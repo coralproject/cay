@@ -1,9 +1,11 @@
 import * as types from "../actions";
 
-const data = (state = {
+const initialState = {
   loading: false,
-  message: "It works!"
-}, action) => {
+  message: 'It works!'
+};
+
+const data = (state = initialState, action) => {
   switch (action.type) {
   case types.REQUEST_DATA:
     return Object.assign({}, state, {

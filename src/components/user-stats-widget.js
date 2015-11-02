@@ -27,22 +27,22 @@ class UserStatsWidget extends React.Component {
     });
   }
 
-    return (
-      <VictoryChart
-            data={getBarData()}
-            dataAttributes={[
-              {type: "stackedBar", fill: "cornflowerblue"},
-              {type: "stackedBar", fill: "orange"},
-              {type: "stackedBar", fill: "greenyellow"},
-              {type: "stackedBar", fill: "gold"},
-              {type: "stackedBar", fill: "tomato"}
-            ]}
-            tickValues={{x: ['🍎', '🍌', '🍓']}}
-            tickFormat={{x: ['🍎', '🍌', '🍓']}}
-            domainPadding={{
-              x: 20,
-              y: 0
-            }}/>
+  return (
+    <VictoryChart
+          data={getBarData()}
+          dataAttributes={[
+            {type: "stackedBar", fill: "cornflowerblue"},
+            {type: "stackedBar", fill: "orange"},
+            {type: "stackedBar", fill: "greenyellow"},
+            {type: "stackedBar", fill: "gold"},
+            {type: "stackedBar", fill: "tomato"}
+          ]}
+          tickValues={{x: ['🍎', '🍌', '🍓']}}
+          tickFormat={{x: ['🍎', '🍌', '🍓']}}
+          domainPadding={{
+            x: 20,
+            y: 0
+          }}/>
     );
   }
 }

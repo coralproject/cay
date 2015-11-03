@@ -9,10 +9,12 @@ import { Provider, connect } from 'react-redux';
 import { DevTools, DebugPanel, LogMonitor } from 'redux-devtools/lib/react';
 
 import App from "./components/app";
-import User from "./components/user";
+import UserManager from "./components/user-manager";
 import configureStore from "./store";
 
 const store = configureStore();
+
+require('../css/AdminLTE.min.css');
 
 class Root extends React.Component {
   render() {
@@ -21,7 +23,7 @@ class Root extends React.Component {
         <Provider store={store}>
           <Router>
             <Route path="/" component={App}/>
-            <Route path="user" component={User}/>
+            <Route path="user-manager" component={UserManager}/>
           </Router>
         </Provider>
         <DebugPanel top right bottom>

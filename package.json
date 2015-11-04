@@ -30,6 +30,7 @@
     "webpack-hot-middleware": "^2.4.1"
   },
   "dependencies": {
+    "color": "^0.10.1",
     "css-loader": "^0.21.0",
     "file-loader": "^0.8.4",
     "history": "^1.12.5",

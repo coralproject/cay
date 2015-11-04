@@ -14,7 +14,9 @@ import configureStore from "./store";
 
 const store = configureStore();
 
-require('../css/AdminLTE.min.css');
+// require('../css/AdminLTE.min.css');
+require('../css/reset.css');
+require('../css/global.css');
 
 class Root extends React.Component {
   render() {

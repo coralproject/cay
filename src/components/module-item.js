@@ -1,13 +1,17 @@
 import React from 'react';
 import Radium from 'radium';
 
+import color from 'color';
+
+import SmallIcon from './small-icon';
+
 @Radium
 class ModuleItem extends React.Component {
   render() {
     return (
       <li style={styles.base}>
         <a style={styles.link} href="#">
-          <i></i>
+          <SmallIcon />
           <span>ModuleItem</span>
           <i></i>
         </a>
@@ -20,7 +24,7 @@ var styles = {
   base: {
     backgroundColor: '#F77160',
     ':hover': {
-      backgroundColor: '#F66350'
+      backgroundColor: color('#F77160').darken(0.1).hexString()
     }
   },
   link: {

@@ -18,6 +18,8 @@ const store = configureStore();
 require('../css/reset.css');
 require('../css/global.css');
 
+require('../fonts/glyphicons-halflings-regular.woff');
+
 class Root extends React.Component {
   render() {
     return (

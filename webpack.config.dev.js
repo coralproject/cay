@@ -30,6 +30,12 @@ module.exports = {
     }, {
       test: /\.jpg$/,
       loader: "file-loader"
+    }, {
+      test: /\.json$/,
+      loader: "json-loader"
+    }, {
+      test: /\.woff$/,
+      loader: 'url?limit=100000'
     }]
   }
 };

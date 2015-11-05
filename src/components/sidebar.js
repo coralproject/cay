@@ -8,7 +8,6 @@ class Sidebar extends React.Component {
   render() {
     return (
       <aside style={styles}>
-        <p>SidebarMenu heading</p>
         <SidebarMenu />
       </aside>
     );

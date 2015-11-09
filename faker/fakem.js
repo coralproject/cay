@@ -127,5 +127,5 @@ var stuff = {
 	lists: fakeStuff(LISTS, fakeList)
 };
 
-console.log(util.inspect(stuff, false, null));
+console.log(JSON.stringify(stuff));
 

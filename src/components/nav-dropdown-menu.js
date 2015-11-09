@@ -2,12 +2,15 @@ import React from 'react';
 import Radium from 'radium';
 
 import Badge from './badge';
+import IconButton from './icon-button';
 
 @Radium
 class NavDropdownMenu extends React.Component {
   render() {
     return (
-      <div style={styles}>NavDropdownMenu <Badge /></div>
+      <div style={styles}>
+        <IconButton name="fa-inbox" /> <Badge />
+      </div>
     );
   }
 }

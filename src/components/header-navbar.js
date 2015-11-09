@@ -3,13 +3,14 @@ import Radium from 'radium';
 
 import Searchbar from './searchbar';
 import NavbarMenu from './navbar-menu';
+import IconButton from './icon-button';
 
 @Radium
 class HeaderNavbar extends React.Component {
   render() {
     return (
       <nav style={styles.nav}>
-        <a style={styles.sidebarToggle} href="#"></a>
+        <IconButton style={styles.sidebarToggle} name="fa-navicon" />
         <Searchbar />
         <NavbarMenu />
       </nav>
@@ -19,17 +20,7 @@ class HeaderNavbar extends React.Component {
 
 var styles = {
   sidebarToggle: {
-    cursor: 'pointer',
-    float: 'left',
-    backgroundColor: 'transparent',
-    backgroundImage: 'none',
-    padding: '15px',
-    textDecoration: 'none',
-    color: 'white',
-    font: 'normal normal normal 14px/1 FontAwesome',
-    ':hover': {
-      backgroundColor: 'green'
-    }
+    float: 'left'
   },
   nav: {
     marginBottom: 0,

@@ -2,6 +2,7 @@ import React from 'react';
 import Radium from 'radium';
 
 import Icon from './icon';
+import IconButton from './icon-button';
 
 @Radium
 class Searchbar extends React.Component {
@@ -9,9 +10,7 @@ class Searchbar extends React.Component {
     return (
       <form style={styles.form} action="#" method="GET">
         <input style={styles.input} name="search" placeholder="Search..." type="text" />
-        <button style={styles.button} type="submit">
-          <Icon size="small" name="fa-search" />
-        </button>
+        <IconButton name="fa-search" />
       </form>
     );
   }
@@ -38,13 +37,6 @@ let styles = {
       background: 'white',
       color: '#ccc'
     }
-  },
-  button: {
-    backgroundColor: 'transparent',
-    border: 'none',
-    height: '100%',
-    width: '40px',
-    color: 'white'
   }
 }
 

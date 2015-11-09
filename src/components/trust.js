@@ -14,7 +14,9 @@ class Trust extends React.Component {
   render() {
     return (
       <div style={styles}>
-        <Button>Click Me</Button>
+        <Button>Base button</Button>
+        <Button size="small">Small Button</Button>
+        <Button size="large">Large Button</Button>
         <div className="filterList">
           {this.getFilters()}
         </div>

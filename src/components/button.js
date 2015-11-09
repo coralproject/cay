@@ -22,13 +22,16 @@ var styles = {
     border: 0,
     borderRadius: 4,
     color: 'white',
-    padding: '1.5em'
+    padding: '0.625rem 1.25rem',
+    fontSize: '1rem'
   },
   small: {
-
+    padding: '0.625rem',
+    fontSize: '0.875rem'
   },
   large: {
-
+    padding: '1.25rem 1.875rem',
+    fontSize: '1.125rem'
   }
 };
 

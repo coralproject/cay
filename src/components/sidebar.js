@@ -20,7 +20,7 @@ var styles = {
   left: 0,
   paddingTop: '50px',
   width: '230px',
-  background: 'rgba(0, 255, 0, .6)',
+  background: '#F77160',
   height: '100%'
 };
 

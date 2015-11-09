@@ -3,7 +3,7 @@ import Radium from 'radium';
 
 import color from 'color';
 
-import SmallIcon from './small-icon';
+import Icon from './icon';
 
 @Radium
 class ModuleItem extends React.Component {
@@ -11,8 +11,8 @@ class ModuleItem extends React.Component {
     return (
       <li style={styles.base}>
         <a style={styles.link} href="#">
-          <SmallIcon />
-          <span>ModuleItem</span>
+          <Icon size="small" name={this.props.icon} />
+          <span>{this.props.name}</span>
           <i></i>
         </a>
       </li>

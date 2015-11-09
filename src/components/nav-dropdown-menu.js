@@ -1,11 +1,11 @@
 import React from 'react';
 
-import IconBadge from './icon-badge';
+import Badge from './badge';
 
 class NavDropdownMenu extends React.Component {
   render() {
     return (
-      <div>NavDropdownMenu <IconBadge /></div>
+      <div>NavDropdownMenu <Badge /></div>
     );
   }
 }

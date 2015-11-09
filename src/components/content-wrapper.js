@@ -2,13 +2,18 @@ import React from "react";
 import { connect } from "react-redux";
 import Radium from "radium";
 
+import HeaderH1 from './header-h1';
+import ContentHeader from './content-header';
+import Trust from './trust';
+
 // @connect(state => state.userData)
 @Radium
-class TrustModule extends React.Component {
+class ContentWrapper extends React.Component {
   render() {
     return (
       <div style={styles}>
-        <p>the trust module</p>
+        <ContentHeader title="Trust Module Header" />
+        <Trust />
       </div>
     );
   }
@@ -21,4 +26,4 @@ var styles = {
 };
 
 
-export default TrustModule;
+export default ContentWrapper;

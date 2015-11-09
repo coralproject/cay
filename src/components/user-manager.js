@@ -4,7 +4,7 @@ import Radium from "radium";
 
 import MainHeader from './main-header';
 import Sidebar from './sidebar';
-import TrustModule from './trust-module';
+import ContentWrapper from './content-wrapper';
 
 // @connect(state => state.userData)
 @Radium
@@ -14,7 +14,7 @@ class UserManager extends React.Component {
       <div className="wrapper">
         <MainHeader />
         <Sidebar />
-        <TrustModule />
+        <ContentWrapper />
       </div>
     );
   }

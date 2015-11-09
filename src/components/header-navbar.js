@@ -9,7 +9,7 @@ class HeaderNavbar extends React.Component {
   render() {
     return (
       <nav style={styles.nav}>
-        <a style={styles.sidebarToggle} href="#">sidebar toggle</a>
+        <a style={styles.sidebarToggle} href="#"></a>
         <Searchbar />
         <NavbarMenu />
       </nav>
@@ -23,7 +23,13 @@ var styles = {
     float: 'left',
     backgroundColor: 'transparent',
     backgroundImage: 'none',
-    padding: '15px'
+    padding: '15px',
+    textDecoration: 'none',
+    color: 'white',
+    font: 'normal normal normal 14px/1 FontAwesome',
+    ':hover': {
+      backgroundColor: 'green'
+    }
   },
   nav: {
     marginBottom: 0,

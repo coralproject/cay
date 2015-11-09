@@ -33,6 +33,8 @@
     "color": "^0.10.1",
     "css-loader": "^0.21.0",
     "file-loader": "^0.8.4",
+    "font-awesome": "^4.4.0",
+    "font-awesome-webpack": "0.0.4",
     "history": "^1.12.5",
     "json-loader": "^0.5.3",
     "lodash": "^3.10.1",

@@ -26,8 +26,8 @@ var styles = {
     fontSize: '1rem'
   },
   small: {
-    padding: '0.625rem',
-    fontSize: '0.875rem'
+    padding: '0.5rem',
+    fontSize: '0.75rem'
   },
   large: {
     padding: '1.25rem 1.875rem',

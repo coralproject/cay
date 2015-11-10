@@ -2,7 +2,6 @@ import React from "react";
 import { connect } from "react-redux";
 import Radium from "radium";
 
-import HeaderH1 from './header-h1';
 import ContentHeader from './content-header';
 import Trust from './trust';
 

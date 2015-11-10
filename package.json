@@ -1,7 +1,8 @@
 {
-  "name": "coral-boilerplate",
+  "name": "trust",
   "version": "0.0.1",
   "description": "trust",
+  "repository": "git@github.com:CoralProject/trust.git",
   "scripts": {
     "clean": "rimraf dist",
     "build:webpack": "NODE_ENV=production webpack --config webpack.config.js",
@@ -37,9 +38,11 @@
     "font-awesome-webpack": "0.0.4",
     "history": "^1.12.5",
     "json-loader": "^0.5.3",
+    "less": "^2.5.3",
     "lodash": "^3.10.1",
+    "material-ui": "^0.13.2",
     "radium": "^0.14.2",
-    "react": "^0.14.0",
+    "react": "^0.14.2",
     "react-dom": "^0.14.0",
     "react-redux": "^4.0.0",
     "react-router": "^1.0.0-rc3",

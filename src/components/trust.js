@@ -3,6 +3,7 @@ import Radium from 'radium';
 
 import InfoBox from './info-box';
 import Button from './button';
+import Checkbox from './checkbox';
 
 @Radium
 class Trust extends React.Component {
@@ -17,6 +18,7 @@ class Trust extends React.Component {
         <Button>Base button</Button>
         <Button size="small">Small Button</Button>
         <Button size="large">Large Button</Button>
+        <Checkbox checked={false} label="this is a checkbox label" />
         <div className="filterList">
           {this.getFilters()}
         </div>

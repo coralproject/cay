@@ -14,7 +14,7 @@ class UserManager extends React.Component {
       <div className="wrapper">
         <MainHeader />
         <Sidebar />
-        <ContentWrapper />
+        <ContentWrapper module="trust" />
       </div>
     );
   }

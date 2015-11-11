@@ -5,6 +5,7 @@ import _ from "lodash";
 
 import MainHeader from './main-header';
 import Sidebar from './sidebar';
+import ContentWrapper from './content-wrapper';
 
 @connect(state => state.data)
 @Radium
@@ -15,20 +16,10 @@ class App extends React.Component {
       <div>
         <MainHeader />
         <Sidebar />
-        <p>This will be some content or a pic of your dog</p>
+        <ContentWrapper module="dashboard" />
       </div>
     );
   }
 }
-
-var styles = {
-  backgroundColor: `hsla(${Math.random() * 255}, 50%, 50%, ${Math.random()})`,
-  padding: '5px',
-  color: 'white',
-  border: 0,
-  ':hover': {
-    backgroundColor: 'blue'
-  }
-};
 
 export default App;

@@ -4,15 +4,43 @@ import Radium from "radium";
 
 import ContentHeader from './content-header';
 import Trust from './trust';
+import Dashboard from './dashboard';
 
 // @connect(state => state.userData)
 @Radium
 class ContentWrapper extends React.Component {
+
+  getPlugin() {
+    switch (this.props.module) {
+      case 'trust':
+        return <Trust />;
+        break;
+      case 'dashboard':
+        return <Dashboard />;
+        break;
+      default:
+        return <Dashboard />;
+    }
+  }
+
+  getHeader() {
+    switch (this.props.module) {
+      case 'trust':
+        return 'Trust Module Header';
+        break;
+      case 'dashboard':
+        return 'Super Dashboard';
+        break;
+      default:
+        return 'the default header';
+    }
+  }
+
   render() {
     return (
       <div style={styles}>
-        <ContentHeader title="Trust Module Header" />
-        <Trust />
+        <ContentHeader title={this.getHeader()} />
+        {this.getPlugin()}
       </div>
     );
   }

@@ -1,27 +1,34 @@
 import React from 'react';
 import Radium from 'radium';
 
-import InfoBox from './info-box';
 import Button from './button';
 import Checkbox from './checkbox';
+import List from './lists/list';
+import ListItem from './lists/list-item';
+import Icon from './icon';
+import Avatar from './avatar';
+
+import settings from '../settings';
 
 @Radium
-class Trust extends React.Component {
+export default class Trust extends React.Component {
   getFilters() {
     const filters = ['All Users', 'New Users', 'Warned Users', 'Trusted Contributors', 'Trolls']
-    return filters.map(filter => <InfoBox name={filter} />);
+    return filters.map((filter, i) => {
+      return <ListItem
+        key={i}
+        leftAvatar={<Avatar src="/img/jack_sparrow.jpg" />}
+        rightAvatar={<Icon color={"red"} name="fa-battery-3" />}
+      >{filter}</ListItem>
+    });
   }
 
   render() {
     return (
       <div style={styles}>
-        <Button>Base button</Button>
-        <Button size="small">Small Button</Button>
-        <Button size="large">Large Button</Button>
-        <Checkbox checked={false} label="this is a checkbox label" />
-        <div className="filterList">
+        <List>
           {this.getFilters()}
-        </div>
+        </List>
       </div>
     );
   }
@@ -29,11 +36,8 @@ class Trust extends React.Component {
 
 var styles = {
   minHeight: '250px',
-  padding: '15px',
-  // margin-right: auto;
-  // margin-left: auto;
-  paddingLeft: '15px',
-  paddingRight: '15px'
-}
-
-export default Trust;
+  paddingTop: 15,
+  paddingBottom: 15,
+  paddingLeft: 15,
+  paddingRight: 15 // why do I have to write these all out?
+};

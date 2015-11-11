@@ -7,7 +7,7 @@ class ContentHeader extends React.Component {
   render() {
     return (
       <section style={styles.base}>
-        <Header size="large" subhead="some optional subhead">Trust App</Header>
+        <Header size="large" subhead="some optional subhead">{this.props.title}</Header>
       </section>
     );
   }

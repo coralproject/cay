@@ -5,7 +5,7 @@ import _ from 'lodash';
 @Radium
 class Icon extends React.Component {
   render() {
-    var g = _.find(icons, {name: this.props.name}).glyph || icons[0].glyph;
+    var g = _.find(icons, {name: this.props.name}).glyph || icons[0].glyph;;
     return (
       <i style={[styles.base,
         this.props.size === 'small' && styles.small,
@@ -31,6 +31,9 @@ var styles = {
   },
   large: {
     font: 'normal normal normal 36px/1 FontAwesome',
+  },
+  leftIcon: {
+    paddingLeft: 20
   }
 };
 

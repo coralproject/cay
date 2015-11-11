@@ -15,11 +15,13 @@ export default class Trust extends React.Component {
   getFilters() {
     const filters = ['All Users', 'New Users', 'Warned Users', 'Trusted Contributors', 'Trolls']
     return filters.map((filter, i) => {
-      return <ListItem
-        key={i}
-        leftAvatar={<Avatar src="/img/jack_sparrow.jpg" />}
-        rightAvatar={<Icon color={"red"} name="fa-battery-3" />}
-      >{filter}</ListItem>
+      return (
+          <ListItem
+          key={i}
+          rightAvatar={<Icon name="fa-battery-3" />}
+          leftAvatar={<Avatar src="/img/jack_sparrow.jpg" />}
+        >{filter}</ListItem>
+      );
     });
   }
 

@@ -6,25 +6,32 @@ import Radium from 'radium';
 export default class ListItem extends React.Component {
   render() {
 
-    console.log(this.mergeStyles);
-
-    const {
-      children,
-      leftAvatar,
-      rightAvatar,
-      ...other
-    } = this.props;
-
     console.log(this.props.leftAvatar);
+
+    let left;
+    if (this.props.leftAvatar) {
+      left = React.cloneElement(this.props.leftAvatar, {style: _.extend({}, styles.avatars, styles.leftAvatar)});
+    }
+
     return (
-      <div style={styles.base}>{leftAvatar || null} {children} {rightAvatar || null}</div>
+      <div style={[
+        styles.base,
+        this.props.leftAvatar && styles.baseWithLeft
+      ]}>
+        {left}
+        {this.props.children}
+      </div>
     );
   }
 }
 
 const styles = {
   base: {
+    position: 'relative',
     padding: 16
+  },
+  baseWithLeft: {
+    paddingLeft: 70
   },
   avatars: {
     position: 'absolute',

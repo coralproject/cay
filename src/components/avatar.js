@@ -5,7 +5,7 @@ import Radium from 'radium';
 export default class Avatar extends React.Component {
   render() {
     return (
-      <img style={styles} src={this.props.src} />
+      <img style={[this.props.style, styles]} src={this.props.src} />
     );
   }
 }

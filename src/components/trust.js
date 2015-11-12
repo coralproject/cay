@@ -18,8 +18,8 @@ export default class Trust extends React.Component {
       return (
           <ListItem
           key={i}
-          rightAvatar={<Icon name="fa-battery-3" />}
           leftAvatar={<Avatar src="/img/jack_sparrow.jpg" />}
+          rightAvatar={<Icon name="fa-battery-3" />}
         >{filter}</ListItem>
       );
     });

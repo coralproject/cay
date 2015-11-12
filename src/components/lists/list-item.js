@@ -9,17 +9,23 @@ export default class ListItem extends React.Component {
     console.log(this.props.leftAvatar);
 
     let left;
+    let right;
     if (this.props.leftAvatar) {
       left = React.cloneElement(this.props.leftAvatar, {style: _.extend({}, styles.avatars, styles.leftAvatar)});
+    }
+    if (this.props.rightAvatar) {
+      right = React.cloneElement(this.props.rightAvatar, {style: _.extend({}, styles.avatars, styles.rightAvatar)});
     }
 
     return (
       <div style={[
         styles.base,
-        this.props.leftAvatar && styles.baseWithLeft
+        left && styles.baseWithLeft,
+        right && styles.baseWithRight
       ]}>
         {left}
         {this.props.children}
+        {right}
       </div>
     );
   }
@@ -28,13 +34,20 @@ export default class ListItem extends React.Component {
 const styles = {
   base: {
     position: 'relative',
-    padding: 16
+    paddingTop: 16,
+    paddingRight: 16,
+    paddingBottom: 16,
+    paddingLeft: 16
   },
   baseWithLeft: {
     paddingLeft: 70
   },
+  baseWithRight: {
+    paddingRight: 70
+  },
   avatars: {
     position: 'absolute',
+    display: 'block',
     top: 8
   },
   leftAvatar: {

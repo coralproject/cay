@@ -7,11 +7,14 @@ class Icon extends React.Component {
   render() {
     var g = _.find(icons, {name: this.props.name}).glyph || icons[0].glyph;;
     return (
-      <i style={[this.props.style, styles.base,
+      <i style={[
+        this.props.style,
+        styles.base,
         this.props.size === 'small' && styles.small,
         this.props.size === 'medium' && styles.medium,
-        this.props.size === 'large' && styles.large]}>
-      {g}</i>
+        this.props.size === 'large' && styles.large,
+        {color: this.props.color}
+      ]}>{g}</i>
     );
   }
 }

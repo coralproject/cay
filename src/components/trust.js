@@ -12,14 +12,23 @@ import settings from '../settings';
 
 @Radium
 export default class Trust extends React.Component {
+
+  handleClick(e) {
+    console.log('Trust', e);
+  }
+
   getFilters() {
     const filters = ['All Users', 'New Users', 'Warned Users', 'Trusted Contributors', 'Trolls']
     return filters.map((filter, i) => {
+      console.log(this.handleClick);
+
+
       return (
           <ListItem
+          onClick={this.handleClick.bind(this)}
           key={i}
           leftAvatar={<Avatar src="/img/jack_sparrow.jpg" />}
-          rightAvatar={<Icon name="fa-battery-3" />}
+          rightAvatar={<Icon size="medium" color="#BDBDBD" name="fa-filter" />}
         >{filter}</ListItem>
       );
     });

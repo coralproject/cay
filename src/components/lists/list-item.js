@@ -4,9 +4,15 @@ import Radium from 'radium';
 
 @Radium
 export default class ListItem extends React.Component {
-  render() {
 
-    console.log(this.props.leftAvatar);
+  handleClick(e) {
+
+    this.setState({active: !this.state.active});
+
+    this.props.onClick(e);
+  }
+
+  render() {
 
     let left;
     let right;
@@ -17,14 +23,16 @@ export default class ListItem extends React.Component {
       right = React.cloneElement(this.props.rightAvatar, {style: _.extend({}, styles.avatars, styles.rightAvatar)});
     }
 
+    let text = this.state.active ? 'is active' : 'is disabled';
+
     return (
-      <div style={[
+      <div onClick={this.handleClick.bind(this)} style={[
         styles.base,
         left && styles.baseWithLeft,
         right && styles.baseWithRight
       ]}>
         {left}
-        {this.props.children}
+        {this.props.children} {text}
         {right}
       </div>
     );
@@ -34,10 +42,11 @@ export default class ListItem extends React.Component {
 const styles = {
   base: {
     position: 'relative',
-    paddingTop: 16,
-    paddingRight: 16,
-    paddingBottom: 16,
-    paddingLeft: 16
+    paddingTop: 20,
+    paddingRight: 20,
+    paddingBottom: 20,
+    paddingLeft: 20,
+    fontSize: 16
   },
   baseWithLeft: {
     paddingLeft: 70

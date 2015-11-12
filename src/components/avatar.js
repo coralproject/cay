@@ -11,7 +11,8 @@ export default class Avatar extends React.Component {
 }
 
 var styles = {
-  width: 40,
-  height: 40,
-  borderRadius: 20
+  width: 38,
+  height: 38,
+  borderRadius: 20,
+  border: '1px solid rgba(0, 0, 0, .08)'
 };

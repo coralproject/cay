@@ -38,6 +38,7 @@
     "font-awesome": "^4.4.0",
     "font-awesome-webpack": "0.0.4",
     "history": "^1.12.5",
+    "jsdom": "^7.0.2",
     "json-loader": "^0.5.3",
     "less": "^2.5.3",
     "lodash": "^3.10.1",

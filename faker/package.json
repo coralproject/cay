@@ -1,0 +1,14 @@
+
+{
+  "name": "Fakem",
+  "version": "10000.0.1",
+  "description": "Fake data for trust",
+  "scripts": {
+    "fake": "node fakem.js > fake.json"
+  },
+  "author": "David Erwin",
+  "license": "MIT",
+  "dependencies": {
+    "faker": "*"
+  }
+}

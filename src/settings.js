@@ -30,6 +30,12 @@ const settings = {
   darkGray: "#6C7277",
   darkerGray: "#34383C",
   darkestGray: "#1E2226",
+
+  primaryColor: '#337ab7',
+  successColor: '#5cb85c',
+  infoColor: '#5bc0de',
+  warningColor: '#f0ad4e',
+  dangerColor: '#d9534f',
 };
 
 export default settings;

@@ -37,6 +37,14 @@ export default class Trust extends React.Component {
   render() {
     return (
       <div style={styles}>
+        <Button size="small">No category size small</Button>
+        <Button category="default">Default</Button>
+        <Button category="primary">Primary</Button>
+        <Button category="success">Success</Button>
+        <Button category="info">Info</Button>
+        <Button category="warning">Warning</Button>
+        <Button category="danger">Danger</Button>
+        <Button category="link">Link</Button>
         <List>
           {this.getFilters()}
         </List>

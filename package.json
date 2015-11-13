@@ -8,7 +8,8 @@
     "build:webpack": "NODE_ENV=production webpack --config webpack.config.js",
     "build": "npm run clean && npm run build:webpack",
     "start": "node dev-server.js",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "test": "./node_modules/.bin/mocha --compilers js:babel-core/register --recursive"
   },
   "author": "Riley Davis",
   "license": "MIT",
@@ -23,6 +24,7 @@
     "eslint-plugin-react": "^3.5.1",
     "express": "^4.13.3",
     "mocha": "^2.3.3",
+    "react-addons-test-utils": "^0.14.2",
     "react-transform-catch-errors": "^1.0.0",
     "react-transform-hmr": "^1.0.1",
     "redbox-react": "^1.1.1",

@@ -8,8 +8,8 @@ import { Provider, connect } from 'react-redux';
 // Redux Devtools
 import { DevTools, DebugPanel, LogMonitor } from 'redux-devtools/lib/react';
 
-import App from "./components/app";
-import UserManager from "./components/user-manager";
+import App from "./containers/app";
+import UserManager from "./containers/user-manager";
 import configureStore from "./store";
 
 const store = configureStore();

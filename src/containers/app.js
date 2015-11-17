@@ -1,11 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
 import Radium from "radium";
-import _ from "lodash";
 
-import MainHeader from './main-header';
-import Sidebar from './sidebar';
-import ContentWrapper from './content-wrapper';
+import MainHeader from '../components/main-header';
+import Sidebar from '../components/sidebar';
+import ContentWrapper from '../components/content-wrapper';
 
 @connect(state => state.data)
 @Radium
@@ -22,4 +21,5 @@ class App extends React.Component {
   }
 }
 
+// same as the @connect decorator above
 export default App;

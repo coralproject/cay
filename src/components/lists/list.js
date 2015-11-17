@@ -7,7 +7,7 @@ import settings from '../../settings';
 export default class List extends React.Component {
   render() {
     return (
-      <div style={styles}>{this.props.children}</div>
+      <div style={[this.props.style, styles]}>{this.props.children}</div>
     );
   }
 }

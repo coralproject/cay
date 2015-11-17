@@ -20,8 +20,7 @@ var styles = {
   left: 0,
   paddingTop: '50px',
   width: '230px',
-  background: '#F77160',
-  height: '100%'
+  background: '#F77160'
 };
 
 export default Sidebar;

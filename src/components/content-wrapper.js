@@ -49,7 +49,7 @@ class ContentWrapper extends React.Component {
 var styles = {
   marginLeft: '230px',
   backgroundColor: '#ecf0f5',
-  height: (window.innerHeight - 50) + 'px'
+  minHeight: (window.innerHeight - 50) + 'px'
 };
 
 

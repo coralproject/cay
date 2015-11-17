@@ -1,4 +1,3 @@
-console.log(__dirname);
 var React = require('react');
 var ReactTestUtils = require('react-addons-test-utils');
 var assert = require('assert');
@@ -23,5 +22,7 @@ describe('Button component', function () {
     assert(this.inputElement.getAttribute('type') === 'button');
   });
 
-  it('<Button category="warning"> should be red')
+  it('<button> should have some textContent', function () {
+    assert(this.inputElement.textContent === "sample test");
+  })
 });

@@ -5,17 +5,22 @@ import Radium from 'radium';
 class Badge extends React.Component {
   render() {
     return (
-      <i style={styles}>5</i>
+      <i style={[
+        this.props.style,
+        styles.base
+      ]}>{this.props.count}</i>
     );
   }
 }
 
 let styles = {
-  backgroundColor: 'green',
-  padding: '5px',
-  color: 'white',
-  borderRadius: '3px',
-  fontSize: '8px'
+  base: {
+    backgroundColor: '#aaa',
+    padding: '5px',
+    color: 'white',
+    borderRadius: 5,
+    fontSize: '8px',
+  }
 };
 
 export default Badge;

@@ -2,13 +2,12 @@ import _ from '../../lib/lodash.min';
 import React from 'react';
 import Radium from 'radium';
 
+import settings from '../../settings';
+
 @Radium
 export default class ListItem extends React.Component {
 
   handleClick(e) {
-
-    this.setState({active: !this.state.active});
-
     this.props.onClick(e);
   }
 
@@ -23,8 +22,6 @@ export default class ListItem extends React.Component {
       right = React.cloneElement(this.props.rightAvatar, {style: _.extend({}, styles.avatars, styles.rightAvatar)});
     }
 
-    let text = this.state.active ? 'is active' : 'is disabled';
-
     return (
       <div onClick={this.handleClick.bind(this)} style={[
         styles.base,
@@ -32,7 +29,7 @@ export default class ListItem extends React.Component {
         right && styles.baseWithRight
       ]}>
         {left}
-        {this.props.children} {text}
+        {this.props.children}
         {right}
       </div>
     );
@@ -46,7 +43,10 @@ const styles = {
     paddingRight: 20,
     paddingBottom: 20,
     paddingLeft: 20,
-    fontSize: 16
+    fontSize: 16,
+    ':hover': {
+      backgroundColor: settings.lighterGray
+    }
   },
   baseWithLeft: {
     paddingLeft: 70

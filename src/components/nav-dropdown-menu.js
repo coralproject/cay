@@ -9,7 +9,7 @@ class NavDropdownMenu extends React.Component {
   render() {
     return (
       <div style={styles}>
-        <IconButton name="fa-inbox" /> <Badge />
+        <IconButton name="fa-inbox" /> <Badge count={Math.random().toString().slice(-2)}/>
       </div>
     );
   }

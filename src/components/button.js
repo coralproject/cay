@@ -1,10 +1,14 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import color from 'color';
 import settings from '../settings';
 
 @Radium
 class Button extends React.Component {
+  static propTypes = {
+    size: PropTypes.string
+  }
+
   render() {
     return (
       <button type="button" style={[

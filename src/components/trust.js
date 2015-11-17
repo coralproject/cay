@@ -3,12 +3,13 @@ import Radium from 'radium';
 
 import Button from './button';
 import Checkbox from './checkbox';
-import List from './lists/list';
-import ListItem from './lists/list-item';
-import Icon from './icon';
-import Avatar from './avatar';
+
 
 import settings from '../settings';
+
+import FilterTable from './filter-table';
+import UserTable from './user-table';
+import UserDetail from './user-detail';
 
 @Radium
 export default class Trust extends React.Component {
@@ -17,46 +18,39 @@ export default class Trust extends React.Component {
     console.log('Trust', e);
   }
 
-  getFilters() {
-    const filters = ['All Users', 'New Users', 'Warned Users', 'Trusted Contributors', 'Trolls']
-    return filters.map((filter, i) => {
-      console.log(this.handleClick);
-
-
-      return (
-          <ListItem
-          onClick={this.handleClick.bind(this)}
-          key={i}
-          leftAvatar={<Avatar src="/img/jack_sparrow.jpg" />}
-          rightAvatar={<Icon size="medium" color="#BDBDBD" name="fa-filter" />}
-        >{filter}</ListItem>
-      );
-    });
-  }
-
   render() {
     return (
-      <div style={styles}>
-        <Button size="small">No category size small</Button>
-        <Button category="default">Default</Button>
-        <Button category="primary">Primary</Button>
-        <Button category="success">Success</Button>
-        <Button category="info">Info</Button>
-        <Button category="warning">Warning</Button>
-        <Button category="danger">Danger</Button>
-        <Button category="link">Link</Button>
-        <List>
-          {this.getFilters()}
-        </List>
+      <div style={styles.base}>
+        <FilterTable
+          style={styles.filterTable}
+          onClick={this.handleClick.bind(this)}
+          filters={['All Users', 'New Users', 'Warned Users', 'Trusted Contributors', 'Trolls']} />
+        <UserTable
+          style={styles.userTable}
+          users={[{name: 'Thorin'}, {name: 'Fili'}, {name: 'Kili'}, {name: 'Balin'}, {name: 'Dwalin'}, {name: 'Oin'}, {name: 'Gloin'}, {name: 'Dori'}, {name: 'Nori'}, {name: 'Ori'}, {name: 'Bifur'}, {name: 'Bofur'}, {name: 'Bombur'}]} />
+        <UserDetail
+          style={styles.userDetail} />
       </div>
     );
   }
 }
 
 var styles = {
-  minHeight: '250px',
-  paddingTop: 15,
-  paddingBottom: 15,
-  paddingLeft: 15,
-  paddingRight: 15 // why do I have to write these all out?
+  base: {
+    display: 'flex',
+    minHeight: '250px',
+    paddingTop: 15,
+    paddingBottom: 15,
+    paddingLeft: 15,
+    paddingRight: 15 // why do I have to write these all out?
+  },
+  filterTable: {
+    flex: 1,
+  },
+  userTable: {
+    flex: 1,
+  },
+  userDetail: {
+    flex: 2,
+  }
 };

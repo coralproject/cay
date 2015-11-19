@@ -5,10 +5,12 @@ import settings from '../settings';
 
 import List from './lists/list';
 import UserRow from './user-row';
+import Header from './header';
 
 @Radium
 export default class UserTable extends React.Component {
   static propTypes = {
+    onUserClick: PropTypes.func.isRequired,
     users: PropTypes.arrayOf(PropTypes.shape({
       name: PropTypes.string.isRequired
     }).isRequired).isRequired
@@ -16,8 +18,9 @@ export default class UserTable extends React.Component {
 
   render() {
     return (
-      <List style={[this.props.style, styles.base]}>
-        {this.props.users.map((user, i) => <UserRow {...user} style={styles.row} key={i} /> )}
+      <List style={[styles.base, this.props.style]}>
+        <Header size="small" style={styles.header}>User List</Header>
+        {this.props.users.map((user, i) => <UserRow {...this.props} {...user} style={styles.row} key={i} /> )}
       </List>
     );
   }
@@ -26,6 +29,9 @@ export default class UserTable extends React.Component {
 var styles = {
   base: {
 
+  },
+  header: {
+    paddingLeft: 10
   },
   row: {
 

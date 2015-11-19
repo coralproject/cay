@@ -7,11 +7,20 @@ import Avatar from './avatar';
 
 @Radium
 export default class UserRow extends React.Component {
+  static propTypes = {
+    onUserClick: PropTypes.func.isRequired
+  }
+
+  handleClick(e) {
+    this.props.onUserClick(this.props.id)
+  }
+
   render() {
     return (
       <ListItem
         style={[this.props.style, styles.base]}
-        leftAvatar={<Avatar src="/img/avatar04.png" />}
+        leftAvatar={<Avatar size="small" roundCorners={true} src={this.props.avatar} />}
+        onClick={this.handleClick.bind(this)}
       >
         {this.props.name}
         <p style={styles.sub}>Rating | Test Score | Comments</p>

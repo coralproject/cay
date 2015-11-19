@@ -16,5 +16,6 @@ const styles = {
   backgroundColor: 'white',
   borderWidth: 1,
   borderStyle: 'solid',
-  borderColor: settings.borderColorBase
+  borderColor: settings.borderColorBase,
+  borderTopWidth: 3
 };

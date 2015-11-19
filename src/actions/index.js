@@ -1,8 +1,10 @@
 export const REQUEST_DATA = "REQUEST_DATA";
 export const RECEIVE_DATA = "RECEIVE_DATA";
 
-export const SHOW_ALL = 'SHOW_ALL';
-export const HIDE_ALL = 'HIDE_ALL';
+export const SET_FILTER = 'SET_FILTER';
+export const UNSET_FILTERS = 'UNSET_FILTERS';
+
+export const SELECT_USER = 'SELECT_USER';
 
 export const requestData = () => {
   return {
@@ -26,16 +28,22 @@ export const fetchData = (message) => {
   };
 };
 
-export const showUsers = () => {
+export const setFilter = (id) => {
   return {
-    type: SHOW_ALL,
-    text: 'show the users?'
+    type: SET_FILTER,
+    id: id
   };
 };
 
-export const hideUsers = (message) => {
+export const unsetFilters = () => {
   return {
-    type: HIDE_ALL,
-    text: message
+    type: UNSET_FILTERS
   };
+};
+
+export const selectUser = (id) => {
+  return {
+    type: SELECT_USER,
+    id: id
+  }
 };

@@ -4,7 +4,7 @@ import Radium from "radium";
 
 import MainHeader from '../components/main-header';
 import Sidebar from '../components/sidebar';
-import ContentWrapper from '../components/content-wrapper';
+import Dashboard from '../components/dashboard';
 
 @connect(state => state.data)
 @Radium
@@ -15,7 +15,7 @@ class App extends React.Component {
       <div>
         <MainHeader />
         <Sidebar />
-        <ContentWrapper module="dashboard" />
+        <Dashboard />
       </div>
     );
   }

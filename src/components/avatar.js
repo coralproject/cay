@@ -7,16 +7,61 @@ export default class Avatar extends React.Component {
     src: React.PropTypes.string.isRequired
   }
 
+  getStyles(size) {
+    let s = {};
+
+    if (size === 'small') {
+      s = {
+        width: 38,
+        height: 38
+      };
+    } else if (size === 'medium') {
+      s = {
+        width: 48,
+        height: 48
+      };
+    } else if (size === 'large') {
+      s = {
+        width: 78,
+        height: 78
+      }
+    }
+
+    if (Number.isInteger(size)) {
+      s = {
+        width: size - 2,
+        height: size - 2
+      }
+    }
+
+    if (this.props.roundCorners) {
+      s = Object.assign({}, s, {borderRadius: s.width / 2 + 1});
+    }
+
+    console.log('Avatar', s);
+
+    return s;
+  }
+
   render() {
     return (
-      <img style={[this.props.style, styles]} src={this.props.src} />
+      <div style={[
+          styles.base,
+          this.getStyles(this.props.size),
+          this.props.style
+        ]}>
+        <img style={styles.image} src={this.props.src} />
+      </div>
     );
   }
 }
 
 var styles = {
-  width: 38,
-  height: 38,
-  borderRadius: 20,
-  border: '1px solid rgba(0, 0, 0, .08)'
+  base: {
+    border: '1px solid rgba(0, 0, 0, .08)',
+    overflow: 'hidden'
+  },
+  image: {
+    width: '100%'
+  }
 };

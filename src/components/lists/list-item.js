@@ -26,7 +26,8 @@ export default class ListItem extends React.Component {
       <div onClick={this.handleClick.bind(this)} style={[
         styles.base,
         left && styles.baseWithLeft,
-        right && styles.baseWithRight
+        right && styles.baseWithRight,
+        this.props.style,
       ]}>
         {left}
         {this.props.children}
@@ -45,7 +46,7 @@ const styles = {
     paddingLeft: 20,
     fontSize: 16,
     ':hover': {
-      backgroundColor: settings.lighterGray
+      backgroundColor: settings.lighterGrey
     }
   },
   baseWithLeft: {

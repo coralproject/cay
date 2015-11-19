@@ -16,6 +16,7 @@ class Button extends React.Component {
           this.props.size === 'small' && styles.small,
           this.props.size === 'large' && styles.large,
           styles[this.props.category],
+          this.props.style,
       ]}>
         {this.props.children}
       </button>

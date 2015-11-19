@@ -11,7 +11,8 @@ class Header extends React.Component {
         this.props.size === 'small' && styles.small,
         this.props.size === 'medium' && styles.medium,
         this.props.size === 'large' && styles.large,
-        this.props.size === 'xlarge' && styles.xlarge
+        this.props.size === 'xlarge' && styles.xlarge,
+        this.props.style
       ]}>
         {this.props.children}
         <small style={styles.subhead}>{this.props.subhead}</small>
@@ -30,7 +31,9 @@ var styles = {
     lineHeight: 1
   },
   base: {
-    fontWeight: 400
+    fontWeight: 400,
+    marginTop: '.8em',
+    marginBottom: '.5em'
   },
   xsmall: {
     fontSize: 14,

@@ -1,6 +1,8 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 
+import settings from '../../settings';
+
 @Radium
 export default class Stat extends React.Component {
   render() {
@@ -15,13 +17,18 @@ export default class Stat extends React.Component {
 
 var styles = {
   base: {
-    clear: 'both'
+    fontSize: '.8em',
+    paddingTop: 5,
+    paddingBottom: 5,
+    borderBottom: '1px solid ' + settings.lighterGrey,
+    display: 'flex'
   },
   dt: {
-    clear: 'both',
-    float: 'left'
+    flex: 1,
+    fontWeight: 700,
   },
   dd: {
-    float: 'right'
+    flex: 1,
+    textAlign: 'right'
   }
 }

@@ -12,17 +12,17 @@ export default class UserRow extends React.Component {
   }
 
   handleClick(e) {
-    this.props.onUserClick(this.props.id)
+    this.props.onUserClick(this.props.user)
   }
 
   render() {
     return (
       <ListItem
         style={[this.props.style, styles.base]}
-        leftAvatar={<Avatar size="small" roundCorners={true} src={this.props.avatar} />}
+        leftAvatar={<Avatar size="small" roundCorners={true} src={this.props.user.avatar} />}
         onClick={this.handleClick.bind(this)}
       >
-        {this.props.name}
+        {this.props.user.name}
         <p style={styles.sub}>Rating | Test Score | Comments</p>
       </ListItem>
     );
@@ -31,7 +31,7 @@ export default class UserRow extends React.Component {
 
 var styles = {
   base: {
-
+    cursor: 'pointer'
   },
   sub: {
     marginTop: 4,

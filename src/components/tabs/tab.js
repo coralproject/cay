@@ -5,7 +5,20 @@ import Radium from 'radium';
 export default class Tab extends React.Component {
   render() {
     return (
-      <div>{this.props.children}</div>
+      <div style={[
+        styles.base,
+        this.props.active && styles.active,
+        this.props.style
+      ]}>{this.props.children}</div>
     );
+  }
+}
+
+const styles = {
+  base: {
+    display: 'none'
+  },
+  active: {
+    display: 'block'
   }
 }

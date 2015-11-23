@@ -38,8 +38,6 @@ export default class Avatar extends React.Component {
       s = Object.assign({}, s, {borderRadius: s.width / 2 + 1});
     }
 
-    console.log('Avatar', s);
-
     return s;
   }
 

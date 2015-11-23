@@ -20,7 +20,7 @@ export default class UserTable extends React.Component {
     return (
       <List style={[styles.base, this.props.style]}>
         <Header size="small" style={styles.header}>User List</Header>
-        {this.props.users.map((user, i) => <UserRow {...this.props} {...user} style={styles.row} key={i} /> )}
+        {this.props.users.map((user, i) => <UserRow {...this.props} user={user} style={styles.row} key={i} /> )}
       </List>
     );
   }

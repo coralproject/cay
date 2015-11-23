@@ -14,12 +14,14 @@ import Header from './header';
 @Radium
 export default class UserDetail extends React.Component {
   render() {
-    console.log('UserDetail', this.props.style);
+
+    console.log('UserDetail', this.props);
+
     return (
       <Card style={[styles.base, this.props.style]}>
-        <Header size="medium">User Name</Header>
+        <Header size="medium">{this.props.name}</Header>
         <div style={styles.topPart}>
-          <Avatar style={styles.avatar} src="/img/avatar2.png" size={200} />
+          <Avatar style={styles.avatar} src={this.props.avatar || ''} size={200} />
           <Stats style={styles.stats}>
             <Stat term="Trust Score" description="87" />
             <Stat term="Status" description="subscriber" />
@@ -28,7 +30,7 @@ export default class UserDetail extends React.Component {
             <Stat term="Warnings" description="0" />
           </Stats>
         </div>
-        <Tabs defaultActiveTab={2} style={styles.tabs}>
+        <Tabs initialSelectedIndex={2} style={styles.tabs}>
           <Tab title="About">Tab Alpha Content</Tab>
           <Tab title="Activity">Tab Bravo Content</Tab>
           <Tab title="Messages">Tab Charlie Content</Tab>
@@ -45,7 +47,8 @@ const styles = {
     paddingRight: 10
   },
   topPart: {
-    display: 'flex'
+    display: 'flex',
+    marginBottom: 10
   },
   avatar: {
     marginRight: 10

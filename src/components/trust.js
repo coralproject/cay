@@ -24,9 +24,6 @@ export default class Trust extends React.Component {
       <div style={styles.wrapper}>
         <ContentHeader title="Trust Module Header" />
         <div style={styles.base}>
-          <UserDetail
-            {...this.props.selectedUser}
-            style={styles.userDetail} />
           <FilterTable
             style={styles.filterTable}
             onFilterClick={this.props.onFilterClick}
@@ -35,6 +32,9 @@ export default class Trust extends React.Component {
             style={styles.userTable}
             users={this.props.userData.items}
             onUserClick={this.props.onUserClick} />
+          <UserDetail
+            {...this.props.selectedUser}
+            style={styles.userDetail} />
         </div>
       </div>
     );

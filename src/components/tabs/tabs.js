@@ -8,7 +8,8 @@ export default class Tabs extends React.Component {
 
   constructor(props) {
     super(props);
-    const initialIndex = props.initialSelectedIndex || 0;
+    let initialIndex = props.initialSelectedIndex || 0;
+    initialIndex = initialIndex < this.getTabCount() ? initialIndex : 0;
     this.state = {selectedIndex: initialIndex};
   }
 
@@ -18,7 +19,6 @@ export default class Tabs extends React.Component {
 
   makeTabButtons() {
     const activeTab = this.state.selectedIndex;
-    console.log('activeTab', activeTab, this.state);
     return React.Children.map(this.props.children, (tabContent, i) => {
       return <div style={[
         styles.tab,
@@ -38,7 +38,10 @@ export default class Tabs extends React.Component {
           {this.makeTabButtons()}
         </div>
         {React.Children.map(this.props.children, (content, i) => {
-          return React.cloneElement(content, Object.assign({}, {active: i === this.state.selectedIndex}));
+          return React.cloneElement(
+            content,
+            Object.assign({}, {active: i === this.state.selectedIndex})
+          );
         })}
       </div>
     );

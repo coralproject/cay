@@ -1,9 +1,13 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import _ from 'lodash';
 
 @Radium
 class Icon extends React.Component {
+
+  static propTypes = {
+    name: PropTypes.string.isRequired
+  }
 
   getColorProps(color, isInverse) {
 

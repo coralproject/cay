@@ -11,6 +11,8 @@ import Stat from './stats/stat';
 import Card from './card';
 import Header from './header';
 
+import CommentDetail from './comment-detail';
+
 @Radium
 export default class UserDetail extends React.Component {
   render() {
@@ -30,8 +32,10 @@ export default class UserDetail extends React.Component {
             <Stat term="Warnings" description="0" />
           </Stats>
         </div>
-        <Tabs initialSelectedIndex={2} style={styles.tabs}>
-          <Tab title="About">Tab Alpha Content</Tab>
+        <Tabs initialSelectedIndex={0} style={styles.tabs}>
+          <Tab title="About">
+            <CommentDetail />
+          </Tab>
           <Tab title="Activity">Tab Bravo Content</Tab>
           <Tab title="Messages">Tab Charlie Content</Tab>
         </Tabs>

@@ -49,6 +49,7 @@
     "radium": "^0.14.2",
     "react": "^0.14.2",
     "react-dom": "^0.14.0",
+    "react-icons": "^0.3.1",
     "react-redux": "^4.0.0",
     "react-router": "^1.0.0-rc3",
     "redux": "^3.0.2",

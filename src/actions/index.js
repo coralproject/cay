@@ -9,6 +9,10 @@ export const USERS_REQUEST = 'USERS_REQUEST';
 export const REQUEST_USERS_FAILURE = 'REQUEST_USERS_FAILURE';
 export const RECIEVE_USERS = 'RECIEVE_USERS';
 
+export const INIT_LOGIN = 'INIT_LOGIN';
+export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
+export const LOGIN_FAIL = 'LOGIN_FAIL';
+
 export const requestData = () => {
   return {
     type: REQUEST_DATA

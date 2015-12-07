@@ -24,7 +24,7 @@ const settings = {
   lighterGrey: "#F6F6F6",
   lightGrey: "#F1F1F1",
   mediumGrey: "#E0E0E0",
-  gray: "#979B9F",
+  grey: "#979B9F",
   darkBlueGrey: "#ACB1B8",
   blueGrey: "#BFC5CC",
   darkGrey: "#6C7277",

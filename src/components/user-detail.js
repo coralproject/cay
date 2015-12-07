@@ -8,7 +8,7 @@ import Tab from './tabs/tab';
 import Tabs from './tabs/tabs';
 import Stats from './stats/stats';
 import Stat from './stats/stat';
-import Card from './card';
+import Card from './cards/card';
 import Header from './header';
 
 import CommentDetail from './comment-detail';

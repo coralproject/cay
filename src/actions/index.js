@@ -9,9 +9,10 @@ export const USERS_REQUEST = 'USERS_REQUEST';
 export const REQUEST_USERS_FAILURE = 'REQUEST_USERS_FAILURE';
 export const RECIEVE_USERS = 'RECIEVE_USERS';
 
-export const INIT_LOGIN = 'INIT_LOGIN';
-export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
-export const LOGIN_FAIL = 'LOGIN_FAIL';
+export const LOGIN_INIT = 'LOGIN_INIT'; // user has clicked the Sign In button
+export const LOGIN_REQUEST = 'LOGIN_REQUEST'; // login http request started
+export const LOGIN_SUCCESS = 'LOGIN_SUCCESS'; // login request success
+export const LOGIN_FAIL = 'LOGIN_FAIL'; // login request failure
 
 export const requestData = () => {
   return {
@@ -86,3 +87,20 @@ export const fetchUsers = (query) => {
       .catch(err => dispatch(requestUsersFailure(err)));
   };
 };
+
+
+/* stuff for the login screen */
+
+export const initLogin = (username, password) => {
+  return {
+    type: LOGIN_INIT,
+    username,
+    password
+  }
+}
+
+export const loginUser = (username, password) => {
+  return (dispatch) => {
+    dispatch();
+  }
+}

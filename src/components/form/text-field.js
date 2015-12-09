@@ -4,11 +4,20 @@ import settings from '../../settings';
 
 @Radium
 export default class TextField extends React.Component {
+
+  handleChange(event) {
+    this.setState({value: event.target.value});
+  }
+
   render() {
     return (
       <div style={[styles.base, this.props.style]}>
         <label style={styles.label}>{this.props.label}</label>
-        <input placeholder="Hint Text" style={styles.input} type="text" />
+        <input
+          placeholder="Hint Text"
+          style={styles.input}
+          type="text"
+          onChange={this.handleChange.bind(this)} />
         <hr style={styles.underline} />
         <hr style={styles.underlineHighlight} />
         <div style={styles.errorMessage}>{this.props.error}</div>

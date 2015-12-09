@@ -52,8 +52,8 @@ export default class RadioButton extends React.Component {
 
   }
 
-  clickHandler() {
-
+  clickHandler(e) {
+    this.props.handleClick(e);
   }
 
   getRadioButtonStyles() {
@@ -61,7 +61,7 @@ export default class RadioButton extends React.Component {
 
     return {
       base: {
-        backgroundColor: '#ccc',
+        backgroundColor: settings.lightestGrey,
         border: '2px solid ' + settings.darkBlueGrey,
         borderRadius: 8,
         display: 'inline-block',
@@ -73,7 +73,7 @@ export default class RadioButton extends React.Component {
         width: 16
       },
       checked: {
-        backgroundColor: this.props.color
+        backgroundColor: settings.grey
       },
       active: {
         backgroundColor: activeColor
@@ -94,8 +94,8 @@ export default class RadioButton extends React.Component {
           onMouseUp={this.activeHandler.bind(this)}>
           <span style={[
             radioButtonStyles.base,
-            this.state.checked && checkboxStyles.checked,
-            this.state.active && checkboxStyles.active
+            this.state.checked && radioButtonStyles.checked,
+            this.state.active && radioButtonStyles.active
           ]}>
           </span>
           <span style={this.getLabelStyles()}>

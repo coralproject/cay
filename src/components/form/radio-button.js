@@ -6,12 +6,6 @@ import settings from '../../settings';
 
 @Radium
 export default class RadioButton extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      checked: this.props.checked
-    }
-  }
 
   getWrapperStyles() {
     return {
@@ -53,7 +47,7 @@ export default class RadioButton extends React.Component {
   }
 
   clickHandler(e) {
-    this.props.handleClick(e);
+    this.props.handleClick(this.props.order, this.props.value);
   }
 
   getRadioButtonStyles() {
@@ -94,7 +88,7 @@ export default class RadioButton extends React.Component {
           onMouseUp={this.activeHandler.bind(this)}>
           <span style={[
             radioButtonStyles.base,
-            this.state.checked && radioButtonStyles.checked,
+            this.props.checked && radioButtonStyles.checked,
             this.state.active && radioButtonStyles.active
           ]}>
           </span>

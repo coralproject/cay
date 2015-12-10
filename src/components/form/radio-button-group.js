@@ -1,20 +1,45 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
+import _ from '../..//lib/lodash.min';
 
 @Radium
 export default class RadioButtonGroup extends React.Component {
 
-  handleClick(e) {
-    console.log('RadioButtonGroup', e);
+  constructor(props) {
+    super(props);
+
+    const children = React.Children.toArray(this.props.children);
+    console.log('children', children);
+    let selectedIndex = _.findIndex(children, child => {
+      return child.props.checked === 'checked'
+    });
+    let initialValue = (selectedIndex !== -1) ? children[selectedIndex].props.value : undefined;
+    if (selectedIndex === -1) {
+      selectedIndex = null;
+    }
+
+    this.state = {selectedIndex: selectedIndex, value: initialValue};
+  }
+
+  handleClick(index, value) {
+    console.log('handleClick', index);
+    this.setState({selectedIndex: index, value: value});
   }
 
   render() {
     return (
       <div>
         {React.Children.map(this.props.children, (content, i) => {
+          const checked = this.state.selectedIndex === i ? 'checked' : undefined;
+          console.log('render', this.state.selectedIndex, i, checked);
+
           return React.cloneElement(
             content,
-            Object.assign({}, {handleClick: this.handleClick.bind(this)})
+            Object.assign({}, {
+              order: i, // key prop does not show up for some reason
+              handleClick: this.handleClick.bind(this),
+              checked: checked
+            })
           );
         })}
         </div>

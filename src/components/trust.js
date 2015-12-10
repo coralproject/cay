@@ -17,9 +17,6 @@ export default class Trust extends React.Component {
   }
 
   render() {
-
-    console.log('Trust', this.props);
-
     return (
       <div style={styles.wrapper}>
         <ContentHeader title="Trust Module Header" />

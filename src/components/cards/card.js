@@ -14,10 +14,10 @@ export default class Card extends React.Component {
 
 var styles = {
   base: {
-    borderWidth: 1,
-    borderColor: settings.borderColorBase,
-    borderTopWidth: 3,
-    borderStyle: 'solid',
+    borderTop: '3px solid ' + settings.borderColorBase,
+    borderRight: '1px solid ' + settings.borderColorBase,
+    borderBottom: '1px solid ' + settings.borderColorBase,
+    borderLeft: '1px solid ' + settings.borderColorBase,
     backgroundColor: 'white',
     borderRadius: 3
   }

@@ -14,9 +14,9 @@ export default class TextField extends React.Component {
       <div style={[styles.base, this.props.style]}>
         <label style={styles.label}>{this.props.label}</label>
         <input
-          placeholder="Hint Text"
+          placeholder={this.props.hint}
           style={styles.input}
-          type="text"
+          type={this.props.type || "text"}
           onChange={this.handleChange.bind(this)} />
         <hr style={styles.underline} />
         <hr style={styles.underlineHighlight} />
@@ -50,7 +50,7 @@ const styles = {
     position: 'relative',
     width: '100%',
     height: '100%',
-    border: 'none',
+    borderColor: 'transparent',
     outline: 'none',
     backgroundColor: 'transparent',
     boxSizing: 'border-box',
@@ -60,16 +60,22 @@ const styles = {
   },
   underline: {
     position: 'absolute',
-    border: 'none',
-    borderBottom: '1px solid ' + settings.lightGrey,
+    borderColor: 'transparent',
+    borderBottom: '1px solid ' + settings.grey,
     width: '100%',
-    bottom: 0,
+    bottom: -4,
     height: 0,
-    boxSizing: 'content-box',
-    borderColor: settings.coralPink
+    boxSizing: 'content-box'
   },
   underlineHighlight: {
-    border: 'none'
+    borderColor: 'transparent',
+    borderBottomColor: settings.coralPink,
+    width: '100%',
+    height: 0,
+    bottom: -3,
+    borderBottomWidth: 2,
+    position: 'absolute',
+    boxSizing: 'content-box'
   },
   errorMessage: {
 

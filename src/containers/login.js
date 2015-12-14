@@ -24,9 +24,13 @@ export default class Login extends React.Component {
         <Card style={styles.loginModal}>
           <CardHeader title="Sign in" />
           <div style={styles.container}>
-            <TextField label="Username / Email Address" />
-            <TextField label="Password" />
-            <Button category="primary">SIGN IN</Button>
+            <TextField style={styles.textInput} label="Username / Email Address" />
+            <TextField
+              style={styles.textInput}
+              label="Password"
+              type="password"
+              error="a password is required" />
+            <Button style={styles.loginButton} category="primary">SIGN IN</Button>
             <hr />
             <p>Or connect with</p>
             <Button category="primary">SSO</Button>
@@ -47,6 +51,16 @@ var styles = {
     margin: 'auto'
   },
   container: {
-    padding: 15
+    paddingTop: 0,
+    paddingRight: 40,
+    paddingBottom: 40,
+    paddingLeft: 40
+  },
+  textInput: {
+    display: 'block'
+  },
+  loginButton: {
+    marginTop: 12,
+    marginBottom: 25
   }
 }

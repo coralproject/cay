@@ -26,7 +26,7 @@ class Button extends React.Component {
 
 var styles = {
   base: {
-    background: '#fff',
+    backgroundColor: '#fff',
     borderRadius: 4,
     borderStyle: 'solid',
     borderWidth: 1,

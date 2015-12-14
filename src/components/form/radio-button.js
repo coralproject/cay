@@ -7,6 +7,10 @@ import settings from '../../settings';
 @Radium
 export default class RadioButton extends React.Component {
 
+  static propTypes = {
+    value: PropTypes.any.isRequired
+  }
+
   getWrapperStyles() {
     return {
       display: 'block',
@@ -29,7 +33,7 @@ export default class RadioButton extends React.Component {
       fontWeight: 400,
       lineHeight: '20px',
       paddingLeft: 22,
-      '-webkit-user-select': 'none'
+      WebkitUserSelect: 'none'
     };
   }
 

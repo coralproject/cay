@@ -31,8 +31,6 @@ export default class RadioButtonGroup extends React.Component {
       <div>
         {React.Children.map(this.props.children, (content, i) => {
           const checked = this.state.selectedIndex === i ? 'checked' : undefined;
-          console.log('render', this.state.selectedIndex, i, checked);
-
           return React.cloneElement(
             content,
             Object.assign({}, {

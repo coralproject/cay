@@ -30,7 +30,7 @@ The basic idea is that the build process results in a `bundle.js` file containin
 
 
 #### Code of conduct
-Please be civil when discussing contributions to the Trust front end code and the Coral Project. If in doubt, please consult our [Code of Conduct](https://the-coral-project.gitbooks.io/coral-bible/content/codeof_conduct_md.html)
+Please be civil when discussing contributions to the Trust front end code and the Coral Project. If in doubt, please consult our [Code of Conduct](https://the-coral-project.gitbooks.io/coral-bible/content/codeofconduct.html)
 
 ## TODO:
 - link to arch diagram

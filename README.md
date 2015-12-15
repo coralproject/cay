@@ -11,6 +11,8 @@ folder structure
 
 The app is a series of React components compiled into modules with [webpack](http://webpack.github.io/).
 
+This repo is for the front-end of the Coral ecosystem [outlined here](https://github.com/CoralProject/reef/tree/master/ecosystem)
+
 The basic idea is that the build process results in a `bundle.js` file containing all javascript and css. CSS cross-browser issues, ES6 transpilation, minification, etc, is all handled by webpack.
 
 ##### Folder structure

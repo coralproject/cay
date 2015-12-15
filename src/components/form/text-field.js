@@ -43,7 +43,7 @@ const styles = {
     opacity: 1,
     color: settings.grey,
     fontSize: '.8em',
-    top: 20
+    top: 15
   },
   input: {
     padding: 0,
@@ -70,7 +70,7 @@ const styles = {
   underlineHighlight: {
     borderColor: 'transparent',
     borderBottomColor: settings.coralPink,
-    width: '100%',
+    width: 0, // somehow transition this to 100%
     height: 0,
     bottom: -3,
     borderBottomWidth: 2,
@@ -78,6 +78,9 @@ const styles = {
     boxSizing: 'content-box'
   },
   errorMessage: {
-
+    position: 'absolute',
+    fontSize: 12,
+    bottom: -17,
+    color: settings.dangerColor
   }
 }

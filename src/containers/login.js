@@ -29,11 +29,11 @@ export default class Login extends React.Component {
               style={styles.textInput}
               label="Password"
               type="password"
-              error="a password is required" />
+              error="A password is required" />
             <Button style={styles.loginButton} category="primary">SIGN IN</Button>
             <hr />
             <p>Or connect with</p>
-            <Button category="primary">SSO</Button>
+            <Button style={styles.loginButton} category="primary">SSO</Button>
           </div>
         </Card>
       </div>
@@ -60,7 +60,7 @@ var styles = {
     display: 'block'
   },
   loginButton: {
-    marginTop: 12,
+    marginTop: 32,
     marginBottom: 25
   }
 }

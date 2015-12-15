@@ -7,6 +7,7 @@ import Checkbox from './form/checkbox';
 import Card from './cards/card';
 import CardHeader from './cards/card-header';
 import Paper from './paper';
+import ProgressBar from './progress-bar';
 
 import settings from '../settings';
 
@@ -19,6 +20,7 @@ export default class Dashboard extends React.Component {
       <div style={styles.wrapper}>
         <ContentHeader title="Dashboard" />
         <div style={styles.base}>
+          <ProgressBar />
           <Checkbox label="this is a checkbox label"/>
           <RadioButtonGroup>
             <RadioButton value="luke skywalker" label="Luke" checked="checked" />

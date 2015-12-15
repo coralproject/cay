@@ -34,7 +34,6 @@ The basic idea is that the build process results in a `bundle.js` file containin
 Please be civil when discussing contributions to the Cay front end code and the Coral Project. If in doubt, please consult our [Code of Conduct](https://the-coral-project.gitbooks.io/coral-bible/content/codeofconduct.html)
 
 ## TODO:
-- link to arch diagram
 - how to internationalize (R2L languages)
 - how to continue to make things accessible
 

@@ -1,11 +1,10 @@
-# Trust
+# Cay
 
-Trust, a community moderation app for Coral Project
-folder structure
+Cay, a community moderation tool (front-end)
 
 ## Getting started
 
-- `git clone git@github.com:CoralProject/trust.git && cd trust`
+- `git clone git@github.com:CoralProject/cay.git && cd cay`
 - `npm install`
 - `npm start`
 
@@ -32,7 +31,7 @@ The basic idea is that the build process results in a `bundle.js` file containin
 
 
 #### Code of conduct
-Please be civil when discussing contributions to the Trust front end code and the Coral Project. If in doubt, please consult our [Code of Conduct](https://the-coral-project.gitbooks.io/coral-bible/content/codeofconduct.html)
+Please be civil when discussing contributions to the Cay front end code and the Coral Project. If in doubt, please consult our [Code of Conduct](https://the-coral-project.gitbooks.io/coral-bible/content/codeofconduct.html)
 
 ## TODO:
 - link to arch diagram

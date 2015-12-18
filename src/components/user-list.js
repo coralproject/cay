@@ -5,10 +5,10 @@ import settings from '../settings';
 
 import List from './lists/list';
 import UserRow from './user-row';
-import Header from './header';
+import Header from './layout/header/header';
 
 @Radium
-export default class UserTable extends React.Component {
+export default class UserList extends React.Component {
   static propTypes = {
     onUserClick: PropTypes.func.isRequired,
     users: PropTypes.arrayOf(PropTypes.shape({

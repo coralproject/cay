@@ -3,10 +3,10 @@ import Radium from 'radium';
 
 import color from 'color';
 
-import Icon from './icon';
+import Icon from '../../icon';
 
 @Radium
-class ModuleItem extends React.Component {
+class MenuItem extends React.Component {
   render() {
     return (
       <li style={styles.base}>
@@ -35,4 +35,4 @@ var styles = {
   }
 };
 
-export default ModuleItem;
+export default MenuItem;

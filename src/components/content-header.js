@@ -1,7 +1,7 @@
 import React from 'react';
 import Radium from 'radium';
 
-import Header from './header';
+import Header from './layout/header/header';
 
 class ContentHeader extends React.Component {
   render() {

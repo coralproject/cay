@@ -2,11 +2,11 @@ import React from 'react';
 import Radium from 'radium';
 
 import Searchbar from './searchbar';
-import NavbarMenu from './navbar-menu';
-import IconButton from './icon-button';
+import NavbarMenu from '../nav/navbar-menu';
+import IconButton from '../../icon-button';
 
 @Radium
-class HeaderNavbar extends React.Component {
+class Header extends React.Component {
   render() {
     return (
       <nav style={styles.nav}>
@@ -31,4 +31,4 @@ var styles = {
   }
 };
 
-export default HeaderNavbar;
+export default Header;

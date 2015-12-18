@@ -5,10 +5,10 @@ import settings from '../settings';
 
 import List from './lists/list';
 import FilterRow from './filter-row';
-import Header from './header';
+import Header from './layout/header/header';
 
 @Radium
-export default class FilterTable extends React.Component {
+export default class FilterList extends React.Component {
 
   static propTypes = {
     onFilterClick: PropTypes.func.isRequired

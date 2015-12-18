@@ -4,8 +4,8 @@ import Radium from "radium";
 
 import {setFilter, selectUser, fetchUsers} from '../actions';
 
-import MainHeader from '../components/main-header';
-import Sidebar from '../components/sidebar';
+import Header from '../components/layout/header/header';
+import Sidebar from '../components/layout/sidebar/sidebar';
 import Trust from '../components/trust';
 
 import settings from '../settings';
@@ -22,7 +22,7 @@ export default class UserManager extends React.Component {
 
     return (
       <div style={styles}>
-        <MainHeader />
+        <Header />
         <Sidebar />
         <Trust
           {...this.props}

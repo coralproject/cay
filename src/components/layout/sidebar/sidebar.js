@@ -1,14 +1,14 @@
 import React from "react";
 import Radium from "radium";
 
-import SidebarMenu from './sidebar-menu';
+import Menu from './menu';
 
 @Radium
 class Sidebar extends React.Component {
   render() {
     return (
       <aside style={styles}>
-        <SidebarMenu />
+        <Menu />
       </aside>
     );
   }

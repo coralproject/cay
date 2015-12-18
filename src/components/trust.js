@@ -4,8 +4,8 @@ import Radium from 'radium';
 import settings from '../settings';
 
 import ContentHeader from './content-header';
-import FilterTable from './filter-table';
-import UserTable from './user-table';
+import FilterList from './filter-list';
+import UserList from './user-list';
 import UserDetail from './user-detail';
 
 @Radium
@@ -21,11 +21,11 @@ export default class Trust extends React.Component {
       <div style={styles.wrapper}>
         <ContentHeader title="Trust Module Header" />
         <div style={styles.base}>
-          <FilterTable
+          <FilterList
             style={styles.filterTable}
             onFilterClick={this.props.onFilterClick}
             filters={['All Users', 'New Users', 'Warned Users', 'Trusted Contributors', 'Trolls']} />
-          <UserTable
+          <UserList
             style={styles.userTable}
             users={this.props.userData.items}
             onUserClick={this.props.onUserClick} />

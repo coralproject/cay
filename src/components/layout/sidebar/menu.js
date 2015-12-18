@@ -2,10 +2,10 @@ import _ from 'lodash';
 import React from 'react';
 import Radium from 'radium';
 
-import ModuleItem from './module-item';
+import ModuleItem from './menu-item';
 
 @Radium
-class SidebarMenu extends React.Component {
+class Menu extends React.Component {
   render() {
     return (
       <ul>
@@ -21,4 +21,4 @@ var styles = {
 
 };
 
-export default SidebarMenu;
+export default Menu;

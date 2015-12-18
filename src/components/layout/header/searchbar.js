@@ -1,8 +1,8 @@
 import React from 'react';
 import Radium from 'radium';
 
-import Icon from './icon';
-import IconButton from './icon-button';
+import Icon from '../../icon';
+import IconButton from '../../icon-button';
 
 @Radium
 class Searchbar extends React.Component {

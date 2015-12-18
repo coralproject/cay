@@ -7,8 +7,7 @@ import Icon from './icon';
 class IconButton extends React.Component {
   render() {
     return (
-      <button style={[styles, this.props.style]}>
-      <Icon name={this.props.name} /></button>
+      <button style={[styles, this.props.style]}><Icon name={this.props.name} /></button>
     );
   }
 }

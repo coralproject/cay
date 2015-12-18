@@ -40,7 +40,7 @@
     "file-loader": "^0.8.4",
     "font-awesome": "^4.4.0",
     "font-awesome-webpack": "0.0.4",
-    "history": "^1.12.5",
+    "history": "1.13.x",
     "jsdom": "^7.0.2",
     "json-loader": "^0.5.3",
     "less": "^2.5.3",

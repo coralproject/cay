@@ -1,13 +1,13 @@
 import React from 'react';
 import Radium from 'radium';
 
-import Header from './layout/header/header';
+import Heading from './heading';
 
 class ContentHeader extends React.Component {
   render() {
     return (
       <section style={styles.base}>
-        <Header size="large" subhead="some optional subhead">{this.props.title}</Header>
+        <Heading size="large" subhead="some optional subhead">{this.props.title}</Heading>
       </section>
     );
   }

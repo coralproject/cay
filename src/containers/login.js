@@ -6,7 +6,7 @@ import settings from '../settings';
 
 import Card from '../components/cards/card';
 import CardHeader from '../components/cards/card-header';
-import TextField from '../components/form/text-field';
+import TextField from '../components/forms/text-field';
 import Button from '../components/button';
 
 @connect(state => {

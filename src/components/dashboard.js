@@ -1,13 +1,14 @@
 import React from 'react';
 import Radium from 'radium';
 
-import RadioButtonGroup from './form/radio-button-group';
-import RadioButton from './form/radio-button';
-import Checkbox from './form/checkbox';
+import RadioButtonGroup from './forms/radio-button-group';
+import RadioButton from './forms/radio-button';
+import Checkbox from './forms/checkbox';
 import Card from './cards/card';
 import CardHeader from './cards/card-header';
 import Paper from './paper';
-import ProgressBar from './progress-bar';
+import LinearProgress from './linear-progress';
+import Slider from './slider';
 
 import settings from '../settings';
 
@@ -20,7 +21,6 @@ export default class Dashboard extends React.Component {
       <div style={styles.wrapper}>
         <ContentHeader title="Dashboard" />
         <div style={styles.base}>
-          <ProgressBar />
           <Checkbox label="this is a checkbox label"/>
           <RadioButtonGroup>
             <RadioButton value="luke skywalker" label="Luke" checked="checked" />
@@ -34,17 +34,21 @@ export default class Dashboard extends React.Component {
                 title="Module Name A"
                 subtitle="A Super Awesome Subtitle"/>
               <Paper>
+                <LinearProgress mode="indeterminate" />
                 <p>Bacon ipsum dolor amet spare ribs chicken pork loin kevin swine turkey flank picanha pastrami brisket ham beef ribs shoulder. Venison chuck ball tip biltong ground round, salami sausage beef kielbasa. Porchetta ground round brisket bresaola. Sirloin salami prosciutto capicola beef ribs, doner pancetta. Pork loin turkey spare ribs leberkas, beef jowl drumstick t-bone jerky brisket pig ball tip picanha. Ham sirloin shankle chuck, cupim shoulder meatball tail.</p>
               </Paper>
             </Card>
+
             <Card style={styles.panel}>
               <CardHeader
                 title="Module Name B"
                 subtitle=""/>
               <Paper>
+                <Slider />
                 <p>Bacon ipsum dolor amet spare ribs chicken pork loin kevin swine turkey flank picanha pastrami brisket ham beef ribs shoulder. Venison chuck ball tip biltong ground round, salami sausage beef kielbasa. Porchetta ground round brisket bresaola. Sirloin salami prosciutto capicola beef ribs, doner pancetta. Pork loin turkey spare ribs leberkas, beef jowl drumstick t-bone jerky brisket pig ball tip picanha. Ham sirloin shankle chuck, cupim shoulder meatball tail.</p>
               </Paper>
             </Card>
+
             <Card style={[styles.panel, styles.lastChild]}>
               <CardHeader
                 title="Module Name C"

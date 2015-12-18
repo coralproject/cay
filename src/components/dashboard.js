@@ -21,7 +21,7 @@ export default class Dashboard extends React.Component {
       <div style={styles.wrapper}>
         <ContentHeader title="Dashboard" />
         <div style={styles.base}>
-          <Checkbox label="this is a checkbox label"/>
+          <Checkbox label="this is a checkbox label" clickHandler={this.props.getComments}/>
           <RadioButtonGroup>
             <RadioButton value="luke skywalker" label="Luke" checked="checked" />
             <RadioButton value="obi wan kenobi" label="Obi Wan" />

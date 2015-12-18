@@ -11,7 +11,7 @@ class Header extends React.Component {
     return (
       <nav style={styles.nav}>
         <IconButton style={styles.sidebarToggle} name="fa-navicon" />
-        <Searchbar />
+        <Searchbar style={styles.searchbar}/>
         <NavbarMenu />
       </nav>
     );
@@ -28,6 +28,9 @@ var styles = {
     border: 'none',
     minHeight: '50px',
     borderRadius: 0
+  },
+  searchbar: {
+    width: '40%'
   }
 };
 

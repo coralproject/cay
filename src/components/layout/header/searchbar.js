@@ -8,7 +8,7 @@ import IconButton from '../../icon-button';
 class Searchbar extends React.Component {
   render() {
     return (
-      <form style={styles.form} action="#" method="GET">
+      <form style={[styles.form, this.props.style]} action="#" method="GET">
         <input style={styles.input} name="search" placeholder="Search..." type="text" />
         <IconButton name="fa-search" />
       </form>
@@ -21,7 +21,6 @@ let styles = {
     borderLeft: '1px solid #F87F70',
     borderRight: '1px solid #F87F70',
     float: 'left',
-    width: '40%',
     height: '50px',
     margin: '0px 0px 0px 10%'
   },

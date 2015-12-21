@@ -16,13 +16,13 @@ export default class UserRow extends React.Component {
   }
 
   render() {
+    console.log('UserRow', this.props.user.user_id);
     return (
       <ListItem
         style={[this.props.style, styles.base]}
-        leftAvatar={<Avatar size="small" roundCorners={true} src={this.props.user.avatar} />}
         onClick={this.handleClick.bind(this)}
       >
-        {this.props.user.name}
+        {this.props.user.user_id}
         <p style={styles.sub}>Rating | Test Score | Comments</p>
       </ListItem>
     );

@@ -12,7 +12,7 @@ export default class UserList extends React.Component {
   static propTypes = {
     onUserClick: PropTypes.func.isRequired,
     users: PropTypes.arrayOf(PropTypes.shape({
-      name: PropTypes.string.isRequired
+      user_id: PropTypes.string.isRequired
     }).isRequired).isRequired
   }
 

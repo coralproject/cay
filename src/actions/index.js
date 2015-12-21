@@ -72,7 +72,7 @@ export const unsetFilters = () => {
 export const selectUser = (user) => {
   return {
     type: SELECT_USER,
-    user
+    user: user.user_id
   }
 };
 

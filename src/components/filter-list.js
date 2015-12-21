@@ -5,7 +5,7 @@ import settings from '../settings';
 
 import List from './lists/list';
 import FilterRow from './filter-row';
-import Header from './layout/header/header';
+import Heading from './heading';
 
 @Radium
 export default class FilterList extends React.Component {
@@ -19,7 +19,7 @@ export default class FilterList extends React.Component {
 
     return (
       <List  style={[styles.base, style]}>
-        <Header size="small" style={styles.header}>Filter List</Header>
+        <Heading size="small" style={styles.heading}>Filter List</Heading>
         {this.props.filters.map((filter, i) => {
           return <FilterRow
             filter={filter}
@@ -37,7 +37,7 @@ var styles = {
   base: {
 
   },
-  header: {
+  heading: {
     paddingLeft: 10
   },
   row: {

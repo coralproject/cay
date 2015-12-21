@@ -36,5 +36,5 @@ Please be civil when discussing contributions to the Cay front end code and the 
 ## TODO:
 - how to internationalize (R2L languages)
 - how to continue to make things accessible
-
+- how to create a production build of bundle.js
 

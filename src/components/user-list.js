@@ -5,7 +5,7 @@ import settings from '../settings';
 
 import List from './lists/list';
 import UserRow from './user-row';
-import Header from './layout/header/header';
+import Heading from './heading';
 
 @Radium
 export default class UserList extends React.Component {
@@ -19,7 +19,7 @@ export default class UserList extends React.Component {
   render() {
     return (
       <List style={[styles.base, this.props.style]}>
-        <Header size="small" style={styles.header}>User List</Header>
+        <Heading size="small" style={styles.heading}>User List</Heading>
         {this.props.users.map((user, i) => <UserRow {...this.props} user={user} style={styles.row} key={i} /> )}
       </List>
     );
@@ -30,7 +30,7 @@ var styles = {
   base: {
 
   },
-  header: {
+  heading: {
     paddingLeft: 10
   },
   row: {

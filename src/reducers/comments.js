@@ -18,10 +18,13 @@ const comments = (state = initialState, action) => {
     case types.COMMENT_SUCCESS:
       console.log(action);
       return Object.assign({}, state, {items: action.data.results[0].Docs});
-    
+
     case types.COMMENT_FAIL:
       return Object.assign({}, state, {items: []});
 
+    default:
+      console.log('no reducer matches:', action.type);
+      return state;
   }
 }
 

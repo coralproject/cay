@@ -13,7 +13,7 @@ import Button from '../components/button';
   return state.auth;
 })
 @Radium
-export default class Login extends React.Component {
+class Login extends React.Component {
   render() {
     const {dispatch} = this.props;
 
@@ -64,3 +64,5 @@ var styles = {
     marginBottom: 25
   }
 }
+
+export default Login;

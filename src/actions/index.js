@@ -14,6 +14,11 @@ export const LOGIN_REQUEST = 'LOGIN_REQUEST'; // login http request started
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS'; // login request success
 export const LOGIN_FAIL = 'LOGIN_FAIL'; // login request failure
 
+export const COMMENT_CLICK = 'COMMENT_CLICK';
+export const COMMENTS_REQUEST = 'COMMENTS_REQUEST';
+export const COMMENTS_SUCCESS = 'COMMENTS_SUCCESS';
+export const COMMENTS_FAIL = 'COMMENTS_FAIL';
+
 export const requestData = () => {
   return {
     type: REQUEST_DATA
@@ -74,8 +79,8 @@ export const requestUsersFailure = (err) => {
   return {
     type: REQUEST_USERS_FAILURE,
     err
-  }
-}
+  };
+};
 
 export const fetchUsers = (query) => {
   return (dispatch) => {
@@ -96,11 +101,64 @@ export const initLogin = (username, password) => {
     type: LOGIN_INIT,
     username,
     password
-  }
-}
+  };
+};
 
 export const loginUser = (username, password) => {
   return (dispatch) => {
     dispatch();
+  };
+};
+
+export const clickCommentButton = () => {
+  return {
+    type: 'COMMENT_CLICK'
+  };
+};
+
+export const fetchComments = () => {
+  return (dispatch) => {
+    dispatch(requestComments());
+
+
+    var myHeaders = new Headers({'Authorization': 'Basic NmQ3MmU2ZGQtOTNkMC00NDEzLTliNGMtODU0NmQ0ZDM1MTRlOlBDeVgvTFRHWjhOdGZWOGVReXZObkpydm4xc2loQk9uQW5TNFpGZGNFdnc9'});
+
+    var myInit = { method: 'GET',
+               headers: myHeaders,
+               mode: 'cors',
+               cache: 'default' };
+
+               console.log(myHeaders.get('Authorization'));
+
+    var myRequest = new Request('http://localhost:4000/1.0/query/top_commenters_by_count/exec', myInit);
+
+    fetch(myRequest)
+      .then(response => response.json())
+      .then(json => dispatch(receiveComments(json)))
+      .catch(err => dispatch(receiveCommentsFailure(err)));
+
+
+/*      .then(response => {
+        dispatch(COMMENTS_SUCCESS, response);
+        console.log(response);
+      })
+      .catch(err => {
+        console.log(err);
+      });*/
+  };
+};
+
+export const requestComments = () => {
+  return {
+    type: COMMENTS_REQUEST
+  };
+};
+
+export const receiveComments = (data) => {
+  return {
+    type: COMMENTS_SUCCESS,
+    data
   }
 }
+
+

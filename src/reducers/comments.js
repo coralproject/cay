@@ -12,14 +12,14 @@ const comments = (state = initialState, action) => {
     case types.COMMENT_CLICK:
       return state;
 
-    case types.COMMENT_REQUEST:
+    case types.COMMENTS_REQUEST:
       return Object.assign({}, state, {loading: true});
 
-    case types.COMMENT_SUCCESS:
+    case types.COMMENTS_SUCCESS:
       console.log(action);
       return Object.assign({}, state, {items: action.data.results[0].Docs});
 
-    case types.COMMENT_FAIL:
+    case types.COMMENTS_FAIL:
       return Object.assign({}, state, {items: []});
 
     default:

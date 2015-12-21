@@ -19,6 +19,21 @@ export const COMMENTS_REQUEST = 'COMMENTS_REQUEST';
 export const COMMENTS_SUCCESS = 'COMMENTS_SUCCESS';
 export const COMMENTS_FAIL = 'COMMENTS_FAIL';
 
+export const STORE_COMMENTS = 'STORE_COMMENTS';
+
+var getInit = () => {
+  var headers = new Headers({'Authorization': 'Basic NmQ3MmU2ZGQtOTNkMC00NDEzLTliNGMtODU0NmQ0ZDM1MTRlOlBDeVgvTFRHWjhOdGZWOGVReXZObkpydm4xc2loQk9uQW5TNFpGZGNFdnc9'});
+
+  var init = {
+    method: 'GET',
+    headers: headers,
+    mode: 'cors',
+    cache: 'default'
+  };
+
+  return init;
+}
+
 export const requestData = () => {
   return {
     type: REQUEST_DATA
@@ -86,7 +101,7 @@ export const fetchUsers = (query) => {
   return (dispatch) => {
     dispatch(requestUsers(query));
 
-    fetch('http://localhost:3000/data/users.json')
+    fetch('http://localhost:4000/1.0/query/top_commenters_by_count/exec', getInit())
       .then(response => response.json())
       .then(json => dispatch(recieveUsers(json)))
       .catch(err => dispatch(requestUsersFailure(err)));
@@ -121,20 +136,15 @@ export const fetchComments = () => {
     dispatch(requestComments());
 
 
-    var myHeaders = new Headers({'Authorization': 'Basic NmQ3MmU2ZGQtOTNkMC00NDEzLTliNGMtODU0NmQ0ZDM1MTRlOlBDeVgvTFRHWjhOdGZWOGVReXZObkpydm4xc2loQk9uQW5TNFpGZGNFdnc9'});
 
-    var myInit = { method: 'GET',
-               headers: myHeaders,
-               mode: 'cors',
-               cache: 'default' };
-
-               console.log(myHeaders.get('Authorization'));
-
-    var myRequest = new Request('http://localhost:4000/1.0/query/top_commenters_by_count/exec', myInit);
+    var myRequest = new Request('http://localhost:4000/1.0/query/top_commenters_by_count/exec', getInit());
 
     fetch(myRequest)
       .then(response => response.json())
-      .then(json => dispatch(receiveComments(json)))
+      .then(json => {
+        dispatch(receiveComments(json));
+        dispatch(storeComments(json));
+      })
       .catch(err => dispatch(receiveCommentsFailure(err)));
 
 
@@ -161,4 +171,10 @@ export const receiveComments = (data) => {
   }
 }
 
+export const storeComments = (data) => {
+  return {
+    type: STORE_COMMENTS,
+    data
+  }
+}
 

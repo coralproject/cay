@@ -29,8 +29,8 @@ class Root extends React.Component {
           <Router>
             <Route path="/" component={App}/>
             <Route path="login" component={Login}/>
-            <Route path="user-manager/:filter_id/:user_id" component={UserManager}/>
-            <Route path="user-manager/:filter_id" component={UserManager}/>
+            <Route path="user-manager/:filterId/:userId" component={UserManager}/>
+            <Route path="user-manager/:filterId" component={UserManager}/>
             <Route path="user-manager" component={UserManager}/>
           </Router>
         </Provider>

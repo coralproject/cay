@@ -32,8 +32,7 @@ export default class Trust extends React.Component {
 
           <UserList
             style={styles.userTable}
-            users={this.props.users}
-            onUserClick={this.props.onUserClick} />
+            users={this.props.users} />
 
           <UserDetail
             {...this.props.selectedUser}

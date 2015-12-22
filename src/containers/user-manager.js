@@ -16,21 +16,24 @@ import settings from '../settings';
 @Radium
 export default class UserManager extends React.Component {
 
+  // only the first time
+  componentWillMount() {
+    if (this.props.params.filterId) {
+      this.props.dispatch(fetchUserListIfNotFetched(this.props.params.filterId));
+    }
+  }
+
+  // every time the state is updated
   componentDidUpdate() {
 
-
-    if (this.props.params.filter_id) {
-      this.props.dispatch(fetchUserListIfNotFetched(this.props.params.filter_id));
+    if (this.props.params.filterId) {
+      this.props.dispatch(fetchUserListIfNotFetched(this.props.params.filterId));
     }
 
   }
 
   render() {
     const {dispatch} = this.props;
-
-    console.log('UserManager', this.props);
-
-
 
     return (
       <div style={styles}>

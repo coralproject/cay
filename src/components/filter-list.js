@@ -18,9 +18,6 @@ export default class FilterList extends React.Component {
   render() {
     const {style, ...other} = this.props;
 
-      console.log("Filer row", this.props.active, this.props.id);
-
-
     return (
 
       <List style={[styles.base, style]}>

@@ -9,8 +9,6 @@ const initialState = {
 
 const userList = (state = initialState, action) => {
 
-  console.log('userList', action);
-
   switch (action.type) {
     case types.SET_FILTER:
       return Object.assign({}, state, {activeFilter: action.id});

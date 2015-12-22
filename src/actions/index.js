@@ -101,13 +101,8 @@ export const fetchUserListIfNotFetched = (filterId) => {
 
   return (dispatch,getState) => {
 
-    console.log("The STATE", getState());
-    console.log("FilterId", filterId, "gs loaded", getState().userList.loadedFilterId);
-
-    if (getState().userList.loadedFilterId != filterId) {
-
+    if (! getState().userList.loading && getState().userList.loadedFilterId !== filterId) {
       return dispatch(fetchUsers(filterId));
-
     }
 
     return {
@@ -121,7 +116,7 @@ export const fetchUserListIfNotFetched = (filterId) => {
 
 export const fetchUsers = (filterId) => {
   return (dispatch) => {
-    console.log("dispatching requestUsers");
+
     dispatch(requestUsers(filterId));
 
     fetch('http://localhost:4000/1.0/query/top_commenters_by_count/exec', getInit())

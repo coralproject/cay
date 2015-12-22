@@ -8,7 +8,9 @@ import settings from '../../settings';
 export default class ListItem extends React.Component {
 
   handleClick(e) {
-    this.props.onClick(e);
+    if (typeof this.props.onClick === "function") {
+      this.props.onClick(e);
+    }
   }
 
   render() {

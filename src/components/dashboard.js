@@ -19,7 +19,9 @@ export default class Dashboard extends React.Component {
   render() {
     return (
       <div style={styles.wrapper}>
+        
         <ContentHeader title="Dashboard" />
+        
         <div style={styles.base}>
           <Checkbox label="this is a checkbox label" clickHandler={this.props.getComments}/>
           <RadioButtonGroup>

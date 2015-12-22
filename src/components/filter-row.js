@@ -1,20 +1,20 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 
+import {Link} from 'react-router';
+
 import settings from '../settings';
 import ListItem from './lists/list-item';
 import Badge from './badge';
 import Icon from './icon';
+
+
 
 @Radium
 export default class FilterRow extends React.Component {
 
   static propTypes = {
     onFilterClick: PropTypes.func.isRequired
-  }
-
-  handleClick(e) {
-    this.props.onFilterClick(this.props.id);
   }
 
   render() {
@@ -25,11 +25,15 @@ export default class FilterRow extends React.Component {
           styles.base,
           this.props.active && styles.active
         ]}
-        onClick={this.handleClick.bind(this)}
+
         leftAvatar={<Icon size="medium" inverse={true} color={settings.coralPink} name="fa-folder" />}
       >
+        <Link to={`/user-manager/${this.props.id}`}>
+          {this.props.filter}
+        </Link>
+
         <Badge count={Math.random().toString().slice(-2)} style={styles.badge}/>
-        {this.props.filter}
+    
       </ListItem>
     );
   }

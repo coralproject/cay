@@ -14,8 +14,10 @@ const initialState = {
 };
 
 const users = (state = initialState, action) => {
-
+/*
   switch (action.type) {
+
+
     case types.SET_FILTER:
       return Object.assign({}, state, {activeFilter: action.id});
     case types.USERS_REQUEST:
@@ -33,6 +35,10 @@ const users = (state = initialState, action) => {
       console.log('no reducer matches:', action.type);
       return state;
   }
-}
+  */
+
+  return state;
+
+};
 
 export default users;

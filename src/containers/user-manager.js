@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import Radium from "radium";
 
-import {setFilter, selectUser, fetchUsers} from '../actions';
+import {fetchUserListIfNotFetched, setFilter, selectUser, fetchUsers} from '../actions';
 
 import Header from '../components/layout/header/header';
 import Sidebar from '../components/layout/sidebar/sidebar';
@@ -11,14 +11,26 @@ import Trust from '../components/trust';
 import settings from '../settings';
 
 @connect(state => {
-  return state.users;
+  return state.userList;
 })
 @Radium
 export default class UserManager extends React.Component {
+
+  componentDidUpdate() {
+
+
+    if (this.props.params.filter_id) {
+      this.props.dispatch(fetchUserListIfNotFetched(this.props.params.filter_id));
+    }
+
+  }
+
   render() {
     const {dispatch} = this.props;
 
     console.log('UserManager', this.props);
+
+
 
     return (
       <div style={styles}>

@@ -19,8 +19,19 @@ export default class UserList extends React.Component {
   render() {
     return (
       <List style={[styles.base, this.props.style]}>
-        <Heading size="small" style={styles.heading}>User List</Heading>
-        {this.props.users.map((user, i) => <UserRow {...this.props} user={user} style={styles.row} key={i} /> )}
+        <Heading size="small" style={styles.heading}>
+          User List
+        </Heading>
+        {
+          this.props.users.map((user, i) => {
+            return (
+              <UserRow {...this.props} 
+                user={user} 
+                style={styles.row} 
+                key={i} />
+            )
+          })
+        }
       </List>
     );
   }

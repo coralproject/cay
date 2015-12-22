@@ -1,6 +1,8 @@
 import React from 'react';
 import Radium from 'radium';
 
+import {connect} from 'react-redux';
+
 import settings from '../settings';
 
 import Avatar from './avatar';
@@ -9,19 +11,20 @@ import Tabs from './tabs/tabs';
 import Stats from './stats/stats';
 import Stat from './stats/stat';
 import Card from './cards/card';
-import Header from './layout/header/header';
+import Heading from './heading';
 
 import CommentDetail from './comment-detail';
 
+@connect((state) => { return state.users})
 @Radium
 export default class UserDetail extends React.Component {
   render() {
 
     console.log('UserDetail', this.props);
-
+    console.log("from connect",this.props.users)
     return (
       <Card style={[styles.base, this.props.style]}>
-        <Header size="medium">{this.props.name}</Header>
+        <Heading size="medium">{this.props.name}</Heading>
         <div style={styles.topPart}>
           <Avatar style={styles.avatar} src={this.props.avatar || ''} size={200} />
           <Stats style={styles.stats}>

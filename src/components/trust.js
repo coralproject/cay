@@ -17,21 +17,28 @@ export default class Trust extends React.Component {
   }
 
   render() {
+
     return (
       <div style={styles.wrapper}>
-        <ContentHeader title="Trust Module Header" />
+        <ContentHeader 
+          title="Trust Module Header" />
+
         <div style={styles.base}>
           <FilterList
+            active={this.props.params.filter_id}
             style={styles.filterTable}
             onFilterClick={this.props.onFilterClick}
             filters={['All Users', 'New Users', 'Warned Users', 'Trusted Contributors', 'Trolls']} />
+
           <UserList
             style={styles.userTable}
-            users={this.props.userData.items}
+            users={this.props.users}
             onUserClick={this.props.onUserClick} />
+
           <UserDetail
             {...this.props.selectedUser}
             style={styles.userDetail} />
+
         </div>
       </div>
     );

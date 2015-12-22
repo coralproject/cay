@@ -76,10 +76,10 @@ export const selectUser = (user) => {
   }
 };
 
-export const requestUsers = (query) => {
+export const requestUsers = (filterId) => {
   return {
     type: USERS_REQUEST,
-    query
+    filterId
   };
 };
 
@@ -97,9 +97,32 @@ export const requestUsersFailure = (err) => {
   };
 };
 
-export const fetchUsers = (query) => {
+export const fetchUserListIfNotFetched = (filterId) => {
+
+  return (dispatch,getState) => {
+
+    console.log("The STATE", getState());
+    console.log("FilterId", filterId, "gs loaded", getState().userList.loadedFilterId);
+
+    if (getState().userList.loadedFilterId != filterId) {
+
+      return dispatch(fetchUsers(filterId));
+
+    }
+
+    return {
+      type: 'NOOP'
+    };
+  
+  };
+
+};
+
+
+export const fetchUsers = (filterId) => {
   return (dispatch) => {
-    dispatch(requestUsers(query));
+    console.log("dispatching requestUsers");
+    dispatch(requestUsers(filterId));
 
     fetch('http://localhost:4000/1.0/query/top_commenters_by_count/exec', getInit())
       .then(response => response.json())
@@ -125,19 +148,16 @@ export const loginUser = (username, password) => {
   };
 };
 
-export const clickCommentButton = () => {
-  return {
-    type: 'COMMENT_CLICK'
-  };
-};
 
-export const fetchComments = () => {
+export const fetchCommentsByUser = (data) => {
   return (dispatch) => {
     dispatch(requestComments());
 
 
+    console.log(userId);
 
-    var myRequest = new Request('http://localhost:4000/1.0/query/top_commenters_by_count/exec', getInit());
+
+    var myRequest = new Request('http://localhost:4000/1.0/query/comments_by_user/exec?user_id=' + data.user_id, getInit());
 
     fetch(myRequest)
       .then(response => response.json())

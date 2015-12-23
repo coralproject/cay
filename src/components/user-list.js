@@ -10,7 +10,6 @@ import Heading from './heading';
 @Radium
 export default class UserList extends React.Component {
   static propTypes = {
-    onUserClick: PropTypes.func.isRequired,
     users: PropTypes.arrayOf(PropTypes.shape({
       user_id: PropTypes.string.isRequired
     }).isRequired).isRequired
@@ -25,9 +24,9 @@ export default class UserList extends React.Component {
         {
           this.props.users.map((user, i) => {
             return (
-              <UserRow {...this.props} 
-                user={user} 
-                style={styles.row} 
+              <UserRow {...this.props}
+                user={user}
+                style={styles.row}
                 key={i} />
             )
           })

@@ -1,15 +1,15 @@
 import React from 'react';
 import Radium from 'radium';
 
-import Icon from '../../icon';
-import IconButton from '../../icon-button';
+import Icon from '../icon';
+import IconButton from '../icon-button';
 
 @Radium
 class Searchbar extends React.Component {
   render() {
     return (
       <form style={[styles.form, this.props.style]} action="#" method="GET">
-        <input style={styles.input} name="search" placeholder="Search..." type="text" />
+        <input className="searchBar__input" style={styles.input} name="search" placeholder="Search..." type="text" />
         <IconButton name="fa-search" />
       </form>
     );
@@ -22,7 +22,8 @@ let styles = {
     borderRight: '1px solid #F87F70',
     float: 'left',
     height: '50px',
-    margin: '0px 0px 0px 10%'
+    margin: '0px 0px 0px 10%',
+    outline: 'none'
   },
   input: {
     border: 'none',
@@ -34,7 +35,8 @@ let styles = {
     transition: 'background-color .3s',
     ':focus': {
       background: 'white',
-      color: '#ccc'
+      color: '#ccc',
+      outline: 'none'
     }
   }
 }

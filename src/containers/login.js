@@ -17,8 +17,6 @@ class Login extends React.Component {
   render() {
     const {dispatch} = this.props;
 
-    console.log('Login container', this.props);
-
     return (
       <div style={styles.base}>
         <Card style={styles.loginModal}>

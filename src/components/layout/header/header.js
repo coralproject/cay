@@ -1,7 +1,7 @@
 import React from 'react';
 import Radium from 'radium';
 
-import Searchbar from './searchbar';
+import Searchbar from '../../forms/searchbar';
 import NavbarMenu from '../nav/navbar-menu';
 import IconButton from '../../icon-button';
 

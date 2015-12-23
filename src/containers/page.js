@@ -5,10 +5,6 @@ import settings from '../settings';
 
 import Header from '../components/layout/header/header';
 import Sidebar from '../components/layout/sidebar/sidebar';
-import Dashboard from '../components/dashboard';
-
-
-
 
 @Radium
 class Page extends React.Component {
@@ -16,10 +12,12 @@ class Page extends React.Component {
   render() {
 
     return (
-      <div style={styles}>
+      <div style={styles.base}>
         <Header />
         <Sidebar />
-        {this.props.children}
+        <div style={styles.wrapper}>        
+          {this.props.children}
+        </div>
       </div>
     );
   }
@@ -29,6 +27,13 @@ class Page extends React.Component {
 export default Page;
 
 const styles = {
-  background: settings.coralPink
+  base: {
+    background: settings.coralPink,
+  },
+  wrapper:  {
+    marginLeft: '230px',
+    backgroundColor: '#ecf0f5',
+    minHeight: (window.innerHeight - 50) + 'px'
+  },
 };
 

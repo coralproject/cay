@@ -6,13 +6,11 @@ import settings from '../settings';
 
 import {fetchComments} from '../actions';
 
-import Header from '../components/layout/header/header';
-import Sidebar from '../components/layout/sidebar/sidebar';
-import Dashboard from '../components/dashboard';
+import Page from './page';
 
 @connect(state => state.data)
 @Radium
-class App extends React.Component {
+class Dashboard extends React.Component {
 
   getComments() {
     this.props.dispatch(fetchComments());
@@ -21,17 +19,15 @@ class App extends React.Component {
   render() {
 
     return (
-      <div style={styles}>
-        <Header />
-        <Sidebar />
-        <Dashboard getComments={this.getComments.bind(this)}/>
-      </div>
+      <Page>
+        <h1>Dashboard goes here</h1>
+      </Page>
     );
   }
 }
 
 // same as the @connect decorator above
-export default App;
+export default Dashboard;
 
 const styles = {
   background: settings.coralPink

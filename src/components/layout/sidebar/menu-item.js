@@ -10,7 +10,7 @@ class MenuItem extends React.Component {
   render() {
     return (
       <li style={styles.base}>
-        <a style={styles.link} href="#">
+        <a style={styles.link} href={this.props.target}>
           <Icon size="small" name={this.props.icon} />
           <span>{this.props.name}</span>
           <i></i>

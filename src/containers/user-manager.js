@@ -40,28 +40,26 @@ export default class UserManager extends React.Component {
     return (
 
       <Page>
-        <div style={styles.wrapper}>
-          <ContentHeader 
-            title="User Manager" />
+        
+        <ContentHeader title="User Manager" />
 
-          <div style={styles.base}>
-            <FilterList
-              active={this.props.params.filter_id}
-              style={styles.filterTable}
-              onFilterClick={this.props.onFilterClick}
-              filters={['All Users', 'New Users', 'Warned Users', 'Trusted Contributors', 'Trolls']} />
+        <div style={styles.base}>
+          <FilterList
+            active={this.props.params.filter_id}
+            style={styles.filterTable}
+            onFilterClick={this.props.onFilterClick}
+            filters={['All Users', 'New Users', 'Warned Users', 'Trusted Contributors', 'Trolls']} />
 
-            <UserList
-              style={styles.userTable}
-              users={this.props.users} />
+          <UserList
+            style={styles.userTable}
+            users={this.props.users} />
 
-            <UserDetail
-              {...this.props.selectedUser}
-              style={styles.userDetail} />
+          <UserDetail
+            {...this.props.selectedUser}
+            style={styles.userDetail} />
 
-          </div>
         </div>
-
+        
       </Page>
     );
   }
@@ -74,11 +72,6 @@ var styles = {
     paddingBottom: 15,
     paddingLeft: 15,
     paddingRight: 15 // why do I have to write these all out?
-  },
-  wrapper:  {
-    marginLeft: '230px',
-    backgroundColor: '#ecf0f5',
-    minHeight: (window.innerHeight - 50) + 'px'
   },
   filterTable: {
     flex: 1,

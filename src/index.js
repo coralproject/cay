@@ -2,7 +2,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 // React Router
-import { Router, Route, Link } from 'react-router';
+import { browserHistory, Router, Route, Link } from 'react-router';
 // React Redux
 import { Provider, connect } from 'react-redux';
 // Redux Devtools
@@ -25,10 +25,11 @@ require('../fonts/glyphicons-halflings-regular.woff');
 
 class Root extends React.Component {
   render() {
+    console.log(browserHistory)
     return (
       <div>
         <Provider store={store}>
-          <Router>
+          <Router history={browserHistory}>
             <Route path="/" component={Dashboard}/>
             <Route path="/settings" component={Settings}/>
             <Route path="login" component={Login}/>

@@ -108,7 +108,7 @@ export const fetchUserListIfNotFetched = (filterId) => {
     return {
       type: 'NOOP'
     };
-  
+
   };
 
 };
@@ -119,7 +119,7 @@ export const fetchUsers = (filterId) => {
 
     dispatch(requestUsers(filterId));
 
-    fetch('http://localhost:4000/1.0/query/top_commenters_by_count/exec', getInit())
+    fetch('http://localhost:4000/1.0/query/test_basic/exec', getInit())
       .then(response => response.json())
       .then(json => dispatch(recieveUsers(json)))
       .catch(err => dispatch(requestUsersFailure(err)));

@@ -14,7 +14,7 @@ class Sidebar extends React.Component {
   }
 }
 
-var styles = {
+const styles = {
   position: 'absolute',
   top: 0,
   left: 0,

@@ -12,7 +12,7 @@ export default class Card extends React.Component {
   }
 }
 
-var styles = {
+const styles = {
   base: {
     borderTop: '3px solid ' + settings.borderColorBase,
     borderRight: '1px solid ' + settings.borderColorBase,

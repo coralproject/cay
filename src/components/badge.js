@@ -13,13 +13,13 @@ class Badge extends React.Component {
   }
 }
 
-let styles = {
+const styles = {
   base: {
     backgroundColor: '#aaa',
     padding: '5px',
     color: 'white',
     borderRadius: 5,
-    fontSize: '8px',
+    fontSize: '8px'
   }
 };
 

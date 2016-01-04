@@ -48,7 +48,7 @@ export default class Tabs extends React.Component {
   }
 }
 
-var styles = {
+const styles = {
   bar: {
     display: 'table',
     width: '100%'

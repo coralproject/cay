@@ -15,7 +15,7 @@ class MainHeader extends React.Component {
   }
 }
 
-var styles = {
+const styles = {
   base: {
     background: '#F77160',
     position: 'relative',

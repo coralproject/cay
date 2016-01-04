@@ -24,14 +24,14 @@ export default class Avatar extends React.Component {
       s = {
         width: 78,
         height: 78
-      }
+      };
     }
 
     if (Number.isInteger(size)) {
       s = {
         width: size - 2,
         height: size - 2
-      }
+      };
     }
 
     if (this.props.roundCorners) {
@@ -44,17 +44,17 @@ export default class Avatar extends React.Component {
   render() {
     return (
       <div style={[
-          styles.base,
-          this.getStyles(this.props.size),
-          this.props.style
-        ]}>
+        styles.base,
+        this.getStyles(this.props.size),
+        this.props.style
+      ]}>
         <img style={styles.image} src={this.props.src} />
       </div>
     );
   }
 }
 
-var styles = {
+const styles = {
   base: {
     border: '1px solid rgba(0, 0, 0, .08)',
     overflow: 'hidden'

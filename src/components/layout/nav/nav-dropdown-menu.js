@@ -15,7 +15,7 @@ class NavDropdownMenu extends React.Component {
   }
 }
 
-let styles = {
+const styles = {
   float: 'right'
 }
 

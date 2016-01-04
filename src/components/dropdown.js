@@ -10,7 +10,7 @@ class Dropdown extends React.Component {
   }
 }
 
-var styles = {
+const styles = {
   backgroundColor: 'white',
   padding: '10px'
 };

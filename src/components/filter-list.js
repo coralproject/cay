@@ -8,12 +8,7 @@ import FilterRow from './filter-row';
 import Heading from './heading';
 import {Link} from 'react-router';
 
-@Radium
-export default class FilterList extends React.Component {
-
-  static propTypes = {
-    onFilterClick: PropTypes.func.isRequired
-  }
+class FilterList extends React.Component {
 
   render() {
     const {style, ...other} = this.props;
@@ -33,9 +28,9 @@ export default class FilterList extends React.Component {
                 style={styles.row}
                 {...other}
                 id={i}
-                key={i} 
+                key={i}
                 active={(this.props.active == i)} />
-            )
+            );
           })
         }
       </List>
@@ -43,7 +38,11 @@ export default class FilterList extends React.Component {
   }
 }
 
-var styles = {
+FilterList.propTypes = {
+  onFilterClick: PropTypes.func.isRequired
+};
+
+const styles = {
   base: {
 
   },
@@ -53,4 +52,6 @@ var styles = {
   row: {
 
   }
-}
+};
+
+export default Radium(FilterList);

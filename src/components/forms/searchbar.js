@@ -16,7 +16,7 @@ class Searchbar extends React.Component {
   }
 }
 
-let styles = {
+const styles = {
   form: {
     borderLeft: '1px solid #F87F70',
     borderRight: '1px solid #F87F70',

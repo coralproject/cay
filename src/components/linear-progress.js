@@ -63,7 +63,7 @@ export default class LinearProgress extends React.Component {
   }
 }
 
-var styles = {
+const styles = {
   base: {
     height: 4,
     borderRadius: 2,

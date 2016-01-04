@@ -18,7 +18,7 @@ class Header extends React.Component {
   }
 }
 
-var styles = {
+const styles = {
   sidebarToggle: {
     float: 'left'
   },

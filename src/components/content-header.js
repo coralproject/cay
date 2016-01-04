@@ -13,11 +13,11 @@ class ContentHeader extends React.Component {
   }
 }
 
-var styles = {
+const styles = {
   base: {
     position: 'relative',
     padding: '15px 15px 0 15px'
   }
-}
+};
 
-export default ContentHeader;
+export default Radium(ContentHeader);

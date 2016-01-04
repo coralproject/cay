@@ -17,7 +17,7 @@ class Menu extends React.Component {
   }
 }
 
-var styles = {
+const styles = {
 
 };
 

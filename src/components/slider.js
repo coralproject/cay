@@ -10,7 +10,7 @@ export default class Slider extends React.Component {
   }
 }
 
-var styles = {
+const styles = {
   base: {
 
   }

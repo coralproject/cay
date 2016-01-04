@@ -15,7 +15,7 @@ export default class Stat extends React.Component {
   }
 }
 
-var styles = {
+const styles = {
   base: {
     fontSize: '.8em',
     paddingTop: 5,

@@ -20,7 +20,7 @@ class MenuItem extends React.Component {
   }
 }
 
-var styles = {
+const styles = {
   base: {
     backgroundColor: '#F77160',
     ':hover': {

@@ -15,7 +15,7 @@ class Page extends React.Component {
       <div style={styles.base}>
         <Header />
         <Sidebar />
-        <div style={styles.wrapper}>        
+        <div style={styles.wrapper}>
           {this.props.children}
         </div>
       </div>
@@ -28,12 +28,11 @@ export default Page;
 
 const styles = {
   base: {
-    background: settings.coralPink,
+    background: settings.coralPink
   },
   wrapper:  {
     marginLeft: '230px',
     backgroundColor: '#ecf0f5',
     minHeight: (window.innerHeight - 50) + 'px'
-  },
+  }
 };
-

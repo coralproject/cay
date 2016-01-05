@@ -7,10 +7,11 @@ import IconButton from '../../icon-button';
 
 @Radium
 class Header extends React.Component {
+
   render() {
     return (
       <nav style={styles.nav}>
-        <IconButton style={styles.sidebarToggle} name="fa-navicon" />
+        <IconButton onClick={this.props.onHamburgerClick} style={styles.sidebarToggle} name="fa-navicon" />
         <Searchbar style={styles.searchbar}/>
         <NavbarMenu />
       </nav>
@@ -24,7 +25,6 @@ const styles = {
   },
   nav: {
     marginBottom: 0,
-    marginLeft: '230px',
     border: 'none',
     minHeight: '50px',
     borderRadius: 0

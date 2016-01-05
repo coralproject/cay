@@ -25,7 +25,6 @@ require('../fonts/glyphicons-halflings-regular.woff');
 
 class Root extends React.Component {
   render() {
-    console.log(browserHistory)
     return (
       <div>
         <Provider store={store}>

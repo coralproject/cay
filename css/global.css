@@ -14,6 +14,10 @@ time, mark, audio, video {
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
+body {
+  background-color: #f77160;
+}
+
 p {
   font-size: 12px;
   line-height: 1.5em;

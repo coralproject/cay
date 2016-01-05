@@ -34,7 +34,7 @@ const settings = {
   primaryColor: '#337ab7',
   successColor: '#5cb85c',
   infoColor: '#5bc0de',
-  warningColor: '#f0ad4e',
+  warningColor: 'rgb(240, 173, 78)',
   dangerColor: '#d9534f'
 };
 

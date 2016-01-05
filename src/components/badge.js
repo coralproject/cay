@@ -1,7 +1,6 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import Radium from 'radium';
 
-@Radium
 class Badge extends React.Component {
   render() {
     return (
@@ -13,6 +12,10 @@ class Badge extends React.Component {
   }
 }
 
+Badge.propTypes = {
+  count: PropTypes.number.isRequired
+};
+
 const styles = {
   base: {
     backgroundColor: '#aaa',
@@ -23,4 +26,4 @@ const styles = {
   }
 };
 
-export default Badge;
+export default Radium(Badge);

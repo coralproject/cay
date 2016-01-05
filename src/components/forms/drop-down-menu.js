@@ -11,9 +11,10 @@ class DropDownMenu extends React.Component {
 
 DropDownMenu.propTypes = {
   menuItems: PropTypes.arrayOf({
-
+    value: PropTypes.string.isRequired,
+    text: PropTypes.any.isRequired
   }),
-  openImmediately: PropTypes.bool  
+  openImmediately: PropTypes.bool
 };
 
 export default Radium(DropDownMenu);

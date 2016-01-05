@@ -8,8 +8,6 @@ import React from 'react';
 import Radium from 'radium';
 import Sidebar from 'react-sidebar';
 
-import settings from '../settings';
-
 import Header from '../components/layout/header/header';
 import Menu from '../components/layout/sidebar/menu';
 
@@ -18,7 +16,11 @@ class Page extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {sidebarOpen: false, sidebarDocked: false, forceDocked: true};
+    this.state = {
+      sidebarOpen: false,
+      sidebarDocked: false,
+      shadow: false
+    };
   }
 
   onSetSidebarOpen(open) {
@@ -40,10 +42,8 @@ class Page extends React.Component {
   }
 
   toggleSidebar() {
-    console.log('toggleSidebar', this.state.forceDocked);
     this.setState({
-      sidebarDocked: !this.state.forceDocked,
-      forceDocked: !this.state.forceDocked
+      sidebarDocked: !this.state.sidebarDocked
     });
   }
 

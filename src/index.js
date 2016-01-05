@@ -2,13 +2,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 // React Router
-import { browserHistory, Router, Route, Link } from 'react-router';
+import { browserHistory, Router, Route } from 'react-router';
 // React Redux
-import { Provider, connect } from 'react-redux';
+import { Provider } from 'react-redux';
 // Redux Devtools
 import { DevTools, DebugPanel, LogMonitor } from 'redux-devtools/lib/react';
 
-import configureStore from "./store";
+import configureStore from './store';
 import Settings from './containers/settings';
 
 import Dashboard from './containers/dashboard';
@@ -41,7 +41,7 @@ class Root extends React.Component {
           <DevTools store={store} monitor={LogMonitor} />
         </DebugPanel>
       </div>
-    )
+    );
   }
 }
 

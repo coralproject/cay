@@ -6,22 +6,19 @@ var chai = require('chai');
 var assert = chai.assert;
 
 var Card = require('../../../src/components/cards/card');
-var CardHeader = require('../../../src/components/cards/card-header');
-var CardTitle = require('../../../src/components/cards/card-title');
-var settings = require('../../../src/settings');
 
 describe('Card component', function () {
 
-  before('render and locate element', function () {
+  beforeEach('render and locate Card node', function () {
     var renderedComponent = ReactTestUtils.renderIntoDocument(
       <Card>
-        <CardHeader title="Card Title" />
+        <div className="foo" />
       </Card>
     );
 
-    var inputComponent = ReactTestUtils.findRenderedDOMComponentWithTag(
+    var inputComponent = ReactTestUtils.findRenderedDOMComponentWithClass(
       renderedComponent,
-      'div'
+      'card'
     );
 
     this.inputElement = inputComponent;
@@ -35,5 +32,20 @@ describe('Card component', function () {
     var card = ReactTestUtils.findRenderedDOMComponentWithTag(renderedCard, 'div');
 
     assert.equal(card.style.backgroundColor, 'red');
+  });
+
+  it('should render provided children', function () {
+    var renderedCard = ReactTestUtils.renderIntoDocument(
+      React.createElement(
+        Card,
+        {},
+        <div className="foo" />,
+        <div className="foo" />
+      )
+    );
+
+    var divs = ReactTestUtils.scryRenderedDOMComponentsWithClass(renderedCard, 'foo');
+
+    assert.lengthOf(divs, 2);
   });
 });

@@ -7,7 +7,7 @@ import settings from '../../settings';
 export default class Card extends React.Component {
   render() {
     return (
-      <div style={[styles.base, this.props.style]}>{this.props.children}</div>
+      <div className="card" style={[styles.base, this.props.style]}>{this.props.children}</div>
     );
   }
 }

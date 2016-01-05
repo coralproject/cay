@@ -7,7 +7,7 @@ var settings = require('../../src/settings.js');
 
 describe('Button component', function () {
 
-  before('render and locate element', function () {
+  beforeEach('render and locate element', function () {
     var renderedComponent = ReactTestUtils.renderIntoDocument(
       <Button size="small" category="warning">sample test</Button>
     );

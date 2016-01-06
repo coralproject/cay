@@ -20,16 +20,17 @@ class DataExplorer extends React.Component {
 
   parseDataFromXenia() {
     const parsedData = this.props.dataset.map((item) => {
-      console.log(item)
+      console.log(item);
       return {
         id: item._id.user_id,
         comments: item.comments
-      }
-    })
+      };
+    });
     return parsedData;
   }
 
   createVisualization() {
+    console.log('createVisualization', this);
     return (
         <VictoryChart
           height={500}

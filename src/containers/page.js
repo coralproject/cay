@@ -29,7 +29,11 @@ class Page extends React.Component {
 
   componentWillMount() {
     var mql = window.matchMedia('(min-width: 800px)');
-    mql.addEventListener(this.mediaQueryChanged.bind(this));
+    if (mql.addEventListener) {
+      mql.addEventListener(this.mediaQueryChanged.bind(this));
+    } else { // wtf Firefox.
+      mql.addListener(this.mediaQueryChanged.bind(this));
+    }
     this.setState({mql: mql, sidebarDocked: mql.matches});
   }
 

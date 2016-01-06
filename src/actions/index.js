@@ -216,7 +216,7 @@ const receiveDataExplorationDataset = (data) => {
   }
 }
 
-const dataExplorationFetchError = (err) => {
+const dataExplorationFetchError = (error) => {
   return {
     type: DATA_EXPLORATION_FETCH_ERROR,
     error
@@ -234,9 +234,3 @@ export const fetchDataExplorationDataset = (params) => {
       .catch(err => dispatch(dataExplorationFetchError(err)));
   };
 };
-
-
-
-
-
-

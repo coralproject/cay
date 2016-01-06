@@ -13,7 +13,7 @@ class Badge extends React.Component {
 }
 
 Badge.propTypes = {
-  count: PropTypes.number.isRequired
+
 };
 
 const styles = {

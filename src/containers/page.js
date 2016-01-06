@@ -42,9 +42,7 @@ class Page extends React.Component {
   }
 
   toggleSidebar() {
-    this.setState({
-      sidebarDocked: !this.state.sidebarDocked
-    });
+    this.setState({ sidebarDocked: !this.state.sidebarDocked });
   }
 
   render() {

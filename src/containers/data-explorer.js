@@ -64,10 +64,12 @@ class DataExplorer extends React.Component {
 
   render() {
 
+    console.log('dataset?', this.props.dataset);
+
     return (
       <Page>
         <h1>Data Explorer</h1>
-        {this.props.dataset ? this.props.dataset[0].comments : "no data"}
+        {this.props.dataset ? this.createVisualization.call(this) : "no data"}
       </Page>
     );
   }

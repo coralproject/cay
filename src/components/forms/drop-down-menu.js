@@ -11,7 +11,7 @@ class DropDownMenu extends React.Component {
 
 DropDownMenu.propTypes = {
   menuItems: PropTypes.arrayOf({
-    value: PropTypes.string.isRequired,
+    payload: PropTypes.string.isRequired,
     text: PropTypes.any.isRequired
   }),
   openImmediately: PropTypes.bool

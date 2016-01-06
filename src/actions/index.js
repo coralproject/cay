@@ -188,15 +188,15 @@ export const receiveComments = (data) => {
   return {
     type: COMMENTS_SUCCESS,
     data
-  }
-}
+  };
+};
 
 export const storeComments = (data) => {
   return {
     type: STORE_COMMENTS,
     data
-  }
-}
+  };
+};
 
 
 
@@ -205,23 +205,23 @@ export const storeComments = (data) => {
 
 const requestDataExplorationDataset = () => {
   return {
-    type: REQUEST_DATA_EXPLORATION_DATASET,
-  }
-}
+    type: REQUEST_DATA_EXPLORATION_DATASET
+  };
+};
 
 const receiveDataExplorationDataset = (data) => {
   return {
     type: RECEIVE_DATA_EXPLORATION_DATASET,
     data
-  }
-}
+  };
+};
 
 const dataExplorationFetchError = (error) => {
   return {
     type: DATA_EXPLORATION_FETCH_ERROR,
     error
-  }
-}
+  };
+};
 
 export const fetchDataExplorationDataset = (params) => {
   return (dispatch) => {
@@ -231,6 +231,9 @@ export const fetchDataExplorationDataset = (params) => {
       .then(json => {
         dispatch(receiveDataExplorationDataset(json));
       })
-      .catch(err => dispatch(dataExplorationFetchError(err)));
+      .catch(err => {
+        console.log('shit!', err);
+      });
+      // .catch(err => dispatch(dataExplorationFetchError(err)));
   };
 };

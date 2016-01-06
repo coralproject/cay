@@ -14,7 +14,7 @@ const data_exploration = (state = {
   case types.RECEIVE_DATA_EXPLORATION_DATASET:
     return Object.assign({}, state, {
       loading: false,
-      dataset: action.data,
+      dataset: action.data.results[0].Docs,
       error: null
     });
   case types.DATA_EXPLORATION_FETCH_ERROR:

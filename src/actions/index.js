@@ -211,7 +211,7 @@ const requestDataExplorationDataset = () => {
 
 const receiveDataExplorationDataset = (data) => {
   return {
-    type: REQUEST_DATA_EXPLORATION_DATASET,
+    type: RECEIVE_DATA_EXPLORATION_DATASET,
     data
   }
 }
@@ -225,10 +225,9 @@ const dataExplorationFetchError = (err) => {
 
 export const fetchDataExplorationDataset = (params) => {
   return (dispatch) => {
-    console.log('fetchin')
     dispatch(requestDataExplorationDataset());
     fetch(prefix + '1.0/query/top_commenters_by_count/exec', getInit())
-      .then(response => response.json())
+      .then(res => res.json())
       .then(json => {
         dispatch(receiveDataExplorationDataset(json));
       })

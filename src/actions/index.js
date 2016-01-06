@@ -21,6 +21,10 @@ export const COMMENTS_FAIL = 'COMMENTS_FAIL';
 
 export const STORE_COMMENTS = 'STORE_COMMENTS';
 
+export const REQUEST_DATA_EXPLORATION_DATASET = "REQUEST_DATA_EXPLORATION_DATASET";
+export const RECEIVE_DATA_EXPLORATION_DATASET = "RECEIVE_DATA_EXPLORATION_DATASET";
+export const DATA_EXPLORATION_FETCH_ERROR = "DATA_EXPLORATION_FETCH_ERROR";
+
 var getInit = () => {
   var headers = new Headers({'Authorization': 'Basic NmQ3MmU2ZGQtOTNkMC00NDEzLTliNGMtODU0NmQ0ZDM1MTRlOlBDeVgvTFRHWjhOdGZWOGVReXZObkpydm4xc2loQk9uQW5TNFpGZGNFdnc9'});
 
@@ -148,10 +152,6 @@ export const fetchCommentsByUser = (data) => {
   return (dispatch) => {
     dispatch(requestComments());
 
-
-    console.log(userId);
-
-
     var myRequest = new Request('http://localhost:4000/1.0/query/comments_by_user/exec?user_id=' + data.user_id, getInit());
 
     fetch(myRequest)
@@ -192,4 +192,46 @@ export const storeComments = (data) => {
     data
   }
 }
+
+
+
+
+/* data exploration */
+
+const requestDataExplorationDataset = () => {
+  return {
+    type: REQUEST_DATA_EXPLORATION_DATASET,
+  }
+}
+
+const receiveDataExplorationDataset = (data) => {
+  return {
+    type: REQUEST_DATA_EXPLORATION_DATASET,
+    data
+  }
+}
+
+const dataExplorationFetchError = (err) => {
+  return {
+    type: DATA_EXPLORATION_FETCH_ERROR,
+    error
+  }
+}
+
+export const fetchDataExplorationDataset = (params) => {
+  return (dispatch) => {
+    dispatch(requestDataExplorationDataset());
+    fetch('http://localhost:4000/1.0/query/top_commenters_by_count/exec', getInit())
+      .then(response => response.json())
+      .then(json => {
+        dispatch(receiveDataExplorationDataset(json));
+      })
+      .catch(err => dispatch(dataExplorationFetchError(err)));
+  };
+};
+
+
+
+
+
 

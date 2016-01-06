@@ -20,11 +20,11 @@ const userList = (state = initialState, action) => {
       return Object.assign({}, state, {loading: false, loadingFilterId: null, showTheError: 'TODO'});
 
     case types.RECIEVE_USERS:
-      return Object.assign({}, state, 
+      return Object.assign({}, state,
           {
             loading: false,
-            loadingFilterId: null, 
-            loadedFilterId: state.loadingFilterId, 
+            loadingFilterId: null,
+            loadedFilterId: state.loadingFilterId,
             users: action.message.results[0].Docs
           }
         );
@@ -36,7 +36,7 @@ const userList = (state = initialState, action) => {
       return Object.assign({}, state, {selectedUser: action.user});
 
     default:
-      console.log('no reducer matches:', action.type);
+      // console.log('no reducer matches:', action.type);
       return state;
   }
 }

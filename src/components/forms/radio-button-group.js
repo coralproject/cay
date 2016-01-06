@@ -40,7 +40,7 @@ export default class RadioButtonGroup extends React.Component {
             })
           );
         })}
-        </div>
+      </div>
     );
   }
 }

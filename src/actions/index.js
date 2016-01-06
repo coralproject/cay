@@ -25,6 +25,8 @@ export const REQUEST_DATA_EXPLORATION_DATASET = "REQUEST_DATA_EXPLORATION_DATASE
 export const RECEIVE_DATA_EXPLORATION_DATASET = "RECEIVE_DATA_EXPLORATION_DATASET";
 export const DATA_EXPLORATION_FETCH_ERROR = "DATA_EXPLORATION_FETCH_ERROR";
 
+/* config */
+
 var getInit = () => {
   var headers = new Headers({'Authorization': 'Basic NmQ3MmU2ZGQtOTNkMC00NDEzLTliNGMtODU0NmQ0ZDM1MTRlOlBDeVgvTFRHWjhOdGZWOGVReXZObkpydm4xc2loQk9uQW5TNFpGZGNFdnc9'});
 
@@ -37,6 +39,9 @@ var getInit = () => {
 
   return init;
 }
+
+const prefix = true ? "http://localhost:4000/" : "production prefix goes here";
+
 
 export const requestData = () => {
   return {
@@ -123,7 +128,7 @@ export const fetchUsers = (filterId) => {
 
     dispatch(requestUsers(filterId));
 
-    fetch('http://localhost:4000/1.0/query/test_basic/exec', getInit())
+    fetch(prefix + '1.0/query/test_basic/exec', getInit())
       .then(response => response.json())
       .then(json => dispatch(recieveUsers(json)))
       .catch(err => dispatch(requestUsersFailure(err)));
@@ -152,7 +157,7 @@ export const fetchCommentsByUser = (data) => {
   return (dispatch) => {
     dispatch(requestComments());
 
-    var myRequest = new Request('http://localhost:4000/1.0/query/comments_by_user/exec?user_id=' + data.user_id, getInit());
+    var myRequest = new Request(prefix + '1.0/query/comments_by_user/exec?user_id=' + data.user_id, getInit());
 
     fetch(myRequest)
       .then(response => response.json())
@@ -220,8 +225,9 @@ const dataExplorationFetchError = (err) => {
 
 export const fetchDataExplorationDataset = (params) => {
   return (dispatch) => {
+    console.log('fetchin')
     dispatch(requestDataExplorationDataset());
-    fetch('http://localhost:4000/1.0/query/top_commenters_by_count/exec', getInit())
+    fetch(prefix + '1.0/query/top_commenters_by_count/exec', getInit())
       .then(response => response.json())
       .then(json => {
         dispatch(receiveDataExplorationDataset(json));

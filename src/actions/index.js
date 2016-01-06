@@ -210,6 +210,7 @@ const requestDataExplorationDataset = () => {
 };
 
 const receiveDataExplorationDataset = (data) => {
+  console.log('receiveDataExplorationDataset');
   return {
     type: RECEIVE_DATA_EXPLORATION_DATASET,
     data
@@ -224,16 +225,24 @@ const dataExplorationFetchError = (error) => {
 };
 
 export const fetchDataExplorationDataset = (params) => {
-  return (dispatch) => {
-    dispatch(requestDataExplorationDataset());
-    fetch(prefix + '1.0/query/top_commenters_by_count/exec', getInit())
+  console.log('fetchDataExplorationDataset called?');
+  return (dispatch, getState) => {
+
+    if (!getState().dataExplorer.loading) {
+      // do stuff
+      dispatch(requestDataExplorationDataset());
+      fetch(prefix + '1.0/query/top_commenters_by_count/exec', getInit())
       .then(res => res.json())
       .then(json => {
         dispatch(receiveDataExplorationDataset(json));
       })
       .catch(err => {
-        console.log('shit!', err);
+        console.log('oh noes', err);
+        dispatch(dataExplorationFetchError(err))
       });
-      // .catch(err => dispatch(dataExplorationFetchError(err)));
+    } else {
+      return { type: 'NOOP' };
+    }
+
   };
 };

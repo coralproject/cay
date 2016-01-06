@@ -1,4 +1,4 @@
-import * as types from "../actions";
+import * as types from '../actions';
 
 const data_exploration = (state = {
   loading: false,

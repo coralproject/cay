@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import Radium from "radium";
+import _ from "lodash";
 
 import settings from '../settings';
 
@@ -15,54 +16,58 @@ import Page from './page';
 class DataExplorer extends React.Component {
 
   componentWillMount() {
-    console.log('componentWillMount?');
     this.props.dispatch(fetchDataExplorationDataset());
   }
 
   parseDataFromXenia() {
-    const parsedData = this.props.dataset.map((item) => {
-      console.log(item);
+    const victoryFormat = this.props.dataset.map((item) => {
       return {
-        id: item._id.user_id,
-        comments: item.comments,
-        x: item._id.user_id,
+        x: item._id.user_id + "" , // hack - cast to string for now for spacing
         y: item.comments
       };
     });
-
-    console.log('parsedData', parsedData);
-
-    return parsedData;
+    return victoryFormat;
   }
 
   createVisualization() {
-    console.log('createVisualization', this);
     return (
       <VictoryChart
-        height={500}
+        height={600}
+        width={800}
         padding={{
           top: 75,
-          bottom: 40,
+          bottom: 140,
           left: 70,
           right: 40
         }}
         domainPadding={{x: 20}}>
         <VictoryAxis
-          label="commenter" />
+          style={{
+            axis: {stroke: "gray"},
+            ticks: {stroke: "gray"},
+            tickLabels: {
+              fontSize: 10,
+              transform: `rotate(45deg) translate(30px, 0px)`,
+            },
+            axisLabels: {
+              fontsize: 16,
+              transform: `translate(30px, 0px)`
+            }
+          }}
+          label="commenter id" />
         <VictoryAxis dependentAxis
           label="# of comments"
-          tickValues={[0, 1.5, 3, 4.5]}
           style={{
             grid: {
-              stroke: "grey",
+              stroke: "lightgrey",
               strokeWidth: 1
             },
-            axis: {stroke: "black"},
+            axis: {stroke: "gray"},
             ticks: {stroke: "transparent"}
           }}/>
         <VictoryBar
           style={{data:
-            {width: 15, fill: "orange"}
+            {width: 1, fill: "orange"}
           }}
           data={this.parseDataFromXenia()}/>
       </VictoryChart>
@@ -70,13 +75,10 @@ class DataExplorer extends React.Component {
   }
 
   render() {
-
-    console.log('render() dataset?', this.props.dataset);
-
     return (
       <Page>
         <h1>Data Explorer</h1>
-        {this.props.dataset ? this.createVisualization.call(this) : "no nothin"}
+          {this.props.dataset ? this.createVisualization.call(this) : "Spinner"}
       </Page>
     );
   }

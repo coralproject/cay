@@ -6,8 +6,7 @@ import Radium from "radium";
 import settings from '../../settings';
 import Icon from '../../components/icon';
 
-import CustomizerToggle from "./customizerToggle";
-import CustomizerSlider from "./customizerSlider";
+import CustomizerSettings from "./customizerSettings";
 
 import {showCustomizer, hideCustomizer} from "../../actions/playground";
 
@@ -16,14 +15,12 @@ import {showCustomizer, hideCustomizer} from "../../actions/playground";
 class Customizer extends React.Component {
 
   onCustomizerTogglerClick() {
-  	if (this.props.customizerIsVisible) {
-  		this.props.dispatch(hideCustomizer())
-  	} else {
-  		this.props.dispatch(showCustomizer())
-  	}
+  	this.setState({ settingsExpanded: !this.state.settingsExpanded });
   }
 
   render() {
+
+  	var customizerSettings = this.state.settingsExpanded ? <CustomizerSettings /> : null;
 
     return (
     	<div>
@@ -34,10 +31,7 @@ class Customizer extends React.Component {
 	    		</h2>
 	    		<button style={ styles.customizeTogglerButton }><Icon size="medium" name="fa-caret-down" /></button>
 	    	</div>
-	    	<div style={ [ styles.customizerContent.base, this.props.customizerIsVisible ? styles.customizerContent.visible : styles.customizerContent.hidden ] }>
-	    		<CustomizerToggle />
-	    		<CustomizerSlider />
-	    	</div>
+	    	{ customizerSettings }
         </div>
     );
 

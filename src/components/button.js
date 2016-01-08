@@ -3,6 +3,7 @@ import Radium from 'radium';
 import color from 'color';
 import settings from '../settings';
 
+@Radium
 class Button extends React.Component {
 
   render() {
@@ -115,4 +116,4 @@ const styles = {
   }
 };
 
-export default Radium(Button);
+export default Button;

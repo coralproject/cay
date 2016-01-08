@@ -42,8 +42,8 @@ function undoEnsureArray(x) {
 
 // undoEnsureArray(ensureArray(x)) === x
 
-var ReactSlider = React.createClass({
-  displayName: 'ReactSlider',
+var Slider = React.createClass({
+  displayName: 'Slider',
 
   propTypes: {
 
@@ -695,6 +695,11 @@ var ReactSlider = React.createClass({
     const className = this.props.barClassName + ' ' + this.props.barClassName + '-' + i;
     const barStyle = this._buildBarStyle(offsetFrom, this.state.upperBound - offsetTo);
 
+    console.log('_renderBar', arguments);
+    console.log('className', className);
+    console.log('barStyle', barStyle);
+    console.log('-------------------');
+
     // React.createElement('div', {
     //   key: 'bar' + i,
     //   ref: 'bar' + i,
@@ -773,17 +778,6 @@ var ReactSlider = React.createClass({
     var bars = props.withBars ? this._renderBars(offset) : null;
     var handles = this._renderHandles(offset);
 
-    // React.createElement('div', {
-    //     ref: 'slider',
-    //     style: {position: 'relative'},
-    //     className: props.className + (props.disabled ? ' disabled' : ''),
-    //     onMouseDown: this._onSliderMouseDown,
-    //     onClick: this._onSliderClick
-    //   },
-    //   bars,
-    //   handles
-    // )
-
     var localStyles = this.props.orientation === 'vertical' ? styles.verticalSlider : styles.horizontalSlider;
 
     return (
@@ -801,7 +795,7 @@ var ReactSlider = React.createClass({
   }
 });
 
-export default Radium(ReactSlider);
+export default Radium(Slider);
 
 const styles = {
   base: {
@@ -810,8 +804,7 @@ const styles = {
   },
   horizontalSlider: {
     width: '100%',
-    height: 12,
-    maxWidth: 600
+    height: 12
   },
   verticalSlider: {
     maxHeight: 500,

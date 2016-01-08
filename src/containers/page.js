@@ -57,6 +57,7 @@ class Page extends React.Component {
       <Sidebar
         sidebar={sidebarContent}
         open={this.state.sidebarOpen}
+        shadow={this.state.shadow}
         docked={this.state.sidebarDocked}
         onSetOpen={this.onSetSidebarOpen.bind(this)}>
         <Header onHamburgerClick={this.toggleSidebar.bind(this)}/>

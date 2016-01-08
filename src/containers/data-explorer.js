@@ -2,24 +2,27 @@ import React from "react";
 import { connect } from "react-redux";
 import Radium from "radium";
 import _ from "lodash";
-
 import settings from '../settings';
-
 import { fetchDataExplorationDataset } from '../actions';
-
-import { VictoryChart, VictoryAxis, VictoryBar } from 'victory';
-
 import Page from './page';
+import DataExplorerVisualization from "../components/data-explorer-visualization";
 
 @connect(state => state.dataExplorer)
 @Radium
 class DataExplorer extends React.Component {
 
   componentWillMount() {
-    this.props.dispatch(fetchDataExplorationDataset());
+    this.props.dispatch(fetchDataExplorationDataset("top_commenters_by_count", null));
+    // this.props.dispatch(fetchDataExplorationDataset("comments_per_day", {
+    //   start_date: "2014-01-01",
+    //   end_date: "2015-01-01"
+    // }))
+    // field was top_commenters_by_count w/ no query string
+    // http://localhost:4000/comments_per_day/exec?start_date=2014-01-01&end_date=2015-01-01
   }
 
   parseDataFromXenia() {
+
     const victoryFormat = this.props.dataset.map((item) => {
       return {
         x: item._id.user_id + "" , // hack - cast to string for now for spacing
@@ -29,56 +32,15 @@ class DataExplorer extends React.Component {
     return victoryFormat;
   }
 
-  createVisualization() {
-    return (
-      <VictoryChart
-        height={600}
-        width={800}
-        padding={{
-          top: 75,
-          bottom: 140,
-          left: 70,
-          right: 40
-        }}
-        domainPadding={{x: 20}}>
-        <VictoryAxis
-          style={{
-            axis: {stroke: "gray"},
-            ticks: {stroke: "gray"},
-            tickLabels: {
-              fontSize: 10,
-              transform: `rotate(45deg) translate(30px, 0px)`,
-            },
-            axisLabels: {
-              fontsize: 16,
-              transform: `translate(30px, 0px)`
-            }
-          }}
-          label="commenter id" />
-        <VictoryAxis dependentAxis
-          label="# of comments"
-          style={{
-            grid: {
-              stroke: "lightgrey",
-              strokeWidth: 1
-            },
-            axis: {stroke: "gray"},
-            ticks: {stroke: "transparent"}
-          }}/>
-        <VictoryBar
-          style={{data:
-            {width: 1, fill: "orange"}
-          }}
-          data={this.parseDataFromXenia()}/>
-      </VictoryChart>
-    );
-  }
-
   render() {
     return (
       <Page>
         <h1>Data Explorer</h1>
-          {this.props.dataset ? this.createVisualization.call(this) : "Spinner"}
+          {
+            this.props.dataset ?
+              <DataExplorerVisualization dataset={this.parseDataFromXenia.call(this)}/> :
+              "Spinner"
+          }
       </Page>
     );
   }

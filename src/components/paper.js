@@ -1,13 +1,15 @@
 import React from 'react';
-import Radim from 'radium';
+import Radium from 'radium';
 
-export default class Paper extends React.Component {
+class Paper extends React.Component {
   render() {
     return (
-      <div style={styles}>{this.props.children}</div>
+      <div style={[styles, this.props.style]}>{this.props.children}</div>
     );
   }
 }
+
+export default Radium(Paper);
 
 const styles = {
   padding: 10

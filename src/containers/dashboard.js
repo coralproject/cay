@@ -2,15 +2,15 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 
-import settings from '../settings';
-
 import {fetchComments} from '../actions';
 
 import Page from './page';
+import Card from '../components/cards/card';
 import DropDownMenu from '../components/forms/drop-down-menu';
+// import Slider from '../components/slider';
+import ReactSlider from '../components/slider';
 
 @connect(state => state.data)
-@Radium
 class Dashboard extends React.Component {
 
   getComments() {
@@ -30,15 +30,33 @@ class Dashboard extends React.Component {
     return (
       <Page>
         <h1>Dashboard goes here</h1>
-        <DropDownMenu menuItems={menuItems} />
+        <div style={styles.base}>
+          <Card style={styles.pane}>
+            <p>Here is a sweet slider</p>
+            <ReactSlider defaultValue={50} orientation="horizontal" withBars={true} />
+            <p>another slider with two values</p>
+            {/*<ReactSlider defaultValue={[20, 80]} orientation="horizontal" withBars />*/}
+          </Card>
+          <Card style={styles.pane}>
+            <DropDownMenu menuItems={menuItems} />
+          </Card>
+        </div>
       </Page>
     );
   }
 }
 
 // same as the @connect decorator above
-export default Dashboard;
+export default Radium(Dashboard);
 
-const styles = {
-  background: settings.coralPink
+var styles = {
+  base: {
+    display: 'flex'
+  },
+  pane: {
+    flex: 1,
+    marginRight: 5,
+    marginLeft: 5,
+    padding: 10
+  }
 };

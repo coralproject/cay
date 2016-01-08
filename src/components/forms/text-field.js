@@ -69,7 +69,7 @@ const styles = {
   },
   underlineHighlight: {
     borderColor: 'transparent',
-    borderBottomColor: settings.coralPink,
+    borderBottomColor: settings.brandColor,
     width: 0, // somehow transition this to 100%
     height: 0,
     bottom: -3,

@@ -1,11 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 
-import settings from '../settings';
-
-import Avatar from './avatar';
-import Button from './button';
-import FormattedDate from './formatted-date';
+import DateTime from './utils/date-time';
 
 @Radium
 export default class CommentDetail extends React.Component {
@@ -13,7 +9,7 @@ export default class CommentDetail extends React.Component {
     return (
       <div style={[styles.base, this.props.style]}>
         CommentDetail
-        <FormattedDate date={new Date()} />
+        <p>{DateTime.format(new Date())}</p>
       </div>
     );
   }

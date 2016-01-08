@@ -85,5 +85,5 @@ class DataExplorer extends React.Component {
 export default DataExplorer;
 
 const styles = {
-  background: settings.coralPink
+  background: settings.brandColor
 };

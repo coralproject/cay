@@ -14,11 +14,10 @@ import Settings from './containers/settings';
 import Dashboard from './containers/dashboard';
 import UserManager from './containers/user-manager';
 import Login from './containers/login';
-import DataExplorer from './containers/data-explorer'
+import DataExplorer from './containers/data-explorer';
 
 const store = configureStore();
 
-// require('../css/AdminLTE.min.css');
 require('../css/reset.css');
 require('../css/global.css');
 

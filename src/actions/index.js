@@ -1,5 +1,5 @@
-export const REQUEST_DATA = "REQUEST_DATA";
-export const RECEIVE_DATA = "RECEIVE_DATA";
+export const REQUEST_DATA = 'REQUEST_DATA';
+export const RECEIVE_DATA = 'RECEIVE_DATA';
 
 export const SET_FILTER = 'SET_FILTER';
 export const UNSET_FILTERS = 'UNSET_FILTERS';
@@ -21,9 +21,9 @@ export const COMMENTS_FAIL = 'COMMENTS_FAIL';
 
 export const STORE_COMMENTS = 'STORE_COMMENTS';
 
-export const REQUEST_DATA_EXPLORATION_DATASET = "REQUEST_DATA_EXPLORATION_DATASET";
-export const RECEIVE_DATA_EXPLORATION_DATASET = "RECEIVE_DATA_EXPLORATION_DATASET";
-export const DATA_EXPLORATION_FETCH_ERROR = "DATA_EXPLORATION_FETCH_ERROR";
+export const REQUEST_DATA_EXPLORATION_DATASET = 'REQUEST_DATA_EXPLORATION_DATASET';
+export const RECEIVE_DATA_EXPLORATION_DATASET = 'RECEIVE_DATA_EXPLORATION_DATASET';
+export const DATA_EXPLORATION_FETCH_ERROR = 'DATA_EXPLORATION_FETCH_ERROR';
 
 /* config */
 
@@ -38,9 +38,9 @@ var getInit = () => {
   };
 
   return init;
-}
+};
 
-const prefix = true ? "http://localhost:4000/" : "production prefix goes here";
+var prefix = ('yep') ? 'http://localhost:4000/' : 'production prefix goes here';
 
 
 export const requestData = () => {
@@ -61,7 +61,7 @@ export const fetchData = (message) => {
     dispatch(requestData());
     setTimeout(() => {
       dispatch(receiveData({message}));
-    }, 300)
+    }, 300);
   };
 };
 
@@ -191,6 +191,13 @@ export const receiveComments = (data) => {
   };
 };
 
+export const receiveCommentsFailure = (err) => {
+  return {
+    type: COMMENTS_FAIL,
+    err
+  };
+};
+
 export const storeComments = (data) => {
   return {
     type: STORE_COMMENTS,
@@ -238,7 +245,7 @@ export const fetchDataExplorationDataset = (params) => {
       })
       .catch(err => {
         console.log('oh noes', err);
-        dispatch(dataExplorationFetchError(err))
+        dispatch(dataExplorationFetchError(err));
       });
     } else {
       return { type: 'NOOP' };

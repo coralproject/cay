@@ -26,7 +26,7 @@ export default class FilterRow extends React.Component {
           this.props.active && styles.active
         ]}
 
-        leftAvatar={<Icon size="medium" inverse={true} color={settings.coralPink} name="fa-folder" />}
+        leftAvatar={<Icon size="medium" inverse={true} color={settings.brandColor} name="fa-folder" />}
       >
         <Link to={`/user-manager/${this.props.id}`}>
           {this.props.filter}

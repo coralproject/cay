@@ -30,5 +30,5 @@ class Settings extends React.Component {
 export default Settings;
 
 const styles = {
-  background: settings.coralPink
+  background: settings.brandColor
 };

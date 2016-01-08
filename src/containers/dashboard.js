@@ -36,7 +36,7 @@ class Dashboard extends React.Component {
             <p>Here is a sweet slider</p>
             <Slider defaultValue={50} orientation="horizontal" withBars={true} />
             <p>another slider with two values</p>
-            {/*<ReactSlider defaultValue={[20, 80]} orientation="horizontal" withBars />*/}
+            <Slider defaultValue={[20, 80]} orientation="horizontal" withBars />
           </Card>
           <Card style={styles.pane}>
             <DropDownMenu menuItems={menuItems} />

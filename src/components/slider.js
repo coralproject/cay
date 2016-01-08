@@ -1,5 +1,6 @@
 import React from 'react';
 import Radium from 'radium';
+import _ from '../lib/lodash.min';
 
 import settings from '../settings';
 
@@ -43,7 +44,6 @@ function undoEnsureArray(x) {
 // undoEnsureArray(ensureArray(x)) === x
 
 var Slider = React.createClass({
-  displayName: 'Slider',
 
   propTypes: {
 
@@ -308,16 +308,6 @@ var Slider = React.createClass({
     };
     style[this._posMinKey()] = offset + 'px';
     return style;
-  },
-
-  _buildBarStyle: function (min, max) {
-    var obj = {
-      position: 'absolute',
-      willChange: this.state.index >= 0 ? this._posMinKey() + ',' + this._posMaxKey() : ''
-    };
-    obj[this._posMinKey()] = min;
-    obj[this._posMaxKey()] = max;
-    return obj;
   },
 
   _getClosestIndex: function (pixelOffset) {
@@ -690,15 +680,26 @@ var Slider = React.createClass({
     return res;
   },
 
+  _buildBarStyle: function (min, max) {
+    var obj = {
+      position: 'absolute',
+      willChange: this.state.index >= 0 ? this._posMinKey() + ',' + this._posMaxKey() : ''
+    };
+    obj[this._posMinKey()] = min;
+    obj[this._posMaxKey()] = max;
+    return obj;
+  },
+
   _renderBar: function (i, offsetFrom, offsetTo) {
 
     const className = this.props.barClassName + ' ' + this.props.barClassName + '-' + i;
-    const barStyle = this._buildBarStyle(offsetFrom, this.state.upperBound - offsetTo);
+    let barStyle = this._buildBarStyle(offsetFrom, this.state.upperBound - offsetTo);
 
-    console.log('_renderBar', arguments);
-    console.log('className', className);
-    console.log('barStyle', barStyle);
-    console.log('-------------------');
+    if ((i === 0 && !_.isArray(this.props.defaultValue)) || i === 1 && _.isArray(this.props.defaultValue)) {
+      barStyle = _.assign({}, barStyle, styles.selectedBar);
+    } else {
+      barStyle = _.assign({}, barStyle, styles.unselectedBar);
+    }
 
     // React.createElement('div', {
     //   key: 'bar' + i,
@@ -706,8 +707,6 @@ var Slider = React.createClass({
     //   className: this.props.barClassName + ' ' + this.props.barClassName + '-' + i,
     //   style: this._buildBarStyle(offsetFrom, this.state.upperBound - offsetTo)
     // })
-
-    console.log('renderBar', this.props);
 
     return (
       <div

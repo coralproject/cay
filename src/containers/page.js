@@ -18,8 +18,9 @@ class Page extends React.Component {
     super(props);
     this.state = {
       sidebarOpen: false,
-      sidebarDocked: false,
-      shadow: false
+      sidebarDocked: true,
+      shadow: false,
+      shouldTransition: false
     };
   }
 
@@ -41,6 +42,13 @@ class Page extends React.Component {
     this.state.mql.removeListener(this.mediaQueryChanged);
   }
 
+  componentDidMount() {
+    setTimeout(function () {
+      // I don't know why this needs to be on nextTick
+      this.setState({shouldTransition: true});
+    }.bind(this), 0);
+  }
+
   mediaQueryChanged() {
     this.setState({sidebarDocked: this.state.mql.matches});
   }
@@ -59,6 +67,7 @@ class Page extends React.Component {
         open={this.state.sidebarOpen}
         shadow={this.state.shadow}
         docked={this.state.sidebarDocked}
+        transitions={this.state.shouldTransition}
         onSetOpen={this.onSetSidebarOpen.bind(this)}>
         <Header onHamburgerClick={this.toggleSidebar.bind(this)}/>
         <div style={styles.wrapper}>

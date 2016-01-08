@@ -25,7 +25,7 @@ class DataExplorer extends React.Component {
 
     const victoryFormat = this.props.dataset.map((item) => {
       return {
-        x: item._id.user_id + "" , // hack - cast to string for now for spacing
+        x: item._id.user_id + "" , // hack - cast to string for now for graph spacing
         y: item.comments
       };
     });
@@ -51,3 +51,5 @@ export default DataExplorer;
 const styles = {
   background: settings.coralPink
 };
+
+

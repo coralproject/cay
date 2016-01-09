@@ -32,11 +32,12 @@
     "rimraf": "^2.4.3",
     "webpack": "^1.12.2",
     "webpack-dev-middleware": "^1.2.0",
-    "webpack-hot-middleware": "^2.4.1"
+    "webpack-hot-middleware": "^2.6.0"
   },
   "dependencies": {
     "color": "^0.10.1",
     "css-loader": "^0.21.0",
+    "d3": "^3.5.12",
     "file-loader": "^0.8.4",
     "font-awesome": "^4.4.0",
     "font-awesome-webpack": "0.0.4",
@@ -46,6 +47,7 @@
     "less": "^2.5.3",
     "lodash": "^3.10.1",
     "material-ui": "^0.13.2",
+    "moment": "^2.11.0",
     "radium": "^0.14.2",
     "react": "^0.14.3",
     "react-dom": "^0.14.3",

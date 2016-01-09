@@ -32,7 +32,8 @@
     "rimraf": "^2.4.3",
     "webpack": "^1.12.2",
     "webpack-dev-middleware": "^1.2.0",
-    "webpack-hot-middleware": "^2.6.0"
+    "webpack-hot-middleware": "^2.6.0",
+    "webpack-module-hot-accept": "^1.0.4"
   },
   "dependencies": {
     "color": "^0.10.1",

@@ -6,9 +6,10 @@ import {fetchComments} from '../actions';
 
 import Page from './page';
 import Card from '../components/cards/card';
-import DropDownMenu from '../components/forms/drop-down-menu';
 // import Slider from '../components/slider';
-import Slider from '../components/slider';
+import ExplorerControls from './explorer-controls';
+
+require('../../css/react-select.css');
 
 @connect(state => state.data)
 @Radium
@@ -20,26 +21,16 @@ class Dashboard extends React.Component {
 
   render() {
 
-    const menuItems = [
-      {payload: 'H', text: 'Hydrogen'},
-      {payload: 'He', text: 'Helium'},
-      {payload: 'Li', text: 'Lithium'},
-      {payload: 'Be', text: 'Beryllium'},
-      {payload: 'B', text: 'Boron'}
-    ];
 
     return (
       <Page>
         <h1>Dashboard goes here</h1>
         <div style={styles.base}>
-          <Card style={[styles.pane, {flex: 2}]}>
-            <p>Here is a sweet slider</p>
-            <Slider defaultValue={50} orientation="horizontal" withBars={true} />
-            <p>another slider with two values</p>
-            <Slider defaultValue={[20, 80]} orientation="horizontal" withBars />
+          <Card style={styles.pane}>
+            <ExplorerControls />
           </Card>
           <Card style={styles.pane}>
-            <DropDownMenu menuItems={menuItems} />
+            <p>Nothin</p>
           </Card>
         </div>
       </Page>

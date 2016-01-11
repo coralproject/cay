@@ -40,8 +40,9 @@ var getInit = () => {
   return init;
 };
 
-var prefix = ('yep') ? 'http://localhost:4000/' : 'production prefix goes here';
-
+const httpPrefix = true ? 'http://localhost:4000/' : 'production httpPrefix goes here';
+const apiPrefix = '1.0/query/'; // maybe later we'll be at api 2.0
+const apiSuffix = '/exec';
 
 export const requestData = () => {
   return {
@@ -82,7 +83,7 @@ export const selectUser = (user) => {
   return {
     type: SELECT_USER,
     user: user.user_id
-  }
+  };
 };
 
 export const requestUsers = (filterId) => {
@@ -128,7 +129,7 @@ export const fetchUsers = (filterId) => {
 
     dispatch(requestUsers(filterId));
 
-    fetch(prefix + '1.0/query/test_basic/exec', getInit())
+    fetch(httpPrefix + apiPrefix + 'test_basic' + apiSuffix, getInit())
       .then(response => response.json())
       .then(json => dispatch(recieveUsers(json)))
       .catch(err => dispatch(requestUsersFailure(err)));
@@ -154,10 +155,11 @@ export const loginUser = (username, password) => {
 
 
 export const fetchCommentsByUser = (data) => {
+  const url = `${httpPrefix}${apiPrefix}comments_by_user${apiSuffix}?user_id=${data.user_id}`;
   return (dispatch) => {
     dispatch(requestComments());
 
-    var myRequest = new Request(prefix + '1.0/query/comments_by_user/exec?user_id=' + data.user_id, getInit());
+    var myRequest = new Request(url, getInit());
 
     fetch(myRequest)
       .then(response => response.json())
@@ -205,9 +207,6 @@ export const storeComments = (data) => {
   };
 };
 
-
-
-
 /* data exploration */
 
 const requestDataExplorationDataset = () => {
@@ -217,7 +216,6 @@ const requestDataExplorationDataset = () => {
 };
 
 const receiveDataExplorationDataset = (data) => {
-  console.log('receiveDataExplorationDataset');
   return {
     type: RECEIVE_DATA_EXPLORATION_DATASET,
     data
@@ -231,20 +229,32 @@ const dataExplorationFetchError = (error) => {
   };
 };
 
-export const fetchDataExplorationDataset = (params) => {
-  console.log('fetchDataExplorationDataset called?');
+// convert to query string
+// http://stackoverflow.com/questions/1714786/querystring-encoding-of-a-javascript-object
+const convert = (json) => {
+  return '?' +
+    Object.keys(json).map((key) => {
+      return encodeURIComponent(key) + '=' +
+        encodeURIComponent(json[key]);
+    }).join('&');
+};
+
+
+export const fetchDataExplorationDataset = (field, queryParams) => {
+  const queryParamString = queryParams ? convert(queryParams) : '';
+  const url = httpPrefix + apiPrefix + field + apiSuffix + queryParamString;
   return (dispatch, getState) => {
 
     if (!getState().dataExplorer.loading) {
-      // do stuff
+
       dispatch(requestDataExplorationDataset());
-      fetch(prefix + '1.0/query/top_commenters_by_count/exec', getInit())
+      fetch(url, getInit())
       .then(res => res.json())
       .then(json => {
         dispatch(receiveDataExplorationDataset(json));
       })
       .catch(err => {
-        console.log('oh noes', err);
+        console.log('fetchDataExplorationDataset error', err);
         dispatch(dataExplorationFetchError(err));
       });
     } else {

@@ -12,7 +12,8 @@ class ProfileBadge extends React.Component {
 
     return (
         <div style={ styles.profileBadge }>
-            PICTURE
+            <img style={ styles.profilePicture } src="http://lorempixel.com/60/60/people" /><br />
+            <h4 style={ styles.userName }>coolcat29</h4>
         </div>
     );
 
@@ -24,6 +25,15 @@ export default ProfileBadge;
 
 var styles = {
     profileBadge: {
-    	padding: "20px"   
+        position: "absolute",
+        top: "20px",
+        left: "20px",
+        textAlign: "center"
+    },
+    profilePicture: {
+        borderRadius: "30px"
+    },
+    userName: {
+        fontSize: "10pt"
     }
 };

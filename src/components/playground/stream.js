@@ -14,7 +14,14 @@ class Stream extends React.Component {
 
     return (
         <div style={ styles.stream }>
-            <Comment />
+        	{ 
+        		this.props.comments.map((comment, i) => { 
+            		return (
+            			<Comment {...comment} />
+            		)
+        		})
+        	}
+            
         </div>
     );
 

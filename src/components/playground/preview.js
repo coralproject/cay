@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import Radium from "radium";
 
 import settings from '../../settings';
+import Icon from '../../components/icon';
 
 import CommentBox from './commentBox';
 import Stream from './stream';
@@ -15,13 +16,17 @@ class Preview extends React.Component {
 
     return (
     	<div>
-	    	<div>
-	    		<h2>Preview</h2>
-	    		<button>Toggle</button>
+	    	<div style={ styles.previewBar }>
+	    		<h2 style={ styles.previewBarTitle }>
+	    			<Icon size="large" name="fa-eye" />
+	    			Preview
+	    		</h2>
 	    	</div>
-    		<p style={ styles.sandBoxIntro }>This is a sandbox only, this preview will be reset every time you reload the page.</p>
-    		<CommentBox />
-    		<Stream />
+	    	<div style={ styles.sandBox }>
+	    		<p style={ styles.sandBoxIntro }>This is a sandbox only, this preview will be reset every time you reload the page.</p>
+	    		<CommentBox />
+	    		<Stream />
+    		</div>
 	    </div>
     );
 
@@ -32,8 +37,25 @@ class Preview extends React.Component {
 export default Preview;
 
 var styles = {
-	sandboxIntro: {
+	sandBox: {
+		padding: "30px"
+	},
+	sandBoxIntro: {
 		padding: "20px",
-		color: settings.lighterGrey
+		color: settings.grey,
+		textAlign: "center",
+		fontSize: "9pt"
+	},
+	previewBar: {
+		padding: "30px",
+		borderBottom: "1px solid " + settings.lightGrey,
+		position: "relative",
+		fontSize: "16pt",
+		cursor: "pointer"
+	},
+	previewBarTitle: {
+		fontSize: "24pt"
 	}
+
+
 }

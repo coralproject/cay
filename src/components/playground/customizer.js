@@ -8,8 +8,6 @@ import Icon from '../../components/icon';
 
 import CustomizerSettings from "./customizerSettings";
 
-import {showCustomizer, hideCustomizer} from "../../actions/playground";
-
 @connect(state => state.playground)
 @Radium
 class Customizer extends React.Component {
@@ -61,14 +59,6 @@ var styles = {
 	},
 	customizeTogglerTitle: {
 		fontSize: "24pt"
-	},
-	customizerContent: {
-		hidden: {
-			display: "none"
-		},
-		visible: {
-			display: "block"
-		}
 	}
 
 }

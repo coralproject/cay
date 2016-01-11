@@ -1,5 +1,6 @@
 export const SHOW_CUSTOMIZER = "SHOW_CUSTOMIZER";
 export const HIDE_CUSTOMIZER = "HIDE_CUSTOMIZER";
+export const SET_TOGGLER = "SET_TOGGLER";
 
 export const showCustomizer = () => {
   return {
@@ -12,3 +13,13 @@ export const hideCustomizer = () => {
     type: HIDE_CUSTOMIZER
   };
 };
+
+export const setToggler = (groupIndex, togglerIndex, status) => {
+  return {
+    type: SET_TOGGLER,
+    groupIndex: groupIndex,
+    togglerIndex: togglerIndex,
+    status: status
+  };
+};
+

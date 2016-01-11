@@ -24,7 +24,7 @@ export default CommentContent;
 
 var styles = {
     commentContent: {
-    	padding: "20px",
-        fontSize: "12pt"
+        fontSize: "12pt",
+        minHeight: "60px"
     }
 };

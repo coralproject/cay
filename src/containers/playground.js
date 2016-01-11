@@ -14,6 +14,7 @@ import Preview from '../components/playground/preview';
 // Global CSS
 require('../../css/reset.css');
 require('../../css/global.css');
+require('../../css/playground.css');
 require('../../fonts/glyphicons-halflings-regular.woff');
 
 @connect(state => state.data)

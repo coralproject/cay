@@ -4,6 +4,8 @@ import Radium from "radium";
 
 import settings from '../../settings';
 
+import Icon from '../../components/icon';
+
 @connect(state => state.playground)
 @Radium
 class StatsBar extends React.Component {
@@ -12,7 +14,7 @@ class StatsBar extends React.Component {
 
     return (
         <div style={ styles.statsBar }>
-            44 Likes
+            <Icon size="medium" name="fa-thumbs-o-up" /> 44 Likes
         </div>
     );
 
@@ -24,7 +26,8 @@ export default StatsBar;
 
 var styles = {
     statsBar: {
-    	padding: "20px",
-        fontSize: "12pt"
+    	padding: "10px 0",
+        fontSize: "11pt",
+        color: settings.grey
     }
 };

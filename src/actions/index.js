@@ -21,6 +21,12 @@ export const COMMENTS_FAIL = 'COMMENTS_FAIL';
 
 export const STORE_COMMENTS = 'STORE_COMMENTS';
 
+export const REQUEST_DATA_EXPLORATION_DATASET = "REQUEST_DATA_EXPLORATION_DATASET";
+export const RECEIVE_DATA_EXPLORATION_DATASET = "RECEIVE_DATA_EXPLORATION_DATASET";
+export const DATA_EXPLORATION_FETCH_ERROR = "DATA_EXPLORATION_FETCH_ERROR";
+
+/* config */
+
 var getInit = () => {
   var headers = new Headers({'Authorization': 'Basic NmQ3MmU2ZGQtOTNkMC00NDEzLTliNGMtODU0NmQ0ZDM1MTRlOlBDeVgvTFRHWjhOdGZWOGVReXZObkpydm4xc2loQk9uQW5TNFpGZGNFdnc9'});
 
@@ -33,6 +39,10 @@ var getInit = () => {
 
   return init;
 }
+
+const httpPrefix = true ? "http://localhost:4000/" : "production httpPrefix goes here";
+const apiPrefix = "1.0/query/" // maybe later we'll be at api 2.0
+const apiSuffix = "/exec"
 
 export const requestData = () => {
   return {
@@ -108,7 +118,7 @@ export const fetchUserListIfNotFetched = (filterId) => {
     return {
       type: 'NOOP'
     };
-  
+
   };
 
 };
@@ -119,7 +129,7 @@ export const fetchUsers = (filterId) => {
 
     dispatch(requestUsers(filterId));
 
-    fetch('http://localhost:4000/1.0/query/top_commenters_by_count/exec', getInit())
+    fetch(httpPrefix + apiPrefix + 'test_basic' + apiSuffix, getInit())
       .then(response => response.json())
       .then(json => dispatch(recieveUsers(json)))
       .catch(err => dispatch(requestUsersFailure(err)));
@@ -145,14 +155,11 @@ export const loginUser = (username, password) => {
 
 
 export const fetchCommentsByUser = (data) => {
+  const url = `${httpPrefix}${apiPrefix}comments_by_user${apiSuffix}?user_id=${data.user_id}`
   return (dispatch) => {
     dispatch(requestComments());
 
-
-    console.log(userId);
-
-
-    var myRequest = new Request('http://localhost:4000/1.0/query/comments_by_user/exec?user_id=' + data.user_id, getInit());
+    var myRequest = new Request(url, getInit());
 
     fetch(myRequest)
       .then(response => response.json())
@@ -183,13 +190,69 @@ export const receiveComments = (data) => {
   return {
     type: COMMENTS_SUCCESS,
     data
-  }
-}
+  };
+};
 
 export const storeComments = (data) => {
   return {
     type: STORE_COMMENTS,
     data
-  }
+  };
+};
+
+/* data exploration */
+
+const requestDataExplorationDataset = () => {
+  return {
+    type: REQUEST_DATA_EXPLORATION_DATASET
+  };
+};
+
+const receiveDataExplorationDataset = (data) => {
+  return {
+    type: RECEIVE_DATA_EXPLORATION_DATASET,
+    data
+  };
+};
+
+const dataExplorationFetchError = (error) => {
+  return {
+    type: DATA_EXPLORATION_FETCH_ERROR,
+    error
+  };
+};
+
+// convert to query string
+// http://stackoverflow.com/questions/1714786/querystring-encoding-of-a-javascript-object
+const convert = (json) => {
+  return '?' +
+    Object.keys(json).map((key) => {
+      return encodeURIComponent(key) + '=' +
+        encodeURIComponent(json[key]);
+    }).join('&');
 }
 
+
+export const fetchDataExplorationDataset = (field, queryParams) => {
+  const queryParamString = queryParams ? convert(queryParams) : "";
+  const url = httpPrefix + apiPrefix + field + apiSuffix + queryParamString;
+  return (dispatch, getState) => {
+
+    if (!getState().dataExplorer.loading) {
+
+      dispatch(requestDataExplorationDataset());
+      fetch(url, getInit())
+      .then(res => res.json())
+      .then(json => {
+        dispatch(receiveDataExplorationDataset(json));
+      })
+      .catch(err => {
+        console.log('fetchDataExplorationDataset error', err);
+        dispatch(dataExplorationFetchError(err))
+      });
+    } else {
+      return { type: 'NOOP' };
+    }
+
+  };
+};

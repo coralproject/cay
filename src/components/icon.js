@@ -33,7 +33,7 @@ class Icon extends React.Component {
   }
 }
 
-var styles = {
+const styles = {
   base: {
     display: 'inline-block',
     font: 'normal normal normal 14px/1 FontAwesome',

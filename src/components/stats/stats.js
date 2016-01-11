@@ -12,6 +12,6 @@ export default class Stats extends React.Component {
   }
 }
 
-var styles = {
+const styles = {
 
 };

@@ -21,7 +21,7 @@ class Header extends React.Component {
   }
 }
 
-var styles = {
+const styles = {
   subhead: {
     fontSize: '.5em',
     display: 'inline-block',

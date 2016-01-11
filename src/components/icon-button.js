@@ -3,17 +3,17 @@ import Radium from 'radium';
 
 import Icon from './icon';
 
-@Radium
 class IconButton extends React.Component {
   render() {
     return (
-      <button style={[styles, this.props.style]}>
-      <Icon name={this.props.name} /></button>
+      <button onClick={this.props.onClick} style={[styles, this.props.style]}>
+        <Icon name={this.props.name} />
+      </button>
     );
   }
 }
 
-let styles = {
+const styles = {
   width: '50px',
   height: '50px',
   border: 'none',
@@ -26,4 +26,4 @@ let styles = {
   }
 };
 
-export default IconButton;
+export default Radium(IconButton);

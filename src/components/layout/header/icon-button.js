@@ -12,7 +12,7 @@ class IconButton extends React.Component {
   }
 }
 
-let styles = {
+const styles = {
   width: '50px',
   height: '50px',
   border: 'none',

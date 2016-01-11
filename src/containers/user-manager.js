@@ -64,7 +64,7 @@ export default class UserManager extends React.Component {
     );
   }
 }
-var styles = {
+const styles = {
   base: {
     display: 'flex',
     minHeight: '250px',

@@ -20,7 +20,7 @@ class MenuItem extends React.Component {
   }
 }
 
-var styles = {
+const styles = {
   base: {
     backgroundColor: '#F77160',
     ':hover': {
@@ -29,7 +29,7 @@ var styles = {
   },
   link: {
     color: 'white',
-    padding: '12px 5px 12px 15px',
+    padding: '12px 20px 12px 15px',
     display: 'block',
     textDecoration: 'none'
   }

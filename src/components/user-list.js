@@ -36,7 +36,7 @@ export default class UserList extends React.Component {
   }
 }
 
-var styles = {
+const styles = {
   base: {
 
   },

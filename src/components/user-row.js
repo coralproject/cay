@@ -37,7 +37,7 @@ export default class UserRow extends React.Component {
   }
 }
 
-var styles = {
+const styles = {
   base: {
     cursor: 'pointer'
   },

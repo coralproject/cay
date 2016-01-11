@@ -1,7 +1,7 @@
 var React = require('react');
 var ReactTestUtils = require('react-addons-test-utils');
 var chai = require('chai');
-var List = require('../../src/components/lists/list');
+var List = require('../../../src/components/lists/list');
 
 describe('List component', function () {
 
@@ -16,5 +16,5 @@ describe('List component', function () {
     );
 
     this.inputElement = inputComponent;
-  }
+  });
 });

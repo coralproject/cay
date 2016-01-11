@@ -1,19 +1,29 @@
+/*
+CardHeader is always meant to go at the top of a Card.
+*/
+
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 
 import settings from '../../settings';
 
-@Radium
-export default class CardHeader extends React.Component {
+class CardHeader extends React.Component {
   render() {
     return (
-      <div style={[styles.base, this.props.style]}>
+      <div className="card-header" style={[styles.base, this.props.style]}>
         <p style={styles.title}>{this.props.title}</p>
         <p style={styles.subtitle}>{this.props.subtitle}</p>
       </div>
     );
   }
 }
+
+CardHeader.propTypes = {
+  title: PropTypes.string.isRequired,
+  subtitle: PropTypes.string
+};
+
+export default Radium(CardHeader);
 
 const styles = {
   base: {

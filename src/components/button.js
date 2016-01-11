@@ -3,20 +3,16 @@ import Radium from 'radium';
 import color from 'color';
 import settings from '../settings';
 
-@Radium
 class Button extends React.Component {
-  static propTypes = {
-    size: PropTypes.string
-  }
 
   render() {
     return (
       <button type="button" style={[
-          styles.base,
-          this.props.size === 'small' && styles.small,
-          this.props.size === 'large' && styles.large,
-          styles[this.props.category],
-          this.props.style,
+        styles.base,
+        this.props.size === 'small' && styles.small,
+        this.props.size === 'large' && styles.large,
+        styles[this.props.category],
+        this.props.style
       ]}>
         {this.props.children}
       </button>
@@ -24,7 +20,11 @@ class Button extends React.Component {
   }
 }
 
-var styles = {
+Button.propTypes = {
+  size: PropTypes.string
+};
+
+const styles = {
   base: {
     backgroundColor: '#fff',
     borderRadius: 4,
@@ -115,4 +115,4 @@ var styles = {
   }
 };
 
-export default Button;
+export default Radium(Button);

@@ -39,7 +39,7 @@ class Login extends React.Component {
   }
 }
 
-var styles = {
+const styles = {
   base: {
     backgroundColor: settings.lighterGrey,
     display: 'flex',

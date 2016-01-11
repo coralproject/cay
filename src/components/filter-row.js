@@ -39,7 +39,7 @@ export default class FilterRow extends React.Component {
   }
 }
 
-var styles = {
+const styles = {
   base: {
     cursor: 'pointer'
   },

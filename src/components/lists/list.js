@@ -3,7 +3,6 @@ import Radium from 'radium';
 
 import settings from '../../settings';
 
-@Radium
 export default class List extends React.Component {
   render() {
     return (
@@ -19,3 +18,5 @@ const styles = {
   borderColor: settings.borderColorBase,
   borderTopWidth: 3
 };
+
+export default Radium(List);

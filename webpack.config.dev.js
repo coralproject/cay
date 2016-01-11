@@ -13,14 +13,13 @@ module.exports = {
     publicPath: '/dist/'
   },
   plugins: [
-    new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin()
   ],
   module: {
     loaders: [{
       test: /\.js$/,
-      loaders: ['babel', "webpack-module-hot-accept"],
+      loaders: ['babel'],
       exclude: /node_modules/,
       include: path.join(__dirname, 'src')
     }, {

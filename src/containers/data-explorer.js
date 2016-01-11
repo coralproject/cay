@@ -48,7 +48,7 @@ class DataExplorer extends React.Component {
   render() {
     return (
       <Page>
-        <h1>Data Explorer</h1>
+        <h1>Data Explorer d888ccccc</h1>
           {
             this.props.dataset ?
               <DataExplorerVisualization

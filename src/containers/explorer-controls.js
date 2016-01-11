@@ -25,8 +25,12 @@ class ExplorerControls extends React.Component {
     };
   }
 
-  logChange(value, initializer) {
-    console.log(value, initializer);
+  handleTypeChange(value, initializer) {
+    console.log('handleTypeChange', value, initializer);
+  }
+
+  handleFieldChange(value, initializer) {
+    console.log('handleFieldChange', value, initializer);
   }
 
   formatDate(date) {
@@ -47,21 +51,64 @@ class ExplorerControls extends React.Component {
   render() {
 
     var options = [
-      { value: 'one', label: 'One' },
-      { value: 'two', label: 'Two' }
+      { value: 'comment', label: 'Comment' },
+      { value: 'asset', label: 'Asset' },
+      { value: 'user', label: 'User' },
+      { value: 'note', label: 'Note' }
     ];
+
+    var fieldOptions = {
+      comment: [
+        {label: 'ID', value: 'CommentID'},
+        {label: 'Body', value: 'CommentBody'},
+        {label: 'ParentID', value: 'ParentID'},
+        {label: 'AssetID', value: 'AssetID'},
+        {label: 'StatusID', value: 'StatusID'},
+        {label: 'CreateDate', value: 'CreateDate'},
+        {label: 'UpdateDate', value: 'UpdateDate'},
+        {label: 'ApproveDate', value: 'ApproveDate'}
+      ],
+      asset: [
+        {label: 'ID', value: 'AssetID'},
+        {label: 'VendorID', value: 'VendorID'},
+        {label: 'SourceID', value: 'SourceID'},
+        {label: 'AssetURL', value: 'AssetURL'},
+        {label: 'CreateDate', value: 'CreateDate'},
+        {label: 'UpdateDate', value: 'UpdateDate'},
+        {label: 'Taxonomy', value: ''}
+      ],
+      user: [
+        {label: 'id', value: 'UserID'},
+        {label: 'displayname', value: 'UserDisplayName'},
+        {label: 'name', value: ''},
+        {label: 'avatar', value: ''},
+        {label: 'email', value: ''}
+      ],
+      note: [
+        {label: 'ID', value: 'commentNoteID'},
+        {label: 'CommentID', value: 'CommentID'},
+        {label: 'CommentNote', value: 'CommentNote'},
+        {label: 'CreateDate', value: 'CreateDate'},
+        {label: 'UpdateDate', value: 'UpdateDate'}
+      ]
+    };
 
     return (
       <Paper style={styles.base}>
+        <p>Types?</p>
         <Select
-            name="form-field-name"
-            value="one"
+            name="types"
+            value={options[0].value}
             options={options}
-            onChange={this.logChange.bind(this)}
+            onChange={this.handleTypeChange.bind(this)}
         />
-        <p>Here is a sweet slider</p>
-        <Slider defaultValue={50} orientation="horizontal" withBars={true} />
-        <p>another slider with two values</p>
+        <p>Fields?</p>
+        <Select
+          name="fields"
+          options={fieldOptions.comment}
+          onChange={this.handleFieldChange.bind(this)}
+          multi={true} />
+        <p>Date Range</p>
         <Slider
           min={this.state.rangeStart}
           max={this.state.rangeEnd}

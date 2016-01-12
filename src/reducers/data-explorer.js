@@ -2,8 +2,10 @@ import * as types from '../actions';
 
 const data_exploration = (state = {
   loading: false,
+  loadingControls: false,
   dataset: null,
-  error: null
+  error: null,
+  pipelines: []
 }, action) => {
   switch (action.type) {
   case types.REQUEST_DATA_EXPLORATION_DATASET:
@@ -23,7 +25,18 @@ const data_exploration = (state = {
       dataset: null,
       error: action.error
     });
+  case types.REQUEST_EXPLORER_CONTROLS:
+    return Object.assign({}, state, {
+      loadingControls: true
+    });
+  case types.RECEIVE_EXPLORER_CONTROLS:
+    console.log('received controls', action.pipelines);
+    return Object.assign({}, state, {
+      loadingControls: false,
+      pipelines: action.pipelines
+    });
   default:
+    console.log('some weird state', action.type);
     return state;
   }
 };

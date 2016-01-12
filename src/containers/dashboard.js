@@ -7,7 +7,6 @@ import {fetchComments} from '../actions';
 import Page from './page';
 import Card from '../components/cards/card';
 // import Slider from '../components/slider';
-import ExplorerControls from './explorer-controls';
 
 require('../../css/react-select.css');
 
@@ -27,7 +26,7 @@ class Dashboard extends React.Component {
         <h1>Dashboard goes here</h1>
         <div style={styles.base}>
           <Card style={styles.pane}>
-            <ExplorerControls />
+            <p>Such wow</p>
           </Card>
           <Card style={styles.pane}>
             <p>Nothin</p>

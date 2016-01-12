@@ -25,6 +25,9 @@ export const REQUEST_DATA_EXPLORATION_DATASET = 'REQUEST_DATA_EXPLORATION_DATASE
 export const RECEIVE_DATA_EXPLORATION_DATASET = 'RECEIVE_DATA_EXPLORATION_DATASET';
 export const DATA_EXPLORATION_FETCH_ERROR = 'DATA_EXPLORATION_FETCH_ERROR';
 
+export const REQUEST_EXPLORER_CONTROLS = 'REQUEST_EXPLORER_CONTROLS';
+export const RECEIVE_EXPLORER_CONTROLS = 'RECEIVE_EXPLORER_CONTROLS';
+
 /* config */
 
 var getInit = () => {
@@ -261,5 +264,31 @@ export const fetchDataExplorationDataset = (field, queryParams) => {
       return { type: 'NOOP' };
     }
 
+  };
+};
+
+const requestControls = () => {
+  return {
+    type: REQUEST_EXPLORER_CONTROLS
+  };
+};
+
+const receiveControls = (pipelines) => {
+  return {
+    type: RECEIVE_EXPLORER_CONTROLS,
+    pipelines
+  };
+};
+
+export const populateControlsReducer = () => {
+  const url = httpPrefix + '1.0/query';
+
+  return (dispatch) => {
+    dispatch(requestControls());
+
+    fetch(url, getInit())
+      .then(res => res.json())
+      .then(pipelines => dispatch(receiveControls(pipelines)))
+      .catch(err => console.log(err));
   };
 };

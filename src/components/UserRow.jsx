@@ -4,8 +4,8 @@ import Radium from 'radium';
 import {connect} from 'react-redux';
 
 import settings from '../settings';
-import ListItem from './lists/list-item';
-import Avatar from './avatar';
+import ListItem from './lists/ListItem';
+import Avatar from './Avatar';
 
 import {fetchCommentsByUser} from "../actions";
 
@@ -27,7 +27,7 @@ export default class UserRow extends React.Component {
         onClick={this.handleClick.bind(this)} >
 
           {this.props.user.user_id}
-          
+
           <p style={styles.sub}>
             Rating | Test Score | Comments
           </p>

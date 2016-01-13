@@ -4,8 +4,8 @@ import Radium from 'radium';
 
 import {fetchComments} from '../actions';
 
-import Page from './page';
-import Card from '../components/cards/card';
+import Page from './Page';
+import Card from '../components/cards/Card';
 
 require('../../css/react-select.css');
 

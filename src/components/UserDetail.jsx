@@ -5,13 +5,13 @@ import {connect} from 'react-redux';
 
 import settings from '../settings';
 
-import Avatar from './avatar';
-import Tab from './tabs/tab';
-import Tabs from './tabs/tabs';
-import Stats from './stats/stats';
-import Stat from './stats/stat';
-import Card from './cards/card';
-import Heading from './heading';
+import Avatar from './Avatar';
+import Tab from './tabs/Tab';
+import Tabs from './tabs/Tabs';
+import Stats from './stats/Stats';
+import Stat from './stats/Stat';
+import Card from './cards/Card';
+import Heading from './Heading';
 
 import CommentDetail from './comment-detail';
 

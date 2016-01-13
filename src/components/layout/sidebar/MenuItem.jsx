@@ -3,7 +3,7 @@ import Radium from 'radium';
 
 import color from 'color';
 
-import Icon from '../../icon';
+import Icon from '../../Icon';
 
 @Radium
 class MenuItem extends React.Component {

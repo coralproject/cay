@@ -3,9 +3,9 @@ import Radium from 'radium';
 
 import settings from '../settings';
 
-import List from './lists/list';
-import UserRow from './user-row';
-import Heading from './heading';
+import List from './lists/List';
+import UserRow from './UserRow';
+import Heading from './Heading';
 
 @Radium
 export default class UserList extends React.Component {

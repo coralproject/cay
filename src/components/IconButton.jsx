@@ -1,7 +1,7 @@
 import React from 'react';
 import Radium from 'radium';
 
-import Icon from './icon';
+import Icon from './Icon';
 
 class IconButton extends React.Component {
   render() {

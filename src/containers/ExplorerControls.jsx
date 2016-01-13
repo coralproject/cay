@@ -2,11 +2,11 @@ import React from 'react';
 import Radium from 'radium';
 
 // import our actions
-import Slider from '../components/slider';
+import Slider from '../components/Slider';
 import Select from 'react-select';
-import Paper from '../components/paper';
+import Paper from '../components/Paper';
 
-import DateTime from '../components/utils/date-time';
+import DateTime from '../components/utils/DateTime';
 
 @Radium
 class ExplorerControls extends React.Component {

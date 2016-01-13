@@ -10,7 +10,7 @@ Cay, a community moderation tool (front-end)
 
 The app is a series of React components compiled into modules with [webpack](http://webpack.github.io/).
 
-This repo is for the front-end of the Coral ecosystem [outlined here](https://github.com/CoralProject/reef/tree/master/ecosystem)
+This repo is for the front-end of the Coral ecosystem [outlined here](https://github.com/coralproject/reef/blob/master/ECOSYSTEM.md).
 
 The basic idea is that the build process results in a `bundle.js` file containing all javascript and css. CSS cross-browser issues, ES6 transpilation, minification, etc, is all handled by webpack.
 
@@ -31,7 +31,7 @@ The basic idea is that the build process results in a `bundle.js` file containin
 
 
 #### Code of conduct
-Please be civil when discussing contributions to the Cay front end code and the Coral Project. If in doubt, please consult our [Code of Conduct](https://the-coral-project.gitbooks.io/coral-bible/content/codeofconduct.html)
+Please be civil when discussing contributions to the Cay front end code and the Coral Project. If in doubt, please consult our [Code of Conduct](https://github.com/coralproject/reef/blob/master/CODE-OF-CONDUCT.md).
 
 ## TODO:
 - how to internationalize (R2L languages)

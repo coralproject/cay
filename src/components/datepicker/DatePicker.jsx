@@ -3,11 +3,11 @@ import Radium from 'radium';
 
 import settings from '../../settings';
 
-import DateTime from '../utils/date-time';
+import DateTime from '../utils/DateTime';
 
-import TextField from '../forms/text-field';
-import Paper from '../paper';
-import CalendarMonth from './calendar-month';
+import TextField from '../forms/TextField';
+import Paper from '../Paper';
+import CalendarMonth from './CalendarMonth';
 
 class DatePicker extends React.Component {
 

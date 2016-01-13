@@ -1,8 +1,8 @@
 import React from 'react';
 import Radium from 'radium';
 
-import Badge from '../../badge';
-import IconButton from '../../icon-button';
+import Badge from '../../Badge';
+import IconButton from '../../IconButton';
 
 @Radium
 class NavDropdownMenu extends React.Component {

@@ -4,11 +4,11 @@ import Radium from "radium";
 
 import {fetchUserListIfNotFetched, setFilter, selectUser, fetchUsers} from '../actions';
 
-import Page from './page';
-import ContentHeader from '../components/content-header';
-import FilterList from '../components/filter-list';
-import UserList from '../components/user-list';
-import UserDetail from '../components/user-detail';
+import Page from './Page';
+import ContentHeader from '../components/ContentHeader';
+import FilterList from '../components/FilterList';
+import UserList from '../components/UserList';
+import UserDetail from '../components/UserDetail';
 
 import settings from '../settings';
 
@@ -40,7 +40,7 @@ export default class UserManager extends React.Component {
     return (
 
       <Page>
-        
+
         <ContentHeader title="User Manager" />
 
         <div style={styles.base}>
@@ -59,7 +59,7 @@ export default class UserManager extends React.Component {
             style={styles.userDetail} />
 
         </div>
-        
+
       </Page>
     );
   }

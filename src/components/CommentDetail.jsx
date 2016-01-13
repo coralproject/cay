@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 
-import DateTime from './utils/date-time';
+import DateTime from './utils/DateTime';
 
 @Radium
 export default class CommentDetail extends React.Component {

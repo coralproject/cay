@@ -4,9 +4,9 @@ import Radium from 'radium';
 import {Link} from 'react-router';
 
 import settings from '../settings';
-import ListItem from './lists/list-item';
-import Badge from './badge';
-import Icon from './icon';
+import ListItem from './lists/ListItem';
+import Badge from './Badge';
+import Icon from './Icon';
 
 
 
@@ -33,7 +33,7 @@ export default class FilterRow extends React.Component {
         </Link>
 
         <Badge count={Math.random().toString().slice(-2)} style={styles.badge}/>
-    
+
       </ListItem>
     );
   }

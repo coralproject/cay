@@ -8,8 +8,8 @@ import React from 'react';
 import Radium from 'radium';
 import Sidebar from 'react-sidebar';
 
-import Header from '../components/layout/header/header';
-import Menu from '../components/layout/sidebar/menu';
+import Header from '../components/layout/header/Header';
+import Menu from '../components/layout/sidebar/Menu';
 
 @Radium
 class Page extends React.Component {

@@ -4,10 +4,10 @@ import Radium from 'radium';
 
 import settings from '../settings';
 
-import Card from '../components/cards/card';
-import CardHeader from '../components/cards/card-header';
-import TextField from '../components/forms/text-field';
-import Button from '../components/button';
+import Card from '../components/cards/Card';
+import CardHeader from '../components/cards/CardHeader';
+import TextField from '../components/forms/TextField';
+import Button from '../components/Button';
 
 @connect(state => {
   return state.auth;

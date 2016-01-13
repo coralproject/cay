@@ -3,9 +3,9 @@ import Radium from 'radium';
 
 import settings from '../settings';
 
-import List from './lists/list';
-import FilterRow from './filter-row';
-import Heading from './heading';
+import List from './lists/List';
+import FilterRow from './FilterRow';
+import Heading from './Heading';
 import {Link} from 'react-router';
 
 class FilterList extends React.Component {

@@ -6,8 +6,8 @@ this component holds the notification dropdowns,
 user account menu, and settings dropdown
  */
 
-import NavDropdownMenu from './nav-dropdown-menu';
-import InboxDropdownMenu from './inbox-dropdown-menu';
+import NavDropdownMenu from './NavDropdownMenu';
+import InboxDropdownMenu from './InboxDropdownMenu';
 
 class NavbarMenu extends React.Component {
   render() {

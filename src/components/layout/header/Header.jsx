@@ -1,9 +1,9 @@
 import React from 'react';
 import Radium from 'radium';
 
-import Searchbar from '../../forms/searchbar';
-import NavbarMenu from '../nav/navbar-menu';
-import IconButton from '../../icon-button';
+import Searchbar from '../../forms/Searchbar';
+import NavbarMenu from '../nav/NavbarMenu';
+import IconButton from '../../IconButton';
 
 @Radium
 class Header extends React.Component {

@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import _ from '../..//lib/lodash.min';
+import _ from 'lodash';
 
 @Radium
 export default class RadioButtonGroup extends React.Component {

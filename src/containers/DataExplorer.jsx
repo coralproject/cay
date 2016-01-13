@@ -2,9 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 import { fetchDataExplorationDataset, populateControlsReducer } from '../actions';
-import Page from './page';
-import DataExplorerVisualization from '../components/data-explorer-visualization';
-import ExplorerControls from './explorer-controls';
+import Page from './Page';
+import DataExplorerVisualization from '../components/DataExplorerVisualization';
+import ExplorerControls from './ExplorerControls';
 
 
 @connect(state => state.dataExplorer)

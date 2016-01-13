@@ -36,7 +36,6 @@ const data_exploration = (state = {
       pipelines: action.pipelines
     });
   default:
-    console.log('some weird state', action.type);
     return state;
   }
 };

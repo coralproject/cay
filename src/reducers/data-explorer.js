@@ -30,7 +30,6 @@ const data_exploration = (state = {
       loadingControls: true
     });
   case types.RECEIVE_EXPLORER_CONTROLS:
-    console.log('received controls', action.pipelines);
     return Object.assign({}, state, {
       loadingControls: false,
       pipelines: action.pipelines

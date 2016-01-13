@@ -22,14 +22,6 @@ class ExplorerControls extends React.Component {
     };
   }
 
-  handleTypeChange(value, initializer) {
-    console.log('handleTypeChange', value, initializer);
-  }
-
-  handleFieldChange(value, initializer) {
-    console.log('handleFieldChange', value, initializer);
-  }
-
   formatDate(date) {
     return DateTime.format(new Date(date));
   }
@@ -45,34 +37,56 @@ class ExplorerControls extends React.Component {
     });
   }
 
+  handleControlChange() {
+    this.setState({
+      selectedStart: new Date(this.refs.dateRange.getValue()[0]).toString(),
+      selectedEnd: new Date(this.refs.dateRange.getValue()[1]).toString()
+    })
+
+    const pipeline = this.refs.pipelines.value;
+    const dateRange = this.refs.dateRange.getValue()
+
+    this.props.getControlValues({
+      pipeline,
+      dateRange
+    })
+  }
+
   render() {
-
-    console.log('ExplorerControls', this.props);
-
     return (
       <Paper style={styles.base}>
-        <Select
-            name="types"
-            options={this.props.pipelines.map(pipe => {
-              return {label: pipe, value: pipe};
-            })}
-            onChange={this.handleTypeChange.bind(this)}
-        />
-        {/*<Select
-          name="fields"
-          options={fieldOptions.comment}
-          onChange={this.handleFieldChange.bind(this)}
-          multi={true} />*/}
+        <select
+          onChange={this.handleControlChange.bind(this)}
+          style={{
+            marginRight: 10,
+            cursor: "pointer",
+            fontSize: 16,
+
+          }}
+          ref="pipelines">
+          {
+            this.props.pipelines.map((pipeline, i) => {
+              return ( <option key={i} value={pipeline}> {pipeline} </option>)
+            })
+          }
+        </select>
         <p>Date Range</p>
         <Slider
+          ref="dateRange"
           min={this.state.rangeStart}
           max={this.state.rangeEnd}
-          onChange={this.changeDate.bind(this)}
+          onChange={this.handleControlChange.bind(this)}
           defaultValue={[this.state.rangeStart, this.state.rangeEnd]}
           orientation="horizontal"
           withBars />
-          <p>Start Date: {this.formatDate(this.state.selectedStart)}</p>
-          <p>End Date: {this.formatDate(this.state.selectedEnd)}</p>
+          <p>
+            Start Date:
+            {this.state.selectedStart}
+          </p>
+          <p>
+            End Date:
+            {this.state.selectedEnd}
+          </p>
       </Paper>
     );
   }

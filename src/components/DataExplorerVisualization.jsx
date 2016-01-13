@@ -48,7 +48,6 @@ class DataExplorerVisualization extends React.Component {
           style={{
             axis: {stroke: "gray"},
             ticks: {stroke: "gray"},
-
             tickLabels: {
               fontSize: 10,
             },

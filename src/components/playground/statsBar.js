@@ -1,6 +1,6 @@
-import React from "react";
-import { connect } from "react-redux";
-import Radium from "radium";
+import React from 'react';
+import { connect } from 'react-redux';
+import Radium from 'radium';
 
 import settings from '../../settings';
 
@@ -13,9 +13,9 @@ class StatsBar extends React.Component {
   render() {
 
     return (
-        <div style={ styles.statsBar }>
-            <Icon size="medium" name="fa-thumbs-o-up" /> 44 Likes
-        </div>
+      <div style={ styles.statsBar }>
+        <Icon size="medium" name="fa-thumbs-o-up" /> { this.props.likes } Likes
+      </div>
     );
 
   }
@@ -25,9 +25,9 @@ class StatsBar extends React.Component {
 export default StatsBar;
 
 var styles = {
-    statsBar: {
-    	padding: "10px 0",
-        fontSize: "11pt",
-        color: settings.grey
-    }
+  statsBar: {
+    padding: '10px 0',
+    fontSize: '11pt',
+    color: settings.grey
+  }
 };

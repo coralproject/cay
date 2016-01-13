@@ -1,6 +1,6 @@
-import React from "react";
-import { connect } from "react-redux";
-import Radium from "radium";
+import React from 'react';
+import { connect } from 'react-redux';
+import Radium from 'radium';
 
 import settings from '../../settings';
 
@@ -22,15 +22,15 @@ class Comment extends React.Component {
     var commentTools = this.state.toolsExpanded ? <CommentTools /> : null;
 
     return (
-        <div style={ styles.comment }>
-            <ProfileBadge />
-            <div onClick={ this.onCommentContentClick.bind(this) } style={ styles.commentContent }>
-                <CommentContent />
-            </div>
-            <StatsBar />
-            { commentTools }
+      <div style={ styles.comment }>
+        <ProfileBadge />
+        <div onClick={ this.onCommentContentClick.bind(this) } style={ styles.commentContent }>
+          <CommentContent />
         </div>
-    );
+        <StatsBar likes={ this.props.likes } />
+        { commentTools }
+      </div>
+      );
 
   }
 }
@@ -39,13 +39,13 @@ class Comment extends React.Component {
 export default Comment;
 
 var styles = {
-    comment: {
-    	borderBottom: "1px solid " + settings.grey,
-    	padding: "20px 20px 20px 100px",
-        position: "relative",
-        minHeight: "100px"
-    },
-    commentContent: {
-        cursor: "pointer"
-    }
+  comment: {
+    borderBottom: '1px solid ' + settings.grey,
+    padding: '20px 20px 20px 100px',
+    position: 'relative',
+    minHeight: '100px'
+  },
+  commentContent: {
+    cursor: 'pointer'
+  }
 };

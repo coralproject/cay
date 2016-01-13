@@ -1,8 +1,6 @@
-import React from "react";
-import { connect } from "react-redux";
-import Radium from "radium";
-
-import settings from '../../settings';
+import React from 'react';
+import { connect } from 'react-redux';
+import Radium from 'radium';
 
 import Comment from './comment';
 
@@ -13,17 +11,16 @@ class Stream extends React.Component {
   render() {
 
     return (
-        <div style={ styles.stream }>
-        	{ 
-        		this.props.comments.map((comment, i) => { 
-            		return (
-            			<Comment {...comment} />
-            		)
-        		})
-        	}
-            
-        </div>
-    );
+      <div style={ styles.stream }>
+      { 
+        this.props.comments.map((comment, i) => { 
+          return (
+            <Comment {...comment} key={ i } />
+          );
+        })
+      }
+      </div>
+      );
 
   }
 }
@@ -32,7 +29,6 @@ class Stream extends React.Component {
 export default Stream;
 
 var styles = {
-    stream: {
-        
-    }
+  stream: {
+  }
 };

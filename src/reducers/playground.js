@@ -40,10 +40,12 @@ const initialState = {
   ],
   comments: [
     {
-      content: "Lorem ipsum dollar"
+      content: "Lorem ipsum dollar",
+      likes: 28
     },
     {
-      content: "Another comment"
+      content: "Another comment",
+      likes: 41
     }
   ]
 };

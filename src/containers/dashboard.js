@@ -6,7 +6,6 @@ import {fetchComments} from '../actions';
 
 import Page from './page';
 import Card from '../components/cards/card';
-// import Slider from '../components/slider';
 
 require('../../css/react-select.css');
 

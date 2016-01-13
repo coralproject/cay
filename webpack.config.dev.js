@@ -24,16 +24,16 @@ module.exports = {
       include: path.join(__dirname, 'src')
     }, {
       test: /\.css$/,
-      loader: "style-loader!css-loader"
+      loader: 'style-loader!css-loader'
     }, {
       test: /\.png$/,
-      loader: "url-loader?limit=100000"
+      loader: 'url-loader?limit=100000'
     }, {
       test: /\.jpg$/,
-      loader: "file-loader"
+      loader: 'file-loader'
     }, {
       test: /\.json$/,
-      loader: "json-loader"
+      loader: 'json-loader'
     }, {
       test: /\.woff$/,
       loader: 'url?limit=100000'

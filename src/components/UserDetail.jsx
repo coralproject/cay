@@ -13,7 +13,7 @@ import Stat from './stats/Stat';
 import Card from './cards/Card';
 import Heading from './Heading';
 
-import CommentDetail from './comment-detail';
+import CommentDetail from './CommentDetail';
 
 @connect((state) => { return state.users})
 @Radium

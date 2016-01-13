@@ -1,5 +1,5 @@
-import * as types from "../actions";
-import _ from '../lib/lodash.min';
+import * as types from '../actions';
+import _ from 'lodash';
 
 const initialState = {
   assets: {},

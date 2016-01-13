@@ -1,9 +1,6 @@
 import React from 'react';
 import Radium from 'radium';
 import { VictoryChart, VictoryAxis, VictoryBar, VictoryLine, VictoryScatter } from 'victory';
-import settings from '../settings';
-import _ from "lodash";
-import d3 from "d3";
 
 @Radium
 class DataExplorerVisualization extends React.Component {

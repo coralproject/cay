@@ -1,6 +1,6 @@
 import React from 'react';
 import Radium from 'radium';
-import _ from '../lib/lodash.min';
+import _ from 'lodash';
 
 import settings from '../settings';
 

@@ -1,12 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
-import _ from 'lodash';
-import settings from '../settings';
 import { fetchDataExplorationDataset, populateControlsReducer } from '../actions';
 import Page from './page';
 import DataExplorerVisualization from '../components/data-explorer-visualization';
-import moment from 'moment';
 import ExplorerControls from './explorer-controls';
 
 
@@ -60,7 +57,7 @@ class DataExplorer extends React.Component {
                 independentVariableName={"indVarName"}
                 dependentVariableName={"depVarName"}
                 dataset={this.parseCommentsPerDay.call(this)}/> :
-              "Spinner"
+              'Spinner'
           }
       </Page>
     );
@@ -68,7 +65,3 @@ class DataExplorer extends React.Component {
 }
 
 export default DataExplorer;
-
-const styles = {
-  background: settings.brandColor
-};

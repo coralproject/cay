@@ -1,4 +1,4 @@
-import _ from '../../lib/lodash.min';
+import _ from 'lodash';
 import React from 'react';
 import Radium from 'radium';
 
@@ -8,7 +8,7 @@ import settings from '../../settings';
 export default class ListItem extends React.Component {
 
   handleClick(e) {
-    if (typeof this.props.onClick === "function") {
+    if (_.isFunction(this.props.onClick)) {
       this.props.onClick(e);
     }
   }
@@ -29,7 +29,7 @@ export default class ListItem extends React.Component {
         styles.base,
         left && styles.baseWithLeft,
         right && styles.baseWithRight,
-        this.props.style,
+        this.props.style
       ]}>
         {left}
         {this.props.children}

@@ -151,6 +151,7 @@ export const initLogin = (username, password) => {
 };
 
 export const loginUser = (username, password) => {
+  console.log(username, password);
   return (dispatch) => {
     dispatch();
   };

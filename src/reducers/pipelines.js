@@ -14,6 +14,9 @@ const pipelines = (state = initialState, action) => {
   case types.PIPELINES_REQUEST:
     return Object.assign({}, state, {loading: true});
 
+  case types.PIPELINE_REQUEST:
+    return state; // query one pipeline?
+
   case types.PIPELINES_REQUEST_FAILURE:
     return Object.assign({}, state, {loading: false, showTheError: 'TODO'});
 

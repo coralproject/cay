@@ -4,7 +4,7 @@ import Radium from 'radium';
 import settings from '../settings';
 
 import List from './lists/List';
-import FilterRow from './FilterRow';
+import PipelineRow from './PipelineRow';
 import Heading from './Heading';
 import {Link} from 'react-router';
 
@@ -24,7 +24,7 @@ class PipelineList extends React.Component {
         {
           this.props.filters.map((filter, i) => {
             return (
-              <FilterRow
+              <PipelineRow
                 filter={filter}
                 style={styles.row}
                 {...other}

@@ -11,11 +11,7 @@ import Icon from './Icon';
 
 
 @Radium
-export default class FilterRow extends React.Component {
-
-  static propTypes = {
-    onFilterClick: PropTypes.func.isRequired
-  }
+export default class PipelineRow extends React.Component {
 
   render() {
     return (

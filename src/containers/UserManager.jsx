@@ -20,7 +20,7 @@ export default class UserManager extends React.Component {
 
   // only the first time
   componentWillMount() {
-    this.props.dispatch(fetchPipelinesIfNotFetched(this.props.params.filterId));
+    this.props.dispatch(fetchPipelinesIfNotFetched());
   }
 
   // every time the state is updated

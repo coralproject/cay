@@ -55,10 +55,16 @@ export const requestPipeline = (pipeline) => {
   };
 };
 
-export const receivePipelines = (message) => {
+export const requestPipelines = () => {
+  return {
+    type: PIPELINES_REQUEST
+  };
+};
+
+export const receivePipelines = (pipelines) => {
   return {
     type: PIPELINES_RECEIVED,
-    message
+    pipelines
   };
 };
 
@@ -69,12 +75,12 @@ export const requestPipelinesFailure = (err) => {
   };
 };
 
-export const fetchPipelinesIfNotFetched = (filterId) => {
+export const fetchPipelinesIfNotFetched = () => {
 
-  return (dispatch,getState) => {
+  return (dispatch, getState) => {
 
-    if (! getState().userList.loading && getState().userList.loadedFilterId !== filterId) {
-      return dispatch(fetchPipelines(filterId));
+    if (! getState().pipelines.loading) {
+      return dispatch(fetchPipelines());
     }
 
     return {
@@ -86,12 +92,12 @@ export const fetchPipelinesIfNotFetched = (filterId) => {
 };
 
 
-export const fetchPipelines = (filterId) => {
+export const fetchPipelines = () => {
   return (dispatch) => {
 
-    dispatch(requestPipelines(filterId));
+    dispatch(requestPipelines());
 
-    fetch(httpPrefix + '/query', getInit())
+    fetch(httpPrefix + '1.0/query', getInit())
       .then(response => response.json())
       .then(pipelines => dispatch(receivePipelines(pipelines)))
       .catch(err => dispatch(requestPipelinesFailure(err)));

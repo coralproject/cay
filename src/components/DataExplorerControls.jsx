@@ -3,7 +3,7 @@ import Radium from 'radium';
 
 // import our actions
 import Slider from '../components/Slider';
-import Select from 'react-select';
+// import Select from 'react-select';
 import Paper from '../components/Paper';
 
 import DateTime from '../components/utils/DateTime';
@@ -41,15 +41,15 @@ class ExplorerControls extends React.Component {
     this.setState({
       selectedStart: new Date(this.refs.dateRange.getValue()[0]).toString(),
       selectedEnd: new Date(this.refs.dateRange.getValue()[1]).toString()
-    })
+    });
 
     const pipeline = this.refs.pipelines.value;
-    const dateRange = this.refs.dateRange.getValue()
+    const dateRange = this.refs.dateRange.getValue();
 
     this.props.getControlValues({
       pipeline,
       dateRange
-    })
+    });
   }
 
   render() {
@@ -59,14 +59,13 @@ class ExplorerControls extends React.Component {
           onChange={this.handleControlChange.bind(this)}
           style={{
             marginRight: 10,
-            cursor: "pointer",
-            fontSize: 16,
-
+            cursor: 'pointer',
+            fontSize: 16
           }}
           ref="pipelines">
           {
             this.props.pipelines.map((pipeline, i) => {
-              return ( <option key={i} value={pipeline}> {pipeline} </option>)
+              return ( <option key={i} value={pipeline}> {pipeline} </option> );
             })
           }
         </select>

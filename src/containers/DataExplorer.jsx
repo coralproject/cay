@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import Radium from 'radium';
 import { fetchDataExplorationDataset, populateControlsReducer } from '../actions';
 import Page from './Page';
+import Card from '../components/cards/Card';
 import DataExplorerVisualization from '../components/DataExplorerVisualization';
 import ExplorerControls from '../components/DataExplorerControls';
 import moment from 'moment';
@@ -21,7 +22,7 @@ class DataExplorer extends React.Component {
   }
 
   controlsUpdatedGoGetDataset(pipeline, dateRange) {
-    console.log('inside', pipeline, dateRange)
+    console.log('inside', pipeline, dateRange);
     this.props.dispatch(fetchDataExplorationDataset(pipeline, dateRange));
 
     // this.props.dispatch(fetchDataExplorationDataset('top_commenters_by_count', null));
@@ -59,16 +60,23 @@ class DataExplorer extends React.Component {
     this.controlsUpdatedGoGetDataset(values.pipeline, {
       start_date: startDate.format('YYYY-MM-DD'),
       end_date: endDate.format('YYYY-MM-DD')
-    })
+    });
   }
 
   render() {
     return (
-      <Page>
+      <Page style={styles.base}>
         <h1>Data Explorer</h1>
-        <ExplorerControls
-          getControlValues={this.getControlValues.bind(this)}
-          pipelines={this.props.pipelines} />
+        <div style={styles.controls}>
+          <Card style={styles.pane}>
+            <ExplorerControls
+              getControlValues={this.getControlValues.bind(this)}
+              pipelines={this.props.pipelines} />
+          </Card>
+          <Card style={styles.pane}>
+            Spacer
+          </Card>
+        </div>
           {
             this.props.dataset ?
               <DataExplorerVisualization
@@ -83,3 +91,15 @@ class DataExplorer extends React.Component {
 }
 
 export default DataExplorer;
+
+const styles = {
+  base: {
+    padding: 10
+  },
+  controls: {
+    display: 'flex'
+  },
+  pane: {
+    flex: 1
+  }
+};

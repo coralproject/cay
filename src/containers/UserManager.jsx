@@ -13,7 +13,7 @@ import UserDetail from '../components/UserDetail';
 import settings from '../settings';
 
 @connect(state => {
-  return state.userList;
+  return state.users;
 })
 @Radium
 export default class UserManager extends React.Component {

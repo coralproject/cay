@@ -132,7 +132,7 @@ export const fetchUsers = (filterId) => {
 
     dispatch(requestUsers(filterId));
 
-    fetch(httpPrefix + apiPrefix + 'test_basic' + apiSuffix, getInit())
+    fetch(httpPrefix + '/query', getInit())
       .then(response => response.json())
       .then(json => dispatch(recieveUsers(json)))
       .catch(err => dispatch(requestUsersFailure(err)));

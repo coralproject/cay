@@ -1,13 +1,7 @@
-export const REQUEST_DATA = 'REQUEST_DATA';
-export const RECEIVE_DATA = 'RECEIVE_DATA';
-
-export const SET_FILTER = 'SET_FILTER';
-export const UNSET_FILTERS = 'UNSET_FILTERS';
-
-export const SELECT_USER = 'SELECT_USER';
-export const USERS_REQUEST = 'USERS_REQUEST';
-export const REQUEST_USERS_FAILURE = 'REQUEST_USERS_FAILURE';
-export const RECIEVE_USERS = 'RECIEVE_USERS';
+export const PIPELINE_SELECTED = 'PIPELINE_SELECTED';
+export const PIPELINES_REQUEST = 'PIPELINES_REQUEST';
+export const PIPELINES_REQUEST_FAILURE = 'PIPELINES_REQUEST_FAILURE';
+export const PIPELINES_RECEIVED = 'PIPELINES_RECEIVED';
 
 export const LOGIN_INIT = 'LOGIN_INIT'; // user has clicked the Sign In button
 export const LOGIN_REQUEST = 'LOGIN_REQUEST'; // login http request started
@@ -47,75 +41,40 @@ const httpPrefix = true ? 'http://localhost:4000/' : 'production httpPrefix goes
 const apiPrefix = '1.0/query/'; // maybe later we'll be at api 2.0
 const apiSuffix = '/exec';
 
-export const requestData = () => {
+export const selectPipeline = (pipeline) => {
   return {
-    type: REQUEST_DATA
+    type: PIPELINE_SELECTED,
+    pipeline
   };
 };
 
-export const receiveData = (data) => {
+export const requestPipeline = (pipeline) => {
   return {
-    type: RECEIVE_DATA,
-    data: data
+    type: PIPELINES_REQUEST,
+    pipeline
   };
 };
 
-export const fetchData = (message) => {
-  return (dispatch) => {
-    dispatch(requestData());
-    setTimeout(() => {
-      dispatch(receiveData({message}));
-    }, 300);
-  };
-};
-
-export const setFilter = (id) => {
+export const receivePipelines = (message) => {
   return {
-    type: SET_FILTER,
-    id
-  };
-};
-
-export const unsetFilters = () => {
-  return {
-    type: UNSET_FILTERS
-  };
-};
-
-export const selectUser = (user) => {
-  return {
-    type: SELECT_USER,
-    user: user.user_id
-  };
-};
-
-export const requestUsers = (filterId) => {
-  return {
-    type: USERS_REQUEST,
-    filterId
-  };
-};
-
-export const recieveUsers = (message) => {
-  return {
-    type: RECIEVE_USERS,
+    type: PIPELINES_RECEIVED,
     message
   };
 };
 
-export const requestUsersFailure = (err) => {
+export const requestPipelinesFailure = (err) => {
   return {
-    type: REQUEST_USERS_FAILURE,
+    type: PIPELINES_REQUEST_FAILURE,
     err
   };
 };
 
-export const fetchUserListIfNotFetched = (filterId) => {
+export const fetchPipelinesIfNotFetched = (filterId) => {
 
   return (dispatch,getState) => {
 
     if (! getState().userList.loading && getState().userList.loadedFilterId !== filterId) {
-      return dispatch(fetchUsers(filterId));
+      return dispatch(fetchPipelines(filterId));
     }
 
     return {
@@ -127,15 +86,15 @@ export const fetchUserListIfNotFetched = (filterId) => {
 };
 
 
-export const fetchUsers = (filterId) => {
+export const fetchPipelines = (filterId) => {
   return (dispatch) => {
 
-    dispatch(requestUsers(filterId));
+    dispatch(requestPipelines(filterId));
 
     fetch(httpPrefix + '/query', getInit())
       .then(response => response.json())
-      .then(json => dispatch(recieveUsers(json)))
-      .catch(err => dispatch(requestUsersFailure(err)));
+      .then(pipelines => dispatch(receivePipelines(pipelines)))
+      .catch(err => dispatch(requestPipelinesFailure(err)));
   };
 };
 

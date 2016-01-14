@@ -1,13 +1,11 @@
 import { combineReducers } from 'redux';
-import data from './data';
 import auth from './auth';
 import comments from './comments';
-import users from './users';
+import pipelines from './pipelines';
 import dataExplorer from './data-explorer';
 
 const rootReducer = combineReducers({
-  data,
-  users,
+  pipelines,
   auth,
   comments,
   dataExplorer

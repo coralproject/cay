@@ -8,7 +8,8 @@ import FilterRow from './FilterRow';
 import Heading from './Heading';
 import {Link} from 'react-router';
 
-class FilterList extends React.Component {
+@Radium
+class PipelineList extends React.Component {
 
   render() {
     const {style, ...other} = this.props;
@@ -38,8 +39,8 @@ class FilterList extends React.Component {
   }
 }
 
-FilterList.propTypes = {
-  onFilterClick: PropTypes.func.isRequired
+PipelineList.propTypes = {
+  onPipelineClick: PropTypes.func.isRequired
 };
 
 const styles = {
@@ -54,4 +55,4 @@ const styles = {
   }
 };
 
-export default Radium(FilterList);
+export default PipelineList;

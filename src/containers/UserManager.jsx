@@ -1,37 +1,35 @@
-import React from "react";
-import { connect } from "react-redux";
-import Radium from "radium";
+import React from 'react';
+import { connect } from 'react-redux';
+import Radium from 'radium';
 
-import {fetchUserListIfNotFetched, setFilter, selectUser, fetchUsers} from '../actions';
+import {fetchPipelinesIfNotFetched, selectPipeline} from '../actions';
 
 import Page from './Page';
 import ContentHeader from '../components/ContentHeader';
-import FilterList from '../components/FilterList';
+import PipelineList from '../components/PipelineList';
 import UserList from '../components/UserList';
 import UserDetail from '../components/UserDetail';
 
 import settings from '../settings';
 
 @connect(state => {
-  return state.users;
+  return state.pipelines;
 })
 @Radium
 export default class UserManager extends React.Component {
 
   // only the first time
   componentWillMount() {
-    if (this.props.params.filterId) {
-      this.props.dispatch(fetchUserListIfNotFetched(this.props.params.filterId));
-    }
+    this.props.dispatch(fetchPipelinesIfNotFetched(this.props.params.filterId));
   }
 
   // every time the state is updated
   componentDidUpdate() {
+    // this.props.dispatch(fetchPipelinesIfNotFetched(this.props.params.filterId));
+  }
 
-    if (this.props.params.filterId) {
-      this.props.dispatch(fetchUserListIfNotFetched(this.props.params.filterId));
-    }
-
+  onPipelineClick() {
+    console.log('foo');
   }
 
   render() {
@@ -44,19 +42,19 @@ export default class UserManager extends React.Component {
         <ContentHeader title="User Manager" />
 
         <div style={styles.base}>
-          <FilterList
+          <PipelineList
             active={this.props.params.filter_id}
             style={styles.filterTable}
-            onFilterClick={this.props.onFilterClick}
-            filters={['All Users', 'New Users', 'Warned Users', 'Trusted Contributors', 'Trolls']} />
+            onPipelineClick={this.onPipelineClick}
+            filters={this.props.pipelines} />
 
-          <UserList
-            style={styles.userTable}
-            users={this.props.users} />
+          {/*<UserList
+                      style={styles.userTable}
+                      users={this.props.pipelines} />
 
-          <UserDetail
-            {...this.props.selectedUser}
-            style={styles.userDetail} />
+                    <UserDetail
+                      {...this.props.selectedUser}
+                      style={styles.userDetail} />*/}
 
         </div>
 

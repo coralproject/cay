@@ -70,7 +70,7 @@ class Page extends React.Component {
         transitions={this.state.shouldTransition}
         onSetOpen={this.onSetSidebarOpen.bind(this)}>
         <Header onHamburgerClick={this.toggleSidebar.bind(this)}/>
-        <div style={styles.wrapper}>
+        <div style={[styles.wrapper, this.props.style]}>
           {this.props.children}
         </div>
       </Sidebar>

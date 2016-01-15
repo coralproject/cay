@@ -24,8 +24,8 @@ export default class PipelineRow extends React.Component {
 
         leftAvatar={<Icon size="medium" inverse={true} color={settings.brandColor} name="fa-folder" />}
       >
-        <Link to={`/user-manager/${this.props.id}`}>
-          {this.props.filter}
+        <Link style={styles.link} to={`/user-manager/${this.props.id}`}>
+          {this.props.pipeline.name}
         </Link>
 
         <Badge count={Math.random().toString().slice(-2)} style={styles.badge}/>
@@ -38,6 +38,10 @@ export default class PipelineRow extends React.Component {
 const styles = {
   base: {
     cursor: 'pointer'
+  },
+  link: {
+    textDecoration: 'none',
+    color: settings.darkGrey
   },
   badge: {
     position: 'absolute',

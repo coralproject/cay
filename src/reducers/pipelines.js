@@ -2,7 +2,10 @@ import * as types from '../actions';
 
 const initialState = {
   loading: false,
-  pipelines: []
+  loadingPipeline: false,
+  pipesLoaded: false,
+  pipelines: [],
+  users: []
 };
 
 const pipelines = (state = initialState, action) => {
@@ -15,13 +18,19 @@ const pipelines = (state = initialState, action) => {
     return Object.assign({}, state, {loading: true});
 
   case types.PIPELINE_REQUEST:
-    return state; // query one pipeline?
+    return Object.assign({}, state, {loadingPipeline: true}); // query one pipeline?
 
   case types.PIPELINES_REQUEST_FAILURE:
-    return Object.assign({}, state, {loading: false, showTheError: 'TODO'});
+    return Object.assign({}, state, {loading: false, showTheError: 'failed to load pipelines from server'});
+
+  case types.PIPELINE_REQUEST_FAILURE:
+    return Object.assign({}, state, {loadingPipeline: false, showTheError: 'failed to load ' + action.pipelineName});
 
   case types.PIPELINES_RECEIVED:
     return Object.assign({}, state, { loading: false, pipelines: action.pipelines } );
+
+  case types.PIPELINE_RECEIVED:
+    return Object.assign({}, state, { loadingPipeline: false, [action.pipeline.name]: action.pipeline});
 
   default:
     // console.log('no reducer matches:', action.type);

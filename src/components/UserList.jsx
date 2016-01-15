@@ -1,8 +1,6 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 
-import settings from '../settings';
-
 import List from './lists/List';
 import UserRow from './UserRow';
 import Heading from './Heading';
@@ -28,7 +26,7 @@ export default class UserList extends React.Component {
                 user={user}
                 style={styles.row}
                 key={i} />
-            )
+            );
           })
         }
       </List>

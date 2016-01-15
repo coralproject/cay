@@ -1,7 +1,10 @@
 export const PIPELINE_SELECTED = 'PIPELINE_SELECTED';
+export const PIPELINE_REQUEST = 'PIPELINE_REQUEST'; // request data for a single pipeline
 export const PIPELINES_REQUEST = 'PIPELINES_REQUEST';
 export const PIPELINES_REQUEST_FAILURE = 'PIPELINES_REQUEST_FAILURE';
+export const PIPELINE_REQUEST_FAILURE = 'PIPELINE_REQUEST_FAILURE';
 export const PIPELINES_RECEIVED = 'PIPELINES_RECEIVED';
+export const PIPELINE_RECEIVED = 'PIPELINE_RECEIVED';
 
 export const LOGIN_INIT = 'LOGIN_INIT'; // user has clicked the Sign In button
 export const LOGIN_REQUEST = 'LOGIN_REQUEST'; // login http request started
@@ -37,7 +40,7 @@ var getInit = () => {
   return init;
 };
 
-const httpPrefix = true ? 'http://localhost:4000/' : 'production httpPrefix goes here';
+const httpPrefix = 'http://52.23.218.253:4000/';
 const apiPrefix = '1.0/query/'; // maybe later we'll be at api 2.0
 const apiSuffix = '/exec';
 
@@ -91,7 +94,7 @@ export const fetchPipelinesIfNotFetched = () => {
 
 };
 
-
+// get shallow list of query_sets
 export const fetchPipelines = () => {
   return (dispatch) => {
 
@@ -101,6 +104,32 @@ export const fetchPipelines = () => {
       .then(response => response.json())
       .then(pipelines => dispatch(receivePipelines(pipelines)))
       .catch(err => dispatch(requestPipelinesFailure(err)));
+  };
+};
+
+export const requestPipelineFailure = (err) => {
+  return {
+    type: PIPELINE_REQUEST_FAILURE,
+    err
+  };
+};
+
+export const receivePipeline = (pipeline) => {
+  return {
+    type: PIPELINE_RECEIVED,
+    pipeline
+  };
+};
+
+// get full data for one query_set
+export const fetchPipeline = (pipelineName) => {
+  return (dispatch) => {
+    dispatch(requestPipeline(pipelineName));
+
+    fetch(httpPrefix + apiPrefix + pipelineName, getInit())
+      .then(response => response.json())
+      .then(pipeline => dispatch(receivePipeline(pipeline)))
+      .catch(err => dispatch(requestPipelineFailure(err)));
   };
 };
 

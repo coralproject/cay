@@ -6,7 +6,6 @@ import settings from '../settings';
 import List from './lists/List';
 import PipelineRow from './PipelineRow';
 import Heading from './Heading';
-import {Link} from 'react-router';
 
 @Radium
 class PipelineList extends React.Component {
@@ -18,14 +17,14 @@ class PipelineList extends React.Component {
 
       <List style={[styles.base, style]}>
         <Heading size="small" style={styles.heading}>
-          Filter List
+          Pipeline List
         </Heading>
 
         {
-          this.props.filters.map((filter, i) => {
+          this.props.pipelines.map((pipeline, i) => {
             return (
               <PipelineRow
-                filter={filter}
+                pipeline={pipeline}
                 style={styles.row}
                 {...other}
                 id={i}

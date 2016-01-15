@@ -1,8 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
+import _ from 'lodash';
 
-import {fetchPipelinesIfNotFetched, selectPipeline} from '../actions';
+import {fetchPipelinesIfNotFetched, selectPipeline, fetchPipeline} from '../actions';
 
 import Page from './Page';
 import ContentHeader from '../components/ContentHeader';
@@ -25,7 +26,17 @@ export default class UserManager extends React.Component {
 
   // every time the state is updated
   componentDidUpdate() {
-    // this.props.dispatch(fetchPipelinesIfNotFetched(this.props.params.filterId));
+    // if (!_.some(_.map(this.props.pipelines, _.isString))) {
+    //   this.props.pipelines.map(pipe => {
+
+    //   })
+    // }
+
+    // if (_.isString(this.props.pipelines[0])) { // stopgap. sorry
+    //   this.props.pipelines.map(pipe => {
+    //     this.props.dispatch(fetchPipeline(pipe));
+    //   });
+    // }
   }
 
   onPipelineClick() {
@@ -44,17 +55,17 @@ export default class UserManager extends React.Component {
         <div style={styles.base}>
           <PipelineList
             active={this.props.params.filter_id}
-            style={styles.filterTable}
+            style={styles.pipelineList}
             onPipelineClick={this.onPipelineClick}
-            filters={this.props.pipelines} />
+            pipelines={this.props.pipelines} />
 
-          {/*<UserList
-                      style={styles.userTable}
-                      users={this.props.pipelines} />
+          <UserList
+            style={styles.userTable}
+            users={this.props.users} />
 
-                    <UserDetail
-                      {...this.props.selectedUser}
-                      style={styles.userDetail} />*/}
+          <UserDetail
+            {...this.props.selectedUser}
+            style={styles.userDetail} />
 
         </div>
 
@@ -71,7 +82,7 @@ const styles = {
     paddingLeft: 15,
     paddingRight: 15 // why do I have to write these all out?
   },
-  filterTable: {
+  pipelineList: {
     flex: 1,
     marginLeft: 5,
     marginRight: 5

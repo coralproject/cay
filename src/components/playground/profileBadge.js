@@ -9,7 +9,7 @@ class ProfileBadge extends React.Component {
   render() {
 
     return (
-      <div style={ styles.profileBadge }>
+      <div style={ styles.profileBadge } onClick={ this.props.profileClickHandler }>
         <img style={ styles.profilePicture } src="http://lorempixel.com/60/60/people" /><br />
         <h4 style={ styles.userName }>coolcat29</h4>
       </div>
@@ -26,7 +26,8 @@ var styles = {
     position: 'absolute',
     top: '20px',
     left: '20px',
-    textAlign: 'center'
+    textAlign: 'center',
+    cursor: 'pointer'
   },
   profilePicture: {
     borderRadius: '30px'

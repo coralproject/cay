@@ -5,6 +5,7 @@ import Radium from 'radium';
 import settings from '../../settings';
 
 import ProfileBadge from './profileBadge';
+import ProfileInfo from './profileInfo';
 import CommentContent from './commentContent';
 import StatsBar from './statsBar';
 import CommentTools from './commentTools';
@@ -17,13 +18,21 @@ class Comment extends React.Component {
     this.setState({ toolsExpanded: !this.state.toolsExpanded });
   }
 
+  onProfileClick() {
+    console.log("probando");
+    this.setState({ profileExpanded: !this.state.profileExpanded });
+    console.log( this.state.profileExpanded );
+  }
+
   render() {
 
     var commentTools = this.state.toolsExpanded ? <CommentTools /> : null;
+    var profileInfoSection = this.state.profileExpanded ? <ProfileInfo /> : null;
 
     return (
       <div style={ styles.comment }>
-        <ProfileBadge />
+        { profileInfoSection }
+        <ProfileBadge profileClickHandler={ this.onProfileClick.bind(this) } />
         <div onClick={ this.onCommentContentClick.bind(this) } style={ styles.commentContent }>
           <CommentContent />
         </div>

@@ -11,15 +11,18 @@ class CommentBox extends React.Component {
 
   render() {
 
-    return (
-      <div style={ styles.commentBox }>
-        <h3 style={ styles.commentBoxTitle }>Posting as <strong>coolcat</strong></h3>
-        <div style={ styles.toolBar }>
+    var toolBar = this.props.togglerGroups["content"].togglers["rich_content"].status ?
+      <div style={ styles.toolBar }>
           <button style={ styles.toolBarButton }><Icon name="fa-bold" /></button>
           <button style={ styles.toolBarButton }><Icon name="fa-italic" /></button>
           <button style={ styles.toolBarButton }><Icon name="fa-link" /></button>
           <button style={ styles.toolBarButton }><Icon name="fa-quote-left" /></button>
         </div>
+      : '';
+    return (
+      <div style={ styles.commentBox }>
+        <h3 style={ styles.commentBoxTitle }>Posting as <strong>coolcat</strong></h3>
+        { toolBar }
         <div>
           <div style={ styles.commentBoxContent } contentEditable="true"></div>
         </div>

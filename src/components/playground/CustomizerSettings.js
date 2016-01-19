@@ -17,18 +17,18 @@ class CustomizerSettings extends React.Component {
     return (
       <div>
         {
-          this.props.togglerGroups.map((togglerGroup, g) => {
+          Object.keys(this.props.togglerGroups).map((togglerGroupIndex, gIndex) => {
             return (
-              <div style={ styles.toggleGroup } key={ g }>
-                <h2 style={ styles.toggleGroupHeader }>{ togglerGroup.name }</h2>
+              <div style={ styles.toggleGroup } key={ gIndex }>
+                <h2 style={ styles.toggleGroupHeader }>{ this.props.togglerGroups[togglerGroupIndex].name }</h2>
                 { 
-                  togglerGroup.togglers.map((toggler, t) => { 
+                  Object.keys(this.props.togglerGroups[togglerGroupIndex].togglers).map((togglerKey, index) => { 
                     return (
                       <CustomizerToggle 
-                        groupIndex={ g } 
-                        togglerIndex={ t } 
-                        toggler={ toggler }
-                        key={ t } />
+                        groupIndex={ togglerGroupIndex } 
+                        togglerIndex={ togglerKey } 
+                        toggler={ this.props.togglerGroups[togglerGroupIndex].togglers[togglerKey] }
+                        key={ togglerKey } />
                     );
                   })
                 }

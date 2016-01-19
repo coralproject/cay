@@ -293,3 +293,24 @@ export const populateControlsReducer = () => {
       .catch(err => console.log(err));
   };
 };
+
+/* github oauth stuff */
+
+export const loginGit = () => {
+  const clientId = '539db12440cca9ec7e2c';
+  const redirectURI = encodeURI('http://localhost:3000/explore');
+
+  const url = `https://github.com/login/oauth/authorize
+    ?client_id=${clientId}
+    &redirect_uri=${redirectURI}
+    state=foobar`;
+
+  console.log('url', url);
+
+  return {
+    type: LOGIN_INIT,
+    url
+  };
+
+  // location.href = url;
+};

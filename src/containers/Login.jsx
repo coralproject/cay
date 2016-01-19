@@ -4,9 +4,10 @@ import Radium from 'radium';
 
 import settings from '../settings';
 
+import {loginGit} from '../actions';
+
 import Card from '../components/cards/Card';
 import CardHeader from '../components/cards/CardHeader';
-import TextField from '../components/forms/TextField';
 import Button from '../components/Button';
 
 @connect(state => {
@@ -14,24 +15,23 @@ import Button from '../components/Button';
 })
 @Radium
 class Login extends React.Component {
-  render() {
-    const {dispatch} = this.props;
 
+  loginUser() {
+    this.props.dispatch(loginGit());
+  }
+
+  render() {
     return (
       <div style={styles.base}>
         <Card style={styles.loginModal}>
-          <CardHeader title="Sign in" />
+          <CardHeader title="Sign in with GitHub" />
           <div style={styles.container}>
-            <TextField style={styles.textInput} label="Username / Email Address" />
-            <TextField
-              style={styles.textInput}
-              label="Password"
-              type="password"
-              error="A password is required" />
-            <Button style={styles.loginButton} category="primary">SIGN IN</Button>
-            <hr />
-            <p>Or connect with</p>
-            <Button style={styles.loginButton} category="primary">SSO</Button>
+            <Button
+              size="large"
+              style={styles.loginButton}
+              category="primary"
+              onClick={this.loginUser.bind(this)}
+            >GitHub</Button>
           </div>
         </Card>
       </div>
@@ -61,6 +61,6 @@ const styles = {
     marginTop: 32,
     marginBottom: 25
   }
-}
+};
 
 export default Login;

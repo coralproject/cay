@@ -8,13 +8,17 @@ class Button extends React.Component {
 
   render() {
     return (
-      <button type="button" style={[
-        styles.base,
-        this.props.size === 'small' && styles.small,
-        this.props.size === 'large' && styles.large,
-        styles[this.props.category],
-        this.props.style
-      ]}>
+      <button
+        onClick={this.props.onClick}
+        type="button"
+        style={[
+          styles.base,
+          this.props.size === 'small' && styles.small,
+          this.props.size === 'large' && styles.large,
+          styles[this.props.category],
+          this.props.style
+        ]}
+      >
         {this.props.children}
       </button>
     );

@@ -16,6 +16,7 @@ export default class PipelineRow extends React.Component {
   render() {
     return (
       <ListItem
+        onClick={this.props.onClick}
         style={[
           this.props.style,
           styles.base,

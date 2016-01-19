@@ -39,10 +39,6 @@ export default class UserManager extends React.Component {
     // }
   }
 
-  onPipelineClick() {
-    console.log('foo');
-  }
-
   render() {
     const {dispatch} = this.props;
 
@@ -56,7 +52,6 @@ export default class UserManager extends React.Component {
           <PipelineList
             active={this.props.params.filter_id}
             style={styles.pipelineList}
-            onPipelineClick={this.onPipelineClick}
             pipelines={this.props.pipelines} />
 
           <UserList

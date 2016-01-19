@@ -4,6 +4,8 @@ import {connect} from 'react-redux';
 
 import settings from '../settings';
 
+import {executeCustomPipeline} from '../actions';
+
 import List from './lists/List';
 import PipelineRow from './PipelineRow';
 import Heading from './Heading';
@@ -13,7 +15,8 @@ import Heading from './Heading';
 class PipelineList extends React.Component {
 
   loadUsers() {
-
+    console.log('loadUsers');
+    this.props.dispatch(executeCustomPipeline('some_id'));
   }
 
   render() {
@@ -30,6 +33,7 @@ class PipelineList extends React.Component {
           this.props.pipelines.map((pipeline, i) => {
             return (
               <PipelineRow
+                onClick={this.loadUsers.bind(this)}
                 pipeline={pipeline}
                 style={styles.row}
                 {...other}
@@ -43,10 +47,6 @@ class PipelineList extends React.Component {
     );
   }
 }
-
-PipelineList.propTypes = {
-  onPipelineClick: PropTypes.func.isRequired
-};
 
 const styles = {
   base: {

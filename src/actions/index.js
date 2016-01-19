@@ -133,6 +133,12 @@ export const fetchPipeline = (pipelineName) => {
   };
 };
 
+export const executeCustomPipeline = pipeline => {
+  return {
+    type: 'EXECUTE_CUSTOM_PIPELINE',
+    pipeline
+  };
+};
 
 /* stuff for the login screen */
 

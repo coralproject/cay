@@ -29,14 +29,9 @@ class DataExplorer extends React.Component {
   }
 
   parseCommentsPerDay() {
-    const victoryFormat = this.props.dataset.map((item) => {
-      const date = item._id;
+    const victoryFormat = this.props.dataset.map((item, i) => {
       return {
-        x: new Date(
-          date.year,
-          date.month,
-          date.day
-        ),
+        x: new Date(2016, 0, i),
         y: item.comments
       };
     });

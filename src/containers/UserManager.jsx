@@ -1,37 +1,42 @@
-import React from "react";
-import { connect } from "react-redux";
-import Radium from "radium";
+import React from 'react';
+import { connect } from 'react-redux';
+import Radium from 'radium';
+import _ from 'lodash';
 
-import {fetchUserListIfNotFetched, setFilter, selectUser, fetchUsers} from '../actions';
+import {fetchPipelinesIfNotFetched, selectPipeline, fetchPipeline} from '../actions';
 
 import Page from './Page';
 import ContentHeader from '../components/ContentHeader';
-import FilterList from '../components/FilterList';
+import PipelineList from '../components/PipelineList';
 import UserList from '../components/UserList';
 import UserDetail from '../components/UserDetail';
 
 import settings from '../settings';
 
 @connect(state => {
-  return state.users;
+  return state.pipelines;
 })
 @Radium
 export default class UserManager extends React.Component {
 
   // only the first time
   componentWillMount() {
-    if (this.props.params.filterId) {
-      this.props.dispatch(fetchUserListIfNotFetched(this.props.params.filterId));
-    }
+    this.props.dispatch(fetchPipelinesIfNotFetched());
   }
 
   // every time the state is updated
   componentDidUpdate() {
+    // if (!_.some(_.map(this.props.pipelines, _.isString))) {
+    //   this.props.pipelines.map(pipe => {
 
-    if (this.props.params.filterId) {
-      this.props.dispatch(fetchUserListIfNotFetched(this.props.params.filterId));
-    }
+    //   })
+    // }
 
+    // if (_.isString(this.props.pipelines[0])) { // stopgap. sorry
+    //   this.props.pipelines.map(pipe => {
+    //     this.props.dispatch(fetchPipeline(pipe));
+    //   });
+    // }
   }
 
   render() {
@@ -44,11 +49,10 @@ export default class UserManager extends React.Component {
         <ContentHeader title="User Manager" />
 
         <div style={styles.base}>
-          <FilterList
+          <PipelineList
             active={this.props.params.filter_id}
-            style={styles.filterTable}
-            onFilterClick={this.props.onFilterClick}
-            filters={['All Users', 'New Users', 'Warned Users', 'Trusted Contributors', 'Trolls']} />
+            style={styles.pipelineList}
+            pipelines={this.props.pipelines} />
 
           <UserList
             style={styles.userTable}
@@ -73,7 +77,7 @@ const styles = {
     paddingLeft: 15,
     paddingRight: 15 // why do I have to write these all out?
   },
-  filterTable: {
+  pipelineList: {
     flex: 1,
     marginLeft: 5,
     marginRight: 5

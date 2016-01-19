@@ -1,14 +1,23 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
+import {connect} from 'react-redux';
 
 import settings from '../settings';
 
-import List from './lists/List';
-import FilterRow from './FilterRow';
-import Heading from './Heading';
-import {Link} from 'react-router';
+import {executeCustomPipeline} from '../actions';
 
-class FilterList extends React.Component {
+import List from './lists/List';
+import PipelineRow from './PipelineRow';
+import Heading from './Heading';
+
+@connect(state => state.pipelines)
+@Radium
+class PipelineList extends React.Component {
+
+  loadUsers() {
+    console.log('loadUsers');
+    this.props.dispatch(executeCustomPipeline('some_id'));
+  }
 
   render() {
     const {style, ...other} = this.props;
@@ -17,14 +26,15 @@ class FilterList extends React.Component {
 
       <List style={[styles.base, style]}>
         <Heading size="small" style={styles.heading}>
-          Filter List
+          Pipeline List
         </Heading>
 
         {
-          this.props.filters.map((filter, i) => {
+          this.props.pipelines.map((pipeline, i) => {
             return (
-              <FilterRow
-                filter={filter}
+              <PipelineRow
+                onClick={this.loadUsers.bind(this)}
+                pipeline={pipeline}
                 style={styles.row}
                 {...other}
                 id={i}
@@ -38,10 +48,6 @@ class FilterList extends React.Component {
   }
 }
 
-FilterList.propTypes = {
-  onFilterClick: PropTypes.func.isRequired
-};
-
 const styles = {
   base: {
 
@@ -54,4 +60,4 @@ const styles = {
   }
 };
 
-export default Radium(FilterList);
+export default PipelineList;

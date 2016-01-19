@@ -10,26 +10,28 @@ class DataExplorerVisualization extends React.Component {
     return (
       <VictoryBar
         style={{data:
-          {width: 1, fill: "orange"}
+          {width: 1, fill: 'orange'}
         }}
         data={this.props.dataset}/>
-    )
+    );
   }
+
   getLineVictoryComponent() {
     return (
       <VictoryLine
         padding={75}
         data={this.props.dataset}
-        interpolation="monotone"
+        interpolation='monotone'
         style={{
           data: {
             strokeWidth: 1,
-            ":hover": {stroke: "#c33b33"}
+            ':hover': {stroke: '#c33b33'}
           },
           labels: {fontSize: 12}
         }}/>
-    )
+    );
   }
+
   render() {
     return (
       <div>
@@ -46,13 +48,13 @@ class DataExplorerVisualization extends React.Component {
         domainPadding={{x: 20}}>
         <VictoryAxis
           style={{
-            axis: {stroke: "gray"},
-            ticks: {stroke: "gray"},
+            axis: {stroke: 'gray'},
+            ticks: {stroke: 'gray'},
             tickLabels: {
-              fontSize: 10,
+              fontSize: 10
             },
             axisLabels: {
-              fontsize: 16,
+              fontsize: 16
             }
           }}
           tickCount={10}
@@ -60,8 +62,8 @@ class DataExplorerVisualization extends React.Component {
         <VictoryAxis dependentAxis
           label={this.props.dependentVariableName}
           style={{
-            axis: {stroke: "gray"},
-            ticks: {stroke: "transparent"}
+            axis: {stroke: 'gray'},
+            ticks: {stroke: 'transparent'}
           }}/>
         {this.getLineVictoryComponent()}
       </VictoryChart>

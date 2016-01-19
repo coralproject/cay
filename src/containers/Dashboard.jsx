@@ -1,5 +1,4 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import Radium from 'radium';
 
 import {fetchComments} from '../actions';
@@ -9,7 +8,6 @@ import Card from '../components/cards/Card';
 
 require('../../css/react-select.css');
 
-@connect(state => state.data)
 @Radium
 class Dashboard extends React.Component {
 

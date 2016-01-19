@@ -7,9 +7,9 @@ import settings from '../settings';
 import ListItem from './lists/ListItem';
 import Avatar from './Avatar';
 
-import {fetchCommentsByUser} from "../actions";
+import {fetchCommentsByUser} from '../actions';
 
-@connect()
+@connect(state => state.pipelines)
 @Radium
 export default class UserRow extends React.Component {
   static propTypes = {
@@ -17,7 +17,7 @@ export default class UserRow extends React.Component {
   }
 
   handleClick() {
-    this.props.dispatch(fetchCommentsByUser(this.props.user))
+    this.props.dispatch(fetchCommentsByUser(this.props.user));
   }
 
   render() {
@@ -26,7 +26,7 @@ export default class UserRow extends React.Component {
         style={[this.props.style, styles.base]}
         onClick={this.handleClick.bind(this)} >
 
-          {this.props.user.user_id}
+          {this.props.user}
 
           <p style={styles.sub}>
             Rating | Test Score | Comments

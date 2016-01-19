@@ -15,13 +15,10 @@ import Heading from './Heading';
 
 import CommentDetail from './CommentDetail';
 
-@connect((state) => { return state.users})
 @Radium
 export default class UserDetail extends React.Component {
   render() {
 
-    console.log('UserDetail', this.props);
-    console.log("from connect",this.props.users)
     return (
       <Card style={[styles.base, this.props.style]}>
         <Heading size="medium">{this.props.name}</Heading>

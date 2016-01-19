@@ -11,15 +11,12 @@ import Icon from './Icon';
 
 
 @Radium
-export default class FilterRow extends React.Component {
-
-  static propTypes = {
-    onFilterClick: PropTypes.func.isRequired
-  }
+export default class PipelineRow extends React.Component {
 
   render() {
     return (
       <ListItem
+        onClick={this.props.onClick}
         style={[
           this.props.style,
           styles.base,
@@ -28,8 +25,8 @@ export default class FilterRow extends React.Component {
 
         leftAvatar={<Icon size="medium" inverse={true} color={settings.brandColor} name="fa-folder" />}
       >
-        <Link to={`/user-manager/${this.props.id}`}>
-          {this.props.filter}
+        <Link style={styles.link} to={`/user-manager/${this.props.id}`}>
+          {this.props.pipeline.name}
         </Link>
 
         <Badge count={Math.random().toString().slice(-2)} style={styles.badge}/>
@@ -42,6 +39,10 @@ export default class FilterRow extends React.Component {
 const styles = {
   base: {
     cursor: 'pointer'
+  },
+  link: {
+    textDecoration: 'none',
+    color: settings.darkGrey
   },
   badge: {
     position: 'absolute',

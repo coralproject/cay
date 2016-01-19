@@ -65,7 +65,7 @@ class ExplorerControls extends React.Component {
           ref="pipelines">
           {
             this.props.pipelines.map((pipeline, i) => {
-              return ( <option key={i} value={pipeline}> {pipeline} </option> );
+              return ( <option key={i} value={pipeline.name}> {pipeline.name} </option> );
             })
           }
         </select>

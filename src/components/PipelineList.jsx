@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
+import {connect} from 'react-redux';
 
 import settings from '../settings';
 
@@ -7,8 +8,13 @@ import List from './lists/List';
 import PipelineRow from './PipelineRow';
 import Heading from './Heading';
 
+@connect(state => state.pipelines)
 @Radium
 class PipelineList extends React.Component {
+
+  loadUsers() {
+
+  }
 
   render() {
     const {style, ...other} = this.props;

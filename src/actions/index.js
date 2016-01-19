@@ -41,7 +41,7 @@ var getInit = () => {
 };
 
 const httpPrefix = 'http://52.23.218.253:4000/';
-const apiPrefix = '1.0/query/'; // maybe later we'll be at api 2.0
+const apiPrefix = '1.0/'; // maybe later we'll be at api 2.0
 const apiSuffix = '/exec';
 
 export const selectPipeline = (pipeline) => {
@@ -94,7 +94,7 @@ export const fetchPipelinesIfNotFetched = () => {
 
 };
 
-// get shallow list of query_sets
+// get deep list of query_sets
 export const fetchPipelines = () => {
   return (dispatch) => {
 
@@ -240,7 +240,8 @@ const convert = (json) => {
 
 export const fetchDataExplorationDataset = (field, queryParams) => {
   const queryParamString = queryParams ? convert(queryParams) : '';
-  const url = httpPrefix + apiPrefix + field + apiSuffix + queryParamString;
+  const url = httpPrefix + apiPrefix + 'exec/' + field + queryParamString;
+
   return (dispatch, getState) => {
 
     if (!getState().dataExplorer.loading) {

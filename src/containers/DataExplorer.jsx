@@ -32,7 +32,7 @@ class DataExplorer extends React.Component {
     const victoryFormat = this.props.dataset.map((item, i) => {
       return {
         x: new Date(2016, 0, i),
-        y: item.comments
+        y: item.data.comments
       };
     });
     return victoryFormat;
@@ -48,13 +48,35 @@ class DataExplorer extends React.Component {
     return victoryFormat;
   }
 
+  // we don't want to request 10000 hourly intervals,
+  // so compute resonable bin size
+  getSensibleInterval(start, end) {
+    const hour = 1000 * 60 * 60;
+    const day = hour * 24;
+    const week = day * 7;
+    const month = day * 30;
+    let diff = end - start;
+
+    if (diff / hour < 300) {
+      return 'hour';
+    } else if (diff / week < 300) {
+      return 'week';
+    } else if (diff / day < 300) {
+      return 'day';
+    } else {
+      return 'month';
+    }
+  }
+
   getControlValues(values) {
-    const startDate = moment(values.dateRange[0]);
-    const endDate = moment(values.dateRange[1]);
+    const startDate = values.dateRange[0];
+    const endDate = values.dateRange[1];
 
     this.controlsUpdatedGoGetDataset(values.pipeline, {
-      start_date: startDate.format('YYYY-MM-DD'),
-      end_date: endDate.format('YYYY-MM-DD')
+      start: Math.floor(startDate / 1000),
+      end: Math.floor(endDate / 1000),
+      duration: this.getSensibleInterval(startDate, endDate),
+      target: 'total'
     });
   }
 

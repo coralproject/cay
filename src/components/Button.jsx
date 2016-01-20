@@ -6,16 +6,23 @@ import settings from '../settings';
 @Radium
 class Button extends React.Component {
 
+  handleClick() {
+    if (this.props.disabled) return;
+
+    this.props.onClick();
+  }
+
   render() {
     return (
       <button
-        onClick={this.props.onClick}
+        onClick={this.handleClick.bind(this)}
         type="button"
         style={[
           styles.base,
           this.props.size === 'small' && styles.small,
           this.props.size === 'large' && styles.large,
           styles[this.props.category],
+          this.props.disabled && styles.disabled,
           this.props.style
         ]}
       >
@@ -52,6 +59,16 @@ const styles = {
   large: {
     padding: '1.25rem 1.875rem',
     fontSize: '1.125rem'
+  },
+  disabled: {
+    backgroundColor: settings.lightGrey,
+    color: settings.grey,
+    cursor: 'default',
+    borderColor: settings.mediumGrey,
+    ':hover': {
+      backgroundColor: settings.lightGrey,
+      borderColor: settings.mediumGrey
+    }
   },
   'default': {
     backgroundColor: '#fff',

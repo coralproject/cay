@@ -1,23 +1,38 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import {browserHistory} from 'react-router';
 import Radium from 'radium';
 
 import settings from '../settings';
 
-import {loginGit} from '../actions';
+import {loginInitGit, loginGitSuccess} from '../actions';
 
 import Card from '../components/cards/Card';
 import CardHeader from '../components/cards/CardHeader';
 import Button from '../components/Button';
 
-@connect(state => {
-  return state.auth;
-})
+@connect(state => state.auth)
 @Radium
 class Login extends React.Component {
 
+  componentWillMount() {
+    console.log('componentWillMount', this.props);
+    // user has redirected here from github auth screen
+    if (!this.props.token && this.props.location.query.code) {
+      // check for github auth token
+      // store in localStorage until we figure out how to have a real webserver
+      this.props.dispatch(loginGitSuccess(this.props.location.query.code));
+
+      // http://localhost:3000/login?code=f2a01d34e1a686b0db3b&state=foobar
+      // use react-router to push state?
+      browserHistory.push('/explore');
+    } else if (this.props.token) { // user has previously logged in
+      browserHistory.push('/explore');
+    }
+  }
+
   loginUser() {
-    this.props.dispatch(loginGit());
+    this.props.dispatch(loginInitGit());
   }
 
   render() {

@@ -10,6 +10,7 @@ export const LOGIN_INIT = 'LOGIN_INIT'; // user has clicked the Sign In button
 export const LOGIN_REQUEST = 'LOGIN_REQUEST'; // login http request started
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS'; // login request success
 export const LOGIN_FAIL = 'LOGIN_FAIL'; // login request failure
+export const LOGGED_OUT = 'LOGGED_OUT';
 
 export const COMMENT_CLICK = 'COMMENT_CLICK';
 export const COMMENTS_REQUEST = 'COMMENTS_REQUEST';
@@ -297,14 +298,10 @@ export const populateControlsReducer = () => {
 
 /* github oauth stuff */
 
-export const loginGit = () => {
+export const loginInitGit = () => {
   const clientId = '539db12440cca9ec7e2c';
-  const redirectURI = encodeURI('http://localhost:3000/explore');
 
-  const url = `https://github.com/login/oauth/authorize
-    ?client_id=${clientId}
-    &redirect_uri=${redirectURI}
-    state=foobar`;
+  const url = `https://github.com/login/oauth/authorize?client_id=${clientId}&state=foobar`;
 
   console.log('url', url);
 
@@ -314,4 +311,14 @@ export const loginGit = () => {
   };
 
   // location.href = url;
+};
+
+export const loginGitSuccess = (token) => {
+
+  window.localStorage.token = token;
+
+  return {
+    type: LOGIN_SUCCESS,
+    token
+  };
 };

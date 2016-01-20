@@ -40,7 +40,6 @@ export default class UserManager extends React.Component {
   }
 
   render() {
-    const {dispatch} = this.props;
 
     return (
 

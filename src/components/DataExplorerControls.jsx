@@ -74,7 +74,7 @@ class ExplorerControls extends React.Component {
           ref="dateRange"
           min={this.state.rangeStart}
           max={this.state.rangeEnd}
-          onChange={this.handleControlChange.bind(this)}
+          onAfterChange={this.handleControlChange.bind(this)}
           defaultValue={[this.state.rangeStart, this.state.rangeEnd]}
           orientation="horizontal"
           withBars />

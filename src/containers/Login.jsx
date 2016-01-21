@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {browserHistory} from 'react-router';
 import Radium from 'radium';
@@ -14,6 +14,10 @@ import Button from '../components/Button';
 @connect(state => state.auth)
 @Radium
 class Login extends React.Component {
+
+  static contextTypes = {
+    router: PropTypes.object.isRequired
+  }
 
   componentWillMount() {
     console.log('componentWillMount', this.props);

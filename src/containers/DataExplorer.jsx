@@ -14,7 +14,6 @@ class DataExplorer extends React.Component {
 
   componentWillMount() {
     this.props.dispatch(populateControlsReducer());
-
   }
 
   controlsUpdatedGoGetDataset(pipeline, dateRange) {
@@ -81,8 +80,8 @@ class DataExplorer extends React.Component {
           <Card style={styles.pane}>
             <ExplorerControls
               dataset={this.props.dataset ? true : false}
-              rangeStart={_.min(_.pluck(this.props.dataset, 'start')) * 1000}
-              rangeEnd={_.max(_.pluck(this.props.dataset, 'start')) * 1000}
+              rangeStart={this.props.pipelineRangeStart}
+              rangeEnd={this.props.pipelineRangeEnd}
               getControlValues={this.getControlValues.bind(this)}
               pipelines={this.props.pipelines} />
           </Card>

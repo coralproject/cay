@@ -1,11 +1,7 @@
 import React from 'react';
 import Radium from 'radium';
-
-// import our actions
 import Slider from '../components/Slider';
-// import Select from 'react-select';
 import Paper from '../components/Paper';
-
 import DateTime from '../components/utils/DateTime';
 
 @Radium
@@ -15,10 +11,7 @@ class ExplorerControls extends React.Component {
     super(props);
 
     this.state = {
-      rangeStart: new Date(2014, 0, 1).getTime(),
-      rangeEnd: new Date().getTime(),
-      selectedStart: new Date(2014, 0, 1).toString(),
-      selectedEnd: new Date().toString()
+
     };
   }
 
@@ -38,13 +31,23 @@ class ExplorerControls extends React.Component {
   }
 
   handleControlChange() {
-    this.setState({
-      selectedStart: new Date(this.refs.dateRange.getValue()[0]).toString(),
-      selectedEnd: new Date(this.refs.dateRange.getValue()[1]).toString()
-    });
 
     const pipeline = this.refs.pipelines.value;
-    const dateRange = this.refs.dateRange.getValue();
+
+    let dateRange;
+
+    if (this.props.dataset) {
+      // the range the user selected - send it to the server and store it in state
+      dateRange = this.refs.dateRange.getValue();
+      this.setState({
+        selectedStart: new Date(this.refs.dateRange.getValue()[0]).toString(),
+        selectedEnd: new Date(this.refs.dateRange.getValue()[1]).toString()
+      });
+    } else {
+      // init - the default range
+      dateRange = [new Date(2014, 0, 1).getTime(), new Date().getTime()]
+    }
+
 
     this.props.getControlValues({
       pipeline,
@@ -54,7 +57,7 @@ class ExplorerControls extends React.Component {
 
   render() {
     return (
-      <Paper style={styles.base}>
+      <Paper>
         <select
           onChange={this.handleControlChange.bind(this)}
           style={{
@@ -69,32 +72,32 @@ class ExplorerControls extends React.Component {
             })
           }
         </select>
-        <p>Date Range</p>
-        <Slider
-          ref="dateRange"
-          min={this.state.rangeStart}
-          max={this.state.rangeEnd}
-          onChange={this.handleControlChange.bind(this)}
-          defaultValue={[this.state.rangeStart, this.state.rangeEnd]}
-          orientation="horizontal"
-          withBars />
-          <p>
-            Start Date:
-            {this.state.selectedStart}
-          </p>
-          <p>
-            End Date:
-            {this.state.selectedEnd}
-          </p>
+        <p> Dataset loaded: {this.props.dataset.toString()} </p>
+        {
+          this.props.dataset ?
+          <div>
+            <p>Date Range</p>
+            <Slider
+              ref="dateRange"
+              min={this.props.rangeStart}
+              max={this.props.rangeEnd}
+              onAfterChange={this.handleControlChange.bind(this)}
+              defaultValue={[this.props.rangeStart, this.props.rangeEnd]}
+              orientation="horizontal"
+              withBars />
+              <p>
+                Start Date:
+                {new Date(this.state.selectedStart || this.props.rangeStart).toString()}
+              </p>
+              <p>
+                End Date:
+                {new Date(this.state.selectedEnd || this.props.rangeEnd).toString()}
+              </p>
+          </div> : ""
+        }
       </Paper>
     );
   }
 }
 
 export default ExplorerControls;
-
-var styles = {
-  base: {
-
-  }
-};

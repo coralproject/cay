@@ -841,7 +841,7 @@ const styles = {
   */
 
   unselectedBar: {
-    backgroundColor: 'white'
+    backgroundColor: 'rgb(230,230,230)'
   },
   selectedBar: {
     backgroundColor: settings.brandColor

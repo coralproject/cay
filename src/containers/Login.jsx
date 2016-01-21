@@ -1,6 +1,5 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
-import {browserHistory} from 'react-router';
 import Radium from 'radium';
 
 import settings from '../settings';
@@ -20,7 +19,9 @@ class Login extends React.Component {
   }
 
   componentWillMount() {
-    console.log('componentWillMount', this.props);
+    console.log('componentWillMount', this.context);
+    let {router} = this.context;
+
     // user has redirected here from github auth screen
     if (!this.props.token && this.props.location.query.code) {
       // check for github auth token
@@ -29,9 +30,9 @@ class Login extends React.Component {
 
       // http://localhost:3000/login?code=f2a01d34e1a686b0db3b&state=foobar
       // use react-router to push state?
-      browserHistory.push('/explore');
+      router.push('/explore');
     } else if (this.props.token) { // user has previously logged in
-      browserHistory.push('/explore');
+      router.push('/explore');
     }
   }
 

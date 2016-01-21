@@ -14,24 +14,17 @@ class DataExplorer extends React.Component {
 
   componentWillMount() {
     this.props.dispatch(populateControlsReducer());
-    // initialize with some data - we will decide what to set as default later
-    // this.controlsUpdatedGoGetDataset('comments_per_day', {
-    //   start_date: '2014-01-01',
-    //   end_date: '2015-01-01'
-    // })
+
   }
 
   controlsUpdatedGoGetDataset(pipeline, dateRange) {
-    console.log('inside', pipeline, dateRange);
     this.props.dispatch(fetchDataExplorationDataset(pipeline, dateRange));
-
-    // this.props.dispatch(fetchDataExplorationDataset('top_commenters_by_count', null));
   }
 
   parseCommentsPerDay() {
     const victoryFormat = this.props.dataset.map((item, i) => {
       return {
-        x: new Date(2016, 0, i),
+        x: new Date(item.start * 1000),
         y: item.data.comments
       };
     });
@@ -87,6 +80,9 @@ class DataExplorer extends React.Component {
         <div style={styles.controls}>
           <Card style={styles.pane}>
             <ExplorerControls
+              dataset={this.props.dataset ? true : false}
+              rangeStart={_.min(_.pluck(this.props.dataset, 'start')) * 1000}
+              rangeEnd={_.max(_.pluck(this.props.dataset, 'start')) * 1000}
               getControlValues={this.getControlValues.bind(this)}
               pipelines={this.props.pipelines} />
           </Card>

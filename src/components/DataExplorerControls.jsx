@@ -59,6 +59,14 @@ class ExplorerControls extends React.Component {
     return (<option key={i} value={pipeline.name}>{pipeline.name}</option>);
   }
 
+  sliderInMotion() {
+    // slider should get a tooltip with this information on it, rather than changing date range in controls
+    this.setState({
+      sliderInMotionMin: new Date(this.refs.dateRange.getValue()[0]).toString(),
+      sliderInMotionMax: new Date(this.refs.dateRange.getValue()[1]).toString()
+    });
+  }
+
   render() {
     return (
       <Paper>
@@ -77,6 +85,7 @@ class ExplorerControls extends React.Component {
               ref="dateRange"
               min={this.props.rangeStart}
               max={this.props.rangeEnd}
+              onChange={this.sliderInMotion.bind(this)}
               onAfterChange={this.handleControlChange.bind(this)}
               defaultValue={[this.props.rangeStart, this.props.rangeEnd]}
               orientation="horizontal"

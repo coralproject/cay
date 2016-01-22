@@ -8,7 +8,7 @@ class Menu extends React.Component {
   render() {
     return (
       <div>
-        <p style={styles.logo}>The Coral Project</p>
+        <a href="/" style={styles.logo}>Coral Project</a>
         <ul>
           <MenuItem name="Dashboard" target="/" icon="fa-area-chart" />
           <MenuItem name="Explore" target="/explore" icon="fa-bar-chart" />
@@ -22,10 +22,15 @@ class Menu extends React.Component {
 
 var styles = {
   logo: {
-    backgroundImage: 'url(/img/coralLogoMark-1.5.white.png)',
-    backgroundRepeat: 'none',
+    backgroundImage: 'url(/img/logo_white.png)',
+    backgroundSize: '20px 20px',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: '10px 10px',
     color: 'white',
-    fontSize: '1em'
+    fontSize: '1em',
+    padding: '12px 20px 12px 35px',
+    textDecoration: 'none',
+    display: 'block'
   }
 };
 

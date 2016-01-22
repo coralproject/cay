@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React from 'react';
 import Radium from 'radium';
 
@@ -8,17 +7,26 @@ import MenuItem from './MenuItem';
 class Menu extends React.Component {
   render() {
     return (
-      <ul>
-        <MenuItem name="Dashboard" target="/" icon="fa-area-chart" />
-        <MenuItem name="User Manager" target="user-manager" icon="fa-users" />
-        <MenuItem name="Settings" target="/settings" icon="fa-cog" />
-      </ul>
+      <div>
+        <p style={styles.logo}>The Coral Project</p>
+        <ul>
+          <MenuItem name="Dashboard" target="/" icon="fa-area-chart" />
+          <MenuItem name="Explore" target="/explore" icon="fa-bar-chart" />
+          <MenuItem name="User Manager" target="/user-manager" icon="fa-users" />
+          <MenuItem name="Settings" target="/settings" icon="fa-cog" />
+        </ul>
+      </div>
     );
   }
 }
 
-const styles = {
-
+var styles = {
+  logo: {
+    backgroundImage: 'url(/img/coralLogoMark-1.5.white.png)',
+    backgroundRepeat: 'none',
+    color: 'white',
+    fontSize: '1em'
+  }
 };
 
 export default Menu;

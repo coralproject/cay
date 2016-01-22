@@ -45,7 +45,7 @@ class ExplorerControls extends React.Component {
       });
     } else {
       // init - the default range
-      dateRange = [new Date(2014, 0, 1).getTime(), new Date().getTime()]
+      dateRange = [new Date(2014, 0, 1).getTime(), new Date().getTime()];
     }
 
 
@@ -55,22 +55,18 @@ class ExplorerControls extends React.Component {
     });
   }
 
+  mapOptions(pipeline, i) {
+    return (<option key={i} value={pipeline.name}>{pipeline.name}</option>);
+  }
+
   render() {
     return (
       <Paper>
         <select
           onChange={this.handleControlChange.bind(this)}
-          style={{
-            marginRight: 10,
-            cursor: 'pointer',
-            fontSize: 16
-          }}
+          style={styles.select}
           ref="pipelines">
-          {
-            this.props.pipelines.map((pipeline, i) => {
-              return ( <option key={i} value={pipeline.name}> {pipeline.name} </option> );
-            })
-          }
+          {this.props.pipelines.map(this.mapOptions)}
         </select>
         <p> Dataset loaded: {this.props.dataset.toString()} </p>
         {
@@ -93,11 +89,19 @@ class ExplorerControls extends React.Component {
                 End Date:
                 {new Date(this.state.selectedEnd || this.props.rangeEnd).toString()}
               </p>
-          </div> : ""
+          </div> : ''
         }
       </Paper>
     );
   }
 }
+
+var styles = {
+  select: {
+    marginRight: 10,
+    cursor: 'pointer',
+    fontSize: 16
+  }
+};
 
 export default ExplorerControls;

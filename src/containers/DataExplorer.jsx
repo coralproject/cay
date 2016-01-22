@@ -51,10 +51,10 @@ class DataExplorer extends React.Component {
 
     if (diff / hour < 300) {
       return 'hour';
-    } else if (diff / week < 300) {
-      return 'week';
     } else if (diff / day < 300) {
       return 'day';
+    } else if (diff / day < 300) {
+      return 'week';
     } else {
       return 'month';
     }

@@ -10,25 +10,40 @@ import settings from '../settings';
 import Sidebar from '../components/playground/sidebar';
 import Customizer from '../components/playground/customizer';
 import Preview from '../components/playground/preview';
+import Wizard from '../components/playground/wizard';
 
-// Global CSS
-require('../../css/reset.css');
-require('../../css/global.css');
+// Playground CSS
 require('../../css/playground.css');
-require('../../fonts/glyphicons-halflings-regular.woff');
 
 @connect(state => state.data)
 @Radium
 class Playground extends React.Component {
 
+  onWizardClick() {
+    this.setState({ wizardIsOpen: !this.state.wizardIsOpen });
+  }
+
+  hideWizard() {
+    this.setState({ wizardIsOpen: false }); 
+  }
+
   render() {
 
+    var wizard = this.state.wizardIsOpen ? 
+      <div style={ styles.wizardOverlay } onClick={ this.hideWizard.bind(this) }>
+        <Wizard hideWizard={ this.hideWizard.bind(this) } />
+      </div>
+      : null;
+
     return (
-        <div style={ styles.playGround }>
+      <div>
+        <div style={ [ styles.playGround, this.state.wizardIsOpen ? styles.blurred : '' ] }>
+
+          <img src="http://coralproject.github.io/design/img/logos/coralWordMark-1.5.png" style={ styles.logo } />
           
           <div style={ styles.heading }>
 
-            <h1 style={ styles.headingTitle }>The Playground</h1>
+            <h1 style={ styles.headingTitle }>Playground</h1>
 
             <div style={ styles.playgroundIntro }>
 
@@ -43,7 +58,7 @@ class Playground extends React.Component {
                 Share your thoughts on the problems addressed by each solution.
               </p>
 
-              <button style={ styles.wizardButton }>Use the Wizard</button>
+              <button style={ styles.wizardButton } onClick={ this.onWizardClick.bind(this) }>Use the Wizard</button>
 
             </div>
 
@@ -54,6 +69,10 @@ class Playground extends React.Component {
           <Sidebar />
 
         </div>
+
+        { wizard }
+
+      </div>
     );
   }
 }
@@ -63,39 +82,60 @@ export default Playground;
 
 const styles = {
   playGround: {
-    maxWidth: "800px"
+    margin: "auto",
+    transition: 'filter 1s'
   },
   heading: {
-    padding: "40px"
+    padding: "50px 350px 50px 50px"
   },
   headingTitle: {
-    fontSize: "30pt",
-    fontWeight: "bold",
-    color: settings.coralPink,
+    fontFamily: 'Josefin Slab',
+    textTransform: 'uppercase',
+    fontSize: "75px",
+    fontWeight: "600",
+    color: "white",
     textAlign: "center"
   },
   playgroundIntro: {
     fontSize: "14pt",
     color: "white",
     lineHeight: "1.2",
-    backgroundColor: "rgba(0,0,0,.8)",
     padding: "20px",
     margin: "20px",
-    textAlign: "center"
+    textAlign: "center",
+    fontFamily: 'Fira Sans'
   },
   playgroundIntroText: {
-    fontSize: "12pt"
+    fontSize: "12pt",
+    fontFamily: 'Fira Sans'
   },
   wizardButton: {
-    backgroundColor: settings.coralPink,
+    color: settings.coralPink,
     border: "none",
     borderRadius: "5px",
     padding: "20px",
     display: "block",
     margin: "20px auto",
+    fontFamily: 'Fira Sans',
     fontWeight: "bold",
     fontSize: "16pt",
-    color: "white",
+    backgroundColor: "white",
     cursor: "pointer"
+  },
+  logo: {
+    width: "400px",
+    margin: '40px 50px'
+  },
+  blurred: {
+    filter: 'blur(8px)',
+    transition: 'filter 1s'
+  },
+  wizardOverlay: {
+    position: 'fixed',
+    left: '0',
+    top: '0',
+    width: '100%',
+    height: '100%',
+    zIndex: '9000'
   }
 };

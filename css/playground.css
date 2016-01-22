@@ -1,3 +1,23 @@
+@import url(https://fonts.googleapis.com/css?family=Josefin+Slab:400,300,600,300italic|Fira+Sans:300,700,400);
+
 body {
+  font-family: "Fira Sans";
+  font-weight: 400;
   background-color: white;
+  color: #fff;
+  background-attachment: scroll;
+  background: rgba(247,114,96,1);
+  background: -moz-linear-gradient(left, rgba(247,114,96,1) 0%, rgba(252,149,70,1) 100%);
+  background: -webkit-gradient(left top, right top, color-stop(0%, rgba(247,114,96,1)), color-stop(100%, rgba(252,149,70,1)));
+  background: -webkit-linear-gradient(left, rgba(247,114,96,1) 0%, rgba(252,149,70,1) 100%);
+  background: -o-linear-gradient(left, rgba(247,114,96,1) 0%, rgba(252,149,70,1) 100%);
+  background: -ms-linear-gradient(left, rgba(247,114,96,1) 0%, rgba(252,149,70,1) 100%);
+  background: linear-gradient(to right, rgba(247,114,96,1) 0%, rgba(252,149,70,1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f77260', endColorstr='#fc9546', GradientType=1 );
+  background-position: center center;
+  background-repeat: none;
+}
+
+p, p span {
+  font-family: 'Fira Sans' !important;
 }

@@ -60,22 +60,33 @@ class CommentTools extends React.Component {
       </div>
       : null;
 
-    var reactions = this.state.reactionsExpanded ?
+    var reactions = this.state.reactionsExpanded && this.props.togglerGroups["interaction"].togglers["reactions"].status ?
       <ReactionTools />
       : null;
 
     return (
       <div>
         <div style={ styles.commentTools } ref={(c) => this._commentTools = c}>
-          { 
-            this.options.map((option) => { 
-              return (
-                <div key={ option.key } style={ styles.commentToolsOption } onClick={ this.onOptionClick.bind(this, option.key) }>
-                  { option.title }
-                </div>
-              );
-            })
+          <div key="ignore" style={ styles.commentToolsOption } onClick={ this.onOptionClick.bind(this, "ignore") }>
+            Ignore User
+          </div>
+          <div key="report" style={ styles.commentToolsOption } onClick={ this.onOptionClick.bind(this, "report") }>
+            Report
+          </div>
+          {
+            this.props.togglerGroups["interaction"].togglers["reactions"].status ?            
+              <div key="react" style={ styles.commentToolsOption } onClick={ this.onOptionClick.bind(this, "react") }>
+                React
+              </div>
+            : 
+              ''
           }
+          <div key="reply" style={ styles.commentToolsOption } onClick={ this.onOptionClick.bind(this, "reply") }>
+            Reply
+          </div>
+          <div key="share" style={ styles.commentToolsOption } onClick={ this.onOptionClick.bind(this, "share") }>
+            Share
+          </div>
           { reportingToolRender }
         </div>
         { reactions }

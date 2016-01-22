@@ -24,6 +24,7 @@ export default TwitterStream;
 
 var styles = {
   twitterStream: {
+    marginTop: '20px',
     padding: '30px',
     border: '1px solid white',
     opacity: '.5'

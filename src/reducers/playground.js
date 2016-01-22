@@ -2,19 +2,17 @@ import * as types from '../actions/playground';
 
 const initialState = {
   customizerIsVisible: false,
+  currentSidebarTopic: null,
   togglerGroups: { 
     "moderation": {
       name: "Moderation",
       togglers: {
-        "emoji": {
-          label: "Enable Emoji",
-          description: "Enables Emoji icons on comments.",
-          status: false
-        },
-        "reactions": {
-          label: "Enable Reactions",
-          description: "Enables Reactions (other than likes) on comments.",
-          status: false
+        "muting": {
+          label: "Block/mute is ON",
+          offLabel: "Block/mute is OFF",
+          description: "Blocking users will hide their posts from the comment stream.",
+          status: false,
+          topic: "muting"
         }
       }
     },
@@ -22,14 +20,18 @@ const initialState = {
       name: "Privacy",
       togglers: {
         "anonymity": {
-          label: "Anonimity is OFF",
+          label: "Anonymity is ON",
+          offLabel: "Anonymity is OFF",
           description: "This means pseudonyms (nicknames) are allowed.",
-          status: false
+          status: false,
+          topic: "anonymity"
         },
         "public_profile": {
-          label: "Public Profile is OFF",
+          label: "Public Profile is ON",
+          offLabel: "Public Profile is OFF",
           description: "Visitor are able to see your public profile.",
-          status: false
+          status: false,
+          topic: "public_profile"
         }
       }
     },
@@ -37,14 +39,18 @@ const initialState = {
       name: "Reputation",
       togglers: {
         "badges": {
-          label: "Badges are OFF",
+          label: "Badges are ON",
+          offLabel: "Badges are OFF",
           description: "Badges are common in discussion boards to show reputation achievements of a user.",
-          status: false
+          status: false,
+          topic: "badges"
         },
         "privileges": {
           label: "Privileges are ON",
+          offLabel: "Privileges are OFF",
           description: "Many reputation systems allow certain privileges (as moderating others) as you gain reputation.",
-          status: false
+          status: false,
+          topic: "privileges"
         }
       }
     },
@@ -52,17 +58,38 @@ const initialState = {
       name: "Content",
       togglers: {
         "rich_content": {
-          label: "Rich content is OFF",
+          label: "Rich content is ON",
+          offLabel: "Rich content is OFF",
           description: "Using bold or italic typefaces, possibly adding images.",
+          status: false,
+          topic: "rich_content"
+        },
+        "emoji": {
+          label: "Emojis are ON",
+          offLabel: "Emojis are OFF",
+          description: "Emojis and other types of emoticons are widely used to convey emotion.",
+          status: false,
+          topic: "emoji"
+        },
+      }
+    },
+    "interaction": {
+      name: "Interaction",
+      togglers: {
+        "reactions": {
+          label: "Reactions are ON",
+          offLabel: "Reactions are OFF",
+          description: "Enables Reactions (other than likes) on comments.",
           status: false
         },
-        "emojis": {
-          label: "Emojis are ON",
-          description: "Emojis or other types or emoticons are widely used to convey emotion.",
+        "likes": {
+          label: "Likes are ON",
+          offLabel: "Likes are OFF",
+          description: "Enables likes on comments, no dislikes, just likes.",
           status: false
         }
       }
-    },
+    }
   },
   comments: [
     {
@@ -73,7 +100,84 @@ const initialState = {
       content: "Another comment",
       likes: 41
     }
-  ]
+  ],
+  wizardSteps: [
+    {
+      content: "Do you think users should be able to remain anonymous (using a nickname)?",
+      yesLabel: "Yes",
+      noLabel: "No",
+      affectedGroup: "privacy",
+      affectedToggler: "anonymity"
+    },
+    {
+      content: "Should rich content (bold, italics, links) be allowed inside comments?",
+      yesLabel: "Yes",
+      noLabel: "No",
+      affectedGroup: "content",
+      affectedToggler: "rich_content"
+    },
+  ],
+  topics: {
+    "anonymity": {
+      title: "Anonymity",
+      description: "Some users prefer being anonymous to express their opinions freely, others think that this leads to...",
+      hashtag: "Anonymity",
+      links: [
+        {
+          friendlyName: "Anonymity - Wikipedia",
+          href: "https://en.wikipedia.org/wiki/Anonymity"
+        },
+        {
+          friendlyName: "Anonymity - Electronic Frontier Foundation",
+          href: "https://www.eff.org/es/issues/anonymity"
+        }
+      ]
+    },
+    "public_profile": {
+      title: "Public Profiles",
+      description: "Having a public profile on a community allows people to find you with different search methods. Some users prefer not to be searchable or having a public profile at all.",
+      hashtag: "PublicProfiles",
+      links: [
+        {
+          friendlyName: "(links pending)",
+          href: "https://en.wikipedia.org/wiki/Anonymity"
+        }
+      ]
+    },
+    "emoji": {
+      title: "Emojis",
+      description: "After years of different emoticon packs and instant messengers, Emojis made it into a standard. They can be used to convey emotions and feelings in conversation, but they can also lead to introducing noise if abused.",
+      hashtag: "Emojis",
+      links: [
+        {
+          friendlyName: "Emojipedia",
+          href: "http://emojipedia.org/"
+        }
+      ]
+    },
+    "badges": {
+      title: "Badges",
+      description: "Badges are a way to show recognition on diffent aspects of a user's community participation...",
+      hashtag: "Badges",
+      links: [
+        {
+          friendlyName: "Badges - Poynter.org",
+          href: "http://www.poynter.org/2011/how-badges-help-news-websites-build-community-make-money/140653/"
+        }
+      ]
+    },
+    "muting": {
+      title: "Blocking & Muting Users",
+      description: "Muting a user is the most basic way to avoid unwanted behaviour on your comment stream...",
+      hashtag: "Blocking",
+      links: [
+        {
+          friendlyName: "(link pending)",
+          href: "http://#"
+        }
+      ]
+    },
+  }
 };
 
 const playground = (state = initialState, action) => {
@@ -86,9 +190,16 @@ const playground = (state = initialState, action) => {
     case types.HIDE_CUSTOMIZER:
       return Object.assign({}, state, { customizerIsVisible: false });
 
+    case types.SET_TOPIC:
+      return Object.assign({}, state, { currentSidebarTopic: action.topic });
+
     case types.SET_TOGGLER:
-      state.togglerGroups[ action.groupIndex ].togglers[ action.togglerIndex ].status = action.status;
-      return state;
+
+      var toggleGroupsUpdater = {};
+      toggleGroupsUpdater[action.groupIndex] = { togglers: state.togglerGroups[action.groupIndex].togglers };
+      toggleGroupsUpdater[action.groupIndex].togglers[action.togglerIndex].status = action.status;
+
+      return Object.assign({}, state, { toggleGroups: toggleGroupsUpdater });
 
     default:
       console.log('Not a Playground action:', action.type);

@@ -64,7 +64,9 @@ var styles = {
     minHeight: '100px',
     fontSize: '9pt',
     display: 'table',
-    width: '100%'
+    width: '100%',
+    maxWidth: '600px',
+    marginBottom: '30px'
   },
   profileLeftPane: {
     display: 'table-cell',

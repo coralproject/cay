@@ -15,11 +15,11 @@ class Preview extends React.Component {
   render() {
 
     return (
-      <div>
+      <div style={ styles.preview }>
         <div style={ styles.previewBar }>
           <h2 style={ styles.previewBarTitle }>
             <Icon size="large" name="fa-eye" />
-            Preview
+            <span style={ styles.previewTitleSpan }>Preview</span>
           </h2>
         </div>
         <div style={ styles.sandBox }>
@@ -36,8 +36,12 @@ class Preview extends React.Component {
 export default Preview;
 
 var styles = {
+  preview: {
+    background: 'white',
+    padding: '50px 350px 50px 50px',
+    color: '#3d3d3d'
+  },
   sandBox: {
-    padding: '30px'
   },
   sandBoxIntro: {
     padding: '20px',
@@ -46,13 +50,13 @@ var styles = {
     fontSize: '9pt'
   },
   previewBar: {
-    padding: '30px',
     borderBottom: '1px solid ' + settings.lightGrey,
     position: 'relative',
     fontSize: '16pt',
-    cursor: 'pointer'
   },
-  previewBarTitle: {
+  previewTitleSpan: {
+    fontFamily: 'Fira Sans',
+    fontWeight: '300',
     fontSize: '24pt'
   }
 };

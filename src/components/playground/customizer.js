@@ -21,11 +21,11 @@ class Customizer extends React.Component {
     var customizerSettings = this.state.settingsExpanded ? <CustomizerSettings /> : null;
 
     return (
-      <div>
+      <div style={ styles.customizer }>
         <div style={ styles.customizeToggler } onClick={ this.onCustomizerTogglerClick.bind(this) }>
           <h2 style={ styles.customizeTogglerTitle }>
             <Icon size="large" name="fa-cog" />
-            Customize
+            <span style={ styles.customizeTogglerTitleSpan }>Customize</span>
           </h2>
           <button style={ styles.customizeTogglerButton }><Icon size="medium" name="fa-caret-down" /></button>
         </div>
@@ -41,8 +41,12 @@ export default Customizer;
 
 
 var styles = {
+  customizer: {
+    padding: '50px 350px 50px 50px',
+    background: '#F1EBE0',
+    color: '#3d3d3d'
+  },
   customizeToggler: {
-    padding: '30px',
     borderBottom: '1px solid ' + settings.lightGrey,
     position: 'relative',
     fontSize: '16pt',
@@ -50,15 +54,22 @@ var styles = {
   },
   customizeTogglerButton: {
     position: 'absolute',
-    top: '30px',
-    right: '30px',
+    top: '5px',
+    right: '0px',
     background: 'none',
     border: 'none',
     padding: '0',
     margin: '0'
   },
-  customizeTogglerTitle: {
-    fontSize: '24pt'
+  customizeTogglerTitleSpan: {
+    fontSize: '24pt',
+    fontFamily: 'Fira Sans',
+    fontWeight: '300',
+    textTransform: 'uppercase'
+  },
+  cogIcon: {
+    fontSize: '24pt',
+    marginRight: '10px'
   }
 
 };

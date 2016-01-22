@@ -48,13 +48,14 @@ export default CustomizerSettings;
 
 var styles = {
   toggleGroup: {
-    padding: '30px'
+    padding: '30px 0'
   },
   toggleGroupHeader: {
     fontSize: '11pt',
     color: settings.grey,
     textTransform: 'uppercase',
-    marginBottom: '30px'
+    marginBottom: '20px',
+    fontFamily: 'Fira Sans'
   },
   clearBoth: {
     'clear': 'both'

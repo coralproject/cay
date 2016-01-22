@@ -5,7 +5,7 @@ import Radium from 'radium';
 // Settings
 import settings from '../../settings';
 
-import { setToggler } from '../../actions/playground';
+import { setToggler, setTopic } from '../../actions/playground';
 
 @connect(state => state.playground)
 @Radium
@@ -22,12 +22,19 @@ class CustomizerToggle extends React.Component {
     this.setState({ active: !currentStatus });
   }
 
+  onMouseEnter() {
+    if (this.props.toggler.topic) {
+      this.props.dispatch(setTopic(this.props.toggler.topic));
+    }
+  }
+
   render() {
 
     return (
-      <div style={ [ styles.base, this.state.active ? styles.active : null ] }>
+      <div style={ [ styles.base, this.state.active ? styles.active : null ] } onMouseEnter={ this.onMouseEnter.bind(this) } >
         <label style={ styles.label }>
-          <input onClick={ this.onTogglerClick.bind(this) } checked={ this.state.active } type="checkbox" /> { this.props.toggler.label }
+          <input onClick={ this.onTogglerClick.bind(this) } checked={ this.state.active } type="checkbox" /> 
+          <span style={ styles.labelSpan }>{ this.state.active ? this.props.toggler.label : this.props.toggler.offLabel }</span>
         </label>
         <p style={ styles.description }>
           { this.props.toggler.description }
@@ -57,9 +64,17 @@ var styles = {
     borderTop: '4px solid ' + settings.coralPink
   },
   label: {
-    fontWeight: 'bold'
+    display: 'block',
+    fontWeight: 'bold',
+    fontFamily: 'Fira Sans',
+    marginBottom: '10px'
+  },
+  labelSpan: {
+    fontWeight: 'bold',
+    fontFamily: 'Fira Sans'
   },
   description: {
-    color: '#666'
+    color: '#666',
+    fontFamily: 'Fira Sans'
   }
 };

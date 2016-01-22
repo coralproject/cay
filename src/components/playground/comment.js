@@ -19,9 +19,7 @@ class Comment extends React.Component {
   }
 
   onProfileClick() {
-    console.log("probando");
     this.setState({ profileExpanded: !this.state.profileExpanded });
-    console.log( this.state.profileExpanded );
   }
 
   render() {

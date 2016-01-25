@@ -23,7 +23,7 @@ The basic idea is that the build process results in a `bundle.js` file containin
 |  +-- actions           -> descriptions of action types for redux
 |  +-- components        -> all of the non-stateful React components
 |  +-- containers        -> stateful React components
-|  +-- lib               -> 3rd party vendor libraries
+|  +-- layout            -> non-stateful components, but control the major parts of the page
 |  +-- reducers          -> redux reducers
 |  +-- store             -> redux store
 +-- test                 -> mirrors the src folder 

@@ -41,7 +41,7 @@ var getInit = () => {
   return init;
 };
 
-const httpPrefix = 'http://52.23.218.253:4000/';
+const httpPrefix = 'http://10.0.1.90:4000/';
 const apiPrefix = '1.0/'; // maybe later we'll be at api 2.0
 const apiSuffix = '/exec';
 

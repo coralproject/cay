@@ -98,6 +98,7 @@ class ExplorerControls extends React.Component {
                 End Date:
                 {new Date(this.state.selectedEnd || this.props.rangeEnd).toString()}
               </p>
+              <button> Seperate by assets </button>
           </div> : ''
         }
       </Paper>

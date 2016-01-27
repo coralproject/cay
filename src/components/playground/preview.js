@@ -2,8 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 
-import settings from '../../settings';
-import Icon from '../../components/icon';
+import Icon from '../../components/Icon';
 
 import CommentBox from './commentBox';
 import Stream from './stream';
@@ -45,12 +44,12 @@ var styles = {
   },
   sandBoxIntro: {
     padding: '20px',
-    color: settings.grey,
+    color: '#999',
     textAlign: 'center',
     fontSize: '9pt'
   },
   previewBar: {
-    borderBottom: '1px solid ' + settings.lightGrey,
+    borderBottom: '1px solid #ccc',
     position: 'relative',
     fontSize: '16pt'
   },

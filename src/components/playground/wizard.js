@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 
-import settings from '../../settings';
 import { setToggler } from '../../actions/playground';
 
 @connect(state => state.playground)
@@ -64,7 +63,7 @@ var styles = {
     position: 'absolute',
     bottom: '30px',
     left: '30px',
-    backgroundColor: settings.grey,
+    backgroundColor: '#999',
     fontFamily: 'Fira Sans',
     color: 'white',
     border: 'none',

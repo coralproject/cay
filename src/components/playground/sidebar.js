@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 
-import Icon from '../../components/icon';
+import Icon from '../../components/Icon';
 import TwitterStream from './TwitterStream';
 
 @connect(state => state.playground)
@@ -11,7 +11,9 @@ class Sidebar extends React.Component {
 
   render() {
 
-    var sideBarLinks = this.props.currentSidebarTopic && this.props.topics[this.props.currentSidebarTopic].links ?
+    var sideBarLinks = this.props.currentSidebarTopic && 
+      this.props.topics[this.props.currentSidebarTopic] &&
+      this.props.topics[this.props.currentSidebarTopic].links ?
       <div style={ styles.sideBarReferences }>
         <h3 style={ styles.referencesTitle }>Learn more about { this.props.topics[this.props.currentSidebarTopic].title }</h3>
           {
@@ -24,7 +26,7 @@ class Sidebar extends React.Component {
       </div>
     : '';
 
-    var sideBarContent = this.props.currentSidebarTopic ? 
+    var sideBarContent = this.props.currentSidebarTopic && this.props.topics[this.props.currentSidebarTopic] ? 
       <div>
         <h2 style={ styles.sideBarTitle }>{ this.props.topics[this.props.currentSidebarTopic].title }</h2>
         <p style={ styles.sideBarDescription }>{ this.props.topics[this.props.currentSidebarTopic].description }</p>

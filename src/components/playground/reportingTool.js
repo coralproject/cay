@@ -2,8 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 
-import settings from '../../settings';
-
 @connect(state => state.playground)
 @Radium
 class ReportingTool extends React.Component {
@@ -77,7 +75,7 @@ export default ReportingTool;
 
 var styles = {
   reportingTool: {
-    background: settings.lightGrey,
+    background: '#ccc',
     width: '350px',
     margin: '0',
     boxShadow: '0 0 10px black',
@@ -90,7 +88,7 @@ var styles = {
   },
   reportingToolOption: {
     padding: '20px',
-    borderBottom: '1px solid ' + settings.grey,
+    borderBottom: '1px solid #999',
     cursor: 'pointer'
   },
   reportingToolOptionHeader: {

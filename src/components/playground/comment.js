@@ -2,8 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 
-import settings from '../../settings';
-
 import ProfileBadge from './profileBadge';
 import ProfileInfo from './profileInfo';
 import CommentContent from './commentContent';
@@ -47,7 +45,7 @@ export default Comment;
 
 var styles = {
   comment: {
-    borderBottom: '1px solid ' + settings.grey,
+    borderBottom: '1px solid #999',
     padding: '20px 20px 20px 100px',
     position: 'relative',
     minHeight: '100px'

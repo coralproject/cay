@@ -2,9 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 
-// Settings
-import settings from '../../settings';
-
 import { setToggler, setTopic } from '../../actions/playground';
 
 import Switch from '../../components/forms/switch';
@@ -35,7 +32,7 @@ class CustomizerToggle extends React.Component {
     return (
 
       <div style={ [ styles.base, this.state.active ? styles.active : null ] } onMouseEnter={ this.onMouseEnter.bind(this) } >
-        <Switch color={ settings.coralPink } checked={ this.state.active } check={ true } clickHandler={ this.onTogglerClick.bind(this) } extraStyles={ styles.switchExtra } />
+        <Switch color={ '#F77260' } checked={ this.state.active } check={ true } clickHandler={ this.onTogglerClick.bind(this) } extraStyles={ styles.switchExtra } />
         <span style={ styles.descriptionSpan }>{ this.state.active ? this.props.toggler.label : this.props.toggler.offLabel }</span>
         <div style={ styles.clearfix }></div>
         <p style={ styles.description }>
@@ -55,17 +52,17 @@ var styles = {
   base: {
     padding: '20px',
     margin: '0 3% 20px 0',
-    borderLeft: '1px solid ' + settings.grey,
-    borderRight: '1px solid ' + settings.grey,
-    borderBottom: '1px solid ' + settings.grey,
-    borderTop: '4px solid ' + settings.grey,
+    borderLeft: '1px solid #999',
+    borderRight: '1px solid #999',
+    borderBottom: '1px solid #999',
+    borderTop: '4px solid #999',
     minHeight: '100px',
     width: '30%',
     'float': 'left',
     transition: 'background .5s'
   },
   active: {
-    borderTop: '4px solid ' + settings.coralPink,
+    borderTop: '4px solid #F77260',
     backgroundColor: 'white'
   },
   label: {

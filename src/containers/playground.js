@@ -3,9 +3,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 
-// Settings
-import settings from '../settings';
-
 // Playground-specific imports
 import Sidebar from '../components/playground/sidebar';
 import Customizer from '../components/playground/customizer';
@@ -16,7 +13,7 @@ import Wizard from '../components/playground/wizard';
 require('../../css/playground.css');
 require('../../fonts/playground/coral-icon-font.css');
 
-@connect(state => state.data)
+@connect(state => state.playground)
 @Radium
 class Playground extends React.Component {
 
@@ -115,7 +112,7 @@ const styles = {
     fontFamily: 'Fira Sans'
   },
   wizardButton: {
-    color: settings.coralPink,
+    color: '#F77260',
     border: 'none',
     borderRadius: '5px',
     padding: '20px',

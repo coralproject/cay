@@ -2,8 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 
-import settings from '../../settings';
-
 import ReportingTool from './reportingTool';
 import ReactionTools from './reactionTools';
 
@@ -103,7 +101,7 @@ var styles = {
   commentTools: {
     height: '60px',
     display: 'table',
-    background: settings.lightGrey,
+    background: '#ccc',
     lineHeight: '60px',
     width: '100%',
     margin: '0'
@@ -117,7 +115,7 @@ var styles = {
     cursor: 'pointer',
     fontWeight: 'bold',
     ':hover': {
-      background: settings.coralPink,
+      background: '#F77260',
       color: 'white'
     }
   },

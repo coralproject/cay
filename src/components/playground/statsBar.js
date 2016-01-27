@@ -2,9 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 
-import settings from '../../settings';
-
-import Icon from '../../components/icon';
+import Icon from '../../components/Icon';
 
 @connect(state => state.playground)
 @Radium
@@ -41,7 +39,7 @@ var styles = {
   statsBar: {
     padding: '10px 0',
     fontSize: '12pt',
-    color: settings.grey
+    color: '#999'
   },
   like: {
     cursor: 'pointer'

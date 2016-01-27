@@ -2,9 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 
-// Settings
-import settings from '../../settings';
-import Icon from '../../components/icon';
+import Icon from '../../components/Icon';
 
 import CustomizerSettings from './customizerSettings';
 
@@ -47,7 +45,7 @@ var styles = {
     color: '#3d3d3d'
   },
   customizeToggler: {
-    borderBottom: '1px solid ' + settings.lightGrey,
+    borderBottom: '1px solid #ccc',
     position: 'relative',
     fontSize: '16pt',
     cursor: 'pointer'

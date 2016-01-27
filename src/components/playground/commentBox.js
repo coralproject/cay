@@ -2,8 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 
-import settings from '../../settings';
-import Icon from '../../components/icon';
+import Icon from '../../components/Icon';
 
 @connect(state => state.playground)
 @Radium
@@ -57,11 +56,11 @@ export default CommentBox;
 
 var styles = {
   toolBar: {
-    backgroundColor: settings.lightGrey,
+    backgroundColor: '#eee',
     borderBottom: '1px solid #aaa'
   },
   commentBox: {
-    backgroundColor: settings.coralPink,
+    backgroundColor: '#F77260',
     padding: '20px',
     borderRadius: '8px'
   },
@@ -90,8 +89,8 @@ var styles = {
   safetyTips: {
     background: 'white',
     padding: '20px',
-    color: settings.grey,
-    borderTop: '1px solid ' + settings.lightGrey
+    color: '#999',
+    borderTop: '1px solid #eee'
   },
   strong: {
     fontWeight: 'bold',

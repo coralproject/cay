@@ -2,8 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 
-import settings from '../../settings';
-import Icon from '../../components/icon';
+import Icon from '../../components/Icon';
 import CoralIcon from '../../components/coral-icon';
 
 @connect(state => state.playground)
@@ -92,7 +91,7 @@ var styles = {
     fontWeight: 'bold'
   },
   profileInfo: {
-    background: settings.lightGrey,
+    background: '#ccc',
     position: 'relative',
     minHeight: '100px',
     fontSize: '9pt',

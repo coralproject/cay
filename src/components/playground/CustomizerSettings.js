@@ -2,9 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 
-// Settings
-import settings from '../../settings';
-
 import CustomizerToggle from './customizerToggle';
 //import CustomizerSlider from './customizerSlider';
 
@@ -52,7 +49,7 @@ var styles = {
   },
   toggleGroupHeader: {
     fontSize: '11pt',
-    color: settings.grey,
+    color: '#999',
     textTransform: 'uppercase',
     marginBottom: '20px',
     fontFamily: 'Fira Sans'

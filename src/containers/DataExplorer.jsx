@@ -7,6 +7,7 @@ import Card from '../components/cards/Card';
 import DataExplorerVisualization from '../components/DataExplorerVisualization';
 import ExplorerControls from '../components/DataExplorerControls';
 import moment from 'moment';
+import _ from "lodash";
 
 @connect(state => state.dataExplorer)
 @Radium
@@ -20,15 +21,6 @@ class DataExplorer extends React.Component {
     this.props.dispatch(fetchDataExplorationDataset(pipeline, dateRange));
   }
 
-  parseCommentsPerDay() {
-    const victoryFormat = this.props.dataset.map((item, i) => {
-      return {
-        x: new Date(item.start * 1000),
-        y: item.data.comments
-      };
-    });
-    return victoryFormat;
-  }
 
   parseTopCommentersByCount() {
     const victoryFormat = this.props.dataset.map((item) => {
@@ -38,6 +30,48 @@ class DataExplorer extends React.Component {
       };
     });
     return victoryFormat;
+  }
+
+  contemplate() {
+
+    /*
+      at this point we know we have data, but we don't know what's in it.
+      expect this function to grow as the possibilities do...
+      we'll continually refactor this out to make it more general
+      but this is hard at this point (1/26) because we don't know what the possibilities are
+      for the 1/28 deadline, it will not be very abstract, checking pipeline names and such
+    */
+
+    let visualization;
+    let parsedDataset;
+    let independentVariableName;
+    let dependentVariableName;
+
+    /* detect time series */
+    if (this.props.dataset[0].start) {
+      parsedDataset = this.props.dataset.map((item, i) => {
+        return {
+          x: new Date(item.start * 1000),
+          y: item.data[this.state.data_object_level_1_key_selection]
+        };
+      });
+
+      dependentVariableName = this.state.data_object_level_1_key_selection ?
+        this.state.data_object_level_1_key_selection.replace(/_/g, ' ') : "";
+      independentVariableName = ""; /* time is self labeling */
+
+      visualization = (
+        <DataExplorerVisualization
+          independentVariableName={independentVariableName}
+          dependentVariableName={dependentVariableName}
+          dataset={parsedDataset}/>
+      )
+    } else /*  assume catagorical  */ {
+      console.log("assuming categorical data because of lack of timestamp")
+    }
+
+    return visualization;
+
   }
 
   // we don't want to request 10000 hourly intervals,
@@ -72,6 +106,12 @@ class DataExplorer extends React.Component {
     });
   }
 
+  getNonActionFiringControlValues(values) {
+    this.setState({
+      data_object_level_1_key_selection: values.data_object_level_1_key_selection
+    })
+  }
+
   render() {
     return (
       <Page style={styles.base}>
@@ -79,23 +119,21 @@ class DataExplorer extends React.Component {
         <div style={styles.controls}>
           <Card style={styles.pane}>
             <ExplorerControls
-              dataset={this.props.dataset ? true : false}
+              dataset={this.props.dataset}
               rangeStart={this.props.pipelineRangeStart}
               rangeEnd={this.props.pipelineRangeEnd}
+              getNonActionFiringControlValues={this.getNonActionFiringControlValues.bind(this)}
               getControlValues={this.getControlValues.bind(this)}
               pipelines={this.props.pipelines} />
           </Card>
           <Card style={styles.pane}>
-            Spacer
+
           </Card>
         </div>
           {
             this.props.dataset ?
-              <DataExplorerVisualization
-                independentVariableName={'indVarName'}
-                dependentVariableName={'depVarName'}
-                dataset={this.parseCommentsPerDay.call(this)}/> :
-              'Spinner'
+              this.contemplate() :
+              "Welcome to data exploration! Let's get started by selecting a pipeline from the dropdown above."
           }
       </Page>
     );

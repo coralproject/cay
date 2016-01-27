@@ -48,15 +48,31 @@ class ExplorerControls extends React.Component {
       dateRange = [new Date(2014, 0, 1).getTime(), new Date().getTime()];
     }
 
-
     this.props.getControlValues({
       pipeline,
-      dateRange
+      dateRange,
     });
   }
 
+  handleNonActionControlChange() {
+    const data_object_level_1_key_selection = this.refs.data_object_level_1_key_selection.value
+
+    this.props.getNonActionFiringControlValues({
+      data_object_level_1_key_selection,
+    })
+  }
+
   mapOptions(pipeline, i) {
-    return (<option key={i} value={pipeline.name}>{pipeline.name}</option>);
+    return (<option key={i} value={pipeline.name}>{pipeline.name.replace(/_/g, ' ')}</option>);
+  }
+
+  makeKeysOptions(obj) {
+    const keyArray = _.keys(obj);
+    const options = keyArray.map((k, i) => {
+        return (<option key={i} value={k}> {k.replace(/_/g, ' ')} </option>)
+      }
+    )
+    return options;
   }
 
   sliderInMotion() {
@@ -74,9 +90,9 @@ class ExplorerControls extends React.Component {
           onChange={this.handleControlChange.bind(this)}
           style={styles.select}
           ref="pipelines">
+          <option value={"DEFAULT_VALUE"}> Select a data pipeline... </option>
           {this.props.pipelines.map(this.mapOptions)}
         </select>
-        <p> Dataset loaded: {this.props.dataset.toString()} </p>
         {
           this.props.dataset ?
           <div>
@@ -90,15 +106,21 @@ class ExplorerControls extends React.Component {
               defaultValue={[this.props.rangeStart, this.props.rangeEnd]}
               orientation="horizontal"
               withBars />
-              <p>
-                Start Date:
-                {new Date(this.state.selectedStart || this.props.rangeStart).toString()}
-              </p>
-              <p>
-                End Date:
-                {new Date(this.state.selectedEnd || this.props.rangeEnd).toString()}
-              </p>
-              <button> Seperate by assets </button>
+            <p>
+              Start Date:
+              {new Date(this.state.selectedStart || this.props.rangeStart).toString()}
+            </p>
+            <p>
+              End Date:
+              {new Date(this.state.selectedEnd || this.props.rangeEnd).toString()}
+            </p>
+            <select
+              onChange={this.handleNonActionControlChange.bind(this)}
+              style={styles.select}
+              ref="data_object_level_1_key_selection">
+              <option value={"DEFAULT_VALUE"}> Select a field... </option>
+              {this.makeKeysOptions(this.props.dataset[0].data)}
+            </select>
           </div> : ''
         }
       </Paper>

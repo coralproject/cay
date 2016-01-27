@@ -19,6 +19,7 @@ const data_exploration = (state = {
   case types.RECEIVE_DATA_EXPLORATION_DATASET:
     let pipelineTimeRange = {};
     /* if it's a new dataset, we need new max and min timescales */
+    /* TODO this assumes it has the property 'start' */
     if (state.datasetName !== action.data.results[0].Name) {
       pipelineTimeRange = {
         pipelineRangeStart: _.min(_.pluck(action.data.results[0].Docs, 'start')) * 1000,

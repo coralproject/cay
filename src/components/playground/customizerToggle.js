@@ -7,11 +7,14 @@ import settings from '../../settings';
 
 import { setToggler, setTopic } from '../../actions/playground';
 
+import Toggle from '../../components/forms/checkbox';
+import Switch from '../../components/forms/switch';
+
 @connect(state => state.playground)
 @Radium
 class CustomizerToggle extends React.Component {
 
-  componentDidMount() {
+  componentWillMount() {
     var initialStatus = this.props.toggler.status;
     this.setState({ active: initialStatus });
   }
@@ -31,16 +34,17 @@ class CustomizerToggle extends React.Component {
   render() {
 
     return (
+
       <div style={ [ styles.base, this.state.active ? styles.active : null ] } onMouseEnter={ this.onMouseEnter.bind(this) } >
-        <label style={ styles.label }>
-          <input onClick={ this.onTogglerClick.bind(this) } checked={ this.state.active } type="checkbox" /> 
-          <span style={ styles.labelSpan }>{ this.state.active ? this.props.toggler.label : this.props.toggler.offLabel }</span>
-        </label>
+        <Switch color={ settings.coralPink } checked={ this.state.active } check={ true } clickHandler={ this.onTogglerClick.bind(this) } extraStyles={ styles.switchExtra } />
+        <span style={ styles.descriptionSpan }>{ this.state.active ? this.props.toggler.label : this.props.toggler.offLabel }</span>
+        <div style={ styles.clearfix }></div>
         <p style={ styles.description }>
           { this.props.toggler.description }
         </p>
       </div>
-      );
+
+    );
 
   }
 }
@@ -56,25 +60,46 @@ var styles = {
     borderRight: '1px solid ' + settings.grey,
     borderBottom: '1px solid ' + settings.grey,
     borderTop: '4px solid ' + settings.grey,
-    height: '100px',
+    minHeight: '100px',
     width: '30%',
-    'float': 'left'
+    'float': 'left',
+    transition: 'background .5s'
   },
   active: {
-    borderTop: '4px solid ' + settings.coralPink
+    borderTop: '4px solid ' + settings.coralPink,
+    backgroundColor: 'white'
   },
   label: {
     display: 'block',
+    width: '80px',
+    height: '30px',
+    borderRadius: '15px',
+    marginBottom: '10px',
+    border: '1px solid #aaa',
+    overflow: 'hidden',
+    position: 'relative',
+    cursor: 'pointer',
+  },
+  descriptionSpan: {
     fontWeight: 'bold',
     fontFamily: 'Fira Sans',
-    marginBottom: '10px'
-  },
-  labelSpan: {
-    fontWeight: 'bold',
-    fontFamily: 'Fira Sans'
+    fontSize: '14pt',
+    lineHeight: '30px'
   },
   description: {
     color: '#666',
+    fontFamily: 'Fira Sans',
+    marginTop: '10px'
+  },
+  checkbox: {
+    display: 'none'
+  },
+  switchExtra: {
+    'float': 'left',
+    margin: '0 10px 0 0',
     fontFamily: 'Fira Sans'
+  },
+  clearfix: {
+    clear: 'both'
   }
 };

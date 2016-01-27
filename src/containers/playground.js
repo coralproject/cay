@@ -14,6 +14,7 @@ import Wizard from '../components/playground/wizard';
 
 // Playground CSS
 require('../../css/playground.css');
+require('../../fonts/playground/coral-icon-font.css');
 
 @connect(state => state.data)
 @Radium
@@ -66,6 +67,9 @@ class Playground extends React.Component {
 
           <Customizer />
           <Preview />
+
+          Medal, Trophy and Badge icons by Zlatko Najdenovski from the Noun Project
+
           <Sidebar />
 
         </div>
@@ -83,7 +87,8 @@ export default Playground;
 const styles = {
   playGround: {
     margin: "auto",
-    transition: 'filter 1s'
+    transition: 'filter 1s',
+    fontFamily: 'Fira Sans'
   },
   heading: {
     padding: "50px 350px 50px 50px"

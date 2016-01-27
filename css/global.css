@@ -11,7 +11,11 @@ article, aside, canvas, details, embed,
 figure, figcaption, footer, header, hgroup,
 menu, nav, output, ruby, section, summary,
 time, mark, audio, video {
+  /* 
+    Temporarily disabling this rule
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  */
+  font-family: inherit;
 }
 
 body {

@@ -25,12 +25,12 @@ class Comment extends React.Component {
   render() {
 
     var commentTools = this.state.toolsExpanded ? <CommentTools /> : null;
-    var profileInfoSection = this.state.profileExpanded ? <ProfileInfo /> : null;
+    var profileInfoSection = this.state.profileExpanded ? <ProfileInfo user={ this.props.user } /> : null;
 
     return (
       <div style={ styles.comment }>
         { profileInfoSection }
-        <ProfileBadge profileClickHandler={ this.onProfileClick.bind(this) } />
+        <ProfileBadge profileClickHandler={ this.onProfileClick.bind(this) } user={ this.props.user } />
         <div onClick={ this.onCommentContentClick.bind(this) } style={ styles.commentContent }>
           <CommentContent />
         </div>

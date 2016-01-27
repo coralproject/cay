@@ -11,17 +11,34 @@ class CommentBox extends React.Component {
 
   render() {
 
-    var toolBar = this.props.togglerGroups["content"].togglers["rich_content"].status ?
+    var toolBar = this.props.togglerGroups["content"].togglers["rich_content"].status 
+      || this.props.togglerGroups["content"].togglers["emoji"].status
+      ?
       <div style={ styles.toolBar }>
-          <button style={ styles.toolBarButton }><Icon name="fa-bold" /></button>
-          <button style={ styles.toolBarButton }><Icon name="fa-italic" /></button>
-          <button style={ styles.toolBarButton }><Icon name="fa-link" /></button>
-          <button style={ styles.toolBarButton }><Icon name="fa-quote-left" /></button>
+          {  
+            this.props.togglerGroups["content"].togglers["rich_content"].status ? 
+              <span>
+                <button style={ styles.toolBarButton }><Icon name="fa-bold" /></button>
+                <button style={ styles.toolBarButton }><Icon name="fa-italic" /></button>
+                <button style={ styles.toolBarButton }><Icon name="fa-link" /></button>
+                <button style={ styles.toolBarButton }><Icon name="fa-quote-left" /></button>
+              </span>
+            : 
+              ''
+          }
+          {  
+            this.props.togglerGroups["content"].togglers["emoji"].status ? 
+              <span>
+                <button style={ styles.toolBarButton }><Icon name="fa-smile-o" /></button>
+              </span>
+            : 
+              ''
+          }
         </div>
       : '';
     return (
       <div style={ styles.commentBox }>
-        <h3 style={ styles.commentBoxTitle }>Posting as <strong>coolcat</strong></h3>
+        <h3 style={ styles.commentBoxTitle }><span style={ styles.postingAs }>Posting as </span><strong style={ styles.strong }>{ this.props.togglerGroups['privacy'].togglers['anonymity'].status ? 'coolcat' : 'Jane Doe' }</strong></h3>
         { toolBar }
         <div>
           <div style={ styles.commentBoxContent } contentEditable="true"></div>
@@ -55,7 +72,8 @@ var styles = {
   },
   commentBoxTitle: {
     fontSize: '11pt',
-    paddingBottom: '10px'
+    paddingBottom: '10px',
+    fontFamily: 'Fira Sans'
   },
   toolBarButton: {
     cursor: 'pointer',
@@ -74,5 +92,12 @@ var styles = {
     padding: '20px',
     color: settings.grey,
     borderTop: '1px solid ' + settings.lightGrey
+  },
+  strong: {
+    fontWeight: 'bold',
+    fontFamily: 'Fira Sans'
+  },
+  postingAs: {
+    fontFamily: 'Fira Sans'
   }
 };

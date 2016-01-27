@@ -29,7 +29,7 @@ const initialState = {
         "public_profile": {
           label: "Public Profile is ON",
           offLabel: "Public Profile is OFF",
-          description: "Visitor are able to see your public profile.",
+          description: "Visitors are able to see your public profile.",
           status: false,
           topic: "public_profile"
         }
@@ -89,14 +89,66 @@ const initialState = {
           status: false
         }
       }
+    },
+    "stream": {
+      name: "Stream",
+      togglers: {
+        "replies": {
+          label: "Replies are ON",
+          offLabel: "Replies are OFF",
+          description: "Allows nested replies on comments.",
+          status: false,
+          topic: "replies"
+        },
+        "trolls": {
+          label: "Trolls are ON",
+          offLabel: "Trolls are OFF",
+          description: "Show sample troll-like content in the stream.",
+          status: false,
+          topic: "trolls"
+        }
+      }
+    },
+    "community": {
+      name: "Community",
+      togglers: {
+        "mentions": {
+          label: "Mentions are ON",
+          offLabel: "Mentions are OFF",
+          description: "Mentions are often used as...",
+          status: false,
+          topic: "replies"
+        },
+        "following": {
+          label: "Following is ON",
+          offLabel: "Following is OFF",
+          description: "Allows following users and getting notified of new posts.",
+          status: false,
+          topic: "following"
+        },
+        "privatemessages": {
+          label: "Private messages are ON",
+          offLabel: "Private messages are OFF",
+          description: "Allows sending private messages between users.",
+          status: false,
+          topic: "privatemessages"
+        }
+      }
     }
   },
   comments: [
     {
+      user: 0,
       content: "Lorem ipsum dollar",
       likes: 28
     },
     {
+      user: 1,
+      content: "Another comment",
+      likes: 41
+    },
+    {
+      user: 1,
       content: "Another comment",
       likes: 41
     }
@@ -177,7 +229,48 @@ const initialState = {
         }
       ]
     },
-  }
+  },
+  users: [
+    {
+      nickName: 'coolcat',
+      realName: 'Jane Doe',
+      comments: 1912,
+      points: 1244,
+      membershipAge: '2 years',
+      location: 'Denver, AR',
+      education: 'B.S. Computer Science',
+      upvoteBalance: 89,
+      badges: [
+        {
+          name: "Verified identity",
+          icon: "badge",
+          color: '#090'
+        }
+      ]
+    },
+    {
+      nickName: 'finedog',
+      realName: 'John Doe',
+      comments: 243,
+      points: 124,
+      membershipAge: '2 years',
+      location: 'Portland, OR',
+      education: 'Ph. D. Economics',
+      upvoteBalance: 42,
+      badges: [
+        {
+          name: "Top 5% contributors",
+          icon: "trophy",
+          color: '#a90'
+        },
+        {
+          name: "Expert moderator",
+          icon: "medal",
+          color: '#09a'
+        }
+      ]
+    },
+  ]
 };
 
 const playground = (state = initialState, action) => {

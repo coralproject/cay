@@ -35,7 +35,11 @@ class Sidebar extends React.Component {
         </div>
         { sideBarLinks }
       </div>
-    : "No topic" ;
+    : 
+      <p>
+        This sidebar will show you contextual information about the various settings and elements in the playground.
+      </p>
+    ;
    
     return (
       <div style={ styles.sideBar }>

@@ -2,6 +2,7 @@ import React from 'react';
 import Radium from 'radium';
 import { VictoryChart, VictoryAxis, VictoryBar, VictoryLine, VictoryScatter } from 'victory';
 import d3 from 'd3';
+import _ from 'lodash';
 
 @Radium
 class DataExplorerVisualization extends React.Component {
@@ -23,7 +24,7 @@ class DataExplorerVisualization extends React.Component {
       at this point we know we have data, but we don't know what's in it.
       expect this function to grow as the possibilities do...
       we'll continually refactor this out to make it more general
-      but this is hard at this point (1/26) because we don't know what the possibilities are
+      but this is hard at this point (1/26) because we don't know what the possibilities are.
       for the 1/28 deadline, it will not be very abstract, checking pipeline names and such
     */
 
@@ -32,8 +33,25 @@ class DataExplorerVisualization extends React.Component {
     let independentVariableName;
     let dependentVariableName;
 
-    /* detect time series */
-    if (this.props.dataset[0].start) {
+    /* start by checking if it's time series and needs multiple lines / bars */
+    if (this.props.dataset[0].start && _.isObject(this.props.dataset[0].data[this.props.field])) {
+
+      /* zis is ze complicated one - we have multiple data we're plotting - may change... */
+
+      /* first we extract the keys we're going to be creating lines for */
+      const keysFromField = _.keys(this.props.dataset[0].data[this.props.field]);
+
+      /* then we iterate over the dataset for each key, using that key as an accessor to the dataset */
+      visualization = keysFromField.map((key, i) => {
+        return this.getLineVictoryComponent(this.props.dataset.map((item, i) => {
+          return {
+            x: new Date(item.start * 1000),
+            y: item.data[this.props.field][key]
+          }
+        }), key)
+      })
+
+    } else if /* detect time series */ (this.props.dataset[0].start) {
       parsedDataset = this.props.dataset.map((item, i) => {
         return {
           x: new Date(item.start * 1000),
@@ -41,13 +59,8 @@ class DataExplorerVisualization extends React.Component {
         };
       });
 
-      dependentVariableName = this.state.data_object_level_1_key_selection ?
-        this.props.field.replace(/_/g, ' ') : "";
-
-      independentVariableName = ""; /* time is self labeling */
-
       visualization = this.getLineVictoryComponent(parsedDataset)
-    } else /*  assume catagorical  */ {
+    } else /*  default assume catagorical  */ {
       console.log("assuming categorical data because of lack of timestamp")
     }
 
@@ -65,12 +78,13 @@ class DataExplorerVisualization extends React.Component {
     );
   }
 
-  getLineVictoryComponent(dataset) {
+  getLineVictoryComponent(dataset, label) {
     return (
       <VictoryLine
         padding={75}
         data={dataset}
         interpolation='monotone'
+        label={label}
         style={{
           data: {
             strokeWidth: 1,
@@ -109,7 +123,7 @@ class DataExplorerVisualization extends React.Component {
           tickCount={10}
           label={this.props.independentVariableName} />
         <VictoryAxis dependentAxis
-          label={this.props.dependentVariableName}
+          label={this.props.field ? this.props.field.replace(/_/g, ' ') : ""}
           style={{
             axis: {stroke: 'gray'},
             ticks: {stroke: 'transparent'}
@@ -123,27 +137,3 @@ class DataExplorerVisualization extends React.Component {
 
 export default DataExplorerVisualization;
 
-
-      // <svg
-      //   height={600}
-      //   width={800}>
-      //   <VictoryAxis
-      //     style={{
-      //       axis: {stroke: "gray"},
-      //       ticks: {stroke: "transparent"},
-      //       tickLabels: {
-      //         fontSize: 6,
-      //         transform: `rotate(45deg) translate(10px, 0px)`,
-      //       },
-      //       axisLabels: {
-      //         fontsize: 16,
-      //       }
-      //     }}
-      //     tickCount={10}
-      //     tickFormat={(x) => x.getFullYear()}
-      //     scale={d3.time.scale()}
-      //     label={this.props.independentVariableName} />
-      //   <VictoryAxis dependentAxis
-      //     label={this.props.dependentVariableName}/>
-      //   {this.getLineVictoryComponent()}
-      // </svg>

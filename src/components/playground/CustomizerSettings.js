@@ -22,7 +22,7 @@ class CustomizerSettings extends React.Component {
               <div style={ styles.toggleGroup } key={ gIndex }>
                 <h2 style={ styles.toggleGroupHeader }>{ this.props.togglerGroups[togglerGroupIndex].name }</h2>
                 { 
-                  Object.keys(this.props.togglerGroups[togglerGroupIndex].togglers).map((togglerKey, index) => { 
+                  Object.keys(this.props.togglerGroups[togglerGroupIndex].togglers).map((togglerKey) => { 
                     return (
                       <CustomizerToggle 
                         groupIndex={ togglerGroupIndex } 

@@ -29,4 +29,4 @@ var styles = {
     border: '1px solid white',
     opacity: '.5'
   }
-}
+};

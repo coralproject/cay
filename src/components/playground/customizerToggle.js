@@ -7,7 +7,6 @@ import settings from '../../settings';
 
 import { setToggler, setTopic } from '../../actions/playground';
 
-import Toggle from '../../components/forms/checkbox';
 import Switch from '../../components/forms/switch';
 
 @connect(state => state.playground)
@@ -78,7 +77,7 @@ var styles = {
     border: '1px solid #aaa',
     overflow: 'hidden',
     position: 'relative',
-    cursor: 'pointer',
+    cursor: 'pointer'
   },
   descriptionSpan: {
     fontWeight: 'bold',

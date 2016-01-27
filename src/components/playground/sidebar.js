@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 
-import settings from '../../settings';
 import Icon from '../../components/icon';
 import TwitterStream from './TwitterStream';
 
@@ -18,8 +17,8 @@ class Sidebar extends React.Component {
           {
             this.props.topics[this.props.currentSidebarTopic].links.map((link, i) => {
               return (
-                  <a style={ styles.sideBarLinks } href="{ link.href }">{ link.friendlyName }</a>
-              )
+                  <a key={ i } style={ styles.sideBarLinks } href="{ link.href }">{ link.friendlyName }</a>
+              );
             })
           }
       </div>

@@ -21,7 +21,7 @@ class Wizard extends React.Component {
     if (currentStep >= this.props.wizardSteps.length) {
       this.props.hideWizard();
     } else {
-      this.setState({ currentStep: currentStep })
+      this.setState({ currentStep: currentStep });
     }
   }
 
@@ -33,7 +33,7 @@ class Wizard extends React.Component {
     if (currentStep >= this.props.wizardSteps.length) {
       this.props.hideWizard();
     } else {
-      this.setState({ currentStep: currentStep })
+      this.setState({ currentStep: currentStep });
     }
   }
 
@@ -99,4 +99,4 @@ var styles = {
     zIndex: '99999',
     borderRadius: '4px'
   }
-}
+};

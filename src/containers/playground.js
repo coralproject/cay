@@ -1,7 +1,7 @@
 // Framework tools
-import React from "react";
-import { connect } from "react-redux";
-import Radium from "radium";
+import React from 'react';
+import { connect } from 'react-redux';
+import Radium from 'radium';
 
 // Settings
 import settings from '../settings';
@@ -86,49 +86,49 @@ export default Playground;
 
 const styles = {
   playGround: {
-    margin: "auto",
+    margin: 'auto',
     transition: 'filter 1s',
     fontFamily: 'Fira Sans'
   },
   heading: {
-    padding: "50px 350px 50px 50px"
+    padding: '50px 350px 50px 50px'
   },
   headingTitle: {
     fontFamily: 'Josefin Slab',
     textTransform: 'uppercase',
-    fontSize: "75px",
-    fontWeight: "600",
-    color: "white",
-    textAlign: "center"
+    fontSize: '75px',
+    fontWeight: '600',
+    color: 'white',
+    textAlign: 'center'
   },
   playgroundIntro: {
-    fontSize: "14pt",
-    color: "white",
-    lineHeight: "1.2",
-    padding: "20px",
-    margin: "20px",
-    textAlign: "center",
+    fontSize: '14pt',
+    color: 'white',
+    lineHeight: '1.2',
+    padding: '20px',
+    margin: '20px',
+    textAlign: 'center',
     fontFamily: 'Fira Sans'
   },
   playgroundIntroText: {
-    fontSize: "12pt",
+    fontSize: '12pt',
     fontFamily: 'Fira Sans'
   },
   wizardButton: {
     color: settings.coralPink,
-    border: "none",
-    borderRadius: "5px",
-    padding: "20px",
-    display: "block",
-    margin: "20px auto",
+    border: 'none',
+    borderRadius: '5px',
+    padding: '20px',
+    display: 'block',
+    margin: '20px auto',
     fontFamily: 'Fira Sans',
-    fontWeight: "bold",
-    fontSize: "16pt",
-    backgroundColor: "white",
-    cursor: "pointer"
+    fontWeight: 'bold',
+    fontSize: '16pt',
+    backgroundColor: 'white',
+    cursor: 'pointer'
   },
   logo: {
-    width: "400px",
+    width: '400px',
     margin: '40px 50px'
   },
   blurred: {

@@ -11,12 +11,12 @@ class CommentBox extends React.Component {
 
   render() {
 
-    var toolBar = this.props.togglerGroups["content"].togglers["rich_content"].status 
-      || this.props.togglerGroups["content"].togglers["emoji"].status
+    var toolBar = this.props.togglerGroups['content'].togglers['rich_content'].status 
+      || this.props.togglerGroups['content'].togglers['emoji'].status
       ?
       <div style={ styles.toolBar }>
           {  
-            this.props.togglerGroups["content"].togglers["rich_content"].status ? 
+            this.props.togglerGroups['content'].togglers['rich_content'].status ? 
               <span>
                 <button style={ styles.toolBarButton }><Icon name="fa-bold" /></button>
                 <button style={ styles.toolBarButton }><Icon name="fa-italic" /></button>
@@ -27,7 +27,7 @@ class CommentBox extends React.Component {
               ''
           }
           {  
-            this.props.togglerGroups["content"].togglers["emoji"].status ? 
+            this.props.togglerGroups['content'].togglers['emoji'].status ? 
               <span>
                 <button style={ styles.toolBarButton }><Icon name="fa-smile-o" /></button>
               </span>

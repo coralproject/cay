@@ -60,31 +60,31 @@ class CommentTools extends React.Component {
       </div>
       : null;
 
-    var reactions = this.state.reactionsExpanded && this.props.togglerGroups["interaction"].togglers["reactions"].status ?
+    var reactions = this.state.reactionsExpanded && this.props.togglerGroups['interaction'].togglers['reactions'].status ?
       <ReactionTools />
       : null;
 
     return (
       <div>
         <div style={ styles.commentTools } ref={(c) => this._commentTools = c}>
-          <div key="ignore" style={ styles.commentToolsOption } onClick={ this.onOptionClick.bind(this, "ignore") }>
+          <div key="ignore" style={ styles.commentToolsOption } onClick={ this.onOptionClick.bind(this, 'ignore') }>
             Ignore User
           </div>
-          <div key="report" style={ styles.commentToolsOption } onClick={ this.onOptionClick.bind(this, "report") }>
+          <div key="report" style={ styles.commentToolsOption } onClick={ this.onOptionClick.bind(this, 'report') }>
             Report
           </div>
           {
-            this.props.togglerGroups["interaction"].togglers["reactions"].status ?            
-              <div key="react" style={ styles.commentToolsOption } onClick={ this.onOptionClick.bind(this, "react") }>
+            this.props.togglerGroups['interaction'].togglers['reactions'].status ?            
+              <div key="react" style={ styles.commentToolsOption } onClick={ this.onOptionClick.bind(this, 'react') }>
                 React
               </div>
             : 
               ''
           }
-          <div key="reply" style={ styles.commentToolsOption } onClick={ this.onOptionClick.bind(this, "reply") }>
+          <div key="reply" style={ styles.commentToolsOption } onClick={ this.onOptionClick.bind(this, 'reply') }>
             Reply
           </div>
-          <div key="share" style={ styles.commentToolsOption } onClick={ this.onOptionClick.bind(this, "share") }>
+          <div key="share" style={ styles.commentToolsOption } onClick={ this.onOptionClick.bind(this, 'share') }>
             Share
           </div>
           { reportingToolRender }

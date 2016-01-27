@@ -89,7 +89,7 @@ export default ProfileInfo;
 var styles = {
   userName: {
     fontSize: '20pt',
-    fontWeight: 'bold',
+    fontWeight: 'bold'
   },
   profileInfo: {
     background: settings.lightGrey,

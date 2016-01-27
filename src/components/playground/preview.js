@@ -52,7 +52,7 @@ var styles = {
   previewBar: {
     borderBottom: '1px solid ' + settings.lightGrey,
     position: 'relative',
-    fontSize: '16pt',
+    fontSize: '16pt'
   },
   previewTitleSpan: {
     fontFamily: 'Fira Sans',

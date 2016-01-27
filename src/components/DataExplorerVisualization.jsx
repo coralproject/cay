@@ -98,38 +98,38 @@ class DataExplorerVisualization extends React.Component {
   render() {
     return (
       <div>
-      <VictoryChart
-        height={600}
-        width={800}
-        padding={{
-          top: 75,
-          bottom: 140,
-          left: 70,
-          right: 70
-        }}
-        scale={{x: d3.time.scale(), y: d3.scale.linear()}}
-        domainPadding={{x: 20}}>
-        <VictoryAxis
-          style={{
-            axis: {stroke: 'gray'},
-            ticks: {stroke: 'gray'},
-            tickLabels: {
-              fontSize: 10
-            },
-            axisLabels: {
-              fontsize: 16
-            }
+        <VictoryChart
+          height={600}
+          width={800}
+          padding={{
+            top: 75,
+            bottom: 140,
+            left: 70,
+            right: 70
           }}
-          tickCount={10}
-          label={this.props.independentVariableName} />
-        <VictoryAxis dependentAxis
-          label={this.props.field ? this.props.field.replace(/_/g, ' ') : ''}
-          style={{
-            axis: {stroke: 'gray'},
-            ticks: {stroke: 'transparent'}
-          }}/>
-        {this.contemplate()}
-      </VictoryChart>
+          scale={{x: d3.time.scale(), y: d3.scale.linear()}}
+          domainPadding={{x: 20}}>
+          <VictoryAxis
+            style={{
+              axis: {stroke: 'gray'},
+              ticks: {stroke: 'gray'},
+              tickLabels: {
+                fontSize: 10
+              },
+              axisLabels: {
+                fontsize: 16
+              }
+            }}
+            tickCount={10}
+            label={this.props.independentVariableName} />
+          <VictoryAxis dependentAxis
+            label={this.props.field ? this.props.field.replace(/_/g, ' ') : ''}
+            style={{
+              axis: {stroke: 'gray'},
+              ticks: {stroke: 'transparent'}
+            }}/>
+          {this.contemplate()}
+        </VictoryChart>
       </div>
     );
   }

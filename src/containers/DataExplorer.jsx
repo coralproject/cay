@@ -6,6 +6,7 @@ import Page from './Page';
 import Card from '../components/cards/Card';
 import DataExplorerVisualization from '../components/DataExplorerVisualization';
 import ExplorerControls from '../components/DataExplorerControls';
+// import ExplorerTutorial from '../components/DataExplorerTutorials';
 
 @connect(state => state.dataExplorer)
 @Radium
@@ -54,13 +55,13 @@ class DataExplorer extends React.Component {
   getNonActionFiringControlValues(values) {
     this.setState({
       field: values.data_object_level_1_key_selection
-    })
+    });
   }
 
   render() {
     return (
       <Page style={styles.base}>
-        <h1>Data Explorer</h1>
+        <p style={styles.heading}>Data Explorer</p>
         <div style={styles.controls}>
           <Card style={styles.pane}>
             <ExplorerControls
@@ -70,9 +71,6 @@ class DataExplorer extends React.Component {
               getNonActionFiringControlValues={this.getNonActionFiringControlValues.bind(this)}
               getControlValues={this.getControlValues.bind(this)}
               pipelines={this.props.pipelines} />
-          </Card>
-          <Card style={styles.pane}>
-
           </Card>
         </div>
         <Card>
@@ -95,10 +93,8 @@ const styles = {
   base: {
     padding: 10
   },
-  controls: {
-    display: 'flex'
-  },
-  pane: {
-    flex: 1
+  heading: {
+    fontSize: 36,
   }
+
 };

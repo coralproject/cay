@@ -37,7 +37,7 @@ class Root extends React.Component {
           </Router>
         </Provider>
         <DebugPanel top right bottom>
-          <DevTools store={store} monitor={LogMonitor} />
+          <DevTools store={store} visibleOnLoad={false} monitor={LogMonitor} />
         </DebugPanel>
       </div>
     );

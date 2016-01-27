@@ -11,7 +11,8 @@ article, aside, canvas, details, embed,
 figure, figcaption, footer, header, hgroup,
 menu, nav, output, ruby, section, summary,
 time, mark, audio, video {
-    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-family: "Fira Sans", "Open Sans", "Helvetica Neue", "Helvetica", "sans-serif";
+  font-weight: 300;
 }
 
 body {

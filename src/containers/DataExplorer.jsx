@@ -6,6 +6,7 @@ import Page from './Page';
 import Card from '../components/cards/Card';
 import DataExplorerVisualization from '../components/DataExplorerVisualization';
 import ExplorerControls from '../components/DataExplorerControls';
+// import ExplorerTutorial from '../components/DataExplorerTutorials';
 import moment from 'moment';
 import _ from "lodash";
 
@@ -64,7 +65,7 @@ class DataExplorer extends React.Component {
   render() {
     return (
       <Page style={styles.base}>
-        <h1>Data Explorer</h1>
+        <p style={styles.heading}>Data Explorer</p>
         <div style={styles.controls}>
           <Card style={styles.pane}>
             <ExplorerControls
@@ -75,9 +76,6 @@ class DataExplorer extends React.Component {
               getControlValues={this.getControlValues.bind(this)}
               pipelines={this.props.pipelines} />
           </Card>
-          <Card style={styles.pane}>
-
-          </Card>
         </div>
         <Card>
           {
@@ -85,7 +83,7 @@ class DataExplorer extends React.Component {
               <DataExplorerVisualization
                 dataset={this.props.dataset}
                 field={this.state.field}/> :
-              "Welcome to data exploration! Let's get started by selecting a pipeline from the dropdown above."
+              ""
           }
         </Card>
       </Page>
@@ -99,10 +97,9 @@ const styles = {
   base: {
     padding: 10
   },
-  controls: {
-    display: 'flex'
-  },
-  pane: {
-    flex: 1
+  heading: {
+    fontSize: 36,
   }
+
 };
+``

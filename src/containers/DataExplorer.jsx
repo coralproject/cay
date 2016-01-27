@@ -6,8 +6,6 @@ import Page from './Page';
 import Card from '../components/cards/Card';
 import DataExplorerVisualization from '../components/DataExplorerVisualization';
 import ExplorerControls from '../components/DataExplorerControls';
-import moment from 'moment';
-import _ from "lodash";
 
 @connect(state => state.dataExplorer)
 @Radium
@@ -32,11 +30,9 @@ class DataExplorer extends React.Component {
     const month = day * 30;
     let diff = end - start;
 
-    if (diff / hour < 300) {
-      return 'hour';
-    } else if (diff / day < 300) {
+    if (diff / day < 300) {
       return 'day';
-    } else if (diff / day < 300) {
+    } else if (diff / week < 300) {
       return 'week';
     } else {
       return 'month';
@@ -85,7 +81,7 @@ class DataExplorer extends React.Component {
               <DataExplorerVisualization
                 dataset={this.props.dataset}
                 field={this.state.field}/> :
-              "Welcome to data exploration! Let's get started by selecting a pipeline from the dropdown above."
+              'Welcome to data exploration! Let\'s get started by selecting a pipeline from the dropdown above.'
           }
         </Card>
       </Page>

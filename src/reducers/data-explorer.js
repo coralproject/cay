@@ -1,4 +1,7 @@
 import * as types from '../actions';
+import min from 'lodash/collection/min';
+import max from 'lodash/collection/max';
+import map from 'lodash/collection/map';
 
 const data_exploration = (state = {
   loading: false,
@@ -22,9 +25,9 @@ const data_exploration = (state = {
     /* TODO this assumes it has the property 'start' */
     if (state.datasetName !== action.data.results[0].Name) {
       pipelineTimeRange = {
-        pipelineRangeStart: _.min(_.pluck(action.data.results[0].Docs, 'start')) * 1000,
-        pipelineRangeEnd: _.max(_.pluck(action.data.results[0].Docs, 'start')) * 1000
-      }
+        pipelineRangeStart: min(map(action.data.results[0].Docs, 'start')) * 1000,
+        pipelineRangeEnd: max(map(action.data.results[0].Docs, 'start')) * 1000
+      };
     }
     return Object.assign({}, state, {
       loading: false,

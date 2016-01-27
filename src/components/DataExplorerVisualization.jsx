@@ -42,26 +42,26 @@ class DataExplorerVisualization extends React.Component {
       const keysFromField = _.keys(this.props.dataset[0].data[this.props.field]);
 
       /* then we iterate over the dataset for each key, using that key as an accessor to the dataset */
-      visualization = keysFromField.map((key, i) => {
-        return this.getLineVictoryComponent(this.props.dataset.map((item, i) => {
+      visualization = keysFromField.map((key) => {
+        return this.getLineVictoryComponent(this.props.dataset.map((item) => {
           return {
             x: new Date(item.start * 1000),
             y: item.data[this.props.field][key]
-          }
-        }), key)
-      })
+          };
+        }), key);
+      });
 
     } else if /* detect time series */ (this.props.dataset[0].start) {
-      parsedDataset = this.props.dataset.map((item, i) => {
+      parsedDataset = this.props.dataset.map((item) => {
         return {
           x: new Date(item.start * 1000),
           y: item.data[this.props.field]
         };
       });
 
-      visualization = this.getLineVictoryComponent(parsedDataset)
+      visualization = this.getLineVictoryComponent(parsedDataset);
     } else /*  default assume catagorical  */ {
-      console.log("assuming categorical data because of lack of timestamp")
+      console.log('assuming categorical data because of lack of timestamp');
     }
 
     return visualization;
@@ -123,7 +123,7 @@ class DataExplorerVisualization extends React.Component {
           tickCount={10}
           label={this.props.independentVariableName} />
         <VictoryAxis dependentAxis
-          label={this.props.field ? this.props.field.replace(/_/g, ' ') : ""}
+          label={this.props.field ? this.props.field.replace(/_/g, ' ') : ''}
           style={{
             axis: {stroke: 'gray'},
             ticks: {stroke: 'transparent'}

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import Radium from 'radium';
 
 import Icon from '../../components/Icon';
-import CoralIcon from '../../components/coral-icon';
+import CoralIcon from '../../components/CoralIcon';
 
 @connect(state => state.playground)
 @Radium

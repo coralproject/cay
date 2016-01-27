@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 
-import Comment from './comment';
+import Comment from './Comment';
 
 @connect(state => state.playground)
 @Radium

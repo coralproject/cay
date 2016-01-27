@@ -4,7 +4,7 @@ import Radium from 'radium';
 
 import { setToggler, setTopic } from '../../actions/playground';
 
-import Switch from '../../components/forms/switch';
+import Switch from '../../components/forms/Switch';
 
 @connect(state => state.playground)
 @Radium

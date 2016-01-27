@@ -4,10 +4,10 @@ import { connect } from 'react-redux';
 import Radium from 'radium';
 
 // Playground-specific imports
-import Sidebar from '../components/playground/sidebar';
-import Customizer from '../components/playground/customizer';
-import Preview from '../components/playground/preview';
-import Wizard from '../components/playground/wizard';
+import Sidebar from '../components/playground/Sidebar';
+import Customizer from '../components/playground/Customizer';
+import Preview from '../components/playground/Preview';
+import Wizard from '../components/playground/Wizard';
 
 // Playground CSS
 require('../../css/playground.css');

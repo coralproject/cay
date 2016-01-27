@@ -2,11 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 
-import ProfileBadge from './profileBadge';
-import ProfileInfo from './profileInfo';
-import CommentContent from './commentContent';
-import StatsBar from './statsBar';
-import CommentTools from './commentTools';
+import ProfileBadge from './ProfileBadge';
+import ProfileInfo from './ProfileInfo';
+import CommentContent from './CommentContent';
+import StatsBar from './StatsBar';
+import CommentTools from './CommentTools';
 
 @connect(state => state.playground)
 @Radium

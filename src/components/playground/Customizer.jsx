@@ -4,7 +4,7 @@ import Radium from 'radium';
 
 import Icon from '../../components/Icon';
 
-import CustomizerSettings from './customizerSettings';
+import CustomizerSettings from './CustomizerSettings';
 
 @connect(state => state.playground)
 @Radium

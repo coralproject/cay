@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 
-import CustomizerToggle from './customizerToggle';
+import CustomizerToggle from './CustomizerToggle';
 //import CustomizerSlider from './customizerSlider';
 
 @connect(state => state.playground)

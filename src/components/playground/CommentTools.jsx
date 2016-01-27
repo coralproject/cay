@@ -2,8 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 
-import ReportingTool from './reportingTool';
-import ReactionTools from './reactionTools';
+import ReportingTool from './ReportingTool';
+import ReactionTools from './ReactionTools';
 
 @connect(state => state.playground)
 @Radium

@@ -9,17 +9,15 @@ import { Provider } from 'react-redux';
 import { DevTools, DebugPanel, LogMonitor } from 'redux-devtools/lib/react';
 
 import configureStore from './store';
-import Settings from './containers/settings';
 
-import Dashboard from './containers/dashboard';
-import UserManager from './containers/user-manager';
-import Login from './containers/login';
+import Dashboard from './containers/Dashboard';
+import UserManager from './containers/UserManager';
+import Login from './containers/Login';
+import DataExplorer from './containers/DataExplorer';
 import Playground from './containers/playground';
-import DataExplorer from './containers/data-explorer'
 
 const store = configureStore();
 
-// require('../css/AdminLTE.min.css');
 require('../css/reset.css');
 require('../css/global.css');
 
@@ -32,13 +30,12 @@ class Root extends React.Component {
         <Provider store={store}>
           <Router history={browserHistory}>
             <Route path="/" component={Dashboard}/>
-            <Route path="/settings" component={Settings}/>
             <Route path="login" component={Login}/>
             <Route path="user-manager/:filterId/:userId" component={UserManager}/>
             <Route path="user-manager/:filterId" component={UserManager}/>
             <Route path="user-manager" component={UserManager}/>
-            <Route path="playground" component={Playground}/>
             <Route path="explore" component={DataExplorer}/>
+            <Route path="playground" component={Playground}/>
           </Router>
         </Provider>
         <DebugPanel top right bottom>
@@ -50,4 +47,3 @@ class Root extends React.Component {
 }
 
 ReactDOM.render(<Root/>, document.getElementById('root'));
-

@@ -1,5 +1,5 @@
 const settings = {
-  coralPink: '#f77160',
+  brandColor: '#f77160',
   textColor: '#3e3e3e',
   linkColor: '#777777',
   darkColorBase: '#202020',

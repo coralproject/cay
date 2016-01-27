@@ -6,6 +6,55 @@ import d3 from 'd3';
 @Radium
 class DataExplorerVisualization extends React.Component {
 
+
+  parseTopCommentersByCount() {
+    const victoryFormat = this.props.dataset.map((item) => {
+      return {
+        x: item._id.user_id + '' , // hack - cast to string for now for graph spacing
+        y: item.comments
+      };
+    });
+    return victoryFormat;
+  }
+
+  contemplate() {
+
+    /*
+      at this point we know we have data, but we don't know what's in it.
+      expect this function to grow as the possibilities do...
+      we'll continually refactor this out to make it more general
+      but this is hard at this point (1/26) because we don't know what the possibilities are
+      for the 1/28 deadline, it will not be very abstract, checking pipeline names and such
+    */
+
+    let visualization;
+    let parsedDataset;
+    let independentVariableName;
+    let dependentVariableName;
+
+    /* detect time series */
+    if (this.props.dataset[0].start) {
+      parsedDataset = this.props.dataset.map((item, i) => {
+        return {
+          x: new Date(item.start * 1000),
+          y: item.data[this.props.field]
+        };
+      });
+
+      dependentVariableName = this.state.data_object_level_1_key_selection ?
+        this.props.field.replace(/_/g, ' ') : "";
+
+      independentVariableName = ""; /* time is self labeling */
+
+      visualization = this.getLineVictoryComponent(parsedDataset)
+    } else /*  assume catagorical  */ {
+      console.log("assuming categorical data because of lack of timestamp")
+    }
+
+    return visualization;
+
+  }
+
   getBarVictoryComponent() {
     return (
       <VictoryBar
@@ -16,11 +65,11 @@ class DataExplorerVisualization extends React.Component {
     );
   }
 
-  getLineVictoryComponent() {
+  getLineVictoryComponent(dataset) {
     return (
       <VictoryLine
         padding={75}
-        data={this.props.dataset}
+        data={dataset}
         interpolation='monotone'
         style={{
           data: {
@@ -65,7 +114,7 @@ class DataExplorerVisualization extends React.Component {
             axis: {stroke: 'gray'},
             ticks: {stroke: 'transparent'}
           }}/>
-        {this.getLineVictoryComponent()}
+        {this.contemplate()}
       </VictoryChart>
       </div>
     );

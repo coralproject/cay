@@ -115,7 +115,7 @@ Flex.propTypes = {
 Flex.defaultProps = {
   align: "center",
   direction: "row",
-  gutters: null,
+  gutters: 0,
   justifyContent: "center",
   styleOverrides: null
 };

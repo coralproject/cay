@@ -116,7 +116,7 @@ Item.defaultProps = {
   fit: false,
   flex: null,
   full: false,
-  gutters: null,
+  gutters: 0,
   large: null,
   medium: null,
   small: null,

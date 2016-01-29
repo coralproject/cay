@@ -79,6 +79,7 @@ class DataExplorerVisualization extends React.Component {
   }
 
   getLineVictoryComponent(dataset, label) {
+    const rand = Math.floor(Math.random() * 100);
     return (
       <VictoryLine
         padding={75}
@@ -87,8 +88,11 @@ class DataExplorerVisualization extends React.Component {
         label={label}
         style={{
           data: {
-            strokeWidth: 1,
-            ':hover': {stroke: '#c33b33'}
+            strokeWidth: 3,
+            stroke: `rgba(${rand * 2}, ${rand * 2}, ${rand * 4}, .5)`,
+            ':hover': {
+              stroke: `rgba(${rand * 2}, ${rand * 2}, ${rand * 4}, .5)`
+            }
           },
           labels: {fontSize: 12}
         }}/>
@@ -121,7 +125,7 @@ class DataExplorerVisualization extends React.Component {
               }
             }}
             tickCount={10}
-            label={this.props.independentVariableName} />
+            label={this.props.dataset[0].duration ? this.props.dataset[0].duration : "" /* naive, assumes time series */} />
           <VictoryAxis dependentAxis
             label={this.props.field ? this.props.field.replace(/_/g, ' ') : ''}
             style={{

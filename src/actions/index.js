@@ -31,11 +31,11 @@ export const RECEIVE_AUTHORS_AND_SECTIONS = 'RECEIVE_AUTHORS_AND_SECTIONS';
 
 /* config */
 
-var getInit = () => {
+var getInit = (method) => {
   var headers = new Headers({'Authorization': 'Basic NmQ3MmU2ZGQtOTNkMC00NDEzLTliNGMtODU0NmQ0ZDM1MTRlOlBDeVgvTFRHWjhOdGZWOGVReXZObkpydm4xc2loQk9uQW5TNFpGZGNFdnc9'});
 
   var init = {
-    method: 'GET',
+    method: method || 'GET',
     headers: headers,
     mode: 'cors',
     cache: 'default'
@@ -274,6 +274,29 @@ const convert = (json) => {
     }).join('&');
 };
 
+export const createPipelineValueChanged = (config) => {
+  const url = httpPrefix + apiPrefix + 'exec';
+
+  return (dispatch, getState) => {
+
+    if (!getState().dataExplorer.loading) {
+
+      dispatch(requestDataExplorationDataset());
+
+      var init = getInit('POST');
+      init.body = JSON.stringify(config);
+
+      fetch(url, init)
+        .then(response => response.json())
+        .then(json => {
+          dispatch(receiveDataExplorationDataset(json));
+        })
+        .catch(err => {
+          dispatch(dataExplorationFetchError(err));
+        });
+    }
+  };
+};
 
 export const fetchDataExplorationDataset = (field, queryParams) => {
   const queryParamString = queryParams ? convert(queryParams) : '';

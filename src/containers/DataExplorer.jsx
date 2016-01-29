@@ -22,8 +22,6 @@ class DataExplorer extends React.Component {
     this.props.dispatch(fetchDataExplorationDataset(pipeline, dateRange));
   }
 
-
-
   // we don't want to request 10000 hourly intervals,
   // so compute resonable bin size
   getSensibleInterval(start, end) {
@@ -61,33 +59,36 @@ class DataExplorer extends React.Component {
   }
 
   render() {
+    console.log('DataExplorer.render', this.props);
+
     return (
       <Page style={styles.base}>
         <p style={styles.heading}>Data Explorer</p>
         <div style={styles.controls}>
           <Card style={styles.pane}>
-            <ExplorerControls
+            {/*<ExplorerControls
               dataset={this.props.dataset}
               rangeStart={this.props.pipelineRangeStart}
               rangeEnd={this.props.pipelineRangeEnd}
               getNonActionFiringControlValues={this.getNonActionFiringControlValues.bind(this)}
               getControlValues={this.getControlValues.bind(this)}
-              pipelines={this.props.pipelines} />
+              pipelines={this.props.pipelines} />*/}
+            <PipelineCreator
+              authors={this.props.authors}
+              sections={this.props.sections}
+              dispatch={this.props.dispatch} />
           </Card>
         </div>
         <Card>
           {
-            this.props.dataset && this.state.field ?
+            this.props.dataset ?
               <DataExplorerVisualization
                 dataset={this.props.dataset}
-                field={this.state.field}/> :
+                field={'replies_per_comment'}/> :
               <ExplorerTutorial
                 dataset={this.props.dataset}
                 field={this.state.field}/>
           }
-        </Card>
-        <Card>
-          <PipelineCreator authors={this.props.authors} sections={this.props.sections} />
         </Card>
       </Page>
     );

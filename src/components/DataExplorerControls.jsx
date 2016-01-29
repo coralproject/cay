@@ -74,6 +74,11 @@ class ExplorerControls extends React.Component {
     return options;
   }
 
+  handlePipelineCreationStartClick () {
+    this.setState({pipelineCreationMode: true})
+
+  }
+
   sliderInMotion() {
     // slider should get a tooltip with this information on it, rather than changing date range in controls
     this.setState({
@@ -89,11 +94,27 @@ class ExplorerControls extends React.Component {
           onChange={this.handleControlChange.bind(this)}
           style={styles.select}
           ref="pipelines">
-          <option value={"DEFAULT_VALUE"}> Select a data pipeline... </option>
+          <option value={"DEFAULT_VALUE"}> Select an existing question... </option>
           {this.props.pipelines.map(this.mapOptions)}
         </select>
+        <span
+          style={{
+            margin: "0px 20px",
+          }}
+          > or </span>
+        <button
+        onClick={this.handlePipelineCreationStartClick.bind(this)}
+        style={{
+          border: 0,
+          backgroundColor: "#F87F70",
+          fontWeight: 500,
+          borderRadius: 3,
+          padding: "10px 10px",
+          color: "white",
+          cursor: "pointer"
+        }}> + Ask a new question </button>
         {
-          this.props.dataset ?
+          this.props.dataset && !this.state.pipelineCreationMode ?
           <div>
             <p>Date Range</p>
             <Slider

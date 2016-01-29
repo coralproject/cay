@@ -7,7 +7,7 @@ class ExplorerTutorial extends React.Component {
     return (
       <div>
         <p>Welcome!</p>
-        <p> {"Let's get started by selecting a pipeline from the dropdown above."} </p>
+        <p> {"Get started by selecting a pipeline from the dropdown above or creating a new one."} </p>
       </div>
     );
   }

@@ -6,7 +6,14 @@ import Page from './Page';
 import Card from '../components/cards/Card';
 import DataExplorerVisualization from '../components/DataExplorerVisualization';
 import ExplorerControls from '../components/DataExplorerControls';
+<<<<<<< HEAD
 // import ExplorerTutorial from '../components/DataExplorerTutorials';
+=======
+import ExplorerTutorial from '../components/DataExplorerTutorial';
+import moment from 'moment';
+import _ from 'lodash';
+import PipelineCreator from '../components/PipelineCreator';
+>>>>>>> stubbing out pipeline creation
 
 @connect(state => state.dataExplorer)
 @Radium
@@ -75,12 +82,17 @@ class DataExplorer extends React.Component {
         </div>
         <Card>
           {
-            this.props.dataset ?
+            this.props.dataset && this.state.field ?
               <DataExplorerVisualization
                 dataset={this.props.dataset}
                 field={this.state.field}/> :
-              'Welcome to data exploration! Let\'s get started by selecting a pipeline from the dropdown above.'
+              <ExplorerTutorial
+                dataset={this.props.dataset}
+                field={this.state.field}/>
           }
+        </Card>
+        <Card>
+          <PipelineCreator/>
         </Card>
       </Page>
     );

@@ -6,14 +6,10 @@ import Page from './Page';
 import Card from '../components/cards/Card';
 import DataExplorerVisualization from '../components/DataExplorerVisualization';
 import ExplorerControls from '../components/DataExplorerControls';
-<<<<<<< HEAD
-// import ExplorerTutorial from '../components/DataExplorerTutorials';
-=======
 import ExplorerTutorial from '../components/DataExplorerTutorial';
 import moment from 'moment';
 import _ from 'lodash';
 import PipelineCreator from '../components/PipelineCreator';
->>>>>>> stubbing out pipeline creation
 
 @connect(state => state.dataExplorer)
 @Radium

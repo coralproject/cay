@@ -4,14 +4,17 @@ import max from 'lodash/collection/max';
 import map from 'lodash/collection/map';
 
 const data_exploration = (state = {
+  authors: [],
   loading: false,
   loadingControls: false,
+  loadingAuthorsAndSections: false,
   dataset: null,
   datasetName: null,
   pipelineRangeStart: null,
   pipelineRangeEnd: null,
   error: null,
-  pipelines: []
+  pipelines: [],
+  sections: []
 }, action) => {
   switch (action.type) {
   case types.REQUEST_DATA_EXPLORATION_DATASET:
@@ -49,6 +52,18 @@ const data_exploration = (state = {
     return Object.assign({}, state, {
       loadingControls: false,
       pipelines: action.pipelines
+    });
+
+  case types.REQUEST_AUTHORS_AND_SECTIONS:
+    return Object.assign({}, state, {
+      loadingAuthorsAndSections: true
+    });
+
+  case types.RECEIVE_AUTHORS_AND_SECTIONS:
+    return Object.assign({}, state, {
+      loadingAuthorsAndSections: false,
+      authors: Object.keys(action.data.results[0].Docs[0].data.authors),
+      sections: Object.keys(action.data.results[0].Docs[0].data.sections)
     });
   default:
     return state;

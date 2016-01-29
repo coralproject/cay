@@ -26,6 +26,9 @@ export const DATA_EXPLORATION_FETCH_ERROR = 'DATA_EXPLORATION_FETCH_ERROR';
 export const REQUEST_EXPLORER_CONTROLS = 'REQUEST_EXPLORER_CONTROLS';
 export const RECEIVE_EXPLORER_CONTROLS = 'RECEIVE_EXPLORER_CONTROLS';
 
+export const REQUEST_AUTHORS_AND_SECTIONS = 'REQUEST_AUTHORS_AND_SECTIONS';
+export const RECEIVE_AUTHORS_AND_SECTIONS = 'RECEIVE_AUTHORS_AND_SECTIONS';
+
 /* config */
 
 var getInit = () => {
@@ -94,6 +97,33 @@ export const fetchPipelinesIfNotFetched = () => {
   };
 
 };
+
+export const requestAuthorsAndSections = () => {
+  return {
+    type: REQUEST_AUTHORS_AND_SECTIONS
+  };
+};
+
+export const receiveAuthorsAndSections = (data) => {
+  return {
+    type: RECEIVE_AUTHORS_AND_SECTIONS,
+    data
+  };
+};
+
+export const fetchAuthorsAndSections = () => {
+  return (dispatch) => {
+    dispatch(requestAuthorsAndSections());
+
+    fetch(httpPrefix + '1.0/exec/author_and_section_list', getInit())
+      .then(response => response.json())
+      .then(json => dispatch(receiveAuthorsAndSections(json)))
+      .catch(err => {
+        console.log('oh no. failed to get authors and section list', err);
+      });
+  };
+};
+
 
 // get deep list of query_sets
 export const fetchPipelines = () => {

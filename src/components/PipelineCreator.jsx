@@ -4,9 +4,12 @@ import Radium from 'radium';
 @Radium
 class PipelineCreator extends React.Component {
   handleCreatePipeline() {
-    console.log(this.refs)
+    console.log(this.refs);
   }
   render() {
+
+    console.log('PipelineCreator.render', this.props);
+
     return (
       <div>
         <p style={{marginBottom: 20}}>
@@ -39,9 +42,14 @@ class PipelineCreator extends React.Component {
         <select
           style={styles.select}
           ref="pipelines">
-          <option value={"krugman"}> Paul Krugman </option>
-          <option value={"collins"}> Gail Collins </option>
+          {this.props.sections.map(section => {
+            return (<option value={section}>{section}</option>);
+          })}
         </select>
+        <p>between</p>
+        <input type="date" />
+        <p>and</p>
+        <input type="date" />
         <div style={{marginTop: 20}}>
           <button onClick={this.handleCreatePipeline.bind(this)}> Create </button>
         </div>

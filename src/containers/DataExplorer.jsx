@@ -1,14 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
-import { fetchDataExplorationDataset, populateControlsReducer } from '../actions';
+import { fetchDataExplorationDataset, fetchAuthorsAndSections, populateControlsReducer } from '../actions';
 import Page from './Page';
 import Card from '../components/cards/Card';
 import DataExplorerVisualization from '../components/DataExplorerVisualization';
 import ExplorerControls from '../components/DataExplorerControls';
 import ExplorerTutorial from '../components/DataExplorerTutorial';
-import moment from 'moment';
-import _ from 'lodash';
 import PipelineCreator from '../components/PipelineCreator';
 
 @connect(state => state.dataExplorer)
@@ -17,6 +15,7 @@ class DataExplorer extends React.Component {
 
   componentWillMount() {
     this.props.dispatch(populateControlsReducer());
+    this.props.dispatch(fetchAuthorsAndSections());
   }
 
   controlsUpdatedGoGetDataset(pipeline, dateRange) {
@@ -88,7 +87,7 @@ class DataExplorer extends React.Component {
           }
         </Card>
         <Card>
-          <PipelineCreator/>
+          <PipelineCreator authors={this.props.authors} sections={this.props.sections} />
         </Card>
       </Page>
     );
@@ -102,7 +101,7 @@ const styles = {
     padding: 10
   },
   heading: {
-    fontSize: 36,
+    fontSize: 36
   }
 
 };

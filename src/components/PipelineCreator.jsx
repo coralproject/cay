@@ -5,6 +5,7 @@ import Flex from "./layout/flex";
 import FlexItem from "./layout/flex-item";
 import Select from 'react-select';
 import TextField from './forms/TextField';
+import _ from 'lodash';
 
 @Radium
 class PipelineCreator extends React.Component {
@@ -24,7 +25,8 @@ class PipelineCreator extends React.Component {
   }
 
   handleCreatePipeline() {
-    console.log('handleCreatePipeline', this.refs);
+
+    const interval = this.getSensibleInterval(new Date(this.state.minDate), new Date(this.state.maxDate));
 
     /* this will be moved to actions, construct and pass an object from here */
     var computedQuery = {
@@ -41,21 +43,20 @@ class PipelineCreator extends React.Component {
           commands: [
             {
               $match: {
-                start_iso: {$gte: `#date:${this.refs.date_start.value}`}
+                start_iso: {$gte: `#date:${this.state.minDate}`}
               }
             },
             {
               $match: {
-                start_iso: {$lt: `#date:${this.refs.date_start.value}`}
+                start_iso: {$lt: `#date:${this.state.maxDate}`}
               }
             },
             {
-              $match: {duration: 'week'}
+              $match: {duration: interval}
             },
             {
-              $match: {target: 'author'}
+              $match: {target: this.state.selectedBreakdown}
             },
-            {$match: {target_doc: 'Paul Krugman'}},
             {
               $sort: {
                 start_iso: 1
@@ -68,6 +69,14 @@ class PipelineCreator extends React.Component {
       enabled: true
     };
 
+    if (this.state.specificBreakdowns.length) {
+      computedQuery.queryies.splice(
+        3,
+        0,
+        {$match: {target_doc: 'Paul Krugman'}}
+      );
+    }
+
     this.props.dispatch(createPipelineValueChanged(computedQuery));
   }
 
@@ -77,6 +86,10 @@ class PipelineCreator extends React.Component {
     return targets.map(t => {
       return {value: t, label: t};
     });
+  }
+
+  setSpecificBreakdowns() {
+    console.log('setSpecificBreakdowns', ...arguments);
   }
 
   getSpecific(selectedBreakdown) {
@@ -102,11 +115,12 @@ class PipelineCreator extends React.Component {
             options={this.getTargets('section')}
             name="selected-targets"
             placeholder="Section"
+            onChange={this.setSpecificBreakdowns.bind(this)}
             multi={true} />
           </div>
         );
     } else if (selectedBreakdown === 'user') {
-      return (<TextField label="auto-complete user input" />);
+      return (<TextField label="auto-complete user search" />);
     } else {
       return '';
     }
@@ -115,6 +129,11 @@ class PipelineCreator extends React.Component {
   // this toggles the UI to load more specific options
   updateOutput(breakdown) {
     this.setState({selectedBreakdown: breakdown});
+  }
+
+  updateFields(values) {
+    console.log('updateFields', values.split(','));
+    this.setState({resultFields: values.split(',')});
   }
 
   getBreakdownOptions() {
@@ -156,40 +175,59 @@ class PipelineCreator extends React.Component {
     }
   }
 
+  // we don't want to request 10000 hourly intervals,
+  // so compute resonable bin size
+  getSensibleInterval(start, end) {
+    const hour = 1000 * 60 * 60;
+    const day = hour * 24;
+    const week = day * 7;
+    const diff = end - start;
+
+    if (diff / day < 300) {
+      return 'day';
+    } else if (diff / week < 300) {
+      return 'week';
+    } else {
+      return 'month';
+    }
+  }
+
   render() {
 
     return (
       <div>
-          <p style={styles.label}>I want to know about</p>
-          <Select
-            options={this.getBreakdownOptions()}
-            name="breakdown-type"
-            onChange={this.updateOutput.bind(this)} />
+        <p style={styles.label}>I want to know about</p>
+        <Select
+          options={this.getBreakdownOptions()}
+          name="breakdown-type"
+          value={this.state.selectedBreakdown}
+          onChange={this.updateOutput.bind(this)} />
 
-          <p style={styles.label}>Show me:</p>
-          <Select
-            style={{width: 100}}
-            onChange={this.updateOutput.bind(this)}
-            name="selected-field"
-            multi={true}
-            options={this.getFieldOptions()}
-            placeholder="comments / replies / accept ratio"/>
+        <p style={styles.label}>Show me:</p>
+        <Select
+          style={{width: 100}}
+          onChange={this.updateFields.bind(this)}
+          name="selected-field"
+          value={this.state.resultFields.join()}
+          multi={true}
+          options={this.getFieldOptions()}
+          placeholder="comments / replies / accept ratio"/>
 
-          {this.getSpecific(this.state.selectedBreakdown)}
+        {this.getSpecific(this.state.selectedBreakdown)}
 
-          <p style={styles.label}>between</p>
-          <input
-            onChange={this.updateDateRange.bind(this)}
-            type="date"
-            ref="date_start"
-            value={this.state.minDate} />
+        <p style={styles.label}>between</p>
+        <input
+          onChange={this.updateDateRange.bind(this)}
+          type="date"
+          ref="date_start"
+          value={this.state.minDate} />
 
-          <p style={styles.label}>and</p>
-          <input
-            onChange={this.updateDateRange.bind(this)}
-            type="date"
-            ref="date_end"
-            value={this.state.maxDate} />
+        <p style={styles.label}>and</p>
+        <input
+          onChange={this.updateDateRange.bind(this)}
+          type="date"
+          ref="date_end"
+          value={this.state.maxDate} />
 
         <p style={{marginTop: 10}}> + Add another question for comparison </p>
         <div style={{marginTop: 20}}>

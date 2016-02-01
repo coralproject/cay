@@ -21,6 +21,12 @@ export default class TextField extends React.Component {
     }
   }
 
+  handleKeyPress(event) {
+    if (this.props.onKeyPress) {
+      this.props.onKeyPress(event);
+    }
+  }
+
   render() {
     return (
       <div style={[styles.base, this.props.style]}>
@@ -31,6 +37,7 @@ export default class TextField extends React.Component {
           type={this.props.type || "text"}
           value={this.state.value}
           ref="textFieldInput"
+          onKeyPress={this.handleKeyPress.bind(this)}
           onChange={this.handleChange.bind(this)} />
         <hr style={styles.underline} />
         <hr style={styles.underlineHighlight} />

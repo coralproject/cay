@@ -64,15 +64,15 @@ export default class Tagger extends React.Component {
     var suggestions = this.state.suggestions;
 
     return (
-        <div style={ styles.outer }>
-            <ReactTags tags={tags}
-                suggestions={suggestions}
-                handleDelete={this.handleDelete.bind(this)}
-                handleAddition={this.handleAddition.bind(this)}
-                handleDrag={this.handleDrag.bind(this)} 
-                removeComponent={TaggerRemoveComponent}
-                />
-        </div>
+      <div style={ styles.outer }>
+        <ReactTags tags={tags}
+          suggestions={suggestions}
+          handleDelete={this.handleDelete.bind(this)}
+          handleAddition={this.handleAddition.bind(this)}
+          handleDrag={this.handleDrag.bind(this)} 
+          removeComponent={TaggerRemoveComponent}
+          />
+      </div>
     )
 
   }

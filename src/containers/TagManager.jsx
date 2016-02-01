@@ -22,7 +22,7 @@ export default class TagManager extends React.Component {
   }
 
   confirmDeletion(index) {
-    var tagsCopy = this.state.tags.slice();
+    var tagsCopy = this.state.tags;
     tagsCopy.splice(index, 1);
     this.setState({ tags: tagsCopy });
   }
@@ -34,7 +34,21 @@ export default class TagManager extends React.Component {
   tagAdderClickHandler() {
     if (this.state.adderValue) {
       this.setState({ tags: [ ...this.state.tags, this.state.adderValue ] });
+      React.findDOMNode(this.refs.tagAdderInput).value = ''; 
     }
+  }
+
+  tagAdderKeyHandler(event) {
+    if (event.key == 'Enter') {
+      this.tagAdderClickHandler();
+    }
+  }
+
+  onEditorSave(index, value) {
+    var firstSlice = this.state.tags.slice(0, index);
+    var lastSlice = this.state.tags.slice(index + 1);
+    var tagsCopy = firstSlice.concat(value).concat(lastSlice);
+    this.setState({ tags: tagsCopy });
   }
 
   render() {
@@ -46,7 +60,7 @@ export default class TagManager extends React.Component {
         <ContentHeader title="Tag Manager" />
 
         <div style={ styles.tagAdder }>
-          <input style={ styles.tagAdderInput } onChange={ this.tagAdderChangeHandler.bind(this) } type="text" placeholder="Add a new tag..." />
+          <input style={ styles.tagAdderInput } ref="tagAdderInput" onChange={ this.tagAdderChangeHandler.bind(this) } onKeyPress={ this.tagAdderKeyHandler.bind(this) } type="text" placeholder="Add a new tag..." />
           <button style={ styles.tagAdderButton } onClick={ this.tagAdderClickHandler.bind(this) }>Add tag</button>
         </div>
 
@@ -67,7 +81,7 @@ export default class TagManager extends React.Component {
                       <input type="checkbox" />
                     </td>
                     <td>
-                      <InPlaceEditor initialValue={ tag } />
+                      <InPlaceEditor key={ i } initialValue={ tag } onSave={ this.onEditorSave.bind(this, i) } />
                     </td>
                     <td style={ styles.actionColumn }>
                       <button style={ [ styles.actionButtons, styles.danger ] } onClick={ this.confirmDeletion.bind(this, i) }>Delete</button>

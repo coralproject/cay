@@ -8,7 +8,11 @@ import TextField from './TextField';
 export default class InPlaceEditor extends React.Component {
 
   componentDidMount() {
-    this.setState({ value: this.props.initialValue, initialValue: this.props.initialValue });
+    this.setState({ value: this.props.initialValue });
+  }
+
+  componentDidUpdate() {
+    this.needsUpdate = true; // Updating the state to initialValue here would cause a recursion error
   }
 
   handleChange(event) {
@@ -19,22 +23,34 @@ export default class InPlaceEditor extends React.Component {
     this.setState({ isEditing: true });
   }
 
-  handleSave() {
+  handleKeyPress(event) {
+    if(event.key == 'Enter') this.handleSave(event);
+  }
+
+  handleSave(event) {
     this.setState({ isEditing: false });
+    if (this.props.onSave) {
+      this.props.onSave(this.state.value);
+    }
   }
 
   render() {
+
+    var value = this.state.value;
+    if (this.needsUpdate) {
+      value = this.props.initialValue;
+    }
 
     return (
       <div style={[styles.base, this.props.style]}>
         {
           this.state.isEditing ?
             <div style={ styles.textAndButtonWrapper }>
-              <TextField style={ styles.textField } defaultValue={ this.state.value } focusOnMount={ true } onChange={ this.handleChange.bind(this) } />
+              <TextField style={ styles.textField } defaultValue={ value } focusOnMount={ true } onChange={ this.handleChange.bind(this) } onKeyPress={ this.handleKeyPress.bind(this) } />
               <button onClick={ this.handleSave.bind(this) }>Save</button>
             </div>
           : 
-            <div style={ styles.editableText } onClick={ this.handleClick.bind(this) }>{ this.state.value }</div>
+            <div style={ styles.editableText } onClick={ this.handleClick.bind(this) }>{ value }</div>
         }
       </div>
     );

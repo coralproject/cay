@@ -88,8 +88,8 @@ class PipelineCreator extends React.Component {
     });
   }
 
-  setSpecificBreakdowns() {
-    console.log('setSpecificBreakdowns', ...arguments);
+  setSpecificBreakdowns(values) {
+    this.setState({specificBreakdowns: values.split(',')});
   }
 
   getSpecific(selectedBreakdown) {
@@ -104,6 +104,7 @@ class PipelineCreator extends React.Component {
             options={this.getTargets('author')}
             name="selected-targets"
             placeholder="Author"
+            value={this.state.specificBreakdowns.join(',')}
             multi={true} />
           </div>
         );
@@ -115,6 +116,7 @@ class PipelineCreator extends React.Component {
             options={this.getTargets('section')}
             name="selected-targets"
             placeholder="Section"
+            value={this.state.specificBreakdowns.join(',')}
             onChange={this.setSpecificBreakdowns.bind(this)}
             multi={true} />
           </div>
@@ -128,11 +130,10 @@ class PipelineCreator extends React.Component {
 
   // this toggles the UI to load more specific options
   updateOutput(breakdown) {
-    this.setState({selectedBreakdown: breakdown});
+    this.setState({selectedBreakdown: breakdown, specificBreakdowns: []});
   }
 
   updateFields(values) {
-    console.log('updateFields', values.split(','));
     this.setState({resultFields: values.split(',')});
   }
 

@@ -3,7 +3,7 @@ import Radium from 'radium';
 
 import TaggerRemoveComponent from './TaggerRemoveComponent';
 
-var ReactTags = require('react-tag-input').WithContext;
+import {WithContext as ReactTags} from 'react-tag-input';
 
 @Radium
 export default class Tagger extends React.Component {
@@ -13,7 +13,7 @@ export default class Tagger extends React.Component {
     id: PropTypes.number.isRequired,
     tags: PropTypes.array,
     tagList: PropTypes.array,
-    freeform: PropTypes.bool
+    freeForm: PropTypes.bool
   }
 
   getDefaultProps() {
@@ -27,6 +27,7 @@ export default class Tagger extends React.Component {
   componentWillMount() {
     this.setState({
       tags: this.props.tags || [],
+      isAllowed: true
     });
   }
 
@@ -34,15 +35,33 @@ export default class Tagger extends React.Component {
     var tags = this.state.tags.slice();
     tags.splice(i, 1);
     this.setState({tags: tags});
+    if (tags.length < 1) this.setState({ isAllowed: true, alreadyAdded: false });
+  }
+
+  isAlreadyAdded(tag) {
+    for (var i in this.state.tags) {
+      if (tag == this.state.tags[i].text) return true;// Early return on purpose.
+    }
+    return false;
   }
 
   handleAddition(tag) {
-    var tags = this.state.tags.slice();
-    tags.push({
-      id: tags.length + 1,
-      text: tag
-    });
-    this.setState({tags: tags});
+
+    if (this.props.freeForm || (this.props.tagList.indexOf(tag) > 0)) {
+      if (!this.isAlreadyAdded(tag)) {
+        var tags = this.state.tags.slice();
+        tags.push({
+          id: tags.length + 1,
+          text: tag
+        });
+        this.setState({tags: tags, isAllowed: true, alreadyAdded: false });
+      } else {
+        this.setState({ alreadyAdded: true, isAllowed: true });
+      }
+    } else {
+      this.setState({ isAllowed: false, alreadyAdded: false });
+    }
+
   }
 
   handleDrag(tag, currPos, newPos) {
@@ -70,6 +89,16 @@ export default class Tagger extends React.Component {
           handleDrag={this.handleDrag.bind(this)}
           removeComponent={TaggerRemoveComponent}
           />
+        {
+          !this.state.isAllowed ?
+            <p style={ styles.notAllowed }>The selected tag is not allowed, please select a tag from the dropdown.</p>
+          : ''
+        }
+        {
+          this.state.alreadyAdded ?
+            <p style={ styles.notAllowed }>Tag was already added.</p>
+          : ''
+        }
       </div>
     );
 
@@ -79,5 +108,8 @@ export default class Tagger extends React.Component {
 const styles = {
   outer: {
     margin: '20px'
+  },
+  notAllowed: {
+    color: '#900'
   }
 };

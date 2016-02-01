@@ -21,6 +21,7 @@
   background: #eee;
   border-radius: 4px;
   margin: 10px 10px 10px 0px;
+  cursor: move;
 }
 
 .ReactTags__selected .ReactTags__remove {

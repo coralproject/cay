@@ -26,19 +26,18 @@ export default class Tagger extends React.Component {
 
   componentWillMount() {
     this.setState({
-      tags: [ {id: 1, text: 'Apples'} ],
-      suggestions: ['Banana', 'Mango', 'Pear', 'Apricot', 'April', 'Appreciation']
+      tags: this.props.tags || [],
     });
   }
 
   handleDelete(i) {
-    var tags = this.state.tags;
+    var tags = this.state.tags.slice();
     tags.splice(i, 1);
     this.setState({tags: tags});
   }
 
   handleAddition(tag) {
-    var tags = this.state.tags;
+    var tags = this.state.tags.slice();
     tags.push({
       id: tags.length + 1,
       text: tag
@@ -47,7 +46,7 @@ export default class Tagger extends React.Component {
   }
 
   handleDrag(tag, currPos, newPos) {
-    var tags = this.state.tags;
+    var tags = this.state.tags.slice();
 
     // mutate array
     tags.splice(currPos, 1);
@@ -60,12 +59,12 @@ export default class Tagger extends React.Component {
   render() {
 
     var tags = this.state.tags;
-    var suggestions = this.state.suggestions;
+    var suggestions = this.props.tagList;
 
     return (
       <div style={ styles.outer }>
-        <ReactTags tags={tags}
-          suggestions={suggestions}
+        <ReactTags tags={ tags }
+          suggestions={ this.props.tagList }
           handleDelete={this.handleDelete.bind(this)}
           handleAddition={this.handleAddition.bind(this)}
           handleDrag={this.handleDrag.bind(this)}

@@ -22,7 +22,7 @@ export default class TagManager extends React.Component {
   }
 
   confirmDeletion(index) {
-    var tagsCopy = this.state.tags;
+    var tagsCopy = this.state.tags.slice();
     tagsCopy.splice(index, 1);
     this.setState({ tags: tagsCopy });
   }
@@ -95,7 +95,7 @@ export default class TagManager extends React.Component {
         </table>
 
         <div>
-          <Tagger type="user" id={ 1 } />
+          <Tagger tagList={ this.state.tags } freeForm={ false } type="user" id={ 1 } />
         </div>
 
       </Page>

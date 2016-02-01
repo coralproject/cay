@@ -1,6 +1,5 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import Color from 'color';
 
 import TaggerRemoveComponent from './TaggerRemoveComponent';
 
@@ -21,14 +20,14 @@ export default class Tagger extends React.Component {
     return {
       tags: [],
       tagList: [],
-      freeform: false 
-    }
+      freeform: false
+    };
   }
 
   componentWillMount() {
     this.setState({
-      tags: [ {id: 1, text: "Apples"} ],
-      suggestions: ["Banana", "Mango", "Pear", "Apricot", "April", "Appreciation"]
+      tags: [ {id: 1, text: 'Apples'} ],
+      suggestions: ['Banana', 'Mango', 'Pear', 'Apricot', 'April', 'Appreciation']
     });
   }
 
@@ -41,8 +40,8 @@ export default class Tagger extends React.Component {
   handleAddition(tag) {
     var tags = this.state.tags;
     tags.push({
-        id: tags.length + 1,
-        text: tag
+      id: tags.length + 1,
+      text: tag
     });
     this.setState({tags: tags});
   }
@@ -69,11 +68,11 @@ export default class Tagger extends React.Component {
           suggestions={suggestions}
           handleDelete={this.handleDelete.bind(this)}
           handleAddition={this.handleAddition.bind(this)}
-          handleDrag={this.handleDrag.bind(this)} 
+          handleDrag={this.handleDrag.bind(this)}
           removeComponent={TaggerRemoveComponent}
           />
       </div>
-    )
+    );
 
   }
 }
@@ -82,4 +81,4 @@ const styles = {
   outer: {
     margin: '20px'
   }
-}
+};

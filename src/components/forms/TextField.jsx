@@ -5,18 +5,39 @@ import settings from '../../settings';
 @Radium
 export default class TextField extends React.Component {
 
+  constructor(props) {
+    super(props);
+
+    this.state = {value: '', focused: false};
+  }
+
   handleChange(event) {
     this.setState({value: event.target.value});
+  }
+
+  handleFocus(event) {
+    this.setState({focused: true});
+  }
+
+  handleBlur(event) {
+    this.setState({focused: false});
   }
 
   render() {
     return (
       <div style={[styles.base, this.props.style]}>
-        <label style={styles.label}>{this.props.label}</label>
+        <label style={[
+          styles.label,
+          this.state.value.length && {display: 'block'}
+        ]}>
+          {this.props.label}
+        </label>
         <input
-          placeholder={this.props.hint}
+          placeholder={this.props.label}
           style={styles.input}
-          type={this.props.type || "text"}
+          type={this.props.type || 'text'}
+          onFocus={this.handleFocus.bind(this)}
+          onBlur={this.handleBlur.bind(this)}
           onChange={this.handleChange.bind(this)} />
         <hr style={styles.underline} />
         <hr style={styles.underlineHighlight} />
@@ -37,7 +58,7 @@ const styles = {
     backgroundColor: 'transparent'
   },
   label: {
-    display: 'block',
+    display: 'none',
     position: 'absolute',
     lineHeight: '22px',
     opacity: 1,
@@ -83,4 +104,4 @@ const styles = {
     bottom: -17,
     color: settings.dangerColor
   }
-}
+};

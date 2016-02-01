@@ -4,6 +4,7 @@ import {createPipelineValueChanged} from '../actions';
 import Flex from "./layout/flex";
 import FlexItem from "./layout/flex-item";
 import Select from 'react-select';
+import TextField from './forms/TextField';
 
 @Radium
 class PipelineCreator extends React.Component {
@@ -23,7 +24,7 @@ class PipelineCreator extends React.Component {
   }
 
   handleCreatePipeline() {
-    console.log(this.refs);
+    console.log('handleCreatePipeline', this.refs);
 
     /* this will be moved to actions, construct and pass an object from here */
     var computedQuery = {
@@ -40,12 +41,12 @@ class PipelineCreator extends React.Component {
           commands: [
             {
               $match: {
-                start_iso: {$gte: '#date:2013-01-01'}
+                start_iso: {$gte: `#date:${this.refs.date_start.value}`}
               }
             },
             {
               $match: {
-                start_iso: {$lt: '#date:2014-12-31'}
+                start_iso: {$lt: `#date:${this.refs.date_start.value}`}
               }
             },
             {
@@ -85,7 +86,7 @@ class PipelineCreator extends React.Component {
       // return a list of authors
       return (
         <div>
-          <p style={{marginBottom: 10, marginTop: 10}}>on assets written by</p>
+          <p style={styles.label}>on assets written by</p>
           <Select
             options={this.getTargets('author')}
             name="selected-targets"
@@ -96,7 +97,7 @@ class PipelineCreator extends React.Component {
     } else if (selectedBreakdown === 'section') {
       return (
         <div>
-          <p style={{marginBottom: 10, marginTop: 10}}>specifically, these sections</p>
+          <p style={styles.label}>specifically, these sections</p>
           <Select
             options={this.getTargets('section')}
             name="selected-targets"
@@ -105,7 +106,7 @@ class PipelineCreator extends React.Component {
           </div>
         );
     } else if (selectedBreakdown === 'user') {
-      return (<p>Auto-complete widget yo</p>);
+      return (<TextField label="auto-complete user input" />);
     } else {
       return '';
     }
@@ -117,7 +118,8 @@ class PipelineCreator extends React.Component {
   }
 
   getBreakdownOptions() {
-    var possible = ['total', 'user', 'asset', 'section', 'author'];
+    // apparently the asset target returns invalid JSON, hide for now
+    var possible = ['total', 'user', /*'asset',*/ 'section', 'author'];
 
     return possible.map(p => {
       return {value: p, label: p};
@@ -146,19 +148,25 @@ class PipelineCreator extends React.Component {
     ];
   }
 
+  updateDateRange(e) {
+    if (e.target === this.refs.date_start) {
+      this.setState({minDate: e.target.value});
+    } else {
+      this.setState({maxDate: e.target.value});
+    }
+  }
+
   render() {
 
     return (
       <div>
-          <p>I want to know about</p>
+          <p style={styles.label}>I want to know about</p>
           <Select
             options={this.getBreakdownOptions()}
             name="breakdown-type"
             onChange={this.updateOutput.bind(this)} />
 
-          <p style={{marginBottom: 10}}>
-            {"Show me:"}
-          </p>
+          <p style={styles.label}>Show me:</p>
           <Select
             style={{width: 100}}
             onChange={this.updateOutput.bind(this)}
@@ -169,10 +177,20 @@ class PipelineCreator extends React.Component {
 
           {this.getSpecific(this.state.selectedBreakdown)}
 
-          <p style={{marginBottom: 10, marginTop: 10}}>between</p>
-          <input type="date" ref="date_start" value={this.state.minDate} />
-          <p style={{marginBottom: 10, marginTop: 10}}>and</p>
-          <input type="date" ref="date_end" value={this.state.maxDate} />
+          <p style={styles.label}>between</p>
+          <input
+            onChange={this.updateDateRange.bind(this)}
+            type="date"
+            ref="date_start"
+            value={this.state.minDate} />
+
+          <p style={styles.label}>and</p>
+          <input
+            onChange={this.updateDateRange.bind(this)}
+            type="date"
+            ref="date_end"
+            value={this.state.maxDate} />
+
         <p style={{marginTop: 10}}> + Add another question for comparison </p>
         <div style={{marginTop: 20}}>
           <button onClick={this.handleCreatePipeline.bind(this)}> Create </button>
@@ -184,7 +202,10 @@ class PipelineCreator extends React.Component {
 
 const styles = {
   backgroundColor: 'white',
-  padding: '10px'
+  padding: '10px',
+  label: {
+    marginTop: 10
+  }
 };
 
 export default PipelineCreator;

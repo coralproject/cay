@@ -45,21 +45,21 @@ class ExplorerControls extends React.Component {
       });
     } else {
       // init - the default range
-      dateRange = [new Date(2014, 0, 1).getTime(), new Date().getTime()];
+      dateRange = [new Date(2013, 0, 1).getTime(), new Date().getTime()];
     }
 
     this.props.getControlValues({
       pipeline,
-      dateRange,
+      dateRange
     });
   }
 
   handleNonActionControlChange() {
-    const data_object_level_1_key_selection = this.refs.data_object_level_1_key_selection.value
+    const data_object_level_1_key_selection = this.refs.data_object_level_1_key_selection.value;
 
     this.props.getNonActionFiringControlValues({
-      data_object_level_1_key_selection,
-    })
+      data_object_level_1_key_selection
+    });
   }
 
   mapOptions(pipeline, i) {
@@ -67,12 +67,16 @@ class ExplorerControls extends React.Component {
   }
 
   makeKeysOptions(obj) {
-    const keyArray = _.keys(obj);
+    const keyArray = Object.keys(obj);
     const options = keyArray.map((k, i) => {
-        return (<option key={i} value={k}> {k.replace(/_/g, ' ')} </option>)
-      }
-    )
+      return (<option key={i} value={k}> {k.replace(/_/g, ' ')} </option>);
+    });
     return options;
+  }
+
+  handlePipelineCreationStartClick () {
+    this.setState({pipelineCreationMode: true})
+
   }
 
   sliderInMotion() {
@@ -90,11 +94,27 @@ class ExplorerControls extends React.Component {
           onChange={this.handleControlChange.bind(this)}
           style={styles.select}
           ref="pipelines">
-          <option value={"DEFAULT_VALUE"}> Select a data pipeline... </option>
+          <option value={"DEFAULT_VALUE"}> Select an existing question... </option>
           {this.props.pipelines.map(this.mapOptions)}
         </select>
+        <span
+          style={{
+            margin: "0px 20px",
+          }}
+          > or </span>
+        <button
+        onClick={this.handlePipelineCreationStartClick.bind(this)}
+        style={{
+          border: 0,
+          backgroundColor: "#F87F70",
+          fontWeight: 500,
+          borderRadius: 3,
+          padding: "10px 10px",
+          color: "white",
+          cursor: "pointer"
+        }}> + Ask a new question </button>
         {
-          this.props.dataset ?
+          this.props.dataset && !this.state.pipelineCreationMode ?
           <div>
             <p>Date Range</p>
             <Slider

@@ -1,14 +1,20 @@
 import * as types from '../actions';
+import min from 'lodash/collection/min';
+import max from 'lodash/collection/max';
+import map from 'lodash/collection/map';
 
 const data_exploration = (state = {
+  authors: [],
   loading: false,
   loadingControls: false,
+  loadingAuthorsAndSections: false,
   dataset: null,
   datasetName: null,
   pipelineRangeStart: null,
   pipelineRangeEnd: null,
   error: null,
-  pipelines: []
+  pipelines: [],
+  sections: []
 }, action) => {
   switch (action.type) {
   case types.REQUEST_DATA_EXPLORATION_DATASET:
@@ -22,9 +28,9 @@ const data_exploration = (state = {
     /* TODO this assumes it has the property 'start' */
     if (state.datasetName !== action.data.results[0].Name) {
       pipelineTimeRange = {
-        pipelineRangeStart: _.min(_.pluck(action.data.results[0].Docs, 'start')) * 1000,
-        pipelineRangeEnd: _.max(_.pluck(action.data.results[0].Docs, 'start')) * 1000
-      }
+        pipelineRangeStart: min(map(action.data.results[0].Docs, 'start')) * 1000,
+        pipelineRangeEnd: max(map(action.data.results[0].Docs, 'start')) * 1000
+      };
     }
     return Object.assign({}, state, {
       loading: false,
@@ -46,6 +52,18 @@ const data_exploration = (state = {
     return Object.assign({}, state, {
       loadingControls: false,
       pipelines: action.pipelines
+    });
+
+  case types.REQUEST_AUTHORS_AND_SECTIONS:
+    return Object.assign({}, state, {
+      loadingAuthorsAndSections: true
+    });
+
+  case types.RECEIVE_AUTHORS_AND_SECTIONS:
+    return Object.assign({}, state, {
+      loadingAuthorsAndSections: false,
+      authors: Object.keys(action.data.results[0].Docs[0].data.authors),
+      sections: Object.keys(action.data.results[0].Docs[0].data.sections)
     });
   default:
     return state;

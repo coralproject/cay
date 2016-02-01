@@ -42,26 +42,26 @@ class DataExplorerVisualization extends React.Component {
       const keysFromField = _.keys(this.props.dataset[0].data[this.props.field]);
 
       /* then we iterate over the dataset for each key, using that key as an accessor to the dataset */
-      visualization = keysFromField.map((key, i) => {
-        return this.getLineVictoryComponent(this.props.dataset.map((item, i) => {
+      visualization = keysFromField.map((key) => {
+        return this.getLineVictoryComponent(this.props.dataset.map((item) => {
           return {
             x: new Date(item.start * 1000),
             y: item.data[this.props.field][key]
-          }
-        }), key)
-      })
+          };
+        }), key);
+      });
 
     } else if /* detect time series */ (this.props.dataset[0].start) {
-      parsedDataset = this.props.dataset.map((item, i) => {
+      parsedDataset = this.props.dataset.map((item) => {
         return {
           x: new Date(item.start * 1000),
           y: item.data[this.props.field]
         };
       });
 
-      visualization = this.getLineVictoryComponent(parsedDataset)
+      visualization = this.getLineVictoryComponent(parsedDataset);
     } else /*  default assume catagorical  */ {
-      console.log("assuming categorical data because of lack of timestamp")
+      console.log('assuming categorical data because of lack of timestamp');
     }
 
     return visualization;
@@ -79,6 +79,7 @@ class DataExplorerVisualization extends React.Component {
   }
 
   getLineVictoryComponent(dataset, label) {
+    const rand = Math.floor(Math.random() * 100);
     return (
       <VictoryLine
         padding={75}
@@ -87,8 +88,11 @@ class DataExplorerVisualization extends React.Component {
         label={label}
         style={{
           data: {
-            strokeWidth: 1,
-            ':hover': {stroke: '#c33b33'}
+            strokeWidth: 3,
+            stroke: `rgba(${rand * 2}, ${rand * 2}, ${rand * 4}, .5)`,
+            ':hover': {
+              stroke: `rgba(${rand * 2}, ${rand * 2}, ${rand * 4}, .5)`
+            }
           },
           labels: {fontSize: 12}
         }}/>
@@ -98,38 +102,38 @@ class DataExplorerVisualization extends React.Component {
   render() {
     return (
       <div>
-      <VictoryChart
-        height={600}
-        width={800}
-        padding={{
-          top: 75,
-          bottom: 140,
-          left: 70,
-          right: 70
-        }}
-        scale={{x: d3.time.scale(), y: d3.scale.linear()}}
-        domainPadding={{x: 20}}>
-        <VictoryAxis
-          style={{
-            axis: {stroke: 'gray'},
-            ticks: {stroke: 'gray'},
-            tickLabels: {
-              fontSize: 10
-            },
-            axisLabels: {
-              fontsize: 16
-            }
+        <VictoryChart
+          height={600}
+          width={800}
+          padding={{
+            top: 75,
+            bottom: 140,
+            left: 70,
+            right: 70
           }}
-          tickCount={10}
-          label={this.props.independentVariableName} />
-        <VictoryAxis dependentAxis
-          label={this.props.field ? this.props.field.replace(/_/g, ' ') : ""}
-          style={{
-            axis: {stroke: 'gray'},
-            ticks: {stroke: 'transparent'}
-          }}/>
-        {this.contemplate()}
-      </VictoryChart>
+          scale={{x: d3.time.scale(), y: d3.scale.linear()}}
+          domainPadding={{x: 20}}>
+          <VictoryAxis
+            style={{
+              axis: {stroke: 'gray'},
+              ticks: {stroke: 'gray'},
+              tickLabels: {
+                fontSize: 10
+              },
+              axisLabels: {
+                fontsize: 16
+              }
+            }}
+            tickCount={10}
+            label={this.props.dataset[0].duration ? this.props.dataset[0].duration : "" /* naive, assumes time series */} />
+          <VictoryAxis dependentAxis
+            label={this.props.field ? this.props.field.replace(/_/g, ' ') : ''}
+            style={{
+              axis: {stroke: 'gray'},
+              ticks: {stroke: 'transparent'}
+            }}/>
+          {this.contemplate()}
+        </VictoryChart>
       </div>
     );
   }

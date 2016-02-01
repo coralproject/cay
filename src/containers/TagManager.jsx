@@ -5,8 +5,11 @@ import Radium from 'radium';
 import Page from './Page';
 import ContentHeader from '../components/ContentHeader';
 import InPlaceEditor from '../components/forms/InPlaceEditor';
+import Tagger from '../components/forms/Tagger';
 
 import settings from '../settings';
+
+require('../../css/react-tag-input.css');
 
 @connect(state => {
   return state.pipelines;
@@ -76,6 +79,10 @@ export default class TagManager extends React.Component {
 
           </tbody>
         </table>
+
+        <div>
+          <Tagger type="user" id={ 1 } />
+        </div>
 
       </Page>
     );

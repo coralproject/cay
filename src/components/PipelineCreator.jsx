@@ -70,11 +70,11 @@ class PipelineCreator extends React.Component {
     };
 
     if (this.state.specificBreakdowns.length) {
-      computedQuery.queryies.splice(
-        3,
-        0,
-        {$match: {target_doc: 'Paul Krugman'}}
-      );
+      // computedQuery.queryies.splice(
+      //   3,
+      //   0,
+      //   {$match: {target_doc: 'Paul Krugman'}}
+      // );
     }
 
     this.props.dispatch(createPipelineValueChanged(computedQuery));

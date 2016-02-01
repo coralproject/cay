@@ -12,6 +12,7 @@ import configureStore from './store';
 
 import Dashboard from './containers/Dashboard';
 import UserManager from './containers/UserManager';
+import TagManager from './containers/TagManager';
 import Login from './containers/Login';
 import DataExplorer from './containers/DataExplorer';
 
@@ -33,6 +34,7 @@ class Root extends React.Component {
             <Route path="user-manager/:filterId/:userId" component={UserManager}/>
             <Route path="user-manager/:filterId" component={UserManager}/>
             <Route path="user-manager" component={UserManager}/>
+            <Route path="tag-manager" component={TagManager}/>
             <Route path="explore" component={DataExplorer}/>
           </Router>
         </Provider>

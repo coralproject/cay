@@ -5,8 +5,20 @@ import settings from '../../settings';
 @Radium
 export default class TextField extends React.Component {
 
+  componentDidMount() {
+    if (this.props.defaultValue) {
+      this.setState({value: this.props.defaultValue});
+    }
+    if (this.props.focusOnMount) {
+      React.findDOMNode(this.refs.textFieldInput).focus(); 
+    }
+  }
+
   handleChange(event) {
     this.setState({value: event.target.value});
+    if (this.props.onChange) {
+      this.props.onChange(event);
+    }
   }
 
   render() {
@@ -17,6 +29,8 @@ export default class TextField extends React.Component {
           placeholder={this.props.hint}
           style={styles.input}
           type={this.props.type || "text"}
+          value={this.state.value}
+          ref="textFieldInput"
           onChange={this.handleChange.bind(this)} />
         <hr style={styles.underline} />
         <hr style={styles.underlineHighlight} />

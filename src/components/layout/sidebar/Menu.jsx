@@ -14,6 +14,7 @@ class Menu extends React.Component {
           <MenuItem name="Explore" target="/explore" icon="fa-bar-chart" />
           <MenuItem name="User Manager" target="/user-manager" icon="fa-users" />
           <MenuItem name="Settings" target="/settings" icon="fa-cog" />
+          <MenuItem name="Tag Manager" target="/tag-manager" icon="fa-tag" />
         </ul>
       </div>
     );

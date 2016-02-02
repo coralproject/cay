@@ -24,6 +24,15 @@ require('../fonts/glyphicons-halflings-regular.woff');
 
 class Root extends React.Component {
   render() {
+
+    if (process && process.env.NODE_ENV !== 'production') {
+      var debug = (
+        <DebugPanel top right bottom>
+          <DevTools store={store} visibleOnLoad={false} monitor={LogMonitor} />
+        </DebugPanel>
+      );
+    }
+
     return (
       <div>
         <Provider store={store}>
@@ -35,10 +44,8 @@ class Root extends React.Component {
             <Route path="user-manager" component={UserManager}/>
             <Route path="explore" component={DataExplorer}/>
           </Router>
-          <DebugPanel top right bottom>
-            <DevTools store={store} visibleOnLoad={false} monitor={LogMonitor} />
-          </DebugPanel>
         </Provider>
+        {debug}
       </div>
     );
   }

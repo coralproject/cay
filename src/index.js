@@ -35,10 +35,10 @@ class Root extends React.Component {
             <Route path="user-manager" component={UserManager}/>
             <Route path="explore" component={DataExplorer}/>
           </Router>
+          <DebugPanel top right bottom>
+            <DevTools store={store} visibleOnLoad={false} monitor={LogMonitor} />
+          </DebugPanel>
         </Provider>
-        <DebugPanel top right bottom>
-          <DevTools store={store} visibleOnLoad={false} monitor={LogMonitor} />
-        </DebugPanel>
       </div>
     );
   }

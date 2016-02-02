@@ -78,7 +78,6 @@ export default class Tagger extends React.Component {
   render() {
 
     var tags = this.state.tags;
-    var suggestions = this.props.tagList;
 
     return (
       <div style={ styles.outer }>

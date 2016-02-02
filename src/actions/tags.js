@@ -19,12 +19,12 @@ var getInit = (jsonObject) => {
   };
 
   return init;
-}
+};
 
 export const storeTag = (tagName) => {
   return (dispatch) => {
     dispatch(tagCreationStarted(tagName));
-    fetch(PILLAR_HOST + API_PREFIX + 'tag', getInit({ "name": tagName, "description": "" }))
+    fetch(PILLAR_HOST + API_PREFIX + 'tag', getInit({ 'name': tagName, 'description': '' }))
       .then(response => response)
       .then(storedTag => dispatch(tagCreationSuccess(storedTag)))
       .catch(error => dispatch(tagCreationFailure(error)));

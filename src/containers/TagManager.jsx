@@ -9,8 +9,6 @@ import Tagger from '../components/forms/Tagger';
 
 import { storeTag } from '../actions/tags';
 
-import settings from '../settings';
-
 require('../../css/react-tag-input.css');
 
 @connect(state => {
@@ -128,7 +126,7 @@ const styles = {
   },
   tableHeader: {
     textAlign: 'left',
-    color: '#ccc',
+    color: '#ccc'
   },
   actionsHeader: {
     width: '200px'

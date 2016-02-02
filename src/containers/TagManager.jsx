@@ -7,12 +7,14 @@ import ContentHeader from '../components/ContentHeader';
 import InPlaceEditor from '../components/forms/InPlaceEditor';
 import Tagger from '../components/forms/Tagger';
 
+import { storeTag } from '../actions/tags';
+
 import settings from '../settings';
 
 require('../../css/react-tag-input.css');
 
 @connect(state => {
-  return state.pipelines;
+  return state.tags;
 })
 @Radium
 export default class TagManager extends React.Component {
@@ -35,6 +37,7 @@ export default class TagManager extends React.Component {
     if (this.state.adderValue) {
       this.setState({ tags: [ ...this.state.tags, this.state.adderValue ] });
       React.findDOMNode(this.refs.tagAdderInput).value = ''; 
+      this.props.dispatch(storeTag(this.state.adderValue));
     }
   }
 
@@ -62,7 +65,18 @@ export default class TagManager extends React.Component {
         <div style={ styles.tagAdder }>
           <input style={ styles.tagAdderInput } ref="tagAdderInput" onChange={ this.tagAdderChangeHandler.bind(this) } onKeyPress={ this.tagAdderKeyHandler.bind(this) } type="text" placeholder="Add a new tag..." />
           <button style={ styles.tagAdderButton } onClick={ this.tagAdderClickHandler.bind(this) }>Add tag</button>
+          {
+            this.props.loading ?
+              <span>Loading...</span>
+            : ''
+          }
         </div>
+
+        {
+          this.props.hasErrors ?
+            <div style={ styles.errorMsg }>Error: { this.props.errorMsg }</div>
+          : ''
+        }
 
         <table style={ styles.tableBase }>
           <thead>
@@ -163,5 +177,9 @@ const styles = {
   },
   actionColumn: {
     textAlign: 'right'
+  },
+  errorMsg: {
+    color: '#900',
+    margin: '10px 0'
   }
 };

@@ -18,8 +18,10 @@ class PipelineCreator extends React.Component {
       resultFields: [], // what fields the user is interested in measuring; replies, replies per comment, etc
       specificBreakdowns: [], // this could be particular author(s), or a specific section
       // hard-code the date range of the NYT dataset.
-      minDate: '2003-05-13',
-      maxDate: '2015-01-01',
+      // minDate: '2003-05-13',
+      // maxDate: '2015-01-01',
+      minDate: '2013-01-01',
+      maxDate: '2013-01-02',
       computedQuery: null
     };
   }
@@ -112,6 +114,7 @@ class PipelineCreator extends React.Component {
             name="selected-targets"
             placeholder="Author"
             value={this.state.specificBreakdowns.join(',')}
+            onChange={this.setSpecificBreakdowns.bind(this)}
             multi={true} />
           </div>
         );

@@ -9,6 +9,7 @@ import ExplorerControls from '../components/DataExplorerControls';
 import ExplorerTutorial from '../components/DataExplorerTutorial';
 import PipelineCreator from '../components/PipelineCreator';
 import Flex from "../components/layout/flex";
+import _ from 'lodash';
 
 @connect(state => state.dataExplorer)
 @Radium
@@ -82,31 +83,31 @@ class DataExplorer extends React.Component {
         </div>
         <Card>
           <Flex>
-            <p> {this.props.loading ? "Loading..." : ""} </p>
+            <p> {this.props.loading ? 'Loading...' : ''} </p>
           </Flex>
           <Flex>
             <p style={{fontSize: 24}}>
               {
                 /* show author name if data and name and not loading new data */
-                this.props.dataset && this.props.dataset[0].target_doc && !this.props.loading ?
+                _.has(this, 'props.dataset.0.target_doc') && !this.props.loading ?
                   this.props.dataset[0].target_doc :
-                  ""
+                  ''
               }
             </p>
           </Flex>
           {
             /* render visualization if data and not loading new data*/
-            !this.props.loading && this.props.dataset ?
+            !this.props.loading && _.has(this, 'props.dataset.0') ?
               <DataExplorerVisualization
                 dataset={this.props.dataset}
-                field={'comments'}/> : ""
+                field={'comments'}/> : ''
           }
           {
             /* show tutorial if no data and no loading - condition occurs at outset*/
-            !this.props.dataset && !this.props.loading ?
+            !_.has(this, 'props.dataset.0') && !this.props.loading ?
               <ExplorerTutorial
                 dataset={this.props.dataset}
-                field={this.state.field}/> : ""
+                field={this.state.field}/> : ''
           }
         </Card>
       </Page>

@@ -28,7 +28,8 @@ export default class TextField extends React.Component {
       <div style={[styles.base, this.props.style]}>
         <label style={[
           styles.label,
-          this.state.value.length && {display: 'block'}
+          this.state.value.length && styles.labelWithValue,
+          this.state.focused && styles.focusedLabel
         ]}>
           {this.props.label}
         </label>
@@ -65,6 +66,12 @@ const styles = {
     color: settings.grey,
     fontSize: '.8em',
     top: 15
+  },
+  labelWithValue: {
+    display: 'block'
+  },
+  focusedLabel: {
+    color: settings.infoColor
   },
   input: {
     padding: 0,

@@ -5,7 +5,7 @@ import Flex from "./layout/flex";
 import FlexItem from "./layout/flex-item";
 import Select from 'react-select';
 import TextField from './forms/TextField';
-import _ from 'lodash';
+import Button from './Button';
 
 @Radium
 class PipelineCreator extends React.Component {
@@ -237,9 +237,13 @@ class PipelineCreator extends React.Component {
           ref="date_end"
           value={this.state.maxDate} />
 
-        <p style={{marginTop: 10}}> + Add another question for comparison </p>
+        <p style={styles.label}> + Add another question for comparison </p>
         <div style={{marginTop: 20}}>
-          <button onClick={this.handleCreatePipeline.bind(this)}> Create </button>
+          <Button
+            category="primary"
+            onClick={this.handleCreatePipeline.bind(this)}>
+              Create
+          </Button>
         </div>
       </div>
     );

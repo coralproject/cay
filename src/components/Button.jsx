@@ -33,7 +33,8 @@ class Button extends React.Component {
 }
 
 Button.propTypes = {
-  size: PropTypes.string
+  size: PropTypes.string,
+  category: PropTypes.string
 };
 
 const styles = {

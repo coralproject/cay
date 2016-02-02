@@ -60,8 +60,18 @@ class DataExplorer extends React.Component {
     });
   }
 
+  getVisLabel(targetDoc) {
+    if (_.isString(targetDoc)) return targetDoc;
+
+    if (_.isObject(targetDoc) && _.has(targetDoc, 'user_name')) return 'Users';
+
+    return '';
+  }
+
   render() {
-    console.log('DataExplorer.render', this.props);
+    if (_.has(this, 'props.dataset.0')) {
+      console.log('DataExplorer.render', this.props.dataset[0].target_doc);
+    }
 
     return (
       <Page style={styles.base}>
@@ -90,7 +100,7 @@ class DataExplorer extends React.Component {
               {
                 /* show author name if data and name and not loading new data */
                 _.has(this, 'props.dataset.0.target_doc') && !this.props.loading ?
-                  this.props.dataset[0].target_doc :
+                  this.getVisLabel(this.props.dataset[0].target_doc) :
                   ''
               }
             </p>
@@ -100,14 +110,14 @@ class DataExplorer extends React.Component {
             !this.props.loading && _.has(this, 'props.dataset.0') ?
               <DataExplorerVisualization
                 dataset={this.props.dataset}
-                field={'comments'}/> : ''
+                field={'comments'} /> : ''
           }
           {
             /* show tutorial if no data and no loading - condition occurs at outset*/
             !_.has(this, 'props.dataset.0') && !this.props.loading ?
               <ExplorerTutorial
                 dataset={this.props.dataset}
-                field={this.state.field}/> : ''
+                field={this.state.field} /> : ''
           }
         </Card>
       </Page>

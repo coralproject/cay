@@ -17,15 +17,18 @@ export default class UserRow extends React.Component {
   }
 
   render() {
+
+    const {user} = this.props;
+
     return (
       <ListItem
         style={[this.props.style, styles.base]}
         onClick={this.handleClick.bind(this)} >
 
-          {this.props.user.user_name}
+          {user.user_name}
 
           <p style={styles.sub}>
-            Rating | Test Score | Comments
+            Rating | accept ratio {user.stats.accept_ratio} | Comments {user.stats.comments.total}
           </p>
 
       </ListItem>

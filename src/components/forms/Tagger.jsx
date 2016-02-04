@@ -16,17 +16,14 @@ export default class Tagger extends React.Component {
     freeForm: PropTypes.bool
   }
 
-  getDefaultProps() {
-    return {
-      tags: [],
-      tagList: [],
-      freeform: false
-    };
-  }
-
   componentWillMount() {
+    var tempTagList = [];
+    for (var i in this.props.tagList) {
+      tempTagList.push(this.props.tagList[i].name);
+    }
     this.setState({
       tags: this.props.tags || [],
+      tagList: tempTagList,
       isAllowed: true
     });
   }
@@ -47,7 +44,7 @@ export default class Tagger extends React.Component {
 
   handleAddition(tag) {
 
-    if (this.props.freeForm || (this.props.tagList.indexOf(tag) > 0)) {
+    if (this.props.freeForm || (this.state.tagList.indexOf(tag) > -1)) {
       if (!this.isAlreadyAdded(tag)) {
         var tags = this.state.tags.slice();
         tags.push({
@@ -82,7 +79,7 @@ export default class Tagger extends React.Component {
     return (
       <div style={ styles.outer }>
         <ReactTags tags={ tags }
-          suggestions={ this.props.tagList }
+          suggestions={ this.state.tagList }
           handleDelete={this.handleDelete.bind(this)}
           handleAddition={this.handleAddition.bind(this)}
           handleDrag={this.handleDrag.bind(this)}
@@ -106,7 +103,6 @@ export default class Tagger extends React.Component {
 
 const styles = {
   outer: {
-    margin: '20px'
   },
   notAllowed: {
     color: '#900'

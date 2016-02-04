@@ -6,8 +6,9 @@ import Page from './Page';
 import ContentHeader from '../components/ContentHeader';
 import InPlaceEditor from '../components/forms/InPlaceEditor';
 import Tagger from '../components/forms/Tagger';
+import Icon from '../components/Icon';
 
-import { storeTag } from '../actions/tags';
+import { storeTag, getTags, deleteTag } from '../actions/tags';
 
 require('../../css/react-tag-input.css');
 
@@ -21,21 +22,33 @@ export default class TagManager extends React.Component {
     this.setState({ tags: [ 'top_commenter', 'banned', 'moderator', 'martian', 'ufo' ] });
   }
 
-  confirmDeletion(index) {
-    var tagsCopy = this.state.tags.slice();
-    tagsCopy.splice(index, 1);
-    this.setState({ tags: tagsCopy });
+  componentDidMount() {
+    this.props.dispatch(getTags());
   }
 
-  tagAdderChangeHandler(event) {
-    this.setState({ adderValue: event.target.value });
+  confirmDeletion(tagName, tagDescription, index) {
+    this.props.dispatch(deleteTag(tagName, tagDescription, index));
+  }
+
+  validateTag(tagName) {
+    return /^([A-Za-z_-\d]*)$/.test(tagName);
   }
 
   tagAdderClickHandler() {
-    if (this.state.adderValue) {
-      this.setState({ tags: [ ...this.state.tags, this.state.adderValue ] });
-      React.findDOMNode(this.refs.tagAdderInput).value = ''; 
-      this.props.dispatch(storeTag(this.state.adderValue));
+
+    var tagName = React.findDOMNode(this.refs.tagNameInput).value;
+    
+    if (tagName.length > 0 && this.validateTag(tagName)) {
+      this.setState({ adderValidationError: false });
+
+      var tagDescription = React.findDOMNode(this.refs.tagDescriptionInput).value;
+
+      React.findDOMNode(this.refs.tagNameInput).value = ''; 
+      React.findDOMNode(this.refs.tagDescriptionInput).value = ''; 
+
+      this.props.dispatch(storeTag(tagName, tagDescription));
+    } else {
+      this.setState({ adderValidationError: "Please type a valid tag, using only letters, numbers, dashes and underscores. Ex: this_is-1-valid_tag" });
     }
   }
 
@@ -45,14 +58,45 @@ export default class TagManager extends React.Component {
     }
   }
 
-  onEditorSave(index, value) {
+  onNameEdit(index, value) {
     var firstSlice = this.state.tags.slice(0, index);
     var lastSlice = this.state.tags.slice(index + 1);
     var tagsCopy = firstSlice.concat(value).concat(lastSlice);
     this.setState({ tags: tagsCopy });
   }
 
+  onDescriptionEdit(tagName, index, value) {
+    this.props.dispatch(storeTag(tagName, value, index));
+  }
+
   render() {
+
+    var tagList = this.props.tags ? 
+      this.props.tags.map((tag, i) => {
+        return (
+          <tr key={ i }>
+            <td style={ [ styles.checkBoxColumn ] }>
+              <input type="checkbox" />
+            </td>
+            <td>
+              <InPlaceEditor key={ i } initialValue={ tag.name } onSave={ this.onNameEdit.bind(this, i) } />
+            </td>
+            <td>
+              <InPlaceEditor key={ i } initialValue={ tag.description } onSave={ this.onDescriptionEdit.bind(this, tag.name, i) } />
+            </td>
+            <td style={ styles.actionColumn }>
+              <button style={ [ styles.actionButtons, styles.danger ] } onClick={ this.confirmDeletion.bind(this, tag.name, tag.description, i) }>Delete</button>
+            </td>
+          </tr>
+        );
+      })
+    : '';
+
+    var tagger = this.props.tags ?
+      <div>
+        <Tagger tagList={ this.props.tags } freeForm={ false } type="user" id={ 1 } />
+      </div>
+    : '';
 
     return (
 
@@ -60,54 +104,59 @@ export default class TagManager extends React.Component {
 
         <ContentHeader title="Tag Manager" />
 
-        <div style={ styles.tagAdder }>
-          <input style={ styles.tagAdderInput } ref="tagAdderInput" onChange={ this.tagAdderChangeHandler.bind(this) } onKeyPress={ this.tagAdderKeyHandler.bind(this) } type="text" placeholder="Add a new tag..." />
-          <button style={ styles.tagAdderButton } onClick={ this.tagAdderClickHandler.bind(this) }>Add tag</button>
+        <div style={ styles.tagManagerContent }>
+
+          <div style={ styles.tagAdder }>
+            <input style={ styles.tagAdderInput } ref="tagNameInput" onKeyPress={ this.tagAdderKeyHandler.bind(this) } type="text" placeholder="Tag name" />
+            <input style={ styles.tagAdderInput } ref="tagDescriptionInput" onKeyPress={ this.tagAdderKeyHandler.bind(this) } type="text" placeholder="Description (optional)" />
+            <button style={ styles.tagAdderButton } onClick={ this.tagAdderClickHandler.bind(this) }>Add tag</button>
+            {
+              this.props.loading ?
+                <span style={ styles.loadingMessage }>
+                  <span style={ styles.spinner }><Icon name="fa-spinner" /></span>
+                  <span>Loading...</span>
+                </span>
+              : ''
+            }
+          </div>
+
           {
-            this.props.loading ?
-              <span>Loading...</span>
+            this.props.hasErrors ?
+              <div style={ styles.errorMsg }>{ this.props.errorMsg }</div>
             : ''
           }
-        </div>
 
-        {
-          this.props.hasErrors ?
-            <div style={ styles.errorMsg }>Error: { this.props.errorMsg }</div>
-          : ''
-        }
+          {
+            this.state.adderValidationError ?
+              <div style={ styles.errorMsg }>{ this.state.adderValidationError }</div>
+            : ''
+          }
 
-        <table style={ styles.tableBase }>
-          <thead>
-            <tr>
-              <th style={ [ styles.checkBoxHeader ] }><input type="checkbox" /></th>
-              <th style={ [ styles.tableHeader ] }>Tag</th>
-              <th style={ [ styles.tableHeader, styles.actionsHeader ] }></th>
-            </tr>
-          </thead>
-          <tbody>
-            {
-              this.state.tags.map((tag, i) => {
-                return (
-                  <tr key={ i }>
-                    <td style={ [ styles.checkBoxColumn ] }>
-                      <input type="checkbox" />
-                    </td>
-                    <td>
-                      <InPlaceEditor key={ i } initialValue={ tag } onSave={ this.onEditorSave.bind(this, i) } />
-                    </td>
-                    <td style={ styles.actionColumn }>
-                      <button style={ [ styles.actionButtons, styles.danger ] } onClick={ this.confirmDeletion.bind(this, i) }>Delete</button>
-                    </td>
-                  </tr>
-                );
-              })
-            }
+          <table style={ styles.tableBase }>
+            <thead>
+              <tr>
+                <th style={ [ styles.checkBoxHeader ] }><input type="checkbox" /></th>
+                <th style={ [ styles.tableHeader ] }>Tag</th>
+                <th style={ [ styles.tableHeader ] }>Description</th>
+                <th style={ [ styles.tableHeader, styles.actionsHeader ] }></th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                this.loadingTags ?
+                  <tr><td colspan="99">Loading tags...</td></tr>
+                :
+                  tagList
+              }
+            </tbody>
+          </table>
 
-          </tbody>
-        </table>
+          { 
+            this.props.tags ?
+              tagger
+            : ''
+          }
 
-        <div>
-          <Tagger tagList={ this.state.tags } freeForm={ false } type="user" id={ 1 } />
         </div>
 
       </Page>
@@ -115,8 +164,11 @@ export default class TagManager extends React.Component {
   }
 }
 const styles = {
+  tagManagerContent: {
+    padding: '20px'
+  },
   tableBase: {
-    margin: '20px',
+    margin: '20px 0',
     width: '70%',
     maxWidth: '900px',
     borderRadius: '4px',
@@ -126,7 +178,7 @@ const styles = {
   },
   tableHeader: {
     textAlign: 'left',
-    color: '#ccc'
+    color: '#999'
   },
   actionsHeader: {
     width: '200px'
@@ -150,8 +202,8 @@ const styles = {
     color: '#a00'
   },
   tagAdder: {
-    width: '400px',
-    margin: '20px'
+    width: '700px',
+    margin: '20px 0'
   },
   tagAdderInput: {
     display: 'inline-block',
@@ -179,5 +231,18 @@ const styles = {
   errorMsg: {
     color: '#900',
     margin: '10px 0'
+  },
+  loadingMsg: {
+    color: '#999',
+    fontSize: '11pt',
+    padding: '0 20px',
+    display: 'inline-block'
+  },
+  spinner: {
+    display: 'inline-block',
+    animationName: 'spin',
+    animationDuration: '1000ms',
+    animationIterationCount: 'infinite',
+    animationTimingFunction: 'linear'
   }
 };

@@ -145,19 +145,19 @@ export const requestPipelineFailure = (err) => {
   };
 };
 
-export const receivePipeline = (pipeline) => {
+export const receivePipeline = (data) => {
   return {
     type: PIPELINE_RECEIVED,
-    pipeline
+    data
   };
 };
 
-// get full data for one query_set
+// execute a query_set
 export const fetchPipeline = (pipelineName) => {
   return (dispatch) => {
     dispatch(requestPipeline(pipelineName));
 
-    fetch(httpPrefix + apiPrefix + pipelineName, getInit())
+    fetch(httpPrefix + apiPrefix + 'exec/' + pipelineName, getInit())
       .then(response => response.json())
       .then(pipeline => dispatch(receivePipeline(pipeline)))
       .catch(err => dispatch(requestPipelineFailure(err)));
@@ -189,8 +189,8 @@ export const loginUser = (username, password) => {
 };
 
 
-export const fetchCommentsByUser = (data) => {
-  const url = `${httpPrefix}${apiPrefix}comments_by_user${apiSuffix}?user_id=${data.user_id}`;
+export const fetchCommentsByUser = (user_id) => {
+  const url = `${httpPrefix}${apiPrefix}comments_by_user${apiSuffix}?user_id=${user_id}`;
   return (dispatch) => {
     dispatch(requestComments());
 

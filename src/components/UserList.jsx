@@ -9,8 +9,28 @@ import Heading from './Heading';
 export default class UserList extends React.Component {
   static propTypes = {
     users: PropTypes.arrayOf(PropTypes.shape({
-      user_id: PropTypes.string.isRequired
+      user_name: PropTypes.string.isRequired,
+      _id: PropTypes.string.idRequired
     }).isRequired).isRequired
+  }
+
+  getUser(user) {
+    console.log('getUser', user);
+  }
+
+  getUserList(users) {
+
+    console.log('getUserList', users);
+
+    return users.map((user, i) => {
+      return (
+        <UserRow {...this.props}
+          user={user}
+          onClick={this.getUser.bind(this)}
+          style={styles.row}
+          key={i} />
+      );
+    });
   }
 
   render() {
@@ -19,16 +39,7 @@ export default class UserList extends React.Component {
         <Heading size="small" style={styles.heading}>
           User List
         </Heading>
-        {
-          this.props.users.map((user, i) => {
-            return (
-              <UserRow {...this.props}
-                user={user}
-                style={styles.row}
-                key={i} />
-            );
-          })
-        }
+        {this.props.users.length ? this.getUserList(this.props.users) : 'Loading...'}
       </List>
     );
   }

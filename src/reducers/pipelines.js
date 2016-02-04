@@ -30,12 +30,16 @@ const pipelines = (state = initialState, action) => {
     return Object.assign({}, state,
       {
         loading: false,
+        // this probably isn't the final way to do this.
+        // queries will eventually be length > 1
         pipelines: action.pipelines.filter(pipe => pipe.queries[0].collection === 'user')
       }
     );
 
+  // query_set executed. receive a list of users.
   case types.PIPELINE_RECEIVED:
-    return Object.assign({}, state, { loadingPipeline: false, [action.pipeline.name]: action.pipeline});
+
+    return Object.assign({}, state, { loadingPipeline: false, users: action.data.results[0].Docs});
 
   default:
     // console.log('no reducer matches:', action.type);

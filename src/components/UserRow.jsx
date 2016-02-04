@@ -3,21 +3,17 @@ import Radium from 'radium';
 
 import {connect} from 'react-redux';
 
-import settings from '../settings';
 import ListItem from './lists/ListItem';
-import Avatar from './Avatar';
-
-import {fetchCommentsByUser} from '../actions';
 
 @connect(state => state.pipelines)
 @Radium
 export default class UserRow extends React.Component {
   static propTypes = {
-    onUserClick: PropTypes.func.isRequired
+    onClick: PropTypes.func.isRequired
   }
 
   handleClick() {
-    this.props.dispatch(fetchCommentsByUser(this.props.user));
+    this.props.onClick();
   }
 
   render() {
@@ -26,7 +22,7 @@ export default class UserRow extends React.Component {
         style={[this.props.style, styles.base]}
         onClick={this.handleClick.bind(this)} >
 
-          {this.props.user}
+          {this.props.user.user_name}
 
           <p style={styles.sub}>
             Rating | Test Score | Comments

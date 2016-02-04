@@ -8,6 +8,13 @@ import InPlaceEditor from '../components/forms/InPlaceEditor';
 import Tagger from '../components/forms/Tagger';
 import Icon from '../components/Icon';
 
+import Table from '../components/tables/Table';
+import TableHead from '../components/tables/TableHead';
+import TableHeader from '../components/tables/TableHeader';
+import TableBody from '../components/tables/TableBody';
+import TableRow from '../components/tables/TableRow';
+import TableCell from '../components/tables/TableCell';
+
 import { storeTag, getTags, deleteTag } from '../actions/tags';
 
 require('../../css/react-tag-input.css');
@@ -74,23 +81,20 @@ export default class TagManager extends React.Component {
     var tagList = this.props.tags ? 
       this.props.tags.map((tag, i) => {
         return (
-          <tr key={ i }>
-            <td style={ [ styles.checkBoxColumn ] }>
-              <input type="checkbox" />
-            </td>
-            <td>
+          <TableRow key={ i }>
+            <TableCell>
               <InPlaceEditor key={ i } initialValue={ tag.name } onSave={ this.onNameEdit.bind(this, i) } />
-            </td>
-            <td>
+            </TableCell>
+            <TableCell>
               <InPlaceEditor key={ i } initialValue={ tag.description } onSave={ this.onDescriptionEdit.bind(this, tag.name, i) } />
-            </td>
-            <td style={ styles.actionColumn }>
+            </TableCell>
+            <TableCell>
               <button style={ [ styles.actionButtons, styles.danger ] } onClick={ this.confirmDeletion.bind(this, tag.name, tag.description, i) }>Delete</button>
-            </td>
-          </tr>
+            </TableCell>
+          </TableRow>
         );
       })
-    : '';
+    : null;
 
     var tagger = this.props.tags ?
       <div>
@@ -132,25 +136,18 @@ export default class TagManager extends React.Component {
             : ''
           }
 
-          <table style={ styles.tableBase }>
-            <thead>
-              <tr>
-                <th style={ [ styles.checkBoxHeader ] }><input type="checkbox" /></th>
-                <th style={ [ styles.tableHeader ] }>Tag</th>
-                <th style={ [ styles.tableHeader ] }>Description</th>
-                <th style={ [ styles.tableHeader, styles.actionsHeader ] }></th>
-              </tr>
-            </thead>
-            <tbody>
+          <Table multiSelect={ true } hasActions={ true } isLoading={ this.props.loadingTags } loadingMessage="Loading tags...">
+            <TableHead>
+              <TableHeader>Tag</TableHeader>
+              <TableHeader>Description</TableHeader>
+            </TableHead>
+            <TableBody>
               {
-                this.loadingTags ?
-                  <tr><td colspan="99">Loading tags...</td></tr>
-                :
                   tagList
               }
-            </tbody>
-          </table>
-
+            </TableBody>
+          </Table>
+          
           { 
             this.props.tags ?
               tagger

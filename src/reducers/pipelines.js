@@ -27,7 +27,12 @@ const pipelines = (state = initialState, action) => {
     return Object.assign({}, state, {loadingPipeline: false, showTheError: 'failed to load ' + action.pipelineName});
 
   case types.PIPELINES_RECEIVED:
-    return Object.assign({}, state, { loading: false, pipelines: action.pipelines } );
+    return Object.assign({}, state,
+      {
+        loading: false,
+        pipelines: action.pipelines.filter(pipe => pipe.queries[0].collection === 'user')
+      }
+    );
 
   case types.PIPELINE_RECEIVED:
     return Object.assign({}, state, { loadingPipeline: false, [action.pipeline.name]: action.pipeline});

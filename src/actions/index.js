@@ -26,13 +26,16 @@ export const DATA_EXPLORATION_FETCH_ERROR = 'DATA_EXPLORATION_FETCH_ERROR';
 export const REQUEST_EXPLORER_CONTROLS = 'REQUEST_EXPLORER_CONTROLS';
 export const RECEIVE_EXPLORER_CONTROLS = 'RECEIVE_EXPLORER_CONTROLS';
 
+export const REQUEST_AUTHORS_AND_SECTIONS = 'REQUEST_AUTHORS_AND_SECTIONS';
+export const RECEIVE_AUTHORS_AND_SECTIONS = 'RECEIVE_AUTHORS_AND_SECTIONS';
+
 /* config */
 
-var getInit = () => {
+var getInit = (method) => {
   var headers = new Headers({'Authorization': 'Basic NmQ3MmU2ZGQtOTNkMC00NDEzLTliNGMtODU0NmQ0ZDM1MTRlOlBDeVgvTFRHWjhOdGZWOGVReXZObkpydm4xc2loQk9uQW5TNFpGZGNFdnc9'});
 
   var init = {
-    method: 'GET',
+    method: method || 'GET',
     headers: headers,
     mode: 'cors',
     cache: 'default'
@@ -94,6 +97,33 @@ export const fetchPipelinesIfNotFetched = () => {
   };
 
 };
+
+export const requestAuthorsAndSections = () => {
+  return {
+    type: REQUEST_AUTHORS_AND_SECTIONS
+  };
+};
+
+export const receiveAuthorsAndSections = (data) => {
+  return {
+    type: RECEIVE_AUTHORS_AND_SECTIONS,
+    data
+  };
+};
+
+export const fetchAuthorsAndSections = () => {
+  return (dispatch) => {
+    dispatch(requestAuthorsAndSections());
+
+    fetch(httpPrefix + '1.0/exec/author_and_section_list', getInit())
+      .then(response => response.json())
+      .then(json => dispatch(receiveAuthorsAndSections(json)))
+      .catch(err => {
+        console.log('oh no. failed to get authors and section list', err);
+      });
+  };
+};
+
 
 // get deep list of query_sets
 export const fetchPipelines = () => {
@@ -244,6 +274,29 @@ const convert = (json) => {
     }).join('&');
 };
 
+export const createPipelineValueChanged = (config) => {
+  const url = httpPrefix + apiPrefix + 'exec';
+
+  return (dispatch, getState) => {
+
+    if (!getState().dataExplorer.loading) {
+
+      dispatch(requestDataExplorationDataset());
+
+      var init = getInit('POST');
+      init.body = JSON.stringify(config);
+
+      fetch(url, init)
+        .then(response => response.json())
+        .then(json => {
+          dispatch(receiveDataExplorationDataset(json));
+        })
+        .catch(err => {
+          dispatch(dataExplorationFetchError(err));
+        });
+    }
+  };
+};
 
 export const fetchDataExplorationDataset = (field, queryParams) => {
   const queryParamString = queryParams ? convert(queryParams) : '';

@@ -1,13 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
-import { fetchDataExplorationDataset, populateControlsReducer } from '../actions';
+import { fetchDataExplorationDataset, fetchAuthorsAndSections, populateControlsReducer } from '../actions';
 import Page from './Page';
 import Card from '../components/cards/Card';
 import DataExplorerVisualization from '../components/DataExplorerVisualization';
 import ExplorerControls from '../components/DataExplorerControls';
-import moment from 'moment';
-import _ from "lodash";
+import ExplorerTutorial from '../components/DataExplorerTutorial';
+import PipelineCreator from '../components/PipelineCreator';
+import Flex from "../components/layout/flex";
+import _ from 'lodash';
 
 @connect(state => state.dataExplorer)
 @Radium
@@ -15,13 +17,12 @@ class DataExplorer extends React.Component {
 
   componentWillMount() {
     this.props.dispatch(populateControlsReducer());
+    this.props.dispatch(fetchAuthorsAndSections());
   }
 
   controlsUpdatedGoGetDataset(pipeline, dateRange) {
     this.props.dispatch(fetchDataExplorationDataset(pipeline, dateRange));
   }
-
-
 
   // we don't want to request 10000 hourly intervals,
   // so compute resonable bin size
@@ -32,11 +33,9 @@ class DataExplorer extends React.Component {
     const month = day * 30;
     let diff = end - start;
 
-    if (diff / hour < 300) {
-      return 'hour';
-    } else if (diff / day < 300) {
+    if (diff / day < 300) {
       return 'day';
-    } else if (diff / day < 300) {
+    } else if (diff / week < 300) {
       return 'week';
     } else {
       return 'month';
@@ -58,34 +57,67 @@ class DataExplorer extends React.Component {
   getNonActionFiringControlValues(values) {
     this.setState({
       field: values.data_object_level_1_key_selection
-    })
+    });
+  }
+
+  getVisLabel(targetDoc) {
+    if (_.isString(targetDoc)) return targetDoc;
+
+    if (_.isObject(targetDoc) && _.has(targetDoc, 'user_name')) return 'Users';
+
+    return '';
   }
 
   render() {
+    if (_.has(this, 'props.dataset.0')) {
+      console.log('DataExplorer.render', this.props.dataset[0].target_doc);
+    }
+
     return (
       <Page style={styles.base}>
-        <h1>Data Explorer</h1>
+        <p style={styles.heading}>Data Explorer</p>
         <div style={styles.controls}>
           <Card style={styles.pane}>
-            <ExplorerControls
+            {/*<ExplorerControls
               dataset={this.props.dataset}
               rangeStart={this.props.pipelineRangeStart}
               rangeEnd={this.props.pipelineRangeEnd}
               getNonActionFiringControlValues={this.getNonActionFiringControlValues.bind(this)}
               getControlValues={this.getControlValues.bind(this)}
-              pipelines={this.props.pipelines} />
-          </Card>
-          <Card style={styles.pane}>
-
+              pipelines={this.props.pipelines} />*/}
+            <PipelineCreator
+              authors={this.props.authors}
+              sections={this.props.sections}
+              dispatch={this.props.dispatch} />
           </Card>
         </div>
         <Card>
+          <Flex>
+            <p> {this.props.loading ? 'Loading...' : ''} </p>
+          </Flex>
+          <Flex>
+            <p style={{fontSize: 24}}>
+              {
+                /* show author name if data and name and not loading new data */
+                _.has(this, 'props.dataset.0.target_doc') && !this.props.loading ?
+                  this.getVisLabel(this.props.dataset[0].target_doc) :
+                  ''
+              }
+            </p>
+          </Flex>
           {
-            this.props.dataset ?
+            /* render visualization if data and not loading new data*/
+            !this.props.loading && _.has(this, 'props.dataset.0') ?
               <DataExplorerVisualization
                 dataset={this.props.dataset}
-                field={this.state.field}/> :
-              "Welcome to data exploration! Let's get started by selecting a pipeline from the dropdown above."
+                field={'comments'} /> : ''
+          }
+          {
+            /* show tutorial if no data and no loading - condition occurs at outset*/
+            !_.has(this, 'props.dataset.0') && !this.props.loading ?
+              <ExplorerTutorial
+                dataset={this.props.dataset}
+                field={this.state.field} /> : ''
           }
         </Card>
       </Page>
@@ -99,10 +131,8 @@ const styles = {
   base: {
     padding: 10
   },
-  controls: {
-    display: 'flex'
-  },
-  pane: {
-    flex: 1
+  heading: {
+    fontSize: 36
   }
+
 };

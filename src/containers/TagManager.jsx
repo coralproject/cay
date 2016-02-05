@@ -65,7 +65,7 @@ export default class TagManager extends React.Component {
 
       this.props.dispatch(storeTag(tagName, tagDescription));
     } else {
-      this.setState({ adderValidationError: "Please type a valid tag, using only letters, numbers, dashes and underscores. Ex: this_is-1-valid_tag" });
+      this.setState({ adderValidationError: 'Please type a valid tag, using only letters, numbers, dashes and underscores. Ex: this_is-1-valid_tag' });
     }
   }
 
@@ -257,15 +257,15 @@ const styles = {
     lineHeight: '40px',
     border: 'none',
     background: '#ddd',
-    cursor: 'pointer',
+    cursor: 'pointer'
   },
   yesButton: {
     right: '30px',
-    bottom: '30px',
+    bottom: '30px'
   },
   noButton: {
     left: '30px',
-    bottom: '30px',
+    bottom: '30px'
   },
   strong: {
     fontWeight: 'bold'

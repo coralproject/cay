@@ -1,4 +1,4 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
 import Radium from 'radium';
 
 @Radium
@@ -20,5 +20,5 @@ const styles = {
     height: '40px',
     lineHeight: '40px',
     padding: '0 10px'
-  },
+  }
 };

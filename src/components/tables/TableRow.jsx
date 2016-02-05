@@ -1,4 +1,4 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
 import Radium from 'radium';
 
 import TableCell from './TableCell';
@@ -23,6 +23,6 @@ export default class TableRow extends React.Component {
 const styles = {
   base: {
     height: '40px',
-    lineHeight: '40px',
-  },
+    lineHeight: '40px'
+  }
 };

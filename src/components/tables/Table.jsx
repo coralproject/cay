@@ -1,4 +1,4 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
 import Radium from 'radium';
 
 import TableHead from './TableHead';
@@ -13,11 +13,11 @@ export default class Table extends React.Component {
       if (child.type === TableHead || child.type === TableBody)
         return React.cloneElement(child, {
           multiSelect: this.props.multiSelect,
-          hasActions: this.props.hasActions,
-        })
+          hasActions: this.props.hasActions
+        });
       else
-        return child
-    }.bind(this))
+        return child;
+    }.bind(this));
   }
 
   render() {

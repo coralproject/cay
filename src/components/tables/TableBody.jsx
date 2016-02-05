@@ -1,4 +1,4 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
 import Radium from 'radium';
 
 import TableRow from './TableRow';
@@ -12,10 +12,10 @@ export default class TableBody extends React.Component {
         return React.cloneElement(child, {
           multiSelect: this.props.multiSelect,
           hasActions: this.props.hasActions
-        })
+        });
       else
-        return child
-    }.bind(this))
+        return child;
+    }.bind(this));
   }
 
   render() {
@@ -34,5 +34,5 @@ const styles = {
     padding: '0 10px',
     textAlign: 'center',
     width: '40px'
-  },
+  }
 };

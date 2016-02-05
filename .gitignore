@@ -26,7 +26,6 @@ Desktop.ini
 $RECYCLE.BIN/
 
 # App specific
-dist
 coverage
 node_modules
 bower_components

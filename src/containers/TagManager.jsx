@@ -34,7 +34,17 @@ export default class TagManager extends React.Component {
   }
 
   confirmDeletion(tagName, tagDescription, index) {
-    this.props.dispatch(deleteTag(tagName, tagDescription, index));
+    this.setState({ confirmTagName: tagName, showConfirmDialog: true, tagToDelete: [ tagName, tagDescription, index ] });
+  }
+
+  onConfirmClick() {
+    var tagToDelete = this.state.tagToDelete;
+    this.setState({ confirmTagName: '', showConfirmDialog: false, tagToDelete: null });
+    this.props.dispatch(deleteTag(...tagToDelete));
+  }
+
+  closeDialog() {
+    this.setState({ confirmTagName: '', showConfirmDialog: false, tagToDelete: null });
   }
 
   validateTag(tagName) {
@@ -65,13 +75,6 @@ export default class TagManager extends React.Component {
     }
   }
 
-  onNameEdit(index, value) {
-    var firstSlice = this.state.tags.slice(0, index);
-    var lastSlice = this.state.tags.slice(index + 1);
-    var tagsCopy = firstSlice.concat(value).concat(lastSlice);
-    this.setState({ tags: tagsCopy });
-  }
-
   onDescriptionEdit(tagName, index, value) {
     this.props.dispatch(storeTag(tagName, value, index));
   }
@@ -83,7 +86,7 @@ export default class TagManager extends React.Component {
         return (
           <TableRow key={ i }>
             <TableCell>
-              <InPlaceEditor key={ i } initialValue={ tag.name } onSave={ this.onNameEdit.bind(this, i) } />
+              { tag.name }
             </TableCell>
             <TableCell>
               <InPlaceEditor key={ i } initialValue={ tag.description } onSave={ this.onDescriptionEdit.bind(this, tag.name, i) } />
@@ -156,6 +159,19 @@ export default class TagManager extends React.Component {
 
         </div>
 
+        {
+          this.state.showConfirmDialog ?
+          <div style={ styles.confirmOverlay }>
+            <div style={ styles.confirmDialog }>
+              <h2>Warning: this action has no undo.</h2>
+              <p style={ styles.confirmMessage }>Are you sure you want to remove the tag <strong style={ styles.strong }>'{ this.state.confirmTagName }'</strong>?</p>
+              <button style={ [ styles.confirmButton, styles.yesButton ] } onClick={ this.onConfirmClick.bind(this) }>Yes</button>              
+              <button style={ [ styles.confirmButton, styles.noButton ] } onClick={ this.closeDialog.bind(this) }>No</button>              
+            </div>
+          </div>
+          : null
+        }
+
       </Page>
     );
   }
@@ -163,30 +179,6 @@ export default class TagManager extends React.Component {
 const styles = {
   tagManagerContent: {
     padding: '20px'
-  },
-  tableBase: {
-    margin: '20px 0',
-    width: '70%',
-    maxWidth: '900px',
-    borderRadius: '4px',
-    border: '1px solid #ccc',
-    background: 'white',
-    padding: '20px'
-  },
-  tableHeader: {
-    textAlign: 'left',
-    color: '#999'
-  },
-  actionsHeader: {
-    width: '200px'
-  },
-  checkBoxColumn: {
-    padding: '10px',
-    textAlign: 'center'
-  },
-  checkBoxHeader: {
-    padding: '10px',
-    textAlign: 'center'
   },
   actionButtons: {
     border: '1px solid #ccc',
@@ -222,9 +214,6 @@ const styles = {
     fontSize: '11pt',
     cursor: 'pointer'
   },
-  actionColumn: {
-    textAlign: 'right'
-  },
   errorMsg: {
     color: '#900',
     margin: '10px 0'
@@ -241,5 +230,44 @@ const styles = {
     animationDuration: '1000ms',
     animationIterationCount: 'infinite',
     animationTimingFunction: 'linear'
+  },
+  confirmOverlay: {
+    background: 'rgba(0,0,0,.7)',
+    position: 'fixed',
+    top: '0',
+    left: '0',
+    width: '100%',
+    height: '100%',
+    zIndex: '5000'
+  },
+  confirmDialog: {
+    width: '500px',
+    background: 'white',
+    padding: '30px 30px 110px 30px',
+    margin: '50px auto',
+    position: 'relative'
+  },
+  confirmMessage: {
+    fontSize: '16px',
+    marginTop: '20px'
+  },
+  confirmButton: {
+    position: 'absolute',
+    padding: '0 20px',
+    lineHeight: '40px',
+    border: 'none',
+    background: '#ddd',
+    cursor: 'pointer',
+  },
+  yesButton: {
+    right: '30px',
+    bottom: '30px',
+  },
+  noButton: {
+    left: '30px',
+    bottom: '30px',
+  },
+  strong: {
+    fontWeight: 'bold'
   }
 };

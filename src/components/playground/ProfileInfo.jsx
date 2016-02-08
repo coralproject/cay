@@ -50,9 +50,9 @@ class ProfileInfo extends React.Component {
             this.props.togglerGroups['reputation'].togglers['badges'].status ? 
               <div>
                 {
-                  user.badges.map((badge) => {
+                  user.badges.map((badge, i) => {
                     return (
-                      <div>
+                      <div key={ i }>
                         <CoralIcon size="medium" name={ badge.icon } color={ badge.color } /> { badge.name }
                       </div>
                     );
@@ -91,7 +91,7 @@ var styles = {
     fontWeight: 'bold'
   },
   profileInfo: {
-    background: '#ccc',
+    background: '#eee',
     position: 'relative',
     minHeight: '100px',
     fontSize: '9pt',

@@ -30,7 +30,7 @@ class Comment extends React.Component {
         { profileInfoSection }
         <ProfileBadge profileClickHandler={ this.onProfileClick.bind(this) } user={ this.props.user } />
         <div onClick={ this.onCommentContentClick.bind(this) } style={ styles.commentContent }>
-          <CommentContent />
+          <CommentContent content={ this.props.content } />
         </div>
         <StatsBar likes={ this.props.likes } />
         { commentTools }

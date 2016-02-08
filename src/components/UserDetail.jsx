@@ -1,9 +1,10 @@
 import React from 'react';
 import Radium from 'radium';
 
+import settings from '../settings';
 import {connect} from 'react-redux';
 
-import settings from '../settings';
+import {fetchCommentsByUser} from '../actions';
 
 import Avatar from './Avatar';
 import Tab from './tabs/Tab';
@@ -13,11 +14,28 @@ import Stat from './stats/Stat';
 import Card from './cards/Card';
 import Heading from './Heading';
 
-import CommentDetail from './CommentDetail';
+import CommentDetailList from './CommentDetailList';
 
+
+@connect(state => state.pipelines)
 @Radium
 export default class UserDetail extends React.Component {
+
+  componentWillMount() {
+    this.setState({userDetailComments: []}); // clear comments from any other views.
+  }
+
+  componentWillUpdate() {
+    if (this.props.selectedUser) {
+      this.props.dispatch(fetchCommentsByUser(this.props.selectedUser.user_id));
+    }
+  }
+
   render() {
+
+    let comments = this.props.userDetailComments.length ?
+      'Loading Comments...' :
+      (<CommentDetailList comments={this.props.userDetailComments} />);
 
     return (
       <Card style={[styles.base, this.props.style]}>
@@ -33,9 +51,7 @@ export default class UserDetail extends React.Component {
           </Stats>
         </div>
         <Tabs initialSelectedIndex={0} style={styles.tabs}>
-          <Tab title="About">
-            <CommentDetail />
-          </Tab>
+          <Tab title="About"> {comments} </Tab>
           <Tab title="Activity">Tab Bravo Content</Tab>
           <Tab title="Messages">Tab Charlie Content</Tab>
         </Tabs>

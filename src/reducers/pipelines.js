@@ -4,8 +4,11 @@ const initialState = {
   loading: false,
   loadingPipeline: false,
   pipesLoaded: false,
+  selectedUser: null,
   pipelines: [],
-  users: []
+  users: [],
+  userDetailComments: [],
+  loadingUserComments: false
 };
 
 const pipelines = (state = initialState, action) => {
@@ -43,6 +46,12 @@ const pipelines = (state = initialState, action) => {
 
   case types.USER_SELECTED:
     return Object.assign({}, state, {selectedUser: action.user});
+
+  case types.COMMENTS_REQUEST:
+    return Object.assign({}, state, {loadingUserComments: true});
+
+  case types.COMMENTS_SUCCESS:
+    return Object.assign({}, state, {loadingUserComments: false, userDetailComments: action.data.results[0].Docs});
 
   default:
     // console.log('no reducer matches:', action.type);

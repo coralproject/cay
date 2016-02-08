@@ -48,22 +48,11 @@ class PipelineCreator extends React.Component {
                 start_iso: {$gte: `#date:${this.state.minDate}`}
               }
             },
-            {
-              $match: {
-                start_iso: {$lt: `#date:${this.state.maxDate}`}
-              }
+            { $match: {start_iso: {$lt: `#date:${this.state.maxDate}`} }
             },
-            {
-              $match: {duration: interval}
-            },
-            {
-              $match: {target: this.state.selectedBreakdown}
-            },
-            {
-              $sort: {
-                start_iso: 1
-              }
-            }
+            { $match: { duration: interval} },
+            { $match: { target: this.state.selectedBreakdown} },
+            { $sort: { start_iso: 1 } }
           ],
           'return': true
         }

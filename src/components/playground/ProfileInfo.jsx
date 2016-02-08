@@ -15,6 +15,9 @@ class ProfileInfo extends React.Component {
 
     return (
       <div style={ styles.profileInfo }>
+        <div style={ styles.profilePicPane }>
+          <img style={ styles.profilePicture } width="180" height="190" src={ "/img/playground/profile" + this.props.user + ".jpg" } /><br />
+        </div>
         <div style={ styles.profileLeftPane }>
           <h3 style={ styles.userName }>
             { 
@@ -97,7 +100,7 @@ var styles = {
     fontSize: '9pt',
     display: 'table',
     width: '100%',
-    maxWidth: '600px',
+    maxWidth: '750px',
     marginBottom: '30px'
   },
   profileLeftPane: {

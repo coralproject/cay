@@ -144,14 +144,40 @@ const initialState = {
     },
     {
       user: 1,
-      content: 'Another comment',
+      content: 'Testing some emojis. :ok_woman: :heart: :bowtie: :hankey:  :horse_racing:',
+      likes: 41
+    },
+    {
+      user: 2,
+      content: "Hillary placed a bet a few years ago, that the system was corrupt, that SuperPAC's were the only way to go in the post-Citizens United era, and that she could get speaking fees from Wall St. and still come across as being less in-their-pocket than her Republican rivals.",
       likes: 41
     },
     {
       user: 1,
-      content: 'Another comment',
+      content: "Is it possible that Bill is going off script here? It would be hard to believe the campaign is encouraging this. Maybe he's become a difficult to control wildcard.",
       likes: 41
-    }
+    },
+    {
+      user: 3,
+      content: "Sanders will keep the high road because so many young people are supporting him. Ignore the side show!",
+      likes: 41
+    },
+    {
+      user: 2,
+      content: "Bill's petty and pathetic remarks should be enough to make any undecided voter vote for Bernie. It's sad to see Bill shilling for Hillary in such a vulgar way.",
+      likes: 41
+    },
+    {
+      user: 1,
+      content: "What sickness that the Clintons think they can criticize anybody about anything. They are greedy, hypocritical, untruthful sociopaths who will take those qualities to the White House in less than a year. ",
+      likes: 41
+    },
+    {
+      user: 0,
+      content: "Anybody but Clinton. Heck, I would even vote for Sarah Palin before I would vote for Hillary Clinton. At least Palin appears to be honest, and she is not part of a corrupt political machine.",
+      likes: 41
+    },
+
   ],
   wizardSteps: [
     {
@@ -263,6 +289,40 @@ const initialState = {
           icon: 'trophy',
           color: '#a90'
         },
+        {
+          name: 'Expert moderator',
+          icon: 'medal',
+          color: '#09a'
+        }
+      ]
+    },
+    {
+      nickName: 'beatnik',
+      realName: 'Laurie Anderson',
+      comments: 110,
+      points: 244,
+      membershipAge: '1 year',
+      location: 'New York, NY',
+      education: 'Ph. D. Arts History',
+      upvoteBalance: 22,
+      badges: [
+        {
+          name: 'Expert moderator',
+          icon: 'medal',
+          color: '#09a'
+        }
+      ]
+    },
+    {
+      nickName: 'nevermind',
+      realName: 'Kurtco Bane',
+      comments: 124,
+      points: 124,
+      membershipAge: '6 years',
+      location: 'Seattle, WA',
+      education: 'B.A. Popular music',
+      upvoteBalance: 42,
+      badges: [
         {
           name: 'Expert moderator',
           icon: 'medal',

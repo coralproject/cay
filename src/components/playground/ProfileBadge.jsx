@@ -10,7 +10,7 @@ class ProfileBadge extends React.Component {
 
     return (
       <div style={ styles.profileBadge } onClick={ this.props.profileClickHandler }>
-        <img style={ styles.profilePicture } src="http://lorempixel.com/60/60/people" /><br />
+        <img style={ styles.profilePicture } width="60" height="60" src={ "/img/playground/profile" + this.props.user + ".jpg" } /><br />
         <h4 style={ styles.userName }>
           { 
             this.props.togglerGroups['privacy'].togglers['anonymity'].status ? 

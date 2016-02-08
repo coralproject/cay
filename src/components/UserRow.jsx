@@ -3,7 +3,10 @@ import Radium from 'radium';
 
 import {connect} from 'react-redux';
 
+import settings from '../settings';
+
 import ListItem from './lists/ListItem';
+import Icon from './Icon';
 
 @connect(state => state.pipelines)
 @Radium
@@ -13,20 +16,20 @@ export default class UserRow extends React.Component {
   }
 
   handleClick() {
-    this.props.onClick();
+    this.props.onClick(this.props.user);
   }
 
   render() {
-
+    const colors = ['#1f77b4', '#aec7e8', '#ff7f0e', '#ffbb78', '#2ca02c', '#98df8a', '#d62728', '#ff9896', '#9467bd', '#c5b0d5', '#8c564b', '#c49c94', '#e377c2', '#f7b6d2', '#7f7f7f', '#c7c7c7', '#bcbd22', '#dbdb8d', '#17becf', '#9edae5'];
     const {user} = this.props;
 
     return (
       <ListItem
         style={[this.props.style, styles.base]}
-        onClick={this.handleClick.bind(this)} >
-
+        onClick={this.handleClick.bind(this)}
+        leftAvatar={<Icon size="medium" color={colors[Math.floor(Math.random() * colors.length)]}>{user.user_name.charAt(0).toUpperCase()}</Icon>}
+        >
           {user.user_name}
-
           <p style={styles.sub}>
             Rating | accept ratio {user.stats.accept_ratio} | Comments {user.stats.comments.total}
           </p>

@@ -21,7 +21,7 @@ export default class UserDetail extends React.Component {
 
     return (
       <Card style={[styles.base, this.props.style]}>
-        <Heading size="medium">{this.props.name}</Heading>
+        <Heading size="medium">{this.props.user_name}</Heading>
         <div style={styles.topPart}>
           <Avatar style={styles.avatar} src={this.props.avatar || ''} size={200} />
           <Stats style={styles.stats}>

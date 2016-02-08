@@ -41,6 +41,8 @@ export default class UserManager extends React.Component {
 
   render() {
 
+    console.log('UserManager.render', this.props);
+
     return (
 
       <Page>

@@ -41,6 +41,9 @@ const pipelines = (state = initialState, action) => {
 
     return Object.assign({}, state, { loadingPipeline: false, users: action.data.results[0].Docs});
 
+  case types.USER_SELECTED:
+    return Object.assign({}, state, {selectedUser: action.user});
+
   default:
     // console.log('no reducer matches:', action.type);
     return state;

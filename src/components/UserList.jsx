@@ -1,10 +1,13 @@
 import React, {PropTypes} from 'react';
+import {connect} from 'react-redux';
 import Radium from 'radium';
+import {userSelected} from '../actions';
 
 import List from './lists/List';
 import UserRow from './UserRow';
 import Heading from './Heading';
 
+@connect(state => state.pipelines)
 @Radium
 export default class UserList extends React.Component {
   static propTypes = {
@@ -15,7 +18,8 @@ export default class UserList extends React.Component {
   }
 
   getUser(user) {
-    console.log('getUser', user);
+    console.log('userSelected', user);
+    this.props.dispatch(userSelected(user));
   }
 
   getUserList(users) {

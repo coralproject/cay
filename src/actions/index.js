@@ -29,6 +29,8 @@ export const RECEIVE_EXPLORER_CONTROLS = 'RECEIVE_EXPLORER_CONTROLS';
 export const REQUEST_AUTHORS_AND_SECTIONS = 'REQUEST_AUTHORS_AND_SECTIONS';
 export const RECEIVE_AUTHORS_AND_SECTIONS = 'RECEIVE_AUTHORS_AND_SECTIONS';
 
+export const USER_SELECTED = 'USER_SELECTED';
+
 /* config */
 
 var getInit = (method) => {
@@ -373,5 +375,12 @@ export const loginGitSuccess = (token) => {
   return {
     type: LOGIN_SUCCESS,
     token
+  };
+};
+
+export const userSelected = (user) => {
+  return {
+    type: USER_SELECTED,
+    user
   };
 };

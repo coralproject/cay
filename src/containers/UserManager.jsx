@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
-import _ from 'lodash';
 
 import {fetchPipelinesIfNotFetched, selectPipeline, fetchPipeline} from '../actions';
 

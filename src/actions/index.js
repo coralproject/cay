@@ -17,6 +17,8 @@ export const COMMENTS_REQUEST = 'COMMENTS_REQUEST';
 export const COMMENTS_SUCCESS = 'COMMENTS_SUCCESS';
 export const COMMENTS_FAIL = 'COMMENTS_FAIL';
 
+export const CLEAR_USER_DETAIL_COMMENTS = 'CLEAR_USER_DETAIL_COMMENTS';
+
 export const STORE_COMMENTS = 'STORE_COMMENTS';
 
 export const REQUEST_DATA_EXPLORATION_DATASET = 'REQUEST_DATA_EXPLORATION_DATASET';
@@ -28,6 +30,8 @@ export const RECEIVE_EXPLORER_CONTROLS = 'RECEIVE_EXPLORER_CONTROLS';
 
 export const REQUEST_AUTHORS_AND_SECTIONS = 'REQUEST_AUTHORS_AND_SECTIONS';
 export const RECEIVE_AUTHORS_AND_SECTIONS = 'RECEIVE_AUTHORS_AND_SECTIONS';
+
+export const USER_SELECTED = 'USER_SELECTED';
 
 /* config */
 
@@ -145,19 +149,19 @@ export const requestPipelineFailure = (err) => {
   };
 };
 
-export const receivePipeline = (pipeline) => {
+export const receivePipeline = (data) => {
   return {
     type: PIPELINE_RECEIVED,
-    pipeline
+    data
   };
 };
 
-// get full data for one query_set
+// execute a query_set
 export const fetchPipeline = (pipelineName) => {
   return (dispatch) => {
     dispatch(requestPipeline(pipelineName));
 
-    fetch(httpPrefix + apiPrefix + pipelineName, getInit())
+    fetch(httpPrefix + apiPrefix + 'exec/' + pipelineName, getInit())
       .then(response => response.json())
       .then(pipeline => dispatch(receivePipeline(pipeline)))
       .catch(err => dispatch(requestPipelineFailure(err)));
@@ -189,8 +193,8 @@ export const loginUser = (username, password) => {
 };
 
 
-export const fetchCommentsByUser = (data) => {
-  const url = `${httpPrefix}${apiPrefix}comments_by_user${apiSuffix}?user_id=${data.user_id}`;
+export const fetchCommentsByUser = (user_id) => {
+  const url = `${httpPrefix}${apiPrefix}exec/comments_by_user?user_id=${user_id}`;
   return (dispatch) => {
     dispatch(requestComments());
 
@@ -232,6 +236,12 @@ export const receiveCommentsFailure = (err) => {
   return {
     type: COMMENTS_FAIL,
     err
+  };
+};
+
+export const clearUserDetailComments = () => {
+  return {
+    type: CLEAR_USER_DETAIL_COMMENTS
   };
 };
 
@@ -373,5 +383,12 @@ export const loginGitSuccess = (token) => {
   return {
     type: LOGIN_SUCCESS,
     token
+  };
+};
+
+export const userSelected = (user) => {
+  return {
+    type: USER_SELECTED,
+    user
   };
 };

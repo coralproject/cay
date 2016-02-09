@@ -6,7 +6,7 @@ import _ from 'lodash';
 class Icon extends React.Component {
 
   static propTypes = {
-    name: PropTypes.string.isRequired
+    name: PropTypes.string
   }
 
   getColorProps(color, isInverse) {
@@ -19,7 +19,7 @@ class Icon extends React.Component {
   }
 
   render() {
-    var g = _.find(icons, {name: this.props.name}).glyph || icons[0].glyph;;
+    var g = this.props.name ? (_.find(icons, {name: this.props.name}).glyph || icons[0].glyph) : this.props.children;
     return (
       <div style={[
         this.props.style,
@@ -27,7 +27,7 @@ class Icon extends React.Component {
         this.props.size === 'small' && styles.small,
         this.props.size === 'medium' && styles.medium,
         this.props.size === 'large' && styles.large,
-        this.getColorProps(this.props.color, this.props.inverse)
+        this.getColorProps(this.props.color, this.props.inverse || !_.has(this, 'props.name'))
       ]}>{g}</div>
     );
   }
@@ -38,7 +38,7 @@ const styles = {
     display: 'inline-block',
     font: 'normal normal normal 14px/1 FontAwesome',
     width: '1.28571429em',
-    textAlign: 'center',
+    textAlign: 'center'
   },
   small: {
     font: 'normal normal normal 14px/1 FontAwesome',

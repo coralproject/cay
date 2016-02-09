@@ -2,7 +2,6 @@ import React from 'react';
 import Radium from 'radium';
 import PipelineCreator from '../components/PipelineCreator';
 
-
 @Radium
 class UserFormulaContainer extends React.Component {
 
@@ -10,7 +9,7 @@ class UserFormulaContainer extends React.Component {
     return (
       <div>
         UserFormulaContainer
-        <PipelineCreator/>
+        <PipelineCreator userOnly={true}/>
       </div>
     );
   }

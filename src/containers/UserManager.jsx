@@ -10,6 +10,8 @@ import PipelineList from '../components/PipelineList';
 import UserList from '../components/UserList';
 import UserDetail from '../components/UserDetail';
 
+import UserFormulaContainer from '../components/UserFormulaContainer';
+
 import settings from '../settings';
 
 @connect(state => {
@@ -23,44 +25,25 @@ export default class UserManager extends React.Component {
     this.props.dispatch(fetchPipelinesIfNotFetched());
   }
 
-  // every time the state is updated
-  componentDidUpdate() {
-    // if (!_.some(_.map(this.props.pipelines, _.isString))) {
-    //   this.props.pipelines.map(pipe => {
-
-    //   })
-    // }
-
-    // if (_.isString(this.props.pipelines[0])) { // stopgap. sorry
-    //   this.props.pipelines.map(pipe => {
-    //     this.props.dispatch(fetchPipeline(pipe));
-    //   });
-    // }
-  }
-
   render() {
 
     console.log('UserManager.render', this.props);
 
     return (
-
       <Page>
-
         <ContentHeader title="User Manager" />
-
         <div style={styles.base}>
-          <PipelineList
-            active={this.props.params.filter_id}
-            style={styles.pipelineList}
-            pipelines={this.props.pipelines} />
+          <UserFormulaContainer/>
 
           <UserList
             style={styles.userTable}
             users={this.props.users} />
 
-          <UserDetail
-            {...this.props.selectedUser}
-            style={styles.userDetail} />
+          {/*
+            <UserDetail
+              {...this.props.selectedUser}
+              style={styles.userDetail} />
+          */}
 
         </div>
 

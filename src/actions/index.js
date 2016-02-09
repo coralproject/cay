@@ -33,6 +33,8 @@ export const RECEIVE_AUTHORS_AND_SECTIONS = 'RECEIVE_AUTHORS_AND_SECTIONS';
 
 export const USER_SELECTED = 'USER_SELECTED';
 
+export const FORMULA_CREATED = 'FORMULA_CREATED';
+
 /* config */
 
 var getInit = (method) => {
@@ -332,6 +334,82 @@ export const fetchDataExplorationDataset = (field, queryParams) => {
 
   };
 };
+
+const formulaCreated = () => {
+  return {
+    type: FORMULA_CREATED
+  };
+};
+
+export const createFormula = (filterSettings) => {
+  const interval = this.getSensibleInterval(new Date(this.state.minDate), new Date(this.state.maxDate));
+
+  if (this.state.specificBreakdowns.length) {
+
+    var match = {
+      $match: {
+        $or: this.state.specificBreakdowns.map(bd => {
+          return {target_doc: bd};
+        })
+      }
+    };
+
+    computedQuery.queries[0].commands.splice(3, 0, match);
+  }
+
+  // validateFormula(filterSettings)
+
+  var computedQuery = {
+    name: 'custom_query',
+    desc: 'Returns a time series of comments bounded by iso dates!  Totals or broken down by duration [day|week|month] and target type total|user|asset|author|section]',
+    pre_script: '',
+    pst_script: '',
+    params: [],
+    queries: [
+      {
+        name: 'custom_query',
+        type: 'pipeline',
+        collection: 'comment_timeseries',
+        /* this will be generated too... */
+        commands: [
+          {
+            $match: {
+              start_iso: {$gte: `#date:${this.state.minDate}`}
+            }
+          },
+          {
+            $match: {
+              start_iso: {$lt: `#date:${this.state.maxDate}`}
+            }
+          },
+          {
+            $match: {
+              duration: interval
+            }
+          },
+          {
+            $match: {
+              target: this.state.selectedBreakdown
+            }
+          },
+          {
+            $sort: {
+              start_iso: 1
+            }
+          }
+        ],
+        'return': true
+      }
+    ],
+    enabled: true
+  };
+
+  return (dispatch) => {
+    dispatch(createPipelineValueChanged(computedQuery));
+
+  }
+}
+
 
 const requestControls = () => {
   return {

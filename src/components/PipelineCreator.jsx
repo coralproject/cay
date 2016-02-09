@@ -2,9 +2,8 @@
 
 import React from 'react';
 import Radium from 'radium';
-import {createPipelineValueChanged} from '../actions';
-import Flex from "./layout/flex";
-import FlexItem from "./layout/flex-item";
+import {createFormula} from '../actions';
+import Flex from "./layout/Flex";
 import Select from 'react-select';
 import TextField from './forms/TextField';
 import Button from './Button';
@@ -27,57 +26,15 @@ class PipelineCreator extends React.Component {
       computedQuery: null
     };
   }
+  static propTypes = {
+
+  }
+  static defaultProps = {
+
+  }
 
   handleCreatePipeline() {
-
-    const interval = this.getSensibleInterval(new Date(this.state.minDate), new Date(this.state.maxDate));
-
-    /* this will be moved to actions, construct and pass an object from here */
-    var computedQuery = {
-      name: 'custom_query',
-      desc: 'Returns a time series of comments bounded by iso dates!  Totals or broken down by duration [day|week|month] and target type total|user|asset|author|section]',
-      pre_script: '',
-      pst_script: '',
-      params: [],
-      queries: [
-        {
-          name: 'custom_query',
-          type: 'pipeline',
-          collection: 'comment_timeseries',
-          commands: [
-            {
-              $match: {
-                start_iso: {$gte: `#date:${this.state.minDate}`}
-              }
-            },
-            { $match: {start_iso: {$lt: `#date:${this.state.maxDate}`} }
-            },
-            { $match: { duration: interval} },
-            { $match: { target: this.state.selectedBreakdown} },
-            { $sort: { start_iso: 1 } }
-          ],
-          'return': true
-        }
-      ],
-      enabled: true
-    };
-
-    if (this.state.specificBreakdowns.length) {
-
-      var match = {
-        $match: {
-          $or: this.state.specificBreakdowns.map(bd => {
-            return {target_doc: bd};
-          })
-        }
-      };
-
-      computedQuery.queries[0].commands.splice(3, 0, match);
-    }
-
-    console.log('computedQuery', computedQuery);
-
-    this.props.dispatch(createPipelineValueChanged(computedQuery));
+    this.props.dispatch(createFormula('FILTER_FIELD_VALUES_GO_HERE'))
   }
 
   getTargets(target) {
@@ -199,11 +156,15 @@ class PipelineCreator extends React.Component {
     return (
       <div>
         <p style={styles.label}>I want to know about</p>
-        <Select
-          options={this.getBreakdownOptions()}
-          name="breakdown-type"
-          value={this.state.selectedBreakdown}
-          onChange={this.updateOutput.bind(this)} />
+
+        {
+          this.props.onlyUser ? "" :
+            <Select
+              options={this.getBreakdownOptions()}
+              name="breakdown-type"
+              value={this.state.selectedBreakdown}
+              onChange={this.updateOutput.bind(this)} />
+        }
 
         <p style={styles.label}>Show me:</p>
         <Select
@@ -215,7 +176,7 @@ class PipelineCreator extends React.Component {
           options={this.getFieldOptions()}
           placeholder="comments / replies / accept ratio"/>
 
-        {this.getSpecific(this.state.selectedBreakdown)}
+        { this.props.onlyUser ? this.getSpecific('user') : this.getSpecific(this.state.selectedBreakdown) }
 
         <p style={styles.label}>between</p>
         <input

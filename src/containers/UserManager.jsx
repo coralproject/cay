@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import Radium from 'radium';
 import _ from 'lodash';
 
+
 import {fetchPipelinesIfNotFetched, selectPipeline, fetchPipeline} from '../actions';
 
 import Page from './Page';
@@ -10,6 +11,7 @@ import ContentHeader from '../components/ContentHeader';
 import PipelineList from '../components/PipelineList';
 import UserList from '../components/UserList';
 import UserDetail from '../components/UserDetail';
+import PipelineCreator from '../components/PipelineCreator';
 
 import settings from '../settings';
 
@@ -24,37 +26,16 @@ export default class UserManager extends React.Component {
     this.props.dispatch(fetchPipelinesIfNotFetched());
   }
 
-  // every time the state is updated
-  componentDidUpdate() {
-    // if (!_.some(_.map(this.props.pipelines, _.isString))) {
-    //   this.props.pipelines.map(pipe => {
-
-    //   })
-    // }
-
-    // if (_.isString(this.props.pipelines[0])) { // stopgap. sorry
-    //   this.props.pipelines.map(pipe => {
-    //     this.props.dispatch(fetchPipeline(pipe));
-    //   });
-    // }
-  }
-
   render() {
-
-    console.log('UserManager.render', this.props);
-
     return (
-
       <Page>
-
         <ContentHeader title="User Manager" />
-
         <div style={styles.base}>
-          <PipelineList
-            active={this.props.params.filter_id}
-            style={styles.pipelineList}
-            pipelines={this.props.pipelines} />
 
+          <PipelineCreator
+            authors={this.props.authors}
+            sections={this.props.sections}
+            dispatch={this.props.dispatch} />
           <UserList
             style={styles.userTable}
             users={this.props.users} />
@@ -94,3 +75,7 @@ const styles = {
     marginRight: 5
   }
 };
+          // <PipelineList
+          //   active={this.props.params.filter_id}
+          //   style={styles.pipelineList}
+          //   pipelines={this.props.pipelines} />

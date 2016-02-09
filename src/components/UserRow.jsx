@@ -16,6 +16,7 @@ export default class UserRow extends React.Component {
   }
 
   handleClick() {
+    console.log('UserRow.handleClick', this.props.user);
     this.props.onClick(this.props.user);
   }
 

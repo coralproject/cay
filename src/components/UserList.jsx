@@ -24,8 +24,6 @@ export default class UserList extends React.Component {
 
   getUserList(users) {
 
-    console.log('getUserList', users);
-
     return users.map((user, i) => {
       return (
         <UserRow {...this.props}

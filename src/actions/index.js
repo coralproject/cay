@@ -17,6 +17,8 @@ export const COMMENTS_REQUEST = 'COMMENTS_REQUEST';
 export const COMMENTS_SUCCESS = 'COMMENTS_SUCCESS';
 export const COMMENTS_FAIL = 'COMMENTS_FAIL';
 
+export const CLEAR_USER_DETAIL_COMMENTS = 'CLEAR_USER_DETAIL_COMMENTS';
+
 export const STORE_COMMENTS = 'STORE_COMMENTS';
 
 export const REQUEST_DATA_EXPLORATION_DATASET = 'REQUEST_DATA_EXPLORATION_DATASET';
@@ -234,6 +236,12 @@ export const receiveCommentsFailure = (err) => {
   return {
     type: COMMENTS_FAIL,
     err
+  };
+};
+
+export const clearUserDetailComments = () => {
+  return {
+    type: CLEAR_USER_DETAIL_COMMENTS
   };
 };
 

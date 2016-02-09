@@ -4,7 +4,7 @@ import Radium from 'radium';
 import settings from '../settings';
 import {connect} from 'react-redux';
 
-import {fetchCommentsByUser} from '../actions';
+import {fetchCommentsByUser, clearUserDetailComments} from '../actions';
 
 import Avatar from './Avatar';
 import Tab from './tabs/Tab';
@@ -22,14 +22,13 @@ import CommentDetailList from './CommentDetailList';
 export default class UserDetail extends React.Component {
 
   componentWillMount() {
-    this.setState({userDetailComments: []}); // clear comments from any other views.
+    // comments might have been loaded for another user.
+    this.props.dispatch(clearUserDetailComments());
   }
 
   componentWillUpdate(nextProps) {
     console.log('UserDetail.componentWillUpdate', nextProps);
-    if (nextProps.selectedUser &&
-      nextProps.selectedUser.stats.comments.total !== 0 && // don't try to load comments on a user that has none
-      nextProps.userDetailComments.length === 0) {
+    if (nextProps.selectedUser && nextProps.userDetailComments === null) {
       console.log('loading comments for user ' + nextProps.selectedUser._id);
       nextProps.dispatch(fetchCommentsByUser(nextProps.selectedUser._id));
     }
@@ -39,9 +38,9 @@ export default class UserDetail extends React.Component {
 
     console.log('UserDetail.render', this.props);
 
-    let comments = this.props.userDetailComments.length === 0 ?
+    let comments = this.props.userDetailComments === null ?
       'Loading Comments...' :
-      (<CommentDetailList comments={this.props.userDetailComments} />);
+      (<CommentDetailList user={this.props.selectedUser} comments={this.props.userDetailComments} />);
 
     return (
       <Card style={[styles.base, this.props.style]}>

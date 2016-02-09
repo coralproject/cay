@@ -7,7 +7,7 @@ const initialState = {
   selectedUser: null,
   pipelines: [],
   users: [],
-  userDetailComments: [],
+  userDetailComments: null,
   loadingUserComments: false
 };
 
@@ -52,6 +52,9 @@ const pipelines = (state = initialState, action) => {
 
   case types.COMMENTS_SUCCESS:
     return Object.assign({}, state, {loadingUserComments: false, userDetailComments: action.data.results[0].Docs});
+
+  case types.CLEAR_USER_DETAIL_COMMENTS:
+    return Object.assign({}, state, {userDetailComments: null});
 
   default:
     // console.log('no reducer matches:', action.type);

@@ -1,3 +1,5 @@
+/* this view is used in both data explorer and user manager */
+
 import React from 'react';
 import Radium from 'radium';
 import {createPipelineValueChanged} from '../actions';

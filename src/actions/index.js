@@ -192,7 +192,7 @@ export const loginUser = (username, password) => {
 
 
 export const fetchCommentsByUser = (user_id) => {
-  const url = `${httpPrefix}${apiPrefix}comments_by_user${apiSuffix}?user_id=${user_id}`;
+  const url = `${httpPrefix}${apiPrefix}exec/comments_by_user?user_id=${user_id}`;
   return (dispatch) => {
     dispatch(requestComments());
 

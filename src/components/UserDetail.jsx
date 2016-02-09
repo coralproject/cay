@@ -25,15 +25,21 @@ export default class UserDetail extends React.Component {
     this.setState({userDetailComments: []}); // clear comments from any other views.
   }
 
-  componentWillUpdate() {
-    if (this.props.selectedUser) {
-      this.props.dispatch(fetchCommentsByUser(this.props.selectedUser.user_id));
+  componentWillUpdate(nextProps) {
+    console.log('UserDetail.componentWillUpdate', nextProps);
+    if (nextProps.selectedUser &&
+      nextProps.selectedUser.stats.comments.total !== 0 && // don't try to load comments on a user that has none
+      nextProps.userDetailComments.length === 0) {
+      console.log('loading comments for user ' + nextProps.selectedUser._id);
+      nextProps.dispatch(fetchCommentsByUser(nextProps.selectedUser._id));
     }
   }
 
   render() {
 
-    let comments = this.props.userDetailComments.length ?
+    console.log('UserDetail.render', this.props);
+
+    let comments = this.props.userDetailComments.length === 0 ?
       'Loading Comments...' :
       (<CommentDetailList comments={this.props.userDetailComments} />);
 

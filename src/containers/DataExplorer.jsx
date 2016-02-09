@@ -7,7 +7,7 @@ import Card from '../components/cards/Card';
 import DataExplorerVisualization from '../components/DataExplorerVisualization';
 import ExplorerTutorial from '../components/DataExplorerTutorial';
 import PipelineCreator from '../components/PipelineCreator';
-import Flex from '../components/layout/flex';
+import Flex from '../components/layout/Flex';
 import _ from 'lodash';
 
 @connect(state => state.dataExplorer)

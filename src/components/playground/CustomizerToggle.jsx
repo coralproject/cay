@@ -18,7 +18,7 @@ class CustomizerToggle extends React.Component {
   onTogglerClick() {
     var currentStatus = this.props.toggler.status;
     this.props.dispatch(setToggler(this.props.groupIndex, this.props.togglerIndex, !currentStatus));
-    this.setState({ active: !currentStatus });
+    this.setState({ active: !currentStatus });    
   }
 
   onMouseEnter() {
@@ -59,7 +59,8 @@ var styles = {
     minHeight: '100px',
     width: '30%',
     'float': 'left',
-    transition: 'background .5s'
+    transition: 'background .5s',
+    cursor: 'pointer'
   },
   active: {
     borderTop: '4px solid #F77260',

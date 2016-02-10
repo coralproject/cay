@@ -15,7 +15,7 @@ class Stream extends React.Component {
       { 
         this.props.comments.map((comment, i) => { 
           return (
-            <Comment {...comment} key={ i } />
+            <Comment {...comment} key={ i } index={ i } />
           );
         })
       }

@@ -77,7 +77,7 @@ class CommentTools extends React.Component {
                 React
               </div>
             : 
-              ''
+              null
           }
           <div key="reply" style={ styles.commentToolsOption } onClick={ this.onOptionClick.bind(this, 'reply') }>
             Reply
@@ -100,20 +100,19 @@ export default CommentTools;
 var styles = {
   commentTools: {
     height: '60px',
-    display: 'table',
-    background: '#ccc',
+    borderTop: '1px solid #ddd',
+    background: '#fafafa',
     lineHeight: '60px',
     width: '100%',
     margin: '0'
   },
   commentToolsOption: {
-    display: 'table-cell',
+    display: 'inline-block',
     width: '20%',
     margin: '0',
     padding: '0',
     textAlign: 'center',
     cursor: 'pointer',
-    fontWeight: 'bold',
     ':hover': {
       background: '#F77260',
       color: 'white'

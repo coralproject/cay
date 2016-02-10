@@ -48,6 +48,8 @@ class Playground extends React.Component {
               <p style={ styles.playgroundIntroText }>
                 What does an ideal commenting system looks like to you?<br />
                 <br />
+                The playground showcases the various elements you would usually find in commentary sections all over the web.
+                <br />
                 Use the controls to tweak the UI and explore how it affects the comment box and the stream. You can also try the features on the comment box and the stream itself. <br />
                 <br />
                 Learn about online comments and the issues they are facing, <br />

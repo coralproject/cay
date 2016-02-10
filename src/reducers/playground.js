@@ -87,6 +87,12 @@ const initialState = {
           offLabel: 'Likes are OFF',
           description: 'Enables likes on comments, no dislikes, just likes.',
           status: false
+        },
+        'upvotes': {
+          label: 'Up/Down voting is ON',
+          offLabel: 'Up/Down voting is OFF',
+          description: 'Enables up/down voting on comments.',
+          status: false
         }
       }
     },
@@ -140,42 +146,66 @@ const initialState = {
     {
       user: 0,
       content: "{community.mentions} Hello, @coolcat{/community.mentions}. Clinton is a smart guy, but I only started to trust or like him was when he was no longer running. And here he is running for his wife, Hillary. For him to lecture Sanders, or the public about Sanders, on the subject of honesty or integrity, is too much. I don't buy it. {content.emoji}:smile:{/content.emoji}",
-      likes: 28
+      likes: 28,
+      liked: false,
+      reactions: ['heart', 'ok_woman'],
+      upvoted: false
     },
     {
       user: 1,
       content: 'Testing some emojis. :ok_woman: :heart: :bowtie: :hankey:  :horse_racing:',
-      likes: 41
+      likes: 11,
+      liked: false,
+      reactions: ['heart', 'ok_woman'],
+      upvoted: false
     },
     {
       user: 2,
       content: "Hillary placed a bet a few years ago, that the system was corrupt, that SuperPAC's were the only way to go in the post-Citizens United era, and that she could get speaking fees from Wall St. and still come across as being less in-their-pocket than her Republican rivals.",
-      likes: 41
+      likes: 4,
+      liked: false,
+      reactions: ['heart', 'ok_woman'],
+      upvoted: false
     },
     {
       user: 1,
       content: "Is it possible that Bill is going off script here? It would be hard to believe the campaign is encouraging this. Maybe he's become a difficult to control wildcard.",
-      likes: 41
+      likes: 7,
+      liked: false,
+      reactions: ['heart', 'ok_woman'],
+      upvoted: false
     },
     {
       user: 3,
       content: "Sanders will keep the high road because so many young people are supporting him. Ignore the side show!",
-      likes: 41
+      likes: 2,
+      liked: false,
+      reactions: ['heart', 'ok_woman'],
+      upvoted: false
     },
     {
       user: 2,
       content: "Bill's petty and pathetic remarks should be enough to make any undecided voter vote for Bernie. It's sad to see Bill shilling for Hillary in such a vulgar way.",
-      likes: 41
+      likes: 9,
+      liked: false,
+      reactions: ['heart', 'ok_woman'],
+      upvoted: false
     },
     {
       user: 1,
       content: "What sickness that the Clintons think they can criticize anybody about anything. They are greedy, hypocritical, untruthful sociopaths who will take those qualities to the White House in less than a year. ",
-      likes: 41
+      likes: 1,
+      liked: false,
+      reactions: ['heart', 'ok_woman'],
+      upvoted: false
     },
     {
       user: 0,
       content: "Anybody but Clinton. Heck, I would even vote for Sarah Palin before I would vote for Hillary Clinton. At least Palin appears to be honest, and she is not part of a corrupt political machine.",
-      likes: 41
+      likes: 24,
+      liked: false,
+      reactions: ['heart', 'ok_woman'],
+      upvoted: false
     },
 
   ],
@@ -258,8 +288,8 @@ const initialState = {
   },
   users: [
     {
-      nickName: 'coolcat',
-      realName: 'Jane Doe',
+      nickName: 'democrateel',
+      realName: 'Eelary Clintoon',
       comments: 1912,
       points: 1244,
       membershipAge: '2 years',
@@ -275,8 +305,8 @@ const initialState = {
       ]
     },
     {
-      nickName: 'finedog',
-      realName: 'John Doe',
+      nickName: 'republicantrout',
+      realName: 'Donald Trout',
       comments: 243,
       points: 124,
       membershipAge: '2 years',
@@ -297,8 +327,8 @@ const initialState = {
       ]
     },
     {
-      nickName: 'beatnik',
-      realName: 'Laurie Anderson',
+      nickName: 'satanicverses',
+      realName: 'Salmon Rushdie',
       comments: 110,
       points: 244,
       membershipAge: '1 year',
@@ -314,8 +344,8 @@ const initialState = {
       ]
     },
     {
-      nickName: 'nevermind',
-      realName: 'Kurtco Bane',
+      nickName: 'nobeyonce',
+      realName: 'Tuna Turner',
       comments: 124,
       points: 124,
       membershipAge: '6 years',
@@ -342,6 +372,34 @@ const playground = (state = initialState, action) => {
 
   case types.HIDE_CUSTOMIZER:
     return Object.assign({}, state, { customizerIsVisible: false });
+
+  case types.LIKE_COMMENT:
+    var commentsCopy = state.comments.slice();
+
+    var updatedComment = commentsCopy[action.index];
+    updatedComment.liked = true;
+    updatedComment.likes++;
+
+    var updatedComments = commentsCopy
+      .slice(0, action.index)
+      .concat([updatedComment])
+      .concat(commentsCopy.slice(action.index + 1));
+
+    return Object.assign({}, state, { comments: updatedComments });
+
+  case types.UNLIKE_COMMENT:
+    var commentsCopy = state.comments.slice();
+
+    var updatedComment = commentsCopy[action.index];
+    updatedComment.liked = false;
+    updatedComment.likes--;
+
+    var updatedComments = commentsCopy
+      .slice(0, action.index)
+      .concat([updatedComment])
+      .concat(commentsCopy.slice(action.index + 1));
+
+    return Object.assign({}, state, { comments: updatedComments });
 
   case types.SET_TOPIC:
     return Object.assign({}, state, { currentSidebarTopic: action.topic });

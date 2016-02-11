@@ -35,6 +35,7 @@ class DatePicker extends React.Component {
           <p style={styles.selectedDate}>{this.getSelectedDate.call(this)}</p>
         </div>
         <CalendarMonth />
+        <TextField />
       </Paper>
     );
   }

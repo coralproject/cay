@@ -6,7 +6,7 @@ import {fetchComments} from '../actions';
 import Page from './Page';
 import Card from '../components/cards/Card';
 
-require('../../css/react-select.css');
+import DatePicker from '../components/datepicker/DatePicker';
 
 @Radium
 class Dashboard extends React.Component {
@@ -23,7 +23,7 @@ class Dashboard extends React.Component {
         <h1>Dashboard goes here</h1>
         <div style={styles.base}>
           <Card style={styles.pane}>
-            <p>Such wow</p>
+            <DatePicker />
           </Card>
           <Card style={styles.pane}>
             <p>Nothin</p>

@@ -2,18 +2,21 @@ import React from 'react';
 import Radium from 'radium';
 
 import MenuItem from './MenuItem';
+import {Link} from 'react-router';
+
+import {MdInsertChart, MdTimeline, MdSupervisorAccount, MdSettings} from 'react-icons';
 
 @Radium
 class Menu extends React.Component {
   render() {
     return (
       <div>
-        <a href="/" style={styles.logo}>Coral Project</a>
+        <Link to="/" style={styles.logo}>Coral Project</Link>
         <ul>
-          <MenuItem name="Dashboard" target="/" icon="fa-area-chart" />
-          <MenuItem name="Explore" target="/explore" icon="fa-bar-chart" />
-          <MenuItem name="User Manager" target="/user-manager" icon="fa-users" />
-          <MenuItem name="Settings" target="/settings" icon="fa-cog" />
+          <MenuItem name="Dashboard" target="/" icon={<MdInsertChart />} />
+          <MenuItem name="Explore" target="/explore" icon={<MdTimeline />} />
+          <MenuItem name="User Manager" target="/user-manager" icon={<MdSupervisorAccount />} />
+          <MenuItem name="Settings" target="/settings" icon={<MdSettings />} />
         </ul>
       </div>
     );

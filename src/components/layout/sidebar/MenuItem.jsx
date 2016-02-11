@@ -1,20 +1,19 @@
 import React from 'react';
 import Radium from 'radium';
+import {Link} from 'react-router';
 
 import color from 'color';
-
-import Icon from '../../Icon';
 
 @Radium
 class MenuItem extends React.Component {
   render() {
     return (
       <li style={styles.base}>
-        <a style={styles.link} href={this.props.target}>
-          <Icon size="small" name={this.props.icon} />
+        <Link style={styles.link} to={this.props.target}>
+          {this.props.icon}
           <span>{this.props.name}</span>
           <i></i>
-        </a>
+        </Link>
       </li>
     );
   }

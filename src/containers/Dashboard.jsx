@@ -21,7 +21,7 @@ class Dashboard extends React.Component {
   }
 
   handleChange() {
-    console.log('Dashboard.handleChange', ...arguments);
+    console.log('Dashboard.handleChange()', ...arguments);
   }
 
   render() {

@@ -7,6 +7,7 @@ import Flex from "./layout/Flex";
 import Select from 'react-select';
 import TextField from './forms/TextField';
 import Button from './Button';
+import Filter from './filter';
 
 @Radium
 class PipelineCreator extends React.Component {
@@ -193,6 +194,7 @@ class PipelineCreator extends React.Component {
           value={this.state.maxDate} />
 
         <p style={styles.label}> + Add another question for comparison </p>
+        <Filter/>
         <div style={{marginTop: 20}}>
           <Button
             category="primary"

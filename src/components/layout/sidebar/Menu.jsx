@@ -1,5 +1,6 @@
 import React from 'react';
 import Radium from 'radium';
+import {Link} from 'react-router';
 
 import MenuItem from './MenuItem';
 
@@ -8,7 +9,7 @@ class Menu extends React.Component {
   render() {
     return (
       <div>
-        <a href="/" style={styles.logo}>Coral Project</a>
+        <Link to="/" style={styles.logo}>Coral Project</Link>
         <ul>
           <MenuItem name="Dashboard" target="/" icon="fa-area-chart" />
           <MenuItem name="Explore" target="/explore" icon="fa-bar-chart" />

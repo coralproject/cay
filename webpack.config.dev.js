@@ -39,17 +39,8 @@ module.exports = {
       test: /\.json$/,
       loader: 'json-loader'
     }, {
-        test   : /\.woff/,
-        loader : 'url?prefix=font/&limit=10000&mimetype=application/font-woff'
-    }, {
-        test   : /\.ttf/,
-        loader : 'file?prefix=font/'
-    }, {
-        test   : /\.eot/,
-        loader : 'file?prefix=font/'
-    }, {
-        test   : /\.svg/,
-        loader : 'file?prefix=font/'
+      test: /\.woff$/,
+      loader: 'url?limit=100000'
     }]
   }
 };

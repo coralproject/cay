@@ -1,4 +1,4 @@
-import React, {PropType} from 'react';
+import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
@@ -11,7 +11,10 @@ import CardHeader from '../cards/CardHeader';
 export default class FilterDate extends React.Component {
 
   static propTypes = {
-
+    start: PropTypes.string,
+    end: PropTypes.string,
+    absMin: PropTypes.string,
+    absMax: PropTypes.string
   }
 
   constructor(props) {

@@ -44,7 +44,7 @@ class Login extends React.Component {
     return (
       <div style={styles.base}>
         <Card style={styles.loginModal}>
-          <CardHeader title="Sign in with GitHub" />
+          <CardHeader>Sign in with GitHub</CardHeader>
           <div style={styles.container}>
             <Button
               size="large"

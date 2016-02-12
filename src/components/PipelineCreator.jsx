@@ -7,8 +7,8 @@ import Select from 'react-select';
 import TextField from './forms/TextField';
 import Button from './Button';
 import Filter from './filter';
-import DatePicker from 'react-datepicker';
-import moment from 'moment';
+
+import FilterDate from './filters/FilterDate';
 
 @Radium
 export default class PipelineCreator extends React.Component {
@@ -21,10 +21,6 @@ export default class PipelineCreator extends React.Component {
       resultFields: [], // what fields the user is interested in measuring; replies, replies per comment, etc
       specificBreakdowns: [], // this could be particular author(s), or a specific section
       // hard-code the date range of the NYT dataset.
-      // minDate: '2003-05-13',
-      // maxDate: '2015-01-01',
-      minDate: moment('2013-01-01'),
-      maxDate: moment('2013-01-02'),
       computedQuery: null
     };
   }
@@ -128,15 +124,6 @@ export default class PipelineCreator extends React.Component {
     ];
   }
 
-  updateDateRange(ref, moment) {
-
-    if (ref === 'date_start') { // probably a better way to do this.
-      this.setState({minDate: moment});
-    } else {
-      this.setState({maxDate: moment});
-    }
-  }
-
   // we don't want to request 10000 hourly intervals,
   // so compute resonable bin size
   getSensibleInterval(start, end) {
@@ -181,17 +168,7 @@ export default class PipelineCreator extends React.Component {
 
         { this.props.onlyUser ? this.getSpecific('user') : this.getSpecific(this.state.selectedBreakdown) }
 
-        <p style={styles.label}>between</p>
-        <DatePicker
-          ref="date_start"
-          selected={this.state.minDate}
-          onChange={this.updateDateRange.bind(this, 'date_start')} />
-
-        <p style={styles.label}>and</p>
-        <DatePicker
-          ref="date_end"
-          selected={this.state.maxDate}
-          onChange={this.updateDateRange.bind(this, 'date_end')} />
+        <FilterDate />
 
         <p style={styles.label}> + Add another question for comparison </p>
         <Filter/>

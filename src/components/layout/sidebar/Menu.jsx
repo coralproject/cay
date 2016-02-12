@@ -1,8 +1,8 @@
 import React from 'react';
 import Radium from 'radium';
+import {Link} from 'react-router';
 
 import MenuItem from './MenuItem';
-import {Link} from 'react-router';
 
 import {MdInsertChart, MdTimeline, MdSupervisorAccount, MdSettings} from 'react-icons';
 

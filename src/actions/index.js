@@ -50,7 +50,7 @@ var getInit = (method) => {
   return init;
 };
 
-const httpPrefix = 'http://10.0.1.84:4000/';
+const httpPrefix = 'https://xenia_stg.coralproject.net/';
 const apiPrefix = '1.0/'; // maybe later we'll be at api 2.0
 const apiSuffix = '/exec';
 

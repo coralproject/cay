@@ -51,4 +51,28 @@ class Root extends React.Component {
   }
 }
 
-ReactDOM.render(<Root/>, document.getElementById('root'));
+var xhr = new XMLHttpRequest();
+xhr.open('GET', './config.json');
+xhr.onload = function () {
+  if (xhr.status === 200) {
+    try {
+      var config = JSON.parse(xhr.responseText);
+
+      for (var key in config) {
+        window[key] = config[key];
+      }
+
+      if (!window.xeniaHost) console.warn('xeniaHost is not set in config.json. Coral will not work correctly.');
+      if (!window.pillarHost) console.warn('pillarHost is not set in config.json. Coral will not work correctly.');
+
+      ReactDOM.render(<Root/>, document.getElementById('root'));
+    } catch (e) {
+      console.error('failed to load ./config.json', e);
+    }
+
+  } else {
+    console.error('something blew up', xhr.status);
+    window.body.innerHTML = 'you need to create ./config.json';
+  }
+};
+xhr.send(null);

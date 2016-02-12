@@ -3,14 +3,15 @@
 import React from 'react';
 import Radium from 'radium';
 import {createFormula} from '../actions';
-import Flex from "./layout/Flex";
 import Select from 'react-select';
 import TextField from './forms/TextField';
 import Button from './Button';
 import Filter from './filter';
+import DatePicker from 'react-datepicker';
+import moment from 'moment';
 
 @Radium
-class PipelineCreator extends React.Component {
+export default class PipelineCreator extends React.Component {
 
   constructor(props) {
     super(props);
@@ -22,8 +23,8 @@ class PipelineCreator extends React.Component {
       // hard-code the date range of the NYT dataset.
       // minDate: '2003-05-13',
       // maxDate: '2015-01-01',
-      minDate: '2013-01-01',
-      maxDate: '2013-01-02',
+      minDate: moment('2013-01-01'),
+      maxDate: moment('2013-01-02'),
       computedQuery: null
     };
   }
@@ -35,7 +36,7 @@ class PipelineCreator extends React.Component {
   }
 
   handleCreatePipeline() {
-    this.props.dispatch(createFormula('FILTER_FIELD_VALUES_GO_HERE'))
+    this.props.dispatch(createFormula('FILTER_FIELD_VALUES_GO_HERE'));
   }
 
   getTargets(target) {
@@ -127,11 +128,12 @@ class PipelineCreator extends React.Component {
     ];
   }
 
-  updateDateRange(e) {
-    if (e.target === this.refs.date_start) {
-      this.setState({minDate: e.target.value});
+  updateDateRange(ref, moment) {
+
+    if (ref === 'date_start') { // probably a better way to do this.
+      this.setState({minDate: moment});
     } else {
-      this.setState({maxDate: e.target.value});
+      this.setState({maxDate: moment});
     }
   }
 
@@ -159,7 +161,7 @@ class PipelineCreator extends React.Component {
         <p style={styles.label}>I want to know about</p>
 
         {
-          this.props.onlyUser ? "" :
+          this.props.onlyUser ? '' :
             <Select
               options={this.getBreakdownOptions()}
               name="breakdown-type"
@@ -180,18 +182,16 @@ class PipelineCreator extends React.Component {
         { this.props.onlyUser ? this.getSpecific('user') : this.getSpecific(this.state.selectedBreakdown) }
 
         <p style={styles.label}>between</p>
-        <input
-          onChange={this.updateDateRange.bind(this)}
-          type="date"
+        <DatePicker
           ref="date_start"
-          value={this.state.minDate} />
+          selected={this.state.minDate}
+          onChange={this.updateDateRange.bind(this, 'date_start')} />
 
         <p style={styles.label}>and</p>
-        <input
-          onChange={this.updateDateRange.bind(this)}
-          type="date"
+        <DatePicker
           ref="date_end"
-          value={this.state.maxDate} />
+          selected={this.state.maxDate}
+          onChange={this.updateDateRange.bind(this, 'date_end')} />
 
         <p style={styles.label}> + Add another question for comparison </p>
         <Filter/>
@@ -214,26 +214,3 @@ const styles = {
     marginTop: 10
   }
 };
-
-export default PipelineCreator;
-
-
-// <select
-//   onChange={this.updateOutput.bind(this)}
-//   style={styles.select}
-//   ref="pipelines">
-//   <option value={"what_is"}> What is the </option>
-// </select>
-// <select
-//   onChange={this.updateOutput.bind(this)}
-//   style={styles.select}
-//   ref="pipelines">
-//   <option value={"number"}> number of </option>
-//   <option value={"ratio"}> ratio of </option>
-// </select>
-// <select
-//   onChange={this.updateOutput.bind(this)}
-//   style={styles.select}
-//   ref="pipelines">
-//   <option value={"rejected comments"}> rejected comments </option>
-// </select>

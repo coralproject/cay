@@ -6,6 +6,9 @@ import Icon from '../../components/Icon';
 
 import CustomizerSettings from './CustomizerSettings';
 
+import mediaQueries from '../../playgroundSettings';
+
+
 @connect(state => state.playground)
 @Radium
 class Customizer extends React.Component {
@@ -27,7 +30,7 @@ class Customizer extends React.Component {
           </h2>
           <button style={ styles.customizeTogglerButton }><Icon size="medium" name="fa-caret-down" /></button>
         </div>
-        { customizerSettings }
+        <CustomizerSettings />
       </div>
     );
 
@@ -40,9 +43,12 @@ export default Customizer;
 
 var styles = {
   customizer: {
-    padding: '50px 350px 50px 50px',
+    padding: '40px',
     background: '#F1EBE0',
-    color: '#3d3d3d'
+    color: '#3d3d3d',
+    [mediaQueries.tablet]: {
+      padding: '20px'
+    }
   },
   customizeToggler: {
     borderBottom: '1px solid #ccc',

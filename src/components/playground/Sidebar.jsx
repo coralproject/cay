@@ -5,6 +5,8 @@ import Radium from 'radium';
 import Icon from '../../components/Icon';
 import TwitterStream from './TwitterStream';
 
+import mediaQueries from '../../playgroundSettings';
+
 @connect(state => state.playground)
 @Radium
 class Sidebar extends React.Component { 
@@ -28,8 +30,10 @@ class Sidebar extends React.Component {
 
     var sideBarContent = this.props.currentSidebarTopic && this.props.topics[this.props.currentSidebarTopic] ? 
       <div>
-        <h2 style={ styles.sideBarTitle }>{ this.props.topics[this.props.currentSidebarTopic].title }</h2>
-        <p style={ styles.sideBarDescription }>{ this.props.topics[this.props.currentSidebarTopic].description }</p>
+        <div style={ styles.sideBarTopic }>
+          <h2 style={ styles.sideBarTitle }>{ this.props.topics[this.props.currentSidebarTopic].title }</h2>
+          <p style={ styles.sideBarDescription }>{ this.props.topics[this.props.currentSidebarTopic].description }</p>
+        </div>
         <div style={ styles.tweets }>
           <span style={ styles.twitterIcon }><Icon size="medium" name="fa-twitter" /></span> <span style={ styles.twitterTitle }>Join the discussion!</span><br />
           <TwitterStream />
@@ -60,11 +64,23 @@ var styles = {
     right: '0px',
     top: '0px',
     height: '100%',
-    width: '300px',
+    width: '15%',
     backgroundColor: '#3B60A8',
     zIndex: '75000',
     color: 'white',
-    padding: '30px'
+    padding: '30px',
+    [mediaQueries.desktop]: {
+      width: '100%',
+      top: 'auto',
+      bottom: '0px',
+      height: '200px'
+    },
+    [mediaQueries.tablet]: {
+      width: '100%',
+      top: 'auto',
+      bottom: '0px',
+      height: '200px'
+    }
   },
   sideBarTitle: {
     fontWeight: '600',
@@ -99,5 +115,23 @@ var styles = {
     fontFamily: 'Fira Sans',
     fontWeight: '700',
     marginBottom: '20px'
+  },
+  sideBarTopic: {
+    [mediaQueries.desktop]: {
+      width: '33.3%',
+      'float': 'left'
+    }
+  },
+  tweets: {
+    [mediaQueries.desktop]: {
+      width: '33.3%',
+      'float': 'left'
+    }
+  },
+  sideBarReferences: {
+    [mediaQueries.desktop]: {
+      width: '33.3%',
+      'float': 'left'
+    }
   }
 };

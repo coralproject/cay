@@ -16,7 +16,7 @@ class ProfileInfo extends React.Component {
     return (
       <div style={ styles.profileInfo }>
         <div style={ styles.profilePicPane }>
-          <img style={ styles.profilePicture } width="180" height="190" src={ "/img/playground/profile" + this.props.user + ".jpg" } /><br />
+          <img style={ styles.profilePicture } width="180" height="180" src={ "/img/playground/profile" + this.props.user + ".jpg" } /><br />
         </div>
         <div style={ styles.profileLeftPane }>
           <h3 style={ styles.userName }>
@@ -39,13 +39,13 @@ class ProfileInfo extends React.Component {
         <div style={ styles.profileCenterPane }>
           <div>
             <div style={ styles.profileStat }>
-              <span style={ styles.profileTotal }>{ user.comments }</span><br/>comments
+              <span style={ styles.profileTotal }>{ user.comments }</span> comments
             </div>
             <div style={ styles.profileStat }>
-              <span style={ styles.profileTotal }>{ user.points }</span><br/>points
+              <span style={ styles.profileTotal }>{ user.points }</span> points
             </div>
             <div style={ styles.profileStat }>
-              <span style={ styles.profileTotal }>{ user.upvoteBalance }%</span><br/>upvotes
+              <span style={ styles.profileTotal }>{ user.upvoteBalance }%</span> upvotes
             </div>
             <div style={ styles.clearfix }></div>
           </div>
@@ -68,15 +68,15 @@ class ProfileInfo extends React.Component {
         <div style={ styles.profileRightPane }>
           { 
             this.props.togglerGroups['community'].togglers['privatemessages'].status ? 
-              <div><Icon size="large" name="fa-comments-o" /></div> : 
-              ''
+              <div style={ styles.rightPaneAction }><Icon size="medium" name="fa-comments-o" /></div> : 
+              null
           }
           { 
             this.props.togglerGroups['moderation'].togglers['muting'].status ? 
-              <div><Icon size="large" name="fa-hand-paper-o" /></div> : 
-              ''
+              <div style={ styles.rightPaneAction }><Icon size="medium" name="fa-hand-paper-o" /></div> : 
+              null
           }
-          <div style={ styles.moreActions }><Icon size="large" name="fa-ellipsis-h" /></div>
+          <div style={ styles.moreActions }><Icon size="medium" name="fa-ellipsis-h" /></div>
         </div>
         <div style={ styles.clearfix }></div>
       </div>
@@ -90,7 +90,7 @@ export default ProfileInfo;
 
 var styles = {
   userName: {
-    fontSize: '20pt',
+    fontSize: '16pt',
     fontWeight: 'bold'
   },
   profileInfo: {
@@ -98,49 +98,51 @@ var styles = {
     position: 'relative',
     minHeight: '100px',
     fontSize: '9pt',
-    display: 'table',
     width: '100%',
     maxWidth: '750px',
-    marginBottom: '30px'
+    marginBottom: '30px',
+    display: 'flex',
+    flexDirection: 'row'
+  },
+  profilePicPane: {
+    width: '180px'
   },
   profileLeftPane: {
-    display: 'table-cell',
     width: '250px',
     minHeight: '150px',
     borderRight: '1px solid #ccc',
     verticalAlign: 'top',
-    padding: '20px'
+    padding: '20px',
   },
   profileCenterPane: {
-    display: 'table-cell',
     minHeight: '150px',
     borderRight: '1px solid #ccc',
     verticalAlign: 'top',
-    padding: '20px'
+    padding: '20px 10px',
+    flexGrow: '2'
   }, 
   profileRightPane: {
-    display: 'table-cell',
-    width: '90px',
+    width: '45px',
     minHeight: '150px',
     verticalAlign: 'top',
     position: 'relative',
-    textAlign: 'center',
-    padding: '20px'
+    textAlign: 'center'
   }, 
   profileStat: {
-    'float': 'left',
-    width: '30%',
-    padding: '1.5%',
-    textAlign: 'center'
+    marginBottom: '10px'
   },
   profileTotal: {
     fontSize: '16pt',
     fontWeight: 'bold'
   },
+  rightPaneAction: {
+    height: '40px',
+    lineHeight: '40px'
+  },
   moreActions: {
     position: 'absolute',
     bottom: '5px',
-    left: '20px'
+    left: '7px'
   },
   clearfix: {
     'clear': 'both'

@@ -31,10 +31,10 @@ var styles = {
   profileBadge: {
     position: 'absolute',
     top: '20px',
-    left: '10px',
+    left: '0px',
     textAlign: 'center',
     cursor: 'pointer',
-    width: '80px'
+    width: '60px'
   },
   profilePicture: {
     borderRadius: '30px'

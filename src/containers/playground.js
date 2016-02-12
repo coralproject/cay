@@ -9,6 +9,8 @@ import Customizer from '../components/playground/Customizer';
 import Preview from '../components/playground/Preview';
 import Wizard from '../components/playground/Wizard';
 
+import mediaQueries from '../playgroundSettings';
+
 // Playground CSS
 require('../../css/playground.css');
 require('../../fonts/playground/coral-icon-font.css');
@@ -35,39 +37,53 @@ class Playground extends React.Component {
 
     return (
       <div>
-        <div style={ [ styles.playGround, this.state.wizardIsOpen ? styles.blurred : '' ] }>
 
-          <img src="http://coralproject.github.io/design/img/logos/coralWordMark-1.5.png" style={ styles.logo } />
-          
-          <div style={ styles.heading }>
+        <div style={ [ styles.playgroundContainer, , this.state.wizardIsOpen ? styles.blurred : '' ] }>
 
-            <h1 style={ styles.headingTitle }>Playground</h1>
+          <div style={ styles.playgroundLeftPane }>
 
-            <div style={ styles.playgroundIntro }>
+            <div style={ [ styles.playGround ] }>
 
-              <p style={ styles.playgroundIntroText }>
-                What does an ideal commenting system looks like to you?<br />
-                <br />
-                The playground showcases the various elements you would usually find in commentary sections all over the web.
-                <br />
-                Use the controls to tweak the UI and explore how it affects the comment box and the stream. You can also try the features on the comment box and the stream itself. <br />
-                <br />
-                Learn about online comments and the issues they are facing, <br />
-                through the contextual sidebar.<br />
-                <br />
-                Share your thoughts on the problems addressed by each solution.
-              </p>
+              <img src="http://coralproject.github.io/design/img/logos/coralWordMark-1.5.png" style={ styles.logo } />
+              
+              <div style={ styles.heading }>
 
-              <button style={ styles.wizardButton } onClick={ this.onWizardClick.bind(this) }>Use the Wizard</button>
+                <h1 style={ styles.headingTitle }>Playground</h1>
+
+                <div style={ styles.playgroundIntro }>
+
+                  <p style={ styles.playgroundIntroText }>
+                    What does an ideal commenting system looks like to you?<br />
+                    <br />
+                    The playground showcases the various elements you would usually find in commentary sections all over the web.
+                    <br />
+                    Use the controls to tweak the UI and explore how it affects the comment box and the stream. You can also try the features on the comment box and the stream itself. <br />
+                    <br />
+                    Learn about online comments and the issues they are facing, <br />
+                    through the contextual sidebar.<br />
+                    <br />
+                    Share your thoughts on the problems addressed by each solution.
+                  </p>
+
+                  <button style={ styles.wizardButton } onClick={ this.onWizardClick.bind(this) }>Use the Wizard</button>
+
+                </div>
+
+              </div>
+
+              <Customizer />
+              
+              Medal, Trophy and Badge icons by Zlatko Najdenovski from the Noun Project
 
             </div>
 
           </div>
 
-          <Customizer />
-          <Preview />
+          <div style={ styles.playgroundMiddlePane }>
+            <Preview />
+          </div>
 
-          Medal, Trophy and Badge icons by Zlatko Najdenovski from the Noun Project
+          <div style={ styles.playgroundRightPane }></div>
 
           <Sidebar />
 
@@ -84,13 +100,63 @@ class Playground extends React.Component {
 export default Playground;
 
 const styles = {
+  playgroundContainer: {
+    width: '100%',
+    height: '100%',
+    position: 'fixed',
+    [mediaQueries.tablet]: {
+      position: 'relative',
+      height: 'auto'
+    },
+    overflowY: 'scroll'
+  },
+  playgroundLeftPane: {
+    width: '35%',
+    height: '100%',
+    overflowY: 'auto',
+    'float': 'left',
+    [mediaQueries.desktop]: {
+      width: '40%'
+    },
+    [mediaQueries.tablet]: {
+      'float': 'none',
+      width: '100%',
+      height: 'auto'
+    }
+  },
+  playgroundMiddlePane: {
+    width: '50%',
+    height: '100%',
+    overflowY: 'auto',
+    'float': 'left',
+    [mediaQueries.desktop]: {
+      width: '60%'
+    },
+    [mediaQueries.tablet]: {
+      'float': 'none',
+      width: '100%',
+      height: 'auto'
+    }
+  },
+  playgroundRightPane: {
+    width: '15%',
+    height: '100%',
+    'float': 'left',
+    [mediaQueries.desktop]: {
+      width: '0%'
+    },
+    [mediaQueries.tablet]: {
+      'float': 'none',
+      display: 'none'
+    }
+  },
   playGround: {
     margin: 'auto',
     transition: 'filter 1s',
     fontFamily: 'Fira Sans'
   },
   heading: {
-    padding: '50px 350px 50px 50px'
+    padding: '40px'
   },
   headingTitle: {
     fontFamily: 'Josefin Slab',
@@ -98,16 +164,24 @@ const styles = {
     fontSize: '75px',
     fontWeight: '600',
     color: 'white',
-    textAlign: 'center'
+    textAlign: 'center',
+    [mediaQueries.desktop]: {
+      fontSize: '48px'
+    },
+    [mediaQueries.tablet]: {
+      fontSize: '38px'
+    }
   },
   playgroundIntro: {
     fontSize: '14pt',
     color: 'white',
     lineHeight: '1.2',
     padding: '20px',
-    margin: '20px',
     textAlign: 'center',
-    fontFamily: 'Fira Sans'
+    fontFamily: 'Fira Sans',
+    [mediaQueries.tablet]: {
+      padding: '0'
+    }
   },
   playgroundIntroText: {
     fontSize: '12pt',
@@ -128,7 +202,11 @@ const styles = {
   },
   logo: {
     width: '400px',
-    margin: '40px 50px'
+    maxWidth: '80%',
+    margin: '40px',
+    [mediaQueries.tablet]: {
+      margin: '20px',
+    }
   },
   blurred: {
     filter: 'blur(8px)',

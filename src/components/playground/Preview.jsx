@@ -37,7 +37,7 @@ export default Preview;
 var styles = {
   preview: {
     background: 'white',
-    padding: '50px 350px 50px 50px',
+    padding: '40px',
     color: '#3d3d3d'
   },
   sandBox: {

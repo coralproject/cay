@@ -51,14 +51,13 @@ export default CustomizerToggle;
 var styles = {
   base: {
     padding: '20px',
-    margin: '0 3% 20px 0',
+    marginBottom: '15px',
     borderLeft: '1px solid #999',
     borderRight: '1px solid #999',
     borderBottom: '1px solid #999',
     borderTop: '4px solid #999',
     minHeight: '100px',
-    width: '30%',
-    'float': 'left',
+    width: '100%',
     transition: 'background .5s',
     cursor: 'pointer'
   },

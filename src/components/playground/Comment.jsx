@@ -52,7 +52,7 @@ export default Comment;
 var styles = {
   comment: {
     borderBottom: '1px solid #ddd',
-    padding: '20px 20px 20px 100px',
+    padding: '20px 0px 20px 75px',
     position: 'relative',
     minHeight: '100px'
   },

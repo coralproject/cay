@@ -170,7 +170,6 @@ export default class PipelineCreator extends React.Component {
 
         <FilterDate />
 
-        <p style={styles.label}> + Add another question for comparison </p>
         <Filter/>
         <div style={{marginTop: 20}}>
           <Button

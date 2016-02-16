@@ -48,7 +48,6 @@ var getInit = (method) => {
   return init;
 };
 
-const httpPrefix = 'https://xenia_stg.coralproject.net/';
 const apiPrefix = '1.0/'; // maybe later we'll be at api 2.0
 const apiSuffix = '/exec';
 
@@ -119,7 +118,7 @@ export const fetchAuthorsAndSections = () => {
   return (dispatch) => {
     dispatch(requestAuthorsAndSections());
 
-    fetch(httpPrefix + '1.0/exec/author_and_section_list', getInit())
+    fetch(window.xeniaHost + '1.0/exec/author_and_section_list', getInit())
       .then(response => response.json())
       .then(json => dispatch(receiveAuthorsAndSections(json)))
       .catch(err => {
@@ -135,7 +134,7 @@ export const fetchPipelines = () => {
 
     dispatch(requestPipelines());
 
-    fetch(httpPrefix + '1.0/query', getInit())
+    fetch(window.xeniaHost + '1.0/query', getInit())
       .then(response => response.json())
       .then(pipelines => dispatch(receivePipelines(pipelines)))
       .catch(err => dispatch(requestPipelinesFailure(err)));
@@ -161,7 +160,7 @@ export const fetchPipeline = (pipelineName) => {
   return (dispatch) => {
     dispatch(requestPipeline(pipelineName));
 
-    fetch(httpPrefix + apiPrefix + 'exec/' + pipelineName, getInit())
+    fetch(window.xeniaHost + apiPrefix + 'exec/' + pipelineName, getInit())
       .then(response => response.json())
       .then(pipeline => dispatch(receivePipeline(pipeline)))
       .catch(err => dispatch(requestPipelineFailure(err)));
@@ -194,7 +193,7 @@ export const loginUser = (username, password) => {
 
 
 export const fetchCommentsByUser = (user_id) => {
-  const url = `${httpPrefix}${apiPrefix}exec/comments_by_user?user_id=${user_id}`;
+  const url = `${window.xeniaHost}${apiPrefix}exec/comments_by_user?user_id=${user_id}`;
   return (dispatch) => {
     dispatch(requestComments());
 
@@ -285,7 +284,7 @@ const convert = (json) => {
 };
 
 export const createPipelineValueChanged = (config) => {
-  const url = httpPrefix + apiPrefix + 'exec';
+  const url = window.xeniaHost + apiPrefix + 'exec';
 
   return (dispatch, getState) => {
 
@@ -310,7 +309,7 @@ export const createPipelineValueChanged = (config) => {
 
 export const fetchDataExplorationDataset = (field, queryParams) => {
   const queryParamString = queryParams ? convert(queryParams) : '';
-  const url = httpPrefix + apiPrefix + 'exec/' + field + queryParamString;
+  const url = window.xeniaHost + apiPrefix + 'exec/' + field + queryParamString;
 
   return (dispatch, getState) => {
 
@@ -347,7 +346,7 @@ const receiveControls = (pipelines) => {
 };
 
 export const populateControlsReducer = () => {
-  const url = httpPrefix + '1.0/query';
+  const url = window.xeniaHost + '1.0/query';
 
   return (dispatch) => {
     dispatch(requestControls());

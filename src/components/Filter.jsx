@@ -4,15 +4,25 @@ import Radium from 'radium';
 import Flex from './layout/Flex';
 // import { connect } from 'react-redux';
 // import { FOO } from '../actions';
+import Slider from './Slider';
 
 const style = {
   symbol: {
-    padding: "3px 10px",
-    backgroundColor: 'rgb(66,138,228)',
+    padding: '8px 10px',
+    backgroundColor: 'rgb(240,240,240)',
     margin: 5,
-    color: 'rgb(255,255,255)',
+    color: 'rgb(100,100,100)',
     borderRadius: 3,
-    fontWeight: 700,
+    fontWeight: 700
+  },
+  sliderInput: {
+    backgroundColor: 'rgb(240, 240, 240)',
+    border: 'none',
+    textAlign: 'center',
+    padding: '10px 0px',
+    fontSize: 16,
+    width: 100,
+    borderRadius: 4
   }
 };
 
@@ -58,21 +68,34 @@ class Filter extends React.Component {
   handleEqualChanged(e) {
     this.setState({equals: e.target.value});
   }
+  pop_Slider(e) {
+    console.log('focus', e.target);
+  }
 
   renderGTLT() {
     return (
       <div>
         {/* will be a component */}
-        {this.props.fieldName}
-        <span style={style.symbol} onClick={this.handleSymbolClick.bind(this)}>{'>='}</span>
-        <input onChange={this.handleGTChanged.bind(this)} value={this.state.gt || this.props.min}/>
+        <p style={{fontSize: 24, color: 'rgb(100,100,100)', marginBottom: 10}}>{this.props.fieldName}  </p>
 
-        <Flex styleOverrides={{margin: '20px 0px'}}> AND </Flex>
+        <Slider/>
+        <span style={style.symbol} onClick={this.handleSymbolClick.bind(this)}>{'>='}</span>
+        <input
+          onFocus={this.pop_Slider}
+          style={style.sliderInput}
+          onChange={this.handleGTChanged.bind(this)}
+          value={this.state.gt || this.props.min}/>
+
+        <span style={{margin: "0px 10px"}}> AND </span>
 
         {/* will be a component */}
-        {this.props.fieldName}
+        {/* this.props.fieldName*/}
         <span style={style.symbol} onClick={this.handleSymbolClick.bind(this)}>{'<='}</span>
-        <input onChange={this.handleLTChanged.bind(this)} value={this.state.lt || this.props.max}/>
+        <input
+          onFocus={this.pop_Slider}
+          style={style.sliderInput}
+          onChange={this.handleLTChanged.bind(this)}
+          value={this.state.lt || this.props.max}/>
       </div>
     );
   }
@@ -81,8 +104,12 @@ class Filter extends React.Component {
       <div>
         {/* will be a component */}
         <span> {this.props.fieldName} </span>
-        <span style={style.symbol} onClick={this.handleSymbolClick.bind(this)}>{"="}</span>
-        <input onChange={this.handleEqualChanged.bind(this)} value={this.state.equals || this.props.min}/>
+        <span style={style.symbol} onClick={this.handleSymbolClick.bind(this)}>{'='}</span>
+        <input
+          onFocus={this.popEqualsSlider}
+          style={style.sliderInput}
+          onChange={this.handleEqualChanged.bind(this)}
+          value={this.state.equals || this.props.min}/>
       </div>
     );
   }

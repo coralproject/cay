@@ -13,10 +13,10 @@ class Menu extends React.Component {
       <div>
         <Link to="/" style={styles.logo}>Coral Project</Link>
         <ul>
-          <MenuItem name="Dashboard" target="/" icon={<MdInsertChart />} />
-          <MenuItem name="Explore" target="/explore" icon={<MdTimeline />} />
+          {/*<MenuItem name="Dashboard" target="/" icon={<MdInsertChart />} />*/}
+          {/*<MenuItem name="Explore" target="/explore" icon={<MdTimeline />} />*/}
           <MenuItem name="User Manager" target="/user-manager" icon={<MdSupervisorAccount />} />
-          <MenuItem name="Settings" target="/settings" icon={<MdSettings />} />
+          {/*<MenuItem name="Settings" target="/settings" icon={<MdSettings />} />*/}
         </ul>
       </div>
     );

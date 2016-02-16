@@ -21,6 +21,7 @@ class MenuItem extends React.Component {
 
 const styles = {
   base: {
+    padding: 10,
     backgroundColor: 'transparent',
     ':hover': {
       backgroundColor: color('#F77160').darken(0.1).hexString()

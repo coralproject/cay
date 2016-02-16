@@ -6,7 +6,7 @@ import {createFormula} from '../actions';
 import Select from 'react-select';
 import TextField from './forms/TextField';
 import Button from './Button';
-import Filter from './filter';
+import FilterNumbersContainer from './filters/FilterNumbersContainer';
 
 import FilterDate from './filters/FilterDate';
 
@@ -168,9 +168,9 @@ export default class PipelineCreator extends React.Component {
 
         { this.props.onlyUser ? this.getSpecific('user') : this.getSpecific(this.state.selectedBreakdown) }
 
-        <FilterDate />
+        <FilterDate/>
 
-        <Filter/>
+        <FilterNumbersContainer/>
         <div style={{marginTop: 20}}>
           <Button
             category="primary"

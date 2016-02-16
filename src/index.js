@@ -37,10 +37,8 @@ class Root extends React.Component {
       <div>
         <Provider store={store}>
           <Router history={browserHistory}>
-            <Route path="/" component={Dashboard}/>
+            <Route path="/" component={UserManager}/>
             <Route path="login" component={Login}/>
-            <Route path="user-manager/:filterId/:userId" component={UserManager}/>
-            <Route path="user-manager/:filterId" component={UserManager}/>
             <Route path="user-manager" component={UserManager}/>
             <Route path="explore" component={DataExplorer}/>
           </Router>
@@ -51,4 +49,21 @@ class Root extends React.Component {
   }
 }
 
-ReactDOM.render(<Root/>, document.getElementById('root'));
+fetch('./config.json')
+  .then(res => res.json())
+  .then(config => {
+
+    for (var key in config) {
+      window[key] = config[key];
+    }
+
+    if (!window.xeniaHost) console.warn('xeniaHost is not set in config.json. Coral will not work correctly.');
+    if (!window.pillarHost) console.warn('pillarHost is not set in config.json. Coral will not work correctly.');
+
+    ReactDOM.render(<Root/>, document.getElementById('root'));
+  })
+  .catch(err => {
+
+    console.error('something blew up', err);
+    window.body.innerHTML = 'you need to create ./config.json, or it is invalid JSON';
+  });

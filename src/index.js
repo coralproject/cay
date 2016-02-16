@@ -37,10 +37,8 @@ class Root extends React.Component {
       <div>
         <Provider store={store}>
           <Router history={browserHistory}>
-            <Route path="/" component={Dashboard}/>
+            <Route path="/" component={UserManager}/>
             <Route path="login" component={Login}/>
-            <Route path="user-manager/:filterId/:userId" component={UserManager}/>
-            <Route path="user-manager/:filterId" component={UserManager}/>
             <Route path="user-manager" component={UserManager}/>
             <Route path="explore" component={DataExplorer}/>
           </Router>

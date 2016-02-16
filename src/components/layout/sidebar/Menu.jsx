@@ -23,7 +23,7 @@ class Menu extends React.Component {
 
 var styles = {
   logo: {
-    backgroundImage: 'url(/img/logo_white.png)',
+    backgroundImage: 'url(./img/logo_white.png)',
     backgroundSize: '20px 20px',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: '10px 10px',

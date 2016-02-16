@@ -4,6 +4,8 @@ import {Link} from 'react-router';
 
 import MenuItem from './MenuItem';
 
+import {MdInsertChart, MdTimeline, MdSupervisorAccount, MdSettings} from 'react-icons';
+
 @Radium
 class Menu extends React.Component {
   render() {
@@ -11,10 +13,10 @@ class Menu extends React.Component {
       <div>
         <Link to="/" style={styles.logo}>Coral Project</Link>
         <ul>
-          <MenuItem name="Dashboard" target="/" icon="fa-area-chart" />
-          <MenuItem name="Explore" target="/explore" icon="fa-bar-chart" />
-          <MenuItem name="User Manager" target="/user-manager" icon="fa-users" />
-          <MenuItem name="Settings" target="/settings" icon="fa-cog" />
+          {/*<MenuItem name="Dashboard" target="/" icon={<MdInsertChart />} />*/}
+          {/*<MenuItem name="Explore" target="/explore" icon={<MdTimeline />} />*/}
+          <MenuItem name="User Manager" target="/user-manager" icon={<MdSupervisorAccount />} />
+          {/*<MenuItem name="Settings" target="/settings" icon={<MdSettings />} />*/}
         </ul>
       </div>
     );
@@ -23,7 +25,7 @@ class Menu extends React.Component {
 
 var styles = {
   logo: {
-    backgroundImage: 'url(./img/logo_white.png)',
+    backgroundImage: 'url(/img/logo_white.png)',
     backgroundSize: '20px 20px',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: '10px 10px',

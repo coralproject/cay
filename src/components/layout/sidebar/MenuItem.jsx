@@ -4,15 +4,13 @@ import {Link} from 'react-router';
 
 import color from 'color';
 
-import Icon from '../../Icon';
-
 @Radium
 class MenuItem extends React.Component {
   render() {
     return (
       <li style={styles.base}>
         <Link style={styles.link} to={this.props.target}>
-          <Icon size="small" name={this.props.icon} />
+          {this.props.icon}
           <span>{this.props.name}</span>
           <i></i>
         </Link>
@@ -23,6 +21,7 @@ class MenuItem extends React.Component {
 
 const styles = {
   base: {
+    padding: 10,
     backgroundColor: 'transparent',
     ':hover': {
       backgroundColor: color('#F77160').darken(0.1).hexString()

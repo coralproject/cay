@@ -1,10 +1,11 @@
 import React from 'react';
 import Radium from 'radium';
 // import _ from 'lodash';
-import Flex from './layout/Flex';
+import Flex from '../layout/Flex';
+
 // import { connect } from 'react-redux';
 // import { FOO } from '../actions';
-import Slider from './Slider';
+import Slider from '../Slider';
 
 const style = {
   symbol: {
@@ -78,7 +79,7 @@ class Filter extends React.Component {
         {/* will be a component */}
         <p style={{fontSize: 24, color: 'rgb(100,100,100)', marginBottom: 10}}>{this.props.fieldName}  </p>
 
-        <Slider/>
+        <Slider  withBars/>
         <span style={style.symbol} onClick={this.handleSymbolClick.bind(this)}>{'>='}</span>
         <input
           onFocus={this.pop_Slider}

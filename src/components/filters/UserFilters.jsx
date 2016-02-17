@@ -87,16 +87,16 @@ export default class UserFilters extends React.Component {
 
         {this.getSpecific()}
 
-        <p>Id</p>
         <ObjectIdPicker />
-        <p>name</p>
+        <hr />
         <TextField label="user name" />
-        <p>status</p>
+        <hr />
         <TextField label="status" />
-        <p>last login</p>
-        <FilterDate ref="lastLogin" />
-        <p>Member since</p>
-        <FilterDate ref="memberSince" />
+        <hr />
+        <FilterDate ref="lastLogin" fieldName="Last Login" />
+
+        <FilterDate ref="memberSince" fieldName="Member Since" />
+
         <p>Tags</p>
         <Select multi={true} options={this.getTags()} />
 

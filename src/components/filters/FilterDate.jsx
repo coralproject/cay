@@ -14,7 +14,8 @@ export default class FilterDate extends React.Component {
     start: PropTypes.string,
     end: PropTypes.string,
     absMin: PropTypes.string,
-    absMax: PropTypes.string
+    absMax: PropTypes.string,
+    fieldName: PropTypes.string.isRequired
   }
 
   constructor(props) {
@@ -47,7 +48,7 @@ export default class FilterDate extends React.Component {
 
     return (
       <Card style={[styles.base, this.props.style]}>
-        <CardHeader>Select Date</CardHeader>
+        <CardHeader>{this.props.fieldName}</CardHeader>
 
         <Slider
           min={this.state.absMin.unix()}

@@ -14,7 +14,7 @@ export default class ObjectIdPicker extends React.Component {
 
   render() {
     return (
-      <TextField onChange={this.validateInput} label="ObjectId string" />
+      <TextField onChange={this.validateInput.bind(this)} label="ObjectId string" />
     );
   }
 }

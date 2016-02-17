@@ -33,7 +33,7 @@ export default Radium(CardHeader);
 
 const styles = {
   base: {
-    height: 72,
+    height: 32,
     position: 'relative',
     lineHeight: '24px'
   },

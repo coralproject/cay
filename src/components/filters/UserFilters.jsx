@@ -1,7 +1,7 @@
 import React from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
-import {fetchAllTags} from '../../actions';
+import {fetchAllTags, fetchAuthorsAndSections} from '../../actions';
 
 import Card from '../cards/Card';
 import CardHeader from '../cards/CardHeader';
@@ -18,11 +18,15 @@ export default class UserFilters extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {specific: 'anything'};
+    this.state = {
+      selectedBreakdown: 'anything',
+      specificBreakdowns: []
+    };
   }
 
   componentWillMount() {
     this.props.dispatch(fetchAllTags());
+    this.props.dispatch(fetchAuthorsAndSections());
   }
 
   makeQuery() {
@@ -36,7 +40,7 @@ export default class UserFilters extends React.Component {
   }
 
   getSpecific() {
-    switch (this.state.specific) {
+    switch (this.state.selectedBreakdown) {
     case 'section':
       return (
         <div>
@@ -67,7 +71,10 @@ export default class UserFilters extends React.Component {
   }
 
   updateBreakdown(breakdown) {
-    this.setState({selectedBreakdown: breakdown, specificBreakdowns: []});
+    this.setState({
+      selectedBreakdown: breakdown,
+      specificBreakdowns: []
+    });
   }
 
   render() {
@@ -77,7 +84,8 @@ export default class UserFilters extends React.Component {
 
         <p>I want to know about:</p>
         <Select
-          ref="specific"
+          ref="breakdown"
+          value={this.state.selectedBreakdown}
           onChange={this.updateBreakdown.bind(this)}
           options={[
             {label: 'anything', value: 'anything'},
@@ -88,11 +96,11 @@ export default class UserFilters extends React.Component {
         {this.getSpecific()}
 
         <ObjectIdPicker />
-        <hr />
+        <div className="clear" />
         <TextField label="user name" />
-        <hr />
+        <div className="clear" />
         <TextField label="status" />
-        <hr />
+        <div className="clear" />
         <FilterDate ref="lastLogin" fieldName="Last Login" />
 
         <FilterDate ref="memberSince" fieldName="Member Since" />

@@ -8,6 +8,7 @@ const initialState = {
   pipelines: [],
   users: [],
   tags: [],
+  sections: [],
   authors: [],
   comments: [],
   userDetailComments: null,
@@ -69,9 +70,10 @@ const pipelines = (state = initialState, action) => {
     return Object.assign({}, state, {loadingTags: false, tagError: 'Failed to load tags ' + action.err});
 
   case types.RECEIVE_AUTHORS_AND_SECTIONS:
+    console.log(action.data.results[0].Docs[0].data);
     return Object.assign({}, state, {
       sections: Object.keys(action.data.results[0].Docs[0].data.sections),
-      authors: Object.keys(action.data.reults[0].Docs[0].data.authors)
+      authors: Object.keys(action.data.results[0].Docs[0].data.authors)
     });
 
   default:

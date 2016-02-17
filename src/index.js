@@ -20,7 +20,7 @@ const store = configureStore();
 require('../css/reset.css');
 require('../css/global.css');
 
-require('../css/react-select.css');
+require('../node_modules/react-select/dist/react-select.css');
 
 require('../fonts/glyphicons-halflings-regular.woff');
 

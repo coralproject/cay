@@ -8,6 +8,8 @@ const initialState = {
   pipelines: [],
   users: [],
   tags: [],
+  authors: [],
+  comments: [],
   userDetailComments: null,
   loadingUserComments: false
 };
@@ -65,6 +67,12 @@ const pipelines = (state = initialState, action) => {
 
   case types.ALL_TAGS_REQUEST_ERROR:
     return Object.assign({}, state, {loadingTags: false, tagError: 'Failed to load tags ' + action.err});
+
+  case types.RECEIVE_AUTHORS_AND_SECTIONS:
+    return Object.assign({}, state, {
+      sections: Object.keys(action.data.results[0].Docs[0].data.sections),
+      authors: Object.keys(action.data.reults[0].Docs[0].data.authors)
+    });
 
   default:
     // console.log('no reducer matches:', action.type);

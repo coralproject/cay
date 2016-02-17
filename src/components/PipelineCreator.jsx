@@ -170,8 +170,6 @@ export default class PipelineCreator extends React.Component {
 
         { this.props.onlyUser ? this.getSpecific('user') : this.getSpecific(this.state.selectedBreakdown) }
 
-        <FilterDate/>
-
         <FilterNumbersContainer/>
 
         {FilterFactory.makeFilters('user')}

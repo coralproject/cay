@@ -1,29 +1,31 @@
 import React from 'react';
 import Radium from 'radium';
 // import _ from 'lodash';
-import Flex from '../layout/Flex';
+// import Flex from '../layout/Flex';
 
-// import { connect } from 'react-redux';
-// import { FOO } from '../actions';
 import Slider from '../Slider';
 
 const style = {
-  symbol: {
-    padding: '8px 10px',
-    backgroundColor: 'rgb(240,240,240)',
-    margin: 5,
-    color: 'rgb(100,100,100)',
-    borderRadius: 3,
-    fontWeight: 700
-  },
+  // symbol: {
+  //   padding: '8px 10px',
+  //   backgroundColor: 'rgb(240,240,240)',
+  //   margin: 5,
+  //   color: 'rgb(100,100,100)',
+  //   borderRadius: 3,
+  //   fontWeight: 300
+  // },
   sliderInput: {
-    backgroundColor: 'rgb(240, 240, 240)',
+    backgroundColor: 'rgb(245, 245, 245)',
     border: 'none',
     textAlign: 'center',
     padding: '10px 0px',
-    fontSize: 16,
-    width: 100,
-    borderRadius: 4
+    width: 50,
+    fontSize: 14,
+    margin: '0px 5px',
+    borderRadius: 4,
+    // 'focus': {
+    //   outline: 0
+    // }
   }
 };
 
@@ -36,8 +38,10 @@ class Filter extends React.Component {
     super(props);
     this.state = {
       symbol: 'GTLT',
-      gt: null,
-      lt: null,
+      absoluteMin: 0,
+      absoluteMax: 1000,
+      userMin: 30,
+      userMax: 800,
       equals: null
     };
   }
@@ -46,14 +50,10 @@ class Filter extends React.Component {
     // dispatch: React.PropTypes.func,
     params: React.PropTypes.object,
     /* component api */
-    min: React.PropTypes.number,
-    max: React.PropTypes.number,
     getValues: React.PropTypes.func
   }
   static defaultProps = {
-    fieldName: 'number of replies',
-    min: 0,
-    max: 1000
+    fieldName: 'number of replies'
   }
 
   handleSymbolClick(){
@@ -61,42 +61,72 @@ class Filter extends React.Component {
     this.setState({symbol: newSymbol});
   }
   handleGTChanged(e) {
-    this.setState({gt: e.target.value});
+    this.setState({userMin: e.target.value});
   }
   handleLTChanged(e) {
-    this.setState({lt: e.target.value});
+    this.setState({userMax: e.target.value});
   }
-  handleEqualChanged(e) {
-    this.setState({equals: e.target.value});
+  // handleEqualChanged(e) {
+  //   this.setState({equals: e.target.value});
+  // }
+  handleGTKeyDown(e) {
+    if (e.which === 38) {
+      this.setState({
+        userMin: this.state.userMin += 1
+      });
+    }
+    if (e.which === 40) {
+      this.setState({
+        userMin: this.state.userMin -= 1
+      });
+    }
   }
-  pop_Slider(e) {
-    console.log('focus', e.target);
+  handleLTKeyDown(e) {
+    if (e.which === 38) {
+      this.setState({
+        userMax: this.state.userMax += 1
+      });
+    }
+    if (e.which === 40) {
+      this.setState({
+        userMax: this.state.userMax -= 1
+      });
+    }
   }
-
+  updateSlider(values) {
+    this.setState({
+      userMin: values[0],
+      userMax: values[1]
+    });
+  }
   renderGTLT() {
     return (
       <div>
-        {/* will be a component */}
-        <p style={{fontSize: 24, color: 'rgb(100,100,100)', marginBottom: 10}}>{this.props.fieldName}  </p>
-
-        <Slider  withBars/>
-        <span style={style.symbol} onClick={this.handleSymbolClick.bind(this)}>{'>='}</span>
+        <span> is </span>
+        <span style={style.symbol} onClick={this.handleSymbolClick.bind(this)}>{'greater than'}</span>
         <input
           onFocus={this.pop_Slider}
           style={style.sliderInput}
+          onKeyDown={this.handleGTKeyDown.bind(this)}
           onChange={this.handleGTChanged.bind(this)}
-          value={this.state.gt || this.props.min}/>
-
-        <span style={{margin: "0px 10px"}}> AND </span>
-
-        {/* will be a component */}
-        {/* this.props.fieldName*/}
-        <span style={style.symbol} onClick={this.handleSymbolClick.bind(this)}>{'<='}</span>
+          value={this.state.userMin}/>
+        <span> and </span>
+        <span style={style.symbol} onClick={this.handleSymbolClick.bind(this)}>{'less than'}</span>
         <input
           onFocus={this.pop_Slider}
           style={style.sliderInput}
+          onKeyDown={this.handleLTKeyDown.bind(this)}
           onChange={this.handleLTChanged.bind(this)}
-          value={this.state.lt || this.props.max}/>
+          value={this.state.userMax}/>
+        <div style={{marginTop: 10}}>
+          <Slider
+            min={this.state.absoluteMin}
+            max={this.state.absoluteMax}
+            defaultValue={[this.state.userMin, this.state.userMax]}
+            value={[this.state.userMin, this.state.userMax]}
+            onChange={this.updateSlider.bind(this)}
+            withBars/>
+        </div>
       </div>
     );
   }
@@ -117,6 +147,7 @@ class Filter extends React.Component {
   render() {
     return (
       <div style={{padding: 10, border: 0, backgroundColor: 'white', borderRadius: 3, width: 400}}>
+        <p style={{fontSize: 24, color: 'rgb(100,100,100)'}}>{this.props.fieldName}  </p>
         {
           this.state.symbol === 'GTLT' ?
             this.renderGTLT() :

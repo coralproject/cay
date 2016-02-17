@@ -10,6 +10,8 @@ import FilterNumbersContainer from './filters/FilterNumbersContainer';
 
 import FilterDate from './filters/FilterDate';
 
+import FilterFactory from './filters/FilterFactory';
+
 @Radium
 export default class PipelineCreator extends React.Component {
 
@@ -171,6 +173,9 @@ export default class PipelineCreator extends React.Component {
         <FilterDate/>
 
         <FilterNumbersContainer/>
+
+        {FilterFactory.makeFilters('user')}
+
         <div style={{marginTop: 20}}>
           <Button
             category="primary"

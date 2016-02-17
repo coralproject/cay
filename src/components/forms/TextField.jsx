@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import settings from '../../settings';
 
@@ -11,8 +11,13 @@ export default class TextField extends React.Component {
     this.state = {value: '', focused: false};
   }
 
+  static propTypes = {
+    onChange: PropTypes.func
+  }
+
   handleChange(event) {
     this.setState({value: event.target.value});
+    this.props.onChange(event.target.value);
   }
 
   handleFocus(event) {

@@ -35,6 +35,10 @@ export const USER_SELECTED = 'USER_SELECTED';
 
 export const FORMULA_CREATED = 'FORMULA_CREATED';
 
+export const REQUEST_ALL_TAGS = 'REQUEST_ALL_TAGS';
+export const RECEIVE_ALL_TAGS = 'RECEIVE_ALL_TAGS';
+export const ALL_TAGS_REQUEST_ERROR = 'ALL_TAGS_REQUEST_ERROR';
+
 /* config */
 
 var getInit = (method) => {
@@ -51,7 +55,6 @@ var getInit = (method) => {
 };
 
 const apiPrefix = '1.0/'; // maybe later we'll be at api 2.0
-const apiSuffix = '/exec';
 
 export const selectPipeline = (pipeline) => {
   return {
@@ -406,8 +409,8 @@ export const createFormula = (filterSettings) => {
   return (dispatch) => {
     dispatch(createPipelineValueChanged(computedQuery));
 
-  }
-}
+  };
+};
 
 
 const requestControls = () => {
@@ -468,4 +471,45 @@ export const userSelected = (user) => {
     type: USER_SELECTED,
     user
   };
+};
+
+const receiveAllTags = (tags) => {
+  return {
+    type: RECEIVE_ALL_TAGS,
+    tags
+  };
+};
+
+const requestAllTags = () => {
+  return {
+    type: REQUEST_ALL_TAGS
+  };
+};
+
+const allTagsRequestError = (err) => {
+  return {
+    type: ALL_TAGS_REQUEST_ERROR,
+    err
+  };
+};
+
+export const fetchAllTags = () => {
+  const url = window.pillarHost + '/api/tags';
+
+  return (dispatch, getState) => {
+    if (!getState().loadingTags) {
+      dispatch(requestAllTags());
+
+      fetch(url)
+        .then(res => res.json())
+        .then(json => {
+          dispatch(receiveAllTags(json));
+        }).catch(err => {
+          dispatch(allTagsRequestError(err));
+        });
+    } else {
+      return {type: 'NOOP'};
+    }
+  };
+
 };

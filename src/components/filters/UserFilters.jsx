@@ -45,17 +45,31 @@ export default class UserFilters extends React.Component {
       return (
         <div>
           <p>By Section</p>
-          <Select multi={true} options={this.getSections()} />
+          <Select
+            multi={true}
+            options={this.getSections()}
+            value={this.state.specificBreakdowns.join(',')}
+            onChange={this.setSpecificBreakdowns.bind(this)}
+          />
         </div>
       );
     case 'author':
       return (
         <div>
           <p>By Author</p>
-          <Select multi={true} options={this.getAuthors()} />
+          <Select
+            multi={true}
+            options={this.getAuthors()}
+            value={this.state.specificBreakdowns.join(',')}
+            onChange={this.setSpecificBreakdowns.bind(this)}
+          />
         </div>
       );
     }
+  }
+
+  setSpecificBreakdowns(values) {
+    this.setState({specificBreakdowns: values.split(',')});
   }
 
   getAuthors() {

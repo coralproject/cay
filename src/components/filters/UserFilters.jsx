@@ -3,9 +3,10 @@ import Radium from 'radium';
 import {connect} from 'react-redux';
 import {fetchAllTags} from '../../actions';
 
+import Card from '../cards/Card';
+import CardHeader from '../cards/CardHeader';
 import ObjectIdPicker from '../forms/ObjectIdPicker';
 import TextField from '../forms/TextField';
-import DatePicker from 'react-datepicker';
 import Select from 'react-select';
 import FilterDate from './FilterDate';
 
@@ -29,7 +30,9 @@ export default class UserFilters extends React.Component {
 
   render() {
     return (
-      <div>
+      <Card>
+        <CardHeader>UserFilters</CardHeader>
+
         <p>Id</p>
         <ObjectIdPicker />
         <p>name</p>
@@ -42,7 +45,7 @@ export default class UserFilters extends React.Component {
         <FilterDate ref="memberSince" />
         <p>Tags</p>
         <Select multi={true} options={this.getTags()} />
-      </div>
+      </Card>
     );
   }
 }

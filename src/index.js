@@ -64,6 +64,6 @@ fetch('./config.json')
   })
   .catch(err => {
 
-    console.error('something blew up', err);
-    window.body.innerHTML = 'you need to create ./config.json, or it is invalid JSON';
+    console.error('Error while fetching config.json: ', err);
+    document.body.innerHTML = 'you need to create ./config.json, or it is invalid JSON';
   });

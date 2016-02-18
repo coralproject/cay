@@ -2,16 +2,17 @@
 
 import React from 'react';
 import Radium from 'radium';
-import {createFormula} from '../actions';
+import {connect} from 'react-redux';
+import {createFormula, makeQueryFromState} from '../actions';
 import Select from 'react-select';
 import TextField from './forms/TextField';
 import Button from './Button';
-import FilterNumbersContainer from './filters/FilterNumbersContainer';
 
 import FilterDate from './filters/FilterDate';
 
 import FilterFactory from './filters/FilterFactory';
 
+@connect(state => state.filters)
 @Radium
 export default class PipelineCreator extends React.Component {
 
@@ -34,7 +35,7 @@ export default class PipelineCreator extends React.Component {
   }
 
   handleCreatePipeline() {
-    this.props.dispatch(createFormula('FILTER_FIELD_VALUES_GO_HERE'));
+    this.props.dispatch(makeQueryFromState('user'));
   }
 
   getTargets(target) {

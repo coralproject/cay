@@ -1,5 +1,6 @@
 import React from 'react';
 import Radium from 'radium';
+import {connect} from 'react-redux';
 // import _ from 'lodash';
 // import Flex from '../layout/Flex';
 
@@ -29,22 +30,22 @@ const style = {
   }
 };
 
-// @connect(state => {
-//   return state.FOO;
-// })
+@connect(state => state.filters)
 @Radium
-class Filter extends React.Component {
+export default class FilterNumbers extends React.Component {
   constructor(props) {
     super(props);
+    console.log('FilterNumbers', props);
     this.state = {
       symbol: 'GTLT',
-      absoluteMin: 0,
-      absoluteMax: 1000,
-      userMin: 30,
-      userMax: 800,
+      absoluteMin: props.absoluteMin || 0,
+      absoluteMax: props.absoluteMax || 1000,
+      userMin: props.userMin || props.absoluteMin || 0,
+      userMax: props.userMax || props.absoluteMax || 800,
       equals: null
     };
   }
+
   static propTypes = {
     /* react */
     // dispatch: React.PropTypes.func,
@@ -54,6 +55,10 @@ class Filter extends React.Component {
   }
   static defaultProps = {
     fieldName: 'UNDEFINED___'
+  }
+
+  componentWillMount() {
+    console.log('componentWillMount', this.props, this.state);
   }
 
   handleSymbolClick(){
@@ -122,6 +127,7 @@ class Filter extends React.Component {
           <Slider
             min={this.state.absoluteMin}
             max={this.state.absoluteMax}
+            step={this.state.absoluteMax - this.state.absoluteMin <= 5 ? 0.01 : 1}
             defaultValue={[this.state.userMin, this.state.userMax]}
             value={[this.state.userMin, this.state.userMax]}
             onChange={this.updateSlider.bind(this)}
@@ -157,8 +163,6 @@ class Filter extends React.Component {
     );
   }
 }
-
-export default Filter;
 
 /*
 

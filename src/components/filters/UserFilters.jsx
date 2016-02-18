@@ -7,8 +7,7 @@ import Card from '../cards/Card';
 import CardHeader from '../cards/CardHeader';
 import ObjectIdPicker from '../forms/ObjectIdPicker';
 import Select from 'react-select';
-import FilterNumber from './FilterNumber';
-import FilterNumbersContainer from './FilterNumbersContainer';
+import FilterNumbers from './FilterNumbers';
 import FilterDate from './FilterDate';
 import FilterString from './FilterString';
 
@@ -118,13 +117,19 @@ export default class UserFilters extends React.Component {
         <p>Tags</p>
         <Select multi={true} options={this.getTags()} />
 
-        <FilterNumbersContainer fieldName="stats.accept_ratio" />
+        <FilterNumbers
+          absoluteMin={0}
+          absoluteMax={1}
+          fieldName="stats.accept_ratio" />
 
-        <FilterNumbersContainer fieldName="stats.comments.total"/>
+        <FilterNumbers fieldName="stats.comments.total"/>
 
-        <FilterNumbersContainer fieldName="stats.replies"/>
+        <FilterNumbers fieldName="stats.replies"/>
 
-        <FilterNumbersContainer fieldName="stats.replies_per_comment"/>
+        <FilterNumbers
+          absoluteMin={0}
+          absoluteMax={1}
+          fieldName="stats.replies_per_comment"/>
 
         {/* some sort operator? */}
 

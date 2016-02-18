@@ -39,6 +39,9 @@ export const REQUEST_ALL_TAGS = 'REQUEST_ALL_TAGS';
 export const RECEIVE_ALL_TAGS = 'RECEIVE_ALL_TAGS';
 export const ALL_TAGS_REQUEST_ERROR = 'ALL_TAGS_REQUEST_ERROR';
 
+export const FILTER_CHANGED = 'FILTER_CHANGED';
+export const CREATE_QUERY = 'CREATE_QUERY';
+
 /* config */
 
 var getInit = (method) => {
@@ -512,4 +515,20 @@ export const fetchAllTags = () => {
     }
   };
 
+};
+
+export const filterChanged = (fieldName, value) => {
+  console.log(FILTER_CHANGED, fieldName, value);
+  return {
+    type: FILTER_CHANGED,
+    fieldName,
+    value
+  };
+};
+
+export const makeQueryFromState = (type) => {
+  return (dispatch, getState) => {
+    // make a query from the current state
+    console.log(type, getState());
+  };
 };

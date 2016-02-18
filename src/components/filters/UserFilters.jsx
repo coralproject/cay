@@ -6,11 +6,11 @@ import {fetchAllTags, fetchAuthorsAndSections} from '../../actions';
 import Card from '../cards/Card';
 import CardHeader from '../cards/CardHeader';
 import ObjectIdPicker from '../forms/ObjectIdPicker';
-import TextField from '../forms/TextField';
 import Select from 'react-select';
 import FilterNumber from './FilterNumber';
 import FilterNumbersContainer from './FilterNumbersContainer';
 import FilterDate from './FilterDate';
+import FilterString from './FilterString';
 
 @connect(state => state.pipelines)
 @Radium
@@ -27,10 +27,6 @@ export default class UserFilters extends React.Component {
   componentWillMount() {
     this.props.dispatch(fetchAllTags());
     this.props.dispatch(fetchAuthorsAndSections());
-  }
-
-  makeQuery() {
-
   }
 
   getTags() {
@@ -111,9 +107,9 @@ export default class UserFilters extends React.Component {
 
         <ObjectIdPicker />
         <div className="clear" />
-        <TextField label="user name" />
+        <FilterString fieldName="user_name" />
         <div className="clear" />
-        <TextField label="status" />
+        <FilterString fieldName="status" />
         <div className="clear" />
         <FilterDate ref="lastLogin" fieldName="Last Login" />
 
@@ -122,13 +118,13 @@ export default class UserFilters extends React.Component {
         <p>Tags</p>
         <Select multi={true} options={this.getTags()} />
 
-        <FilterNumbersContainer fieldName="Comment Accept Ratio" />
+        <FilterNumbersContainer fieldName="stats.accept_ratio" />
 
-        <FilterNumbersContainer fieldName="Total Comments"/>
+        <FilterNumbersContainer fieldName="stats.comments.total"/>
 
-        <FilterNumbersContainer fieldName="Replied to Ratio"/>
+        <FilterNumbersContainer fieldName="stats.replies"/>
 
-        <FilterNumbersContainer fieldName="Replies per Comment"/>
+        <FilterNumbersContainer fieldName="stats.replies_per_comment"/>
 
         {/* some sort operator? */}
 

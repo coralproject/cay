@@ -91,7 +91,7 @@ export default class UserFilters extends React.Component {
     console.log()
 
     return (
-      <Card>
+      <div>
         <CardHeader>UserFilters</CardHeader>
 
         <p>I want to know about:</p>
@@ -149,8 +149,7 @@ export default class UserFilters extends React.Component {
           fieldName="stats.replies_per_comment"/>
 
         {/* some sort operator? */}
-
-      </Card>
+      </div>
     );
   }
 }

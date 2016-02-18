@@ -118,8 +118,8 @@ export default class UserFilters extends React.Component {
         <Select multi={true} options={this.getTags()} />
 
         <FilterNumbers
-          absoluteMin={0}
-          absoluteMax={1}
+          min={0}
+          max={1}
           fieldName="stats.accept_ratio" />
 
         <FilterNumbers fieldName="stats.comments.total"/>
@@ -127,8 +127,8 @@ export default class UserFilters extends React.Component {
         <FilterNumbers fieldName="stats.replies"/>
 
         <FilterNumbers
-          absoluteMin={0}
-          absoluteMax={1}
+          min={0}
+          max={1}
           fieldName="stats.replies_per_comment"/>
 
         {/* some sort operator? */}

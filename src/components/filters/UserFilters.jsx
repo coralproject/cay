@@ -11,7 +11,7 @@ import FilterNumbers from './FilterNumbers';
 import FilterDate from './FilterDate';
 import FilterString from './FilterString';
 
-@connect(state => state.pipelines)
+@connect(state => state.filters)
 @Radium
 export default class UserFilters extends React.Component {
 
@@ -87,6 +87,9 @@ export default class UserFilters extends React.Component {
   }
 
   render() {
+
+    console.log()
+
     return (
       <Card>
         <CardHeader>UserFilters</CardHeader>
@@ -120,15 +123,29 @@ export default class UserFilters extends React.Component {
         <FilterNumbers
           min={0}
           max={1}
+          userMin={this.props['stats.accept_ratio'].userMin}
+          userMax={this.props['stats.accept_ratio'].userMax}
           fieldName="stats.accept_ratio" />
 
-        <FilterNumbers fieldName="stats.comments.total"/>
+        <FilterNumbers
+          min={0}
+          max={10000}
+          userMin={this.props['stats.comments.total'].userMin}
+          userMax={this.props['stats.comments.total'].userMax}
+          fieldName="stats.comments.total"/>
 
-        <FilterNumbers fieldName="stats.replies"/>
+        <FilterNumbers
+          min={0}
+          max={1000}
+          userMin={this.props['stats.replies'].userMin}
+          userMax={this.props['stats.replies'].userMax}
+          fieldName="stats.replies"/>
 
         <FilterNumbers
           min={0}
           max={1}
+          userMin={this.props['stats.replies_per_comment'].userMin}
+          userMax={this.props['stats.replies_per_comment'].userMax}
           fieldName="stats.replies_per_comment"/>
 
         {/* some sort operator? */}

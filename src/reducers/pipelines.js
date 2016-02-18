@@ -7,9 +7,6 @@ const initialState = {
   selectedUser: null,
   pipelines: [],
   users: [],
-  tags: [],
-  sections: [],
-  authors: [],
   comments: [],
   userDetailComments: null,
   loadingUserComments: false
@@ -59,21 +56,6 @@ const pipelines = (state = initialState, action) => {
 
   case types.CLEAR_USER_DETAIL_COMMENTS:
     return Object.assign({}, state, {userDetailComments: null});
-
-  case types.REQUEST_ALL_TAGS:
-    return Object.assign({}, state, {loadingTags: true});
-
-  case types.RECEIVE_ALL_TAGS:
-    return Object.assign({}, state, {loadingTags: false, tags: action.tags});
-
-  case types.ALL_TAGS_REQUEST_ERROR:
-    return Object.assign({}, state, {loadingTags: false, tagError: 'Failed to load tags ' + action.err});
-
-  case types.RECEIVE_AUTHORS_AND_SECTIONS:
-    return Object.assign({}, state, {
-      sections: Object.keys(action.data.results[0].Docs[0].data.sections),
-      authors: Object.keys(action.data.results[0].Docs[0].data.authors)
-    });
 
   default:
     // console.log('no reducer matches:', action.type);

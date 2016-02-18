@@ -38,10 +38,7 @@ export default class FilterNumbers extends React.Component {
     super(props);
     this.state = {
       symbol: 'GTLT',
-      min: props.min || 0,
-      max: props.max || 1000,
-      userMin: props.userMin || props.min || 0,
-      userMax: props.userMax || props.max || 800,
+      step: props.userMax - props.userMin <= 5 ? 0.01 : 1,
       equals: null
     };
   }
@@ -62,43 +59,40 @@ export default class FilterNumbers extends React.Component {
     this.setState({symbol: newSymbol});
   }
   handleGTChanged(e) {
-    this.setState({userMin: e.target.value});
+    console.log('handleGTChanged', e);
+    this.props.dispatch(filterChanged(this.props.fieldName, {userMin: e.target.value}));
   }
   handleLTChanged(e) {
-    this.setState({userMax: e.target.value});
+    console.log('handleLTChanged', e);
+    this.props.dispatch(filterChanged(this.props.fieldName, {userMax: e.target.value}));
   }
   // handleEqualChanged(e) {
   //   this.setState({equals: e.target.value});
   // }
   handleGTKeyDown(e) {
+    let userMin;
     if (e.which === 38) {
-      this.setState({
-        userMin: this.state.userMin += 1
-      });
+      userMin = Math.min(this.props.userMin + this.state.step, this.props.max);
+      this.props.dispatch(filterChanged(this.props.fieldName, {userMin, userMax: this.props.userMax}));
     }
     if (e.which === 40) {
-      this.setState({
-        userMin: this.state.userMin -= 1
-      });
+      userMin = Math.max(this.props.userMin - this.state.step, this.props.min);
+      this.props.dispatch(filterChanged(this.props.fieldName, {userMin, userMax: this.props.userMax}));
     }
   }
   handleLTKeyDown(e) {
+    let userMax;
     if (e.which === 38) {
-      this.setState({
-        userMax: this.state.userMax += 1
-      });
+      userMax = Math.min(this.props.userMax + this.state.step, this.props.max);
+      this.props.dispatch(filterChanged(this.props.fieldName, {userMax, userMin: this.props.userMin}));
     }
     if (e.which === 40) {
-      this.setState({
-        userMax: this.state.userMax -= 1
-      });
+      userMax = Math.max(this.props.userMax - this.state.step, this.props.min);
+      this.props.dispatch(filterChanged(this.props.fieldName, {userMax, userMin: this.props.userMin}));
     }
   }
   updateSlider(values) {
-    this.setState({
-      userMin: values[0],
-      userMax: values[1]
-    });
+    this.props.dispatch(filterChanged(this.props.fieldName, {userMin: values[0], userMax: values[1]}));
   }
   renderGTLT() {
     return (
@@ -110,7 +104,7 @@ export default class FilterNumbers extends React.Component {
           style={style.sliderInput}
           onKeyDown={this.handleGTKeyDown.bind(this)}
           onChange={this.handleGTChanged.bind(this)}
-          value={this.state.userMin}/>
+          value={this.props.userMin}/>
         <span> and </span>
         <span style={style.symbol} onClick={this.handleSymbolClick.bind(this)}>{'less than'}</span>
         <input
@@ -118,14 +112,14 @@ export default class FilterNumbers extends React.Component {
           style={style.sliderInput}
           onKeyDown={this.handleLTKeyDown.bind(this)}
           onChange={this.handleLTChanged.bind(this)}
-          value={this.state.userMax}/>
+          value={this.props.userMax}/>
         <div style={{marginTop: 10}}>
           <Slider
-            min={this.state.min}
-            max={this.state.max}
-            step={this.state.max - this.state.min <= 5 ? 0.01 : 1}
-            defaultValue={[this.state.userMin, this.state.userMax]}
-            value={[this.state.userMin, this.state.userMax]}
+            min={this.props.min}
+            max={this.props.max}
+            step={this.state.step}
+            defaultValue={[this.props.userMin, this.props.userMax]}
+            value={[this.props.userMin, this.props.userMax]}
             onChange={this.updateSlider.bind(this)}
             withBars/>
         </div>

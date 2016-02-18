@@ -517,12 +517,12 @@ export const fetchAllTags = () => {
 
 };
 
-export const filterChanged = (fieldName, value) => {
-  console.log(FILTER_CHANGED, fieldName, value);
+export const filterChanged = (fieldName, data) => {
+  console.log(FILTER_CHANGED, fieldName, data);
   return {
     type: FILTER_CHANGED,
     fieldName,
-    value
+    data
   };
 };
 

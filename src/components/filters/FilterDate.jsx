@@ -16,18 +16,18 @@ export default class FilterDate extends React.Component {
   static propTypes = {
     start: PropTypes.string,
     end: PropTypes.string,
-    absMin: PropTypes.string,
-    absMax: PropTypes.string,
+    min: PropTypes.string,
+    max: PropTypes.string,
     fieldName: PropTypes.string.isRequired
   }
 
   constructor(props) {
     super(props);
     this.state = {
-      absMin: moment('2003-05-13'),
-      absMax: moment('2015-01-01'),
-      start: moment('2013-01-01'),
-      end: moment('2013-01-02')
+      min: moment(this.props.min || '2003-05-13'),
+      max: moment(this.props.max || '2015-01-01'),
+      start: moment(this.props.start || '2013-01-01'),
+      end: moment(this.props.end || '2013-09-01')
     };
   }
 
@@ -55,8 +55,8 @@ export default class FilterDate extends React.Component {
         <CardHeader>{this.props.fieldName}</CardHeader>
 
         <Slider
-          min={this.state.absMin.unix()}
-          max={this.state.absMax.unix()}
+          min={this.state.min.unix()}
+          max={this.state.max.unix()}
           defaultValue={[this.state.start.unix(), this.state.end.unix()]}
           value={[this.state.start.unix(), this.state.end.unix()]}
           onChange={this.updateSlider.bind(this)}

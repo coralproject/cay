@@ -1,6 +1,7 @@
 import React from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
+import {filterChanged} from '../../actions';
 // import _ from 'lodash';
 // import Flex from '../layout/Flex';
 
@@ -35,7 +36,6 @@ const style = {
 export default class FilterNumbers extends React.Component {
   constructor(props) {
     super(props);
-    console.log('FilterNumbers', props);
     this.state = {
       symbol: 'GTLT',
       min: props.min || 0,
@@ -55,10 +55,6 @@ export default class FilterNumbers extends React.Component {
   }
   static defaultProps = {
     fieldName: 'UNDEFINED___'
-  }
-
-  componentWillMount() {
-    console.log('componentWillMount', this.props, this.state);
   }
 
   handleSymbolClick(){

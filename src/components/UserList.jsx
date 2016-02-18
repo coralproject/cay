@@ -38,12 +38,14 @@ export default class UserList extends React.Component {
 
   render() {
     return (
+    <div>
+      <Heading size="small" style={styles.heading}>
+        User List
+      </Heading>
       <Card style={[styles.base, this.props.style]}>
-        <Heading size="small" style={styles.heading}>
-          User List
-        </Heading>
         {this.props.users.length ? this.getUserList(this.props.users) : 'Loading...'}
       </Card>
+    </div>
     );
   }
 }

@@ -5,6 +5,9 @@ import {filterChanged} from '../../actions';
 // import _ from 'lodash';
 // import Flex from '../layout/Flex';
 
+import Card from '../cards/Card';
+import CardHeader from '../cards/CardHeader';
+
 import Slider from '../Slider';
 
 const style = {
@@ -24,7 +27,7 @@ const style = {
     width: 50,
     fontSize: 14,
     margin: '0px 5px',
-    borderRadius: 4,
+    borderRadius: 4
     // 'focus': {
     //   outline: 0
     // }
@@ -142,14 +145,14 @@ export default class FilterNumbers extends React.Component {
   }
   render() {
     return (
-      <div style={{padding: 10, border: 0, backgroundColor: 'white', borderRadius: 3, width: 400}}>
-        <p style={{fontSize: 24, color: 'rgb(100,100,100)'}}>{this.props.fieldName}  </p>
+      <Card>
+        <CardHeader>{this.props.fieldName}</CardHeader>
         {
           this.state.symbol === 'GTLT' ?
             this.renderGTLT() :
             this.renderEQUALS()
         }
-      </div>
+      </Card>
     );
   }
 }

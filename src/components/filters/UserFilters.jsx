@@ -91,8 +91,8 @@ export default class UserFilters extends React.Component {
     console.log()
 
     return (
-      <div>
-        <CardHeader>UserFilters</CardHeader>
+      <div style={{margin: "0px 30px"}}>
+        <p style={{fontSize: 24}}>Filters</p>
 
         <p>I want to know about:</p>
         <Select

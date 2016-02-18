@@ -14,15 +14,13 @@ export default class Card extends React.Component {
 
 const styles = {
   base: {
-    borderTop: '2px solid ' + settings.grey,
     backgroundColor: 'rgb(253,253,253)',
     marginBottom: 14,
     borderRadius: 3,
-    paddingTop: 10,
-    paddingRight: 10,
-    paddingBottom: 10,
-    paddingLeft: 10,
-    WebkitBoxShadow: '3px 3px 6px -1px rgba(220,220,220,1)',
-    BoxShadow: '3px 3px 6px -1px rgba(220,220,220,1)'
+    padding: 10,
+    color: "rgb(100,100,100)",
+    borderRadius: 3,
+    WebkitBoxShadow: "3px 3px 6px -1px rgba(220,220,220,1)",
+    BoxShadow: "3px 3px 6px -1px rgba(220,220,220,1)"
   }
 };

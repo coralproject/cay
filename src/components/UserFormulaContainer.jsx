@@ -8,7 +8,6 @@ class UserFormulaContainer extends React.Component {
   render() {
     return (
       <div>
-        UserFormulaContainer
         <PipelineCreator userOnly={true}/>
       </div>
     );

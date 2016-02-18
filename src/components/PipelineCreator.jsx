@@ -147,30 +147,6 @@ export default class PipelineCreator extends React.Component {
 
     return (
       <div>
-        <p style={styles.label}>I want to know about</p>
-
-        {
-          this.props.onlyUser ? '' :
-            <Select
-              options={this.getBreakdownOptions()}
-              name="breakdown-type"
-              value={this.state.selectedBreakdown}
-              onChange={this.updateOutput.bind(this)} />
-        }
-
-        <p style={styles.label}>Show me:</p>
-        <Select
-          style={{width: 100}}
-          onChange={this.updateFields.bind(this)}
-          name="selected-field"
-          value={this.state.resultFields.join()}
-          multi={true}
-          options={this.getFieldOptions()}
-          placeholder="comments / replies / accept ratio"/>
-
-        { this.props.onlyUser ? this.getSpecific('user') : this.getSpecific(this.state.selectedBreakdown) }
-
-        <FilterNumbersContainer/>
 
         {FilterFactory.makeFilters('user')}
 

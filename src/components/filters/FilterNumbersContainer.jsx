@@ -53,7 +53,7 @@ class Filter extends React.Component {
     getValues: React.PropTypes.func
   }
   static defaultProps = {
-    fieldName: 'number of replies'
+    fieldName: 'UNDEFINED___'
   }
 
   handleSymbolClick(){

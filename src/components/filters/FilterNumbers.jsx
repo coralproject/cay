@@ -38,10 +38,10 @@ export default class FilterNumbers extends React.Component {
     console.log('FilterNumbers', props);
     this.state = {
       symbol: 'GTLT',
-      absoluteMin: props.absoluteMin || 0,
-      absoluteMax: props.absoluteMax || 1000,
-      userMin: props.userMin || props.absoluteMin || 0,
-      userMax: props.userMax || props.absoluteMax || 800,
+      min: props.min || 0,
+      max: props.max || 1000,
+      userMin: props.userMin || props.min || 0,
+      userMax: props.userMax || props.max || 800,
       equals: null
     };
   }
@@ -125,9 +125,9 @@ export default class FilterNumbers extends React.Component {
           value={this.state.userMax}/>
         <div style={{marginTop: 10}}>
           <Slider
-            min={this.state.absoluteMin}
-            max={this.state.absoluteMax}
-            step={this.state.absoluteMax - this.state.absoluteMin <= 5 ? 0.01 : 1}
+            min={this.state.min}
+            max={this.state.max}
+            step={this.state.max - this.state.min <= 5 ? 0.01 : 1}
             defaultValue={[this.state.userMin, this.state.userMax]}
             value={[this.state.userMin, this.state.userMax]}
             onChange={this.updateSlider.bind(this)}

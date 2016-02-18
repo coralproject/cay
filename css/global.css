@@ -23,3 +23,8 @@ p {
   font-size: 12px;
   line-height: 1.5em;
 }
+
+/* react-datepicker shim */
+.datepicker__tether-element {
+  z-index: 3;
+}

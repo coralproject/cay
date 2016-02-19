@@ -3,9 +3,7 @@ import Radium from 'radium';
 import {connect} from 'react-redux';
 import {fetchAllTags, fetchAuthorsAndSections} from '../../actions';
 
-import Card from '../cards/Card';
-import CardHeader from '../cards/CardHeader';
-import ObjectIdPicker from '../forms/ObjectIdPicker';
+import FilterObjectId from './FilterObjectId';
 import Select from 'react-select';
 import FilterNumbers from './FilterNumbers';
 import FilterDate from './FilterDate';
@@ -105,7 +103,7 @@ export default class UserFilters extends React.Component {
 
         {this.getSpecific()}
 
-        <ObjectIdPicker />
+        <FilterObjectId />
         <div className="clear" />
         <FilterString fieldName="user_name" />
         <div className="clear" />

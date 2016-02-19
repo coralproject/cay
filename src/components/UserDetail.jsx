@@ -16,8 +16,10 @@ import Heading from './Heading';
 
 import CommentDetailList from './CommentDetailList';
 
+import { Lang } from '../lang';
 
 @connect(state => state.pipelines)
+@Lang
 @Radium
 export default class UserDetail extends React.Component {
 
@@ -48,11 +50,11 @@ export default class UserDetail extends React.Component {
         <div style={styles.topPart}>
           <Avatar style={styles.avatar} src={this.props.avatar || ''} size={200} />
           <Stats style={styles.stats}>
-            <Stat term="Trust Score" description="87" />
-            <Stat term="Status" description="subscriber" />
-            <Stat term="Last Login" description={new Date().toISOString()} />
-            <Stat term="Member Since" description={new Date().toISOString()} />
-            <Stat term="Warnings" description="0" />
+            <Stat term={ L.t("Trust Score") } description="87" />
+            <Stat term={ L.t("Status") } description="subscriber" />
+            <Stat term={ L.t("Last Login") } description={ L.date("", "LLLL") } />
+            <Stat term={ L.t("Member Since") } description={ L.relativeDate() } />
+            <Stat term={ L.t("Warnings") } description="0" />
           </Stats>
         </div>
         <Tabs initialSelectedIndex={0} style={styles.tabs}>
@@ -85,3 +87,4 @@ const styles = {
     clear: 'both'
   }
 };
+

@@ -3,11 +3,16 @@ import Radium from 'radium';
 import {Link} from 'react-router';
 
 import MenuItem from './MenuItem';
+import LanguageSwitcher from '../LanguageSwitcher';
 
 import {MdInsertChart, MdTimeline, MdSupervisorAccount, MdSettings} from 'react-icons';
 
+import { Lang } from '../../../lang';
+
+@Lang
 @Radium
 class Menu extends React.Component {
+
   render() {
     return (
       <div>
@@ -15,9 +20,10 @@ class Menu extends React.Component {
         <ul>
           {/*<MenuItem name="Dashboard" target="/" icon={<MdInsertChart />} />*/}
           {/*<MenuItem name="Explore" target="/explore" icon={<MdTimeline />} />*/}
-          <MenuItem name="User Manager" target="/user-manager" icon={<MdSupervisorAccount />} />
+          <MenuItem name={ L.t("User Manager") } target="/user-manager" icon={<MdSupervisorAccount />} />
           {/*<MenuItem name="Settings" target="/settings" icon={<MdSettings />} />*/}
         </ul>
+        <LanguageSwitcher />
       </div>
     );
   }

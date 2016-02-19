@@ -47,7 +47,7 @@ export default class UserManager extends React.Component {
 
       <Page>
 
-        <ContentHeader title="User Manager" />
+        <ContentHeader title={ L.t("User Manager") } />
 
         <div style={styles.base}>
           <PipelineList

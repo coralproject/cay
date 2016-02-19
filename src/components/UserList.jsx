@@ -7,9 +7,13 @@ import List from './lists/List';
 import UserRow from './UserRow';
 import Heading from './Heading';
 
+import { Lang } from '../lang';
+
 @connect(state => state.pipelines)
+@Lang
 @Radium
 export default class UserList extends React.Component {
+
   static propTypes = {
     users: PropTypes.arrayOf(PropTypes.shape({
       user_name: PropTypes.string.isRequired,
@@ -39,7 +43,7 @@ export default class UserList extends React.Component {
     return (
       <List style={[styles.base, this.props.style]}>
         <Heading size="small" style={styles.heading}>
-          User List
+          { L.t("User List") }
         </Heading>
         {this.props.users.length ? this.getUserList(this.props.users) : 'Loading...'}
       </List>

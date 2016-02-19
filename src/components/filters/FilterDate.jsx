@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import {connect} from 'react-redux';
+// import {connect} from 'react-redux';
 import {filterChanged} from '../../actions';
 import Radium from 'radium';
 import DatePicker from 'react-datepicker';
@@ -9,7 +9,7 @@ import Slider from '../Slider';
 import Card from '../cards/Card';
 import CardHeader from '../cards/CardHeader';
 
-@connect(state => state.filters)
+// @connect(state => state.filters)
 @Radium
 export default class FilterDate extends React.Component {
 

@@ -51,11 +51,9 @@ export default class UserManager extends React.Component {
             style={styles.userTable}
             users={this.props.users} />
 
-          {/*
-            <UserDetail
-              {...this.props.selectedUser}
-              style={styles.userDetail} />
-          */}
+          <UserDetail
+            {...this.props.selectedUser}
+            style={styles.userDetail} />
 
         </div>
 

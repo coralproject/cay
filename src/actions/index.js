@@ -41,7 +41,8 @@ export const ALL_TAGS_REQUEST_ERROR = 'ALL_TAGS_REQUEST_ERROR';
 
 export const FILTER_CHANGED = 'FILTER_CHANGED';
 export const CREATE_QUERY = 'CREATE_QUERY';
-
+export const SUBMIT_CUSTOM_QUERY = 'SUBMIT_CUSTOM_QUERY';
+export const RECEIVE_USER_LIST = 'RECEIVE_USER_LIST';
 /* config */
 
 var getInit = (method) => {
@@ -526,9 +527,65 @@ export const filterChanged = (fieldName, data) => {
   };
 };
 
+export const createQuery = (query) => {
+  return {
+    type: CREATE_QUERY,
+    query
+  };
+};
+
+const receiveUserList = (data) => {
+  return {
+    type: RECEIVE_USER_LIST,
+    data
+  };
+};
+
 export const makeQueryFromState = (type) => {
   return (dispatch, getState) => {
     // make a query from the current state
-    console.log(type, getState());
+    let filterState = getState().filters;
+    console.log(type, filterState);
+
+    let query = {
+      name: 'user_search',
+      desc: 'user search currently. this is going to be more dynamic in the future',
+      pre_script: '',
+      pst_script: '',
+      params: [],
+      queries: [
+        {
+          name: 'user_search',
+          type: 'pipeline',
+          collection: 'user',
+          commands: [
+            {$match: {'stats.accept_ratio': {$gte: filterState['stats.accept_ratio'].userMin}}},
+            {$match: {'stats.accept_ratio': {$lte: filterState['stats.accept_ratio'].userMax}}},
+            {$sort: {'stats.comments.total': -1}},
+            {$skip: 0},
+            {$limit: 20}
+          ],
+          return: true
+        }
+      ],
+      enabled: true
+    };
+
+    dispatch(createQuery(query));
+
+    const url = window.xeniaHost + apiPrefix + 'exec';
+
+    var init = getInit('POST');
+    init.body = JSON.stringify(query);
+
+    fetch(url, init)
+      .then(response => response.json())
+      .then(json => {
+        dispatch(receiveUserList(json));
+      })
+      .catch(err => {
+        dispatch(dataExplorationFetchError(err));
+      });
+
   };
 };

@@ -111,9 +111,9 @@ export default class UserFilters extends React.Component {
         <div className="clear" />
         <FilterString fieldName="status" />
         <div className="clear" />
-        <FilterDate ref="lastLogin" fieldName="Last Login" />
+        <FilterDate ref="lastLogin" fieldName="last_login" />
 
-        <FilterDate ref="memberSince" fieldName="Member Since" />
+        <FilterDate ref="memberSince" fieldName="member_since" />
 
         <p>Tags</p>
         <Select multi={true} options={this.getTags()} />

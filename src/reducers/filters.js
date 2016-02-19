@@ -4,6 +4,7 @@ const initialState = {
   tags: [],
   authors: [],
   sections: [],
+  loadingUserList: false,
   'stats.accept_ratio': {userMin: 0, userMax: 1},
   'stats.replies_per_comment': {userMin: 0, userMax: 1},
   'stats.comments.total': {userMin: 0, userMax: 10000},
@@ -14,7 +15,11 @@ const filters = (state = initialState, action) => {
   switch (action.type) {
 
   case types.CREATE_QUERY:
-    return state;
+    return Object.assign({}, state, {loadingUserList: true});
+
+  case types.RECEIVE_USER_LIST:
+    console.log(action);
+    return Object.assign({}, state, {loadingUserList: false});
 
   case types.FILTER_CHANGED:
     return Object.assign({}, state, { [action.fieldName]: action.data });

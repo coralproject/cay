@@ -62,11 +62,9 @@ export default class FilterNumbers extends React.Component {
     this.setState({symbol: newSymbol});
   }
   handleGTChanged(e) {
-    console.log('handleGTChanged', e);
     this.props.dispatch(filterChanged(this.props.fieldName, {userMin: e.target.value}));
   }
   handleLTChanged(e) {
-    console.log('handleLTChanged', e);
     this.props.dispatch(filterChanged(this.props.fieldName, {userMax: e.target.value}));
   }
   // handleEqualChanged(e) {

@@ -88,10 +88,8 @@ export default class UserFilters extends React.Component {
 
   render() {
 
-    console.log()
-
     return (
-      <div style={{margin: "0px 30px"}}>
+      <div style={styles.base}>
         <p style={{fontSize: 24}}>Filters</p>
 
         <p>I want to know about:</p>
@@ -153,3 +151,9 @@ export default class UserFilters extends React.Component {
     );
   }
 }
+
+const styles = {
+  base: {
+    margin: '0px 30px'
+  }
+};

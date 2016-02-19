@@ -1,13 +1,13 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-// import {connect} from 'react-redux';
+import {connect} from 'react-redux';
 import {filterChanged} from '../../actions';
 import Card from '../cards/Card';
 import CardHeader from '../cards/CardHeader';
 
 import TextField from '../forms/TextField';
 
-// @connect(state => state.filters)
+@connect()
 @Radium
 export default class FilterString extends React.Component {
 

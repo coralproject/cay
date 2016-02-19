@@ -534,13 +534,6 @@ export const createQuery = (query) => {
   };
 };
 
-const receiveUserList = (data) => {
-  return {
-    type: RECEIVE_USER_LIST,
-    data
-  };
-};
-
 export const makeQueryFromState = (type) => {
   return (dispatch, getState) => {
     // make a query from the current state
@@ -561,6 +554,12 @@ export const makeQueryFromState = (type) => {
           commands: [
             {$match: {'stats.accept_ratio': {$gte: filterState['stats.accept_ratio'].userMin}}},
             {$match: {'stats.accept_ratio': {$lte: filterState['stats.accept_ratio'].userMax}}},
+            {$match: {'stats.comments.total': {$gte: filterState['stats.comments.total'].userMin}}},
+            {$match: {'stats.comments.total': {$lte: filterState['stats.comments.total'].userMax}}},
+            {$match: {'stats.replies': {$gte: filterState['stats.replies'].userMin}}},
+            {$match: {'stats.replies': {$lte: filterState['stats.replies'].userMax}}},
+            {$match: {'stats.replies_per_comment': {$gte: filterState['stats.replies_per_comment'].userMin}}},
+            {$match: {'stats.replies_per_comment': {$lte: filterState['stats.replies_per_comment'].userMax}}},
             {$sort: {'stats.comments.total': -1}},
             {$skip: 0},
             {$limit: 20}
@@ -581,7 +580,7 @@ export const makeQueryFromState = (type) => {
     fetch(url, init)
       .then(response => response.json())
       .then(json => {
-        dispatch(receiveUserList(json));
+        dispatch(receivePipeline(json));
       })
       .catch(err => {
         dispatch(dataExplorationFetchError(err));

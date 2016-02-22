@@ -33,6 +33,16 @@ export const RECEIVE_AUTHORS_AND_SECTIONS = 'RECEIVE_AUTHORS_AND_SECTIONS';
 
 export const USER_SELECTED = 'USER_SELECTED';
 
+export const FORMULA_CREATED = 'FORMULA_CREATED';
+
+export const REQUEST_ALL_TAGS = 'REQUEST_ALL_TAGS';
+export const RECEIVE_ALL_TAGS = 'RECEIVE_ALL_TAGS';
+export const ALL_TAGS_REQUEST_ERROR = 'ALL_TAGS_REQUEST_ERROR';
+
+export const FILTER_CHANGED = 'FILTER_CHANGED';
+export const CREATE_QUERY = 'CREATE_QUERY';
+export const SUBMIT_CUSTOM_QUERY = 'SUBMIT_CUSTOM_QUERY';
+export const RECEIVE_USER_LIST = 'RECEIVE_USER_LIST';
 /* config */
 
 var getInit = (method) => {
@@ -49,7 +59,6 @@ var getInit = (method) => {
 };
 
 const apiPrefix = '1.0/'; // maybe later we'll be at api 2.0
-const apiSuffix = '/exec';
 
 export const selectPipeline = (pipeline) => {
   return {
@@ -332,6 +341,82 @@ export const fetchDataExplorationDataset = (field, queryParams) => {
   };
 };
 
+const formulaCreated = () => {
+  return {
+    type: FORMULA_CREATED
+  };
+};
+
+export const createFormula = (filterSettings) => {
+  const interval = this.getSensibleInterval(new Date(this.state.minDate), new Date(this.state.maxDate));
+
+  if (this.state.specificBreakdowns.length) {
+
+    var match = {
+      $match: {
+        $or: this.state.specificBreakdowns.map(bd => {
+          return {target_doc: bd};
+        })
+      }
+    };
+
+    computedQuery.queries[0].commands.splice(3, 0, match);
+  }
+
+  // validateFormula(filterSettings)
+
+  var computedQuery = {
+    name: 'custom_query',
+    desc: 'Returns a time series of comments bounded by iso dates!  Totals or broken down by duration [day|week|month] and target type total|user|asset|author|section]',
+    pre_script: '',
+    pst_script: '',
+    params: [],
+    queries: [
+      {
+        name: 'custom_query',
+        type: 'pipeline',
+        collection: 'comment_timeseries',
+        /* this will be generated too... */
+        commands: [
+          {
+            $match: {
+              start_iso: {$gte: `#date:${this.state.minDate}`}
+            }
+          },
+          {
+            $match: {
+              start_iso: {$lt: `#date:${this.state.maxDate}`}
+            }
+          },
+          {
+            $match: {
+              duration: interval
+            }
+          },
+          {
+            $match: {
+              target: this.state.selectedBreakdown
+            }
+          },
+          {
+            $sort: {
+              start_iso: 1
+            }
+          }
+        ],
+        'return': true
+      }
+    ],
+    enabled: true
+  };
+
+  return (dispatch) => {
+    dispatch(createPipelineValueChanged(computedQuery));
+
+  };
+};
+
+
 const requestControls = () => {
   return {
     type: REQUEST_EXPLORER_CONTROLS
@@ -389,5 +474,117 @@ export const userSelected = (user) => {
   return {
     type: USER_SELECTED,
     user
+  };
+};
+
+const receiveAllTags = (tags) => {
+  return {
+    type: RECEIVE_ALL_TAGS,
+    tags
+  };
+};
+
+const requestAllTags = () => {
+  return {
+    type: REQUEST_ALL_TAGS
+  };
+};
+
+const allTagsRequestError = (err) => {
+  return {
+    type: ALL_TAGS_REQUEST_ERROR,
+    err
+  };
+};
+
+export const fetchAllTags = () => {
+  const url = window.pillarHost + '/api/tags';
+
+  return (dispatch, getState) => {
+    if (!getState().loadingTags) {
+      dispatch(requestAllTags());
+
+      fetch(url)
+        .then(res => res.json())
+        .then(json => {
+          dispatch(receiveAllTags(json));
+        }).catch(err => {
+          dispatch(allTagsRequestError(err));
+        });
+    } else {
+      return {type: 'NOOP'};
+    }
+  };
+
+};
+
+export const filterChanged = (fieldName, data) => {
+  console.log(FILTER_CHANGED, fieldName, data);
+  return {
+    type: FILTER_CHANGED,
+    fieldName,
+    data
+  };
+};
+
+export const createQuery = (query) => {
+  return {
+    type: CREATE_QUERY,
+    query
+  };
+};
+
+export const makeQueryFromState = (type) => {
+  return (dispatch, getState) => {
+    // make a query from the current state
+    let filterState = getState().filters;
+    console.log(type, filterState);
+
+    let query = {
+      name: 'user_search',
+      desc: 'user search currently. this is going to be more dynamic in the future',
+      pre_script: '',
+      pst_script: '',
+      params: [],
+      queries: [
+        {
+          name: 'user_search',
+          type: 'pipeline',
+          collection: 'user',
+          commands: [
+            {$match: {'stats.accept_ratio': {$gte: filterState['stats.accept_ratio'].userMin}}},
+            {$match: {'stats.accept_ratio': {$lte: filterState['stats.accept_ratio'].userMax}}},
+            {$match: {'stats.comments.total': {$gte: filterState['stats.comments.total'].userMin}}},
+            {$match: {'stats.comments.total': {$lte: filterState['stats.comments.total'].userMax}}},
+            {$match: {'stats.replies': {$gte: filterState['stats.replies'].userMin}}},
+            {$match: {'stats.replies': {$lte: filterState['stats.replies'].userMax}}},
+            {$match: {'stats.replies_per_comment': {$gte: filterState['stats.replies_per_comment'].userMin}}},
+            {$match: {'stats.replies_per_comment': {$lte: filterState['stats.replies_per_comment'].userMax}}},
+            {$sort: {'stats.comments.total': -1}},
+            {$skip: 0},
+            {$limit: 20}
+          ],
+          return: true
+        }
+      ],
+      enabled: true
+    };
+
+    dispatch(createQuery(query));
+
+    const url = window.xeniaHost + apiPrefix + 'exec';
+
+    var init = getInit('POST');
+    init.body = JSON.stringify(query);
+
+    fetch(url, init)
+      .then(response => response.json())
+      .then(json => {
+        dispatch(receivePipeline(json));
+      })
+      .catch(err => {
+        dispatch(dataExplorationFetchError(err));
+      });
+
   };
 };

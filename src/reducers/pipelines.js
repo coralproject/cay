@@ -7,6 +7,7 @@ const initialState = {
   selectedUser: null,
   pipelines: [],
   users: [],
+  comments: [],
   userDetailComments: null,
   loadingUserComments: false
 };

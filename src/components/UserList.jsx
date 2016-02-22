@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import {userSelected} from '../actions';
 
+import Card from './cards/Card';
 import List from './lists/List';
 import UserRow from './UserRow';
 import Heading from './Heading';
@@ -37,12 +38,14 @@ export default class UserList extends React.Component {
 
   render() {
     return (
-      <List style={[styles.base, this.props.style]}>
-        <Heading size="small" style={styles.heading}>
-          User List
-        </Heading>
+    <div>
+      <Heading size="small" style={styles.heading}>
+        User List
+      </Heading>
+      <Card style={[styles.base, this.props.style]}>
         {this.props.users.length ? this.getUserList(this.props.users) : 'Loading...'}
-      </List>
+      </Card>
+    </div>
     );
   }
 }

@@ -6,7 +6,7 @@ import {connect} from 'react-redux';
 import settings from '../settings';
 
 import ListItem from './lists/ListItem';
-import Icon from './Icon';
+import CharacterIcon from './CharacterIcon';
 
 @connect(state => state.pipelines)
 @Radium
@@ -28,7 +28,7 @@ export default class UserRow extends React.Component {
       <ListItem
         style={[this.props.style, styles.base]}
         onClick={this.handleClick.bind(this)}
-        leftAvatar={<Icon size="medium" color={colors[Math.floor(Math.random() * colors.length)]}>{user.user_name.charAt(0).toUpperCase()}</Icon>}
+        leftAvatar={<CharacterIcon size="medium" color={colors[Math.floor(Math.random() * colors.length)]}>{user.user_name.charAt(0).toUpperCase()}</CharacterIcon>}
         >
           {user.user_name}
           <p style={styles.sub}>

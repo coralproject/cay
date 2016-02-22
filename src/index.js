@@ -20,6 +20,8 @@ const store = configureStore();
 require('../css/reset.css');
 require('../css/global.css');
 
+require('../css/react-select.css');
+
 require('../fonts/glyphicons-halflings-regular.woff');
 
 class Root extends React.Component {
@@ -67,3 +69,30 @@ fetch('./config.json')
     console.error('Error while fetching config.json: ', err);
     document.body.innerHTML = 'you need to create ./config.json, or it is invalid JSON';
   });
+
+// prevent browser from navigating backwards if you hit the backspace key
+document.removeEventListener('keydown');
+document.addEventListener('keydown', function (e) {
+  var doPrevent = false;
+  if (e.keyCode === 8) {
+    var d = e.srcElement || e.target;
+    if ((d.tagName.toUpperCase() === 'INPUT' &&
+      (
+        d.type.toUpperCase() === 'TEXT' ||
+        d.type.toUpperCase() === 'PASSWORD' ||
+        d.type.toUpperCase() === 'FILE' ||
+        d.type.toUpperCase() === 'EMAIL' ||
+        d.type.toUpperCase() === 'SEARCH' ||
+        d.type.toUpperCase() === 'DATE' )
+      ) || d.tagName.toUpperCase() === 'TEXTAREA') {
+      doPrevent = d.readOnly || d.disabled;
+
+    } else {
+      doPrevent = true;
+    }
+  }
+
+  if (doPrevent) {
+    e.preventDefault();
+  }
+});

@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
-import _ from 'lodash';
 
 import {fetchPipelinesIfNotFetched, selectPipeline, fetchPipeline} from '../actions';
 
@@ -11,11 +10,9 @@ import PipelineList from '../components/PipelineList';
 import UserList from '../components/UserList';
 import UserDetail from '../components/UserDetail';
 
-import settings from '../settings';
+import UserFormulaContainer from '../components/UserFormulaContainer';
 
-@connect(state => {
-  return state.pipelines;
-})
+@connect(state => state.pipelines)
 @Radium
 export default class UserManager extends React.Component {
 
@@ -41,8 +38,6 @@ export default class UserManager extends React.Component {
 
   render() {
 
-    console.log('UserManager.render', this.props);
-
     return (
 
       <Page>
@@ -50,10 +45,7 @@ export default class UserManager extends React.Component {
         <ContentHeader title="User Manager" />
 
         <div style={styles.base}>
-          <PipelineList
-            active={this.props.params.filter_id}
-            style={styles.pipelineList}
-            pipelines={this.props.pipelines} />
+          <UserFormulaContainer/>
 
           <UserList
             style={styles.userTable}

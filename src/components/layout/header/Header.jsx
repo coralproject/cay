@@ -11,7 +11,7 @@ class Header extends React.Component {
     return (
       <nav style={styles.nav}>
         <IconButton onClick={this.props.onHamburgerClick} style={styles.sidebarToggle} name="fa-navicon" />
-        <Searchbar style={styles.searchbar}/>
+        {/*<Searchbar style={styles.searchbar}/>*/}
       </nav>
     );
   }

@@ -1,5 +1,4 @@
 // Local constants
-const PILLAR_HOST = 'http://localhost:8080/';
 const API_PREFIX = 'api/';
 
 // Exported constants
@@ -27,7 +26,7 @@ var getInit = (body, method) => {
 export const getTags = () => {
   return (dispatch) => {
     dispatch(tagRequestStarted());
-    fetch(PILLAR_HOST + API_PREFIX + 'tags', getInit(null, 'GET'))
+    fetch(window.pillarHost + API_PREFIX + 'tags', getInit(null, 'GET'))
       .then(response => response.json())
       .then(tags => dispatch(tagRequestSuccess(tags, null, 'list')))
       .catch(error => dispatch(tagRequestFailure(error)));
@@ -37,7 +36,7 @@ export const getTags = () => {
 export const storeTag = (tagName, tagDescription, index) => {
   return (dispatch) => {
     dispatch(tagRequestStarted());
-    fetch(PILLAR_HOST + API_PREFIX + 'tag', getInit({ 'name': tagName, 'description': tagDescription }))
+    fetch(window.pillarHost + API_PREFIX + 'tag', getInit({ 'name': tagName, 'description': tagDescription }))
       .then(response => response.json())
       .then(storedTag => dispatch(tagRequestSuccess(storedTag, index, 'create')))
       .catch(error => dispatch(tagRequestFailure(error)));
@@ -47,7 +46,7 @@ export const storeTag = (tagName, tagDescription, index) => {
 export const deleteTag = (tagName, tagDescription, index) => {
   return (dispatch) => {
     dispatch(tagRequestStarted());
-    fetch(PILLAR_HOST + API_PREFIX + 'tag', getInit({ 'name': tagName, 'description': tagDescription }, 'DELETE'))
+    fetch(window.pillarHost + API_PREFIX + 'tag', getInit({ 'name': tagName, 'description': tagDescription }, 'DELETE'))
       .then(response => response)
       .then(deletedTag => dispatch(tagRequestSuccess(deletedTag, index, 'delete')))
       .catch(error => dispatch(tagRequestFailure(error)));

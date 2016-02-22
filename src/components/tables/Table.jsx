@@ -3,7 +3,7 @@ import Radium from 'radium';
 
 import TableHead from './TableHead';
 import TableBody from './TableBody';
-import Icon from '../Icon';
+import { FaSpinner } from 'react-icons';
 
 @Radium
 export default class Table extends React.Component {
@@ -27,7 +27,7 @@ export default class Table extends React.Component {
           this.props.isLoading ? 
             <tr>
               <td style={ styles.loading }>
-                <span style={ styles.spinner }><Icon name="fa-spinner" size="medium" /></span>
+                <span style={ styles.spinner }><FaSpinner /></span>
                 <span>{ this.props.loadingMessage || 'Loading...' }</span>
               </td>
             </tr>

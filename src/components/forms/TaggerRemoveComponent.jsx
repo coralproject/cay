@@ -1,12 +1,12 @@
 import React from 'react';
 
-import Icon from '../Icon.jsx';
+import { FaTimesCircle } from 'react-icons';
 
 export default class TaggerRemoveComponent extends React.Component {
   render() {
     return (
       <button {...this.props}>
-        <Icon color="#a00" name="fa-times-circle" />
+        <FaTimesCircle />
       </button>
     );
   }

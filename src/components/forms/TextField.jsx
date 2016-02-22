@@ -26,7 +26,7 @@ export default class TextField extends React.Component {
 
   handleChange(event) {
     this.setState({value: event.target.value});
-    if (typeof this.props.onChange === 'function')
+    if (typeof this.props.onChange === 'function') {
       this.props.onChange(event.target.value);
     }
   }

@@ -4,7 +4,7 @@ import {Link} from 'react-router';
 
 import MenuItem from './MenuItem';
 
-import {MdInsertChart, MdTimeline, MdSupervisorAccount, MdSettings} from 'react-icons';
+import {MdInsertChart, MdTimeline, MdSupervisorAccount, MdSettings, FaTag } from 'react-icons';
 
 @Radium
 class Menu extends React.Component {
@@ -13,7 +13,7 @@ class Menu extends React.Component {
       <div>
         <Link to="/" style={styles.logo}>Coral Project</Link>
         <ul>
-          <MenuItem name="Tag Manager" target="/tag-manager" icon="fa-tag" />
+          <MenuItem name="Tag Manager" target="/tag-manager" icon={<FaTag />} />
           {/*<MenuItem name="Dashboard" target="/" icon={<MdInsertChart />} />*/}
           {/*<MenuItem name="Explore" target="/explore" icon={<MdTimeline />} />*/}
           <MenuItem name="User Manager" target="/user-manager" icon={<MdSupervisorAccount />} />

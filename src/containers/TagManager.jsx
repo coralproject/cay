@@ -6,7 +6,6 @@ import Page from './Page';
 import ContentHeader from '../components/ContentHeader';
 import InPlaceEditor from '../components/forms/InPlaceEditor';
 import Tagger from '../components/forms/Tagger';
-import Icon from '../components/Icon';
 
 import Table from '../components/tables/Table';
 import TableHead from '../components/tables/TableHead';
@@ -16,6 +15,8 @@ import TableRow from '../components/tables/TableRow';
 import TableCell from '../components/tables/TableCell';
 
 import { storeTag, getTags, deleteTag } from '../actions/tags';
+
+import {FaSpinner} from 'react-icons';
 
 require('../../css/react-tag-input.css');
 
@@ -120,7 +121,7 @@ export default class TagManager extends React.Component {
             {
               this.props.loading ?
                 <span style={ styles.loadingMessage }>
-                  <span style={ styles.spinner }><Icon name="fa-spinner" /></span>
+                  <span style={ styles.spinner }><FaSpinner /></span>
                   <span>Loading...</span>
                 </span>
               : ''

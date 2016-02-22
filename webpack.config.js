@@ -31,11 +31,8 @@ module.exports = {
     loaders: [{
       test: /\.(js|jsx)$/,
       loaders: ['babel'],
-      // exclude: /node_modules/,
-      include: [
-        path.join(__dirname, 'src'),
-        path.join(__dirname, 'node_modules/react-icons')
-      ]
+      exclude: /node_modules/,
+      include: path.join(__dirname, 'src')
     }, {
       test: /\.css$/,
       loader: 'style-loader!css-loader'

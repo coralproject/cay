@@ -1,7 +1,8 @@
 import React from 'react';
 import Radium from 'radium';
 
-import {MdSearch} from 'react-icons';
+// import {MdSearch} from 'react-icons';
+import MdSearch from 'react-icons/lib/md/search';
 
 @Radium
 export default class Searchbar extends React.Component {

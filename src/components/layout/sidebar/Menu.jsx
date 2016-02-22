@@ -4,7 +4,8 @@ import {Link} from 'react-router';
 
 import MenuItem from './MenuItem';
 
-import {MdInsertChart, MdTimeline, MdSupervisorAccount, MdSettings} from 'react-icons';
+// import {MdInsertChart, MdTimeline, MdSupervisorAccount, MdSettings} from 'react-icons';
+import MdSupervisorAccount from 'react-icons/lib/md/supervisor-account';
 
 @Radium
 class Menu extends React.Component {

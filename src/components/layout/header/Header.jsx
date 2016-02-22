@@ -3,7 +3,8 @@ import Radium from 'radium';
 
 import Searchbar from '../../forms/Searchbar';
 
-import {MdMenu} from 'react-icons';
+// import {MdMenu} from 'react-icons';
+import MdMenu from 'react-icons/lib/md/menu';
 
 @Radium
 class Header extends React.Component {

@@ -1,3 +1,4 @@
+'use strict';
 // React Core
 import React from 'react';
 import ReactDOM from 'react-dom';

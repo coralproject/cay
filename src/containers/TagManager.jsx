@@ -80,6 +80,12 @@ export default class TagManager extends React.Component {
     this.props.dispatch(storeTag(tagName, value, index));
   }
 
+  onTagEdit(tagDescription, index, value) {
+    console.log(value);
+    console.log(tagDescription);
+    this.props.dispatch(storeTag(value, tagDescription, index));
+  }
+
   render() {
 
     var tagList = this.props.tags ? 
@@ -87,7 +93,7 @@ export default class TagManager extends React.Component {
         return (
           <TableRow key={ i }>
             <TableCell>
-              { tag.name }
+              <InPlaceEditor key={ i } initialValue={ tag.name } onSave={ this.onTagEdit.bind(this, tag.description, i) } />
             </TableCell>
             <TableCell>
               <InPlaceEditor key={ i } initialValue={ tag.description } onSave={ this.onDescriptionEdit.bind(this, tag.name, i) } />

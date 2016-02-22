@@ -15,8 +15,8 @@ export default class InPlaceEditor extends React.Component {
     this.needsUpdate = true; // Updating the state to initialValue here would cause a recursion error
   }
 
-  handleChange(event) {
-    this.setState({value: event.target.value});
+  handleChange(newValue) {
+    this.setState({value: newValue});
   }
 
   handleClick() {

@@ -16,7 +16,7 @@ class Header extends React.Component {
     return (
       <nav style={styles.nav}>
         <MdMenu style={styles.sidebarToggle} onClick={this.handleClick.bind(this)} />
-        <Searchbar style={styles.searchbar}/>
+        {/*<Searchbar style={styles.searchbar}/>*/}
       </nav>
     );
   }

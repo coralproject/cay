@@ -21,6 +21,8 @@ const store = configureStore();
 require('../css/reset.css');
 require('../css/global.css');
 
+require('../css/react-select.css');
+
 require('../fonts/glyphicons-halflings-regular.woff');
 
 class Root extends React.Component {
@@ -38,10 +40,8 @@ class Root extends React.Component {
       <div>
         <Provider store={store}>
           <Router history={browserHistory}>
-            <Route path="/" component={Dashboard}/>
+            <Route path="/" component={UserManager}/>
             <Route path="login" component={Login}/>
-            <Route path="user-manager/:filterId/:userId" component={UserManager}/>
-            <Route path="user-manager/:filterId" component={UserManager}/>
             <Route path="user-manager" component={UserManager}/>
             <Route path="tag-manager" component={TagManager}/>
             <Route path="explore" component={DataExplorer}/>
@@ -53,4 +53,48 @@ class Root extends React.Component {
   }
 }
 
-ReactDOM.render(<Root/>, document.getElementById('root'));
+fetch('./config.json')
+  .then(res => res.json())
+  .then(config => {
+
+    for (var key in config) {
+      window[key] = config[key];
+    }
+
+    if (!window.xeniaHost) console.warn('xeniaHost is not set in config.json. Coral will not work correctly.');
+    if (!window.pillarHost) console.warn('pillarHost is not set in config.json. Coral will not work correctly.');
+
+    ReactDOM.render(<Root/>, document.getElementById('root'));
+  })
+  .catch(err => {
+
+    console.error('Error while fetching config.json: ', err);
+    document.body.innerHTML = 'you need to create ./config.json, or it is invalid JSON';
+  });
+
+// prevent browser from navigating backwards if you hit the backspace key
+document.removeEventListener('keydown');
+document.addEventListener('keydown', function (e) {
+  var doPrevent = false;
+  if (e.keyCode === 8) {
+    var d = e.srcElement || e.target;
+    if ((d.tagName.toUpperCase() === 'INPUT' &&
+      (
+        d.type.toUpperCase() === 'TEXT' ||
+        d.type.toUpperCase() === 'PASSWORD' ||
+        d.type.toUpperCase() === 'FILE' ||
+        d.type.toUpperCase() === 'EMAIL' ||
+        d.type.toUpperCase() === 'SEARCH' ||
+        d.type.toUpperCase() === 'DATE' )
+      ) || d.tagName.toUpperCase() === 'TEXTAREA') {
+      doPrevent = d.readOnly || d.disabled;
+
+    } else {
+      doPrevent = true;
+    }
+  }
+
+  if (doPrevent) {
+    e.preventDefault();
+  }
+});

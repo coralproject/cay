@@ -8,7 +8,7 @@ describe('CardHeader component', function () {
   beforeEach('render and locate element', function () {
     var renderedComponent = ReactTestUtils.renderIntoDocument(
       <Card>
-        <CardHeader title="Test Title" subtitle="Test Subtitle" />
+        <CardHeader subtitle="Test Subtitle">Test Title</CardHeader>
       </Card>
     );
 

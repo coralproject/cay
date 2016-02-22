@@ -764,31 +764,27 @@ var Slider = React.createClass({
   },
 
   render: function () {
-    var state = this.state;
-    var props = this.props;
 
-    var offset = this.tempArray;
-    var value = state.value;
-    var l = value.length;
-    for (var i = 0; i < l; i++) {
+    const offset = this.tempArray;
+    const value = this.state.value;
+    const l = this.state.value.length;
+    for (let i = 0; i < l; i++) {
       offset[i] = this._calcOffset(value[i], i);
     }
 
-    var bars = props.withBars ? this._renderBars(offset) : null;
-    var handles = this._renderHandles(offset);
-
-    var localStyles = this.props.orientation === 'vertical' ? styles.verticalSlider : styles.horizontalSlider;
+    const orientation = this.props.orientation === 'vertical' ?
+                        styles.verticalSlider :
+                        styles.horizontalSlider;
 
     return (
       <div
         ref="slider"
-        style={[styles.base, localStyles]}
-        className={props.className + (props.disabled ? ' disabled' : '')}
+        style={[styles.base, orientation]}
         onMouseDown={this._onSliderMouseDown}
         onClick={this._onSliderClick}
       >
-        {bars}
-        {handles}
+        {this.props.withBars ? this._renderBars(offset) : null}
+        {this._renderHandles(offset)}
       </div>
     );
   }

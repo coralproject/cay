@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 
 import settings from '../settings';
 
-import {executeCustomPipeline} from '../actions';
+import {fetchPipeline} from '../actions';
 
 import List from './lists/List';
 import PipelineRow from './PipelineRow';
@@ -14,9 +14,9 @@ import Heading from './Heading';
 @Radium
 class PipelineList extends React.Component {
 
-  loadUsers() {
+  loadUsers(pipeline) {
     console.log('loadUsers');
-    this.props.dispatch(executeCustomPipeline('some_id'));
+    this.props.dispatch(fetchPipeline(pipeline.name));
   }
 
   render() {
@@ -33,7 +33,7 @@ class PipelineList extends React.Component {
           this.props.pipelines.map((pipeline, i) => {
             return (
               <PipelineRow
-                onClick={this.loadUsers.bind(this)}
+                onClick={this.loadUsers.bind(this, pipeline)}
                 pipeline={pipeline}
                 style={styles.row}
                 {...other}

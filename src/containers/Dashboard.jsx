@@ -1,32 +1,41 @@
 import React from 'react';
 import Radium from 'radium';
 
-import {fetchComments} from '../actions';
-
 import Page from './Page';
 import Card from '../components/cards/Card';
 
-require('../../css/react-select.css');
+import DatePicker from 'react-datepicker';
+import moment from 'moment';
+
+import {MdAndroid, MdCameraEnhance} from 'react-icons';
+
+// this doesn't seem wise, but copying the file to /css seems worse.
+require('../../node_modules/react-datepicker/dist/react-datepicker.min.css');
 
 @Radium
 class Dashboard extends React.Component {
 
-  getComments() {
-    this.props.dispatch(fetchComments());
+  constructor(props) {
+    super(props);
+    this.state = {startDate: moment()};
+  }
+
+  handleChange() {
+    console.log('Dashboard.handleChange()', ...arguments);
   }
 
   render() {
-
 
     return (
       <Page>
         <h1>Dashboard goes here</h1>
         <div style={styles.base}>
           <Card style={styles.pane}>
-            <p>Such wow</p>
+            <DatePicker selected={this.state.startDate} onChange={this.handleChange} />
           </Card>
           <Card style={styles.pane}>
-            <p>Nothin</p>
+            <MdAndroid style={styles.lonelyIcon} />
+            <MdCameraEnhance style={styles.lonelyIcon} />
           </Card>
         </div>
       </Page>
@@ -46,5 +55,10 @@ var styles = {
     marginRight: 5,
     marginLeft: 5,
     padding: 10
+  },
+  lonelyIcon: {
+    fill: 'red',
+    width: 50,
+    height: 50
   }
 };

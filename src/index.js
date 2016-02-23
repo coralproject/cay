@@ -16,6 +16,8 @@ import UserManager from './containers/UserManager';
 import Login from './containers/Login';
 import DataExplorer from './containers/DataExplorer';
 
+import ga from 'react-ga';
+
 const store = configureStore();
 
 require('../css/reset.css');
@@ -26,6 +28,16 @@ require('../css/react-select.css');
 require('../fonts/glyphicons-halflings-regular.woff');
 
 class Root extends React.Component {
+
+  constructor(props){
+    super(props);
+    ga.initialize(window.googleAnalyticsId, { debug: (process && process.env.NODE_ENV !== 'production') });
+  }
+
+  logPageView() {
+    ga.pageview(this.state.location.pathname);
+  }
+
   render() {
 
     if (process && process.env.NODE_ENV !== 'production') {
@@ -39,7 +51,7 @@ class Root extends React.Component {
     return (
       <div>
         <Provider store={store}>
-          <Router history={browserHistory}>
+          <Router history={browserHistory} onUpdate={ this.logPageView }>
             <Route path="/" component={UserManager}/>
             <Route path="login" component={Login}/>
             <Route path="user-manager" component={UserManager}/>

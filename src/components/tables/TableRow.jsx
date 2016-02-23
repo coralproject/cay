@@ -23,6 +23,7 @@ export default class TableRow extends React.Component {
 const styles = {
   base: {
     height: '40px',
-    lineHeight: '40px'
+    lineHeight: '40px',
+    backgroundColor: 'white'
   }
 };

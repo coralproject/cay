@@ -18,6 +18,7 @@ const styles = {
     textAlign: 'left',
     height: '40px',
     lineHeight: '40px',
-    padding: '0 10px'
+    padding: '0 10px',
+    verticalAlign: 'top'
   }
 };

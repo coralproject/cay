@@ -1,5 +1,5 @@
 // Local constants
-const API_PREFIX = 'api/';
+const API_PREFIX = '/api/';
 
 // Exported constants
 export const TAG_REQUEST_STARTED = 'TAG_REQUEST_STARTED';

@@ -16,7 +16,9 @@ import TableCell from '../components/tables/TableCell';
 
 import { storeTag, getTags, deleteTag } from '../actions/tags';
 
-import {FaSpinner} from 'react-icons';
+import {FaSpinner, MdDelete} from 'react-icons';
+
+import settings from '../settings';
 
 require('../../css/react-tag-input.css');
 
@@ -82,7 +84,8 @@ export default class TagManager extends React.Component {
     this.props.dispatch(storeTag(tagName, value, index));
   }
 
-  onTagName(tagDescription, index, value) {
+  onTagNameEdit(tagDescription, index, value) {
+    console.log(value);
     if (this.validateTag(value)) {
       this.props.dispatch(storeTag(value, tagDescription, index));
     } else {
@@ -95,15 +98,15 @@ export default class TagManager extends React.Component {
     var tagList = this.props.tags ? 
       this.props.tags.map((tag, i) => {
         return (
-          <TableRow key={ i }>
-            <TableCell>
-              <InPlaceEditor key={ i } initialValue={ tag.name } validationMessage={ this.invalidTagMessage } validatorFunction={ this.validateTag } onSave={ this.onTagName.bind(this, tag.description, i) } />
+          <TableRow key={ i } style={ i % 2 ? styles.striped : null }>
+            <TableCell style={ styles.tdPadding }>
+              <InPlaceEditor key={ i } initialValue={ tag.name } validationMessage={ this.invalidTagMessage } validatorFunction={ this.validateTag } onSave={ this.onTagNameEdit.bind(this, tag.description, i) } />
             </TableCell>
-            <TableCell>
+            <TableCell style={ styles.tdPadding }>
               <InPlaceEditor key={ i } initialValue={ tag.description } onSave={ this.onDescriptionEdit.bind(this, tag.name, i) } />
             </TableCell>
-            <TableCell>
-              <button style={ [ styles.actionButtons, styles.danger ] } onClick={ this.confirmDeletion.bind(this, tag.name, tag.description, i) }>Delete</button>
+            <TableCell style={ styles.tdPadding }>
+              <button key={ i } style={ styles.actionButtons } onClick={ this.confirmDeletion.bind(this, tag.name, tag.description, i) }><MdDelete /></button>
             </TableCell>
           </TableRow>
         );
@@ -154,7 +157,7 @@ export default class TagManager extends React.Component {
             { "Click on a tag's name or description to edit it." }
           </p>
 
-          <Table multiSelect={ false } hasActions={ true } isLoading={ this.props.loadingTags } loadingMessage="Loading tags...">
+          <Table striped={ true } multiSelect={ false } hasActions={ true } isLoading={ this.props.loadingTags } loadingMessage="Loading tags...">
             <TableHead>
               <TableHeader>Tag</TableHeader>
               <TableHeader>Description</TableHeader>
@@ -180,8 +183,8 @@ export default class TagManager extends React.Component {
             <div style={ styles.confirmDialog }>
               <h2>Warning: this action has no undo.</h2>
               <p style={ styles.confirmMessage }>Are you sure you want to remove the tag <strong style={ styles.strong }>'{ this.state.confirmTagName }'</strong>?</p>
-              <button style={ [ styles.confirmButton, styles.yesButton ] } onClick={ this.onConfirmClick.bind(this) }>Yes</button>              
-              <button style={ [ styles.confirmButton, styles.noButton ] } onClick={ this.closeDialog.bind(this) }>No</button>              
+              <button style={ [ styles.confirmButton, styles.yesButton ] } onClick={ this.onConfirmClick.bind(this) }>Yes</button>
+              <button style={ [ styles.confirmButton, styles.noButton ] } onClick={ this.closeDialog.bind(this) }>No</button>
             </div>
           </div>
           : null
@@ -196,11 +199,15 @@ const styles = {
     padding: '20px'
   },
   actionButtons: {
-    border: '1px solid #ccc',
-    padding: '10px',
+    border: 'none',
+    padding: '0px 10px',
+    height: '40px',
     cursor: 'pointer',
-    margin: '5px',
-    background: 'none'
+    background: 'none',
+    color: "#666",
+    ':hover': {
+      color: 'red'
+    }
   },
   danger: {
     color: '#a00'
@@ -276,7 +283,9 @@ const styles = {
   },
   yesButton: {
     right: '30px',
-    bottom: '30px'
+    bottom: '30px',
+    background: settings.brandColor,
+    color: 'white'
   },
   noButton: {
     left: '30px',
@@ -284,5 +293,11 @@ const styles = {
   },
   strong: {
     fontWeight: 'bold'
+  },
+  striped: {
+    backgroundColor: '#eee'
+  },
+  tdPadding: {
+    padding: '5px'
   }
 };

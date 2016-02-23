@@ -13,7 +13,8 @@ export default class Table extends React.Component {
       if (child.type === TableHead || child.type === TableBody)
         return React.cloneElement(child, {
           multiSelect: this.props.multiSelect,
-          hasActions: this.props.hasActions
+          hasActions: this.props.hasActions,
+          striped: this.props.striped
         });
       else
         return child;

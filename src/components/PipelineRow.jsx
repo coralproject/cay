@@ -6,8 +6,8 @@ import {Link} from 'react-router';
 import settings from '../settings';
 import ListItem from './lists/ListItem';
 import Badge from './Badge';
-// import {MdFolder} from 'react-icons';
 
+import MdFolder from 'react-icons/lib/md/folder';
 
 @Radium
 export default class PipelineRow extends React.Component {
@@ -21,6 +21,7 @@ export default class PipelineRow extends React.Component {
           styles.base,
           this.props.active && styles.active
         ]}
+        leftAvatar={<MdFolder />}
       >
         <Link style={styles.link} to={`/user-manager/${this.props.id}`}>
           {this.props.pipeline.name}

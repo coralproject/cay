@@ -1,9 +1,7 @@
 import React from 'react';
 import Radium from 'radium';
 
-import Searchbar from '../../forms/Searchbar';
-
-// import {MdMenu} from 'react-icons';
+// import Searchbar from '../../forms/Searchbar';
 import MdMenu from 'react-icons/lib/md/menu';
 
 @Radium

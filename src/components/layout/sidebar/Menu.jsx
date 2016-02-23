@@ -4,7 +4,6 @@ import {Link} from 'react-router';
 
 import MenuItem from './MenuItem';
 
-// import {MdInsertChart, MdTimeline, MdSupervisorAccount, MdSettings} from 'react-icons';
 import MdSupervisorAccount from 'react-icons/lib/md/supervisor-account';
 import MdSettings from 'react-icons/lib/md/settings';
 

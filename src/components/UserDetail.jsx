@@ -4,7 +4,7 @@ import Radium from 'radium';
 import settings from '../settings';
 import {connect} from 'react-redux';
 
-import {fetchCommentsByUser, clearUserDetailComments} from '../actions';
+import {clearUserDetailComments} from '../actions';
 
 import Avatar from './Avatar';
 import Tab from './tabs/Tab';
@@ -16,31 +16,19 @@ import Heading from './Heading';
 
 import CommentDetailList from './CommentDetailList';
 
+// Riley's: nextProps.dispatch(fetchCommentsByUser(nextProps.selectedUser._id));
+// Riley's: this.props.dispatch(clearUserDetailComments());
 
-@connect(state => state.pipelines)
+
+@connect(state => state.selectedUser)
 @Radium
 export default class UserDetail extends React.Component {
 
-  componentWillMount() {
-    // comments might have been loaded for another user.
-    this.props.dispatch(clearUserDetailComments());
-  }
-
-  componentWillUpdate(nextProps) {
-    console.log('UserDetail.componentWillUpdate', nextProps);
-    if (nextProps.selectedUser && nextProps.userDetailComments === null) {
-      console.log('loading comments for user ' + nextProps.selectedUser._id);
-      nextProps.dispatch(fetchCommentsByUser(nextProps.selectedUser._id));
-    }
-  }
-
   render() {
 
-    console.log('UserDetail.render', this.props);
-
-    let comments = this.props.userDetailComments === null ?
+    let comments = this.props.comments === null ?
       'Loading Comments...' :
-      (<CommentDetailList user={this.props.selectedUser} comments={this.props.userDetailComments} />);
+      (<CommentDetailList user={this.props.selectedUser} comments={this.props.selectedUserComments} />);
 
     return (
       <Card style={[styles.base, this.props.style]}>

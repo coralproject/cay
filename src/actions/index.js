@@ -331,7 +331,6 @@ export const fetchDataExplorationDataset = (field, queryParams) => {
         dispatch(receiveDataExplorationDataset(json));
       })
       .catch(err => {
-        console.log('fetchDataExplorationDataset error', err);
         dispatch(dataExplorationFetchError(err));
       });
     } else {
@@ -450,8 +449,6 @@ export const loginInitGit = () => {
 
   const url = `https://github.com/login/oauth/authorize?client_id=${clientId}&state=foobar`;
 
-  console.log('url', url);
-
   return {
     type: LOGIN_INIT,
     url
@@ -519,7 +516,6 @@ export const fetchAllTags = () => {
 };
 
 export const filterChanged = (fieldName, data) => {
-  console.log(FILTER_CHANGED, fieldName, data);
   return {
     type: FILTER_CHANGED,
     fieldName,
@@ -538,7 +534,6 @@ export const makeQueryFromState = (type) => {
   return (dispatch, getState) => {
     // make a query from the current state
     let filterState = getState().filters;
-    console.log(type, filterState);
 
     let query = {
       name: 'user_search',

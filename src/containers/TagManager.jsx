@@ -169,10 +169,13 @@ export default class TagManager extends React.Component {
             </TableBody>
           </Table>
           
+
           { 
+            /*
             this.props.tags ?
               tagger
-            : ''
+            : null
+            */
           }
 
         </div>

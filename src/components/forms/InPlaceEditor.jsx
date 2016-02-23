@@ -95,7 +95,7 @@ const styles = {
   base: {
     fontSize: '16px',
     width: '400px',
-    display: 'inline-block',
+    display: 'block',
     position: 'relative',
     backgroundColor: 'transparent'
   },
@@ -132,6 +132,7 @@ const styles = {
     backgroundColor: settings.brandColor,
     color: 'white',
     border: 'none',
-    display: 'inline-block'
+    display: 'inline-block',
+    'float': 'left'
   }
 }

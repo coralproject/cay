@@ -5,15 +5,6 @@ import settings from '../../settings';
 @Radium
 export default class TextField extends React.Component {
 
-  componentDidMount() {
-    if (this.props.defaultValue) {
-      this.setState({value: this.props.defaultValue});
-    }
-    if (this.props.focusOnMount) {
-      React.findDOMNode(this.refs.textFieldInput).focus(); 
-    }
-  }
-
   constructor(props) {
     super(props);
     this.state = {value: props.value || '', focused: false};
@@ -28,12 +19,6 @@ export default class TextField extends React.Component {
     this.setState({value: event.target.value});
     if (typeof this.props.onChange === 'function') {
       this.props.onChange(event.target.value);
-    }
-  }
-
-  handleKeyPress(event) {
-    if (this.props.onKeyPress) {
-      this.props.onKeyPress(event);
     }
   }
 
@@ -60,8 +45,6 @@ export default class TextField extends React.Component {
           value={this.state.value}
           style={styles.input}
           value={this.state.value}
-          ref="textFieldInput"
-          onKeyPress={this.handleKeyPress.bind(this)}
           type={this.props.type || 'text'}
           onFocus={this.handleFocus.bind(this)}
           onBlur={this.handleBlur.bind(this)}

@@ -16,7 +16,8 @@ import TableCell from '../components/tables/TableCell';
 
 import { storeTag, getTags, deleteTag } from '../actions/tags';
 
-import {FaSpinner, MdDelete} from 'react-icons';
+import FaSpinner from 'react-icons/lib/fa/spinner';
+import MdDelete from 'react-icons/lib/md/delete';
 
 import settings from '../settings';
 

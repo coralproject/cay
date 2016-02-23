@@ -3,7 +3,7 @@ import Radium from 'radium';
 
 import TableHead from './TableHead';
 import TableBody from './TableBody';
-import { FaSpinner } from 'react-icons';
+import FaSpinner from 'react-icons/lib/fa/spinner';
 
 @Radium
 export default class Table extends React.Component {

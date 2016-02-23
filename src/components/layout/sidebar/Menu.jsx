@@ -14,7 +14,7 @@ class Menu extends React.Component {
       <div>
         <Link to="/" style={styles.logo}>Coral Project</Link>
         <ul>
-          <MenuItem name="Tag Manager" target="/tag-manager" />
+          <MenuItem name="Settings" target="/tag-manager" />
           {/*<MenuItem name="Dashboard" target="/" icon={<MdInsertChart />} />*/}
           {/*<MenuItem name="Explore" target="/explore" icon={<MdTimeline />} />*/}
           <MenuItem name="User Manager" target="/user-manager" />

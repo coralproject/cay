@@ -85,7 +85,6 @@ export default class TagManager extends React.Component {
   }
 
   onTagNameEdit(tagDescription, index, value) {
-    console.log(value);
     if (this.validateTag(value)) {
       this.props.dispatch(storeTag(value, tagDescription, index));
     } else {

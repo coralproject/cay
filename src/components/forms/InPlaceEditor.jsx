@@ -35,9 +35,9 @@ export default class InPlaceEditor extends React.Component {
     this.setState({value: event.target.value});
   }
 
-  handleClick(event) {
+  handleClick(value, event) {
     event.stopPropagation();
-    this.setState({ isEditing: true });
+    this.setState({ isEditing: true, value: value });
   }
 
   handleKeyPress(event) {
@@ -64,6 +64,7 @@ export default class InPlaceEditor extends React.Component {
     var value = this.state.value;
     if (this.needsUpdate) {
       value = this.props.initialValue;
+      this.needsUpdate = false;
     }
 
     var validationMessage = this.state.showValidationError ?
@@ -82,7 +83,7 @@ export default class InPlaceEditor extends React.Component {
               <button style={ styles.button } onClick={ this.handleSave.bind(this) }>Save</button>
             </div>
           : 
-            <div style={ styles.editableText } onClick={ this.handleClick.bind(this) }>{ value }</div>
+            <div style={ styles.editableText } onClick={ this.handleClick.bind(this, value) }>{ value }</div>
         }
         { validationMessage }
       </div>

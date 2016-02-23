@@ -330,7 +330,6 @@ export const fetchDataExplorationDataset = (field, queryParams) => {
         dispatch(receiveDataExplorationDataset(json));
       })
       .catch(err => {
-        console.log('fetchDataExplorationDataset error', err);
         dispatch(dataExplorationFetchError(err));
       });
     } else {
@@ -443,7 +442,6 @@ export const populateControlsReducer = () => {
 };
 
 const loginInit = (email, pass) => {
-
   return {
     type: LOGIN_INIT,
     email,
@@ -545,7 +543,6 @@ export const fetchAllTags = () => {
 };
 
 export const filterChanged = (fieldName, data) => {
-  console.log(FILTER_CHANGED, fieldName, data);
   return {
     type: FILTER_CHANGED,
     fieldName,
@@ -564,7 +561,6 @@ export const makeQueryFromState = (type) => {
   return (dispatch, getState) => {
     // make a query from the current state
     let filterState = getState().filters;
-    console.log(type, filterState);
 
     let query = {
       name: 'user_search',

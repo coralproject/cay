@@ -8,7 +8,7 @@ export default class CommentDetailList extends React.Component {
 
   showComments(comments) {
     console.log('showComments', comments);
-    if (!comments.length) {
+    if (comments && !comments.length || !comments) { /* todo streamline at end */
       return 'There are no comments.';
     } else {
       return comments.map(comment => {
@@ -18,7 +18,6 @@ export default class CommentDetailList extends React.Component {
   }
 
   render() {
-    console.log('CommentDetailList.render', this.props);
     return (
       <div>
         {this.showComments(this.props.comments)}

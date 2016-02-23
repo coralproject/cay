@@ -26,6 +26,8 @@ require('../../css/react-tag-input.css');
 @Radium
 export default class TagManager extends React.Component {
 
+  invalidTagMessage = 'Please type a valid tag, using only letters, numbers, dashes and underscores. Ex: this_is-1-valid_tag'
+
   componentWillMount() {
     this.setState({ tags: [ 'top_commenter', 'banned', 'moderator', 'martian', 'ufo' ] });
   }
@@ -66,7 +68,7 @@ export default class TagManager extends React.Component {
 
       this.props.dispatch(storeTag(tagName, tagDescription));
     } else {
-      this.setState({ adderValidationError: 'Please type a valid tag, using only letters, numbers, dashes and underscores. Ex: this_is-1-valid_tag' });
+      this.setState({ adderValidationError: this.invalidTagMessage });
     }
   }
 
@@ -80,10 +82,12 @@ export default class TagManager extends React.Component {
     this.props.dispatch(storeTag(tagName, value, index));
   }
 
-  onTagEdit(tagDescription, index, value) {
-    console.log(value);
-    console.log(tagDescription);
-    this.props.dispatch(storeTag(value, tagDescription, index));
+  onTagName(tagDescription, index, value) {
+    if (this.validateTag(value)) {
+      this.props.dispatch(storeTag(value, tagDescription, index));
+    } else {
+      this.showValidationError();
+    }
   }
 
   render() {
@@ -93,10 +97,10 @@ export default class TagManager extends React.Component {
         return (
           <TableRow key={ i }>
             <TableCell>
-              <InPlaceEditor key={ i } initialValue={ tag.name } onSave={ this.onTagEdit.bind(this, tag.description, i) } />
+              <InPlaceEditor key={ i } initialValue={ tag.name } validationMessage={ this.invalidTagMessage } validatorFunction={ this.validateTag } onSave={ this.onTagName.bind(this, tag.description, i) } />
             </TableCell>
             <TableCell>
-              <InPlaceEditor key={ i } initialValue={ tag.description } onSave={ this.onDescriptionEdit.bind(this, tag.name, i) } />
+              <InPlaceEditor key={ i } initialValue={ tag.description } validationMessage={ this.invalidTagMessage } validatorFunction={ this.validateTag } onSave={ this.onDescriptionEdit.bind(this, tag.name, i) } />
             </TableCell>
             <TableCell>
               <button style={ [ styles.actionButtons, styles.danger ] } onClick={ this.confirmDeletion.bind(this, tag.name, tag.description, i) }>Delete</button>
@@ -146,7 +150,7 @@ export default class TagManager extends React.Component {
             : ''
           }
 
-          <Table multiSelect={ true } hasActions={ true } isLoading={ this.props.loadingTags } loadingMessage="Loading tags...">
+          <Table multiSelect={ false } hasActions={ true } isLoading={ this.props.loadingTags } loadingMessage="Loading tags...">
             <TableHead>
               <TableHeader>Tag</TableHeader>
               <TableHeader>Description</TableHeader>

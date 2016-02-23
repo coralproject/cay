@@ -28,8 +28,15 @@ export default class InPlaceEditor extends React.Component {
   }
 
   handleSave(event) {
+    if (this.props.validatorFunction) {
+      if(!this.props.validatorFunction(this.state.value)) {
+        this.setState({ showValidationError: true });
+        return false;
+      }
+    }
     this.setState({ isEditing: false });
     if (this.props.onSave) {
+      this.setState({ showValidationError: false });
       this.props.onSave(this.state.value);
     }
   }
@@ -40,6 +47,13 @@ export default class InPlaceEditor extends React.Component {
     if (this.needsUpdate) {
       value = this.props.initialValue;
     }
+
+    var validationMessage = this.state.showValidationError ?
+      <div style={ styles.validationError }>
+        { this.props.validationMessage }
+      </div>
+    : 
+      null;
 
     return (
       <div style={[styles.base, this.props.style]}>
@@ -52,6 +66,7 @@ export default class InPlaceEditor extends React.Component {
           : 
             <div style={ styles.editableText } onClick={ this.handleClick.bind(this) }>{ value }</div>
         }
+        { validationMessage }
       </div>
     );
   }
@@ -73,5 +88,10 @@ const styles = {
   },
   editableText: {
     cursor: 'pointer'
+  },
+  validationError: {
+    color: '#900',
+    fontSize: '9pt',
+    lineHeight: '1.1'
   }
 }

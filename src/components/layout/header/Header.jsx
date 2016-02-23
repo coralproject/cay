@@ -1,10 +1,9 @@
 import React from 'react';
 import Radium from 'radium';
 
-import Searchbar from '../../forms/Searchbar';
+// import Searchbar from '../../forms/Searchbar';
 
-// import {MdMenu} from 'react-icons';
-// import MdMenu from 'react-icons/lib/md/menu';
+import MdMenu from 'react-icons/lib/md/menu';
 
 @Radium
 class Header extends React.Component {
@@ -16,8 +15,7 @@ class Header extends React.Component {
   render() {
     return (
       <nav style={styles.nav}>
-        <p onClick={this.handleClick.bind(this)}>M</p>
-        {/*<MdMenu style={styles.sidebarToggle} onClick={this.handleClick.bind(this)} />*/}
+        <MdMenu style={styles.sidebarToggle} onClick={this.handleClick.bind(this)} />
         {/*<Searchbar style={styles.searchbar}/>*/}
       </nav>
     );

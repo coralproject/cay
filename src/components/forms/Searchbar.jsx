@@ -1,7 +1,8 @@
 import React from 'react';
 import Radium from 'radium';
 
-import {MdSearch} from 'react-icons';
+// import {MdSearch} from 'react-icons';
+// import MdSearch from 'react-icons/lib/md/search';
 
 @Radium
 export default class Searchbar extends React.Component {
@@ -9,7 +10,7 @@ export default class Searchbar extends React.Component {
     return (
       <form style={[styles.form, this.props.style]} action="#" method="GET">
         <input className="searchBar__input" style={styles.input} name="search" placeholder="Search..." type="text" />
-        <MdSearch style={styles.icon} onClick={this.props.onClick} />
+        {/*<MdSearch style={styles.icon} onClick={this.props.onClick} />*/}
       </form>
     );
   }

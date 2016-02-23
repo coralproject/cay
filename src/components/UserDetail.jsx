@@ -48,7 +48,6 @@ export default class UserDetail extends React.Component {
         <div style={styles.topPart}>
           <Avatar style={styles.avatar} src={this.props.avatar || ''} size={200} />
           <Stats style={styles.stats}>
-            <Stat term="Trust Score" description="87" />
             <Stat term="Status" description="subscriber" />
             <Stat term="Last Login" description={new Date().toISOString()} />
             <Stat term="Member Since" description={new Date().toISOString()} />

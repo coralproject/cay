@@ -1,6 +1,7 @@
 import * as types from '../actions';
 
 const initialState = {
+  authorized: false,
   loading: false,
   loadingPipeline: false,
   pipesLoaded: false,
@@ -56,6 +57,9 @@ const pipelines = (state = initialState, action) => {
 
   case types.CLEAR_USER_DETAIL_COMMENTS:
     return Object.assign({}, state, {userDetailComments: null});
+
+  case types.LOGIN_SUCCESS:
+    return Object.assign({}, state, {authorized: true});
 
   default:
     // console.log('no reducer matches:', action.type);

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 
@@ -16,8 +16,18 @@ import UserFormulaContainer from '../components/UserFormulaContainer';
 @Radium
 export default class UserManager extends React.Component {
 
+  static contextTypes = {
+    router: PropTypes.object.isRequired
+  }
+
   // only the first time
   componentWillMount() {
+
+    if (!this.props.authorized) {
+      let {router} = this.context;
+      return router.push('/login');
+    }
+
     this.props.dispatch(fetchPipelinesIfNotFetched());
   }
 

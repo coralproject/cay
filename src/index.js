@@ -74,7 +74,6 @@ fetch('./config.json')
   });
 
 // prevent browser from navigating backwards if you hit the backspace key
-document.removeEventListener('keydown');
 document.addEventListener('keydown', function (e) {
   var doPrevent = false;
   if (e.keyCode === 8) {

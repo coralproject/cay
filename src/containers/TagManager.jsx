@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 
@@ -23,15 +23,25 @@ import settings from '../settings';
 
 require('../../css/react-tag-input.css');
 
-@connect(state => {
-  return state.tags;
-})
+@connect(state => state.tags)
 @Radium
 export default class TagManager extends React.Component {
 
   invalidTagMessage = 'Please type a valid tag, using only letters, numbers, dashes and underscores. Ex: this_is-1-valid_tag'
 
+  static contextTypes = {
+    router: PropTypes.object.isRequired
+  }
+
   componentWillMount() {
+
+    console.log('TagManager.componentWillMount', this.props);
+    // redirect to login page if user is not authorized
+    if (!this.props.authorized) {
+      const {router} = this.context;
+      return router.push('/login');
+    }
+
     this.setState({ tags: [ 'top_commenter', 'banned', 'moderator', 'martian', 'ufo' ] });
   }
 
@@ -60,14 +70,14 @@ export default class TagManager extends React.Component {
   tagAdderClickHandler() {
 
     var tagName = React.findDOMNode(this.refs.tagNameInput).value;
-    
+
     if (tagName.length > 0 && this.validateTag(tagName)) {
       this.setState({ adderValidationError: false });
 
       var tagDescription = React.findDOMNode(this.refs.tagDescriptionInput).value;
 
-      React.findDOMNode(this.refs.tagNameInput).value = ''; 
-      React.findDOMNode(this.refs.tagDescriptionInput).value = ''; 
+      React.findDOMNode(this.refs.tagNameInput).value = '';
+      React.findDOMNode(this.refs.tagDescriptionInput).value = '';
 
       this.props.dispatch(storeTag(tagName, tagDescription));
     } else {
@@ -95,7 +105,7 @@ export default class TagManager extends React.Component {
 
   render() {
 
-    var tagList = this.props.tags ? 
+    var tagList = this.props.tags ?
       this.props.tags.map((tag, i) => {
         return (
           <TableRow key={ i } style={ i % 2 ? styles.striped : null }>
@@ -168,9 +178,9 @@ export default class TagManager extends React.Component {
               }
             </TableBody>
           </Table>
-          
 
-          { 
+
+          {
             /*
             this.props.tags ?
               tagger
@@ -207,13 +217,13 @@ const styles = {
     height: '40px',
     cursor: 'pointer',
     background: 'none',
-    color: "#666",
+    color: settings.darkGrey,
     ':hover': {
       color: 'red'
     }
   },
   danger: {
-    color: '#a00'
+    color: settings.dangerColor
   },
   tagAdder: {
     width: '700px',
@@ -224,9 +234,9 @@ const styles = {
     padding: '0 10px',
     lineHeight: '40px',
     fontSize: '11pt',
-    borderLeft: '1px solid #ccc',
-    borderTop: '1px solid #ccc',
-    borderBottom: '1px solid #ccc',
+    borderLeft: '1px solid ' + settings.blueGrey,
+    borderTop: '1px solid ' + settings.blueGrey,
+    borderBottom: '1px solid ' + settings.blueGrey,
     borderRight: '0px'
   },
   tagAdderButton: {
@@ -235,16 +245,16 @@ const styles = {
     lineHeight: '38px',
     background: '#eee',
     margin: '0px',
-    border: '1px solid #ccc',
+    border: '1px solid ' + settings.blueGrey,
     fontSize: '11pt',
     cursor: 'pointer'
   },
   errorMsg: {
-    color: '#900',
+    color: settings.dangerColor,
     margin: '10px 0'
   },
   loadingMsg: {
-    color: '#999',
+    color: settings.grey,
     fontSize: '11pt',
     padding: '0 20px',
     display: 'inline-block'
@@ -298,7 +308,7 @@ const styles = {
     fontWeight: 'bold'
   },
   striped: {
-    backgroundColor: '#eee'
+    backgroundColor: settings.mediumGrey
   },
   tdPadding: {
     padding: '5px'

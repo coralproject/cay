@@ -22,7 +22,7 @@ export default class UserManager extends React.Component {
 
   // only the first time
   componentWillMount() {
-
+    // redirect user to /login if they're not logged in
     if (!this.props.authorized) {
       let {router} = this.context;
       return router.push('/login');

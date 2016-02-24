@@ -45,7 +45,7 @@ export const RECEIVE_USER_LIST = 'RECEIVE_USER_LIST';
 /* config */
 
 var getInit = (method) => {
-  var headers = new Headers({'Authorization': 'Basic NmQ3MmU2ZGQtOTNkMC00NDEzLTliNGMtODU0NmQ0ZDM1MTRlOlBDeVgvTFRHWjhOdGZWOGVReXZObkpydm4xc2loQk9uQW5TNFpGZGNFdnc9'});
+  var headers = new Headers({'Authorization': window.basicAuthorization});
 
   var init = {
     method: method || 'GET',

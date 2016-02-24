@@ -49,7 +49,7 @@ class Login extends React.Component {
     return (
       <div style={styles.base}>
         <div style={styles.loginModal}>
-          <img style={styles.logo} src="./img/logo_white.png" />
+          <img style={styles.logo} src="./img/logomark_512x512.svg" />
           <p style={styles.welcome}>Welcome to</p>
           <p style={styles.projectName}>The Coral Project</p>
           <div style={styles.container}>
@@ -126,8 +126,8 @@ const styles = {
   },
   logo: {
     float: 'left',
-    width: 130.5,
-    height: 134.5,
+    width: 128,
+    height: 128,
     marginRight: 20
   }
 };

@@ -62,8 +62,9 @@ fetch('./config.json')
       window[key] = config[key];
     }
 
-    if (!window.xeniaHost) console.warn('xeniaHost is not set in config.json. Coral will not work correctly.');
-    if (!window.pillarHost) console.warn('pillarHost is not set in config.json. Coral will not work correctly.');
+    if (!window.xeniaHost) throw new Error('xeniaHost is not set in config.json. Coral will not work correctly.');
+    if (!window.pillarHost) throw new Error('pillarHost is not set in config.json. Coral will not work correctly.');
+    if (!window.basicAuthorization) throw new Error('basicAuthorization is not set in config.json. Coral will not work correctly');
 
     ReactDOM.render(<Root/>, document.getElementById('root'));
   })

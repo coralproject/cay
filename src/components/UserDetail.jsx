@@ -16,19 +16,11 @@ import Heading from './Heading';
 
 import CommentDetailList from './CommentDetailList';
 
-// Riley's: nextProps.dispatch(fetchCommentsByUser(nextProps.selectedUser._id));
-// Riley's: this.props.dispatch(clearUserDetailComments());
-
-
-@connect(state => state.selectedUser)
+@connect(state => state.pipelines)
 @Radium
 export default class UserDetail extends React.Component {
 
   render() {
-
-    let comments = this.props.comments === null ?
-      'Loading Comments...' :
-      (<CommentDetailList user={this.props.selectedUser} comments={this.props.selectedUserComments} />);
 
     return (
       <Card style={[styles.base, this.props.style]}>
@@ -43,7 +35,17 @@ export default class UserDetail extends React.Component {
           </Stats>
         </div>
         <Tabs initialSelectedIndex={0} style={styles.tabs}>
-          <Tab title="About"> {comments} </Tab>
+          <Tab title="About">
+            {
+              this.props.loadingUserComments ?
+                'Loading Comments...' :
+                (
+                  <CommentDetailList
+                    user={this.props.selectedUser}
+                    comments={this.props.userDetailComments} />
+                )
+            }
+          </Tab>
           <Tab title="Activity">Tab Bravo Content</Tab>
           <Tab title="Messages">Tab Charlie Content</Tab>
         </Tabs>

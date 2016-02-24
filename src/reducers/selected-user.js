@@ -2,21 +2,22 @@ import * as types from '../actions';
 
 const initialState = {
   loading: false,
-  item: []
+  user: null,
+  comments: null
 };
 
-const comments = (state = initialState, action) => {
+const selectedUser = (state = initialState, action) => {
   switch (action.type) {
-    case types.COMMENT_CLICK:
+    case types.:
       return state;
 
-    case types.COMMENTS_REQUEST:
+    case types.REQUEST_USER:
       return Object.assign({}, state, {loading: true});
 
-    case types.COMMENTS_SUCCESS:
+    case types.USER_SUCCESS:
       return Object.assign({}, state, {items: action.data.results[0].Docs});
 
-    case types.COMMENTS_FAIL:
+    case types.USER_FAIL:
       return Object.assign({}, state, {items: []});
 
     default:
@@ -24,4 +25,4 @@ const comments = (state = initialState, action) => {
   }
 }
 
-export default comments;
+export default selectedUser;

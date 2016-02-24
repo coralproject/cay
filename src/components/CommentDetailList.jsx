@@ -8,7 +8,7 @@ export default class CommentDetailList extends React.Component {
 
   showComments(comments) {
     console.log('showComments', comments);
-    if (comments && !comments.length || !comments) { /* todo streamline at end */
+    if (comments && !comments.length) {
       return 'There are no comments.';
     } else {
       return comments.map(comment => {

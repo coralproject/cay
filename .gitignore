@@ -33,3 +33,4 @@ bower_components
 npm-debug.log
 public/config.json
 dist/config.json
+public/auth.php

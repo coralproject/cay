@@ -18,9 +18,8 @@ const styles = {
     marginBottom: 14,
     borderRadius: 3,
     padding: 10,
-    color: "rgb(100,100,100)",
-    borderRadius: 3,
-    WebkitBoxShadow: "3px 3px 6px -1px rgba(220,220,220,1)",
-    BoxShadow: "3px 3px 6px -1px rgba(220,220,220,1)"
+    color: settings.darkGrey,
+    WebkitBoxShadow: '3px 3px 6px -1px ' + settings.mediumGrey,
+    BoxShadow: '3px 3px 6px -1px ' + settings.mediumGrey
   }
 };

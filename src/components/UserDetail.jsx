@@ -25,10 +25,6 @@ export default class UserDetail extends React.Component {
 
   render() {
 
-    let comments = this.props.comments === null ?
-      'Loading Comments...' :
-      (<CommentDetailList user={this.props.selectedUser} comments={this.props.selectedUserComments} />);
-
     return (
       <div style={[styles.base, this.props.style]}>
         <Heading size="medium">{this.props.user_name}</Heading>
@@ -42,7 +38,17 @@ export default class UserDetail extends React.Component {
           </Stats>
         </div>
         <Tabs initialSelectedIndex={0} style={styles.tabs}>
-          <Tab title="About"> {comments} </Tab>
+          <Tab title="About">
+            {
+              this.props.loadingUserComments ?
+                'Loading Comments...' :
+                (
+                  <CommentDetailList
+                    user={this.props.selectedUser}
+                    comments={this.props.userDetailComments} />
+                )
+            }
+          </Tab>
           <Tab title="Activity">Tab Bravo Content</Tab>
           <Tab title="Messages">Tab Charlie Content</Tab>
         </Tabs>

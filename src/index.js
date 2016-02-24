@@ -83,7 +83,7 @@ fetch('./config.json')
   .catch(err => {
 
     console.error('Error while fetching config.json: ', err);
-    document.body.innerHTML = 'you need to create ./config.json, or it is invalid JSON';
+    document.body.innerHTML = 'you need to create ./config.json, or it is invalid JSON, or something blew up somewhere in react :/';
   });
 
 // prevent browser from navigating backwards if you hit the backspace key

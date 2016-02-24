@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
-import {userSelected} from '../actions';
+import {userSelected, fetchCommentsByUser} from '../actions';
 
 import Card from './cards/Card';
 import List from './lists/List';
@@ -23,8 +23,8 @@ export default class UserList extends React.Component {
   }
 
   getUser(user) {
-    console.log('userSelected', user);
     this.props.dispatch(userSelected(user));
+    this.props.dispatch(fetchCommentsByUser(user._id));
   }
 
   getUserList(users) {

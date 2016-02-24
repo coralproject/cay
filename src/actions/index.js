@@ -203,6 +203,8 @@ export const loginUser = (username, password) => {
 export const fetchCommentsByUser = (user_id) => {
   const url = `${window.xeniaHost}/${apiPrefix}exec/comments_by_user?user_id=${user_id}`;
   return (dispatch) => {
+
+    dispatch(clearUserDetailComments());
     dispatch(requestComments());
 
     var myRequest = new Request(url, getInit());

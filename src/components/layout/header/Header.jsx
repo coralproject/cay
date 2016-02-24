@@ -1,17 +1,21 @@
 import React from 'react';
 import Radium from 'radium';
 
-import Searchbar from '../../forms/Searchbar';
-import IconButton from '../../IconButton';
+// import Searchbar from '../../forms/Searchbar';
+import MdMenu from 'react-icons/lib/md/menu';
 
 @Radium
 class Header extends React.Component {
 
+  handleClick() {
+    this.props.onHamburgerClick();
+  }
+
   render() {
     return (
       <nav style={styles.nav}>
-        <IconButton onClick={this.props.onHamburgerClick} style={styles.sidebarToggle} name="fa-navicon" />
-        <Searchbar style={styles.searchbar}/>
+        <MdMenu style={styles.sidebarToggle} onClick={this.handleClick.bind(this)} />
+        {/*<Searchbar style={styles.searchbar}/>*/}
       </nav>
     );
   }
@@ -19,7 +23,13 @@ class Header extends React.Component {
 
 const styles = {
   sidebarToggle: {
-    float: 'left'
+    float: 'left',
+    width: 36,
+    height: 36,
+    fill: 'white',
+    paddingLeft: 10,
+    paddingTop: 10,
+    cursor: 'pointer'
   },
   nav: {
     marginBottom: 0,

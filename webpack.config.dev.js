@@ -1,6 +1,7 @@
 var path = require('path');
 var webpack = require('webpack');
 
+
 module.exports = {
   devtool: 'eval',
   entry: [
@@ -24,7 +25,7 @@ module.exports = {
       test: /\.(js|jsx)$/,
 
       loaders: ['babel'],
-      exclude: /node_modules/,
+      // exclude: /node_modules/,
       include: path.join(__dirname, 'src')
     }, {
       test: /\.css$/,

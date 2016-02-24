@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import settings from '../../settings';
 
@@ -7,12 +7,19 @@ export default class TextField extends React.Component {
 
   constructor(props) {
     super(props);
+    this.state = {value: props.value || '', focused: false};
+  }
 
-    this.state = {value: '', focused: false};
+  static propTypes = {
+    onChange: PropTypes.func,
+    value: PropTypes.string
   }
 
   handleChange(event) {
     this.setState({value: event.target.value});
+    if (typeof this.props.onChange === 'function') {
+      this.props.onChange(event.target.value);
+    }
   }
 
   handleFocus(event) {
@@ -35,7 +42,9 @@ export default class TextField extends React.Component {
         </label>
         <input
           placeholder={this.props.label}
+          value={this.state.value}
           style={styles.input}
+          value={this.state.value}
           type={this.props.type || 'text'}
           onFocus={this.handleFocus.bind(this)}
           onBlur={this.handleBlur.bind(this)}

@@ -5,7 +5,8 @@ import {Link} from 'react-router';
 import MenuItem from './MenuItem';
 import LanguageSwitcher from '../LanguageSwitcher';
 
-import {MdInsertChart, MdTimeline, MdSupervisorAccount, MdSettings} from 'react-icons';
+import MdSupervisorAccount from 'react-icons/lib/md/supervisor-account';
+import MdSettings from 'react-icons/lib/md/settings';
 
 import { Lang } from '../../../lang';
 
@@ -21,6 +22,7 @@ class Menu extends React.Component {
           {/*<MenuItem name="Dashboard" target="/" icon={<MdInsertChart />} />*/}
           {/*<MenuItem name="Explore" target="/explore" icon={<MdTimeline />} />*/}
           <MenuItem name={ L.t("User Manager") } target="/user-manager" icon={<MdSupervisorAccount />} />
+          <MenuItem name={ L.t("Settings") } target="/tag-manager" icon={<MdSettings />}/>
           {/*<MenuItem name="Settings" target="/settings" icon={<MdSettings />} />*/}
         </ul>
         <LanguageSwitcher />

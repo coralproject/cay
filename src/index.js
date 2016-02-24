@@ -16,6 +16,7 @@ import UserManager from './containers/UserManager';
 import TagManager from './containers/TagManager';
 import Login from './containers/Login';
 import DataExplorer from './containers/DataExplorer';
+import SquadManager from './containers/SquadManager';
 
 const store = configureStore();
 
@@ -41,11 +42,12 @@ class Root extends React.Component {
       <div>
         <Provider store={store}>
           <Router history={browserHistory}>
-            <Route path="/" component={UserManager}/>
-            <Route path="login" component={Login}/>
-            <Route path="user-manager" component={UserManager}/>
-            <Route path="tag-manager" component={TagManager}/>
-            <Route path="explore" component={DataExplorer}/>
+            <Route path="/" component={UserManager} />
+            <Route path="login" component={Login} />
+            <Route path="user-manager" component={UserManager} />
+            <Route path="tag-manager" component={TagManager} />
+            <Route path="squad-manager" component={SquadManager} />
+            <Route path="explore" component={DataExplorer} />
           </Router>
         </Provider>
         {debug}

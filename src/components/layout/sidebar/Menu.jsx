@@ -4,7 +4,8 @@ import {Link} from 'react-router';
 
 import MenuItem from './MenuItem';
 
-import MdSupervisorAccount from 'react-icons/lib/md/supervisor-account';
+import MdFace from 'react-icons/lib/md/face';
+import MdBuild from 'react-icons/lib/md/build';
 import MdSettings from 'react-icons/lib/md/settings';
 
 @Radium
@@ -16,8 +17,9 @@ class Menu extends React.Component {
         <ul>
           {/*<MenuItem name="Dashboard" target="/" icon={<MdInsertChart />} />*/}
           {/*<MenuItem name="Explore" target="/explore" icon={<MdTimeline />} />*/}
-          <MenuItem name="User Manager" target="/user-manager" icon={<MdSupervisorAccount />} />
-          <MenuItem name="Settings" target="/tag-manager" icon={<MdSettings />}/>
+          <MenuItem name="User Manager" target="/user-manager" icon={<MdBuild />} />
+          <MenuItem name="Settings" target="/tag-manager" icon={<MdSettings />} />
+          <MenuItem name="Squad Manager" target="/squad-manager" icon={<MdFace />} />
           {/*<MenuItem name="Settings" target="/settings" icon={<MdSettings />} />*/}
         </ul>
       </div>

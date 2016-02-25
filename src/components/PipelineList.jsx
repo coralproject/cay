@@ -10,7 +10,10 @@ import List from './lists/List';
 import PipelineRow from './PipelineRow';
 import Heading from './Heading';
 
+import { Lang } from '../lang';
+
 @connect(state => state.pipelines)
+@Lang
 @Radium
 class PipelineList extends React.Component {
 
@@ -26,7 +29,7 @@ class PipelineList extends React.Component {
 
       <List style={[styles.base, style]}>
         <Heading size="small" style={styles.heading}>
-          Pipeline List
+           { window.L.t("Pipeline List") }
         </Heading>
 
         {

@@ -21,8 +21,11 @@ import MdDelete from 'react-icons/lib/md/delete';
 
 import settings from '../settings';
 
+import { Lang } from '../lang';
+
 require('../../css/react-tag-input.css');
 
+@Lang
 @connect(state => {
   return state.tags;
 })
@@ -60,14 +63,14 @@ export default class TagManager extends React.Component {
   tagAdderClickHandler() {
 
     var tagName = React.findDOMNode(this.refs.tagNameInput).value;
-    
+
     if (tagName.length > 0 && this.validateTag(tagName)) {
       this.setState({ adderValidationError: false });
 
       var tagDescription = React.findDOMNode(this.refs.tagDescriptionInput).value;
 
-      React.findDOMNode(this.refs.tagNameInput).value = ''; 
-      React.findDOMNode(this.refs.tagDescriptionInput).value = ''; 
+      React.findDOMNode(this.refs.tagNameInput).value = '';
+      React.findDOMNode(this.refs.tagDescriptionInput).value = '';
 
       this.props.dispatch(storeTag(tagName, tagDescription));
     } else {
@@ -95,7 +98,7 @@ export default class TagManager extends React.Component {
 
   render() {
 
-    var tagList = this.props.tags ? 
+    var tagList = this.props.tags ?
       this.props.tags.map((tag, i) => {
         return (
           <TableRow key={ i } style={ i % 2 ? styles.striped : null }>
@@ -123,7 +126,7 @@ export default class TagManager extends React.Component {
 
       <Page>
 
-        <ContentHeader title="Tag Manager" />
+        <ContentHeader title={ window.L.t('Tag Manager') } />
 
         <div style={ styles.tagManagerContent }>
 
@@ -159,8 +162,8 @@ export default class TagManager extends React.Component {
 
           <Table striped={ true } multiSelect={ false } hasActions={ true } isLoading={ this.props.loadingTags } loadingMessage="Loading tags...">
             <TableHead>
-              <TableHeader>Tag</TableHeader>
-              <TableHeader>Description</TableHeader>
+              <TableHeader>{ window.L.t('Tag') }</TableHeader>
+              <TableHeader>{ window.L.t('Description') }</TableHeader>
             </TableHead>
             <TableBody>
               {
@@ -168,15 +171,6 @@ export default class TagManager extends React.Component {
               }
             </TableBody>
           </Table>
-          
-
-          { 
-            /*
-            this.props.tags ?
-              tagger
-            : null
-            */
-          }
 
         </div>
 

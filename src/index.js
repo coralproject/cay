@@ -20,6 +20,15 @@ import SquadManager from './containers/SquadManager';
 
 const store = configureStore();
 
+import messages from './messages'; // Lang does not know where did you get your messages from.
+
+import LangSugar from './lang';
+window.L = new LangSugar();
+
+window.L.addTranslations(messages['en'], 'en');
+window.L.addTranslations(messages['de'], 'de');
+window.L.setLocale('en');
+
 require('../css/reset.css');
 require('../css/global.css');
 
@@ -27,7 +36,10 @@ require('../css/react-select.css');
 
 require('../fonts/glyphicons-halflings-regular.woff');
 
+import { Lang } from './lang';
+@Lang
 class Root extends React.Component {
+
   render() {
 
     if (process && process.env.NODE_ENV !== 'production') {

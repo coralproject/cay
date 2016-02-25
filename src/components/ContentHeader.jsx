@@ -3,6 +3,9 @@ import Radium from 'radium';
 
 import Heading from './Heading';
 
+import { Lang } from '../lang';
+
+@Lang
 class ContentHeader extends React.Component {
   render() {
     return (
@@ -10,7 +13,7 @@ class ContentHeader extends React.Component {
         <Heading
           size="large"
           subhead={""/*"some optional subhead"*/}>
-          {this.props.title}
+          { window.L.t(this.props.title) }
         </Heading>
       </section>
     );

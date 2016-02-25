@@ -12,12 +12,7 @@ import UserDetail from '../components/UserDetail';
 @Radium
 export default class SquadManager extends React.Component {
 
-  static propTypes = {
-    groupName: PropTypes.string.isRequired
-  }
-
   componentWillMount() {
-    console.log('what filter?', this.props.params.name);
     this.props.dispatch(fetchPipeline(this.props.params.name));
   }
 
@@ -32,6 +27,7 @@ export default class SquadManager extends React.Component {
             users={this.props.users} />
 
           <UserDetail
+            tags={this.props.tags}
             {...this.props.selectedUser}
             style={styles.userDetail} />
         </div>

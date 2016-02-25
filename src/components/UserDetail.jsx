@@ -4,15 +4,16 @@ import Radium from 'radium';
 import settings from '../settings';
 import {connect} from 'react-redux';
 
-import {fetchCommentsByUser, clearUserDetailComments} from '../actions';
+import {fetchCommentsByUser, clearUserDetailComments, fetchAllTags} from '../actions';
 
 import Avatar from './Avatar';
 import Tab from './tabs/Tab';
 import Tabs from './tabs/Tabs';
 import Stats from './stats/Stats';
 import Stat from './stats/Stat';
-import Card from './cards/Card';
 import Heading from './Heading';
+import Select from 'react-select';
+import MdLocalOffer from 'react-icons/lib/md/local-offer';
 
 import CommentDetailList from './CommentDetailList';
 
@@ -26,6 +27,7 @@ export default class UserDetail extends React.Component {
   componentWillMount() {
     // comments might have been loaded for another user.
     this.props.dispatch(clearUserDetailComments());
+    this.props.dispatch(fetchAllTags());
   }
 
   componentWillUpdate(nextProps) {
@@ -36,9 +38,17 @@ export default class UserDetail extends React.Component {
     }
   }
 
-  render() {
+  getAllTags() {
+    return this.props.tags.map(tag => {
+      return {label: tag.description, value: tag.name};
+    });
+  }
 
-    console.log('UserDetail.render', this.props);
+  saveTags() {
+
+  }
+
+  render() {
 
     let comments = this.props.userDetailComments === null ?
       'Loading Comments...' :
@@ -56,6 +66,12 @@ export default class UserDetail extends React.Component {
             <Stat term={ window.L.t('Warnings') } description="0" />
           </Stats>
         </div>
+        <p><MdLocalOffer /> Add / Remove Tags for this Commenter</p>
+        <Select
+          multi={true}
+          options={this.getAllTags()}
+          onChange={this.saveTags.bind(this)}
+        />
         <Tabs initialSelectedIndex={0} style={styles.tabs}>
           <Tab title="About"> {comments} </Tab>
           <Tab title="Activity">Tab Bravo Content</Tab>
@@ -69,7 +85,7 @@ export default class UserDetail extends React.Component {
 const styles = {
   base: {
     background: 'white',
-    padding: '20px',
+    padding: 20,
     marginTop: '50px'
   },
   topPart: {
@@ -83,6 +99,7 @@ const styles = {
     flex: 1
   },
   tabs: {
-    clear: 'both'
+    clear: 'both',
+    marginTop: 20
   }
 };

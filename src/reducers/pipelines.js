@@ -4,11 +4,13 @@ const initialState = {
   authorized: localStorage.authorized || false,
   loading: false,
   loadingPipeline: false,
+  loadingTags: false,
   pipesLoaded: false,
   selectedUser: null,
   pipelines: [],
   users: [],
   comments: [],
+  tags: [],
   userDetailComments: null,
   loadingUserComments: false
 };
@@ -25,6 +27,12 @@ const pipelines = (state = initialState, action) => {
 
   case types.PIPELINE_REQUEST_FAILURE:
     return Object.assign({}, state, {loadingPipeline: false, showTheError: 'failed to load ' + action.pipelineName});
+
+  case types.REQUEST_ALL_TAGS:
+    return Object.assign({}, state, {loadingTags: true});
+
+  case types.RECEIVE_ALL_TAGS:
+    return Object.assign({}, state, {loadingTags: false, tags: action.tags});
 
   case types.PIPELINES_RECEIVED:
     return Object.assign({}, state,

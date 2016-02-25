@@ -8,9 +8,13 @@ import List from './lists/List';
 import UserRow from './UserRow';
 import Heading from './Heading';
 
+import { Lang } from '../lang';
+
 @connect(state => state.pipelines)
+@Lang
 @Radium
 export default class UserList extends React.Component {
+
   static propTypes = {
     users: PropTypes.arrayOf(PropTypes.shape({
       user_name: PropTypes.string.isRequired,
@@ -38,13 +42,13 @@ export default class UserList extends React.Component {
 
   render() {
     return (
-    <div>
-      <Heading size="small" style={styles.heading}>
-        User List
-      </Heading>
-      <Card style={[styles.base, this.props.style]}>
-        {this.props.users.length ? this.getUserList(this.props.users) : 'Loading...'}
-      </Card>
+    <div style={ styles.base }>
+      <div style={ styles.columnHeader }>
+        <Heading size="medium">
+          { L.t("User List") }
+        </Heading>
+      </div>
+      {this.props.users.length ? this.getUserList(this.props.users) : 'Loading...'}
     </div>
     );
   }
@@ -52,12 +56,13 @@ export default class UserList extends React.Component {
 
 const styles = {
   base: {
-
+    paddingLeft: '20px'
   },
-  heading: {
-    paddingLeft: 10
+  columnHeader: {
+    height: '50px'
   },
-  row: {
-
+  card: {
+    margin: 0,
+    padding: 0
   }
 };

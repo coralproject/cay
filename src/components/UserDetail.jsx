@@ -16,8 +16,10 @@ import Heading from './Heading';
 
 import CommentDetailList from './CommentDetailList';
 
+import { Lang } from '../lang';
 
 @connect(state => state.pipelines)
+@Lang
 @Radium
 export default class UserDetail extends React.Component {
 
@@ -43,15 +45,15 @@ export default class UserDetail extends React.Component {
       (<CommentDetailList user={this.props.selectedUser} comments={this.props.userDetailComments} />);
 
     return (
-      <Card style={[styles.base, this.props.style]}>
+      <div style={[styles.base, this.props.style]}>
         <Heading size="medium">{this.props.user_name}</Heading>
         <div style={styles.topPart}>
           <Avatar style={styles.avatar} src={this.props.avatar || ''} size={200} />
           <Stats style={styles.stats}>
-            <Stat term="Status" description="subscriber" />
-            <Stat term="Last Login" description={new Date().toISOString()} />
-            <Stat term="Member Since" description={new Date().toISOString()} />
-            <Stat term="Warnings" description="0" />
+            <Stat term={ L.t("Status") } description="subscriber" />
+            <Stat term={ L.t("Last Login") } description={ L.date("", "LLLL") } />
+            <Stat term={ L.t("Member Since") } description={ L.relativeDate() } />
+            <Stat term={ L.t("Warnings") } description="0" />
           </Stats>
         </div>
         <Tabs initialSelectedIndex={0} style={styles.tabs}>
@@ -59,16 +61,16 @@ export default class UserDetail extends React.Component {
           <Tab title="Activity">Tab Bravo Content</Tab>
           <Tab title="Messages">Tab Charlie Content</Tab>
         </Tabs>
-      </Card>
+      </div>
     );
   }
 }
 
 const styles = {
   base: {
-    borderTopColor: settings.primaryColor,
-    paddingLeft: 10,
-    paddingRight: 10
+    background: 'white',
+    padding: '20px',
+    marginTop: '50px'
   },
   topPart: {
     display: 'flex',
@@ -84,3 +86,4 @@ const styles = {
     clear: 'both'
   }
 };
+

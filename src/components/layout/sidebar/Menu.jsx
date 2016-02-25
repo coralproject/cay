@@ -7,17 +7,22 @@ import MenuItem from './MenuItem';
 import MdSupervisorAccount from 'react-icons/lib/md/supervisor-account';
 import MdSettings from 'react-icons/lib/md/settings';
 
+import { Lang } from '../../../lang';
+import settings from '../../../settings';
+
+@Lang
 @Radium
 class Menu extends React.Component {
+
   render() {
     return (
       <div>
         <Link to="/" style={styles.logo}>Coral Project</Link>
-        <ul>
+        <ul style={ styles.sideBarMenu }>
           {/*<MenuItem name="Dashboard" target="/" icon={<MdInsertChart />} />*/}
           {/*<MenuItem name="Explore" target="/explore" icon={<MdTimeline />} />*/}
-          <MenuItem name="User Manager" target="/user-manager" icon={<MdSupervisorAccount />} />
-          <MenuItem name="Settings" target="/tag-manager" icon={<MdSettings />}/>
+          <MenuItem name={ L.t("User Manager") } target="/user-manager" icon={<MdSupervisorAccount />} />
+          <MenuItem name={ L.t("Settings") } target="/tag-manager" icon={<MdSettings />}/>
           {/*<MenuItem name="Settings" target="/settings" icon={<MdSettings />} />*/}
         </ul>
       </div>
@@ -30,12 +35,18 @@ var styles = {
     backgroundImage: 'url(/img/logo_white.png)',
     backgroundSize: '20px 20px',
     backgroundRepeat: 'no-repeat',
-    backgroundPosition: '10px 10px',
+    backgroundPosition: '10px 14px',
+    backgroundColor: settings.brandColor,
     color: 'white',
     fontSize: '1em',
-    padding: '12px 20px 12px 35px',
+    padding: '0 20px 0 35px',
     textDecoration: 'none',
-    display: 'block'
+    display: 'block',
+    height: '50px',
+    lineHeight: '50px'
+  },
+  sideBarMenu: {
+    borderTop: '1px solid rgba(255,255,255,.5)'
   }
 };
 

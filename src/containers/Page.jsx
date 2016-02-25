@@ -68,7 +68,8 @@ class Page extends React.Component {
         shadow={this.state.shadow}
         docked={this.state.sidebarDocked}
         transitions={this.state.shouldTransition}
-        onSetOpen={this.onSetSidebarOpen.bind(this)}>
+        onSetOpen={this.onSetSidebarOpen.bind(this)}
+        styles={ { sidebar: { backgroundColor: "#444" } } }>
         <Header onHamburgerClick={this.toggleSidebar.bind(this)}/>
         <div style={[styles.wrapper, this.props.style]}>
           {this.props.children}
@@ -84,6 +85,7 @@ export default Page;
 const styles = {
   wrapper:  {
     backgroundColor: '#ecf0f5',
-    minHeight: (window.innerHeight - 50) + 'px'
+    minHeight: (window.innerHeight - 50) + 'px',
+    padding: '20px'
   }
 };

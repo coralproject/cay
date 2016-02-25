@@ -19,6 +19,15 @@ import DataExplorer from './containers/DataExplorer';
 
 const store = configureStore();
 
+import messages from './messages'; // Lang does not know where did you get your messages from.
+
+import LangSugar from './lang';
+window.L = new LangSugar();
+
+L.addTranslations(messages["en"], "en");
+L.addTranslations(messages["de"], "de");
+L.setLocale("en");
+
 require('../css/reset.css');
 require('../css/global.css');
 
@@ -26,8 +35,11 @@ require('../css/react-select.css');
 
 require('../fonts/glyphicons-halflings-regular.woff');
 
+import { Lang } from './lang';
+@Lang
 class Root extends React.Component {
-  render() {
+
+  render() {  
 
     if (process && process.env.NODE_ENV !== 'production') {
       var debug = (

@@ -21,8 +21,11 @@ import MdDelete from 'react-icons/lib/md/delete';
 
 import settings from '../settings';
 
+import { Lang } from '../lang';
+
 require('../../css/react-tag-input.css');
 
+@Lang
 @connect(state => state.tags)
 @Radium
 export default class TagManager extends React.Component {
@@ -133,7 +136,7 @@ export default class TagManager extends React.Component {
 
       <Page>
 
-        <ContentHeader title="Tag Manager" />
+        <ContentHeader title={ L.t("Tag Manager") } />
 
         <div style={ styles.tagManagerContent }>
 
@@ -169,8 +172,8 @@ export default class TagManager extends React.Component {
 
           <Table striped={ true } multiSelect={ false } hasActions={ true } isLoading={ this.props.loadingTags } loadingMessage="Loading tags...">
             <TableHead>
-              <TableHeader>Tag</TableHeader>
-              <TableHeader>Description</TableHeader>
+              <TableHeader>{ window.L.t('Tag') }</TableHeader>
+              <TableHeader>{ window.L.t('Description') }</TableHeader>
             </TableHead>
             <TableBody>
               {
@@ -178,16 +181,6 @@ export default class TagManager extends React.Component {
               }
             </TableBody>
           </Table>
-
-
-          {
-            /*
-            this.props.tags ?
-              tagger
-            : null
-            */
-          }
-
         </div>
 
         {
@@ -209,7 +202,6 @@ export default class TagManager extends React.Component {
 }
 const styles = {
   tagManagerContent: {
-    padding: '20px'
   },
   actionButtons: {
     border: 'none',

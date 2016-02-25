@@ -14,7 +14,7 @@ class Header extends React.Component {
         this.props.size === 'xlarge' && styles.xlarge,
         this.props.style
       ]}>
-        {this.props.children}
+        <span style={ { fontWeight: this.props.fontWeight } }>{this.props.children}</span>
         <small style={styles.subhead}>{this.props.subhead}</small>
       </p>
     );
@@ -26,13 +26,12 @@ const styles = {
     fontSize: '.5em',
     display: 'inline-block',
     paddingLeft: '4px',
-    fontWeight: 300,
+    fontWeight: 600,
     color: '#777',
     lineHeight: 1
   },
   base: {
-    fontWeight: 400,
-    marginTop: '.8em',
+    fontWeight: 600,
     marginBottom: '.5em'
   },
   xsmall: {

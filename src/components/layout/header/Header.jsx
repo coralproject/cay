@@ -6,6 +6,7 @@ import {logout} from '../../../actions';
 // import Searchbar from '../../forms/Searchbar';
 import MdMenu from 'react-icons/lib/md/menu';
 import Button from '../../Button';
+import LanguageSwitcher from '../LanguageSwitcher';
 
 @connect()
 @Radium
@@ -35,6 +36,7 @@ class Header extends React.Component {
           size="small"
           category="default"
           onClick={this.logout.bind(this)}>Logout</Button>
+        <LanguageSwitcher />
       </nav>
     );
   }

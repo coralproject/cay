@@ -3,6 +3,7 @@ import Radium from 'radium';
 
 // import Searchbar from '../../forms/Searchbar';
 import MdMenu from 'react-icons/lib/md/menu';
+import LanguageSwitcher from '../LanguageSwitcher';
 
 @Radium
 class Header extends React.Component {
@@ -16,6 +17,7 @@ class Header extends React.Component {
       <nav style={styles.nav}>
         <MdMenu style={styles.sidebarToggle} onClick={this.handleClick.bind(this)} />
         {/*<Searchbar style={styles.searchbar}/>*/}
+        <LanguageSwitcher />
       </nav>
     );
   }

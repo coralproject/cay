@@ -24,9 +24,9 @@ import messages from './messages'; // Lang does not know where did you get your 
 import LangSugar from './lang';
 window.L = new LangSugar();
 
-L.addTranslations(messages["en-US"], "en-US");
-L.addTranslations(messages["de-DE"], "de-DE");
-L.setLocale("en-US");
+L.addTranslations(messages["en"], "en");
+L.addTranslations(messages["de"], "de");
+L.setLocale("en");
 
 require('../css/reset.css');
 require('../css/global.css');

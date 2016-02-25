@@ -2,11 +2,17 @@ import Polyglot from 'node-polyglot';
 import moment from 'moment';
 import React from "react";
 
+/*
+  This is currently using two anti-patterns on purpose, 
+  a global, and a pseudo-isMounted property on the decorator,
+  for some details about it, read: https://github.com/coralproject/cay/issues/9
+*/
+
 export default class LangSugar {
 
   translations = {};
   polyglot = new Polyglot();
-  locale = "en-US";
+  locale = "en";
   moment = moment;
   renderParent = {};
   componentQueue = [];
@@ -21,6 +27,11 @@ export default class LangSugar {
   }
 
   t(phrase, vars) {
+    if (process && process.env.NODE_ENV !== 'production') {
+      if (Object.keys(this.translations[this.locale]).indexOf(phrase) < 0) {
+        console.warn("Translation for the key [" + phrase + "] on locale [" + this.locale + "] is missing. Please add it to [lang/" + this.locale + ".json].");
+      }
+    }
     return this.polyglot.t(phrase, vars);
   }
 
@@ -63,7 +74,10 @@ export var Lang = ComposedComponent => class extends React.Component {
 
   constructor(props) {
     super(props);
+    // native React's isMounted is discouraged as anti-pattern,
+    // the reasoning behind this implementation is in: https://github.com/coralproject/cay/issues/9
     this._langIsMounted = false;
+    this.state = { currentLocale: L.locale || 'en' };
   }
 
   componentWillUnmount() {
@@ -77,7 +91,7 @@ export var Lang = ComposedComponent => class extends React.Component {
   }
 
   render() {
-    return <ComposedComponent {...this.props} />;
+    return <ComposedComponent {...this.props} currentLocale={ this.state.currentLocale } />;
   }
 
 };

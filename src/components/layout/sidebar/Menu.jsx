@@ -3,7 +3,6 @@ import Radium from 'radium';
 import {Link} from 'react-router';
 
 import MenuItem from './MenuItem';
-import LanguageSwitcher from '../LanguageSwitcher';
 
 import MdSupervisorAccount from 'react-icons/lib/md/supervisor-account';
 import MdSettings from 'react-icons/lib/md/settings';
@@ -25,7 +24,6 @@ class Menu extends React.Component {
           <MenuItem name={ L.t("Settings") } target="/tag-manager" icon={<MdSettings />}/>
           {/*<MenuItem name="Settings" target="/settings" icon={<MdSettings />} />*/}
         </ul>
-        <LanguageSwitcher />
       </div>
     );
   }

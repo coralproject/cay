@@ -193,7 +193,6 @@ export default class TagManager extends React.Component {
 }
 const styles = {
   tagManagerContent: {
-    padding: '20px'
   },
   actionButtons: {
     border: 'none',

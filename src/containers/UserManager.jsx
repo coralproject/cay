@@ -65,10 +65,6 @@ const styles = {
   base: {
     display: 'flex',
     minHeight: '250px',
-    paddingTop: 15,
-    paddingBottom: 15,
-    paddingLeft: 15,
-    paddingRight: 15 // why do I have to write these all out?
   },
   pipelineList: {
     flex: 1,
@@ -82,7 +78,6 @@ const styles = {
   },
   userDetail: {
     flex: 2,
-    marginLeft: 5,
     marginRight: 5
   }
 };

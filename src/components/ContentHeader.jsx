@@ -10,11 +10,9 @@ class ContentHeader extends React.Component {
   render() {
     return (
       <section style={styles.base}>
-        <Heading
+        <Heading fontWeight="600"
           size="large"
-          subhead={""/*"some optional subhead"*/}>
-          { L.t(this.props.title) }
-        </Heading>
+          subhead={""/*"some optional subhead"*/}>{ L.t(this.props.title) }</Heading>
       </section>
     );
   }
@@ -22,8 +20,7 @@ class ContentHeader extends React.Component {
 
 const styles = {
   base: {
-    position: 'relative',
-    padding: '15px 15px 0 15px'
+    position: 'relative'
   }
 };
 

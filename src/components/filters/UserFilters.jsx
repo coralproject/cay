@@ -9,6 +9,8 @@ import FilterNumbers from './FilterNumbers';
 import FilterDate from './FilterDate';
 import FilterString from './FilterString';
 
+import Heading from '../Heading';
+
 @connect(state => state.filters)
 @Radium
 export default class UserFilters extends React.Component {
@@ -87,8 +89,12 @@ export default class UserFilters extends React.Component {
   render() {
 
     return (
-      <div style={styles.base}>
-        <p style={{fontSize: 24}}>Filters</p>
+      <div>
+        <div style={ styles.columnHeader }>
+          <Heading size="medium">
+            Filters
+          </Heading>
+        </div>
 
         <p>I want to know about:</p>
         <Select
@@ -151,7 +157,7 @@ export default class UserFilters extends React.Component {
 }
 
 const styles = {
-  base: {
-    margin: '0px 30px'
+  columnHeader: {
+    height: '50px'
   }
 };

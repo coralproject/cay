@@ -151,7 +151,7 @@ export default class PipelineCreator extends React.Component {
 
         {FilterFactory.makeFilters('user')}
 
-        <div style={{marginTop: 20}}>
+        <div>
           <Button
             category="primary"
             onClick={this.handleCreatePipeline.bind(this)}>

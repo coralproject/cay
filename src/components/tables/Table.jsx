@@ -5,6 +5,8 @@ import TableHead from './TableHead';
 import TableBody from './TableBody';
 import FaSpinner from 'react-icons/lib/fa/spinner';
 
+import settings from '../../settings';
+
 @Radium
 export default class Table extends React.Component {
 
@@ -25,14 +27,14 @@ export default class Table extends React.Component {
     return (
       <table style={[ styles.base, this.props.style ]}>
         {
-          this.props.isLoading ? 
+          this.props.isLoading ?
             <tr>
               <td style={ styles.loading }>
                 <span style={ styles.spinner }><FaSpinner /></span>
                 <span>{ this.props.loadingMessage || 'Loading...' }</span>
               </td>
             </tr>
-          : 
+          :
             this.renderChildren()
         }
       </table>
@@ -46,7 +48,7 @@ const styles = {
     width: '70%',
     maxWidth: '900px',
     borderRadius: '4px',
-    border: '1px solid #ccc',
+    border: '1px solid ' + settings.blueGrey,
     background: 'white',
     padding: '20px'
   },

@@ -7,9 +7,8 @@ export const PIPELINES_RECEIVED = 'PIPELINES_RECEIVED';
 export const PIPELINE_RECEIVED = 'PIPELINE_RECEIVED';
 
 export const LOGIN_INIT = 'LOGIN_INIT'; // user has clicked the Sign In button
-export const LOGIN_REQUEST = 'LOGIN_REQUEST'; // login http request started
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS'; // login request success
-export const LOGIN_FAIL = 'LOGIN_FAIL'; // login request failure
+export const LOGIN_FAILURE = 'LOGIN_FAILURE'; // login request failure
 export const LOGGED_OUT = 'LOGGED_OUT';
 
 export const COMMENT_CLICK = 'COMMENT_CLICK';
@@ -46,7 +45,7 @@ export const RECEIVE_USER_LIST = 'RECEIVE_USER_LIST';
 /* config */
 
 var getInit = (method) => {
-  var headers = new Headers({'Authorization': 'Basic NmQ3MmU2ZGQtOTNkMC00NDEzLTliNGMtODU0NmQ0ZDM1MTRlOlBDeVgvTFRHWjhOdGZWOGVReXZObkpydm4xc2loQk9uQW5TNFpGZGNFdnc9'});
+  var headers = new Headers({'Authorization': window.basicAuthorization});
 
   var init = {
     method: method || 'GET',
@@ -443,30 +442,57 @@ export const populateControlsReducer = () => {
   };
 };
 
-/* github oauth stuff */
-
-export const loginInitGit = () => {
-  const clientId = '539db12440cca9ec7e2c';
-
-  const url = `https://github.com/login/oauth/authorize?client_id=${clientId}&state=foobar`;
-
-  console.log('url', url);
+const loginInit = (email, pass) => {
 
   return {
     type: LOGIN_INIT,
-    url
+    email,
+    pass
   };
-
-  // location.href = url;
 };
 
-export const loginGitSuccess = (token) => {
-
-  window.localStorage.token = token;
-
+const loginSuccess = () => {
   return {
-    type: LOGIN_SUCCESS,
-    token
+    type: LOGIN_SUCCESS
+  };
+};
+
+const loginFailure = (err) => {
+  return {
+    type: LOGIN_FAILURE,
+    err
+  };
+};
+
+export const login = (email, password) => {
+  return (dispatch, getState) => {
+
+    if (getState().loading) {
+      return;
+    }
+
+    dispatch(loginInit(email, password));
+
+    fetch(`./auth.php?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`)
+      .then(response => response.json())
+      .then(json => {
+        if (json.valid === 1) {
+          window.localStorage.authorized = true;
+          dispatch(loginSuccess());
+        } else {
+          dispatch(loginFailure('unauthorized'));
+        }
+      })
+      .catch(err => {
+        dispatch(loginFailure(err));
+      });
+  };
+};
+
+export const logout = () => {
+  window.localStorage.removeItem('authorized');
+  return {
+    type: LOGGED_OUT
   };
 };
 

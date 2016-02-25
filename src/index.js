@@ -17,6 +17,7 @@ import TagManager from './containers/TagManager';
 import Login from './containers/Login';
 import DataExplorer from './containers/DataExplorer';
 import SquadManager from './containers/SquadManager';
+import NoMatch from './containers/NoMatch';
 
 const store = configureStore();
 
@@ -58,8 +59,10 @@ class Root extends React.Component {
             <Route path="login" component={Login} />
             <Route path="user-manager" component={UserManager} />
             <Route path="tag-manager" component={TagManager} />
-            <Route path="squad-manager" component={SquadManager} />
-            <Route path="explore" component={DataExplorer} />
+            <Route path="filters" component={UserManager} />
+            <Route path="filter/:name" component={SquadManager} />
+            <Route path="*" component={NoMatch} />
+            {/*<Route path="explore" component={DataExplorer} />*/}
           </Router>
         </Provider>
         {debug}
@@ -68,7 +71,7 @@ class Root extends React.Component {
   }
 }
 
-fetch('./config.json')
+fetch('/config.json')
   .then(res => res.json())
   .then(config => {
 
@@ -76,8 +79,9 @@ fetch('./config.json')
       window[key] = config[key];
     }
 
-    if (!window.xeniaHost) console.warn('xeniaHost is not set in config.json. Coral will not work correctly.');
-    if (!window.pillarHost) console.warn('pillarHost is not set in config.json. Coral will not work correctly.');
+    if (!window.xeniaHost) throw new Error('xeniaHost is not set in config.json. Coral will not work correctly.');
+    if (!window.pillarHost) throw new Error('pillarHost is not set in config.json. Coral will not work correctly.');
+    if (!window.basicAuthorization) throw new Error('basicAuthorization is not set in config.json. Coral will not work correctly');
 
     ReactDOM.render(<Root/>, document.getElementById('root'));
   })

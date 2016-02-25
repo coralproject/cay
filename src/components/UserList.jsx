@@ -42,13 +42,13 @@ export default class UserList extends React.Component {
 
   render() {
     return (
-    <div>
-      <Heading size="small" style={styles.heading}>
-        { L.t("User List") }
-      </Heading>
-      <Card style={[styles.base, this.props.style]}>
-        {this.props.users.length ? this.getUserList(this.props.users) : 'Loading...'}
-      </Card>
+    <div style={ styles.base }>
+      <div style={ styles.columnHeader }>
+        <Heading size="medium">
+          { window.L.t('Commentors') }
+        </Heading>
+      </div>
+      {this.props.users.length ? this.getUserList(this.props.users) : 'Loading...'}
     </div>
     );
   }
@@ -56,12 +56,13 @@ export default class UserList extends React.Component {
 
 const styles = {
   base: {
-
+    paddingLeft: '20px'
   },
-  heading: {
-    paddingLeft: 10
+  columnHeader: {
+    height: '50px'
   },
-  row: {
-
+  card: {
+    margin: 0,
+    padding: 0
   }
 };

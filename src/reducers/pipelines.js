@@ -1,6 +1,7 @@
 import * as types from '../actions';
 
 const initialState = {
+  authorized: localStorage.authorized || false,
   loading: false,
   loadingPipeline: false,
   pipesLoaded: false,
@@ -15,14 +16,9 @@ const initialState = {
 const pipelines = (state = initialState, action) => {
 
   switch (action.type) {
-  case types.PIPELINE_SELECTED:
-    return state;
 
   case types.PIPELINES_REQUEST:
     return Object.assign({}, state, {loading: true});
-
-  case types.PIPELINE_REQUEST:
-    return Object.assign({}, state, {loadingPipeline: true}); // query one pipeline?
 
   case types.PIPELINES_REQUEST_FAILURE:
     return Object.assign({}, state, {loading: false, showTheError: 'failed to load pipelines from server'});
@@ -39,6 +35,12 @@ const pipelines = (state = initialState, action) => {
         pipelines: action.pipelines.filter(pipe => pipe.queries[0].collection === 'user')
       }
     );
+
+  case types.PIPELINE_SELECTED:
+    return state;
+
+  case types.PIPELINE_REQUEST:
+    return Object.assign({}, state, {loadingPipeline: true}); // query one pipeline?
 
   // query_set executed. receive a list of users.
   case types.PIPELINE_RECEIVED:

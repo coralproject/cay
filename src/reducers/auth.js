@@ -1,22 +1,24 @@
 import * as types from '../actions';
 
 const initialState = {
-  authorized: window.localStorage.token !== undefined,
-  token: window.localStorage.token || null
+  loading: false,
+  authorized: window.localStorage.authorized || false
 };
 
 const auth = (state = initialState, action) => {
   switch (action.type) {
   case types.LOGIN_INIT:
-    location.href = action.url;
-    return state;
-  case types.LOGIN_REQUEST:
-    return state;
+    return Object.assign({}, state, {loading: true});
+
   case types.LOGIN_SUCCESS:
-    window.localStorage.token = action.token; // probably bad.
-    return Object.assign({}, state, {authorized: true, token: action.token});
+    return Object.assign({}, state, {authorized: true, loading: false});
+
   case types.LOGIN_FAIL:
-    return state;
+    return Object.assign({}, state, {authorized: false, loading: false});
+
+  case types.LOGGED_OUT:
+    return Object.assign({}, state, {authorized: false});
+
   default:
     return state;
   }

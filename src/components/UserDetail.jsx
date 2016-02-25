@@ -24,6 +24,11 @@ import { Lang } from '../lang';
 @Radium
 export default class UserDetail extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {selectedTags: []};
+  }
+
   componentWillMount() {
     // comments might have been loaded for another user.
     this.props.dispatch(clearUserDetailComments());
@@ -44,8 +49,9 @@ export default class UserDetail extends React.Component {
     });
   }
 
-  saveTags() {
-
+  saveTags(values) {
+    console.log(values, Object.prototype.toString.call(values));
+    this.setState({selectedTags: values});
   }
 
   render() {
@@ -71,6 +77,7 @@ export default class UserDetail extends React.Component {
           multi={true}
           options={this.getAllTags()}
           onChange={this.saveTags.bind(this)}
+          value={this.state.selectedTags}
         />
         <Tabs initialSelectedIndex={0} style={styles.tabs}>
           <Tab title="About"> {comments} </Tab>

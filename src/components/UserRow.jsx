@@ -32,7 +32,7 @@ export default class UserRow extends React.Component {
         >
           {user.user_name}
           <p style={styles.sub}>
-            Rating | accept ratio {user.stats.accept_ratio} | Comments {user.stats.comments.total}
+            Accept ratio {user.stats.accept_ratio} | Comments {user.stats.comments.total}
           </p>
 
       </ListItem>

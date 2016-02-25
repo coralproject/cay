@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
+import {Link} from 'react-router';
 
 import settings from '../settings';
 import color from 'color';
@@ -53,6 +54,7 @@ class Login extends React.Component {
           <p style={styles.welcome}>Welcome to</p>
           <p style={styles.projectName}>The Coral Project</p>
           <div style={styles.container}>
+            <p style={styles.cta}>Help us test the beta site</p>
             <TextField
               ref="email"
               style={styles.textInput}
@@ -69,7 +71,10 @@ class Login extends React.Component {
               style={styles.loginButton}
               category="primary"
               onClick={this.loginUser.bind(this)}
-            >Log In</Button>
+            >
+              Log In
+            </Button>
+            <Link style={styles.loginRequest} to="/about">How can I request a login?</Link>
           </div>
         </div>
       </div>
@@ -85,6 +90,12 @@ const styles = {
   loginModal: {
     margin: 'auto',
     width: 700
+  },
+  cta: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 20,
+    marginBottom: 10
   },
   welcome: {
     color: 'white',
@@ -123,6 +134,9 @@ const styles = {
       backgroundColor: 'rgba(255, 255, 255, 0.3)',
       borderColor: 'transparent'
     }
+  },
+  loginRequest: {
+    color: 'white'
   },
   logo: {
     float: 'left',

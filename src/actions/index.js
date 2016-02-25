@@ -477,6 +477,7 @@ export const login = (email, password) => {
       .then(response => response.json())
       .then(json => {
         if (json.valid === 1) {
+          window.localStorage.authorized = true;
           dispatch(loginSuccess());
         } else {
           dispatch(loginFailure('unauthorized'));
@@ -485,6 +486,13 @@ export const login = (email, password) => {
       .catch(err => {
         dispatch(loginFailure(err));
       });
+  };
+};
+
+export const logout = () => {
+  window.localStorage.removeItem('authorized');
+  return {
+    type: LOGGED_OUT
   };
 };
 

@@ -6,7 +6,7 @@ const types = Object.assign({}, index, tagActions);
 const initialState = {
   loading: false,
   loadingTags: false,
-  authorized: false
+  authorized: window.localStorage.authorized || false
 };
 
 const tags = (state = initialState, action) => {
@@ -44,6 +44,9 @@ const tags = (state = initialState, action) => {
   case types.LOGIN_SUCCESS:
     console.log('\n\nTag Reducer LOGIN_SUCCESS\n\n');
     return Object.assign({}, state, {authorized: true});
+
+  case types.LOGGED_OUT:
+    return Object.assign({}, state, {authorized: false});
 
   default:
     // console.log('no reducer matches:', action.type);

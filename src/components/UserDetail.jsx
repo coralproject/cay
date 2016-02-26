@@ -4,7 +4,7 @@ import Radium from 'radium';
 import settings from '../settings';
 import {connect} from 'react-redux';
 
-import {clearUserDetailComments} from '../actions';
+import {fetchAllTagsUserDetail, upsertUser, fetchCommentsByUser, clearUserDetailComments} from '../actions';
 
 import Avatar from './Avatar';
 import Tab from './tabs/Tab';
@@ -13,6 +13,7 @@ import Stats from './stats/Stats';
 import Stat from './stats/Stat';
 import Card from './cards/Card';
 import Heading from './Heading';
+import Tagger from './forms/Tagger';
 
 import CommentDetailList from './CommentDetailList';
 
@@ -23,7 +24,58 @@ import { Lang } from '../lang';
 @Radium
 export default class UserDetail extends React.Component {
 
+  componentWillMount() {
+    // comments might have been loaded for another user.
+    this.props.dispatch(clearUserDetailComments());
+    this.props.dispatch(fetchAllTagsUserDetail());
+  }
+
+  componentWillUpdate(nextProps) {
+    console.log('UserDetail.componentWillUpdate', nextProps);
+    if (nextProps.selectedUser && nextProps.userDetailComments === null) {
+      console.log('loading comments for user ' + nextProps.selectedUser._id);
+      nextProps.dispatch(fetchCommentsByUser(nextProps.selectedUser._id));
+    }
+  }
+
+  getUserTags(user) {
+    var tags = [];
+    if (user && user.tags && user.tags.length) {
+      for (var i in user.tags) {
+        tags.push({
+          id: user.tags[i] + Math.random(),
+          text: user.tags[i]
+        });
+      }
+    }
+    return tags;
+  }
+
+  onTagsChange(tags) {
+    if (this.props.selectedUser && this.props.selectedUser._id) {
+      var preparedUser = {};
+      preparedUser.id = this.props.selectedUser._id;
+      preparedUser.name = this.props.selectedUser.user_name;
+      preparedUser.avatar = this.props.selectedUser.avatar;
+      preparedUser.status = this.props.selectedUser.status;
+      preparedUser.tags = tags.map(tag => tag.text);
+      this.props.dispatch(upsertUser(preparedUser));
+    }
+  }
+
   render() {
+
+    console.log('UserDetail.render', this.props);
+
+    let comments = this.props.userDetailComments === null ?
+      'Loading Comments...' :
+      (<CommentDetailList user={this.props.selectedUser} comments={this.props.userDetailComments} />);
+
+    var tagger = this.props.tags ?
+      <div style={ styles.tags }>
+        <Tagger onChange={ this.onTagsChange.bind(this) } tagList={ this.props.tags } tags={ this.getUserTags(this.props.selectedUser) } freeForm={ false } type="user" id={ this.props.selectedUser && this.props.selectedUser._id ? this.props.selectedUser._id : 1 } />
+      </div>
+    : null;
 
     return (
       <div style={[styles.base, this.props.style]}>
@@ -35,6 +87,7 @@ export default class UserDetail extends React.Component {
             <Stat term={ L.t("Last Login") } description={ L.date("", "LLLL") } />
             <Stat term={ L.t("Member Since") } description={ L.relativeDate() } />
             <Stat term={ L.t("Warnings") } description="0" />
+            { tagger }
           </Stats>
         </div>
         <Tabs initialSelectedIndex={0} style={styles.tabs}>
@@ -75,5 +128,9 @@ const styles = {
   },
   tabs: {
     clear: 'both'
+  },
+  tags: {
+    clear: 'both',
+    paddingTop: '20px'
   }
 };

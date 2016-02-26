@@ -19,7 +19,7 @@ const tags = (state = initialState, action) => {
   case types.TAG_REQUEST_SUCCESS:
     switch (action.requestType) {
     case 'create':
-      if (action.index) {
+      if (typeof action.index !== "undefined") {
         var firstSlice = state.tags.slice(0, action.index);
         var lastSlice = state.tags.slice(action.index + 1);
         var tagsCopy = firstSlice.concat(action.payload).concat(lastSlice);

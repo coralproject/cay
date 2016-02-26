@@ -7,6 +7,7 @@ import {logout} from '../../../actions';
 import MdMenu from 'react-icons/lib/md/menu';
 import Button from '../../Button';
 import LanguageSwitcher from '../LanguageSwitcher';
+import settings from '../../../settings';
 
 @connect()
 @Radium
@@ -56,7 +57,8 @@ const styles = {
     marginBottom: 0,
     border: 'none',
     minHeight: '50px',
-    borderRadius: 0
+    borderRadius: 0,
+    backgroundColor: settings.brandColor
   },
   logoutButton: {
     float: 'right',

@@ -64,12 +64,15 @@ const pipelines = (state = initialState, action) => {
 
     case types.CLEAR_USER_DETAIL_COMMENTS:
       return Object.assign({}, state, {userDetailComments: null});
+<<<<<<< HEAD
 
   case types.LOGIN_SUCCESS:
     return Object.assign({}, state, {authorized: true});
 
   case types.LOGGED_OUT:
     return Object.assign({}, state, {authorized: false});
+=======
+>>>>>>> 78a0edce0d74e24c3458e13ca389d5b764f32dd7
 
   default:
     // console.log('no reducer matches:', action.type);

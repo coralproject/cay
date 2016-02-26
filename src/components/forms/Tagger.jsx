@@ -43,6 +43,9 @@ export default class Tagger extends React.Component {
     tags.splice(i, 1);
     this.setState({tags: tags});
     if (tags.length < 1) this.setState({ isAllowed: true, alreadyAdded: false });
+    if (this.props.onChange) {
+      this.props.onChange(tags);
+    }
   }
 
   isAlreadyAdded(tag) {
@@ -53,7 +56,6 @@ export default class Tagger extends React.Component {
   }
 
   handleAddition(tag) {
-
     if (this.props.freeForm || (this.state.tagList.indexOf(tag) > -1)) {
       if (!this.isAlreadyAdded(tag)) {
         var tags = this.state.tags.slice();
@@ -62,6 +64,9 @@ export default class Tagger extends React.Component {
           text: tag
         });
         this.setState({tags: tags, isAllowed: true, alreadyAdded: false });
+        if (this.props.onChange) {
+          this.props.onChange(tags);
+        }
       } else {
         this.setState({ alreadyAdded: true, isAllowed: true });
       }

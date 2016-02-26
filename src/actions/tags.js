@@ -27,7 +27,9 @@ export const getTags = () => {
   return (dispatch) => {
     dispatch(tagRequestStarted());
     fetch(window.pillarHost + API_PREFIX + 'tags', getInit(null, 'GET'))
-      .then(response => response.json())
+      .then(
+        response => response.json()
+      )
       .then(tags => dispatch(tagRequestSuccess(tags, null, 'list')))
       .catch(error => dispatch(tagRequestFailure(error)));
   };

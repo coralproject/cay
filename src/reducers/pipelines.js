@@ -73,13 +73,13 @@ const pipelines = (state = initialState, action) => {
     case types.ALL_TAGS_REQUEST_ERROR:
       return Object.assign({}, state, {loadingTags: false, tagError: 'Failed to load tags ' + action.err});
 
-    case types.REQUEST_ALL_TAGS:
+    case types.REQUEST_ALL_TAGS_USER_DETAIL:
       return Object.assign({}, state, {loadingTags: true});
 
-    case types.RECEIVE_ALL_TAGS:
+    case types.RECEIVE_ALL_TAGS_USER_DETAIL:
       return Object.assign({}, state, {loadingTags: false, tags: action.tags});
 
-    case types.ALL_TAGS_REQUEST_ERROR:
+    case types.ALL_TAGS_REQUEST_ERROR_USER_DETAIL:
       return Object.assign({}, state, {loadingTags: false, tagError: 'Failed to load tags ' + action.err});
 
   default:

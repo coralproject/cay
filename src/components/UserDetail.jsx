@@ -4,7 +4,7 @@ import Radium from 'radium';
 import settings from '../settings';
 import {connect} from 'react-redux';
 
-import {fetchAllTags, fetchCommentsByUser, clearUserDetailComments} from '../actions';
+import {fetchAllTags, upsertUser, fetchCommentsByUser, clearUserDetailComments} from '../actions';
 
 import Avatar from './Avatar';
 import Tab from './tabs/Tab';
@@ -27,7 +27,7 @@ export default class UserDetail extends React.Component {
   componentWillMount() {
     // comments might have been loaded for another user.
     this.props.dispatch(clearUserDetailComments());
-    this.props.dispatch(fetchAllTags());
+    this.props.dispatch(fetchAllTagsUserDetail());
   }
 
   componentWillUpdate(nextProps) {
@@ -40,6 +40,20 @@ export default class UserDetail extends React.Component {
     this.tags = [];
   }
 
+  onTagsChange(tags) {
+    if (this.props.selectedUser && this.props.selectedUser._id) {
+      var preparedUser = {};
+      preparedUser['id'] = this.props.selectedUser._id;
+      preparedUser['name'] = this.props.selectedUser.user_name;
+      preparedUser['avatar'] = this.props.selectedUser.avatar;
+      preparedUser['status'] = this.props.selectedUser.status;
+      preparedUser['tags'] = [];
+      for(var i in tags) {
+        preparedUser['tags'].push(tags[i].text);
+      }
+      this.props.dispatch(upsertUser(preparedUser));
+    }
+  }
 
   render() {
 
@@ -51,7 +65,7 @@ export default class UserDetail extends React.Component {
 
     var tagger = this.props.tags ?
       <div style={ styles.tags }>
-        <Tagger tagList={ this.props.tags } tags={ this.tags } freeForm={ false } type="user" id={ this.props.selectedUser._id } />
+        <Tagger onChange={ this.onTagsChange.bind(this) } tagList={ this.props.tags } tags={ this.tags } freeForm={ false } type="user" id={ this.props.selectedUser && this.props.selectedUser._id ? this.props.selectedUser._id : 1 } />
       </div>
     : null;
 

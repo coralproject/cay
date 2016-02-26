@@ -10,7 +10,7 @@ export default class Tagger extends React.Component {
 
   static propTypes = {
     type: PropTypes.any.isRequired,
-    id: PropTypes.number.isRequired,
+    id: PropTypes.any.isRequired,
     tags: PropTypes.array,
     tagList: PropTypes.array,
     freeForm: PropTypes.bool
@@ -24,8 +24,18 @@ export default class Tagger extends React.Component {
     this.setState({
       tags: this.props.tags || [],
       tagList: tempTagList,
-      isAllowed: true
+      isAllowed: true,
+      id: this.props.id
     });
+  }
+
+  componentDidUpdate() {
+    if (this.props.id != this.state.id) {
+      this.setState({
+        tags: this.props.tags || [],
+        id: this.props.id
+      });
+    }
   }
 
   handleDelete(i) {

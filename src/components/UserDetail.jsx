@@ -4,7 +4,7 @@ import Radium from 'radium';
 import settings from '../settings';
 import {connect} from 'react-redux';
 
-import {fetchCommentsByUser, clearUserDetailComments} from '../actions';
+import {fetchAllTags, fetchCommentsByUser, clearUserDetailComments} from '../actions';
 
 import Avatar from './Avatar';
 import Tab from './tabs/Tab';
@@ -13,6 +13,7 @@ import Stats from './stats/Stats';
 import Stat from './stats/Stat';
 import Card from './cards/Card';
 import Heading from './Heading';
+import Tagger from './forms/Tagger';
 
 import CommentDetailList from './CommentDetailList';
 
@@ -26,6 +27,7 @@ export default class UserDetail extends React.Component {
   componentWillMount() {
     // comments might have been loaded for another user.
     this.props.dispatch(clearUserDetailComments());
+    this.props.dispatch(fetchAllTags());
   }
 
   componentWillUpdate(nextProps) {
@@ -34,7 +36,10 @@ export default class UserDetail extends React.Component {
       console.log('loading comments for user ' + nextProps.selectedUser._id);
       nextProps.dispatch(fetchCommentsByUser(nextProps.selectedUser._id));
     }
+
+    this.tags = [];
   }
+
 
   render() {
 
@@ -43,6 +48,12 @@ export default class UserDetail extends React.Component {
     let comments = this.props.userDetailComments === null ?
       'Loading Comments...' :
       (<CommentDetailList user={this.props.selectedUser} comments={this.props.userDetailComments} />);
+
+    var tagger = this.props.tags ?
+      <div style={ styles.tags }>
+        <Tagger tagList={ this.props.tags } tags={ this.tags } freeForm={ false } type="user" id={ this.props.selectedUser._id } />
+      </div>
+    : null;
 
     return (
       <div style={[styles.base, this.props.style]}>
@@ -54,6 +65,7 @@ export default class UserDetail extends React.Component {
             <Stat term={ L.t("Last Login") } description={ L.date("", "LLLL") } />
             <Stat term={ L.t("Member Since") } description={ L.relativeDate() } />
             <Stat term={ L.t("Warnings") } description="0" />
+            { tagger }
           </Stats>
         </div>
         <Tabs initialSelectedIndex={0} style={styles.tabs}>
@@ -84,6 +96,10 @@ const styles = {
   },
   tabs: {
     clear: 'both'
+  },
+  tags: {
+    clear: 'both',
+    paddingTop: '20px'
   }
 };
 

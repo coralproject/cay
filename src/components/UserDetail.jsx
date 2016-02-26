@@ -4,7 +4,7 @@ import Radium from 'radium';
 import settings from '../settings';
 import {connect} from 'react-redux';
 
-import {fetchAllTags, upsertUser, fetchCommentsByUser, clearUserDetailComments} from '../actions';
+import {fetchAllTagsUserDetail, upsertUser, fetchCommentsByUser, clearUserDetailComments} from '../actions';
 
 import Avatar from './Avatar';
 import Tab from './tabs/Tab';
@@ -28,6 +28,9 @@ export default class UserDetail extends React.Component {
     // comments might have been loaded for another user.
     this.props.dispatch(clearUserDetailComments());
     this.props.dispatch(fetchAllTagsUserDetail());
+
+    this.updateTagsList(this.props.selectedUser);
+    
   }
 
   componentWillUpdate(nextProps) {
@@ -36,8 +39,19 @@ export default class UserDetail extends React.Component {
       console.log('loading comments for user ' + nextProps.selectedUser._id);
       nextProps.dispatch(fetchCommentsByUser(nextProps.selectedUser._id));
     }
+    this.updateTagsList(nextProps.selectedUser);
+  }
 
+  updateTagsList(user) {
     this.tags = [];
+    if (user && user.tags && user.tags.length) {
+      for (var i in user.tags) {
+        this.tags.push({
+          id: user.tags[i] + Math.random(),
+          text: user.tags[i]
+        });
+      }
+    }
   }
 
   onTagsChange(tags) {
@@ -58,6 +72,8 @@ export default class UserDetail extends React.Component {
   render() {
 
     console.log('UserDetail.render', this.props);
+
+    console.log(this.tags);
 
     let comments = this.props.userDetailComments === null ?
       'Loading Comments...' :

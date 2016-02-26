@@ -24,6 +24,7 @@ export default class UserList extends React.Component {
 
   getUser(user) {
     console.log('userSelected', user);
+    // user.tags = [ "troll", "moderator" ];
     this.props.dispatch(userSelected(user));
   }
 

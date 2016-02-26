@@ -47,6 +47,7 @@ class Login extends React.Component {
   }
 
   render() {
+
     return (
       <div style={styles.base}>
         <div style={styles.loginModal}>
@@ -55,6 +56,7 @@ class Login extends React.Component {
           <p style={styles.projectName}>The Coral Project</p>
           <div style={styles.container}>
             <p style={styles.cta}>Help us test the beta site</p>
+
             <TextField
               ref="email"
               style={styles.textInput}
@@ -66,6 +68,14 @@ class Login extends React.Component {
               style={styles.textInput}
               onChange={this.updatePass.bind(this)}
               label="password" />
+
+            {
+              this.props.authorized === false ? 
+                <p style={ styles.unauthorizedMessage }>Invalid username or password.</p>
+              :
+                null
+            }
+
             <Button
               size="large"
               style={styles.loginButton}
@@ -74,7 +84,7 @@ class Login extends React.Component {
             >
               Log In
             </Button>
-            <Link style={styles.loginRequest} to="/about">How can I request a login?</Link>
+            <Link style={styles.loginRequest} to="https://coralproject.net/beta-testers/">How can I request a login?</Link>
           </div>
         </div>
       </div>
@@ -85,7 +95,8 @@ class Login extends React.Component {
 const styles = {
   base: {
     display: 'flex',
-    height: window.innerHeight
+    height: window.innerHeight,
+    backgroundColor: settings.brandColor
   },
   loginModal: {
     margin: 'auto',
@@ -143,6 +154,13 @@ const styles = {
     width: 128,
     height: 128,
     marginRight: 20
+  },
+  unauthorizedMessage: {
+    padding: '20px',
+    backgroundColor: 'rgba(255, 255, 255, 0.4)',
+    textAlign: 'center',
+    fontSize: '12pt',
+    color: 'white'
   }
 };
 

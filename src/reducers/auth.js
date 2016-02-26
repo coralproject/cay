@@ -2,7 +2,7 @@ import * as types from '../actions';
 
 const initialState = {
   loading: false,
-  authorized: window.localStorage.authorized || false
+  authorized: window.localStorage.authorized || null
 };
 
 const auth = (state = initialState, action) => {
@@ -13,7 +13,7 @@ const auth = (state = initialState, action) => {
   case types.LOGIN_SUCCESS:
     return Object.assign({}, state, {authorized: true, loading: false});
 
-  case types.LOGIN_FAIL:
+  case types.LOGIN_FAILURE:
     return Object.assign({}, state, {authorized: false, loading: false});
 
   case types.LOGGED_OUT:

@@ -35,7 +35,7 @@ class Sentence extends React.Component {
   getStyles() {
     return {
       base: {
-
+        fontSize: 24
       }
     };
   }
@@ -115,7 +115,7 @@ class Sentence extends React.Component {
         styles.base,
         this.props.style
       ]}>
-        <p style={{margin: '100px 0px', fontSize: 24}}>
+        <p>
           {
             /* todo disable other inputs ? ask emma */
             this.props['user_name'] ?

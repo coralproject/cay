@@ -90,7 +90,6 @@ export default class UserFilters extends React.Component {
     return (
       <div style={styles.base}>
         <p style={{fontSize: 24}}>Filters</p>
-        <Sentence {...this.props} />
         <p>I want to know about:</p>
         <Select
           ref="breakdown"

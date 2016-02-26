@@ -30,6 +30,8 @@ export default class Tagger extends React.Component {
   }
 
   componentDidUpdate() {
+    // Component updates, for example, when a UserRow is clicked.
+    // This will update the local state to show the tags of that user.
     if (this.props.id != this.state.id) {
       this.setState({
         tags: this.props.tags || [],
@@ -38,11 +40,14 @@ export default class Tagger extends React.Component {
     }
   }
 
-  handleDelete(i) {
+  handleDelete(deletedTagIndex) {
     var tags = this.state.tags.slice();
-    tags.splice(i, 1);
+    tags.splice(deletedTagIndex, 1);
     this.setState({tags: tags});
+
+    // Reset error messages
     if (tags.length < 1) this.setState({ isAllowed: true, alreadyAdded: false });
+
     if (this.props.onChange) {
       this.props.onChange(tags);
     }
@@ -56,11 +61,13 @@ export default class Tagger extends React.Component {
   }
 
   handleAddition(tag) {
+
     if (this.props.freeForm || (this.state.tagList.indexOf(tag) > -1)) {
       if (!this.isAlreadyAdded(tag)) {
+
         var tags = this.state.tags.slice();
         tags.push({
-          id: tags.length + 1,
+          id: tag + Math.random(),
           text: tag
         });
         this.setState({tags: tags, isAllowed: true, alreadyAdded: false });

@@ -131,7 +131,7 @@ class Sentence extends React.Component {
           }
           {
             this.props['member_since'] ?
-            ` become a member between
+            ` became a member between
               ${moment(this.props['member_since'][0]).unix()} and
               ${moment(this.props['member_since'][1]).unix()}, ` :
             ''

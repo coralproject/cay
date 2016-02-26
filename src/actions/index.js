@@ -443,17 +443,7 @@ export const populateControlsReducer = () => {
   };
 };
 
-<<<<<<< HEAD
 const loginInit = (email, pass) => {
-=======
-/* github oauth stuff */
-
-export const loginInitGit = () => {
-  const clientId = '539db12440cca9ec7e2c';
-
-  const url = `https://github.com/login/oauth/authorize?client_id=${clientId}&state=foobar`;
-
->>>>>>> 78a0edce0d74e24c3458e13ca389d5b764f32dd7
   return {
     type: LOGIN_INIT,
     email,

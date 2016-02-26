@@ -16,11 +16,8 @@ import Heading from './Heading';
 
 import CommentDetailList from './CommentDetailList';
 
-<<<<<<< HEAD
 import { Lang } from '../lang';
 
-=======
->>>>>>> 78a0edce0d74e24c3458e13ca389d5b764f32dd7
 @connect(state => state.pipelines)
 @Lang
 @Radium

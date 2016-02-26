@@ -9,11 +9,8 @@ import FilterNumbers from './FilterNumbers';
 import FilterDate from './FilterDate';
 import FilterString from './FilterString';
 import Sentence from '../Sentence';
-<<<<<<< HEAD
 
 import Heading from '../Heading';
-=======
->>>>>>> 78a0edce0d74e24c3458e13ca389d5b764f32dd7
 
 @connect(state => state.filters)
 @Radium
@@ -93,17 +90,12 @@ export default class UserFilters extends React.Component {
   render() {
 
     return (
-<<<<<<< HEAD
       <div>
         <div style={ styles.columnHeader }>
           <Heading size="medium">
             Filters
           </Heading>
         </div>
-=======
-      <div style={styles.base}>
-        <p style={{fontSize: 24}}>Filters</p>
->>>>>>> 78a0edce0d74e24c3458e13ca389d5b764f32dd7
         <p>I want to know about:</p>
         <Select
           ref="breakdown"

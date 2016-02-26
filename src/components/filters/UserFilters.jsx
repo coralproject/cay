@@ -29,11 +29,9 @@ export default class UserFilters extends React.Component {
   }
 
   getTags() {
-    /*
     return this.props.tags.map(tag => {
       return {label: tag.description, value: tag.name};
     });
-    */
   }
 
   getSpecific() {

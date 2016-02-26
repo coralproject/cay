@@ -73,8 +73,6 @@ export default class UserDetail extends React.Component {
 
     console.log('UserDetail.render', this.props);
 
-    console.log(this.tags);
-
     let comments = this.props.userDetailComments === null ?
       'Loading Comments...' :
       (<CommentDetailList user={this.props.selectedUser} comments={this.props.userDetailComments} />);

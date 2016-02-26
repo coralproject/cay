@@ -647,7 +647,7 @@ export const upsertUser = (preparedObject) => {
 
   return (dispatch, getState) => {
     if (!getState().upsertingUser) {
-      dispatch(requestAllTags());
+      dispatch(requestUserUpsert());
 
       var headers = new Headers({ 'Accept': 'application/json', 'Content-Type': 'application/json' });
 
@@ -662,9 +662,9 @@ export const upsertUser = (preparedObject) => {
       fetch(url, init)
         .then(res => res.json())
         .then(json => {
-          dispatch(receiveAllTags(json));
+          dispatch(receiveUpsertedUser(json));
         }).catch(err => {
-          dispatch(allTagsRequestError(err));
+          dispatch(userUpsertRequestError(err));
         });
 
     } else {

@@ -8,6 +8,7 @@ import Select from 'react-select';
 import FilterNumbers from './FilterNumbers';
 import FilterDate from './FilterDate';
 import FilterString from './FilterString';
+import Sentence from '../Sentence';
 
 @connect(state => state.filters)
 @Radium
@@ -89,7 +90,7 @@ export default class UserFilters extends React.Component {
     return (
       <div style={styles.base}>
         <p style={{fontSize: 24}}>Filters</p>
-
+        <Sentence {...this.props} />
         <p>I want to know about:</p>
         <Select
           ref="breakdown"

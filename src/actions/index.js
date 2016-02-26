@@ -518,6 +518,7 @@ export const fetchAllTags = () => {
 };
 
 export const filterChanged = (fieldName, data) => {
+  console.log(fieldName)
   return {
     type: FILTER_CHANGED,
     fieldName,

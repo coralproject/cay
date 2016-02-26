@@ -37,7 +37,7 @@ export default class UserDetail extends React.Component {
         <Tabs initialSelectedIndex={0} style={styles.tabs}>
           <Tab title="About">
             {
-              this.props.loadingUserComments ?
+              this.props.loadingUserComments || !this.props.userDetailComments ?
                 'Loading Comments...' :
                 (
                   <CommentDetailList

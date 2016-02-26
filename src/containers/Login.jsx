@@ -85,7 +85,8 @@ class Login extends React.Component {
 const styles = {
   base: {
     display: 'flex',
-    height: window.innerHeight
+    height: window.innerHeight,
+    backgroundColor: settings.brandColor
   },
   loginModal: {
     margin: 'auto',

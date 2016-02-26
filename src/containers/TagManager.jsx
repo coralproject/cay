@@ -166,21 +166,25 @@ export default class TagManager extends React.Component {
             : ''
           }
 
-          <p>
-            { "Click on a tag's name or description to edit it." }
-          </p>
-
-          <Table striped={ true } multiSelect={ false } hasActions={ true } isLoading={ this.props.loadingTags } loadingMessage="Loading tags...">
-            <TableHead>
-              <TableHeader>{ window.L.t('Tag') }</TableHeader>
-              <TableHeader>{ window.L.t('Description') }</TableHeader>
-            </TableHead>
-            <TableBody>
-              {
-                  tagList
-              }
-            </TableBody>
-          </Table>
+          {
+            this.props.tags && this.props.tags.length ? 
+              <div>
+                <p>
+                  { "Click on a tag's name or description to edit it." }
+                </p>
+                <Table striped={ true } multiSelect={ false } hasActions={ true } isLoading={ this.props.loadingTags } loadingMessage="Loading tags...">
+                  <TableHead>
+                    <TableHeader>{ window.L.t('Tag') }</TableHeader>
+                    <TableHeader>{ window.L.t('Description') }</TableHeader>
+                  </TableHead>
+                  <TableBody>
+                    { tagList }
+                  </TableBody>
+                </Table>
+              </div>
+            : 
+              <p style={ styles.noTags }>No tags created yet.</p>
+          }
         </div>
 
         {
@@ -202,6 +206,11 @@ export default class TagManager extends React.Component {
 }
 const styles = {
   tagManagerContent: {
+  },
+  noTags: {
+    fontSize: '14pt',
+    marginTop: '30px',
+    fontStyle: 'italic'
   },
   actionButtons: {
     border: 'none',
@@ -245,7 +254,7 @@ const styles = {
     color: settings.dangerColor,
     margin: '10px 0'
   },
-  loadingMsg: {
+  loadingMessage: {
     color: settings.grey,
     fontSize: '11pt',
     padding: '0 20px',

@@ -576,7 +576,7 @@ export const makeQueryFromState = (type) => {
         {
           name: 'user_search',
           type: 'pipeline',
-          collection: 'user',
+          collection: 'users',
           commands: [
             {$match: {'stats.accept_ratio': {$gte: filterState['stats.accept_ratio'].userMin}}},
             {$match: {'stats.accept_ratio': {$lte: filterState['stats.accept_ratio'].userMax}}},

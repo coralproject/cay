@@ -8,6 +8,7 @@ import Select from 'react-select';
 import FilterNumbers from './FilterNumbers';
 import FilterDate from './FilterDate';
 import FilterString from './FilterString';
+import Sentence from '../Sentence';
 
 import Heading from '../Heading';
 
@@ -95,7 +96,6 @@ export default class UserFilters extends React.Component {
             Filters
           </Heading>
         </div>
-
         <p>I want to know about:</p>
         <Select
           ref="breakdown"

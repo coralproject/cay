@@ -54,14 +54,11 @@ export default class UserDetail extends React.Component {
   onTagsChange(tags) {
     if (this.props.selectedUser && this.props.selectedUser._id) {
       var preparedUser = {};
-      preparedUser['id'] = this.props.selectedUser._id;
-      preparedUser['name'] = this.props.selectedUser.user_name;
-      preparedUser['avatar'] = this.props.selectedUser.avatar;
-      preparedUser['status'] = this.props.selectedUser.status;
-      preparedUser['tags'] = [];
-      for(var i in tags) {
-        preparedUser['tags'].push(tags[i].text);
-      }
+      preparedUser.id = this.props.selectedUser._id;
+      preparedUser.name = this.props.selectedUser.user_name;
+      preparedUser.avatar = this.props.selectedUser.avatar;
+      preparedUser.status = this.props.selectedUser.status;
+      preparedUser.tags = tags.map(tag => tag.text);
       this.props.dispatch(upsertUser(preparedUser));
     }
   }

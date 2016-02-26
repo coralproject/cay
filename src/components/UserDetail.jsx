@@ -4,7 +4,7 @@ import Radium from 'radium';
 import settings from '../settings';
 import {connect} from 'react-redux';
 
-import {fetchCommentsByUser, clearUserDetailComments, fetchAllTags} from '../actions';
+import {fetchAllTags, upsertUser, fetchCommentsByUser, clearUserDetailComments} from '../actions';
 
 import Avatar from './Avatar';
 import Tab from './tabs/Tab';
@@ -12,8 +12,9 @@ import Tabs from './tabs/Tabs';
 import Stats from './stats/Stats';
 import Stat from './stats/Stat';
 import Heading from './Heading';
-import Select from 'react-select';
 import MdLocalOffer from 'react-icons/lib/md/local-offer';
+import Tagger from './forms/Tagger';
+import Select from 'react-select';
 
 import CommentDetailList from './CommentDetailList';
 
@@ -43,15 +44,51 @@ export default class UserDetail extends React.Component {
     }
   }
 
-  getAllTags() {
+  // getUserTags(user) {
+  //   console.log('\n\n', user);
+  //   var tags = [];
+  //   if (user && user.tags && user.tags.length) {
+  //     for (var i in user.tags) {
+  //       tags.push({
+  //         id: user.tags[i] + Math.random(),
+  //         text: user.tags[i]
+  //       });
+  //     }
+  //   }
+  //   return tags;
+  // }
+
+  // onTagsChange(tags) {
+  //   if (this.props.selectedUser && this.props.selectedUser._id) {
+  //     var preparedUser = {};
+  //     preparedUser.id = this.props.selectedUser._id;
+  //     preparedUser.name = this.props.selectedUser.user_name;
+  //     preparedUser.avatar = this.props.selectedUser.avatar;
+  //     preparedUser.status = this.props.selectedUser.status;
+  //     preparedUser.tags = tags.map(tag => tag.text);
+  //     this.props.dispatch(upsertUser(preparedUser));
+  //   }
+  // }
+
+  getTags() {
     return this.props.tags.map(tag => {
-      return {label: tag.description, value: tag.name};
+      return {label: tag.name, value: tag.name};
     });
   }
 
-  saveTags(values) {
-    console.log(values, Object.prototype.toString.call(values));
-    this.setState({selectedTags: values});
+  updateTags(tags) {
+    this.setState({selectedTags: tags.map(tag => tag.value)});
+    if (this.props.selectedUser && this.props.selectedUser._id) {
+      var s = this.props.selectedUser;
+      var preparedUser = {
+        id: s._id,
+        name: s.user_name,
+        avatar: s.avatar,
+        status: s.status,
+        tags: this.state.selectedTags.splice()
+      };
+      this.props.dispatch(upsertUser(preparedUser));
+    }
   }
 
   render() {
@@ -59,6 +96,25 @@ export default class UserDetail extends React.Component {
     let comments = this.props.userDetailComments === null ?
       'Loading Comments...' :
       (<CommentDetailList user={this.props.selectedUser} comments={this.props.userDetailComments} />);
+
+    /*
+    var tagger = this.props.tags ?
+      <div style={ styles.tags }>
+        <Tagger
+          onChange={ this.onTagsChange.bind(this) }
+          tagList={ this.props.tags }
+          tags={ this.getUserTags(this.props.selectedUser) }
+          freeForm={ false }
+          type="user"
+          id={
+            this.props.selectedUser && this.props.selectedUser._id ?
+              this.props.selectedUser._id :
+              1
+            }
+          />
+      </div>
+    : null;
+    */
 
     return (
       <div style={[styles.base, this.props.style]}>
@@ -70,14 +126,15 @@ export default class UserDetail extends React.Component {
             <Stat term={ window.L.t('Last Login') } description={ window.L.date('', 'LLLL') } />
             <Stat term={ window.L.t('Member Since') } description={ window.L.relativeDate() } />
             <Stat term={ window.L.t('Warnings') } description="0" />
+            {/* tagger */}
           </Stats>
         </div>
         <p><MdLocalOffer /> Add / Remove Tags for this Commenter</p>
         <Select
           multi={true}
-          options={this.getAllTags()}
-          onChange={this.saveTags.bind(this)}
           value={this.state.selectedTags}
+          onChange={this.updateTags.bind(this)}
+          options={this.getTags()}
         />
         <Tabs initialSelectedIndex={0} style={styles.tabs}>
           <Tab title="About"> {comments} </Tab>
@@ -106,7 +163,11 @@ const styles = {
     flex: 1
   },
   tabs: {
+    marginTop: 20,
+    clear: 'both'
+  },
+  tags: {
     clear: 'both',
-    marginTop: 20
+    paddingTop: '20px'
   }
 };

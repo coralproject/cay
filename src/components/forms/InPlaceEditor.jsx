@@ -79,7 +79,19 @@ export default class InPlaceEditor extends React.Component {
         {
           this.state.isEditing ?
             <div style={ styles.textAndButtonWrapper }>
-              <input onClick={ this.onWrapperClick.bind(this) } style={ styles.textField } type="text" value={ this.state.value } onChange={ this.handleChange.bind(this) } onKeyPress={ this.handleKeyPress.bind(this) } />
+              <input 
+                ref={function(input) {
+                  if (input != null) {
+                    input.focus();
+                    input.selectionStart = input.selectionEnd = input.value.length;
+                  }
+                }} 
+                onClick={ this.onWrapperClick.bind(this) } 
+                style={ styles.textField } 
+                type="text" 
+                value={ this.state.value } 
+                onChange={ this.handleChange.bind(this) } 
+                onKeyPress={ this.handleKeyPress.bind(this) } />
               <button style={ styles.button } onClick={ this.handleSave.bind(this) }>Save</button>
             </div>
           : 

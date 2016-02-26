@@ -38,6 +38,10 @@ export const REQUEST_ALL_TAGS = 'REQUEST_ALL_TAGS';
 export const RECEIVE_ALL_TAGS = 'RECEIVE_ALL_TAGS';
 export const ALL_TAGS_REQUEST_ERROR = 'ALL_TAGS_REQUEST_ERROR';
 
+export const RECEIVE_UPSERTED_USER = 'RECEIVE_UPSERTED_USER';
+export const REQUEST_USER_UPSERT = 'REQUEST_USER_UPSERT';
+export const USER_UPSERT_REQUEST_ERROR = 'USER_UPSERT_REQUEST_ERROR';
+
 export const FILTER_CHANGED = 'FILTER_CHANGED';
 export const CREATE_QUERY = 'CREATE_QUERY';
 export const SUBMIT_CUSTOM_QUERY = 'SUBMIT_CUSTOM_QUERY';
@@ -336,85 +340,8 @@ export const fetchDataExplorationDataset = (field, queryParams) => {
     } else {
       return { type: 'NOOP' };
     }
-
   };
 };
-
-const formulaCreated = () => {
-  return {
-    type: FORMULA_CREATED
-  };
-};
-
-export const createFormula = (filterSettings) => {
-  const interval = this.getSensibleInterval(new Date(this.state.minDate), new Date(this.state.maxDate));
-
-  if (this.state.specificBreakdowns.length) {
-
-    var match = {
-      $match: {
-        $or: this.state.specificBreakdowns.map(bd => {
-          return {target_doc: bd};
-        })
-      }
-    };
-
-    computedQuery.queries[0].commands.splice(3, 0, match);
-  }
-
-  // validateFormula(filterSettings)
-
-  var computedQuery = {
-    name: 'custom_query',
-    desc: 'Returns a time series of comments bounded by iso dates!  Totals or broken down by duration [day|week|month] and target type total|user|asset|author|section]',
-    pre_script: '',
-    pst_script: '',
-    params: [],
-    queries: [
-      {
-        name: 'custom_query',
-        type: 'pipeline',
-        collection: 'comment_timeseries',
-        /* this will be generated too... */
-        commands: [
-          {
-            $match: {
-              start_iso: {$gte: `#date:${this.state.minDate}`}
-            }
-          },
-          {
-            $match: {
-              start_iso: {$lt: `#date:${this.state.maxDate}`}
-            }
-          },
-          {
-            $match: {
-              duration: interval
-            }
-          },
-          {
-            $match: {
-              target: this.state.selectedBreakdown
-            }
-          },
-          {
-            $sort: {
-              start_iso: 1
-            }
-          }
-        ],
-        'return': true
-      }
-    ],
-    enabled: true
-  };
-
-  return (dispatch) => {
-    dispatch(createPipelineValueChanged(computedQuery));
-
-  };
-};
-
 
 const requestControls = () => {
   return {
@@ -531,7 +458,9 @@ export const fetchAllTags = () => {
       dispatch(requestAllTags());
 
       fetch(url)
-        .then(res => res.json())
+        .then(res => {
+          return res.json();
+        })
         .then(json => {
           dispatch(receiveAllTags(json));
         }).catch(err => {
@@ -613,4 +542,106 @@ export const makeQueryFromState = (type) => {
       });
 
   };
+};
+
+
+const receiveUpsertedUser = (user) => {
+  return {
+    type: RECEIVE_UPSERTED_USER,
+    user
+  };
+};
+
+const requestUserUpsert = () => {
+  return {
+    type: REQUEST_USER_UPSERT
+  };
+};
+
+const userUpsertRequestError = (err) => {
+  return {
+    type: USER_UPSERT_REQUEST_ERROR,
+    err
+  };
+};
+
+export const upsertUser = (preparedObject) => {
+  const url = window.pillarHost + '/api/user';
+
+  return (dispatch, getState) => {
+    if (!getState().upsertingUser) {
+      dispatch(requestUserUpsert());
+
+      var headers = new Headers({ 'Accept': 'application/json', 'Content-Type': 'application/json' });
+
+      var init = {
+        method: 'POST',
+        headers: headers,
+        mode: 'cors',
+        cache: 'default',
+        body: JSON.stringify(preparedObject)
+      };
+
+      fetch(url, init)
+        .then(res => res.json())
+        .then(json => {
+          dispatch(receiveUpsertedUser(json));
+        }).catch(err => {
+          dispatch(userUpsertRequestError(err));
+        });
+
+    } else {
+      return {type: 'NOOP'};
+    }
+  };
+
+};
+
+
+/*****************************************/
+/* Redundant, for testing purposes only */
+
+export const REQUEST_ALL_TAGS_USER_DETAIL = 'REQUEST_ALL_TAGS_USER_DETAIL';
+export const RECEIVE_ALL_TAGS_USER_DETAIL = 'RECEIVE_ALL_TAGS_USER_DETAIL';
+export const ALL_TAGS_REQUEST_ERROR_USER_DETAIL = 'ALL_TAGS_REQUEST_ERROR_USER_DETAIL';
+
+const receiveAllTagsUserDetail = (tags) => {
+  return {
+    type: RECEIVE_ALL_TAGS_USER_DETAIL,
+    tags
+  };
+};
+
+const requestAllTagsUserDetail = () => {
+  return {
+    type: REQUEST_ALL_TAGS_USER_DETAIL
+  };
+};
+
+const allTagsRequestErrorUserDetail = (err) => {
+  return {
+    type: ALL_TAGS_REQUEST_ERROR_USER_DETAIL,
+    err
+  };
+};
+
+export const fetchAllTagsUserDetail = () => {
+  const url = window.pillarHost + '/api/tags';
+
+  return (dispatch, getState) => {
+    if (!getState().loadingTags) {
+      dispatch(requestAllTagsUserDetail());
+
+      fetch(url)
+        .then(res => res.json())
+        .then(json => {
+          dispatch(receiveAllTagsUserDetail(json));
+        }).catch(err => {
+          dispatch(allTagsRequestErrorUserDetail(err));
+        });
+    } else {
+      return {type: 'NOOP'};
+    }
+  };
+
 };

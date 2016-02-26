@@ -10,7 +10,7 @@ export default class Tagger extends React.Component {
 
   static propTypes = {
     type: PropTypes.any.isRequired,
-    id: PropTypes.number.isRequired,
+    id: PropTypes.any.isRequired,
     tags: PropTypes.array,
     tagList: PropTypes.array,
     freeForm: PropTypes.bool
@@ -24,15 +24,33 @@ export default class Tagger extends React.Component {
     this.setState({
       tags: this.props.tags || [],
       tagList: tempTagList,
-      isAllowed: true
+      isAllowed: true,
+      id: this.props.id
     });
   }
 
-  handleDelete(i) {
+  componentDidUpdate() {
+    // Component updates, for example, when a UserRow is clicked.
+    // This will update the local state to show the tags of that user.
+    if (this.props.id != this.state.id) {
+      this.setState({
+        tags: this.props.tags || [],
+        id: this.props.id
+      });
+    }
+  }
+
+  handleDelete(deletedTagIndex) {
     var tags = this.state.tags.slice();
-    tags.splice(i, 1);
+    tags.splice(deletedTagIndex, 1);
     this.setState({tags: tags});
+
+    // Reset error messages
     if (tags.length < 1) this.setState({ isAllowed: true, alreadyAdded: false });
+
+    if (this.props.onChange) {
+      this.props.onChange(tags);
+    }
   }
 
   isAlreadyAdded(tag) {
@@ -46,12 +64,16 @@ export default class Tagger extends React.Component {
 
     if (this.props.freeForm || (this.state.tagList.indexOf(tag) > -1)) {
       if (!this.isAlreadyAdded(tag)) {
+
         var tags = this.state.tags.slice();
         tags.push({
-          id: tags.length + 1,
+          id: tag + Math.random(),
           text: tag
         });
         this.setState({tags: tags, isAllowed: true, alreadyAdded: false });
+        if (this.props.onChange) {
+          this.props.onChange(tags);
+        }
       } else {
         this.setState({ alreadyAdded: true, isAllowed: true });
       }

@@ -64,23 +64,14 @@ const pipelines = (state = initialState, action) => {
   case types.LOGGED_OUT:
     return Object.assign({}, state, {authorized: false});
 
-    case types.REQUEST_ALL_TAGS:
-      return Object.assign({}, state, {loadingTags: true});
+  case types.REQUEST_ALL_TAGS_USER_DETAIL:
+    return Object.assign({}, state, {loadingTags: true});
 
-    case types.RECEIVE_ALL_TAGS:
-      return Object.assign({}, state, {loadingTags: false, tags: action.tags});
+  case types.RECEIVE_ALL_TAGS_USER_DETAIL:
+    return Object.assign({}, state, {loadingTags: false, tags: action.tags});
 
-    case types.ALL_TAGS_REQUEST_ERROR:
-      return Object.assign({}, state, {loadingTags: false, tagError: 'Failed to load tags ' + action.err});
-
-    case types.REQUEST_ALL_TAGS_USER_DETAIL:
-      return Object.assign({}, state, {loadingTags: true});
-
-    case types.RECEIVE_ALL_TAGS_USER_DETAIL:
-      return Object.assign({}, state, {loadingTags: false, tags: action.tags});
-
-    case types.ALL_TAGS_REQUEST_ERROR_USER_DETAIL:
-      return Object.assign({}, state, {loadingTags: false, tagError: 'Failed to load tags ' + action.err});
+  case types.ALL_TAGS_REQUEST_ERROR_USER_DETAIL:
+    return Object.assign({}, state, {loadingTags: false, tagError: 'Failed to load tags ' + action.err});
 
   default:
     // console.log('no reducer matches:', action.type);

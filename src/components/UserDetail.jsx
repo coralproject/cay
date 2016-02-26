@@ -28,9 +28,6 @@ export default class UserDetail extends React.Component {
     // comments might have been loaded for another user.
     this.props.dispatch(clearUserDetailComments());
     this.props.dispatch(fetchAllTagsUserDetail());
-
-    this.updateTagsList(this.props.selectedUser);
-    
   }
 
   componentWillUpdate(nextProps) {
@@ -39,19 +36,19 @@ export default class UserDetail extends React.Component {
       console.log('loading comments for user ' + nextProps.selectedUser._id);
       nextProps.dispatch(fetchCommentsByUser(nextProps.selectedUser._id));
     }
-    this.updateTagsList(nextProps.selectedUser);
   }
 
-  updateTagsList(user) {
-    this.tags = [];
+  getUserTags(user) {
+    var tags = [];
     if (user && user.tags && user.tags.length) {
       for (var i in user.tags) {
-        this.tags.push({
+        tags.push({
           id: user.tags[i] + Math.random(),
           text: user.tags[i]
         });
       }
     }
+    return tags;
   }
 
   onTagsChange(tags) {
@@ -79,7 +76,7 @@ export default class UserDetail extends React.Component {
 
     var tagger = this.props.tags ?
       <div style={ styles.tags }>
-        <Tagger onChange={ this.onTagsChange.bind(this) } tagList={ this.props.tags } tags={ this.tags } freeForm={ false } type="user" id={ this.props.selectedUser && this.props.selectedUser._id ? this.props.selectedUser._id : 1 } />
+        <Tagger onChange={ this.onTagsChange.bind(this) } tagList={ this.props.tags } tags={ this.getUserTags(this.props.selectedUser) } freeForm={ false } type="user" id={ this.props.selectedUser && this.props.selectedUser._id ? this.props.selectedUser._id : 1 } />
       </div>
     : null;
 

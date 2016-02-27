@@ -32,7 +32,7 @@ var filters = [
 	{
 		"name": "Replied",
 		"category": "Activity",
-		"field": "stats.comments.total",
+		"field": "stats.replied",
 		"description": "Number replies they have written to others.",
 		"min": 0,
 		"max": 500
@@ -224,7 +224,6 @@ var getRandomFilterState = function () {
 	forth = getFilterStateFromQuery(getQueryFromFilterState(getFilterStateFromQuery(back)));
 
 	console.log("Are they the same after lots of schenanigans?");
-	console.log(JSON.stringify(back) === JSON.stringify(query), JSON.stringify(forth) === JSON.stringify(filterState));
-
+	console.log(JSON.stringify(back) === JSON.stringify(query), " and ", JSON.stringify(forth) === JSON.stringify(filterState));
 
 }());

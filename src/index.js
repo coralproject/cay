@@ -16,6 +16,7 @@ import UserManager from './containers/UserManager';
 import TagManager from './containers/TagManager';
 import Login from './containers/Login';
 import DataExplorer from './containers/DataExplorer';
+import SeeAllGroups from './containers/SeeAllGroups.jsx'; 
 
 const store = configureStore();
 
@@ -39,7 +40,7 @@ import { Lang } from './lang';
 @Lang
 class Root extends React.Component {
 
-  render() {  
+  render() {
 
     if (process && process.env.NODE_ENV !== 'production') {
       var debug = (
@@ -58,6 +59,7 @@ class Root extends React.Component {
             <Route path="user-manager" component={UserManager}/>
             <Route path="tag-manager" component={TagManager}/>
             <Route path="explore" component={DataExplorer}/>
+            <Route path="groups" component={SeeAllGroups}/>
           </Router>
         </Provider>
         {debug}

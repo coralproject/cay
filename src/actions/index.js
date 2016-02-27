@@ -98,47 +98,15 @@ export const requestPipelinesFailure = (err) => {
 };
 
 export const fetchPipelinesIfNotFetched = () => {
-
   return (dispatch, getState) => {
-
     if (! getState().pipelines.loading) {
       return dispatch(fetchPipelines());
     }
-
     return {
       type: 'NOOP'
     };
-
-  };
-
-};
-
-export const requestAuthorsAndSections = () => {
-  return {
-    type: REQUEST_AUTHORS_AND_SECTIONS
   };
 };
-
-export const receiveAuthorsAndSections = (data) => {
-  return {
-    type: RECEIVE_AUTHORS_AND_SECTIONS,
-    data
-  };
-};
-
-export const fetchAuthorsAndSections = () => {
-  return (dispatch) => {
-    dispatch(requestAuthorsAndSections());
-
-    fetch(window.xeniaHost + '/1.0/exec/author_and_section_list', getInit())
-      .then(response => response.json())
-      .then(json => dispatch(receiveAuthorsAndSections(json)))
-      .catch(err => {
-        console.log('oh no. failed to get authors and section list', err);
-      });
-  };
-};
-
 
 // get deep list of query_sets
 export const fetchPipelines = () => {
@@ -186,6 +154,32 @@ export const executeCustomPipeline = pipeline => {
   };
 };
 
+export const requestAuthorsAndSections = () => {
+  return {
+    type: REQUEST_AUTHORS_AND_SECTIONS
+  };
+};
+
+export const receiveAuthorsAndSections = (data) => {
+  return {
+    type: RECEIVE_AUTHORS_AND_SECTIONS,
+    data
+  };
+};
+
+export const fetchAuthorsAndSections = () => {
+  return (dispatch) => {
+    dispatch(requestAuthorsAndSections());
+
+    fetch(window.xeniaHost + '/1.0/exec/author_and_section_list', getInit())
+      .then(response => response.json())
+      .then(json => dispatch(receiveAuthorsAndSections(json)))
+      .catch(err => {
+        console.log('oh no. failed to get authors and section list', err);
+      });
+  };
+};
+
 /* stuff for the login screen */
 
 export const initLogin = (username, password) => {
@@ -203,7 +197,6 @@ export const loginUser = (username, password) => {
   };
 };
 
-
 export const fetchCommentsByUser = (user_id) => {
   const url = `${window.xeniaHost}/${apiPrefix}exec/comments_by_user?user_id=${user_id}`;
   return (dispatch) => {
@@ -220,15 +213,6 @@ export const fetchCommentsByUser = (user_id) => {
         dispatch(storeComments(json));
       })
       .catch(err => dispatch(receiveCommentsFailure(err)));
-
-
-/*      .then(response => {
-        dispatch(COMMENTS_SUCCESS, response);
-        console.log(response);
-      })
-      .catch(err => {
-        console.log(err);
-      });*/
   };
 };
 
@@ -535,7 +519,7 @@ export const fetchAllTags = () => {
       dispatch(requestAllTags());
 
       fetch(url)
-        .then(res => { 
+        .then(res => {
           return res.json();
         })
         .then(json => {

@@ -1,7 +1,6 @@
 import React from 'react';
 import Radium from 'radium';
 
-import settings from '../settings';
 import {connect} from 'react-redux';
 
 import {fetchAllTags, upsertUser, fetchCommentsByUser, clearUserDetailComments} from '../actions';
@@ -13,7 +12,7 @@ import Stats from './stats/Stats';
 import Stat from './stats/Stat';
 import Heading from './Heading';
 import MdLocalOffer from 'react-icons/lib/md/local-offer';
-import Tagger from './forms/Tagger';
+// import Tagger from './forms/Tagger';
 import Select from 'react-select';
 
 import CommentDetailList from './CommentDetailList';
@@ -41,6 +40,12 @@ export default class UserDetail extends React.Component {
     if (nextProps.selectedUser && nextProps.userDetailComments === null) {
       console.log('loading comments for user ' + nextProps.selectedUser._id);
       nextProps.dispatch(fetchCommentsByUser(nextProps.selectedUser._id));
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.selectedUser) {
+      this.setState({selectedTags: nextProps.selectedUser.tags});
     }
   }
 
@@ -85,7 +90,7 @@ export default class UserDetail extends React.Component {
         name: s.user_name,
         avatar: s.avatar,
         status: s.status,
-        tags: this.state.selectedTags.splice()
+        tags: this.state.selectedTags.slice()
       };
       this.props.dispatch(upsertUser(preparedUser));
     }

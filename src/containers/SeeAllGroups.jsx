@@ -64,7 +64,7 @@ class SeeAllGroups extends React.Component {
           <p> Details </p>
           <p> REPLACE_WITH_SENTENCE These 106 commenters are active on Politics, logged in within the last year, and have created more than 100 comments total. </p>
           {/*<Sentence {...this.props}/>*/}
-          <Link to={`/filters/${group.name}`}>View Group</Link>
+          <Link to={`/group/${group.name}`}>View Group</Link>
           <Button>Edit Group</Button>
         </Card>
       );

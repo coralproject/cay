@@ -51,7 +51,8 @@ export default class FilterNumbers extends React.Component {
     // dispatch: React.PropTypes.func,
     params: React.PropTypes.object,
     /* component api */
-    getValues: React.PropTypes.func
+    getValues: React.PropTypes.func,
+    description: React.PropTypes.string
   }
   static defaultProps = {
     fieldName: 'UNDEFINED___'
@@ -131,7 +132,7 @@ export default class FilterNumbers extends React.Component {
     return (
       <div>
         {/* will be a component */}
-        <span> {this.props.fieldName} </span>
+        <span> {this.props.description} </span>
         <span style={style.symbol} onClick={this.handleSymbolClick.bind(this)}>{'='}</span>
         <input
           onFocus={this.popEqualsSlider}
@@ -144,7 +145,7 @@ export default class FilterNumbers extends React.Component {
   render() {
     return (
       <Card>
-        <CardHeader>{this.props.fieldName}</CardHeader>
+        <CardHeader>{this.props.description}</CardHeader>
         {
           this.state.symbol === 'GTLT' ?
             this.renderGTLT() :

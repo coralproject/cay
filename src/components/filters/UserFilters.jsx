@@ -98,6 +98,7 @@ export default class UserFilters extends React.Component {
             max={f.max}
             userMin={this.props[f.field].userMin}
             userMax={this.props[f.field].userMax}
+            description={f.description}
             fieldName={f.field} />
         );
       } else if (f.type === 'dateRange') {

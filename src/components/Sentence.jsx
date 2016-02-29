@@ -2,16 +2,11 @@ import React from 'react';
 import Radium from 'radium';
 // import _ from 'lodash';
 // import Flex from './layout/Flex';
-// import { connect } from 'react-redux';
-// import { FOO } from '../actions';
 import moment from 'moment';
 
 // const style = {
 // };
 
-// @connect(state => {
-//   return state.FOO;
-// })
 @Radium
 class Sentence extends React.Component {
   constructor(props) {

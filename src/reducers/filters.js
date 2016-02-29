@@ -8,14 +8,12 @@ let initialState = {
   'user_name': null,
   'status': null,
   'last_login': null,
-  'member_since': null,
+  'member_since': null
   // 'stats.accept_ratio': {userMin: 0, userMax: 1},
   // 'stats.replies_per_comment': {userMin: 0, userMax: 1},
   // 'stats.comments.total': {userMin: 0, userMax: 10000},
   // 'stats.replies': {userMin: 0, userMax: 1000}
 };
-
-initialState
 
 const filters = (state = initialState, action) => {
   switch (action.type) {

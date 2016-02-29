@@ -1,6 +1,6 @@
 import React from 'react';
 import Radium from 'radium';
-// import _ from 'lodash';
+import _ from 'lodash';
 // import Flex from './layout/Flex';
 import moment from 'moment';
 
@@ -103,8 +103,20 @@ class Sentence extends React.Component {
     }
   }
 
+  getClauses() {
+    const matchCommands = _.filter(this.props.queries[0].commands, command => {
+      return _.has(command, '$match');
+    });
+    return _.map(matchCommands, command => {
+      var name = _.first(_.keys(command.$match));
+      return _.find(window.filters, {field: name}).description;
+    }).join(' | ');
+  }
+
+
   render() {
     const styles = this.getStyles();
+    console.log('Sentence.render', this.props);
     return (
       <div style={[
         styles.base,
@@ -112,7 +124,7 @@ class Sentence extends React.Component {
       ]}>
         <p>
           {
-            /* todo disable other inputs ? ask emma */
+            /* todo disable other inputs ? ask emma
             this.props['user_name'] ?
               `A user with the username ${this.props['user_name']}` :
               'Users who '
@@ -139,7 +151,8 @@ class Sentence extends React.Component {
             this.props['status'] ?
               `have status ${this.props['status']}` :
               ''
-          }
+          */}
+          {this.getClauses()}
         </p>
       </div>
     );

@@ -40,7 +40,9 @@ const pipelines = (state = initialState, action) => {
         loading: false,
         // this probably isn't the final way to do this.
         // queries will eventually be length > 1
-        pipelines: action.pipelines.filter(pipe => pipe.queries[0].collection === 'user')
+        pipelines: action.pipelines.filter(pipe => {
+          return pipe.queries[0].collection === 'user_statistics' && pipe.name !== 'user_search';
+        })
       }
     );
 

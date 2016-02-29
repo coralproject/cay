@@ -34,9 +34,9 @@ export default class PipelineCreator extends React.Component {
 
   }
 
-  componentDidMount() {
-    this.props.dispatch(makeQueryFromState('user'));
-  }
+  // componentDidMount() {
+  //   this.props.dispatch(makeQueryFromState('user'));
+  // }
 
   handleCreatePipeline() {
     this.props.dispatch(makeQueryFromState('user'));

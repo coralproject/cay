@@ -62,8 +62,8 @@ class SeeAllGroups extends React.Component {
           <p>{group.name}</p>
           <p>{group.desc}</p>
           <p> Details </p>
-          <p> REPLACE_WITH_SENTENCE These 106 commenters are active on Politics, logged in within the last year, and have created more than 100 comments total. </p>
-          {/*<Sentence {...this.props}/>*/}
+          {/*<p> REPLACE_WITH_SENTENCE These 106 commenters are active on Politics, logged in within the last year, and have created more than 100 comments total. </p>*/}
+          <Sentence {...group}/>
           <Link to={`/group/${group.name}`}>View Group</Link>
           <Button>Edit Group</Button>
         </Card>

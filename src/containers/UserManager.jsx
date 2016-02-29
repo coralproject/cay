@@ -36,7 +36,7 @@ export default class UserManager extends React.Component {
 
       <Page>
 
-        <ContentHeader title={ window.L.t('User Manager') } />
+        <ContentHeader title={ window.L.t('Group Creator') } />
 
         <div style={styles.base}>
           <UserFormulaContainer/>

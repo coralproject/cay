@@ -16,7 +16,7 @@ import UserManager from './containers/UserManager';
 import TagManager from './containers/TagManager';
 import Login from './containers/Login';
 import DataExplorer from './containers/DataExplorer';
-import SquadManager from './containers/SquadManager';
+import GroupDetail from './containers/GroupDetail';
 import NoMatch from './containers/NoMatch';
 
 const store = configureStore();
@@ -60,7 +60,7 @@ class Root extends React.Component {
             <Route path="user-manager" component={UserManager} />
             <Route path="tag-manager" component={TagManager} />
             <Route path="filters" component={UserManager} />
-            <Route path="filter/:name" component={SquadManager} />
+            <Route path="filter/:name" component={GroupDetail} />
             <Route path="*" component={NoMatch} />
             {/*<Route path="explore" component={DataExplorer} />*/}
           </Router>

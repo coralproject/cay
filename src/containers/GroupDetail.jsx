@@ -10,7 +10,7 @@ import UserDetail from '../components/UserDetail';
 
 @connect(state => state.pipelines)
 @Radium
-export default class SquadManager extends React.Component {
+export default class GroupDetail extends React.Component {
 
   componentWillMount() {
     this.props.dispatch(fetchPipeline(this.props.params.name));

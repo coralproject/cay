@@ -7,7 +7,7 @@ const data_exploration = (state = {
   authors: [],
   loading: false,
   loadingControls: false,
-  loadingAuthorsAndSections: false,
+  loadingSections: false,
   dataset: null,
   datasetName: null,
   pipelineRangeStart: null,
@@ -54,16 +54,16 @@ const data_exploration = (state = {
       pipelines: action.pipelines
     });
 
-  case types.REQUEST_AUTHORS_AND_SECTIONS:
+  case types.REQUEST_SECTIONS:
     return Object.assign({}, state, {
-      loadingAuthorsAndSections: true
+      loadingSections: true
     });
 
-  case types.RECEIVE_AUTHORS_AND_SECTIONS:
+  case types.RECEIVE_SECTIONS:
+    console.log(action.type, action);
     return Object.assign({}, state, {
-      loadingAuthorsAndSections: false,
-      authors: Object.keys(action.data.results[0].Docs[0].data.authors),
-      sections: Object.keys(action.data.results[0].Docs[0].data.sections)
+      loadingSections: false,
+      sections: action.data.results[0].Docs
     });
   default:
     return state;

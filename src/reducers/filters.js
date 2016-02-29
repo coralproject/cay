@@ -1,6 +1,6 @@
 import * as types from '../actions';
 
-const initialState = {
+let initialState = {
   tags: [],
   authors: [],
   sections: [],
@@ -9,14 +9,25 @@ const initialState = {
   'status': null,
   'last_login': null,
   'member_since': null,
-  'stats.accept_ratio': {userMin: 0, userMax: 1},
-  'stats.replies_per_comment': {userMin: 0, userMax: 1},
-  'stats.comments.total': {userMin: 0, userMax: 10000},
-  'stats.replies': {userMin: 0, userMax: 1000}
+  // 'stats.accept_ratio': {userMin: 0, userMax: 1},
+  // 'stats.replies_per_comment': {userMin: 0, userMax: 1},
+  // 'stats.comments.total': {userMin: 0, userMax: 10000},
+  // 'stats.replies': {userMin: 0, userMax: 1000}
 };
+
+initialState
 
 const filters = (state = initialState, action) => {
   switch (action.type) {
+
+  case types.CONFIG_LOADED:
+    const filters = action.config.filters.reduce((accum, filter) => {
+      accum[filter.field] = filter;
+      accum[filter.field].userMin = filter.min;
+      accum[filter.field].userMax = filter.max;
+      return accum;
+    }, {});
+    return Object.assign({}, state, filters);
 
   case types.CREATE_QUERY:
     return Object.assign({}, state, {loadingUserList: true});
@@ -37,11 +48,8 @@ const filters = (state = initialState, action) => {
   case types.ALL_TAGS_REQUEST_ERROR:
     return Object.assign({}, state, {loadingTags: false, tagError: 'Failed to load tags ' + action.err});
 
-  case types.RECEIVE_AUTHORS_AND_SECTIONS:
-    return Object.assign({}, state, {
-      sections: Object.keys(action.data.results[0].Docs[0].data.sections),
-      authors: Object.keys(action.data.results[0].Docs[0].data.authors)
-    });
+  case types.RECEIVE_SECTIONS:
+    return Object.assign({}, state, { sections: Object.keys(action.data.results[0].Docs) });
 
   default:
     return state;

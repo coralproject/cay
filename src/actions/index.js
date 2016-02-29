@@ -1,3 +1,5 @@
+export const CONFIG_LOADED = 'CONFIG_LOADED';
+
 export const PIPELINE_SELECTED = 'PIPELINE_SELECTED';
 export const PIPELINE_REQUEST = 'PIPELINE_REQUEST'; // request data for a single pipeline
 export const PIPELINES_REQUEST = 'PIPELINES_REQUEST';
@@ -27,8 +29,8 @@ export const DATA_EXPLORATION_FETCH_ERROR = 'DATA_EXPLORATION_FETCH_ERROR';
 export const REQUEST_EXPLORER_CONTROLS = 'REQUEST_EXPLORER_CONTROLS';
 export const RECEIVE_EXPLORER_CONTROLS = 'RECEIVE_EXPLORER_CONTROLS';
 
-export const REQUEST_AUTHORS_AND_SECTIONS = 'REQUEST_AUTHORS_AND_SECTIONS';
-export const RECEIVE_AUTHORS_AND_SECTIONS = 'RECEIVE_AUTHORS_AND_SECTIONS';
+export const REQUEST_SECTIONS = 'REQUEST_SECTIONS';
+export const RECEIEVE_SECTIONS = 'RECEIEVE_SECTIONS';
 
 export const USER_SELECTED = 'USER_SELECTED';
 
@@ -38,9 +40,9 @@ export const REQUEST_ALL_TAGS = 'REQUEST_ALL_TAGS';
 export const RECEIVE_ALL_TAGS = 'RECEIVE_ALL_TAGS';
 export const ALL_TAGS_REQUEST_ERROR = 'ALL_TAGS_REQUEST_ERROR';
 
-export const RECEIVE_UPSERTED_USER = "RECEIVE_UPSERTED_USER";
-export const REQUEST_USER_UPSERT = "REQUEST_USER_UPSERT";
-export const USER_UPSERT_REQUEST_ERROR = "USER_UPSERT_REQUEST_ERROR";
+export const RECEIVE_UPSERTED_USER = 'RECEIVE_UPSERTED_USER';
+export const REQUEST_USER_UPSERT = 'REQUEST_USER_UPSERT';
+export const USER_UPSERT_REQUEST_ERROR = 'USER_UPSERT_REQUEST_ERROR';
 
 export const FILTER_CHANGED = 'FILTER_CHANGED';
 export const CREATE_QUERY = 'CREATE_QUERY';
@@ -48,10 +50,10 @@ export const SUBMIT_CUSTOM_QUERY = 'SUBMIT_CUSTOM_QUERY';
 export const RECEIVE_USER_LIST = 'RECEIVE_USER_LIST';
 /* config */
 
-var getInit = (method) => {
-  var headers = new Headers({'Authorization': window.basicAuthorization});
+const getInit = (method) => {
+  const headers = new Headers({'Authorization': window.basicAuthorization});
 
-  var init = {
+  const init = {
     method: method || 'GET',
     headers: headers,
     mode: 'cors',
@@ -154,28 +156,28 @@ export const executeCustomPipeline = pipeline => {
   };
 };
 
-export const requestAuthorsAndSections = () => {
+export const requestSections = () => {
   return {
-    type: REQUEST_AUTHORS_AND_SECTIONS
+    type: REQUEST_SECTIONS
   };
 };
 
-export const receiveAuthorsAndSections = (data) => {
+export const receiveSections = (data) => {
   return {
-    type: RECEIVE_AUTHORS_AND_SECTIONS,
+    type: RECEIEVE_SECTIONS,
     data
   };
 };
 
-export const fetchAuthorsAndSections = () => {
+export const fetchSections = () => {
   return (dispatch) => {
-    dispatch(requestAuthorsAndSections());
+    dispatch(requestSections());
 
-    fetch(window.xeniaHost + '/1.0/exec/author_and_section_list', getInit())
+    fetch(window.xeniaHost + '/1.0/exec/dimension_section_list', getInit())
       .then(response => response.json())
-      .then(json => dispatch(receiveAuthorsAndSections(json)))
+      .then(json => dispatch(receiveSections(json)))
       .catch(err => {
-        console.log('oh no. failed to get authors and section list', err);
+        console.log('oh no. failed to get section list', err);
       });
   };
 };

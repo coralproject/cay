@@ -3,6 +3,7 @@ import Radium from 'radium';
 // import _ from 'lodash';
 // import Flex from './layout/Flex';
 import { connect } from 'react-redux';
+import {Link} from 'react-router';
 // import { FOO } from '../actions';
 import Page from './Page';
 import {fetchPipelinesIfNotFetched, selectPipeline, fetchPipeline} from '../actions';
@@ -30,7 +31,7 @@ class SeeAllGroups extends React.Component {
     params: React.PropTypes.object,
     routes: React.PropTypes.array,
     /* component api */
-    style: React.PropTypes.object,
+    style: React.PropTypes.object
     // foo: React.PropTypes.string
   }
   static defaultProps = {
@@ -53,17 +54,17 @@ class SeeAllGroups extends React.Component {
     };
   }
   renderGroups() {
-    console.log(this.props)
-    const groups = this.props.pipelines.map((pipeline, i) => {
+    console.log(this.props);
+    const groups = this.props.pipelines.map((group, i) => {
 
       return (
         <Card key={i}>
-          <p>{pipeline.name}</p>
-          <p>{pipeline.desc}</p>
+          <p>{group.name}</p>
+          <p>{group.desc}</p>
           <p> Details </p>
           <p> REPLACE_WITH_SENTENCE These 106 commenters are active on Politics, logged in within the last year, and have created more than 100 comments total. </p>
           {/*<Sentence {...this.props}/>*/}
-          <Button>View Group</Button>
+          <Link to={`/filters/${group.name}`}>View Group</Link>
           <Button>Edit Group</Button>
         </Card>
       );

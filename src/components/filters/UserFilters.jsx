@@ -1,7 +1,7 @@
 import React from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
-import {fetchAllTags, fetchAuthorsAndSections} from '../../actions';
+import {fetchAllTags, fetchSections} from '../../actions';
 
 import FilterObjectId from './FilterObjectId';
 import Select from 'react-select';
@@ -26,7 +26,7 @@ export default class UserFilters extends React.Component {
 
   componentWillMount() {
     this.props.dispatch(fetchAllTags());
-    this.props.dispatch(fetchAuthorsAndSections());
+    this.props.dispatch(fetchSections());
   }
 
   getTags() {
@@ -87,6 +87,27 @@ export default class UserFilters extends React.Component {
     });
   }
 
+  getActiveFiltersFromConfig() {
+    const userFilters = window.filters.filter(f => f.collection === 'users');
+    return userFilters.map(f => {
+      let filterComponent;
+      if (f.type === 'numberRange') {
+        filterComponent = (
+          <FilterNumbers
+            min={f.min}
+            max={f.max}
+            userMin={this.props[f.field].userMin}
+            userMax={this.props[f.field].userMax}
+            fieldName={f.field} />
+        );
+      } else if (f.type === 'dateRange') {
+        filterComponent = null;
+      }
+
+      return filterComponent;
+    });
+  }
+
   render() {
 
     return (
@@ -122,7 +143,10 @@ export default class UserFilters extends React.Component {
         <p>Tags</p>
         <Select multi={true} options={this.getTags()} />
 
-        <FilterNumbers
+        {/* this will eventually be the meat of the component */}
+        {this.getActiveFiltersFromConfig()}
+
+        {/*<FilterNumbers
           min={0}
           max={1}
           userMin={this.props['stats.accept_ratio'].userMin}
@@ -148,7 +172,7 @@ export default class UserFilters extends React.Component {
           max={1}
           userMin={this.props['stats.replies_per_comment'].userMin}
           userMax={this.props['stats.replies_per_comment'].userMax}
-          fieldName="stats.replies_per_comment"/>
+          fieldName="stats.replies_per_comment"/>*/}
 
         {/* some sort operator? */}
       </div>

@@ -2,7 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 
-import Icon from '../../components/Icon';
+import FaCaretUp from 'react-icons/lib/fa/caret-up';
+import FaCaretDown from 'react-icons/lib/fa/caret-down';
 
 @connect(state => state.playground)
 @Radium
@@ -12,9 +13,9 @@ class Upvoter extends React.Component {
 
     return (
       <div style={ styles.upvoter }>
-        <Icon style={ styles.icon } name="fa-caret-up" size="large" />
+        <FaCaretUp />
         <div style={ styles.number }>33</div>
-        <Icon style={ styles.icon } name="fa-caret-down" size="large" />
+        <FaCaretDown />
       </div>
     );
 

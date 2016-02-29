@@ -8,18 +8,24 @@ import Radium from 'radium';
 import settings from '../../settings';
 
 class CardHeader extends React.Component {
+
+  getVisible() {
+    return {
+      display: this.props.subtitle ? 'block' : 'none'
+    };
+  }
+
   render() {
     return (
       <div className="card-header" style={[styles.base, this.props.style]}>
-        <p style={styles.title}>{this.props.title}</p>
-        <p style={styles.subtitle}>{this.props.subtitle}</p>
+        <p style={styles.title}>{this.props.children}</p>
+        <p style={[styles.subtitle, this.getVisible()]}>{this.props.subtitle}</p>
       </div>
     );
   }
 }
 
 CardHeader.propTypes = {
-  title: PropTypes.string.isRequired,
   subtitle: PropTypes.string
 };
 
@@ -27,8 +33,7 @@ export default Radium(CardHeader);
 
 const styles = {
   base: {
-    height: 72,
-    padding: 16,
+    height: 32,
     position: 'relative',
     lineHeight: '24px'
   },

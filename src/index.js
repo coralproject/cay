@@ -1,3 +1,4 @@
+'use strict';
 // React Core
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -12,18 +13,35 @@ import configureStore from './store';
 
 import Dashboard from './containers/Dashboard';
 import UserManager from './containers/UserManager';
+import TagManager from './containers/TagManager';
 import Login from './containers/Login';
 import DataExplorer from './containers/DataExplorer';
 import Playground from './containers/playground';
+import GroupDetail from './containers/GroupDetail';
+import NoMatch from './containers/NoMatch';
 
 const store = configureStore();
+
+import messages from './messages'; // Lang does not know where did you get your messages from.
+
+import LangSugar from './lang';
+window.L = new LangSugar();
+
+window.L.addTranslations(messages['en'], 'en');
+window.L.addTranslations(messages['de'], 'de');
+window.L.setLocale('en');
 
 require('../css/reset.css');
 require('../css/global.css');
 
+require('../css/react-select.css');
+
 require('../fonts/glyphicons-halflings-regular.woff');
 
+import { Lang } from './lang';
+@Lang
 class Root extends React.Component {
+
   render() {
 
     if (process && process.env.NODE_ENV !== 'production') {
@@ -38,13 +56,15 @@ class Root extends React.Component {
       <div>
         <Provider store={store}>
           <Router history={browserHistory}>
-            <Route path="/" component={Dashboard}/>
-            <Route path="login" component={Login}/>
-            <Route path="user-manager/:filterId/:userId" component={UserManager}/>
-            <Route path="user-manager/:filterId" component={UserManager}/>
-            <Route path="user-manager" component={UserManager}/>
-            <Route path="explore" component={DataExplorer}/>
+            <Route path="/" component={UserManager} />
+            <Route path="login" component={Login} />
+            <Route path="user-manager" component={UserManager} />
+            <Route path="tag-manager" component={TagManager} />
+            <Route path="filters" component={UserManager} />
+            <Route path="filter/:name" component={GroupDetail} />
             <Route path="playground" component={Playground}/>
+            <Route path="*" component={NoMatch} />
+            {/*<Route path="explore" component={DataExplorer} />*/}
           </Router>
         </Provider>
         {debug}
@@ -53,4 +73,48 @@ class Root extends React.Component {
   }
 }
 
-ReactDOM.render(<Root/>, document.getElementById('root'));
+fetch('/config.json')
+  .then(res => res.json())
+  .then(config => {
+
+    for (var key in config) {
+      window[key] = config[key];
+    }
+
+    if (!window.xeniaHost) throw new Error('xeniaHost is not set in config.json. Coral will not work correctly.');
+    if (!window.pillarHost) throw new Error('pillarHost is not set in config.json. Coral will not work correctly.');
+    if (!window.basicAuthorization) throw new Error('basicAuthorization is not set in config.json. Coral will not work correctly');
+
+    ReactDOM.render(<Root/>, document.getElementById('root'));
+  })
+  .catch(err => {
+
+    console.error('Error while fetching config.json: ', err);
+    document.body.innerHTML = 'you need to create ./config.json, or it is invalid JSON';
+  });
+
+// prevent browser from navigating backwards if you hit the backspace key
+document.addEventListener('keydown', function (e) {
+  var doPrevent = false;
+  if (e.keyCode === 8) {
+    var d = e.srcElement || e.target;
+    if ((d.tagName.toUpperCase() === 'INPUT' &&
+      (
+        d.type.toUpperCase() === 'TEXT' ||
+        d.type.toUpperCase() === 'PASSWORD' ||
+        d.type.toUpperCase() === 'FILE' ||
+        d.type.toUpperCase() === 'EMAIL' ||
+        d.type.toUpperCase() === 'SEARCH' ||
+        d.type.toUpperCase() === 'DATE' )
+      ) || d.tagName.toUpperCase() === 'TEXTAREA') {
+      doPrevent = d.readOnly || d.disabled;
+
+    } else {
+      doPrevent = true;
+    }
+  }
+
+  if (doPrevent) {
+    e.preventDefault();
+  }
+});

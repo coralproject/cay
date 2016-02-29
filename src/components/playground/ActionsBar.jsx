@@ -2,7 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 
-import Icon from '../../components/Icon';
+import MdThumbUp from 'react-icons/lib/md/thumb-up';
+import FaSmileO from 'react-icons/lib/fa/smile-o';
+import FaEllipsisH from 'react-icons/lib/fa/ellipsis-h';
 
 import { likeComment, unLikeComment } from '../../actions/playground';
 
@@ -33,7 +35,7 @@ class ActionsBar extends React.Component {
         { 
           this.props.togglerGroups['interaction'].togglers['likes'].status ? 
             <div onClick={ this.likeClickHandler.bind(this, this.props.index) } style={ [ styles.actionBarButton, this.props.liked ? styles.liked : null ] }>
-              <Icon size="medium" name="fa-thumbs-o-up" /> 
+              <MdThumbUp />
               { this.props.likes } Likes
             </div>
           : null
@@ -41,7 +43,7 @@ class ActionsBar extends React.Component {
         { 
           this.props.togglerGroups['interaction'].togglers['reactions'].status ? 
             <div onClick={ this.reactionClickHandler.bind(this) } style={ styles.actionBarButton }>
-              <Icon size="medium" name="fa-smile-o" /> 
+              <FaSmileO />
               { this.props.likes } Reactions
             </div>
           : null
@@ -49,7 +51,7 @@ class ActionsBar extends React.Component {
         { 
           true ? 
             <div style={ styles.actionBarButton } onClick={ this.moreClickHandler.bind(this) }>
-              <Icon size="medium" name="fa-ellipsis-h" /> 
+              <FaEllipsisH />
               More actions
             </div>
           : null

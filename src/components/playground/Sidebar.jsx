@@ -2,10 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 
-import Icon from '../../components/Icon';
 import TwitterStream from './TwitterStream';
 
 import mediaQueries from '../../playgroundSettings';
+
+import FaTwitter from 'react-icons/lib/fa/twitter';
 
 @connect(state => state.playground)
 @Radium
@@ -35,7 +36,7 @@ class Sidebar extends React.Component {
           <p style={ styles.sideBarDescription }>{ this.props.topics[this.props.currentSidebarTopic].description }</p>
         </div>
         <div style={ styles.tweets }>
-          <span style={ styles.twitterIcon }><Icon size="medium" name="fa-twitter" /></span> <span style={ styles.twitterTitle }>Join the discussion!</span><br />
+          <span style={ styles.twitterIcon }><FaTwitter /></span> <span style={ styles.twitterTitle }>Join the discussion!</span><br />
           <TwitterStream />
         </div>
         { sideBarLinks }

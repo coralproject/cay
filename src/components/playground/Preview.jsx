@@ -2,10 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 
-import Icon from '../../components/Icon';
-
 import CommentBox from './commentBox';
 import Stream from './stream';
+
+import MdRemoveRedEye from 'react-icons/lib/md/remove-red-eye';
 
 @connect(state => state.playground)
 @Radium
@@ -17,7 +17,7 @@ class Preview extends React.Component {
       <div style={ styles.preview }>
         <div style={ styles.previewBar }>
           <h2 style={ styles.previewBarTitle }>
-            <Icon size="large" name="fa-eye" />
+            <MdRemoveRedEye />
             <span style={ styles.previewTitleSpan }>Preview</span>
           </h2>
         </div>

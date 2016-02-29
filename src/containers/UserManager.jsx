@@ -1,42 +1,33 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
-import _ from 'lodash';
 
-import {fetchPipelinesIfNotFetched, selectPipeline, fetchPipeline} from '../actions';
+import {fetchPipelinesIfNotFetched} from '../actions';
 
 import Page from './Page';
 import ContentHeader from '../components/ContentHeader';
-import PipelineList from '../components/PipelineList';
 import UserList from '../components/UserList';
 import UserDetail from '../components/UserDetail';
 
-import settings from '../settings';
+import UserFormulaContainer from '../components/UserFormulaContainer';
 
-@connect(state => {
-  return state.pipelines;
-})
+@connect(state => state.pipelines)
 @Radium
 export default class UserManager extends React.Component {
 
-  // only the first time
-  componentWillMount() {
-    this.props.dispatch(fetchPipelinesIfNotFetched());
+  static contextTypes = {
+    router: PropTypes.object.isRequired
   }
 
-  // every time the state is updated
-  componentDidUpdate() {
-    // if (!_.some(_.map(this.props.pipelines, _.isString))) {
-    //   this.props.pipelines.map(pipe => {
+  // only the first time
+  componentWillMount() {
+    // redirect user to /login if they're not logged in
+    if (!this.props.authorized) {
+      let {router} = this.context;
+      return router.push('/login');
+    }
 
-    //   })
-    // }
-
-    // if (_.isString(this.props.pipelines[0])) { // stopgap. sorry
-    //   this.props.pipelines.map(pipe => {
-    //     this.props.dispatch(fetchPipeline(pipe));
-    //   });
-    // }
+    this.props.dispatch(fetchPipelinesIfNotFetched());
   }
 
   render() {
@@ -45,16 +36,13 @@ export default class UserManager extends React.Component {
 
       <Page>
 
-        <ContentHeader title="User Manager" />
+        <ContentHeader title={ window.L.t('User Manager') } />
 
         <div style={styles.base}>
-          <PipelineList
-            active={this.props.params.filter_id}
-            style={styles.pipelineList}
-            pipelines={this.props.pipelines} />
+          <UserFormulaContainer/>
 
           <UserList
-            style={styles.userTable}
+            style={styles.userList}
             users={this.props.users} />
 
           <UserDetail
@@ -70,25 +58,20 @@ export default class UserManager extends React.Component {
 const styles = {
   base: {
     display: 'flex',
-    minHeight: '250px',
-    paddingTop: 15,
-    paddingBottom: 15,
-    paddingLeft: 15,
-    paddingRight: 15 // why do I have to write these all out?
+    minHeight: 250
   },
   pipelineList: {
     flex: 1,
     marginLeft: 5,
     marginRight: 5
   },
-  userTable: {
+  userList: {
     flex: 1,
     marginLeft: 5,
     marginRight: 5
   },
   userDetail: {
     flex: 2,
-    marginLeft: 5,
     marginRight: 5
   }
 };

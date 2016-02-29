@@ -2,7 +2,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 
-import Icon from '../../components/Icon';
+import MdFormatBold from 'react-icons/lib/md/format-bold';
+import MdFormatItalic from 'react-icons/lib/md/format-italic';
+import MdLink from 'react-icons/lib/md/link';
+import MdFormatQuote from 'react-icons/lib/md/format-quote';
+import FaSmileO from 'react-icons/lib/fa/smile-o';
+import FaHeart from 'react-icons/lib/fa/heart';
 
 @connect(state => state.playground)
 @Radium
@@ -17,10 +22,10 @@ class CommentBox extends React.Component {
           {  
             this.props.togglerGroups['content'].togglers['rich_content'].status ? 
               <span>
-                <button style={ styles.toolBarButton }><Icon name="fa-bold" /></button>
-                <button style={ styles.toolBarButton }><Icon name="fa-italic" /></button>
-                <button style={ styles.toolBarButton }><Icon name="fa-link" /></button>
-                <button style={ styles.toolBarButton }><Icon name="fa-quote-left" /></button>
+                <button style={ styles.toolBarButton }><MdFormatBold /></button>
+                <button style={ styles.toolBarButton }><MdFormatItalic /></button>
+                <button style={ styles.toolBarButton }><MdLink /></button>
+                <button style={ styles.toolBarButton }><MdFormatQuote /></button>
               </span>
             : 
               ''
@@ -28,7 +33,7 @@ class CommentBox extends React.Component {
           {  
             this.props.togglerGroups['content'].togglers['emoji'].status ? 
               <span>
-                <button style={ styles.toolBarButton }><Icon name="fa-smile-o" /></button>
+                <button style={ styles.toolBarButton }><FaSmileO /></button>
               </span>
             : 
               ''
@@ -43,7 +48,7 @@ class CommentBox extends React.Component {
           <div style={ styles.commentBoxContent } contentEditable="true"></div>
         </div>
         <div style={ styles.safetyTips }>
-          <span style={ styles.heart }><Icon name="fa-heart" /></span> Dont engage in personal attacks! Remember you can always use the report tools.
+          <span style={ styles.heart }><FaHeart /></span> Dont engage in personal attacks! Remember you can always use the report tools.
         </div>
       </div>
       );

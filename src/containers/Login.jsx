@@ -1,14 +1,15 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
+import {Link} from 'react-router';
 
 import settings from '../settings';
+import color from 'color';
 
-import {loginInitGit, loginGitSuccess} from '../actions';
+import {login} from '../actions';
 
-import Card from '../components/cards/Card';
-import CardHeader from '../components/cards/CardHeader';
 import Button from '../components/Button';
+import TextField from '../components/forms/TextField';
 
 @connect(state => state.auth)
 @Radium
@@ -19,41 +20,73 @@ class Login extends React.Component {
   }
 
   componentWillMount() {
-    console.log('componentWillMount', this.context);
-    let {router} = this.context;
+    // use react-router to push state?
+    if (this.props.authorized) {
+      let {router} = this.context;
+      router.push('/user-manager');
+    }
+  }
 
-    // user has redirected here from github auth screen
-    if (!this.props.token && this.props.location.query.code) {
-      // check for github auth token
-      // store in localStorage until we figure out how to have a real webserver
-      this.props.dispatch(loginGitSuccess(this.props.location.query.code));
-
-      // http://localhost:3000/login?code=f2a01d34e1a686b0db3b&state=foobar
-      // use react-router to push state?
-      router.push('/explore');
-    } else if (this.props.token) { // user has previously logged in
-      router.push('/explore');
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.authorized) {
+      let {router} = this.context;
+      router.push('/user-manager');
     }
   }
 
   loginUser() {
-    this.props.dispatch(loginInitGit());
+    this.props.dispatch(login(this.state.email, this.state.password));
+  }
+
+  updateEmail(email) {
+    this.setState({email});
+  }
+
+  updatePass(password) {
+    this.setState({password});
   }
 
   render() {
+
     return (
       <div style={styles.base}>
-        <Card style={styles.loginModal}>
-          <CardHeader title="Sign in with GitHub" />
+        <div style={styles.loginModal}>
+          <img style={styles.logo} src="./img/logomark_512x512.svg" />
+          <p style={styles.welcome}>Welcome to</p>
+          <p style={styles.projectName}>The Coral Project</p>
           <div style={styles.container}>
+            <p style={styles.cta}>Help us test the beta site</p>
+
+            <TextField
+              ref="email"
+              style={styles.textInput}
+              onChange={this.updateEmail.bind(this)}
+              label="email" />
+            <TextField
+              type="password"
+              ref="password"
+              style={styles.textInput}
+              onChange={this.updatePass.bind(this)}
+              label="password" />
+
+            {
+              this.props.authorized === false ? 
+                <p style={ styles.unauthorizedMessage }>Invalid username or password.</p>
+              :
+                null
+            }
+
             <Button
               size="large"
               style={styles.loginButton}
               category="primary"
               onClick={this.loginUser.bind(this)}
-            >GitHub</Button>
+            >
+              Log In
+            </Button>
+            <Link style={styles.loginRequest} to="https://coralproject.net/beta-testers/">How can I request a login?</Link>
           </div>
-        </Card>
+        </div>
       </div>
     );
   }
@@ -61,25 +94,73 @@ class Login extends React.Component {
 
 const styles = {
   base: {
-    backgroundColor: settings.lighterGrey,
     display: 'flex',
-    height: window.innerHeight
+    height: window.innerHeight,
+    backgroundColor: settings.brandColor
   },
   loginModal: {
-    margin: 'auto'
+    margin: 'auto',
+    width: 700
+  },
+  cta: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 20,
+    marginBottom: 10
+  },
+  welcome: {
+    color: 'white',
+    fontSize: '2em',
+    textShadow: '1px 1px 2px ' + color(settings.brandColor).darken(0.3).hexString()
+  },
+  projectName: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: '4em',
+    marginTop: -10,
+    textShadow: '1px 1px 2px ' + color(settings.brandColor).darken(0.3).hexString()
   },
   container: {
-    paddingTop: 0,
+    clear: 'both',
+    width: 500,
+    margin: 'auto',
+    paddingTop: 30,
     paddingRight: 40,
-    paddingBottom: 40,
+    paddingBottom: 10,
     paddingLeft: 40
   },
   textInput: {
-    display: 'block'
+    display: 'block',
+    width: '100%',
+    marginBottom: 15,
+    backgroundColor: 'white'
   },
   loginButton: {
-    marginTop: 32,
-    marginBottom: 25
+    marginTop: 12,
+    marginBottom: 25,
+    width: '100%',
+    borderColor: 'transparent',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    ':hover': {
+      backgroundColor: 'rgba(255, 255, 255, 0.3)',
+      borderColor: 'transparent'
+    }
+  },
+  loginRequest: {
+    color: 'white'
+  },
+  logo: {
+    float: 'left',
+    width: 128,
+    height: 128,
+    marginRight: 20
+  },
+  unauthorizedMessage: {
+    padding: '20px',
+    backgroundColor: 'rgba(255, 255, 255, 0.4)',
+    textAlign: 'center',
+    fontSize: '12pt',
+    color: 'white'
   }
 };
 

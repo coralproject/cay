@@ -2,12 +2,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 
-import Icon from '../../components/Icon';
-
 import CustomizerSettings from './CustomizerSettings';
 
 import mediaQueries from '../../playgroundSettings';
 
+import MdSettings from 'react-icons/lib/md/settings';
+import FaCaretDown from 'react-icons/lib/fa/caret-down';
 
 @connect(state => state.playground)
 @Radium
@@ -25,10 +25,10 @@ class Customizer extends React.Component {
       <div style={ styles.customizer }>
         <div style={ styles.customizeToggler } onClick={ this.onCustomizerTogglerClick.bind(this) }>
           <h2 style={ styles.customizeTogglerTitle }>
-            <Icon size="large" name="fa-cog" />
+            <MdSettings />
             <span style={ styles.customizeTogglerTitleSpan }>Customize</span>
           </h2>
-          <button style={ styles.customizeTogglerButton }><Icon size="medium" name="fa-caret-down" /></button>
+          <button style={ styles.customizeTogglerButton }><FaCaretDown /></button>
         </div>
         <CustomizerSettings />
       </div>

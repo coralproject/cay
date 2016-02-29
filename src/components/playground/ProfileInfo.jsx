@@ -2,8 +2,14 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 
-import Icon from '../../components/Icon';
 import CoralIcon from '../../components/CoralIcon';
+
+import FaClockO from 'react-icons/lib/fa/clock-o';
+import FaMortarBoard from 'react-icons/lib/fa/mortar-board';
+import FaHandPaperO from 'react-icons/lib/fa/hand-paper-o';
+import FaEllipsisH from 'react-icons/lib/fa/ellipsis-h';
+import MdPlace from 'react-icons/lib/md/place';
+import MdComment from 'react-icons/lib/md/comment';
 
 @connect(state => state.playground)
 @Radium
@@ -29,9 +35,9 @@ class ProfileInfo extends React.Component {
           { 
             this.props.togglerGroups['privacy'].togglers['public_profile'].status ? 
               <div>
-                <div style={ styles.profileBullet }><Icon size="medium" name="fa-clock-o" /> Member for { user.membershipAge }</div>
-                <div style={ styles.profileBullet }><Icon size="medium" name="fa-map-marker" /> { user.location }</div>
-                <div style={ styles.profileBullet }><Icon size="medium" name="fa-mortar-board" /> { user.education }</div>
+                <div style={ styles.profileBullet }><FaClockO /> Member for { user.membershipAge }</div>
+                <div style={ styles.profileBullet }><MdPlace /> { user.location }</div>
+                <div style={ styles.profileBullet }><FaMortarBoard /> { user.education }</div>
               </div>            
             : ''
           }
@@ -68,15 +74,15 @@ class ProfileInfo extends React.Component {
         <div style={ styles.profileRightPane }>
           { 
             this.props.togglerGroups['community'].togglers['privatemessages'].status ? 
-              <div style={ styles.rightPaneAction }><Icon size="medium" name="fa-comments-o" /></div> : 
+              <div style={ styles.rightPaneAction }><MdComment /></div> : 
               null
           }
           { 
             this.props.togglerGroups['moderation'].togglers['muting'].status ? 
-              <div style={ styles.rightPaneAction }><Icon size="medium" name="fa-hand-paper-o" /></div> : 
+              <div style={ styles.rightPaneAction }><FaHandPaperO /></div> : 
               null
           }
-          <div style={ styles.moreActions }><Icon size="medium" name="fa-ellipsis-h" /></div>
+          <div style={ styles.moreActions }><FaEllipsisH /></div>
         </div>
         <div style={ styles.clearfix }></div>
       </div>

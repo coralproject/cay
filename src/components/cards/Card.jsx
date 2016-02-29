@@ -14,11 +14,12 @@ export default class Card extends React.Component {
 
 const styles = {
   base: {
-    backgroundColor: "rgb(253,253,253)",
+    backgroundColor: 'rgb(253,253,253)',
     marginBottom: 14,
     borderRadius: 3,
     padding: 10,
-    WebkitBoxShadow: "3px 3px 6px -1px rgba(220,220,220,1)",
-    BoxShadow: "3px 3px 6px -1px rgba(220,220,220,1)"
+    color: settings.darkGrey,
+    WebkitBoxShadow: '3px 3px 6px -1px ' + settings.mediumGrey,
+    BoxShadow: '3px 3px 6px -1px ' + settings.mediumGrey
   }
 };

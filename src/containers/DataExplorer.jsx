@@ -5,10 +5,9 @@ import { fetchDataExplorationDataset, fetchAuthorsAndSections, populateControlsR
 import Page from './Page';
 import Card from '../components/cards/Card';
 import DataExplorerVisualization from '../components/DataExplorerVisualization';
-import ExplorerControls from '../components/DataExplorerControls';
 import ExplorerTutorial from '../components/DataExplorerTutorial';
 import PipelineCreator from '../components/PipelineCreator';
-import Flex from "../components/layout/flex";
+import Flex from '../components/layout/Flex';
 import _ from 'lodash';
 
 @connect(state => state.dataExplorer)
@@ -30,7 +29,6 @@ class DataExplorer extends React.Component {
     const hour = 1000 * 60 * 60;
     const day = hour * 24;
     const week = day * 7;
-    const month = day * 30;
     let diff = end - start;
 
     if (diff / day < 300) {
@@ -40,6 +38,7 @@ class DataExplorer extends React.Component {
     } else {
       return 'month';
     }
+
   }
 
   getControlValues(values) {

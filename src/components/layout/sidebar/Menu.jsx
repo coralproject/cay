@@ -1,19 +1,29 @@
 import React from 'react';
 import Radium from 'radium';
+import {Link} from 'react-router';
 
 import MenuItem from './MenuItem';
 
+import MdBuild from 'react-icons/lib/md/build';
+import MdSettings from 'react-icons/lib/md/settings';
+
+import { Lang } from '../../../lang';
+import settings from '../../../settings';
+
+@Lang
 @Radium
 class Menu extends React.Component {
+
   render() {
     return (
       <div>
-        <a href="/" style={styles.logo}>Coral Project</a>
-        <ul>
-          <MenuItem name="Dashboard" target="/" icon="fa-area-chart" />
-          <MenuItem name="Explore" target="/explore" icon="fa-bar-chart" />
-          <MenuItem name="User Manager" target="/user-manager" icon="fa-users" />
-          <MenuItem name="Settings" target="/settings" icon="fa-cog" />
+        <Link to="/" style={styles.logo}>Coral Project</Link>
+        <ul style={ styles.sideBarMenu }>
+          {/*<MenuItem name="Dashboard" target="/" icon={<MdInsertChart />} />*/}
+          {/*<MenuItem name="Explore" target="/explore" icon={<MdTimeline />} />*/}
+          <MenuItem name={ window.L.t('User Manager') } target="/user-manager" icon={<MdBuild />} />
+          <MenuItem name={ window.L.t('Settings') } target="/tag-manager" icon={<MdSettings />}/>
+          {/*<MenuItem name="Settings" target="/settings" icon={<MdSettings />} />*/}
         </ul>
       </div>
     );
@@ -25,12 +35,18 @@ var styles = {
     backgroundImage: 'url(/img/logo_white.png)',
     backgroundSize: '20px 20px',
     backgroundRepeat: 'no-repeat',
-    backgroundPosition: '10px 10px',
+    backgroundPosition: '10px 14px',
+    backgroundColor: settings.brandColor,
     color: 'white',
     fontSize: '1em',
-    padding: '12px 20px 12px 35px',
+    padding: '0 20px 0 35px',
     textDecoration: 'none',
-    display: 'block'
+    display: 'block',
+    height: '50px',
+    lineHeight: '50px'
+  },
+  sideBarMenu: {
+    borderTop: '1px solid rgba(255,255,255,.5)'
   }
 };
 

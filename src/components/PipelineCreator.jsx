@@ -1,14 +1,20 @@
+/* this view is used in both data explorer and user manager */
+
 import React from 'react';
 import Radium from 'radium';
-import {createPipelineValueChanged} from '../actions';
-import Flex from "./layout/flex";
-import FlexItem from "./layout/flex-item";
+import {connect} from 'react-redux';
+import {createFormula, makeQueryFromState} from '../actions';
 import Select from 'react-select';
 import TextField from './forms/TextField';
 import Button from './Button';
 
+import FilterDate from './filters/FilterDate';
+
+import FilterFactory from './filters/FilterFactory';
+
+@connect(state => state.filters)
 @Radium
-class PipelineCreator extends React.Component {
+export default class PipelineCreator extends React.Component {
 
   constructor(props) {
     super(props);
@@ -18,75 +24,18 @@ class PipelineCreator extends React.Component {
       resultFields: [], // what fields the user is interested in measuring; replies, replies per comment, etc
       specificBreakdowns: [], // this could be particular author(s), or a specific section
       // hard-code the date range of the NYT dataset.
-      // minDate: '2003-05-13',
-      // maxDate: '2015-01-01',
-      minDate: '2013-01-01',
-      maxDate: '2013-01-02',
       computedQuery: null
     };
   }
+  static propTypes = {
+
+  }
+  static defaultProps = {
+
+  }
 
   handleCreatePipeline() {
-
-    const interval = this.getSensibleInterval(new Date(this.state.minDate), new Date(this.state.maxDate));
-
-    /* this will be moved to actions, construct and pass an object from here */
-    var computedQuery = {
-      name: 'custom_query',
-      desc: 'Returns a time series of comments bounded by iso dates!  Totals or broken down by duration [day|week|month] and target type total|user|asset|author|section]',
-      pre_script: '',
-      pst_script: '',
-      params: [],
-      queries: [
-        {
-          name: 'custom_query',
-          type: 'pipeline',
-          collection: 'comment_timeseries',
-          commands: [
-            {
-              $match: {
-                start_iso: {$gte: `#date:${this.state.minDate}`}
-              }
-            },
-            {
-              $match: {
-                start_iso: {$lt: `#date:${this.state.maxDate}`}
-              }
-            },
-            {
-              $match: {duration: interval}
-            },
-            {
-              $match: {target: this.state.selectedBreakdown}
-            },
-            {
-              $sort: {
-                start_iso: 1
-              }
-            }
-          ],
-          'return': true
-        }
-      ],
-      enabled: true
-    };
-
-    if (this.state.specificBreakdowns.length) {
-
-      var match = {
-        $match: {
-          $or: this.state.specificBreakdowns.map(bd => {
-            return {target_doc: bd};
-          })
-        }
-      };
-
-      computedQuery.queries[0].commands.splice(3, 0, match);
-    }
-
-    console.log('computedQuery', computedQuery);
-
-    this.props.dispatch(createPipelineValueChanged(computedQuery));
+    this.props.dispatch(makeQueryFromState('user'));
   }
 
   getTargets(target) {
@@ -178,14 +127,6 @@ class PipelineCreator extends React.Component {
     ];
   }
 
-  updateDateRange(e) {
-    if (e.target === this.refs.date_start) {
-      this.setState({minDate: e.target.value});
-    } else {
-      this.setState({maxDate: e.target.value});
-    }
-  }
-
   // we don't want to request 10000 hourly intervals,
   // so compute resonable bin size
   getSensibleInterval(start, end) {
@@ -207,41 +148,10 @@ class PipelineCreator extends React.Component {
 
     return (
       <div>
-        <p style={styles.label}>I want to know about</p>
-        <Select
-          options={this.getBreakdownOptions()}
-          name="breakdown-type"
-          value={this.state.selectedBreakdown}
-          onChange={this.updateOutput.bind(this)} />
 
-        <p style={styles.label}>Show me:</p>
-        <Select
-          style={{width: 100}}
-          onChange={this.updateFields.bind(this)}
-          name="selected-field"
-          value={this.state.resultFields.join()}
-          multi={true}
-          options={this.getFieldOptions()}
-          placeholder="comments / replies / accept ratio"/>
+        {FilterFactory.makeFilters('user')}
 
-        {this.getSpecific(this.state.selectedBreakdown)}
-
-        <p style={styles.label}>between</p>
-        <input
-          onChange={this.updateDateRange.bind(this)}
-          type="date"
-          ref="date_start"
-          value={this.state.minDate} />
-
-        <p style={styles.label}>and</p>
-        <input
-          onChange={this.updateDateRange.bind(this)}
-          type="date"
-          ref="date_end"
-          value={this.state.maxDate} />
-
-        <p style={styles.label}> + Add another question for comparison </p>
-        <div style={{marginTop: 20}}>
+        <div>
           <Button
             category="primary"
             onClick={this.handleCreatePipeline.bind(this)}>
@@ -260,26 +170,3 @@ const styles = {
     marginTop: 10
   }
 };
-
-export default PipelineCreator;
-
-
-// <select
-//   onChange={this.updateOutput.bind(this)}
-//   style={styles.select}
-//   ref="pipelines">
-//   <option value={"what_is"}> What is the </option>
-// </select>
-// <select
-//   onChange={this.updateOutput.bind(this)}
-//   style={styles.select}
-//   ref="pipelines">
-//   <option value={"number"}> number of </option>
-//   <option value={"ratio"}> ratio of </option>
-// </select>
-// <select
-//   onChange={this.updateOutput.bind(this)}
-//   style={styles.select}
-//   ref="pipelines">
-//   <option value={"rejected comments"}> rejected comments </option>
-// </select>

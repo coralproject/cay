@@ -1,4 +1,4 @@
-{ 
+{
   "User Manager": "User Manager",
   "Trust Score": "Trust Score",
   "some optional subhead": "some optional subhead",
@@ -8,10 +8,12 @@
   "Last Login": "Last Login",
   "Member Since": "Member Since",
   "Warnings": "Warnings",
-  "User List": "User List",
+  "Commentors": "Commentors",
   "Language": "Language",
   "Description": "Description",
   "Tag": "Tag",
   "Tag Manager": "Tag Manager",
-  "Settings": "Settings"
+  "Settings": "Settings",
+  "Squads": "Squads",
+  "Missing": "Missing"
 }

@@ -136,7 +136,7 @@ export default class TagManager extends React.Component {
 
       <Page>
 
-        <ContentHeader title={ L.t("Tag Manager") } />
+        <ContentHeader title={ window.L.t('Tag Manager') } />
 
         <div style={ styles.tagManagerContent }>
 

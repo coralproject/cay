@@ -2,11 +2,10 @@ import React, {PropTypes} from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 
-import {fetchPipelinesIfNotFetched, selectPipeline, fetchPipeline} from '../actions';
+import {fetchPipelinesIfNotFetched} from '../actions';
 
 import Page from './Page';
 import ContentHeader from '../components/ContentHeader';
-import PipelineList from '../components/PipelineList';
 import UserList from '../components/UserList';
 import UserDetail from '../components/UserDetail';
 
@@ -31,34 +30,19 @@ export default class UserManager extends React.Component {
     this.props.dispatch(fetchPipelinesIfNotFetched());
   }
 
-  // every time the state is updated
-  componentDidUpdate() {
-    // if (!_.some(_.map(this.props.pipelines, _.isString))) {
-    //   this.props.pipelines.map(pipe => {
-
-    //   })
-    // }
-
-    // if (_.isString(this.props.pipelines[0])) { // stopgap. sorry
-    //   this.props.pipelines.map(pipe => {
-    //     this.props.dispatch(fetchPipeline(pipe));
-    //   });
-    // }
-  }
-
   render() {
 
     return (
 
       <Page>
 
-        <ContentHeader title={ L.t("User Manager") } />
+        <ContentHeader title={ window.L.t('User Manager') } />
 
         <div style={styles.base}>
           <UserFormulaContainer/>
 
           <UserList
-            style={styles.userTable}
+            style={styles.userList}
             users={this.props.users} />
 
           <UserDetail
@@ -74,14 +58,14 @@ export default class UserManager extends React.Component {
 const styles = {
   base: {
     display: 'flex',
-    minHeight: '250px',
+    minHeight: 250
   },
   pipelineList: {
     flex: 1,
     marginLeft: 5,
     marginRight: 5
   },
-  userTable: {
+  userList: {
     flex: 1,
     marginLeft: 5,
     marginRight: 5

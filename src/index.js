@@ -17,8 +17,10 @@ import configureStore from './store';
 import UserManager from './containers/UserManager';
 import TagManager from './containers/TagManager';
 import Login from './containers/Login';
-import DataExplorer from './containers/DataExplorer';
+// import DataExplorer from './containers/DataExplorer';
 import SeeAllGroups from './containers/SeeAllGroups.jsx';
+import GroupDetail from './containers/GroupDetail';
+import NoMatch from './containers/NoMatch';
 
 const store = configureStore();
 
@@ -56,12 +58,14 @@ class Root extends React.Component {
       <div>
         <Provider store={store}>
           <Router history={browserHistory}>
-            <Route path="/" component={UserManager}/>
-            <Route path="login" component={Login}/>
-            <Route path="user-manager" component={UserManager}/>
-            <Route path="tag-manager" component={TagManager}/>
-            <Route path="explore" component={DataExplorer}/>
+            <Route path="/" component={UserManager} />
+            <Route path="login" component={Login} />
+            <Route path="group-creator" component={UserManager} />
+            <Route path="tag-manager" component={TagManager} />
             <Route path="groups" component={SeeAllGroups}/>
+            <Route path="group/:name" component={GroupDetail} />
+            <Route path="*" component={NoMatch} />
+            {/*<Route path="explore" component={DataExplorer} />*/}
           </Router>
         </Provider>
         {debug}
@@ -70,7 +74,7 @@ class Root extends React.Component {
   }
 }
 
-fetch('./config.json')
+fetch('/config.json')
   .then(res => res.json())
   .then(config => {
 

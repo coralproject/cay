@@ -29,7 +29,7 @@ class PipelineList extends React.Component {
 
       <List style={[styles.base, style]}>
         <Heading size="small" style={styles.heading}>
-           { L.t("Pipeline List") }
+           { window.L.t("Pipeline List") }
         </Heading>
 
         {

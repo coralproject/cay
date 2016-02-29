@@ -4,7 +4,7 @@ import {Link} from 'react-router';
 
 import MenuItem from './MenuItem';
 
-import MdSupervisorAccount from 'react-icons/lib/md/supervisor-account';
+import MdBuild from 'react-icons/lib/md/build';
 import MdSettings from 'react-icons/lib/md/settings';
 
 import { Lang } from '../../../lang';
@@ -21,8 +21,8 @@ class Menu extends React.Component {
         <ul style={ styles.sideBarMenu }>
           {/*<MenuItem name="Dashboard" target="/" icon={<MdInsertChart />} />*/}
           {/*<MenuItem name="Explore" target="/explore" icon={<MdTimeline />} />*/}
-          <MenuItem name={ L.t("User Manager") } target="/user-manager" icon={<MdSupervisorAccount />} />
-          <MenuItem name={ L.t("Settings") } target="/tag-manager" icon={<MdSettings />}/>
+          <MenuItem name={ window.L.t('User Manager') } target="/user-manager" icon={<MdBuild />} />
+          <MenuItem name={ window.L.t('Settings') } target="/tag-manager" icon={<MdSettings />}/>
           {/*<MenuItem name="Settings" target="/settings" icon={<MdSettings />} />*/}
         </ul>
       </div>

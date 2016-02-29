@@ -1,9 +1,9 @@
 import Polyglot from 'node-polyglot';
 import moment from 'moment';
-import React from "react";
+import React from 'react';
 
 /*
-  This is currently using two anti-patterns on purpose, 
+  This is currently using two anti-patterns on purpose,
   a global, and a pseudo-isMounted property on the decorator,
   for some details about it, read: https://github.com/coralproject/cay/issues/9
 */
@@ -12,7 +12,7 @@ export default class LangSugar {
 
   translations = {};
   polyglot = new Polyglot();
-  locale = "en";
+  locale = 'en';
   moment = moment;
   renderParent = {};
   componentQueue = [];
@@ -29,20 +29,20 @@ export default class LangSugar {
   t(phrase, vars) {
     if (process && process.env.NODE_ENV !== 'production') {
       if (Object.keys(this.translations[this.locale]).indexOf(phrase) < 0) {
-        console.warn("Translation for the key [" + phrase + "] on locale [" + this.locale + "] is missing. Please add it to [lang/" + this.locale + ".json].");
+        console.warn(`Translation for the key [${phrase}] on locale [${this.locale}] is missing. Please add it to [lang/${this.locale}.json].`);
       }
     }
     return this.polyglot.t(phrase, vars);
   }
 
   date(time, format) {
-    var time = !!time ? time : new Date();
+    time = time ? time : new Date();
     return this.moment(time).format(format);
   }
 
   relativeDate(time) {
-    var time = !!time ? time : new Date();
-    return this.moment(time).fromNow(); 
+    time = time ? time : new Date();
+    return this.moment(time).fromNow();
   }
 
   setLocale(locale) {
@@ -77,16 +77,16 @@ export var Lang = ComposedComponent => class extends React.Component {
     // native React's isMounted is discouraged as anti-pattern,
     // the reasoning behind this implementation is in: https://github.com/coralproject/cay/issues/9
     this._langIsMounted = false;
-    this.state = { currentLocale: L.locale || 'en' };
+    this.state = { currentLocale: window.L.locale || 'en' };
   }
 
   componentWillUnmount() {
-    L.unqueue(this);
+    window.L.unqueue(this);
     this._langIsMounted = false;
   }
 
   componentDidMount() {
-    L.enqueue(this);
+    window.L.enqueue(this);
     this._langIsMounted = true;
   }
 
@@ -95,4 +95,3 @@ export var Lang = ComposedComponent => class extends React.Component {
   }
 
 };
-

@@ -19,7 +19,7 @@ export default class UserRow extends React.Component {
     const {user} = this.props;
     const leftAvatar = (
       <CharacterIcon size="medium" color={"#1f77b4"}>
-        { user.user_name.charAt(0).toUpperCase() }
+        { user.name.charAt(0).toUpperCase() }
       </CharacterIcon>
     );
 
@@ -28,9 +28,9 @@ export default class UserRow extends React.Component {
         style={[this.props.style, styles.base]}
         onClick={this.handleClick.bind(this)}
         leftAvatar={leftAvatar}>
-        {user.user_name}
+        {user.name}
         <p style={styles.sub}>
-          Rating | accept ratio {user.stats.accept_ratio} | Comments {user.stats.comments.total}
+          Rating | accept ratio {user.statistics.comments.all.all.accept_ratio} | Comments {user.statistics.comments.all.all.count}
         </p>
       </ListItem>
     );

@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export const CONFIG_LOADED = 'CONFIG_LOADED';
 
 export const PIPELINE_SELECTED = 'PIPELINE_SELECTED';
@@ -327,85 +329,8 @@ export const fetchDataExplorationDataset = (field, queryParams) => {
     } else {
       return { type: 'NOOP' };
     }
-
   };
 };
-
-const formulaCreated = () => {
-  return {
-    type: FORMULA_CREATED
-  };
-};
-
-export const createFormula = (filterSettings) => {
-  const interval = this.getSensibleInterval(new Date(this.state.minDate), new Date(this.state.maxDate));
-
-  if (this.state.specificBreakdowns.length) {
-
-    var match = {
-      $match: {
-        $or: this.state.specificBreakdowns.map(bd => {
-          return {target_doc: bd};
-        })
-      }
-    };
-
-    computedQuery.queries[0].commands.splice(3, 0, match);
-  }
-
-  // validateFormula(filterSettings)
-
-  var computedQuery = {
-    name: 'custom_query',
-    desc: 'Returns a time series of comments bounded by iso dates!  Totals or broken down by duration [day|week|month] and target type total|user|asset|author|section]',
-    pre_script: '',
-    pst_script: '',
-    params: [],
-    queries: [
-      {
-        name: 'custom_query',
-        type: 'pipeline',
-        collection: 'comment_timeseries',
-        /* this will be generated too... */
-        commands: [
-          {
-            $match: {
-              start_iso: {$gte: `#date:${this.state.minDate}`}
-            }
-          },
-          {
-            $match: {
-              start_iso: {$lt: `#date:${this.state.maxDate}`}
-            }
-          },
-          {
-            $match: {
-              duration: interval
-            }
-          },
-          {
-            $match: {
-              target: this.state.selectedBreakdown
-            }
-          },
-          {
-            $sort: {
-              start_iso: 1
-            }
-          }
-        ],
-        'return': true
-      }
-    ],
-    enabled: true
-  };
-
-  return (dispatch) => {
-    dispatch(createPipelineValueChanged(computedQuery));
-
-  };
-};
-
 
 const requestControls = () => {
   return {
@@ -555,6 +480,14 @@ export const makeQueryFromState = (type) => {
   return (dispatch, getState) => {
     // make a query from the current state
     let filterState = getState().filters;
+    let filterPresets = window.filters;
+
+    let matches = _.flatten(_.map(filterPresets, filter => {
+      return [
+        {$match: {[filter.field]: {$gte: filterState[filter.field].userMin}}},
+        {$match: {[filter.field]: {$lte: filterState[filter.field].userMax}}}
+      ];
+    }));
 
     let query = {
       name: 'user_search',
@@ -566,19 +499,23 @@ export const makeQueryFromState = (type) => {
         {
           name: 'user_search',
           type: 'pipeline',
-          collection: 'users',
+          collection: 'user_statistics',
           commands: [
-            {$match: {'stats.accept_ratio': {$gte: filterState['stats.accept_ratio'].userMin}}},
-            {$match: {'stats.accept_ratio': {$lte: filterState['stats.accept_ratio'].userMax}}},
-            {$match: {'stats.comments.total': {$gte: filterState['stats.comments.total'].userMin}}},
-            {$match: {'stats.comments.total': {$lte: filterState['stats.comments.total'].userMax}}},
-            {$match: {'stats.replies': {$gte: filterState['stats.replies'].userMin}}},
-            {$match: {'stats.replies': {$lte: filterState['stats.replies'].userMax}}},
-            {$match: {'stats.replies_per_comment': {$gte: filterState['stats.replies_per_comment'].userMin}}},
-            {$match: {'stats.replies_per_comment': {$lte: filterState['stats.replies_per_comment'].userMax}}},
-            {$sort: {'stats.comments.total': -1}},
+            ...matches,
+            {$sort: {'statistics.comments.all.all.count': -1}},
             {$skip: 0},
             {$limit: 20}
+            // {
+            //   $redact: {
+            //     $cond: {
+            //       if: {
+            //         $eq: [{$ifNull: ['$reply_comments', true]}, true]
+            //       },
+            //       then: '$$DESCEND',
+            //       else: '$$PRUNE'
+            //     }
+            //   }
+            // }
           ],
           return: true
         }

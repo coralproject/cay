@@ -24,8 +24,8 @@ class LanguageSwitcher extends React.Component {
 
   switchLanguage(locale, event) {
     event.stopPropagation();
-    L.setLocale(locale);
-    L.processQueue();
+    window.L.setLocale(locale);
+    window.L.processQueue();
   }
 
   onClickOutside(event) {
@@ -43,36 +43,36 @@ class LanguageSwitcher extends React.Component {
 
   render() {
 
-    var dropdown = this.state.dropdownActive ? 
+    var dropdown = this.state.dropdownActive ?
       <ul style={ styles.dropdown } onMouseLeave={ this.onMouseLeave.bind(this) }>
         <li style={ styles.dropdownOption }>
-          <button key={ 1 } style={ styles.languageButton } onClick={ this.switchLanguage.bind(this, "en") }>
+          <button key={ 1 } style={ styles.languageButton } onClick={ this.switchLanguage.bind(this, 'en') }>
             English
             {
-              this.props.currentLocale == 'en' ? 
+              this.props.currentLocale == 'en' ?
                 <span style={ styles.check }><MdCheck /></span>
               : null
             }
           </button>
         </li>
         <li style={ styles.dropdownOption }>
-          <button key={ 2 } style={ styles.languageButton } onClick={ this.switchLanguage.bind(this, "de") }>
+          <button key={ 2 } style={ styles.languageButton } onClick={ this.switchLanguage.bind(this, 'de') }>
             Deutsch
             {
-              this.props.currentLocale == 'de' ? 
+              this.props.currentLocale == 'de' ?
                 <span style={ styles.check }><MdCheck /></span>
               : null
             }
           </button>
         </li>
-      </ul> 
+      </ul>
     : null;
 
     return (
       <div style={ styles.languageSwitcher }>
         <button onClick={ this.onTogglerClick.bind(this) } style={ styles.toggler }>
           <MdLanguage />
-            <span style={ styles.togglerText }>{ L.t("Language") }</span>
+            <span style={ styles.togglerText }>{ window.L.t('Language') }</span>
           <MdArrowDropDown />
         </button>
         { dropdown }

@@ -12,7 +12,9 @@ class ContentHeader extends React.Component {
       <section style={styles.base}>
         <Heading fontWeight="600"
           size="large"
-          subhead={""/*"some optional subhead"*/}>{ L.t(this.props.title) }</Heading>
+          subhead={""/*"some optional subhead"*/}>
+          { window.L.t(this.props.title) }
+        </Heading>
       </section>
     );
   }

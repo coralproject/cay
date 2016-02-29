@@ -45,7 +45,7 @@ export default class UserList extends React.Component {
     <div style={ styles.base }>
       <div style={ styles.columnHeader }>
         <Heading size="medium">
-          { L.t("User List") }
+          { window.L.t('Commentors') }
         </Heading>
       </div>
       {this.props.users.length ? this.getUserList(this.props.users) : 'Loading...'}

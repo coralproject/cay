@@ -130,17 +130,6 @@ export default class UserFilters extends React.Component {
 
         {this.getSpecific()}
 
-        <FilterObjectId />
-        <div className="clear" />
-        <FilterString fieldName="user_name" />
-        <div className="clear" />
-        <FilterString fieldName="status" />
-        <div className="clear" />
-        <FilterDate ref="lastLogin" fieldName="last_login" />
-
-        <FilterDate ref="memberSince" fieldName="member_since" />
-
-        <p>Tags</p>
         <Select multi={true} options={this.getTags()} />
 
         {/* this will eventually be the meat of the component */}

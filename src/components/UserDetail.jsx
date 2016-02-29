@@ -126,13 +126,6 @@ export default class UserDetail extends React.Component {
         <Heading size="medium">{this.props.name}</Heading>
         <div style={styles.topPart}>
           <Avatar style={styles.avatar} src={this.props.avatar || ''} size={200} />
-          <Stats style={styles.stats}>
-            <Stat term={ window.L.t('Status') } description="subscriber" />
-            <Stat term={ window.L.t('Last Login') } description={ window.L.date('', 'LLLL') } />
-            <Stat term={ window.L.t('Member Since') } description={ window.L.relativeDate() } />
-            <Stat term={ window.L.t('Warnings') } description="0" />
-            {/* tagger */}
-          </Stats>
         </div>
         <p><MdLocalOffer /> Add / Remove Tags for this Commenter</p>
         <Select

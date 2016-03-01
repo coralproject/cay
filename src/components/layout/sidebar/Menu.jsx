@@ -22,9 +22,9 @@ class Menu extends React.Component {
         <ul style={ styles.sideBarMenu }>
           {/*<MenuItem name="Dashboard" target="/" icon={<MdInsertChart />} />*/}
           {/*<MenuItem name="Explore" target="/explore" icon={<MdTimeline />} />*/}
+          <MenuItem name={ window.L.t('Group List') } target="/groups" icon={<MdGroup />} />
           <MenuItem name={ window.L.t('Group Creator') } target="/group-creator" icon={<MdBuild />} />
           <MenuItem name={ window.L.t('Settings') } target="/tag-manager" icon={<MdSettings />} />
-          <MenuItem name={ window.L.t('Group List') } target="/groups" icon={<MdGroup />} />
           {/*<MenuItem name="Settings" target="/settings" icon={<MdSettings />} />*/}
         </ul>
       </div>

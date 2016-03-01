@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
 import {fetchPipeline} from '../actions';
+import _ from 'lodash';
 
 import Page from './Page';
 import ContentHeader from '../components/ContentHeader';
@@ -16,11 +17,19 @@ export default class GroupDetail extends React.Component {
     this.props.dispatch(fetchPipeline(this.props.params.name));
   }
 
+  getGroupDescription(name) {
+    if (this.props.groups.length) {
+      return _.find(this.props.groups, {name}).desc;
+    } else {
+      return '';
+    }
+  }
+
   render() {
     return (
       <Page>
         <ContentHeader title={this.props.params.name} />
-        <p>Some sort of sentence describing what the filter is on about</p>
+        <p>{this.getGroupDescription(this.props.params.name)}</p>
         <div style={styles.base}>
           <UserList
             style={styles.userList}

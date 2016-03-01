@@ -9,14 +9,14 @@ import Page from './Page';
 import {fetchPipelinesIfNotFetched, selectPipeline, fetchPipeline} from '../actions';
 import Sentence from '../components/Sentence';
 import Card from '../components/cards/Card';
+import CardHeader from '../components/cards/CardHeader';
+import ContentHeader from '../components/ContentHeader';
 import Button from '../components/Button';
 
 // const style = {
 // };
 
-@connect(state => {
-  return state.pipelines;
-})
+@connect(state => state.pipelines)
 @Radium
 class SeeAllGroups extends React.Component {
   constructor(props) {
@@ -58,29 +58,34 @@ class SeeAllGroups extends React.Component {
     const groups = this.props.pipelines.map((group, i) => {
 
       return (
-        <Card key={i}>
-          <p>{group.name}</p>
+        <Card style={styles.groupCard} key={i}>
+          <CardHeader>{group.name}</CardHeader>
           <p>{group.desc}</p>
-          <p> Details </p>
-          <p> REPLACE_WITH_SENTENCE These 106 commenters are active on Politics, logged in within the last year, and have created more than 100 comments total. </p>
-          {/*<Sentence {...this.props}/>*/}
-          <Link to={`/filters/${group.name}`}>View Group</Link>
-          <Button>Edit Group</Button>
+          <p style={styles.sentenceHeading}> Details </p>
+          {/*<p> REPLACE_WITH_SENTENCE These 106 commenters are active on Politics, logged in within the last year, and have created more than 100 comments total. </p>*/}
+          <Sentence {...group}/>
+          <div style={styles.actionsContainer}>
+            <Link
+              style={styles.viewGroupLink}
+              to={`/group/${group.name}`}>View Group</Link>
+            <span>Edit Group (coming soon)</span>
+          </div>
         </Card>
       );
     });
     return groups;
   }
   render() {
-    const styles = this.getStyles();
     return (
     <Page>
       <div style={[
         styles.base,
         this.props.style
       ]}>
-        {"Commenter groups"}
-        {this.renderGroups()}
+        <ContentHeader title={ window.L.t('Commenter Groups') } />
+        <div style={styles.cardHolder}>
+          {this.renderGroups()}
+        </div>
       </div>
 
     </Page>
@@ -89,6 +94,27 @@ class SeeAllGroups extends React.Component {
 }
 
 export default SeeAllGroups;
+
+const styles = {
+  cardHolder: {
+    display: 'flex'
+  },
+  sentenceHeading: {
+    margin: "10px 0px",
+    textTransform: "uppercase",
+    fontWeight: 500
+  },
+  actionsContainer: {
+    marginTop: 20
+  },
+  viewGroupLink: {
+    marginRight: 20
+  },
+  groupCard: {
+    flex: 1,
+    margin: 10
+  }
+};
 
 /*
 

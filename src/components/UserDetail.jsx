@@ -123,7 +123,7 @@ export default class UserDetail extends React.Component {
 
     return (
       <div style={[styles.base, this.props.style]}>
-        <Heading size="medium">{this.props.name}</Heading>
+        <Heading size="medium">{this.props.name || 'Select a user to see details'}</Heading>
         <div style={styles.topPart}>
           <Avatar style={styles.avatar} src={this.props.avatar || ''} size={200} />
         </div>

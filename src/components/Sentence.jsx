@@ -1,6 +1,6 @@
 import React from 'react';
 import Radium from 'radium';
-// import _ from 'lodash';
+import _ from 'lodash';
 // import Flex from './layout/Flex';
 import moment from 'moment';
 
@@ -77,9 +77,9 @@ class Sentence extends React.Component {
       this.props['stats.replies_per_comment'].userMax !== repliesPerCommentMinDefault
     ) {
       return (`
-        had more than
+        between
         ${this.props['stats.replies_per_comment'].userMin}
-        but less than
+        and
         ${this.props['stats.replies_per_comment'].userMax}
         replies per comment on average,
       `);
@@ -94,17 +94,40 @@ class Sentence extends React.Component {
       this.props['stats.replies'].userMax !== repliesMinDefault
     ) {
       return (`
-        had more than
+        between
         ${this.props['stats.replies'].userMin}
-        but less than
+        and
         ${this.props['stats.replies'].userMax}
         replies to their comments in total,
       `);
     }
   }
 
+  getClauses() {
+    const matchCommands = _.filter(this.props.queries[0].commands, command => {
+      return _.has(command, '$match');
+    });
+
+    return _.map(matchCommands, command => {
+      const name = _.first(_.keys(command.$match));
+      const baseFilter = _.find(window.filters, {field: name});
+      let clause;
+
+      if (_.has(command.$match[name], '$gte')) {
+        clause = `between ${command.$match[name].$gte}`;
+      } else if (_.has(command.$match[name], '$lte')) {
+        clause = `and ${command.$match[name].$lte} ${baseFilter.description},`;
+      }
+
+      return clause;
+
+    }).join(' ');
+  }
+
+
   render() {
     const styles = this.getStyles();
+    console.log('Sentence.render', this.props);
     return (
       <div style={[
         styles.base,
@@ -112,7 +135,7 @@ class Sentence extends React.Component {
       ]}>
         <p>
           {
-            /* todo disable other inputs ? ask emma */
+            /* todo disable other inputs ? ask emma
             this.props['user_name'] ?
               `A user with the username ${this.props['user_name']}` :
               'Users who '
@@ -139,7 +162,8 @@ class Sentence extends React.Component {
             this.props['status'] ?
               `have status ${this.props['status']}` :
               ''
-          }
+          */}
+          {this.getClauses()}
         </p>
       </div>
     );

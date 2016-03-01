@@ -7,6 +7,7 @@ const data_exploration = (state = {
   authors: [],
   loading: false,
   loadingControls: false,
+  loadingAuthors: false,
   loadingSections: false,
   dataset: null,
   datasetName: null,
@@ -60,11 +61,21 @@ const data_exploration = (state = {
     });
 
   case types.RECEIVE_SECTIONS:
-    console.log(action.type, action);
     return Object.assign({}, state, {
       loadingSections: false,
       sections: action.data.results[0].Docs
     });
+
+  case types.REQUEST_AUTHORS:
+    return Object.assign({}, state, {loadingAuthors: true});
+
+
+  case types.RECEIVE_AUTHORS:
+    return Object.assign({}, state, {
+      loadingAuthors: false,
+      authors: action.data.results[0].Docs
+    });
+
   default:
     return state;
   }

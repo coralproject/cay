@@ -136,19 +136,33 @@ export default class UserDetail extends React.Component {
         />
         <Tabs initialSelectedIndex={0} style={styles.tabs}>
           <Tab title="About">
+            <Stats>
+              {
+                this.props.selectedUser ?
+                  ([
+                    <Stat term="total comment count" description={this.props.statistics.comments.all.all.count} />,
+                    <Stat term="replied count" description={this.props.statistics.comments.all.all.replied_count} />,
+                    <Stat term="reply count" description={this.props.statistics.comments.all.all.reply_count} />,
+                    <Stat term="reply ratio" description={this.props.statistics.comments.all.all.reply_ratio} />,
+                    <Stat term="community flagged" description={this.props.statistics.comments.all.CommunityFlagged.count} />
+                  ]) :
+                  <Stat term="Commenter Stat" description="select a commenter to see details" />
+              }
+            </Stats>
+          </Tab>
+          <Tab title="Activity">
             {
               this.props.loadingUserComments || !this.props.userDetailComments ?
-                'Loading Comments...' :
-                (
-                  <CommentDetailList
-                    user={this.props.selectedUser}
-                    comments={this.props.userDetailComments} />
-                )
+              'Loading Comments...' :
+              (
+                <CommentDetailList
+                  user={this.props.selectedUser}
+                  comments={this.props.userDetailComments} />
+              )
             }
           </Tab>
-          <Tab title="Activity">Tab Bravo Content</Tab>
           <Tab title="Notes">
-            <p>Notes about the commmenter will go here. These will be provided by the mods</p>
+            <p>Watch out for her comments on Climate stories, she often corrects mistakes.</p>
           </Tab>
         </Tabs>
       </div>

@@ -107,9 +107,20 @@ class Sentence extends React.Component {
     const matchCommands = _.filter(this.props.queries[0].commands, command => {
       return _.has(command, '$match');
     });
+
     return _.map(matchCommands, command => {
-      var name = _.first(_.keys(command.$match));
-      return _.find(window.filters, {field: name}).description;
+      const name = _.first(_.keys(command.$match));
+      const baseFilter = _.find(window.filters, {field: name});
+      let clause;
+
+      if (_.has(command.$match[name], '$gte')) {
+        clause = `more than ${command.$match[name].$gte} ${baseFilter.description}`;
+      } else if (_.has(command.$match[name], '$lte')) {
+        clause = `less than ${command.$match[name].$lte} ${baseFilter.description}`;
+      }
+
+      return clause;
+
     }).join(' | ');
   }
 

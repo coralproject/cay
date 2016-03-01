@@ -88,7 +88,7 @@ export default class UserFilters extends React.Component {
   }
 
   getActiveFiltersFromConfig() {
-    const userFilters = window.filters.filter(f => f.collection === 'users');
+    const userFilters = window.filters.filter(f => f.collection === 'user_statistics');
     return userFilters.map(f => {
       let filterComponent;
       if (f.type === 'numberRange') {

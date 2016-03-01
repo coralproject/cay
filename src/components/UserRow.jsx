@@ -23,8 +23,6 @@ export default class UserRow extends React.Component {
       </CharacterIcon>
     );
 
-    console.log(user.statistics);
-
     return (
       <ListItem
         style={[this.props.style, styles.base]}

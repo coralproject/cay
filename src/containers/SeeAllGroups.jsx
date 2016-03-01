@@ -9,6 +9,7 @@ import Page from './Page';
 import {fetchPipelinesIfNotFetched, selectPipeline, fetchPipeline} from '../actions';
 import Sentence from '../components/Sentence';
 import Card from '../components/cards/Card';
+import CardHeader from '../components/cards/CardHeader';
 import Button from '../components/Button';
 
 // const style = {
@@ -59,7 +60,7 @@ class SeeAllGroups extends React.Component {
 
       return (
         <Card key={i}>
-          <p>{group.name}</p>
+          <CardHeader>{group.name}</CardHeader>
           <p>{group.desc}</p>
           <p> Details </p>
           {/*<p> REPLACE_WITH_SENTENCE These 106 commenters are active on Politics, logged in within the last year, and have created more than 100 comments total. </p>*/}

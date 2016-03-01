@@ -38,7 +38,8 @@ const styles = {
     lineHeight: '24px'
   },
   title: {
-    fontSize: 15
+    fontSize: 15,
+    fontWeight: 'bold'
   },
   subtitle: {
     color: settings.grey,

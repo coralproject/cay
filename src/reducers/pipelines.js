@@ -10,6 +10,7 @@ const initialState = {
   pipelines: [],
   users: [],
   comments: [],
+  groups: [],
   tags: [],
   userDetailComments: null,
   loadingUserComments: false
@@ -40,6 +41,7 @@ const pipelines = (state = initialState, action) => {
         loading: false,
         // this probably isn't the final way to do this.
         // queries will eventually be length > 1
+        groups: action.pipelines,
         pipelines: action.pipelines.filter(pipe => {
           return pipe.queries[0].collection === 'user_statistics' && pipe.name !== 'user_search';
         })

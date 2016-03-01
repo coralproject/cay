@@ -76,7 +76,7 @@ export const selectPipeline = (pipeline) => {
 
 export const requestPipeline = (pipeline) => {
   return {
-    type: PIPELINES_REQUEST,
+    type: PIPELINE_REQUEST,
     pipeline
   };
 };
@@ -525,6 +525,7 @@ export const makeQueryFromState = (type) => {
 
     console.log(JSON.stringify(query, null, 2));
 
+    dispatch(requestPipeline());
     dispatch(createQuery(query));
 
     const url = window.xeniaHost + '/' + apiPrefix + 'exec';

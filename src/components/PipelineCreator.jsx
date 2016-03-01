@@ -7,6 +7,7 @@ import {createFormula, makeQueryFromState} from '../actions';
 import Select from 'react-select';
 import TextField from './forms/TextField';
 import Button from './Button';
+import Spinner from './Spinner';
 
 import FilterDate from './filters/FilterDate';
 
@@ -158,8 +159,16 @@ export default class PipelineCreator extends React.Component {
         <div>
           <Button
             category="primary"
+            disabled={ this.props.loadingUserList }
             onClick={this.handleCreatePipeline.bind(this)}>
-              Create
+            {
+              this.props.loadingUserList ?
+                <span>
+                  <Spinner /> Loading...
+                </span>
+              : 
+                <span>Create</span>
+            }
           </Button>
         </div>
       </div>

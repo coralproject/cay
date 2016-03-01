@@ -12,6 +12,9 @@ import Stats from './stats/Stats';
 import Stat from './stats/Stat';
 import Heading from './Heading';
 import MdLocalOffer from 'react-icons/lib/md/local-offer';
+
+import Spinner from './Spinner';
+
 // import Tagger from './forms/Tagger';
 import Select from 'react-select';
 
@@ -123,32 +126,42 @@ export default class UserDetail extends React.Component {
 
     return (
       <div style={[styles.base, this.props.style]}>
-        <Heading size="medium">{this.props.name || 'Select a user to see details'}</Heading>
-        <div style={styles.topPart}>
-          <Avatar style={styles.avatar} src={this.props.avatar || ''} size={200} />
-        </div>
-        <p><MdLocalOffer /> Add / Remove Tags for this Commenter</p>
-        <Select
-          multi={true}
-          value={this.state.selectedTags}
-          onChange={this.updateTags.bind(this)}
-          options={this.getTags()}
-        />
-        <Tabs initialSelectedIndex={0} style={styles.tabs}>
-          <Tab title="About">
-            {
-              this.props.loadingUserComments || !this.props.userDetailComments ?
-                'Loading Comments...' :
-                (
-                  <CommentDetailList
-                    user={this.props.selectedUser}
-                    comments={this.props.userDetailComments} />
-                )
-            }
-          </Tab>
-          <Tab title="Activity">Tab Bravo Content</Tab>
-          <Tab title="Messages">Tab Charlie Content</Tab>
-        </Tabs>
+      {
+        this.props.name ?
+          <div>
+            <Heading size="medium">{this.props.name}</Heading>
+            <div style={styles.topPart}>
+              <Avatar style={styles.avatar} src={this.props.avatar || ''} size={200} />
+            </div>
+            <p><MdLocalOffer /> Add / Remove Tags for this Commenter</p>
+            <Select
+              multi={true}
+              value={this.state.selectedTags}
+              onChange={this.updateTags.bind(this)}
+              options={this.getTags()}
+            />
+            <Tabs initialSelectedIndex={0} style={styles.tabs}>
+              <Tab title="About">
+                {
+                  this.props.loadingUserComments || !this.props.userDetailComments ?
+                    <div style={ styles.loadingComments }>
+                      <Spinner/> Loading Comments...
+                    </div>
+                  :
+                    (
+                      <CommentDetailList
+                        user={this.props.selectedUser}
+                        comments={this.props.userDetailComments} />
+                    )
+                }
+              </Tab>
+              <Tab title="Activity">Tab Bravo Content</Tab>
+              <Tab title="Messages">Tab Charlie Content</Tab>
+            </Tabs>
+          </div>
+        :
+          <span>Select a user to see details</span>
+      }
       </div>
     );
   }
@@ -177,5 +190,8 @@ const styles = {
   tags: {
     clear: 'both',
     paddingTop: '20px'
+  },
+  loadingComments: {
+    padding: '10px'
   }
 };

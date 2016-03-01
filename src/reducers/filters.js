@@ -49,6 +49,9 @@ const filters = (state = initialState, action) => {
   case types.RECEIVE_SECTIONS:
     return Object.assign({}, state, { sections: Object.keys(action.data.results[0].Docs) });
 
+  case types.PIPELINE_RECEIVED:
+    return Object.assign({}, state, { loadingUserList: false });
+
   default:
     return state;
 

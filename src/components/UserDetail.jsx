@@ -146,8 +146,13 @@ export default class UserDetail extends React.Component {
                 )
             }
           </Tab>
-          <Tab title="Activity">Tab Bravo Content</Tab>
-          <Tab title="Messages">Tab Charlie Content</Tab>
+          <Tab title="Activity">
+
+
+          </Tab>
+          <Tab title="Notes">
+            <p>Notes about the commmenter will go here. These will be provided by the mods</p>
+          </Tab>
         </Tabs>
       </div>
     );

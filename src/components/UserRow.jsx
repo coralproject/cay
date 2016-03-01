@@ -23,6 +23,8 @@ export default class UserRow extends React.Component {
       </CharacterIcon>
     );
 
+    console.log(user.statistics);
+
     return (
       <ListItem
         style={[this.props.style, styles.base]}
@@ -30,7 +32,7 @@ export default class UserRow extends React.Component {
         leftAvatar={leftAvatar}>
         {user.name}
         <p style={styles.sub}>
-          Rating | accept ratio {user.statstics.comments.all.all.accept_ratio} | Comments {user.statstics.comments.all.all.count}
+          Comments {user.statistics.comments.all.all.count} | replied ratio {user.statistics.comments.all.all.replied_ratio.toFixed(2)} | reply ratio {user.statistics.comments.all.all.reply_ratio.toFixed(2)}
         </p>
       </ListItem>
     );

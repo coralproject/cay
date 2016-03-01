@@ -100,7 +100,7 @@ export default class TagManager extends React.Component {
 
   onTagNameEdit(tagDescription, index, value) {
     if (this.validateTag(value)) {
-      this.props.dispatch(storeTag(value, tagDescription, index));
+      this.props.dispatch(storeTag(value, tagDescription, index, this.props.tags[index].name));
     } else {
       this.showValidationError();
     }
@@ -116,7 +116,7 @@ export default class TagManager extends React.Component {
               <InPlaceEditor key={ i } initialValue={ tag.name } validationMessage={ this.invalidTagMessage } validatorFunction={ this.validateTag } onSave={ this.onTagNameEdit.bind(this, tag.description, i) } />
             </TableCell>
             <TableCell style={ styles.tdPadding }>
-              <InPlaceEditor key={ i } initialValue={ tag.description } onSave={ this.onDescriptionEdit.bind(this, tag.name, i) } />
+              <InPlaceEditor key={ i } initialValue={ tag.description ? tag.description : '(No description given)' } onSave={ this.onDescriptionEdit.bind(this, tag.name, i) } />
             </TableCell>
             <TableCell style={ styles.tdPadding }>
               <button key={ i } style={ styles.actionButtons } onClick={ this.confirmDeletion.bind(this, tag.name, tag.description, i) }><MdDelete /></button>

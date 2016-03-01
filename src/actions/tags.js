@@ -35,12 +35,25 @@ export const getTags = () => {
   };
 };
 
-export const storeTag = (tagName, tagDescription, index) => {
+export const storeTag = (tagName, tagDescription, index, oldValue) => {
   return (dispatch) => {
     dispatch(tagRequestStarted());
-    fetch(window.pillarHost + API_PREFIX + 'tag', getInit({ 'name': tagName, 'description': tagDescription }))
-      .then(response => response.json())
-      .then(storedTag => dispatch(tagRequestSuccess(storedTag, index, 'create')))
+
+    var preparedTag = { 'name': tagName, 'description': tagDescription };
+    if (typeof oldValue != "undefined") {
+      preparedTag["old_name"] = oldValue;
+    }
+    fetch(window.pillarHost + API_PREFIX + 'tag', getInit(preparedTag))
+      .then(response => response.text())
+      .then(responseText => {
+        // Temporary fix, errors from pillar are not in JSON notation.
+        try {
+          var responseJson = JSON.parse(responseText);
+          dispatch(tagRequestSuccess(responseJson, index, 'create'));
+        } catch(e) {
+          dispatch(tagRequestFailure(responseText));  
+        }
+      })
       .catch(error => dispatch(tagRequestFailure(error)));
   };
 };

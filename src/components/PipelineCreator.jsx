@@ -3,12 +3,8 @@
 import React from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
-import {createFormula, makeQueryFromState} from '../actions';
-import Select from 'react-select';
-import TextField from './forms/TextField';
+import {makeQueryFromState} from '../actions';
 import Button from './Button';
-
-import FilterDate from './filters/FilterDate';
 
 import FilterFactory from './filters/FilterFactory';
 
@@ -40,95 +36,6 @@ export default class PipelineCreator extends React.Component {
 
   handleCreatePipeline() {
     this.props.dispatch(makeQueryFromState('user'));
-  }
-
-  getTargets(target) {
-    var targets = (target === 'author') ? this.props.authors : this.props.sections;
-
-    return targets.map(t => {
-      return {value: t, label: t};
-    });
-  }
-
-  setSpecificBreakdowns(values) {
-    this.setState({specificBreakdowns: values.split(',')});
-  }
-
-  getSpecific(selectedBreakdown) {
-    if (selectedBreakdown === 'asset') {
-      // ????
-    } else if (selectedBreakdown === 'author') {
-      // return a list of authors
-      return (
-        <div>
-          <p style={styles.label}>on assets written by</p>
-          <Select
-            options={this.getTargets('author')}
-            name="selected-targets"
-            placeholder="Author"
-            value={this.state.specificBreakdowns.join(',')}
-            onChange={this.setSpecificBreakdowns.bind(this)}
-            multi={true} />
-          </div>
-        );
-    } else if (selectedBreakdown === 'section') {
-      return (
-        <div>
-          <p style={styles.label}>specifically, these sections</p>
-          <Select
-            options={this.getTargets('section')}
-            name="selected-targets"
-            placeholder="Section"
-            value={this.state.specificBreakdowns.join(',')}
-            onChange={this.setSpecificBreakdowns.bind(this)}
-            multi={true} />
-          </div>
-        );
-    } else if (selectedBreakdown === 'user') {
-      return (<TextField label="auto-complete user search" />);
-    } else {
-      return '';
-    }
-  }
-
-  // this toggles the UI to load more specific options
-  updateOutput(breakdown) {
-    this.setState({selectedBreakdown: breakdown, specificBreakdowns: []});
-  }
-
-  updateFields(values) {
-    this.setState({resultFields: values.split(',')});
-  }
-
-  getBreakdownOptions() {
-    // apparently the asset target returns invalid JSON, hide for now
-    var possible = ['total', 'user', /*'asset',*/ 'section', 'author'];
-
-    return possible.map(p => {
-      return {value: p, label: p};
-    });
-  }
-
-  getFieldOptions() {
-
-    return [
-      {
-        value: 'comments',
-        label: 'comments (total, accepted, rejected & escalated)'
-      },
-      {
-        value: 'replies',
-        label: 'replies (total)'
-      },
-      {
-        value: 'replies_per_comment',
-        label: 'replies (per comment)'
-      },
-      {
-        value: 'accept_ratio',
-        label: 'accept ratio'
-      }
-    ];
   }
 
   // we don't want to request 10000 hourly intervals,
@@ -166,11 +73,3 @@ export default class PipelineCreator extends React.Component {
     );
   }
 }
-
-const styles = {
-  backgroundColor: 'white',
-  padding: '10px',
-  label: {
-    marginTop: 10
-  }
-};

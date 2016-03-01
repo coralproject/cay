@@ -61,11 +61,15 @@ class SeeAllGroups extends React.Component {
         <Card style={styles.groupCard} key={i}>
           <CardHeader>{group.name}</CardHeader>
           <p>{group.desc}</p>
-          <p> Details </p>
+          <p style={styles.sentenceHeading}> Details </p>
           {/*<p> REPLACE_WITH_SENTENCE These 106 commenters are active on Politics, logged in within the last year, and have created more than 100 comments total. </p>*/}
           <Sentence {...group}/>
-          <Link to={`/group/${group.name}`}>View Group</Link>
-          <Button>Edit Group</Button>
+          <div style={styles.actionsContainer}>
+            <Link
+              style={styles.viewGroupLink}
+              to={`/group/${group.name}`}>View Group</Link>
+            <span>Edit Group (coming soon)</span>
+          </div>
         </Card>
       );
     });
@@ -94,6 +98,17 @@ export default SeeAllGroups;
 const styles = {
   cardHolder: {
     display: 'flex'
+  },
+  sentenceHeading: {
+    margin: "10px 0px",
+    textTransform: "uppercase",
+    fontWeight: 500
+  },
+  actionsContainer: {
+    marginTop: 20
+  },
+  viewGroupLink: {
+    marginRight: 20
   },
   groupCard: {
     flex: 1,

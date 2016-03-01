@@ -84,7 +84,7 @@ class Login extends React.Component {
             >
               Log In
             </Button>
-            <Link style={styles.loginRequest} to="https://coralproject.net/beta-testers/">How can I request a login?</Link>
+            <a style={styles.loginRequest} href="https://coralproject.net/beta-testers/">How can I request a login?</a>
           </div>
         </div>
       </div>

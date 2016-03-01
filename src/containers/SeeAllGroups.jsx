@@ -10,14 +10,13 @@ import {fetchPipelinesIfNotFetched, selectPipeline, fetchPipeline} from '../acti
 import Sentence from '../components/Sentence';
 import Card from '../components/cards/Card';
 import CardHeader from '../components/cards/CardHeader';
+import ContentHeader from '../components/ContentHeader';
 import Button from '../components/Button';
 
 // const style = {
 // };
 
-@connect(state => {
-  return state.pipelines;
-})
+@connect(state => state.pipelines)
 @Radium
 class SeeAllGroups extends React.Component {
   constructor(props) {
@@ -59,7 +58,7 @@ class SeeAllGroups extends React.Component {
     const groups = this.props.pipelines.map((group, i) => {
 
       return (
-        <Card key={i}>
+        <Card style={styles.groupCard} key={i}>
           <CardHeader>{group.name}</CardHeader>
           <p>{group.desc}</p>
           <p> Details </p>
@@ -73,15 +72,16 @@ class SeeAllGroups extends React.Component {
     return groups;
   }
   render() {
-    const styles = this.getStyles();
     return (
     <Page>
       <div style={[
         styles.base,
         this.props.style
       ]}>
-        {"Commenter groups"}
-        {this.renderGroups()}
+        <ContentHeader title={ window.L.t('Commenter Groups') } />
+        <div style={styles.cardHolder}>
+          {this.renderGroups()}
+        </div>
       </div>
 
     </Page>
@@ -90,6 +90,16 @@ class SeeAllGroups extends React.Component {
 }
 
 export default SeeAllGroups;
+
+const styles = {
+  cardHolder: {
+    display: 'flex'
+  },
+  groupCard: {
+    flex: 1,
+    margin: 10
+  }
+};
 
 /*
 

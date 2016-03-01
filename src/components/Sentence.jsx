@@ -77,9 +77,9 @@ class Sentence extends React.Component {
       this.props['stats.replies_per_comment'].userMax !== repliesPerCommentMinDefault
     ) {
       return (`
-        had more than
+        between
         ${this.props['stats.replies_per_comment'].userMin}
-        but less than
+        and
         ${this.props['stats.replies_per_comment'].userMax}
         replies per comment on average,
       `);
@@ -94,9 +94,9 @@ class Sentence extends React.Component {
       this.props['stats.replies'].userMax !== repliesMinDefault
     ) {
       return (`
-        had more than
+        between
         ${this.props['stats.replies'].userMin}
-        but less than
+        and
         ${this.props['stats.replies'].userMax}
         replies to their comments in total,
       `);
@@ -114,14 +114,14 @@ class Sentence extends React.Component {
       let clause;
 
       if (_.has(command.$match[name], '$gte')) {
-        clause = `more than ${command.$match[name].$gte} ${baseFilter.description}`;
+        clause = `between ${command.$match[name].$gte}`;
       } else if (_.has(command.$match[name], '$lte')) {
-        clause = `less than ${command.$match[name].$lte} ${baseFilter.description}`;
+        clause = `and ${command.$match[name].$lte} ${baseFilter.description},`;
       }
 
       return clause;
 
-    }).join(' | ');
+    }).join(' ');
   }
 
 

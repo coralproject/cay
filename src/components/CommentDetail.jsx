@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 
+import settings from '../settings';
 import DateTime from './utils/DateTime';
 import Card from './cards/Card';
 import CardHeader from './cards/CardHeader';
@@ -8,26 +9,31 @@ import CardHeader from './cards/CardHeader';
 @Radium
 export default class CommentDetail extends React.Component {
 
+
   render() {
 
+    const approvedDate = this.props.comment.date_approved ?
+      DateTime.format(new Date(this.props.comment.date_approved)) :
+      ' - Not Approved';
+
     return (
-      <div style={[styles.base, this.props.style]}>
-        {/*<CardHeader>{this.props.user.user_name}</CardHeader>*/}
-        <p style={ styles.commentLegend }>Created {DateTime.format(new Date(this.props.comment.date_created))}</p>
-        {
-          (typeof this.props.comment.date_approved != "undefined") ?
-            <p style={ styles.commentLegend }>Approved {DateTime.format(new Date(this.props.comment.date_approved))} { this.props.comment.date_approved } </p>
-          : 
-            null
-        }
-        <p style={ styles.commentContent } dangerouslySetInnerHTML={{__html: this.props.comment.body}} />
-      </div>
+      <Card style={[styles.base, this.props.style]}>
+        <CardHeader>{this.props.user.name}</CardHeader>
+        <p>Created <strong style={styles.date}>{DateTime.format(new Date(this.props.comment.date_created))}</strong></p>
+        <p>Approved <strong style={styles.date}>{approvedDate}</strong></p>
+        <p dangerouslySetInnerHTML={{__html: this.props.comment.body}} />
+      </Card>
+
     );
   }
 }
 
 const styles = {
   base: {
+
+  },
+  date: {
+    fontWeight: 'bold',
     marginBottom: '10px',
     paddingBottom: '10px',
     borderBottom: '1px solid #ddd'
@@ -37,6 +43,6 @@ const styles = {
     fontSize: '11pt'
   },
   commentLegend: {
-    color: "#888"
+    color: settings.grey
   }
 };

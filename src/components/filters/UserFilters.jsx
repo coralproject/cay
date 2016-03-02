@@ -1,13 +1,11 @@
 import React from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
-import {fetchAllTags, fetchSections} from '../../actions';
+import _ from 'lodash';
+import {fetchAllTags, fetchSections, fetchAuthors} from '../../actions';
 
-import FilterObjectId from './FilterObjectId';
 import Select from 'react-select';
 import FilterNumbers from './FilterNumbers';
-import FilterDate from './FilterDate';
-import FilterString from './FilterString';
 import Sentence from '../Sentence';
 
 import Heading from '../Heading';
@@ -27,6 +25,7 @@ export default class UserFilters extends React.Component {
   componentWillMount() {
     this.props.dispatch(fetchAllTags());
     this.props.dispatch(fetchSections());
+    this.props.dispatch(fetchAuthors());
   }
 
   getTags() {
@@ -36,6 +35,8 @@ export default class UserFilters extends React.Component {
   }
 
   getSpecific() {
+    console.log('getSpecific', this.state.selectedBreakdown);
+
     switch (this.state.selectedBreakdown) {
     case 'section':
       return (
@@ -65,24 +66,26 @@ export default class UserFilters extends React.Component {
   }
 
   setSpecificBreakdowns(values) {
-    this.setState({specificBreakdowns: values.split(',')});
+    console.log('setSpecificBreakdowns', values);
+    this.setState({specificBreakdowns: _.map(values, 'value')});
   }
 
   getAuthors() {
     return this.props.authors.map(author => {
-      return {label: author, value: author};
+      return {label: author.name, value: author.name};
     });
   }
 
   getSections() {
+    console.log('getSections', this.props.sections);
     return this.props.sections.map(section => {
-      return {label: section, value: section};
+      return {label: section.description, value: section.description};
     });
   }
 
   updateBreakdown(breakdown) {
     this.setState({
-      selectedBreakdown: breakdown,
+      selectedBreakdown: breakdown.value,
       specificBreakdowns: []
     });
   }
@@ -173,7 +176,9 @@ export default class UserFilters extends React.Component {
 
 const styles = {
   base: {
-    minWidth: 300
+    minWidth: 300,
+    maxWidth: 300,
+    marginRight: 40
   },
   columnHeader: {
     height: '50px'

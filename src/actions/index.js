@@ -32,7 +32,9 @@ export const REQUEST_EXPLORER_CONTROLS = 'REQUEST_EXPLORER_CONTROLS';
 export const RECEIVE_EXPLORER_CONTROLS = 'RECEIVE_EXPLORER_CONTROLS';
 
 export const REQUEST_SECTIONS = 'REQUEST_SECTIONS';
-export const RECEIEVE_SECTIONS = 'RECEIEVE_SECTIONS';
+export const RECEIVE_SECTIONS = 'RECEIVE_SECTIONS';
+export const REQUEST_AUTHORS = 'REQUEST_AUTHORS';
+export const RECEIVE_AUTHORS = 'RECEIEVE_AUTHORS';
 
 export const USER_SELECTED = 'USER_SELECTED';
 
@@ -166,7 +168,7 @@ export const requestSections = () => {
 
 export const receiveSections = (data) => {
   return {
-    type: RECEIEVE_SECTIONS,
+    type: RECEIVE_SECTIONS,
     data
   };
 };
@@ -180,6 +182,30 @@ export const fetchSections = () => {
       .then(json => dispatch(receiveSections(json)))
       .catch(err => {
         console.log('oh no. failed to get section list', err);
+      });
+  };
+};
+
+export const requestAuthors = () => {
+  return { type: REQUEST_AUTHORS };
+};
+
+export const receiveAuthors = (data) => {
+  return {
+    type: RECEIVE_AUTHORS,
+    data
+  };
+};
+
+export const fetchAuthors = () => {
+  return dispatch => {
+    dispatch(requestAuthors());
+
+    fetch(window.xeniaHost + '/1.0/exec/dimension_author_list', getInit())
+      .then(response => response.json())
+      .then(json => dispatch(receiveAuthors(json)))
+      .catch(err => {
+        console.log('you failed to get the authors list!', err);
       });
   };
 };
@@ -523,7 +549,7 @@ export const makeQueryFromState = (type) => {
       enabled: true
     };
 
-    console.log(JSON.stringify(query, null, 2));
+    // console.log(JSON.stringify(query, null, 2));
 
     dispatch(requestPipeline());
     dispatch(createQuery(query));

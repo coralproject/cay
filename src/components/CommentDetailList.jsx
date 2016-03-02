@@ -11,8 +11,8 @@ export default class CommentDetailList extends React.Component {
     if (comments && !comments.length) {
       return 'There are no comments.';
     } else {
-      return comments.map(comment => {
-        return (<CommentDetail user={this.props.user} comment={comment} />);
+      return comments.map((comment, i) => {
+        return (<CommentDetail key={i} user={this.props.user} comment={comment} />);
       });
     }
   }

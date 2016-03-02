@@ -5,6 +5,8 @@ let initialState = {
   authors: [],
   sections: [],
   loadingUserList: false,
+  loadingAuthors: false,
+  loadingSections: false,
   'user_name': null,
   'status': null,
   'last_login': null,
@@ -46,8 +48,21 @@ const filters = (state = initialState, action) => {
   case types.ALL_TAGS_REQUEST_ERROR:
     return Object.assign({}, state, {loadingTags: false, tagError: 'Failed to load tags ' + action.err});
 
+  case types.REQUEST_SECTIONS:
+    return Object.assign({}, state, {loadingSections: true});
+
   case types.RECEIVE_SECTIONS:
-    return Object.assign({}, state, { sections: Object.keys(action.data.results[0].Docs) });
+    console.log('filters reducer', action);
+    return Object.assign({}, state, { sections: action.data.results[0].Docs });
+
+  case types.REQUEST_AUTHORS:
+    return Object.assign({}, state, {loadingAuthors: true});
+
+  case types.RECEIVE_AUTHORS:
+    return Object.assign({}, state, {
+      loadingAuthors: false,
+      authors: action.data.results[0].Docs
+    });
 
   case types.PIPELINE_RECEIVED:
     return Object.assign({}, state, { loadingUserList: false });

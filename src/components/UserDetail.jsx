@@ -1,5 +1,6 @@
 import React from 'react';
 import Radium from 'radium';
+import _ from 'lodash';
 
 import {connect} from 'react-redux';
 
@@ -12,6 +13,9 @@ import Stats from './stats/Stats';
 import Stat from './stats/Stat';
 import Heading from './Heading';
 import MdLocalOffer from 'react-icons/lib/md/local-offer';
+
+import Spinner from './Spinner';
+
 // import Tagger from './forms/Tagger';
 import Select from 'react-select';
 
@@ -36,9 +40,7 @@ export default class UserDetail extends React.Component {
   }
 
   componentWillUpdate(nextProps) {
-    console.log('UserDetail.componentWillUpdate', nextProps);
     if (nextProps.selectedUser && nextProps.userDetailComments === null) {
-      console.log('loading comments for user ' + nextProps.selectedUser._id);
       nextProps.dispatch(fetchCommentsByUser(nextProps.selectedUser._id));
     }
   }
@@ -96,11 +98,26 @@ export default class UserDetail extends React.Component {
     }
   }
 
-  render() {
+  getStats() {
+    let statsList = [];
+    if (this.props.selectedUser &&  _.has(this.props, 'statistics.comments.all.all')) {
+      statsList = statsList.concat([
+        <Stat term="total comment count" description={this.props.statistics.comments.all.all.count} />,
+        <Stat term="replied count" description={this.props.statistics.comments.all.all.replied_count} />,
+        <Stat term="reply count" description={this.props.statistics.comments.all.all.reply_count} />,
+        <Stat term="reply ratio" description={this.props.statistics.comments.all.all.reply_ratio} />
+      ]);
 
-    let comments = this.props.userDetailComments === null ?
-      'Loading Comments...' :
-      (<CommentDetailList user={this.props.selectedUser} comments={this.props.userDetailComments} />);
+      if (_.has(this.props, 'statistics.comments.all.CommunityFlagged')) {
+        statsList.push(<Stat term="community flagged" description={this.props.statistics.comments.all.CommunityFlagged.count} />);
+      }
+      return statsList;
+    } else {
+      return <Stat term="Commenter Stat" description="select a commenter to see details" />;
+    }
+  }
+
+  render() {
 
     /*
     var tagger = this.props.tags ?
@@ -121,34 +138,50 @@ export default class UserDetail extends React.Component {
     : null;
     */
 
+    console.log('this.props.statistics', this.props.statistics);
+
     return (
       <div style={[styles.base, this.props.style]}>
-        <Heading size="medium">{this.props.name}</Heading>
-        <div style={styles.topPart}>
-          <Avatar style={styles.avatar} src={this.props.avatar || ''} size={200} />
-        </div>
-        <p><MdLocalOffer /> Add / Remove Tags for this Commenter</p>
-        <Select
-          multi={true}
-          value={this.state.selectedTags}
-          onChange={this.updateTags.bind(this)}
-          options={this.getTags()}
-        />
-        <Tabs initialSelectedIndex={0} style={styles.tabs}>
-          <Tab title="About">
-            {
-              this.props.loadingUserComments || !this.props.userDetailComments ?
-                'Loading Comments...' :
-                (
-                  <CommentDetailList
-                    user={this.props.selectedUser}
-                    comments={this.props.userDetailComments} />
-                )
-            }
-          </Tab>
-          <Tab title="Activity">Tab Bravo Content</Tab>
-          <Tab title="Messages">Tab Charlie Content</Tab>
-        </Tabs>
+      {
+        this.props.name ?
+          <div>
+            <Heading size="medium">{this.props.name}</Heading>
+            <div style={styles.topPart}>
+              <Avatar style={styles.avatar} src={this.props.avatar || ''} size={200} />
+            </div>
+            <p><MdLocalOffer /> Add / Remove Tags for this Commenter</p>
+            <Select
+              multi={true}
+              value={this.state.selectedTags}
+              onChange={this.updateTags.bind(this)}
+              options={this.getTags()}
+            />
+            <Tabs initialSelectedIndex={0} style={styles.tabs}>
+              <Tab title="About">
+                <Stats>
+                  { this.getStats() }
+                </Stats>
+              </Tab>
+              <Tab title="Activity">
+
+                {
+                  this.props.loadingUserComments || !this.props.userDetailComments ?
+                  'Loading Comments...' :
+                  (
+                    <CommentDetailList
+                      user={this.props.selectedUser}
+                      comments={this.props.userDetailComments} />
+                  )
+                }
+              </Tab>
+              <Tab title="Notes">
+                <p>Watch out for her comments on Climate stories, she often corrects mistakes.</p>
+              </Tab>
+            </Tabs>
+          </div>
+        :
+          <span>Select a user to see details</span>
+      }
       </div>
     );
   }
@@ -177,5 +210,8 @@ const styles = {
   tags: {
     clear: 'both',
     paddingTop: '20px'
+  },
+  loadingComments: {
+    padding: '10px'
   }
 };

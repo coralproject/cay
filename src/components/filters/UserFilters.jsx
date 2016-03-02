@@ -1,13 +1,11 @@
 import React from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
-import {fetchAllTags, fetchSections} from '../../actions';
+import _ from 'lodash';
+import {fetchAllTags, fetchSections, fetchAuthors} from '../../actions';
 
-import FilterObjectId from './FilterObjectId';
 import Select from 'react-select';
 import FilterNumbers from './FilterNumbers';
-import FilterDate from './FilterDate';
-import FilterString from './FilterString';
 import Sentence from '../Sentence';
 
 import Heading from '../Heading';
@@ -19,7 +17,7 @@ export default class UserFilters extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedBreakdown: 'anything',
+      selectedBreakdown: 'everything',
       specificBreakdowns: []
     };
   }
@@ -27,6 +25,7 @@ export default class UserFilters extends React.Component {
   componentWillMount() {
     this.props.dispatch(fetchAllTags());
     this.props.dispatch(fetchSections());
+    this.props.dispatch(fetchAuthors());
   }
 
   getTags() {
@@ -36,6 +35,8 @@ export default class UserFilters extends React.Component {
   }
 
   getSpecific() {
+    console.log('getSpecific', this.state.selectedBreakdown);
+
     switch (this.state.selectedBreakdown) {
     case 'section':
       return (
@@ -65,30 +66,32 @@ export default class UserFilters extends React.Component {
   }
 
   setSpecificBreakdowns(values) {
-    this.setState({specificBreakdowns: values.split(',')});
+    console.log('setSpecificBreakdowns', values);
+    this.setState({specificBreakdowns: _.map(values, 'value')});
   }
 
   getAuthors() {
     return this.props.authors.map(author => {
-      return {label: author, value: author};
+      return {label: author.name, value: author.name};
     });
   }
 
   getSections() {
+    console.log('getSections', this.props.sections);
     return this.props.sections.map(section => {
-      return {label: section, value: section};
+      return {label: section.description, value: section.description};
     });
   }
 
   updateBreakdown(breakdown) {
     this.setState({
-      selectedBreakdown: breakdown,
+      selectedBreakdown: breakdown.value,
       specificBreakdowns: []
     });
   }
 
   getActiveFiltersFromConfig() {
-    const userFilters = window.filters.filter(f => f.collection === 'users');
+    const userFilters = window.filters.filter(f => f.collection === 'user_statistics');
     return userFilters.map(f => {
       let filterComponent;
       if (f.type === 'numberRange') {
@@ -112,26 +115,27 @@ export default class UserFilters extends React.Component {
   render() {
 
     return (
-      <div>
+      <div style={ styles.base }>
         <div style={ styles.columnHeader }>
           <Heading size="medium">
             Filters
           </Heading>
         </div>
-        <p>I want to know about:</p>
+        <p style={ styles.legend }>I want to know about:</p>
         <Select
           ref="breakdown"
           value={this.state.selectedBreakdown}
           onChange={this.updateBreakdown.bind(this)}
+          style={ styles.filterDropdown }
           options={[
-            {label: 'anything', value: 'anything'},
+            {label: 'everything', value: 'everything'},
             {label: 'author', value: 'author'},
             {label: 'section', value: 'section'}
           ]} />
 
         {this.getSpecific()}
 
-        <Select multi={true} options={this.getTags()} />
+        <Select multi={true} style={ styles.filterDropdown } options={this.getTags()} />
 
         {/* this will eventually be the meat of the component */}
         {this.getActiveFiltersFromConfig()}
@@ -171,7 +175,18 @@ export default class UserFilters extends React.Component {
 }
 
 const styles = {
+  base: {
+    minWidth: 300,
+    maxWidth: 300
+  },
   columnHeader: {
     height: '50px'
+  },
+  legend: {
+    padding: '10px 0',
+    fontSize: '12pt'
+  },
+  filterDropdown: {
+    marginBottom: '20px'
   }
 };

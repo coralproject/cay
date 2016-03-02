@@ -25,10 +25,10 @@ const styles = {
   },
   dt: {
     flex: 1,
-    fontWeight: 700,
+    fontWeight: 700
   },
   dd: {
     flex: 1,
     textAlign: 'right'
   }
-}
+};

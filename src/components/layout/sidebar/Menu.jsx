@@ -7,6 +7,7 @@ import MenuItem from './MenuItem';
 import MdBuild from 'react-icons/lib/md/build';
 import MdSettings from 'react-icons/lib/md/settings';
 import MdInfoOutline from 'react-icons/lib/md/info-outline';
+import MdGroup from 'react-icons/lib/md/group';
 
 import { Lang } from '../../../lang';
 import settings from '../../../settings';
@@ -18,10 +19,11 @@ class Menu extends React.Component {
   render() {
     return (
       <div>
-        <Link to="/" style={styles.logo}>Coral Project</Link>
+        <Link to="/" style={styles.logo}>The Coral Project</Link>
         <ul style={ styles.sideBarMenu }>
           {/*<MenuItem name="Dashboard" target="/" icon={<MdInsertChart />} />*/}
           {/*<MenuItem name="Explore" target="/explore" icon={<MdTimeline />} />*/}
+          <MenuItem name={ window.L.t('Group List') } target="/groups" icon={<MdGroup />} />
           <MenuItem name={ window.L.t('Group Creator') } target="/group-creator" icon={<MdBuild />} />
           <MenuItem name={ window.L.t('Settings') } target="/tag-manager" icon={<MdSettings />}/>
           <MenuItem name={ window.L.t('About') } target="/about" icon={<MdInfoOutline />}/>

@@ -62,7 +62,6 @@ class Root extends React.Component {
           <Router history={browserHistory}>
             <Route path="/" component={UserManager} />
             <Route path="login" component={Login} />
-            <Route path="feedback" component={Feedback} />
             <Route path="about" component={About} />
             <Route path="group-creator" component={UserManager} />
             <Route path="tag-manager" component={TagManager} />

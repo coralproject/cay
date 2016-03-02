@@ -40,7 +40,6 @@ export default class UserFilters extends React.Component {
     case 'section':
       return (
         <div>
-          <p>By Section</p>
           <Select
             options={this.getSections()}
             value={this.props.specificBreakdown}
@@ -51,7 +50,6 @@ export default class UserFilters extends React.Component {
     case 'author':
       return (
         <div>
-          <p>By Author</p>
           <Select
             options={this.getAuthors()}
             value={this.props.specificBreakdown}
@@ -117,7 +115,7 @@ export default class UserFilters extends React.Component {
             Filters
           </Heading>
         </div>
-        <p style={ styles.legend }>I want to know about:</p>
+        <p style={ styles.legend }>Limit User activity to:</p>
         <Select
           ref="breakdown"
           value={this.props.breakdown}
@@ -131,12 +129,16 @@ export default class UserFilters extends React.Component {
 
         {this.getSpecific()}
 
-        <p style={styles.legend}>Tags <span style={styles.comingSoon}>Coming Soon!</span></p>
-        <Select multi={true} style={ styles.filterDropdown } options={this.getTags()} />
-
-        {/* this will eventually be the meat of the component */}
+        <p style={styles.legend}>Show me Users that have:</p>
         {this.getActiveFiltersFromConfig()}
 
+        <p style={styles.legend}>Filter by Tags <span style={styles.comingSoon}>Coming Soon!</span></p>
+
+        <p>Include Users with these Tags:</p>
+        <Select multi={true} style={ styles.filterDropdown } options={this.getTags()} />
+
+        <p>Exclude Users with these Tags:</p>
+        <Select multi={true} style={ styles.filterDropdown } options={this.getTags()} />
       </div>
     );
   }

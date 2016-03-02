@@ -16,8 +16,8 @@ class Button extends React.Component {
 
     var attrs = {};
     if (this.props.disabled) {
-        attrs['disabled'] = 'disabled';
-    };
+      attrs['disabled'] = 'disabled';
+    }
 
     return (
       <button

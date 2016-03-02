@@ -1,12 +1,16 @@
 import React from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
-import _ from 'lodash';
-import {fetchAllTags, fetchSections, fetchAuthors} from '../../actions';
+import {
+  fetchAllTags,
+  fetchSections,
+  fetchAuthors,
+  setBreakdown,
+  setSpecificBreakdown
+} from '../../actions';
 
 import Select from 'react-select';
 import FilterNumbers from './FilterNumbers';
-import Sentence from '../Sentence';
 
 import Heading from '../Heading';
 
@@ -16,10 +20,6 @@ export default class UserFilters extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      selectedBreakdown: 'everything',
-      specificBreakdowns: []
-    };
   }
 
   componentWillMount() {
@@ -35,18 +35,16 @@ export default class UserFilters extends React.Component {
   }
 
   getSpecific() {
-    console.log('getSpecific', this.state.selectedBreakdown);
 
-    switch (this.state.selectedBreakdown) {
+    switch (this.props.breakdown) {
     case 'section':
       return (
         <div>
           <p>By Section</p>
           <Select
-            multi={true}
             options={this.getSections()}
-            value={this.state.specificBreakdowns.join(',')}
-            onChange={this.setSpecificBreakdowns.bind(this)}
+            value={this.props.specificBreakdown}
+            onChange={this.setSpecificBreakdown.bind(this)}
           />
         </div>
       );
@@ -55,19 +53,18 @@ export default class UserFilters extends React.Component {
         <div>
           <p>By Author</p>
           <Select
-            multi={true}
             options={this.getAuthors()}
-            value={this.state.specificBreakdowns.join(',')}
-            onChange={this.setSpecificBreakdowns.bind(this)}
+            value={this.props.specificBreakdown}
+            onChange={this.setSpecificBreakdown.bind(this)}
           />
         </div>
       );
     }
   }
 
-  setSpecificBreakdowns(values) {
-    console.log('setSpecificBreakdowns', values);
-    this.setState({specificBreakdowns: _.map(values, 'value')});
+  setSpecificBreakdown(specificBreakdown) {
+    console.log('setSpecificBreakdown', specificBreakdown.value);
+    this.props.dispatch(setSpecificBreakdown(specificBreakdown.value));
   }
 
   getAuthors() {
@@ -84,10 +81,9 @@ export default class UserFilters extends React.Component {
   }
 
   updateBreakdown(breakdown) {
-    this.setState({
-      selectedBreakdown: breakdown.value,
-      specificBreakdowns: []
-    });
+    console.log('updateBreakdown', breakdown);
+    this.props.dispatch(setBreakdown(breakdown.value));
+    this.props.dispatch(setSpecificBreakdown(''));
   }
 
   getActiveFiltersFromConfig() {
@@ -124,51 +120,23 @@ export default class UserFilters extends React.Component {
         <p style={ styles.legend }>I want to know about:</p>
         <Select
           ref="breakdown"
-          value={this.state.selectedBreakdown}
+          value={this.props.breakdown}
           onChange={this.updateBreakdown.bind(this)}
           style={ styles.filterDropdown }
           options={[
-            {label: 'everything', value: 'everything'},
+            {label: 'all', value: 'all'},
             {label: 'author', value: 'author'},
             {label: 'section', value: 'section'}
           ]} />
 
         {this.getSpecific()}
 
+        <p style={styles.legend}>Tags <span style={styles.comingSoon}>Coming Soon!</span></p>
         <Select multi={true} style={ styles.filterDropdown } options={this.getTags()} />
 
         {/* this will eventually be the meat of the component */}
         {this.getActiveFiltersFromConfig()}
 
-        {/*<FilterNumbers
-          min={0}
-          max={1}
-          userMin={this.props['stats.accept_ratio'].userMin}
-          userMax={this.props['stats.accept_ratio'].userMax}
-          fieldName="stats.accept_ratio" />
-
-        <FilterNumbers
-          min={0}
-          max={10000}
-          userMin={this.props['stats.comments.total'].userMin}
-          userMax={this.props['stats.comments.total'].userMax}
-          fieldName="stats.comments.total"/>
-
-        <FilterNumbers
-          min={0}
-          max={1000}
-          userMin={this.props['stats.replies'].userMin}
-          userMax={this.props['stats.replies'].userMax}
-          fieldName="stats.replies"/>
-
-        <FilterNumbers
-          min={0}
-          max={1}
-          userMin={this.props['stats.replies_per_comment'].userMin}
-          userMax={this.props['stats.replies_per_comment'].userMax}
-          fieldName="stats.replies_per_comment"/>*/}
-
-        {/* some sort operator? */}
       </div>
     );
   }
@@ -180,13 +148,17 @@ const styles = {
     maxWidth: 300
   },
   columnHeader: {
-    height: '50px'
+    height: 50
   },
   legend: {
     padding: '10px 0',
     fontSize: '12pt'
   },
   filterDropdown: {
-    marginBottom: '20px'
+    marginBottom: 20
+  },
+  comingSoon: {
+    fontStyle: 'italic',
+    fontWeight: 'bold'
   }
 };

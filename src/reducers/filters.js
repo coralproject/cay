@@ -10,7 +10,9 @@ let initialState = {
   'user_name': null,
   'status': null,
   'last_login': null,
-  'member_since': null
+  'member_since': null,
+  breakdown: 'all',
+  specificBreakdown: ''
   // 'stats.accept_ratio': {userMin: 0, userMax: 1},
   // 'stats.replies_per_comment': {userMin: 0, userMax: 1},
   // 'stats.comments.total': {userMin: 0, userMax: 10000},
@@ -66,6 +68,12 @@ const filters = (state = initialState, action) => {
 
   case types.PIPELINE_RECEIVED:
     return Object.assign({}, state, { loadingUserList: false });
+
+  case types.SET_BREAKDOWN:
+    return Object.assign({}, state, {breakdown: action.breakdown});
+
+  case types.SET_SPECIFIC_BREAKDOWN:
+    return Object.assign({}, state, {specificBreakdown: action.specificBreakdown});
 
   default:
     return state;

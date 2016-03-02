@@ -18,7 +18,7 @@ export default class UserList extends React.Component {
 
   static propTypes = {
     users: PropTypes.arrayOf(PropTypes.shape({
-      user_name: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
       _id: PropTypes.string.idRequired
     }).isRequired).isRequired
   }

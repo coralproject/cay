@@ -15,18 +15,6 @@ export default class PipelineCreator extends React.Component {
 
   constructor(props) {
     super(props);
-
-    this.state = {
-      resultFields: [], // what fields the user is interested in measuring; replies, replies per comment, etc
-      // hard-code the date range of the NYT dataset.
-      computedQuery: null
-    };
-  }
-  static propTypes = {
-
-  }
-  static defaultProps = {
-
   }
 
   componentDidMount() {
@@ -63,6 +51,7 @@ export default class PipelineCreator extends React.Component {
 
         <div>
           <Button
+            style={styles.previewButton}
             category="primary"
             disabled={ this.props.loadingUserList }
             onClick={this.handleCreatePipeline.bind(this)}>
@@ -72,11 +61,18 @@ export default class PipelineCreator extends React.Component {
                   <Spinner /> Loading...
                 </span>
               :
-                <span>Create</span>
+                'Preview'
             }
           </Button>
+          <Button disabled>Save (Coming Soon)</Button>
         </div>
       </div>
     );
   }
 }
+
+const styles = {
+  previewButton: {
+    marginRight: 10
+  }
+};

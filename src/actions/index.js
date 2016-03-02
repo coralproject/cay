@@ -32,7 +32,7 @@ export const REQUEST_EXPLORER_CONTROLS = 'REQUEST_EXPLORER_CONTROLS';
 export const RECEIVE_EXPLORER_CONTROLS = 'RECEIVE_EXPLORER_CONTROLS';
 
 export const REQUEST_SECTIONS = 'REQUEST_SECTIONS';
-export const RECEIEVE_SECTIONS = 'RECEIEVE_SECTIONS';
+export const RECEIVE_SECTIONS = 'RECEIVE_SECTIONS';
 export const REQUEST_AUTHORS = 'REQUEST_AUTHORS';
 export const RECEIVE_AUTHORS = 'RECEIEVE_AUTHORS';
 
@@ -168,7 +168,7 @@ export const requestSections = () => {
 
 export const receiveSections = (data) => {
   return {
-    type: RECEIEVE_SECTIONS,
+    type: RECEIVE_SECTIONS,
     data
   };
 };
@@ -549,7 +549,7 @@ export const makeQueryFromState = (type) => {
       enabled: true
     };
 
-    console.log(JSON.stringify(query, null, 2));
+    // console.log(JSON.stringify(query, null, 2));
 
     dispatch(requestPipeline());
     dispatch(createQuery(query));

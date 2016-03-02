@@ -39,9 +39,7 @@ export default class UserDetail extends React.Component {
   }
 
   componentWillUpdate(nextProps) {
-    console.log('UserDetail.componentWillUpdate', nextProps);
     if (nextProps.selectedUser && nextProps.userDetailComments === null) {
-      console.log('loading comments for user ' + nextProps.selectedUser._id);
       nextProps.dispatch(fetchCommentsByUser(nextProps.selectedUser._id));
     }
   }

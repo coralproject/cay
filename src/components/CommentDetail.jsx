@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 
+import settings from '../settings';
 import DateTime from './utils/DateTime';
 import Card from './cards/Card';
 import CardHeader from './cards/CardHeader';
@@ -22,6 +23,7 @@ export default class CommentDetail extends React.Component {
         <p>Approved <strong style={styles.date}>{approvedDate}</strong></p>
         <p dangerouslySetInnerHTML={{__html: this.props.comment.body}} />
       </Card>
+
     );
   }
 }
@@ -31,6 +33,16 @@ const styles = {
 
   },
   date: {
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    marginBottom: '10px',
+    paddingBottom: '10px',
+    borderBottom: '1px solid #ddd'
+  },
+  commentContent: {
+    color: 'black',
+    fontSize: '11pt'
+  },
+  commentLegend: {
+    color: settings.grey
   }
 };

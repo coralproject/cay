@@ -1,5 +1,6 @@
 import React from 'react';
 import Radium from 'radium';
+import _ from 'lodash';
 
 import {connect} from 'react-redux';
 
@@ -97,11 +98,26 @@ export default class UserDetail extends React.Component {
     }
   }
 
-  render() {
+  getStats() {
+    let statsList = [];
+    if (this.props.selectedUser &&  _.has(this.props, 'statistics.comments.all.all')) {
+      statsList = statsList.concat([
+        <Stat term="total comment count" description={this.props.statistics.comments.all.all.count} />,
+        <Stat term="replied count" description={this.props.statistics.comments.all.all.replied_count} />,
+        <Stat term="reply count" description={this.props.statistics.comments.all.all.reply_count} />,
+        <Stat term="reply ratio" description={this.props.statistics.comments.all.all.reply_ratio} />
+      ]);
 
-    let comments = this.props.userDetailComments === null ?
-      'Loading Comments...' :
-      (<CommentDetailList user={this.props.selectedUser} comments={this.props.userDetailComments} />);
+      if (_.has(this.props, 'statistics.comments.all.CommunityFlagged')) {
+        statsList.push(<Stat term="community flagged" description={this.props.statistics.comments.all.CommunityFlagged.count} />);
+      }
+      return statsList;
+    } else {
+      return <Stat term="Commenter Stat" description="select a commenter to see details" />;
+    }
+  }
+
+  render() {
 
     /*
     var tagger = this.props.tags ?
@@ -122,6 +138,8 @@ export default class UserDetail extends React.Component {
     : null;
     */
 
+    console.log('this.props.statistics', this.props.statistics);
+
     return (
       <div style={[styles.base, this.props.style]}>
       {
@@ -141,20 +159,11 @@ export default class UserDetail extends React.Component {
             <Tabs initialSelectedIndex={0} style={styles.tabs}>
               <Tab title="About">
                 <Stats>
-                  {
-                    this.props.selectedUser ?
-                      ([
-                        <Stat term="total comment count" description={this.props.statistics.comments.all.all.count} />,
-                        <Stat term="replied count" description={this.props.statistics.comments.all.all.replied_count} />,
-                        <Stat term="reply count" description={this.props.statistics.comments.all.all.reply_count} />,
-                        <Stat term="reply ratio" description={this.props.statistics.comments.all.all.reply_ratio} />,
-                        <Stat term="community flagged" description={this.props.statistics.comments.all.CommunityFlagged.count} />
-                      ]) :
-                      <Stat term="Commenter Stat" description="select a commenter to see details" />
-                  }
+                  { this.getStats() }
                 </Stats>
               </Tab>
               <Tab title="Activity">
+
                 {
                   this.props.loadingUserComments || !this.props.userDetailComments ?
                   'Loading Comments...' :

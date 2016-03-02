@@ -62,13 +62,9 @@ const styles = {
   },
   pipelineList: {
     flex: 1,
-    marginLeft: 5,
-    marginRight: 5
   },
   userList: {
     flex: 1,
-    marginLeft: 5,
-    marginRight: 5
   },
   userDetail: {
     flex: 2,

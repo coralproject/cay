@@ -7,6 +7,11 @@ import TextField from './TextField';
 @Radium
 export default class InPlaceEditor extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.previouslyFocused = false;
+  }
+
   componentDidMount() {
     this.setState({ value: this.props.initialValue });
     // Since bind() will wrap onClickOutside, we need a proper ref
@@ -59,6 +64,13 @@ export default class InPlaceEditor extends React.Component {
     }
   }
 
+  handleFocus(event) {
+    if (!this.previouslyFocused) {
+      event.target.selectionStart = event.target.selectionEnd = event.target.value.length;
+      this.previouslyFocused = true;
+    }
+  }
+
   render() {
 
     var value = this.state.value;
@@ -83,10 +95,10 @@ export default class InPlaceEditor extends React.Component {
                 ref={function(input) {
                   if (input != null) {
                     input.focus();
-                    input.selectionStart = input.selectionEnd = input.value.length;
                   }
                 }} 
                 onClick={ this.onWrapperClick.bind(this) } 
+                onFocus={ this.handleFocus.bind(this) }
                 style={ styles.textField } 
                 type="text" 
                 value={ this.state.value } 

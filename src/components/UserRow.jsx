@@ -25,7 +25,7 @@ export default class UserRow extends React.Component {
 
     return (
       <ListItem
-        style={[this.props.style, styles.base]}
+        style={[styles.base, this.props.style]}
         onClick={this.handleClick.bind(this)}
         leftAvatar={leftAvatar}>
         {user.name}

@@ -49,6 +49,8 @@ We will not accept commits or pushes to the `master` branch, as the latest versi
 
 Packaging for production involves building the js and css files with `npm run build`. This will nuke and re-populate the `/dist` folder. After these files are copied to the server, a valid `config.json` file must live in the root of the directory from which the front-end assets are served. There is a `config.sample.json` in the `/public` directory for your reference.
 
+Replace the values in `config.json` with the hostnames for your specific development/deployment setup.
+
 #### Code of conduct
 Please be civil when discussing contributions to the Cay front end code and the Coral Project. If in doubt, please consult our [Code of Conduct](https://github.com/coralproject/reef/blob/master/CODE-OF-CONDUCT.md).
 

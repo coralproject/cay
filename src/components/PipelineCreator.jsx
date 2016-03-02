@@ -17,9 +17,7 @@ export default class PipelineCreator extends React.Component {
     super(props);
 
     this.state = {
-      selectedBreakdown: 'total', // asset|author|section|user|total
       resultFields: [], // what fields the user is interested in measuring; replies, replies per comment, etc
-      specificBreakdowns: [], // this could be particular author(s), or a specific section
       // hard-code the date range of the NYT dataset.
       computedQuery: null
     };
@@ -73,7 +71,7 @@ export default class PipelineCreator extends React.Component {
                 <span>
                   <Spinner /> Loading...
                 </span>
-              : 
+              :
                 <span>Create</span>
             }
           </Button>

@@ -52,6 +52,10 @@ export const FILTER_CHANGED = 'FILTER_CHANGED';
 export const CREATE_QUERY = 'CREATE_QUERY';
 export const SUBMIT_CUSTOM_QUERY = 'SUBMIT_CUSTOM_QUERY';
 export const RECEIVE_USER_LIST = 'RECEIVE_USER_LIST';
+
+export const SET_BREAKDOWN = 'SET_BREAKDOWN';
+export const SET_SPECIFIC_BREAKDOWN = 'SET_SPECIFIC_BREAKDOWN';
+
 /* config */
 
 const getInit = (method) => {
@@ -207,6 +211,20 @@ export const fetchAuthors = () => {
       .catch(err => {
         console.log('you failed to get the authors list!', err);
       });
+  };
+};
+
+export const setBreakdown = (breakdown) => {
+  return {
+    type: SET_BREAKDOWN,
+    breakdown
+  };
+};
+
+export const setSpecificBreakdown = (specificBreakdown) => {
+  return {
+    type: SET_SPECIFIC_BREAKDOWN,
+    specificBreakdown
   };
 };
 
@@ -509,9 +527,18 @@ export const makeQueryFromState = (type) => {
     let filterPresets = window.filters;
 
     let matches = _.flatten(_.map(filterPresets, filter => {
+      let dbField;
+      if (filterState.breakdown === 'author') {
+        dbField = _.template(filter.template)({dimension: 'author.' + filterState.specificBreakdown});
+      } else if (filterState.breakdown === 'section') {
+        dbField = _.template(filter.template)({dimension: 'section.' + filterState.specificBreakdown});
+      } else { // all
+        dbField = _.template(filter.template)({dimension: 'all'});
+      }
+
       return [
-        {$match: {[filter.field]: {$gte: filterState[filter.field].userMin}}},
-        {$match: {[filter.field]: {$lte: filterState[filter.field].userMax}}}
+        {$match: {[dbField]: {$gte: filterState[filter.field].userMin}}},
+        {$match: {[dbField]: {$lte: filterState[filter.field].userMax}}}
       ];
     }));
 
@@ -528,7 +555,7 @@ export const makeQueryFromState = (type) => {
           collection: 'user_statistics',
           commands: [
             ...matches,
-            {$sort: {'statistics.comments.all.all.count': -1}},
+            // {$sort: {'statistics.comments.all.all.count': -1}},
             {$skip: 0},
             {$limit: 20}
             // {

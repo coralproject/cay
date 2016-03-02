@@ -18,7 +18,7 @@ class Menu extends React.Component {
   render() {
     return (
       <div>
-        <Link to="/" style={styles.logo}>Coral Project</Link>
+        <Link to="/" style={styles.logo}>The Coral Project</Link>
         <ul style={ styles.sideBarMenu }>
           {/*<MenuItem name="Dashboard" target="/" icon={<MdInsertChart />} />*/}
           {/*<MenuItem name="Explore" target="/explore" icon={<MdTimeline />} />*/}

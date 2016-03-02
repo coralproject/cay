@@ -5,5 +5,63 @@
   "brand": "Tyrell Corporation",
   "requireLogin": true,
   "googleAnalyticsId": "",
-  "basicAuthorization": "Basic 109340923j02i3jroi23jroi23ljf23f"
+  "basicAuthorization": "Basic 109340923j02i3jroi23jroi23ljf23f",
+  "dimensions": [
+    {
+      "name": "all",
+      "label": "Anywhere",
+      "value": "all"
+    },
+    {
+      "name": "sections",
+      "label": "In a section",
+      "value": "sections",
+
+      "querySet": "dimension_section_list",
+      "labelField": "description",
+      "valueField": "description"
+    }
+],
+  "filters": [
+    {
+       "name": "Comments",
+       "category": "Activity",
+       "field": "statistics.comments.all.all.count",
+       "description": "total comments",
+       "min": 0,
+       "max": 500,
+       "collection": "user_statistics",
+       "type": "numberRange"
+    },
+    {
+       "name": "Replied",
+       "category": "Activity",
+       "field": "statistics.comments.all.all.replied_count",
+       "description": "replies they have written to others",
+       "min": 0,
+       "max": 500,
+       "collection": "user_statistics",
+       "type": "numberRange"
+    },
+    {
+       "name": "Replies",
+       "category": "Response",
+       "field": "statistics.comments.all.all.reply_count",
+       "description": "times other have replied to them",
+       "min": 0,
+       "max": 500,
+       "collection": "user_statistics",
+       "type": "numberRange"
+    },
+    {
+       "name": "Replies per Comment",
+       "category": "Response",
+       "field": "statistics.comments.all.all.reply_ratio",
+       "description": "replies received per comment",
+       "min": 0,
+       "max": 500,
+       "collection": "user_statistics",
+       "type": "numberRange"
+    }
+  ]
 }

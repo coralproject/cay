@@ -3,8 +3,6 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import {userSelected, fetchCommentsByUser} from '../actions';
 
-import Card from './cards/Card';
-import List from './lists/List';
 import UserRow from './UserRow';
 import Heading from './Heading';
 import Spinner from './Spinner';
@@ -34,7 +32,6 @@ export default class UserList extends React.Component {
         <UserRow {...this.props}
           user={user}
           onClick={this.getUser.bind(this)}
-          style={styles.row}
           key={i} />
       );
     });
@@ -48,7 +45,7 @@ export default class UserList extends React.Component {
     </p>
 
     var userListContent = this.props.users.length ? this.getUserList(this.props.users) : noUsersMessage;
-      
+
     return (
     <div style={ [ styles.base, this.props.style ] }>
       <div style={ styles.columnHeader }>
@@ -62,10 +59,10 @@ export default class UserList extends React.Component {
           <div style={ styles.loading }>
             <Spinner /> Loading...
           </div>
-        : 
+        :
           userListContent
       }
-        
+
     </div>
     );
   }
@@ -73,17 +70,16 @@ export default class UserList extends React.Component {
 
 const styles = {
   base: {
-    paddingLeft: '20px'
+    paddingLeft: 20,
+    minWidth: 350,
+    maxWidth: 350
   },
   columnHeader: {
-    height: '50px'
+    height: 50
   },
   card: {
     margin: 0,
     padding: 0
-  },
-  row: {
-    minWidth: "300px"
   },
   noUsers: {
     fontSize: '12pt',

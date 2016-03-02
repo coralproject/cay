@@ -5,6 +5,7 @@ import Radium from 'radium';
 import {connect} from 'react-redux';
 import {makeQueryFromState} from '../actions';
 import Button from './Button';
+import Spinner from './Spinner';
 
 import FilterFactory from './filters/FilterFactory';
 
@@ -65,8 +66,16 @@ export default class PipelineCreator extends React.Component {
         <div>
           <Button
             category="primary"
+            disabled={ this.props.loadingUserList }
             onClick={this.handleCreatePipeline.bind(this)}>
-              Create
+            {
+              this.props.loadingUserList ?
+                <span>
+                  <Spinner /> Loading...
+                </span>
+              : 
+                <span>Create</span>
+            }
           </Button>
         </div>
       </div>

@@ -7,6 +7,7 @@ import Card from './cards/Card';
 import List from './lists/List';
 import UserRow from './UserRow';
 import Heading from './Heading';
+import Spinner from './Spinner';
 
 import { Lang } from '../lang';
 
@@ -45,10 +46,17 @@ export default class UserList extends React.Component {
     <div style={ styles.base }>
       <div style={ styles.columnHeader }>
         <Heading size="medium">
-          { window.L.t('Commenters') }
+          { window.L.t('Users') }
         </Heading>
       </div>
-      {this.props.users.length ? this.getUserList(this.props.users) : 'Loading...'}
+      {
+        this.props.users.length ?
+        this.getUserList(this.props.users) :
+        <p style={ styles.noUsers }>
+          No users loaded yet,<br />
+          create a filter on the left to load users.
+        </p>
+      }
     </div>
     );
   }
@@ -56,7 +64,8 @@ export default class UserList extends React.Component {
 
 const styles = {
   base: {
-    paddingLeft: '20px'
+    paddingLeft: '20px',
+    minWidth: '300px'
   },
   columnHeader: {
     height: '50px'
@@ -64,5 +73,14 @@ const styles = {
   card: {
     margin: 0,
     padding: 0
+  },
+  row: {
+    minWidth: "300px"
+  },
+  noUsers: {
+    fontSize: '12pt',
+    color: '#888',
+    fontStyle: 'italic',
+    paddingRight: 120
   }
 };

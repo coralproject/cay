@@ -63,6 +63,9 @@ const filters = (state = initialState, action) => {
       authors: action.data.results[0].Docs
     });
 
+  case types.PIPELINE_RECEIVED:
+    return Object.assign({}, state, { loadingUserList: false });
+
   default:
     return state;
 

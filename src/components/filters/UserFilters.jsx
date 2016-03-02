@@ -17,7 +17,7 @@ export default class UserFilters extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedBreakdown: 'anything',
+      selectedBreakdown: 'everything',
       specificBreakdowns: []
     };
   }
@@ -115,26 +115,27 @@ export default class UserFilters extends React.Component {
   render() {
 
     return (
-      <div>
+      <div style={ styles.base }>
         <div style={ styles.columnHeader }>
           <Heading size="medium">
             Filters
           </Heading>
         </div>
-        <p>I want to know about:</p>
+        <p style={ styles.legend }>I want to know about:</p>
         <Select
           ref="breakdown"
           value={this.state.selectedBreakdown}
           onChange={this.updateBreakdown.bind(this)}
+          style={ styles.filterDropdown }
           options={[
-            {label: 'anything', value: 'anything'},
+            {label: 'everything', value: 'everything'},
             {label: 'author', value: 'author'},
             {label: 'section', value: 'section'}
           ]} />
 
         {this.getSpecific()}
 
-        <Select multi={true} options={this.getTags()} />
+        <Select multi={true} style={ styles.filterDropdown } options={this.getTags()} />
 
         {/* this will eventually be the meat of the component */}
         {this.getActiveFiltersFromConfig()}
@@ -174,7 +175,18 @@ export default class UserFilters extends React.Component {
 }
 
 const styles = {
+  base: {
+    minWidth: 300,
+    marginRight: 40
+  },
   columnHeader: {
     height: '50px'
+  },
+  legend: {
+    padding: '10px 0',
+    fontSize: '12pt'
+  },
+  filterDropdown: {
+    marginBottom: '20px'
   }
 };

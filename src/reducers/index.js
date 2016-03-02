@@ -5,6 +5,7 @@ import pipelines from './pipelines';
 import dataExplorer from './data-explorer';
 import tags from './tags';
 import filters from './filters';
+import feedback from './feedback';
 
 const rootReducer = combineReducers({
   pipelines,
@@ -12,7 +13,8 @@ const rootReducer = combineReducers({
   comments,
   dataExplorer,
   tags,
-  filters
+  filters,
+  feedback
 });
 
 export default rootReducer;

@@ -21,6 +21,8 @@ import Login from './containers/Login';
 import SeeAllGroups from './containers/SeeAllGroups.jsx';
 import GroupDetail from './containers/GroupDetail';
 import NoMatch from './containers/NoMatch';
+import About from './containers/About';
+import Feedback from './containers/Feedback';
 
 const store = configureStore();
 
@@ -60,6 +62,7 @@ class Root extends React.Component {
           <Router history={browserHistory}>
             <Route path="/" component={UserManager} />
             <Route path="login" component={Login} />
+            <Route path="about" component={About} />
             <Route path="group-creator" component={UserManager} />
             <Route path="tag-manager" component={TagManager} />
             <Route path="groups" component={SeeAllGroups}/>

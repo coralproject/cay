@@ -6,6 +6,7 @@ import MenuItem from './MenuItem';
 
 import MdBuild from 'react-icons/lib/md/build';
 import MdSettings from 'react-icons/lib/md/settings';
+import MdInfoOutline from 'react-icons/lib/md/info-outline';
 import MdGroup from 'react-icons/lib/md/group';
 
 import { Lang } from '../../../lang';
@@ -24,7 +25,8 @@ class Menu extends React.Component {
           {/*<MenuItem name="Explore" target="/explore" icon={<MdTimeline />} />*/}
           <MenuItem name={ window.L.t('Group List') } target="/groups" icon={<MdGroup />} />
           <MenuItem name={ window.L.t('Group Creator') } target="/group-creator" icon={<MdBuild />} />
-          <MenuItem name={ window.L.t('Settings') } target="/tag-manager" icon={<MdSettings />} />
+          <MenuItem name={ window.L.t('Settings') } target="/tag-manager" icon={<MdSettings />}/>
+          <MenuItem name={ window.L.t('About') } target="/about" icon={<MdInfoOutline />}/>
           {/*<MenuItem name="Settings" target="/settings" icon={<MdSettings />} />*/}
         </ul>
       </div>

@@ -28,7 +28,7 @@ The basic idea is that the build process results in a `bundle.js` file containin
 |  +-- layout            -> non-stateful components, but control the major parts of the page
 |  +-- reducers          -> redux reducers
 |  +-- store             -> redux store
-+-- test                 -> mirrors the src folder 
++-- test                 -> mirrors the src folder
 ```
 
 #### Development
@@ -45,6 +45,10 @@ Sequester all work in pull requests
 
 We will not accept commits or pushes to the `master` branch, as the latest version of master is automatically deployed. Any direct push to master will be reverted.
 
+#### Deploying
+
+Packaging for production involves building the js and css files with `npm run build`. This will nuke and re-populate the `/dist` folder. After these files are copied to the server, a valid `config.json` file must live in the root of the directory from which the front-end assets are served. There is a `config.sample.json` in the `/public` directory for your reference.
+
 #### Code of conduct
 Please be civil when discussing contributions to the Cay front end code and the Coral Project. If in doubt, please consult our [Code of Conduct](https://github.com/coralproject/reef/blob/master/CODE-OF-CONDUCT.md).
 
@@ -52,4 +56,3 @@ Please be civil when discussing contributions to the Cay front end code and the 
 - how to internationalize (R2L languages)
 - how to continue to make things accessible
 - how to create a production build of bundle.js
-

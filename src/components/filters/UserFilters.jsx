@@ -69,7 +69,7 @@ export default class UserFilters extends React.Component {
 
   getAuthors() {
     return this.props.authors.map(author => {
-      return {label: author.name, value: author.name};
+      return {label: author.name, value: author._id};
     });
   }
 

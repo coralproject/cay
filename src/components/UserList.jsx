@@ -39,10 +39,10 @@ export default class UserList extends React.Component {
 
   render() {
 
-    var noUsersMessage = <p style={ styles.noUsers }>
+    var noUsersMessage = (<p style={ styles.noUsers }>
       No users loaded yet,<br />
       create a filter on the left to load users.
-    </p>
+    </p>);
 
     var userListContent = this.props.users.length ? this.getUserList(this.props.users) : noUsersMessage;
 

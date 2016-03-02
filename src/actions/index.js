@@ -536,10 +536,19 @@ export const makeQueryFromState = (type) => {
         dbField = _.template(filter.template)({dimension: 'all'});
       }
 
-      return [
-        {$match: {[dbField]: {$gte: filterState[filter.field].userMin}}},
-        {$match: {[dbField]: {$lte: filterState[filter.field].userMax}}}
-      ];
+      var matches = [];
+
+      // Only create match statements for non-defaults
+      if (filter.min !== filterState[filter.field].userMin) {
+        matches.push( {$match: {[dbField]: {$gte: filterState[filter.field].userMin}}});
+      }
+
+      if (filter.max !== filterState[filter.field].userMax) {
+        matches.push( {$match: {[dbField]: {$lte: filterState[filter.field].userMax}}});
+      }
+
+      return matches;
+
     }));
 
     let query = {

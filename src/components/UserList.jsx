@@ -29,7 +29,6 @@ export default class UserList extends React.Component {
   }
 
   getUserList(users) {
-
     return users.map((user, i) => {
       return (
         <UserRow {...this.props}
@@ -42,21 +41,31 @@ export default class UserList extends React.Component {
   }
 
   render() {
+
+    var noUsersMessage = <p style={ styles.noUsers }>
+      No users loaded yet,<br />
+      create a filter on the left to load users.
+    </p>
+
+    var userListContent = this.props.users.length ? this.getUserList(this.props.users) : noUsersMessage;
+      
     return (
-    <div style={ styles.base }>
+    <div style={ [ styles.base, this.props.style ] }>
       <div style={ styles.columnHeader }>
         <Heading size="medium">
           { window.L.t('Users') }
         </Heading>
       </div>
-      { 
-        this.props.users.length ? 
-        this.getUserList(this.props.users) : 
-        <p style={ styles.noUsers }>
-          No users loaded yet,<br />
-          create a filter on the left to load users.
-        </p>
+
+      {
+        this.props.loadingPipeline ?
+          <div style={ styles.loading }>
+            <Spinner /> Loading...
+          </div>
+        : 
+          userListContent
       }
+        
     </div>
     );
   }
@@ -64,8 +73,7 @@ export default class UserList extends React.Component {
 
 const styles = {
   base: {
-    paddingLeft: '20px',
-    minWidth: '300px'
+    paddingLeft: '20px'
   },
   columnHeader: {
     height: '50px'
@@ -81,6 +89,11 @@ const styles = {
     fontSize: '12pt',
     color: '#888',
     fontStyle: 'italic',
-    paddingRight: 120
+    paddingRight: 50
+  },
+  loading: {
+    fontSize: '14pt',
+    color: '#888',
+    padding: '10px 0'
   }
 };

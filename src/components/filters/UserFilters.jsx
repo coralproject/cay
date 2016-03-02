@@ -173,8 +173,7 @@ export default class UserFilters extends React.Component {
 
 const styles = {
   base: {
-    minWidth: 300,
-    marginRight: 40
+    minWidth: 300
   },
   columnHeader: {
     height: '50px'

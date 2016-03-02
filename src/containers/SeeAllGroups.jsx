@@ -112,7 +112,7 @@ const styles = {
   },
   groupCard: {
     flex: 1,
-    margin: 10
+    margin: '20px 20px 0 0'
   }
 };
 

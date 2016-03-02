@@ -141,7 +141,7 @@ export default class UserDetail extends React.Component {
               options={this.getTags()}
             />
             <Tabs initialSelectedIndex={0} style={styles.tabs}>
-              <Tab title="About">
+              <Tab title="Comments">
                 {
                   this.props.loadingUserComments || !this.props.userDetailComments ?
                     <div style={ styles.loadingComments }>
@@ -155,8 +155,8 @@ export default class UserDetail extends React.Component {
                     )
                 }
               </Tab>
-              <Tab title="Activity">Tab Bravo Content</Tab>
-              <Tab title="Messages">Tab Charlie Content</Tab>
+              {/*<Tab title="Activity">Tab Bravo Content</Tab>
+              <Tab title="Messages">Tab Charlie Content</Tab>*/}
             </Tabs>
           </div>
         :

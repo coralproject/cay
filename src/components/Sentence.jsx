@@ -108,9 +108,15 @@ class Sentence extends React.Component {
       return _.has(command, '$match');
     });
 
+    // this code is brittle and will break in the future.
+    // sorry whoever is fixing this.
+    // you probably changed the filter.field name, or there are multiple
+    // filters with the same trailing segment
     return _.map(matchCommands, command => {
       const name = _.first(_.keys(command.$match));
-      const baseFilter = _.find(window.filters, {field: name});
+      const baseFilter = _.find(window.filters, filter => {
+        return filter.field === _.last(name.split('.'));
+      });
       let clause;
 
       if (_.has(command.$match[name], '$gte')) {

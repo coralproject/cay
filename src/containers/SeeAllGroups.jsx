@@ -61,9 +61,6 @@ class SeeAllGroups extends React.Component {
         <Card style={styles.groupCard} key={i}>
           <CardHeader>{group.name}</CardHeader>
           <p>{group.desc}</p>
-          <p style={styles.sentenceHeading}> Details </p>
-          {/*<p> REPLACE_WITH_SENTENCE These 106 commenters are active on Politics, logged in within the last year, and have created more than 100 comments total. </p>*/}
-          <Sentence {...group}/>
           <div style={styles.actionsContainer}>
             <Link
               style={styles.viewGroupLink}

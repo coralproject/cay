@@ -20,7 +20,6 @@ export default class CommentDetail extends React.Component {
       <Card style={[styles.base, this.props.style]}>
         <CardHeader>{this.props.user.name}</CardHeader>
         <p>Created <strong style={styles.date}>{DateTime.format(new Date(this.props.comment.date_created))}</strong></p>
-        <p>Approved <strong style={styles.date}>{approvedDate}</strong></p>
         <p dangerouslySetInnerHTML={{__html: this.props.comment.body}} />
       </Card>
 

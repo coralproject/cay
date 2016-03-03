@@ -51,7 +51,8 @@ export default class FilterNumbers extends React.Component {
     // dispatch: React.PropTypes.func,
     params: React.PropTypes.object,
     /* component api */
-    getValues: React.PropTypes.func
+    getValues: React.PropTypes.func,
+    description: React.PropTypes.string
   }
   static defaultProps = {
     fieldName: 'UNDEFINED___'
@@ -98,23 +99,8 @@ export default class FilterNumbers extends React.Component {
   renderGTLT() {
     return (
       <div>
-        <span> is </span>
-        <span style={style.symbol} onClick={this.handleSymbolClick.bind(this)}>{'greater than'}</span>
-        <input
-          onFocus={this.pop_Slider}
-          style={style.sliderInput}
-          onKeyDown={this.handleGTKeyDown.bind(this)}
-          onChange={this.handleGTChanged.bind(this)}
-          value={this.props.userMin}/>
-        <span> and </span>
-        <span style={style.symbol} onClick={this.handleSymbolClick.bind(this)}>{'less than'}</span>
-        <input
-          onFocus={this.pop_Slider}
-          style={style.sliderInput}
-          onKeyDown={this.handleLTKeyDown.bind(this)}
-          onChange={this.handleLTChanged.bind(this)}
-          value={this.props.userMax}/>
-        <div style={{marginTop: 10}}>
+        <span style={{float: "left", position: "relative", top: -6}}> {this.props.userMin} - {this.props.userMax}</span>
+        <div style={{marginTop: 12, marginLeft: 70, width: 200}}>
           <Slider
             min={this.props.min}
             max={this.props.max}
@@ -131,7 +117,7 @@ export default class FilterNumbers extends React.Component {
     return (
       <div>
         {/* will be a component */}
-        <span> {this.props.fieldName} </span>
+        <span> {this.props.description} </span>
         <span style={style.symbol} onClick={this.handleSymbolClick.bind(this)}>{'='}</span>
         <input
           onFocus={this.popEqualsSlider}
@@ -144,7 +130,7 @@ export default class FilterNumbers extends React.Component {
   render() {
     return (
       <Card>
-        <CardHeader>{this.props.fieldName}</CardHeader>
+        <CardHeader>{this.props.description}</CardHeader>
         {
           this.state.symbol === 'GTLT' ?
             this.renderGTLT() :

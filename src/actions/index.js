@@ -1,3 +1,7 @@
+import _ from 'lodash';
+
+export const CONFIG_LOADED = 'CONFIG_LOADED';
+
 export const PIPELINE_SELECTED = 'PIPELINE_SELECTED';
 export const PIPELINE_REQUEST = 'PIPELINE_REQUEST'; // request data for a single pipeline
 export const PIPELINES_REQUEST = 'PIPELINES_REQUEST';
@@ -7,9 +11,8 @@ export const PIPELINES_RECEIVED = 'PIPELINES_RECEIVED';
 export const PIPELINE_RECEIVED = 'PIPELINE_RECEIVED';
 
 export const LOGIN_INIT = 'LOGIN_INIT'; // user has clicked the Sign In button
-export const LOGIN_REQUEST = 'LOGIN_REQUEST'; // login http request started
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS'; // login request success
-export const LOGIN_FAIL = 'LOGIN_FAIL'; // login request failure
+export const LOGIN_FAILURE = 'LOGIN_FAILURE'; // login request failure
 export const LOGGED_OUT = 'LOGGED_OUT';
 
 export const COMMENT_CLICK = 'COMMENT_CLICK';
@@ -28,8 +31,10 @@ export const DATA_EXPLORATION_FETCH_ERROR = 'DATA_EXPLORATION_FETCH_ERROR';
 export const REQUEST_EXPLORER_CONTROLS = 'REQUEST_EXPLORER_CONTROLS';
 export const RECEIVE_EXPLORER_CONTROLS = 'RECEIVE_EXPLORER_CONTROLS';
 
-export const REQUEST_AUTHORS_AND_SECTIONS = 'REQUEST_AUTHORS_AND_SECTIONS';
-export const RECEIVE_AUTHORS_AND_SECTIONS = 'RECEIVE_AUTHORS_AND_SECTIONS';
+export const REQUEST_SECTIONS = 'REQUEST_SECTIONS';
+export const RECEIVE_SECTIONS = 'RECEIVE_SECTIONS';
+export const REQUEST_AUTHORS = 'REQUEST_AUTHORS';
+export const RECEIVE_AUTHORS = 'RECEIEVE_AUTHORS';
 
 export const USER_SELECTED = 'USER_SELECTED';
 
@@ -39,16 +44,24 @@ export const REQUEST_ALL_TAGS = 'REQUEST_ALL_TAGS';
 export const RECEIVE_ALL_TAGS = 'RECEIVE_ALL_TAGS';
 export const ALL_TAGS_REQUEST_ERROR = 'ALL_TAGS_REQUEST_ERROR';
 
+export const RECEIVE_UPSERTED_USER = 'RECEIVE_UPSERTED_USER';
+export const REQUEST_USER_UPSERT = 'REQUEST_USER_UPSERT';
+export const USER_UPSERT_REQUEST_ERROR = 'USER_UPSERT_REQUEST_ERROR';
+
 export const FILTER_CHANGED = 'FILTER_CHANGED';
 export const CREATE_QUERY = 'CREATE_QUERY';
 export const SUBMIT_CUSTOM_QUERY = 'SUBMIT_CUSTOM_QUERY';
 export const RECEIVE_USER_LIST = 'RECEIVE_USER_LIST';
+
+export const SET_BREAKDOWN = 'SET_BREAKDOWN';
+export const SET_SPECIFIC_BREAKDOWN = 'SET_SPECIFIC_BREAKDOWN';
+
 /* config */
 
-var getInit = (method) => {
-  var headers = new Headers({'Authorization': 'Basic NmQ3MmU2ZGQtOTNkMC00NDEzLTliNGMtODU0NmQ0ZDM1MTRlOlBDeVgvTFRHWjhOdGZWOGVReXZObkpydm4xc2loQk9uQW5TNFpGZGNFdnc9'});
+const getInit = (method) => {
+  const headers = new Headers({'Authorization': window.basicAuthorization});
 
-  var init = {
+  const init = {
     method: method || 'GET',
     headers: headers,
     mode: 'cors',
@@ -69,7 +82,7 @@ export const selectPipeline = (pipeline) => {
 
 export const requestPipeline = (pipeline) => {
   return {
-    type: PIPELINES_REQUEST,
+    type: PIPELINE_REQUEST,
     pipeline
   };
 };
@@ -95,47 +108,15 @@ export const requestPipelinesFailure = (err) => {
 };
 
 export const fetchPipelinesIfNotFetched = () => {
-
   return (dispatch, getState) => {
-
     if (! getState().pipelines.loading) {
       return dispatch(fetchPipelines());
     }
-
     return {
       type: 'NOOP'
     };
-
-  };
-
-};
-
-export const requestAuthorsAndSections = () => {
-  return {
-    type: REQUEST_AUTHORS_AND_SECTIONS
   };
 };
-
-export const receiveAuthorsAndSections = (data) => {
-  return {
-    type: RECEIVE_AUTHORS_AND_SECTIONS,
-    data
-  };
-};
-
-export const fetchAuthorsAndSections = () => {
-  return (dispatch) => {
-    dispatch(requestAuthorsAndSections());
-
-    fetch(window.xeniaHost + '1.0/exec/author_and_section_list', getInit())
-      .then(response => response.json())
-      .then(json => dispatch(receiveAuthorsAndSections(json)))
-      .catch(err => {
-        console.log('oh no. failed to get authors and section list', err);
-      });
-  };
-};
-
 
 // get deep list of query_sets
 export const fetchPipelines = () => {
@@ -143,7 +124,7 @@ export const fetchPipelines = () => {
 
     dispatch(requestPipelines());
 
-    fetch(window.xeniaHost + '1.0/query', getInit())
+    fetch(window.xeniaHost + '/1.0/query', getInit())
       .then(response => response.json())
       .then(pipelines => dispatch(receivePipelines(pipelines)))
       .catch(err => dispatch(requestPipelinesFailure(err)));
@@ -169,7 +150,7 @@ export const fetchPipeline = (pipelineName) => {
   return (dispatch) => {
     dispatch(requestPipeline(pipelineName));
 
-    fetch(window.xeniaHost + apiPrefix + 'exec/' + pipelineName, getInit())
+    fetch(window.xeniaHost + '/' + apiPrefix + 'exec/' + pipelineName, getInit())
       .then(response => response.json())
       .then(pipeline => dispatch(receivePipeline(pipeline)))
       .catch(err => dispatch(requestPipelineFailure(err)));
@@ -180,6 +161,70 @@ export const executeCustomPipeline = pipeline => {
   return {
     type: 'EXECUTE_CUSTOM_PIPELINE',
     pipeline
+  };
+};
+
+export const requestSections = () => {
+  return {
+    type: REQUEST_SECTIONS
+  };
+};
+
+export const receiveSections = (data) => {
+  return {
+    type: RECEIVE_SECTIONS,
+    data
+  };
+};
+
+export const fetchSections = () => {
+  return (dispatch) => {
+    dispatch(requestSections());
+
+    fetch(window.xeniaHost + '/1.0/exec/dimension_section_list', getInit())
+      .then(response => response.json())
+      .then(json => dispatch(receiveSections(json)))
+      .catch(err => {
+        console.log('oh no. failed to get section list', err);
+      });
+  };
+};
+
+export const requestAuthors = () => {
+  return { type: REQUEST_AUTHORS };
+};
+
+export const receiveAuthors = (data) => {
+  return {
+    type: RECEIVE_AUTHORS,
+    data
+  };
+};
+
+export const fetchAuthors = () => {
+  return dispatch => {
+    dispatch(requestAuthors());
+
+    fetch(window.xeniaHost + '/1.0/exec/dimension_author_list', getInit())
+      .then(response => response.json())
+      .then(json => dispatch(receiveAuthors(json)))
+      .catch(err => {
+        console.log('you failed to get the authors list!', err);
+      });
+  };
+};
+
+export const setBreakdown = (breakdown) => {
+  return {
+    type: SET_BREAKDOWN,
+    breakdown
+  };
+};
+
+export const setSpecificBreakdown = (specificBreakdown) => {
+  return {
+    type: SET_SPECIFIC_BREAKDOWN,
+    specificBreakdown
   };
 };
 
@@ -200,10 +245,11 @@ export const loginUser = (username, password) => {
   };
 };
 
-
 export const fetchCommentsByUser = (user_id) => {
-  const url = `${window.xeniaHost}${apiPrefix}exec/comments_by_user?user_id=${user_id}`;
+  const url = `${window.xeniaHost}/${apiPrefix}exec/comments_by_user?user_id=${user_id}`;
   return (dispatch) => {
+
+    dispatch(clearUserDetailComments());
     dispatch(requestComments());
 
     var myRequest = new Request(url, getInit());
@@ -215,15 +261,6 @@ export const fetchCommentsByUser = (user_id) => {
         dispatch(storeComments(json));
       })
       .catch(err => dispatch(receiveCommentsFailure(err)));
-
-
-/*      .then(response => {
-        dispatch(COMMENTS_SUCCESS, response);
-        console.log(response);
-      })
-      .catch(err => {
-        console.log(err);
-      });*/
   };
 };
 
@@ -293,7 +330,7 @@ const convert = (json) => {
 };
 
 export const createPipelineValueChanged = (config) => {
-  const url = window.xeniaHost + apiPrefix + 'exec';
+  const url = window.xeniaHost + '/' + apiPrefix + 'exec';
 
   return (dispatch, getState) => {
 
@@ -318,7 +355,7 @@ export const createPipelineValueChanged = (config) => {
 
 export const fetchDataExplorationDataset = (field, queryParams) => {
   const queryParamString = queryParams ? convert(queryParams) : '';
-  const url = window.xeniaHost + apiPrefix + 'exec/' + field + queryParamString;
+  const url = window.xeniaHost + '/' + apiPrefix + 'exec/' + field + queryParamString;
 
   return (dispatch, getState) => {
 
@@ -331,91 +368,13 @@ export const fetchDataExplorationDataset = (field, queryParams) => {
         dispatch(receiveDataExplorationDataset(json));
       })
       .catch(err => {
-        console.log('fetchDataExplorationDataset error', err);
         dispatch(dataExplorationFetchError(err));
       });
     } else {
       return { type: 'NOOP' };
     }
-
   };
 };
-
-const formulaCreated = () => {
-  return {
-    type: FORMULA_CREATED
-  };
-};
-
-export const createFormula = (filterSettings) => {
-  const interval = this.getSensibleInterval(new Date(this.state.minDate), new Date(this.state.maxDate));
-
-  if (this.state.specificBreakdowns.length) {
-
-    var match = {
-      $match: {
-        $or: this.state.specificBreakdowns.map(bd => {
-          return {target_doc: bd};
-        })
-      }
-    };
-
-    computedQuery.queries[0].commands.splice(3, 0, match);
-  }
-
-  // validateFormula(filterSettings)
-
-  var computedQuery = {
-    name: 'custom_query',
-    desc: 'Returns a time series of comments bounded by iso dates!  Totals or broken down by duration [day|week|month] and target type total|user|asset|author|section]',
-    pre_script: '',
-    pst_script: '',
-    params: [],
-    queries: [
-      {
-        name: 'custom_query',
-        type: 'pipeline',
-        collection: 'comment_timeseries',
-        /* this will be generated too... */
-        commands: [
-          {
-            $match: {
-              start_iso: {$gte: `#date:${this.state.minDate}`}
-            }
-          },
-          {
-            $match: {
-              start_iso: {$lt: `#date:${this.state.maxDate}`}
-            }
-          },
-          {
-            $match: {
-              duration: interval
-            }
-          },
-          {
-            $match: {
-              target: this.state.selectedBreakdown
-            }
-          },
-          {
-            $sort: {
-              start_iso: 1
-            }
-          }
-        ],
-        'return': true
-      }
-    ],
-    enabled: true
-  };
-
-  return (dispatch) => {
-    dispatch(createPipelineValueChanged(computedQuery));
-
-  };
-};
-
 
 const requestControls = () => {
   return {
@@ -431,7 +390,7 @@ const receiveControls = (pipelines) => {
 };
 
 export const populateControlsReducer = () => {
-  const url = window.xeniaHost + '1.0/query';
+  const url = window.xeniaHost + '/1.0/query';
 
   return (dispatch) => {
     dispatch(requestControls());
@@ -443,30 +402,56 @@ export const populateControlsReducer = () => {
   };
 };
 
-/* github oauth stuff */
-
-export const loginInitGit = () => {
-  const clientId = '539db12440cca9ec7e2c';
-
-  const url = `https://github.com/login/oauth/authorize?client_id=${clientId}&state=foobar`;
-
-  console.log('url', url);
-
+const loginInit = (email, pass) => {
   return {
     type: LOGIN_INIT,
-    url
+    email,
+    pass
   };
-
-  // location.href = url;
 };
 
-export const loginGitSuccess = (token) => {
-
-  window.localStorage.token = token;
-
+const loginSuccess = () => {
   return {
-    type: LOGIN_SUCCESS,
-    token
+    type: LOGIN_SUCCESS
+  };
+};
+
+const loginFailure = (err) => {
+  return {
+    type: LOGIN_FAILURE,
+    err
+  };
+};
+
+export const login = (email, password) => {
+  return (dispatch, getState) => {
+
+    if (getState().loading) {
+      return;
+    }
+
+    dispatch(loginInit(email, password));
+
+    fetch(`./auth.php?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`)
+      .then(response => response.json())
+      .then(json => {
+        if (json.valid === 1) {
+          window.localStorage.authorized = true;
+          dispatch(loginSuccess());
+        } else {
+          dispatch(loginFailure('unauthorized'));
+        }
+      })
+      .catch(err => {
+        dispatch(loginFailure(err));
+      });
+  };
+};
+
+export const logout = () => {
+  window.localStorage.removeItem('authorized');
+  return {
+    type: LOGGED_OUT
   };
 };
 
@@ -505,7 +490,9 @@ export const fetchAllTags = () => {
       dispatch(requestAllTags());
 
       fetch(url)
-        .then(res => res.json())
+        .then(res => {
+          return res.json();
+        })
         .then(json => {
           dispatch(receiveAllTags(json));
         }).catch(err => {
@@ -519,7 +506,6 @@ export const fetchAllTags = () => {
 };
 
 export const filterChanged = (fieldName, data) => {
-  console.log(FILTER_CHANGED, fieldName, data);
   return {
     type: FILTER_CHANGED,
     fieldName,
@@ -538,7 +524,32 @@ export const makeQueryFromState = (type) => {
   return (dispatch, getState) => {
     // make a query from the current state
     let filterState = getState().filters;
-    console.log(type, filterState);
+    let filterPresets = window.filters;
+
+    let matches = _.flatten(_.map(filterPresets, filter => {
+      let dbField;
+      if (filterState.breakdown === 'author') {
+        dbField = _.template(filter.template)({dimension: 'author.' + filterState.specificBreakdown});
+      } else if (filterState.breakdown === 'section') {
+        dbField = _.template(filter.template)({dimension: 'section.' + filterState.specificBreakdown});
+      } else { // all
+        dbField = _.template(filter.template)({dimension: 'all'});
+      }
+
+      var matches = [];
+
+      // Only create match statements for non-defaults
+      if (filter.min !== filterState[filter.field].userMin) {
+        matches.push( {$match: {[dbField]: {$gte: filterState[filter.field].userMin}}});
+      }
+
+      if (filter.max !== filterState[filter.field].userMax) {
+        matches.push( {$match: {[dbField]: {$lte: filterState[filter.field].userMax}}});
+      }
+
+      return matches;
+
+    }));
 
     let query = {
       name: 'user_search',
@@ -550,19 +561,23 @@ export const makeQueryFromState = (type) => {
         {
           name: 'user_search',
           type: 'pipeline',
-          collection: 'user',
+          collection: 'user_statistics',
           commands: [
-            {$match: {'stats.accept_ratio': {$gte: filterState['stats.accept_ratio'].userMin}}},
-            {$match: {'stats.accept_ratio': {$lte: filterState['stats.accept_ratio'].userMax}}},
-            {$match: {'stats.comments.total': {$gte: filterState['stats.comments.total'].userMin}}},
-            {$match: {'stats.comments.total': {$lte: filterState['stats.comments.total'].userMax}}},
-            {$match: {'stats.replies': {$gte: filterState['stats.replies'].userMin}}},
-            {$match: {'stats.replies': {$lte: filterState['stats.replies'].userMax}}},
-            {$match: {'stats.replies_per_comment': {$gte: filterState['stats.replies_per_comment'].userMin}}},
-            {$match: {'stats.replies_per_comment': {$lte: filterState['stats.replies_per_comment'].userMax}}},
-            {$sort: {'stats.comments.total': -1}},
+            ...matches,
+            // {$sort: {'statistics.comments.all.all.count': -1}},
             {$skip: 0},
             {$limit: 20}
+            // {
+            //   $redact: {
+            //     $cond: {
+            //       if: {
+            //         $eq: [{$ifNull: ['$reply_comments', true]}, true]
+            //       },
+            //       then: '$$DESCEND',
+            //       else: '$$PRUNE'
+            //     }
+            //   }
+            // }
           ],
           return: true
         }
@@ -570,9 +585,12 @@ export const makeQueryFromState = (type) => {
       enabled: true
     };
 
+    // console.log(JSON.stringify(query, null, 2));
+
+    dispatch(requestPipeline());
     dispatch(createQuery(query));
 
-    const url = window.xeniaHost + apiPrefix + 'exec';
+    const url = window.xeniaHost + '/' + apiPrefix + 'exec';
 
     var init = getInit('POST');
     init.body = JSON.stringify(query);
@@ -587,4 +605,106 @@ export const makeQueryFromState = (type) => {
       });
 
   };
+};
+
+
+const receiveUpsertedUser = (user) => {
+  return {
+    type: RECEIVE_UPSERTED_USER,
+    user
+  };
+};
+
+const requestUserUpsert = () => {
+  return {
+    type: REQUEST_USER_UPSERT
+  };
+};
+
+const userUpsertRequestError = (err) => {
+  return {
+    type: USER_UPSERT_REQUEST_ERROR,
+    err
+  };
+};
+
+export const upsertUser = (preparedObject) => {
+  const url = window.pillarHost + '/api/user';
+
+  return (dispatch, getState) => {
+    if (!getState().upsertingUser) {
+      dispatch(requestUserUpsert());
+
+      var headers = new Headers({ 'Accept': 'application/json', 'Content-Type': 'application/json' });
+
+      var init = {
+        method: 'POST',
+        headers: headers,
+        mode: 'cors',
+        cache: 'default',
+        body: JSON.stringify(preparedObject)
+      };
+
+      fetch(url, init)
+        .then(res => res.json())
+        .then(json => {
+          dispatch(receiveUpsertedUser(json));
+        }).catch(err => {
+          dispatch(userUpsertRequestError(err));
+        });
+
+    } else {
+      return {type: 'NOOP'};
+    }
+  };
+
+};
+
+
+/*****************************************/
+/* Redundant, for testing purposes only */
+
+export const REQUEST_ALL_TAGS_USER_DETAIL = 'REQUEST_ALL_TAGS_USER_DETAIL';
+export const RECEIVE_ALL_TAGS_USER_DETAIL = 'RECEIVE_ALL_TAGS_USER_DETAIL';
+export const ALL_TAGS_REQUEST_ERROR_USER_DETAIL = 'ALL_TAGS_REQUEST_ERROR_USER_DETAIL';
+
+const receiveAllTagsUserDetail = (tags) => {
+  return {
+    type: RECEIVE_ALL_TAGS_USER_DETAIL,
+    tags
+  };
+};
+
+const requestAllTagsUserDetail = () => {
+  return {
+    type: REQUEST_ALL_TAGS_USER_DETAIL
+  };
+};
+
+const allTagsRequestErrorUserDetail = (err) => {
+  return {
+    type: ALL_TAGS_REQUEST_ERROR_USER_DETAIL,
+    err
+  };
+};
+
+export const fetchAllTagsUserDetail = () => {
+  const url = window.pillarHost + '/api/tags';
+
+  return (dispatch, getState) => {
+    if (!getState().loadingTags) {
+      dispatch(requestAllTagsUserDetail());
+
+      fetch(url)
+        .then(res => res.json())
+        .then(json => {
+          dispatch(receiveAllTagsUserDetail(json));
+        }).catch(err => {
+          dispatch(allTagsRequestErrorUserDetail(err));
+        });
+    } else {
+      return {type: 'NOOP'};
+    }
+  };
+
 };

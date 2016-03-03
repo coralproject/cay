@@ -7,8 +7,6 @@ import Card from '../components/cards/Card';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 
-// import {MdAndroid, MdCameraEnhance} from 'react-icons';
-
 // this doesn't seem wise, but copying the file to /css seems worse.
 require('../../node_modules/react-datepicker/dist/react-datepicker.min.css');
 
@@ -32,10 +30,6 @@ class Dashboard extends React.Component {
         <div style={styles.base}>
           <Card style={styles.pane}>
             <DatePicker selected={this.state.startDate} onChange={this.handleChange} />
-          </Card>
-          <Card style={styles.pane}>
-            {/*<MdAndroid style={styles.lonelyIcon} />*/}
-            {/*<MdCameraEnhance style={styles.lonelyIcon} />*/}
           </Card>
         </div>
       </Page>

@@ -13,10 +13,17 @@ class Button extends React.Component {
   }
 
   render() {
+
+    var attrs = {};
+    if (this.props.disabled) {
+      attrs['disabled'] = 'disabled';
+    }
+
     return (
       <button
         onClick={this.handleClick.bind(this)}
         type="button"
+        {...attrs}
         style={[
           styles.base,
           this.props.size === 'small' && styles.small,

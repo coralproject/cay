@@ -47,20 +47,25 @@ const styles = {
     paddingBottom: 20,
     paddingLeft: 20,
     fontSize: 16,
+    backgroundColor: settings.lighterGrey,
+    borderBottom: '1px solid ' + settings.lighterGrey,
+    borderRight: '1px solid #ddd',
     ':hover': {
-      backgroundColor: settings.lighterGrey
+      backgroundColor: 'white',
+      borderRight: '1px solid #fff',
+      borderBottom: '1px solid #ddd'
     }
   },
   baseWithLeft: {
-    paddingLeft: 70
+    paddingLeft: 60
   },
   baseWithRight: {
-    paddingRight: 70
+    paddingRight: 60
   },
   avatars: {
     position: 'absolute',
     display: 'block',
-    top: 8
+    top: 20
   },
   leftAvatar: {
     left: 16

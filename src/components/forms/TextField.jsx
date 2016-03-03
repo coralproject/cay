@@ -7,7 +7,6 @@ export default class TextField extends React.Component {
 
   constructor(props) {
     super(props);
-
     this.state = {value: props.value || '', focused: false};
   }
 
@@ -45,6 +44,7 @@ export default class TextField extends React.Component {
           placeholder={this.props.label}
           value={this.state.value}
           style={styles.input}
+          value={this.state.value}
           type={this.props.type || 'text'}
           onFocus={this.handleFocus.bind(this)}
           onBlur={this.handleBlur.bind(this)}
@@ -74,7 +74,8 @@ const styles = {
     opacity: 1,
     color: settings.grey,
     fontSize: '.8em',
-    top: 15
+    top: 15,
+    left: 8
   },
   labelWithValue: {
     display: 'block'
@@ -83,7 +84,7 @@ const styles = {
     color: settings.infoColor
   },
   input: {
-    padding: 0,
+    padding: '0 0 0 8px',
     position: 'relative',
     width: '100%',
     height: '100%',

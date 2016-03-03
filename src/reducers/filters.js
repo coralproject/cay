@@ -1,18 +1,35 @@
 import * as types from '../actions';
 
-const initialState = {
+let initialState = {
   tags: [],
   authors: [],
   sections: [],
   loadingUserList: false,
-  'stats.accept_ratio': {userMin: 0, userMax: 1},
-  'stats.replies_per_comment': {userMin: 0, userMax: 1},
-  'stats.comments.total': {userMin: 0, userMax: 10000},
-  'stats.replies': {userMin: 0, userMax: 1000}
+  loadingAuthors: false,
+  loadingSections: false,
+  'user_name': null,
+  'status': null,
+  'last_login': null,
+  'member_since': null,
+  breakdown: 'all',
+  specificBreakdown: ''
+  // 'stats.accept_ratio': {userMin: 0, userMax: 1},
+  // 'stats.replies_per_comment': {userMin: 0, userMax: 1},
+  // 'stats.comments.total': {userMin: 0, userMax: 10000},
+  // 'stats.replies': {userMin: 0, userMax: 1000}
 };
 
 const filters = (state = initialState, action) => {
   switch (action.type) {
+
+  case types.CONFIG_LOADED:
+    const filters = action.config.filters.reduce((accum, filter) => {
+      accum[filter.field] = filter;
+      accum[filter.field].userMin = filter.min;
+      accum[filter.field].userMax = filter.max;
+      return accum;
+    }, {});
+    return Object.assign({}, state, filters);
 
   case types.CREATE_QUERY:
     return Object.assign({}, state, {loadingUserList: true});
@@ -33,11 +50,30 @@ const filters = (state = initialState, action) => {
   case types.ALL_TAGS_REQUEST_ERROR:
     return Object.assign({}, state, {loadingTags: false, tagError: 'Failed to load tags ' + action.err});
 
-  case types.RECEIVE_AUTHORS_AND_SECTIONS:
+  case types.REQUEST_SECTIONS:
+    return Object.assign({}, state, {loadingSections: true});
+
+  case types.RECEIVE_SECTIONS:
+    console.log('filters reducer', action);
+    return Object.assign({}, state, { sections: action.data.results[0].Docs });
+
+  case types.REQUEST_AUTHORS:
+    return Object.assign({}, state, {loadingAuthors: true});
+
+  case types.RECEIVE_AUTHORS:
     return Object.assign({}, state, {
-      sections: Object.keys(action.data.results[0].Docs[0].data.sections),
-      authors: Object.keys(action.data.results[0].Docs[0].data.authors)
+      loadingAuthors: false,
+      authors: action.data.results[0].Docs
     });
+
+  case types.PIPELINE_RECEIVED:
+    return Object.assign({}, state, { loadingUserList: false });
+
+  case types.SET_BREAKDOWN:
+    return Object.assign({}, state, {breakdown: action.breakdown});
+
+  case types.SET_SPECIFIC_BREAKDOWN:
+    return Object.assign({}, state, {specificBreakdown: action.specificBreakdown});
 
   default:
     return state;

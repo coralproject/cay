@@ -1,7 +1,6 @@
 var path = require('path');
 var webpack = require('webpack');
 
-
 module.exports = {
   devtool: 'eval',
   entry: [
@@ -18,6 +17,9 @@ module.exports = {
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
+    new webpack.ProvidePlugin({
+      'fetch': 'imports?this=>global!exports?global.fetch!whatwg-fetch'
+    }),
     new webpack.NoErrorsPlugin()
   ],
   module: {

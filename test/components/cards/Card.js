@@ -5,7 +5,7 @@ var ReactTestUtils = require('react-addons-test-utils');
 var chai = require('chai');
 var assert = chai.assert;
 
-var Card = require('../../../src/components/cards/card');
+var Card = require('../../../src/components/cards/Card');
 
 describe('Card component', function () {
 

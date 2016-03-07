@@ -2,7 +2,7 @@ var React = require('react');
 var ReactTestUtils = require('react-addons-test-utils');
 var chai = require('chai');
 var assert = chai.assert;
-var Button = require('../../src/components/button');
+var Button = require('../../src/components/Button');
 var settings = require('../../src/settings.js');
 
 describe('Button component', function () {
@@ -30,10 +30,6 @@ describe('Button component', function () {
 
   it('<button> should have a background color of ' + settings.warningColor, function () {
     assert.equal(this.inputElement.style.backgroundColor, settings.warningColor);
-  });
-
-  it('<button> should be a small button with a "size" attribute provided', function () {
-    assert.equal(this.inputElement.style.padding, '0.5rem');
   });
 
   it('<button> should merge provided styles with defaults', function () {

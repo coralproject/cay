@@ -2,7 +2,7 @@ var React = require('react');
 var ReactTestUtils = require('react-addons-test-utils');
 var chai = require('chai');
 var assert = chai.assert;
-var Badge = require('../../src/components/badge');
+var Badge = require('../../src/components/Badge');
 
 describe('Badge component', function () {
   before('render and locate element', function () {

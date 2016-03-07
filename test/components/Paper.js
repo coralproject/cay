@@ -1,7 +1,7 @@
 var React = require('react');
 var ReactTestUtils = require('react-addons-test-utils');
 var assert = require('chai').assert;
-var Paper = require('../../src/components/paper');
+var Paper = require('../../src/components/Paper');
 
 describe('Paper component', function () {
   beforeEach('render and locate element', function () {

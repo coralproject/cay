@@ -1,10 +1,11 @@
 {
   "xeniaHost": "",
   "pillarHost": "",
+  "language": "en-US",
   "environment": "development",
   "brand": "Tyrell Corporation",
+  "googleAnalyticsId": "UA-12345678-9",
   "requireLogin": true,
-  "googleAnalyticsId": "",
   "basicAuthorization": "Basic 109340923j02i3jroi23jroi23ljf23f",
   "dimensions": [
     {

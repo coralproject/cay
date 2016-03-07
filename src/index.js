@@ -24,6 +24,8 @@ import NoMatch from './containers/NoMatch';
 import About from './containers/About';
 import Feedback from './containers/Feedback';
 
+import ga from 'react-ga';
+
 const store = configureStore();
 
 import messages from './messages'; // Lang does not know where did you get your messages from.
@@ -46,6 +48,15 @@ import { Lang } from './lang';
 @Lang
 class Root extends React.Component {
 
+  constructor(props){
+    super(props);
+    ga.initialize(window.googleAnalyticsId, { debug: (process && process.env.NODE_ENV !== 'production') });
+  }
+
+  logPageView() {
+    ga.pageview(this.state.location.pathname);
+  }
+
   render() {
 
     if (process && process.env.NODE_ENV !== 'production') {
@@ -59,7 +70,7 @@ class Root extends React.Component {
     return (
       <div>
         <Provider store={store}>
-          <Router history={browserHistory}>
+          <Router history={browserHistory} onUpdate={ this.logPageView }>
             <Route path="/" component={UserManager} />
             <Route path="login" component={Login} />
             <Route path="about" component={About} />

@@ -1,8 +1,8 @@
 var React = require('react');
 var ReactTestUtils = require('react-addons-test-utils');
 var assert = require('chai').assert;
-var Card = require('../../../src/components/cards/card');
-var CardHeader = require('../../../src/components/cards/card-header');
+var Card = require('../../../src/components/cards/Card');
+var CardHeader = require('../../../src/components/cards/CardHeader');
 
 describe('CardHeader component', function () {
   beforeEach('render and locate element', function () {

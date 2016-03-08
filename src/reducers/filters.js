@@ -22,7 +22,7 @@ let initialState = {
 const filters = (state = initialState, action) => {
   switch (action.type) {
 
-  case types.CONFIG_LOADED:
+  case types.DATA_CONFIG_LOADED:
     const filters = action.config.filters.reduce((accum, filter) => {
       accum[filter.field] = filter;
       accum[filter.field].userMin = filter.min;

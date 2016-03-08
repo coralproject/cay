@@ -52,7 +52,8 @@ export default class FilterNumbers extends React.Component {
     params: React.PropTypes.object,
     /* component api */
     getValues: React.PropTypes.func,
-    description: React.PropTypes.string
+    description: React.PropTypes.string,
+    isPercentage: React.PropTypes.bool
   }
   static defaultProps = {
     fieldName: 'UNDEFINED___'
@@ -97,9 +98,13 @@ export default class FilterNumbers extends React.Component {
     this.props.dispatch(filterChanged(this.props.fieldName, {userMin: values[0], userMax: values[1]}));
   }
   renderGTLT() {
+
+    var min = (this.props.isPercentage) ? Math.floor(this.props.userMin * 100) : this.props.userMin;
+    var max = (this.props.isPercentage) ? Math.floor(this.props.userMax * 100) : this.props.userMax;
+
     return (
       <div>
-        <span style={{float: "left", position: "relative", top: -6}}> {this.props.userMin} - {this.props.userMax}</span>
+        <span style={{float: 'left', position: 'relative', top: -6}}> {min} - {max}{this.props.isPercentage ? '%' : ''}</span>
         <div style={{marginTop: 12, marginLeft: 70, width: 200}}>
           <Slider
             min={this.props.min}

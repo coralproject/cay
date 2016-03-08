@@ -58,7 +58,7 @@
       "min": 0,
       "max": 1,
       "collection": "user_statistics",
-      "type": "numberRange"
+      "type": "percentRange"
     },
     {
       "name": "Replied per Comment",
@@ -91,7 +91,7 @@
       "min": 0,
       "max": 1,
       "collection": "user_statistics",
-      "type": "numberRange"
+      "type": "percentRange"
     }
   ]
 }

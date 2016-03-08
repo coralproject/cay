@@ -1,6 +1,7 @@
 import _ from 'lodash';
 
 export const CONFIG_LOADED = 'CONFIG_LOADED';
+export const DATA_CONFIG_LOADED = 'DATA_CONFIG_LOADED';
 
 export const PIPELINE_SELECTED = 'PIPELINE_SELECTED';
 export const PIPELINE_REQUEST = 'PIPELINE_REQUEST'; // request data for a single pipeline

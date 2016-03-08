@@ -9,8 +9,6 @@ import { Provider } from 'react-redux';
 // Redux Devtools
 import { DevTools, DebugPanel, LogMonitor } from 'redux-devtools/lib/react';
 
-import {configLoaded} from './actions';
-
 import configureStore from './store';
 
 // import Dashboard from './containers/Dashboard';
@@ -88,29 +86,27 @@ class Root extends React.Component {
   }
 }
 
-fetch('/config.json')
-  .then(res => res.json())
-  .then(config => {
+const loadConfig = (requiredKeys, file, actionType) => {
+  return fetch(file)
+    .then(res => res.json())
+    .then(config => {
+      requiredKeys.forEach(key => {
+        if (!config[key]) throw new Error(`${key} is not set in ${file}. Coral will not work correctly.`);
+        window[key] = config[key];
+      });
 
-    for (var key in config) {
-      window[key] = config[key];
-    }
+      store.dispatch({type: actionType, config});
+    });
+};
 
-    if (!window.xeniaHost) throw new Error('xeniaHost is not set in config.json. Coral will not work correctly.');
-    if (!window.pillarHost) throw new Error('pillarHost is not set in config.json. Coral will not work correctly.');
-    if (!window.basicAuthorization) throw new Error('basicAuthorization is not set in config.json. Coral will not work correctly');
-    if (!window.filters) throw new Error('filters is not set in config.json');
+const requiredEnvKeys = [ 'xeniaHost', 'pillarHost', 'basicAuthorization', 'environment', 'googleAnalyticsId', 'requireLogin' ];
+const requiredDataKeys = ['filters', 'dimensions'];
+const setupEnv = loadConfig(requiredEnvKeys, './config.json', 'CONFIG_LOADED');
+const setupData = loadConfig(requiredDataKeys, './data_config.json', 'DATA_CONFIG_LOADED');
 
-    // set state here.
-    store.dispatch({type: 'CONFIG_LOADED', config});
-
-    ReactDOM.render(<Root/>, document.getElementById('root'));
-  })
-  .catch(err => {
-
-    console.error('Error while fetching config.json: ', err);
-    document.body.innerHTML = 'you need to create ./config.json, or it is invalid JSON, or something blew up somewhere in react :/';
-  });
+Promise.all([setupEnv, setupData]).then(() => {
+  ReactDOM.render(<Root/>, document.getElementById('root'));
+}); // there is no catch here because we want redbox-react to display the error screen (on dev)
 
 // prevent browser from navigating backwards if you hit the backspace key
 document.addEventListener('keydown', function (e) {

@@ -100,6 +100,17 @@ export default class UserFilters extends React.Component {
         );
       } else if (f.type === 'dateRange') {
         filterComponent = null;
+      } else if (f.type === 'percentRange') {
+        filterComponent = (
+          <FilterNumbers
+            min={f.min}
+            max={f.max}
+            userMin={this.props[f.field].userMin}
+            userMax={this.props[f.field].userMax}
+            description={f.description}
+            fieldName={f.field}
+            isPercentage={true} />
+        );
       }
 
       return filterComponent;

@@ -223,9 +223,14 @@ export const setBreakdown = (breakdown) => {
 };
 
 export const setSpecificBreakdown = (specificBreakdown) => {
-  return {
-    type: SET_SPECIFIC_BREAKDOWN,
-    specificBreakdown
+  return (dispatch, getState) => {
+    let counter = getState().filters.counter;
+    counter++
+    dispatch({
+      type: SET_SPECIFIC_BREAKDOWN,
+      specificBreakdown: specificBreakdown,
+      counter
+    });
   };
 };
 
@@ -507,12 +512,19 @@ export const fetchAllTags = () => {
 };
 
 export const filterChanged = (fieldName, data) => {
-  return {
-    type: FILTER_CHANGED,
-    fieldName,
-    data
+  return (dispatch, getState) => {
+    let counter = getState().filters.counter;
+    counter++;
+
+    dispatch({
+      type: FILTER_CHANGED,
+      fieldName,
+      data,
+      counter
+    });
   };
 };
+
 
 export const createQuery = (query) => {
   return {

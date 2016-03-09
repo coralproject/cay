@@ -28,7 +28,7 @@ const filters = (state = initialState, action) => {
     const filters = action.config.filters.reduce((accum, filter) => {
 
       const key = Math.random().toString().slice(2, 18);
-      accum[key] = Object.assign({}, filter, {userMin: filter.min, userMax: filter.max});
+      accum[key] = Object.assign({}, filter, {userMin: filter.min, userMax: filter.max, key});
 
       filterList.push(key);
 
@@ -43,7 +43,9 @@ const filters = (state = initialState, action) => {
     return Object.assign({}, state, {loadingUserList: false});
 
   case types.FILTER_CHANGED:
-    return Object.assign({}, state, { [action.fieldName]: action.data });
+    const currentFilter = state[action.fieldName];
+    const newFilter = Object.assign({}, currentFilter, action.data);
+    return Object.assign({}, state, { [action.fieldName]: newFilter });
 
   case types.REQUEST_ALL_TAGS:
     return Object.assign({}, state, {loadingTags: true});

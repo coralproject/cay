@@ -12,7 +12,7 @@ let initialState = {
   'last_login': null,
   'member_since': null,
   breakdown: 'all',
-  counter: 0,
+  counter: 0, // this is a signal for ajax consumed by userFilters
   specificBreakdown: ''
   // 'stats.accept_ratio': {userMin: 0, userMax: 1},
   // 'stats.replies_per_comment': {userMin: 0, userMax: 1},
@@ -40,8 +40,7 @@ const filters = (state = initialState, action) => {
     return Object.assign({}, state, {loadingUserList: false});
 
   case types.FILTER_CHANGED:
-    console.log(state.counter, state.counter++);
-    return Object.assign({}, state, { [action.fieldName]: action.data, counter: state.counter++ });
+    return Object.assign({}, state, { [action.fieldName]: action.data, counter: action.counter });
 
   case types.REQUEST_ALL_TAGS:
     return Object.assign({}, state, {loadingTags: true});
@@ -71,10 +70,10 @@ const filters = (state = initialState, action) => {
     return Object.assign({}, state, { loadingUserList: false });
 
   case types.SET_BREAKDOWN:
-    return Object.assign({}, state, {breakdown: action.breakdown, counter: state.counter++});
+    return Object.assign({}, state, {breakdown: action.breakdown});
 
   case types.SET_SPECIFIC_BREAKDOWN:
-    return Object.assign({}, state, {specificBreakdown: action.specificBreakdown, counter: state.counter++});
+    return Object.assign({}, state, {specificBreakdown: action.specificBreakdown, counter: action.counter});
 
   default:
     return state;

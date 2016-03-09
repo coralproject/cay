@@ -539,10 +539,10 @@ export const createQuery = (query) => {
 export const makeQueryFromState = (/*type*/) => {
   return (dispatch, getState) => {
     // make a query from the current state
-    let filterState = getState().filters;
-    let filterPresets = window.filters;
+    const filterState = getState().filters;
+    const filters = filterState.filterList.map(key => filterState[key]);
 
-    let matches = _.flatten(_.map(filterPresets, filter => {
+    let matches = _.flatten(_.map(filters, filter => {
       let dbField;
       if (filterState.breakdown === 'author') {
         dbField = _.template(filter.template)({dimension: 'author.' + filterState.specificBreakdown});
@@ -555,12 +555,12 @@ export const makeQueryFromState = (/*type*/) => {
       var matches = [];
 
       // Only create match statements for non-defaults
-      if (filter.min !== filterState[filter.field].userMin) {
-        matches.push( {$match: {[dbField]: {$gte: filterState[filter.field].userMin}}});
+      if (filter.min !== filter.userMin) {
+        matches.push( {$match: {[dbField]: {$gte: filter.userMin}}});
       }
 
-      if (filter.max !== filterState[filter.field].userMax) {
-        matches.push( {$match: {[dbField]: {$lte: filterState[filter.field].userMax}}});
+      if (filter.max !== filter.userMax) {
+        matches.push( {$match: {[dbField]: {$lte: filter.userMax}}});
       }
 
       return matches;

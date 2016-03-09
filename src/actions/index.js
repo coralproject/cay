@@ -534,7 +534,8 @@ export const createQuery = (query) => {
 };
 
 export const makeQueryFromState = (type) => {
-  return (dispatch, getState) => {
+  return _.debounce((dispatch, getState) => {
+    console.log('debounce')
     // make a query from the current state
     let filterState = getState().filters;
     let filterPresets = window.filters;
@@ -617,7 +618,7 @@ export const makeQueryFromState = (type) => {
         dispatch(dataExplorationFetchError(err));
       });
 
-  };
+  }, 1000);
 };
 
 

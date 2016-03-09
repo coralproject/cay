@@ -3,7 +3,7 @@
 import React from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
-import {makeQueryFromState} from '../actions';
+import {makeQueryFromState, getFilterRanges} from '../actions';
 import Button from './Button';
 import Spinner from './Spinner';
 
@@ -18,6 +18,7 @@ export default class PipelineCreator extends React.Component {
   }
 
   componentDidMount() {
+    this.props.dispatch(getFilterRanges('user'));
     this.props.dispatch(makeQueryFromState('user'));
   }
 

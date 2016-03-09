@@ -138,8 +138,6 @@ export default class UserDetail extends React.Component {
     : null;
     */
 
-    console.log('this.props.statistics', this.props.statistics);
-
     return (
       <div style={[styles.base, this.props.style]}>
       {

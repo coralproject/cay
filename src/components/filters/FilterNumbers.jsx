@@ -112,7 +112,7 @@ export default class FilterNumbers extends React.Component {
             step={this.state.step}
             defaultValue={[this.props.userMin, this.props.userMax]}
             value={[this.props.userMin, this.props.userMax]}
-            onChange={_.debounce(this.updateSlider.bind(this), 500)}
+            onChange={this.updateSlider.bind(this)}
             withBars/>
         </div>
       </div>

@@ -12,6 +12,7 @@ let initialState = {
   'last_login': null,
   'member_since': null,
   breakdown: 'all',
+  counter: 0,
   specificBreakdown: ''
   // 'stats.accept_ratio': {userMin: 0, userMax: 1},
   // 'stats.replies_per_comment': {userMin: 0, userMax: 1},
@@ -39,7 +40,8 @@ const filters = (state = initialState, action) => {
     return Object.assign({}, state, {loadingUserList: false});
 
   case types.FILTER_CHANGED:
-    return Object.assign({}, state, { [action.fieldName]: action.data });
+    console.log(state.counter, state.counter++);
+    return Object.assign({}, state, { [action.fieldName]: action.data, counter: state.counter++ });
 
   case types.REQUEST_ALL_TAGS:
     return Object.assign({}, state, {loadingTags: true});
@@ -70,10 +72,10 @@ const filters = (state = initialState, action) => {
     return Object.assign({}, state, { loadingUserList: false });
 
   case types.SET_BREAKDOWN:
-    return Object.assign({}, state, {breakdown: action.breakdown});
+    return Object.assign({}, state, {breakdown: action.breakdown, counter: state.counter++});
 
   case types.SET_SPECIFIC_BREAKDOWN:
-    return Object.assign({}, state, {specificBreakdown: action.specificBreakdown});
+    return Object.assign({}, state, {specificBreakdown: action.specificBreakdown, counter: state.counter++});
 
   default:
     return state;

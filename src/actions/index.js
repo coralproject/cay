@@ -515,7 +515,15 @@ export const getFilterRanges = () => {
     let filterState = getState().filters;
     let $group = filterState.filterList.reduce((accum, key) => {
 
-      const field = '$' + _.template(filterState[key].template)({dimension: 'all'});
+      let dimension;
+      if (filterState.breakdown === 'author') {
+        dimension = 'author.' + filterState.specificBreakdown;
+      } else if (filterState.breakdown === 'section') {
+        dimension = 'section.' + filterState.specificBreakdown;
+      } else { // all
+        dimension = 'all';
+      }
+      const field = '$' + _.template(filterState[key].template)({dimension});
 
       // if you change this naming convention
       // you must update the RECEIVE_FILTER_RANGES in reducers/filters.js

@@ -6,7 +6,8 @@ import {
   fetchSections,
   fetchAuthors,
   setBreakdown,
-  setSpecificBreakdown
+  setSpecificBreakdown,
+  getFilterRanges
 } from '../../actions';
 
 import Select from 'react-select';
@@ -63,6 +64,7 @@ export default class UserFilters extends React.Component {
   setSpecificBreakdown(specificBreakdown) {
     console.log('setSpecificBreakdown', specificBreakdown.value);
     this.props.dispatch(setSpecificBreakdown(specificBreakdown.value));
+    this.props.dispatch(getFilterRanges('user'));
   }
 
   getAuthors() {
@@ -82,6 +84,9 @@ export default class UserFilters extends React.Component {
     console.log('updateBreakdown', breakdown);
     this.props.dispatch(setBreakdown(breakdown.value));
     this.props.dispatch(setSpecificBreakdown(''));
+    if (breakdown.value === 'all') {
+      this.props.dispatch(getFilterRanges('user'));
+    }
   }
 
   getActiveFiltersFromConfig() {

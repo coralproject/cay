@@ -2,7 +2,7 @@ import React from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
 import {filterChanged} from '../../actions';
-// import _ from 'lodash';
+import _ from 'lodash';
 // import Flex from '../layout/Flex';
 
 import Card from '../cards/Card';
@@ -112,7 +112,7 @@ export default class FilterNumbers extends React.Component {
             step={this.state.step}
             defaultValue={[this.props.userMin, this.props.userMax]}
             value={[this.props.userMin, this.props.userMax]}
-            onChange={this.updateSlider.bind(this)}
+            onChange={_.debounce(this.updateSlider.bind(this), 500)}
             withBars/>
         </div>
       </div>
@@ -145,6 +145,7 @@ export default class FilterNumbers extends React.Component {
     );
   }
 }
+
 
 /*
 

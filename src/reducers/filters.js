@@ -56,7 +56,6 @@ const filters = (state = initialState, action) => {
     return Object.assign({}, state, {loadingSections: true});
 
   case types.RECEIVE_SECTIONS:
-    console.log('filters reducer', action);
     return Object.assign({}, state, { sections: action.data.results[0].Docs });
 
   case types.REQUEST_AUTHORS:

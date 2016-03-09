@@ -510,14 +510,59 @@ export const fetchAllTags = () => {
 };
 
 export const getFilterRanges = () => {
+
   return (dispatch, getState) => {
-    let filterPresets = window.filters;
     let filterState = getState().filters;
+    let $group = filterState.filterList.reduce((accum, key) => {
 
+      const field = '$' + _.template(filterState[key].template)({dimension: 'all'});
 
+      // if you change this naming convention
+      // you must update the RECEIVE_FILTER_RANGES in reducers/filters.js
+      accum[key + '_min'] = {
+        $min: field
+      };
 
+      accum[key + '_max'] = {
+        $max: field
+      };
 
-    console.log('filterState', filterState);
+      return accum;
+    }, {_id: null});
+
+    let query = {
+      name: 'ranges',
+      desc: 'min and max values for arbitrary filters',
+      pre_script: '',
+      pst_script: '',
+      params: [],
+      queries: [
+        {
+          name: 'ranges',
+          type: 'pipeline',
+          collection: 'user_statistics',
+          commands: [ { $group } ],
+          return: true
+        }
+      ],
+      enabled: true
+    };
+
+    dispatch({type: 'REQUEST_FILTER_RANGES'});
+
+    const url = window.xeniaHost + '/' + apiPrefix + 'exec';
+
+    var init = getInit('POST');
+    init.body = JSON.stringify(query);
+
+    fetch(url, init)
+      .then(res => res.json())
+      .then(data => {
+        console.log('RECEIVE_FILTER_RANGES', data);
+        dispatch({type: 'RECEIVE_FILTER_RANGES', data});
+      }).catch(err => {
+        console.log(err);
+      });
   };
 };
 

@@ -86,8 +86,6 @@ export default class UserFilters extends React.Component {
 
   getActiveFiltersFromConfig() {
 
-    console.log('getActiveFiltersFromConfig', this.props);
-
     const filters = this.props.filterList.map(key => this.props[key]);
     const userFilters = filters.filter(f => f.collection === 'user_statistics');
     return userFilters.map(f => {

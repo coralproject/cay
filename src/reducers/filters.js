@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import * as types from '../actions';
 
 let initialState = {
@@ -43,8 +44,8 @@ const filters = (state = initialState, action) => {
     return Object.assign({}, state, {loadingUserList: false});
 
   case types.FILTER_CHANGED:
-    const currentFilter = state[action.fieldName];
-    const newFilter = Object.assign({}, currentFilter, action.data);
+    const oldFilter = state[action.fieldName];
+    const newFilter = Object.assign({}, oldFilter, action.data);
     return Object.assign({}, state, { [action.fieldName]: newFilter });
 
   case types.REQUEST_ALL_TAGS:
@@ -79,6 +80,32 @@ const filters = (state = initialState, action) => {
 
   case types.SET_SPECIFIC_BREAKDOWN:
     return Object.assign({}, state, {specificBreakdown: action.specificBreakdown});
+
+  case types.RECEIVE_FILTER_RANGES:
+    const ranges = action.data.results[0].Docs[0];
+
+    const newFilters = _.reduce(ranges, (accum, value, aggKey) => {
+      let [key, field] = aggKey.split('_');
+
+      if (field === 'id') return accum;
+
+      // we might have already updated the old filter with the min value
+      // retrieve it from the accumulator in progress instead of the state
+      let newFilter = _.has(accum, key) ? accum[key] : _.cloneDeep(state[key]);
+      newFilter[field] = value; // where field is {min|max}
+
+      if (field === 'min') {
+        newFilter.userMin = value;
+      } else if (field === 'max') {
+        newFilter.userMax = value;
+      }
+
+      accum[key] = newFilter;
+
+      return accum;
+    }, {});
+
+    return Object.assign({}, state, newFilters, {rangesLoaded: true});
 
   default:
     return state;

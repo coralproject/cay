@@ -19,7 +19,7 @@ export default class PipelineCreator extends React.Component {
 
   componentDidMount() {
     this.props.dispatch(getFilterRanges('user'));
-    // this.props.dispatch(makeQueryFromState('user'));
+    this.props.dispatch(makeQueryFromState('user'));
   }
 
   handleCreatePipeline() {

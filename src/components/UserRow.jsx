@@ -8,11 +8,18 @@ import CharacterIcon from './CharacterIcon';
 @Radium
 export default class UserRow extends React.Component {
   static propTypes = {
-    onClick: PropTypes.func.isRequired
+    onClick: PropTypes.func.isRequired,
+    active: React.PropTypes.bool,
+    setAsActive: React.PropTypes.func,
+    activeIndex: React.PropTypes.number
+  }
+  static defaultProps = {
+    active: true
   }
 
   handleClick() {
     this.props.onClick(this.props.user);
+    this.props.setAsActive(this.props.activeIndex)
   }
 
   render() {
@@ -25,6 +32,7 @@ export default class UserRow extends React.Component {
 
     return (
       <ListItem
+        active={this.props.active}
         style={[styles.base, this.props.style]}
         onClick={this.handleClick.bind(this)}
         leftAvatar={leftAvatar}>

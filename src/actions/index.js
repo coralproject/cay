@@ -35,7 +35,7 @@ export const RECEIVE_EXPLORER_CONTROLS = 'RECEIVE_EXPLORER_CONTROLS';
 export const REQUEST_SECTIONS = 'REQUEST_SECTIONS';
 export const RECEIVE_SECTIONS = 'RECEIVE_SECTIONS';
 export const REQUEST_AUTHORS = 'REQUEST_AUTHORS';
-export const RECEIVE_AUTHORS = 'RECEIEVE_AUTHORS';
+export const RECEIVE_AUTHORS = 'RECEIVE_AUTHORS';
 
 export const USER_SELECTED = 'USER_SELECTED';
 
@@ -56,6 +56,9 @@ export const RECEIVE_USER_LIST = 'RECEIVE_USER_LIST';
 
 export const SET_BREAKDOWN = 'SET_BREAKDOWN';
 export const SET_SPECIFIC_BREAKDOWN = 'SET_SPECIFIC_BREAKDOWN';
+
+export const REQUEST_FILTER_RANGES = 'REQUEST_FILTER_RANGES';
+export const RECEIVE_FILTER_RANGES = 'RECEIVE_FILTER_RANGES';
 
 /* config */
 
@@ -506,6 +509,18 @@ export const fetchAllTags = () => {
 
 };
 
+export const getFilterRanges = () => {
+  return (dispatch, getState) => {
+    let filterPresets = window.filters;
+    let filterState = getState().filters;
+
+
+
+
+    console.log('filterState', filterState);
+  };
+};
+
 export const filterChanged = (fieldName, data) => {
   return {
     type: FILTER_CHANGED,
@@ -521,7 +536,7 @@ export const createQuery = (query) => {
   };
 };
 
-export const makeQueryFromState = (type) => {
+export const makeQueryFromState = (/*type*/) => {
   return (dispatch, getState) => {
     // make a query from the current state
     let filterState = getState().filters;

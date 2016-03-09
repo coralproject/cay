@@ -22,20 +22,24 @@ let initialState = {
 const filters = (state = initialState, action) => {
   switch (action.type) {
 
+  // this should run before any ReactDOM stuff happens
   case types.DATA_CONFIG_LOADED:
+    const filterList = [];
     const filters = action.config.filters.reduce((accum, filter) => {
-      accum[filter.field] = filter;
-      accum[filter.field].userMin = filter.min;
-      accum[filter.field].userMax = filter.max;
+
+      const key = Math.random().toString().slice(2, 18);
+      accum[key] = Object.assign({}, filter, {userMin: filter.min, userMax: filter.max});
+
+      filterList.push(key);
+
       return accum;
     }, {});
-    return Object.assign({}, state, filters);
+    return Object.assign({}, state, filters, {filterList});
 
   case types.CREATE_QUERY:
     return Object.assign({}, state, {loadingUserList: true});
 
   case types.RECEIVE_USER_LIST:
-    console.log(action);
     return Object.assign({}, state, {loadingUserList: false});
 
   case types.FILTER_CHANGED:
@@ -54,7 +58,6 @@ const filters = (state = initialState, action) => {
     return Object.assign({}, state, {loadingSections: true});
 
   case types.RECEIVE_SECTIONS:
-    console.log('filters reducer', action);
     return Object.assign({}, state, { sections: action.data.results[0].Docs });
 
   case types.REQUEST_AUTHORS:

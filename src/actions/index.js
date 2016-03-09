@@ -535,7 +535,7 @@ export const createQuery = (query) => {
 
 export const makeQueryFromState = (type) => {
   return (dispatch, getState) => {
-    console.log('debounce')
+    console.log('function that calls async')
     // make a query from the current state
     let filterState = getState().filters;
     let filterPresets = window.filters;
@@ -599,27 +599,30 @@ export const makeQueryFromState = (type) => {
       enabled: true
     };
 
-    // console.log(JSON.stringify(query, null, 2));
-
-    dispatch(requestPipeline());
-    dispatch(createQuery(query));
-
-    const url = window.xeniaHost + '/' + apiPrefix + 'exec';
-
-    var init = getInit('POST');
-    init.body = JSON.stringify(query);
-
-    fetch(url, init)
-      .then(response => response.json())
-      .then(json => {
-        dispatch(receivePipeline(json));
-      })
-      .catch(err => {
-        dispatch(dataExplorationFetchError(err));
-      });
+    doMakeQueryFromStateAsync(query, dispatch);
 
   };
 };
+
+const doMakeQueryFromStateAsync = _.debounce((query, dispatch)=>{
+  console.log('actual async')
+  dispatch(requestPipeline());
+  dispatch(createQuery(query));
+
+  const url = window.xeniaHost + '/' + apiPrefix + 'exec';
+
+  var init = getInit('POST');
+  init.body = JSON.stringify(query);
+
+  fetch(url, init)
+    .then(response => response.json())
+    .then(json => {
+      dispatch(receivePipeline(json));
+    })
+    .catch(err => {
+      dispatch(dataExplorationFetchError(err));
+    });
+},1000)
 
 
 const receiveUpsertedUser = (user) => {

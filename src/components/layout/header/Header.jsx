@@ -33,7 +33,10 @@ class Header extends React.Component {
         <MdMenu style={styles.sidebarToggle} onClick={this.handleClick.bind(this)} />
         {/*<Searchbar style={styles.searchbar}/>*/}
         <Button
-          style={styles.logoutButton}
+          style={[
+            styles.logoutButton,
+            !window.requireLogin && styles.logoutDisabled
+          ]}
           size="small"
           category="default"
           onClick={this.logout.bind(this)}>Logout</Button>
@@ -52,6 +55,9 @@ const styles = {
     paddingLeft: 10,
     paddingTop: 10,
     cursor: 'pointer'
+  },
+  logoutDisabled: {
+    display: 'none'
   },
   nav: {
     marginBottom: 0,

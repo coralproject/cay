@@ -21,16 +21,16 @@ class Login extends React.Component {
 
   componentWillMount() {
     // use react-router to push state?
-    if (this.props.authorized) {
+    if (!window.requireLogin || this.props.authorized) {
       let {router} = this.context;
-      router.push('/group-creator');
+      router.push('/');
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.authorized) {
+    if (!window.requireLogin || this.props.authorized) {
       let {router} = this.context;
-      router.push('/group-creator');
+      router.push('/');
     }
   }
 

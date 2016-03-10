@@ -23,7 +23,7 @@
       "template": "statistics.comments.<%= dimension %>.all.count",
       "description": "total comments",
       "collection": "user_statistics",
-      "type": "numberRange"
+      "type": "intRange"
     },
     {
       "name": "Replied",
@@ -32,7 +32,7 @@
       "template": "statistics.comments.<%= dimension %>.all.replied_count",
       "description": "replies they have written to others",
       "collection": "user_statistics",
-      "type": "numberRange"
+      "type": "intRange"
     },
     {
       "name": "Replies",
@@ -41,7 +41,7 @@
       "template": "statistics.comments.<%= dimension %>.all.reply_count",
       "description": "times other have replied to them",
       "collection": "user_statistics",
-      "type": "numberRange"
+      "type": "intRange"
     },
     {
       "name": "Replies per Comment",
@@ -59,7 +59,7 @@
       "template": "statistics.comments.<%= dimension %>.all.reply_ratio",
       "description": "Replies from others per comment",
       "collection": "user_statistics",
-      "type": "numberRange"
+      "type": "floatRange"
     },
     {
       "name": "Average Wordcount",
@@ -68,7 +68,7 @@
       "template": "statistics.comments.<%= dimension %>.all.word_count_average",
       "description": "Average words per post",
       "collection": "user_statistics",
-      "type": "numberRange"
+      "type": "floatRange"
     },
     {
       "name": "Percent SystemFlagged",

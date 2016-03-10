@@ -107,13 +107,11 @@ const filters = (state = initialState, action) => {
       return accum;
     }, {});
 
-    _.each(newFilters, f => {
-
-      f.userMin = Math.min(Math.max(f.userMin, f.min), f.max);
-      f.userMax = Math.min(Math.max(f.userMax, f.min), f.max);
-      // f.userMin = _.clamp(f.userMin, f.min, f.max);
-      // f.userMax = _.clamp(f.userMax, f.min, f.max);
-    });
+    // _.each(newFilters, f => {
+    //
+    //   f.userMin = Math.min(Math.max(f.userMin, f.min), f.max);
+    //   f.userMax = Math.min(Math.max(f.userMax, f.min), f.max);
+    // });
 
     return Object.assign({}, state, newFilters);
 

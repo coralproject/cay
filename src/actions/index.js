@@ -35,7 +35,7 @@ export const RECEIVE_EXPLORER_CONTROLS = 'RECEIVE_EXPLORER_CONTROLS';
 export const REQUEST_SECTIONS = 'REQUEST_SECTIONS';
 export const RECEIVE_SECTIONS = 'RECEIVE_SECTIONS';
 export const REQUEST_AUTHORS = 'REQUEST_AUTHORS';
-export const RECEIVE_AUTHORS = 'RECEIEVE_AUTHORS';
+export const RECEIVE_AUTHORS = 'RECEIVE_AUTHORS';
 
 export const USER_SELECTED = 'USER_SELECTED';
 
@@ -56,6 +56,9 @@ export const RECEIVE_USER_LIST = 'RECEIVE_USER_LIST';
 
 export const SET_BREAKDOWN = 'SET_BREAKDOWN';
 export const SET_SPECIFIC_BREAKDOWN = 'SET_SPECIFIC_BREAKDOWN';
+
+export const REQUEST_FILTER_RANGES = 'REQUEST_FILTER_RANGES';
+export const RECEIVE_FILTER_RANGES = 'RECEIVE_FILTER_RANGES';
 
 /* config */
 
@@ -223,9 +226,14 @@ export const setBreakdown = (breakdown) => {
 };
 
 export const setSpecificBreakdown = (specificBreakdown) => {
-  return {
-    type: SET_SPECIFIC_BREAKDOWN,
-    specificBreakdown
+  return (dispatch, getState) => {
+    let counter = getState().filters.counter;
+    counter++
+    dispatch({
+      type: SET_SPECIFIC_BREAKDOWN,
+      specificBreakdown: specificBreakdown,
+      counter
+    });
   };
 };
 
@@ -506,13 +514,77 @@ export const fetchAllTags = () => {
 
 };
 
-export const filterChanged = (fieldName, data) => {
-  return {
-    type: FILTER_CHANGED,
-    fieldName,
-    data
+export const getFilterRanges = () => {
+
+  return (dispatch, getState) => {
+    let filterState = getState().filters;
+    let $group = filterState.filterList.reduce((accum, key) => {
+
+      const field = '$' + _.template(filterState[key].template)({dimension: 'all'});
+
+      // if you change this naming convention
+      // you must update the RECEIVE_FILTER_RANGES in reducers/filters.js
+      accum[key + '_min'] = {
+        $min: field
+      };
+
+      accum[key + '_max'] = {
+        $max: field
+      };
+
+      return accum;
+    }, {_id: null});
+
+    let query = {
+      name: 'ranges',
+      desc: 'min and max values for arbitrary filters',
+      pre_script: '',
+      pst_script: '',
+      params: [],
+      queries: [
+        {
+          name: 'ranges',
+          type: 'pipeline',
+          collection: 'user_statistics',
+          commands: [ { $group } ],
+          return: true
+        }
+      ],
+      enabled: true
+    };
+
+    dispatch({type: 'REQUEST_FILTER_RANGES'});
+
+    const url = window.xeniaHost + '/' + apiPrefix + 'exec';
+
+    var init = getInit('POST');
+    init.body = JSON.stringify(query);
+
+    fetch(url, init)
+      .then(res => res.json())
+      .then(data => {
+        console.log('RECEIVE_FILTER_RANGES', data);
+        dispatch({type: 'RECEIVE_FILTER_RANGES', data});
+      }).catch(err => {
+        console.log(err);
+      });
   };
 };
+
+export const filterChanged = (fieldName, data) => {
+  return (dispatch, getState) => {
+    let counter = getState().filters.counter;
+    counter++;
+
+    dispatch({
+      type: FILTER_CHANGED,
+      fieldName,
+      data,
+      counter
+    });
+  };
+};
+
 
 export const createQuery = (query) => {
   return {
@@ -521,13 +593,14 @@ export const createQuery = (query) => {
   };
 };
 
-export const makeQueryFromState = (type) => {
+export const makeQueryFromState = (/*type*/) => {
   return (dispatch, getState) => {
+    console.log('function that calls async')
     // make a query from the current state
-    let filterState = getState().filters;
-    let filterPresets = window.filters;
+    const filterState = getState().filters;
+    const filters = filterState.filterList.map(key => filterState[key]);
 
-    let matches = _.flatten(_.map(filterPresets, filter => {
+    let matches = _.flatten(_.map(filters, filter => {
       let dbField;
       if (filterState.breakdown === 'author') {
         dbField = _.template(filter.template)({dimension: 'author.' + filterState.specificBreakdown});
@@ -540,12 +613,12 @@ export const makeQueryFromState = (type) => {
       var matches = [];
 
       // Only create match statements for non-defaults
-      if (filter.min !== filterState[filter.field].userMin) {
-        matches.push( {$match: {[dbField]: {$gte: filterState[filter.field].userMin}}});
+      if (filter.min !== filter.userMin) {
+        matches.push( {$match: {[dbField]: {$gte: filter.userMin}}});
       }
 
-      if (filter.max !== filterState[filter.field].userMax) {
-        matches.push( {$match: {[dbField]: {$lte: filterState[filter.field].userMax}}});
+      if (filter.max !== filter.userMax) {
+        matches.push( {$match: {[dbField]: {$lte: filter.userMax}}});
       }
 
       return matches;
@@ -586,27 +659,30 @@ export const makeQueryFromState = (type) => {
       enabled: true
     };
 
-    // console.log(JSON.stringify(query, null, 2));
-
-    dispatch(requestPipeline());
-    dispatch(createQuery(query));
-
-    const url = window.xeniaHost + '/' + apiPrefix + 'exec';
-
-    var init = getInit('POST');
-    init.body = JSON.stringify(query);
-
-    fetch(url, init)
-      .then(response => response.json())
-      .then(json => {
-        dispatch(receivePipeline(json));
-      })
-      .catch(err => {
-        dispatch(dataExplorationFetchError(err));
-      });
+    doMakeQueryFromStateAsync(query, dispatch);
 
   };
 };
+
+const doMakeQueryFromStateAsync = _.debounce((query, dispatch)=>{
+  console.log('actual async')
+  dispatch(requestPipeline());
+  dispatch(createQuery(query));
+
+  const url = window.xeniaHost + '/' + apiPrefix + 'exec';
+
+  var init = getInit('POST');
+  init.body = JSON.stringify(query);
+
+  fetch(url, init)
+    .then(response => response.json())
+    .then(json => {
+      dispatch(receivePipeline(json));
+    })
+    .catch(err => {
+      dispatch(dataExplorationFetchError(err));
+    });
+},1000)
 
 
 const receiveUpsertedUser = (user) => {

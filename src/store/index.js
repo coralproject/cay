@@ -1,11 +1,18 @@
-import { createStore, applyMiddleware, compose } from "redux";
-import thunk from "redux-thunk";
+import { createStore, applyMiddleware, compose } from 'redux';
+import thunk from 'redux-thunk';
 import { devTools } from 'redux-devtools';
 import createHistory from 'history/lib/createBrowserHistory';
+import createDebounce from 'redux-debounce';
 
-import rootReducer from "../reducers";
+import rootReducer from '../reducers';
 
-const middleware = [thunk];
+const debounceConfig = {
+  userMangerFilters: 500
+};
+
+const debouncer = createDebounce(debounceConfig);
+
+const middleware = [thunk, debouncer];
 
 let finalCreateStore;
 

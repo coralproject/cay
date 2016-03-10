@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import {clamp} from '../utils';
 
 export const CONFIG_LOADED = 'CONFIG_LOADED';
 export const DATA_CONFIG_LOADED = 'DATA_CONFIG_LOADED';
@@ -622,11 +623,11 @@ export const makeQueryFromState = (/*type*/) => {
 
       // Only create match statements for non-defaults
       if (filter.min !== filter.userMin) {
-        matches.push( {$match: {[dbField]: {$gte: filter.userMin}}});
+        matches.push( {$match: {[dbField]: {$gte: clamp(filter.userMin, filter.min, filter.max)}}});
       }
 
       if (filter.max !== filter.userMax) {
-        matches.push( {$match: {[dbField]: {$lte: filter.userMax}}});
+        matches.push( {$match: {[dbField]: {$lte: clamp(filter.userMax, filter.min, filter.max)}}});
       }
 
       return matches;

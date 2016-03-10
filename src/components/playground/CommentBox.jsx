@@ -32,11 +32,9 @@ class CommentBox extends React.Component {
   }
 
   onToolBarClick(style) {
-    const {editorState} = this.state;
+    const { editorState } = this.state;
     var newState = RichUtils.toggleInlineStyle(editorState, style);
     this.onChange(newState);
-    console.log("Bold click");
-    console.log(newState);
   }
 
   onSendClick() {
@@ -83,7 +81,10 @@ class CommentBox extends React.Component {
   render() {
 
     const {editorState} = this.state;
-    console.log('render');
+    var inlineStyles = [];    
+    editorState.getCurrentInlineStyle().map((style) => {
+      inlineStyles.push(style);
+    });
 
     var toolBar = this.props.togglerGroups['content'].togglers['rich_content'].status 
       || this.props.togglerGroups['content'].togglers['emoji'].status
@@ -92,8 +93,16 @@ class CommentBox extends React.Component {
           {  
             this.props.togglerGroups['content'].togglers['rich_content'].status ? 
               <span>
-                <button onClick={ this.onToolBarClick.bind(this, 'BOLD') } style={ styles.toolBarButton }><MdFormatBold /></button>
-                <button onClick={ this.onToolBarClick.bind(this, 'ITALIC') } style={ styles.toolBarButton }><MdFormatItalic /></button>
+                <button 
+                  onClick={ this.onToolBarClick.bind(this, 'BOLD') } 
+                  style={ [ styles.toolBarButton, inlineStyles.indexOf('BOLD') >= 0 ? styles.toolBarActive : "" ] }>
+                  <MdFormatBold />
+                </button>
+                <button 
+                  onClick={ this.onToolBarClick.bind(this, 'ITALIC') } 
+                  style={ [ styles.toolBarButton, inlineStyles.indexOf('ITALIC') >= 0 ? styles.toolBarActive : "" ] }>
+                  <MdFormatItalic />
+                </button>
                 <button style={ styles.toolBarButton }><MdLink /></button>
                 <button style={ styles.toolBarButton }><MdFormatQuote /></button>
               </span>
@@ -180,6 +189,9 @@ var styles = {
     borderBottom: '0',
     background: 'none',
     fontSize: '12pt'
+  },
+  toolBarActive: {
+    background: 'rgba(0,0,0,.3)'
   },
   heart: {
     color: '#900'

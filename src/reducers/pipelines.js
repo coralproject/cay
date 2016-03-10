@@ -10,6 +10,7 @@ const initialState = {
   pipelines: [],
   users: [],
   comments: [],
+  groups: [],
   tags: [],
   userDetailComments: null,
   loadingUserComments: false
@@ -40,7 +41,10 @@ const pipelines = (state = initialState, action) => {
         loading: false,
         // this probably isn't the final way to do this.
         // queries will eventually be length > 1
-        pipelines: action.pipelines.filter(pipe => pipe.queries[0].collection === 'user')
+        groups: action.pipelines,
+        pipelines: action.pipelines.filter(pipe => {
+          return pipe.queries[0].collection === 'user_statistics' && pipe.name !== 'user_search';
+        })
       }
     );
 
@@ -62,7 +66,14 @@ const pipelines = (state = initialState, action) => {
     return Object.assign({}, state, {loadingUserComments: true});
 
   case types.COMMENTS_SUCCESS:
-    return Object.assign({}, state, {loadingUserComments: false, userDetailComments: action.data.results[0].Docs});
+    return Object.assign(
+      {},
+      state,
+      {
+        loadingUserComments: false,
+        userDetailComments: action.data.results[0].Docs
+      }
+    );
 
   case types.CLEAR_USER_DETAIL_COMMENTS:
     return Object.assign({}, state, {userDetailComments: null});

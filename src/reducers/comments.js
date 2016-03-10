@@ -6,9 +6,7 @@ const initialState = {
 };
 
 const comments = (state = initialState, action) => {
-
   switch (action.type) {
-
     case types.COMMENT_CLICK:
       return state;
 

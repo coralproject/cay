@@ -11,14 +11,19 @@ import { DevTools, DebugPanel, LogMonitor } from 'redux-devtools/lib/react';
 
 import configureStore from './store';
 
-import Dashboard from './containers/Dashboard';
+// import Dashboard from './containers/Dashboard';
 import UserManager from './containers/UserManager';
 import TagManager from './containers/TagManager';
 import Login from './containers/Login';
-import DataExplorer from './containers/DataExplorer';
 import Playground from './containers/playground';
+// import DataExplorer from './containers/DataExplorer';
+import SeeAllGroups from './containers/SeeAllGroups.jsx';
 import GroupDetail from './containers/GroupDetail';
 import NoMatch from './containers/NoMatch';
+import About from './containers/About';
+import Feedback from './containers/Feedback';
+
+import ga from 'react-ga';
 
 const store = configureStore();
 
@@ -42,6 +47,15 @@ import { Lang } from './lang';
 @Lang
 class Root extends React.Component {
 
+  constructor(props){
+    super(props);
+    ga.initialize(window.googleAnalyticsId, { debug: (process && process.env.NODE_ENV !== 'production') });
+  }
+
+  logPageView() {
+    ga.pageview(this.state.location.pathname);
+  }
+
   render() {
 
     if (process && process.env.NODE_ENV !== 'production') {
@@ -55,14 +69,15 @@ class Root extends React.Component {
     return (
       <div>
         <Provider store={store}>
-          <Router history={browserHistory}>
+          <Router history={browserHistory} onUpdate={ this.logPageView }>
             <Route path="/" component={UserManager} />
             <Route path="login" component={Login} />
-            <Route path="user-manager" component={UserManager} />
+            <Route path="about" component={About} />
+            <Route path="group-creator" component={UserManager} />
             <Route path="tag-manager" component={TagManager} />
-            <Route path="filters" component={UserManager} />
-            <Route path="filter/:name" component={GroupDetail} />
             <Route path="playground" component={Playground}/>
+            <Route path="groups" component={SeeAllGroups}/>
+            <Route path="group/:name" component={GroupDetail} />
             <Route path="*" component={NoMatch} />
             {/*<Route path="explore" component={DataExplorer} />*/}
           </Router>
@@ -73,25 +88,27 @@ class Root extends React.Component {
   }
 }
 
-fetch('/config.json')
-  .then(res => res.json())
-  .then(config => {
+const loadConfig = (requiredKeys, file, actionType) => {
+  return fetch(file)
+    .then(res => res.json())
+    .then(config => {
+      requiredKeys.forEach(key => {
+        if (!config[key]) throw new Error(`${key} is not set in ${file}. Coral will not work correctly.`);
+        window[key] = config[key];
+      });
 
-    for (var key in config) {
-      window[key] = config[key];
-    }
+      store.dispatch({type: actionType, config});
+    });
+};
 
-    if (!window.xeniaHost) throw new Error('xeniaHost is not set in config.json. Coral will not work correctly.');
-    if (!window.pillarHost) throw new Error('pillarHost is not set in config.json. Coral will not work correctly.');
-    if (!window.basicAuthorization) throw new Error('basicAuthorization is not set in config.json. Coral will not work correctly');
+const requiredEnvKeys = [ 'xeniaHost', 'pillarHost', 'basicAuthorization', 'environment', 'googleAnalyticsId', 'requireLogin' ];
+const requiredDataKeys = ['filters', 'dimensions'];
+const setupEnv = loadConfig(requiredEnvKeys, './config.json', 'CONFIG_LOADED');
+const setupData = loadConfig(requiredDataKeys, './data_config.json', 'DATA_CONFIG_LOADED');
 
-    ReactDOM.render(<Root/>, document.getElementById('root'));
-  })
-  .catch(err => {
-
-    console.error('Error while fetching config.json: ', err);
-    document.body.innerHTML = 'you need to create ./config.json, or it is invalid JSON';
-  });
+Promise.all([setupEnv, setupData]).then(() => {
+  ReactDOM.render(<Root/>, document.getElementById('root'));
+}); // there is no catch here because we want redbox-react to display the error screen (on dev)
 
 // prevent browser from navigating backwards if you hit the backspace key
 document.addEventListener('keydown', function (e) {

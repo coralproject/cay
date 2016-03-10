@@ -1,3 +1,8 @@
+import _ from 'lodash';
+
+export const CONFIG_LOADED = 'CONFIG_LOADED';
+export const DATA_CONFIG_LOADED = 'DATA_CONFIG_LOADED';
+
 export const PIPELINE_SELECTED = 'PIPELINE_SELECTED';
 export const PIPELINE_REQUEST = 'PIPELINE_REQUEST'; // request data for a single pipeline
 export const PIPELINES_REQUEST = 'PIPELINES_REQUEST';
@@ -27,8 +32,10 @@ export const DATA_EXPLORATION_FETCH_ERROR = 'DATA_EXPLORATION_FETCH_ERROR';
 export const REQUEST_EXPLORER_CONTROLS = 'REQUEST_EXPLORER_CONTROLS';
 export const RECEIVE_EXPLORER_CONTROLS = 'RECEIVE_EXPLORER_CONTROLS';
 
-export const REQUEST_AUTHORS_AND_SECTIONS = 'REQUEST_AUTHORS_AND_SECTIONS';
-export const RECEIVE_AUTHORS_AND_SECTIONS = 'RECEIVE_AUTHORS_AND_SECTIONS';
+export const REQUEST_SECTIONS = 'REQUEST_SECTIONS';
+export const RECEIVE_SECTIONS = 'RECEIVE_SECTIONS';
+export const REQUEST_AUTHORS = 'REQUEST_AUTHORS';
+export const RECEIVE_AUTHORS = 'RECEIEVE_AUTHORS';
 
 export const USER_SELECTED = 'USER_SELECTED';
 
@@ -46,12 +53,16 @@ export const FILTER_CHANGED = 'FILTER_CHANGED';
 export const CREATE_QUERY = 'CREATE_QUERY';
 export const SUBMIT_CUSTOM_QUERY = 'SUBMIT_CUSTOM_QUERY';
 export const RECEIVE_USER_LIST = 'RECEIVE_USER_LIST';
+
+export const SET_BREAKDOWN = 'SET_BREAKDOWN';
+export const SET_SPECIFIC_BREAKDOWN = 'SET_SPECIFIC_BREAKDOWN';
+
 /* config */
 
-var getInit = (method) => {
-  var headers = new Headers({'Authorization': window.basicAuthorization});
+const getInit = (method) => {
+  const headers = new Headers({'Authorization': window.basicAuthorization});
 
-  var init = {
+  const init = {
     method: method || 'GET',
     headers: headers,
     mode: 'cors',
@@ -72,7 +83,7 @@ export const selectPipeline = (pipeline) => {
 
 export const requestPipeline = (pipeline) => {
   return {
-    type: PIPELINES_REQUEST,
+    type: PIPELINE_REQUEST,
     pipeline
   };
 };
@@ -98,47 +109,15 @@ export const requestPipelinesFailure = (err) => {
 };
 
 export const fetchPipelinesIfNotFetched = () => {
-
   return (dispatch, getState) => {
-
     if (! getState().pipelines.loading) {
       return dispatch(fetchPipelines());
     }
-
     return {
       type: 'NOOP'
     };
-
-  };
-
-};
-
-export const requestAuthorsAndSections = () => {
-  return {
-    type: REQUEST_AUTHORS_AND_SECTIONS
   };
 };
-
-export const receiveAuthorsAndSections = (data) => {
-  return {
-    type: RECEIVE_AUTHORS_AND_SECTIONS,
-    data
-  };
-};
-
-export const fetchAuthorsAndSections = () => {
-  return (dispatch) => {
-    dispatch(requestAuthorsAndSections());
-
-    fetch(window.xeniaHost + '/1.0/exec/author_and_section_list', getInit())
-      .then(response => response.json())
-      .then(json => dispatch(receiveAuthorsAndSections(json)))
-      .catch(err => {
-        console.log('oh no. failed to get authors and section list', err);
-      });
-  };
-};
-
 
 // get deep list of query_sets
 export const fetchPipelines = () => {
@@ -186,6 +165,70 @@ export const executeCustomPipeline = pipeline => {
   };
 };
 
+export const requestSections = () => {
+  return {
+    type: REQUEST_SECTIONS
+  };
+};
+
+export const receiveSections = (data) => {
+  return {
+    type: RECEIVE_SECTIONS,
+    data
+  };
+};
+
+export const fetchSections = () => {
+  return (dispatch) => {
+    dispatch(requestSections());
+
+    fetch(window.xeniaHost + '/1.0/exec/dimension_section_list', getInit())
+      .then(response => response.json())
+      .then(json => dispatch(receiveSections(json)))
+      .catch(err => {
+        console.log('oh no. failed to get section list', err);
+      });
+  };
+};
+
+export const requestAuthors = () => {
+  return { type: REQUEST_AUTHORS };
+};
+
+export const receiveAuthors = (data) => {
+  return {
+    type: RECEIVE_AUTHORS,
+    data
+  };
+};
+
+export const fetchAuthors = () => {
+  return dispatch => {
+    dispatch(requestAuthors());
+
+    fetch(window.xeniaHost + '/1.0/exec/dimension_author_list', getInit())
+      .then(response => response.json())
+      .then(json => dispatch(receiveAuthors(json)))
+      .catch(err => {
+        console.log('you failed to get the authors list!', err);
+      });
+  };
+};
+
+export const setBreakdown = (breakdown) => {
+  return {
+    type: SET_BREAKDOWN,
+    breakdown
+  };
+};
+
+export const setSpecificBreakdown = (specificBreakdown) => {
+  return {
+    type: SET_SPECIFIC_BREAKDOWN,
+    specificBreakdown
+  };
+};
+
 /* stuff for the login screen */
 
 export const initLogin = (username, password) => {
@@ -203,10 +246,11 @@ export const loginUser = (username, password) => {
   };
 };
 
-
 export const fetchCommentsByUser = (user_id) => {
   const url = `${window.xeniaHost}/${apiPrefix}exec/comments_by_user?user_id=${user_id}`;
   return (dispatch) => {
+
+    dispatch(clearUserDetailComments());
     dispatch(requestComments());
 
     var myRequest = new Request(url, getInit());
@@ -218,15 +262,6 @@ export const fetchCommentsByUser = (user_id) => {
         dispatch(storeComments(json));
       })
       .catch(err => dispatch(receiveCommentsFailure(err)));
-
-
-/*      .then(response => {
-        dispatch(COMMENTS_SUCCESS, response);
-        console.log(response);
-      })
-      .catch(err => {
-        console.log(err);
-      });*/
   };
 };
 
@@ -334,7 +369,6 @@ export const fetchDataExplorationDataset = (field, queryParams) => {
         dispatch(receiveDataExplorationDataset(json));
       })
       .catch(err => {
-        console.log('fetchDataExplorationDataset error', err);
         dispatch(dataExplorationFetchError(err));
       });
     } else {
@@ -370,7 +404,6 @@ export const populateControlsReducer = () => {
 };
 
 const loginInit = (email, pass) => {
-
   return {
     type: LOGIN_INIT,
     email,
@@ -474,7 +507,6 @@ export const fetchAllTags = () => {
 };
 
 export const filterChanged = (fieldName, data) => {
-  console.log(FILTER_CHANGED, fieldName, data);
   return {
     type: FILTER_CHANGED,
     fieldName,
@@ -493,7 +525,32 @@ export const makeQueryFromState = (type) => {
   return (dispatch, getState) => {
     // make a query from the current state
     let filterState = getState().filters;
-    console.log(type, filterState);
+    let filterPresets = window.filters;
+
+    let matches = _.flatten(_.map(filterPresets, filter => {
+      let dbField;
+      if (filterState.breakdown === 'author') {
+        dbField = _.template(filter.template)({dimension: 'author.' + filterState.specificBreakdown});
+      } else if (filterState.breakdown === 'section') {
+        dbField = _.template(filter.template)({dimension: 'section.' + filterState.specificBreakdown});
+      } else { // all
+        dbField = _.template(filter.template)({dimension: 'all'});
+      }
+
+      var matches = [];
+
+      // Only create match statements for non-defaults
+      if (filter.min !== filterState[filter.field].userMin) {
+        matches.push( {$match: {[dbField]: {$gte: filterState[filter.field].userMin}}});
+      }
+
+      if (filter.max !== filterState[filter.field].userMax) {
+        matches.push( {$match: {[dbField]: {$lte: filterState[filter.field].userMax}}});
+      }
+
+      return matches;
+
+    }));
 
     let query = {
       name: 'user_search',
@@ -505,19 +562,23 @@ export const makeQueryFromState = (type) => {
         {
           name: 'user_search',
           type: 'pipeline',
-          collection: 'users',
+          collection: 'user_statistics',
           commands: [
-            {$match: {'stats.accept_ratio': {$gte: filterState['stats.accept_ratio'].userMin}}},
-            {$match: {'stats.accept_ratio': {$lte: filterState['stats.accept_ratio'].userMax}}},
-            {$match: {'stats.comments.total': {$gte: filterState['stats.comments.total'].userMin}}},
-            {$match: {'stats.comments.total': {$lte: filterState['stats.comments.total'].userMax}}},
-            {$match: {'stats.replies': {$gte: filterState['stats.replies'].userMin}}},
-            {$match: {'stats.replies': {$lte: filterState['stats.replies'].userMax}}},
-            {$match: {'stats.replies_per_comment': {$gte: filterState['stats.replies_per_comment'].userMin}}},
-            {$match: {'stats.replies_per_comment': {$lte: filterState['stats.replies_per_comment'].userMax}}},
-            {$sort: {'stats.comments.total': -1}},
+            ...matches,
+            // {$sort: {'statistics.comments.all.all.count': -1}},
             {$skip: 0},
             {$limit: 20}
+            // {
+            //   $redact: {
+            //     $cond: {
+            //       if: {
+            //         $eq: [{$ifNull: ['$reply_comments', true]}, true]
+            //       },
+            //       then: '$$DESCEND',
+            //       else: '$$PRUNE'
+            //     }
+            //   }
+            // }
           ],
           return: true
         }
@@ -525,6 +586,9 @@ export const makeQueryFromState = (type) => {
       enabled: true
     };
 
+    // console.log(JSON.stringify(query, null, 2));
+
+    dispatch(requestPipeline());
     dispatch(createQuery(query));
 
     const url = window.xeniaHost + '/' + apiPrefix + 'exec';

@@ -36,7 +36,7 @@ export default class UserManager extends React.Component {
 
       <Page>
 
-        <ContentHeader title={ window.L.t('User Manager') } />
+        <ContentHeader title={ window.L.t('Group Creator') } />
 
         <div style={styles.base}>
           <UserFormulaContainer/>
@@ -62,13 +62,9 @@ const styles = {
   },
   pipelineList: {
     flex: 1,
-    marginLeft: 5,
-    marginRight: 5
   },
   userList: {
     flex: 1,
-    marginLeft: 5,
-    marginRight: 5
   },
   userDetail: {
     flex: 2,

@@ -23,14 +23,14 @@ class Login extends React.Component {
     // use react-router to push state?
     if (this.props.authorized) {
       let {router} = this.context;
-      router.push('/user-manager');
+      router.push('/group-creator');
     }
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.authorized) {
       let {router} = this.context;
-      router.push('/user-manager');
+      router.push('/group-creator');
     }
   }
 
@@ -70,7 +70,7 @@ class Login extends React.Component {
               label="password" />
 
             {
-              this.props.authorized === false ? 
+              this.props.authorized === false ?
                 <p style={ styles.unauthorizedMessage }>Invalid username or password.</p>
               :
                 null
@@ -84,7 +84,7 @@ class Login extends React.Component {
             >
               Log In
             </Button>
-            <Link style={styles.loginRequest} to="https://coralproject.net/beta-testers/">How can I request a login?</Link>
+            <a style={styles.loginRequest} href="https://coralproject.net/beta-testers/">How can I request a login?</a>
           </div>
         </div>
       </div>

@@ -109,7 +109,7 @@ const filters = (state = initialState, action) => {
 
     _.each(newFilters, f => {
 
-      f.userMin = Math.max(Math.max(f.userMin, f.min), f.max);
+      f.userMin = Math.min(Math.max(f.userMin, f.min), f.max);
       f.userMax = Math.min(Math.max(f.userMax, f.min), f.max);
       // f.userMin = _.clamp(f.userMin, f.min, f.max);
       // f.userMax = _.clamp(f.userMax, f.min, f.max);

@@ -3,7 +3,7 @@
 import React from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
-import {makeQueryFromState, getFilterRanges} from '../actions';
+import {getFilterRanges} from '../actions';
 import Button from './Button';
 import Spinner from './Spinner';
 
@@ -19,13 +19,7 @@ export default class PipelineCreator extends React.Component {
 
   componentDidMount() {
     this.props.dispatch(getFilterRanges('user'));
-    this.props.dispatch(makeQueryFromState('user'));
   }
-
-  handleCreatePipeline() {
-    this.props.dispatch(makeQueryFromState('user'));
-  }
-
   // we don't want to request 10000 hourly intervals,
   // so compute resonable bin size
   getSensibleInterval(start, end) {
@@ -44,29 +38,9 @@ export default class PipelineCreator extends React.Component {
   }
 
   render() {
-
     return (
       <div>
-
         {FilterFactory.makeFilters('user')}
-
-        <div>
-          <Button
-            style={styles.previewButton}
-            category="primary"
-            disabled={ this.props.loadingUserList }
-            onClick={this.handleCreatePipeline.bind(this)}>
-            {
-              this.props.loadingUserList ?
-                <span>
-                  <Spinner /> Loading...
-                </span>
-              :
-                'Preview'
-            }
-          </Button>
-          <Button disabled>Save (Coming Soon)</Button>
-        </div>
       </div>
     );
   }

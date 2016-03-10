@@ -226,9 +226,14 @@ export const setBreakdown = (breakdown) => {
 };
 
 export const setSpecificBreakdown = (specificBreakdown) => {
-  return {
-    type: SET_SPECIFIC_BREAKDOWN,
-    specificBreakdown
+  return (dispatch, getState) => {
+    let counter = getState().filters.counter;
+    counter++
+    dispatch({
+      type: SET_SPECIFIC_BREAKDOWN,
+      specificBreakdown: specificBreakdown,
+      counter
+    });
   };
 };
 
@@ -575,12 +580,19 @@ export const getFilterRanges = () => {
 };
 
 export const filterChanged = (fieldName, data) => {
-  return {
-    type: FILTER_CHANGED,
-    fieldName,
-    data
+  return (dispatch, getState) => {
+    let counter = getState().filters.counter;
+    counter++;
+
+    dispatch({
+      type: FILTER_CHANGED,
+      fieldName,
+      data,
+      counter
+    });
   };
 };
+
 
 export const createQuery = (query) => {
   return {
@@ -591,6 +603,7 @@ export const createQuery = (query) => {
 
 export const makeQueryFromState = (/*type*/) => {
   return (dispatch, getState) => {
+    console.log('function that calls async')
     // make a query from the current state
     const filterState = getState().filters;
     const filters = filterState.filterList.map(key => filterState[key]);
@@ -654,27 +667,30 @@ export const makeQueryFromState = (/*type*/) => {
       enabled: true
     };
 
-    // console.log(JSON.stringify(query, null, 2));
-
-    dispatch(requestPipeline());
-    dispatch(createQuery(query));
-
-    const url = window.xeniaHost + '/' + apiPrefix + 'exec';
-
-    var init = getInit('POST');
-    init.body = JSON.stringify(query);
-
-    fetch(url, init)
-      .then(response => response.json())
-      .then(json => {
-        dispatch(receivePipeline(json));
-      })
-      .catch(err => {
-        dispatch(dataExplorationFetchError(err));
-      });
+    doMakeQueryFromStateAsync(query, dispatch);
 
   };
 };
+
+const doMakeQueryFromStateAsync = _.debounce((query, dispatch)=>{
+  console.log('actual async')
+  dispatch(requestPipeline());
+  dispatch(createQuery(query));
+
+  const url = window.xeniaHost + '/' + apiPrefix + 'exec';
+
+  var init = getInit('POST');
+  init.body = JSON.stringify(query);
+
+  fetch(url, init)
+    .then(response => response.json())
+    .then(json => {
+      dispatch(receivePipeline(json));
+    })
+    .catch(err => {
+      dispatch(dataExplorationFetchError(err));
+    });
+},1000)
 
 
 const receiveUpsertedUser = (user) => {

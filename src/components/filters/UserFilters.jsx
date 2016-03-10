@@ -1,18 +1,21 @@
 import React from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
+import _ from 'lodash';
 import {
   fetchAllTags,
   fetchSections,
   fetchAuthors,
   setBreakdown,
-  setSpecificBreakdown
+  setSpecificBreakdown,
+  makeQueryFromState
 } from '../../actions';
 
 import Select from 'react-select';
 import FilterNumbers from './FilterNumbers';
 
 import Heading from '../Heading';
+
 
 @connect(state => state.filters)
 @Radium
@@ -26,8 +29,21 @@ export default class UserFilters extends React.Component {
     this.props.dispatch(fetchAllTags());
     this.props.dispatch(fetchSections());
     this.props.dispatch(fetchAuthors());
+    this.props.dispatch(makeQueryFromState('user'));
   }
-
+  componentWillUpdate(nextProps) {
+    /*
+      only a filter or breakdown change updates the counter in the reducer.
+      if a filter changed, we trigger ajax.
+    */
+    if (this.props.counter !== nextProps.counter) {
+      // a filter changed, fire ajax,
+      this.updateUserList();
+    }
+  }
+  updateUserList() {
+    this.props.dispatch(makeQueryFromState('user'));
+  }
   getTags() {
     return this.props.tags.map(tag => {
       return {label: tag.description, value: tag.name};
@@ -61,7 +77,7 @@ export default class UserFilters extends React.Component {
   }
 
   setSpecificBreakdown(specificBreakdown) {
-    console.log('setSpecificBreakdown', specificBreakdown.value);
+    // console.log('setSpecificBreakdown', specificBreakdown.value);
     this.props.dispatch(setSpecificBreakdown(specificBreakdown.value));
   }
 
@@ -72,14 +88,14 @@ export default class UserFilters extends React.Component {
   }
 
   getSections() {
-    console.log('getSections', this.props.sections);
+    // console.log('getSections', this.props.sections);
     return this.props.sections.map(section => {
       return {label: section.description, value: section.description};
     });
   }
 
   updateBreakdown(breakdown) {
-    console.log('updateBreakdown', breakdown);
+    // console.log('updateBreakdown', breakdown);
     this.props.dispatch(setBreakdown(breakdown.value));
     this.props.dispatch(setSpecificBreakdown(''));
   }
@@ -88,11 +104,12 @@ export default class UserFilters extends React.Component {
 
     const filters = this.props.filterList.map(key => this.props[key]);
     const userFilters = filters.filter(f => f.collection === 'user_statistics');
-    return userFilters.map(f => {
+    return userFilters.map((f,i) => {
       let filterComponent;
       if (f.type === 'numberRange' || f.type === 'percentRange') {
         filterComponent = (
           <FilterNumbers
+            key={i}
             min={f.min}
             max={f.max}
             userMin={f.userMin}

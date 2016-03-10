@@ -13,6 +13,7 @@ let initialState = {
   'last_login': null,
   'member_since': null,
   breakdown: 'all',
+  counter: 0, // this is a signal for ajax consumed by userFilters
   specificBreakdown: ''
   // 'stats.accept_ratio': {userMin: 0, userMax: 1},
   // 'stats.replies_per_comment': {userMin: 0, userMax: 1},
@@ -44,9 +45,10 @@ const filters = (state = initialState, action) => {
     return Object.assign({}, state, {loadingUserList: false});
 
   case types.FILTER_CHANGED:
+
     const oldFilter = state[action.fieldName];
     const newFilter = Object.assign({}, oldFilter, action.data);
-    return Object.assign({}, state, { [action.fieldName]: newFilter });
+    return Object.assign({}, state, { [action.fieldName]: newFilter, counter: action.counter });
 
   case types.REQUEST_ALL_TAGS:
     return Object.assign({}, state, {loadingTags: true});
@@ -79,7 +81,7 @@ const filters = (state = initialState, action) => {
     return Object.assign({}, state, {breakdown: action.breakdown});
 
   case types.SET_SPECIFIC_BREAKDOWN:
-    return Object.assign({}, state, {specificBreakdown: action.specificBreakdown});
+    return Object.assign({}, state, {specificBreakdown: action.specificBreakdown, counter: action.counter});
 
   case types.RECEIVE_FILTER_RANGES:
     const ranges = action.data.results[0].Docs[0];

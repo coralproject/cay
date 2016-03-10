@@ -7,7 +7,7 @@ import CommentDetail from './CommentDetail';
 export default class CommentDetailList extends React.Component {
 
   showComments(comments) {
-    console.log('showComments', comments);
+    // console.log('showComments', comments);
     if (comments && !comments.length) {
       return 'There are no comments.';
     } else {

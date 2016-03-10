@@ -2,7 +2,7 @@ import React from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
 import {filterChanged} from '../../actions';
-// import _ from 'lodash';
+import _ from 'lodash';
 // import Flex from '../layout/Flex';
 
 import Card from '../cards/Card';
@@ -145,6 +145,7 @@ export default class FilterNumbers extends React.Component {
     );
   }
 }
+
 
 /*
 

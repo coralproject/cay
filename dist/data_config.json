@@ -1,0 +1,83 @@
+{
+  "dimensions": [
+    {
+      "name": "all",
+      "label": "Anywhere",
+      "value": "all"
+    },
+    {
+      "name": "sections",
+      "label": "In a section",
+      "value": "sections",
+
+      "querySet": "dimension_section_list",
+      "labelField": "description",
+      "valueField": "description"
+    }
+  ],
+  "filters": [
+    {
+      "name": "Comments",
+      "category": "Activity",
+      "field": "count",
+      "template": "statistics.comments.<%= dimension %>.all.count",
+      "description": "total comments",
+      "collection": "user_statistics",
+      "type": "intRange"
+    },
+    {
+      "name": "Replied",
+      "category": "Activity",
+      "field": "replied_count",
+      "template": "statistics.comments.<%= dimension %>.all.replied_count",
+      "description": "replies they have written to others",
+      "collection": "user_statistics",
+      "type": "intRange"
+    },
+    {
+      "name": "Replies",
+      "category": "Response",
+      "field": "reply_count",
+      "template": "statistics.comments.<%= dimension %>.all.reply_count",
+      "description": "times other have replied to them",
+      "collection": "user_statistics",
+      "type": "intRange"
+    },
+    {
+      "name": "Replies per Comment",
+      "category": "Response",
+      "field": "replied_ratio",
+      "template": "statistics.comments.<%= dimension %>.all.replied_ratio",
+      "description": "Percent of comments that are replies",
+      "collection": "user_statistics",
+      "type": "percentRange"
+    },
+    {
+      "name": "Replied per Comment",
+      "category": "Response",
+      "field": "reply_ratio",
+      "template": "statistics.comments.<%= dimension %>.all.reply_ratio",
+      "description": "Replies from others per comment",
+      "collection": "user_statistics",
+      "type": "floatRange"
+    },
+    {
+      "name": "Average Wordcount",
+      "category": "Content",
+      "field": "word_count_average",
+      "template": "statistics.comments.<%= dimension %>.all.word_count_average",
+      "description": "Average words per post",
+      "collection": "user_statistics",
+      "type": "floatRange"
+    },
+    {
+      "name": "Percent SystemFlagged",
+      "category": "Moderation",
+      "field": "SystemFlagged",
+      "template": "statistics.comments.<%= dimension %>.ratios.SystemFlagged",
+      "description": "Percent of comments SystemFlagged",
+      "collection": "user_statistics",
+      "type": "percentRange"
+    }
+  ]
+}

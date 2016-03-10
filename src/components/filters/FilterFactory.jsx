@@ -30,7 +30,7 @@ var schema = {
 export default class FilterFactory extends React.Component {
   static makeFilters = (type) => {
 
-    if (!_.contains(Object.keys(schema), type)) {
+    if (!_.includes(Object.keys(schema), type)) {
       throw new Error(`FilterFactory type must be of type [${Object.keys(schema).join('|')}]`);
     }
 

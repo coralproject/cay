@@ -1,13 +1,13 @@
 import React from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
-import _ from 'lodash';
 import {
   fetchAllTags,
   fetchSections,
   fetchAuthors,
   setBreakdown,
   setSpecificBreakdown,
+  getFilterRanges,
   makeQueryFromState
 } from '../../actions';
 
@@ -79,6 +79,7 @@ export default class UserFilters extends React.Component {
   setSpecificBreakdown(specificBreakdown) {
     // console.log('setSpecificBreakdown', specificBreakdown.value);
     this.props.dispatch(setSpecificBreakdown(specificBreakdown.value));
+    this.props.dispatch(getFilterRanges('user'));
   }
 
   getAuthors() {
@@ -98,6 +99,9 @@ export default class UserFilters extends React.Component {
     // console.log('updateBreakdown', breakdown);
     this.props.dispatch(setBreakdown(breakdown.value));
     this.props.dispatch(setSpecificBreakdown(''));
+    if (breakdown.value === 'all') {
+      this.props.dispatch(getFilterRanges('user'));
+    }
   }
 
   getActiveFiltersFromConfig() {
@@ -106,7 +110,7 @@ export default class UserFilters extends React.Component {
     const userFilters = filters.filter(f => f.collection === 'user_statistics');
     return userFilters.map((f,i) => {
       let filterComponent;
-      if (f.type === 'numberRange' || f.type === 'percentRange') {
+      if (f.type === 'intRange' || f.type === 'percentRange' || f.type === 'floatRange') {
         filterComponent = (
           <FilterNumbers
             key={i}
@@ -116,6 +120,7 @@ export default class UserFilters extends React.Component {
             userMax={f.userMax}
             description={f.description}
             fieldName={f.key}
+            type={f.type}
             isPercentage={f.type === 'percentRange'} />
         );
       } else if (f.type === 'dateRange') {

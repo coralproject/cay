@@ -93,11 +93,14 @@ const loadConfig = (requiredKeys, file, actionType) => {
     .then(res => res.json())
     .then(config => {
       requiredKeys.forEach(key => {
-        if (typeof config[key] === "undefined") throw new Error(`${key} is not set in ${file}. Coral will not work correctly.`);
+        if (typeof config[key] === 'undefined') throw new Error(`${key} is not set in ${file}. Coral will not work correctly.`);
         window[key] = config[key];
       });
 
       store.dispatch({type: actionType, config});
+    }).catch(err => {
+      console.error(`Unable to load ${file}`);
+      console.error(err.stack);
     });
 };
 
@@ -108,6 +111,9 @@ const setupData = loadConfig(requiredDataKeys, './data_config.json', 'DATA_CONFI
 
 Promise.all([setupEnv, setupData]).then(() => {
   ReactDOM.render(<Root/>, document.getElementById('root'));
+}).catch(err => {
+  console.error('An Error occured rendering the <Root> element.');
+  console.error(err.stack);
 }); // there is no catch here because we want redbox-react to display the error screen (on dev)
 
 // prevent browser from navigating backwards if you hit the backspace key

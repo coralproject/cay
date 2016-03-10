@@ -30,7 +30,7 @@ const filters = (state = initialState, action) => {
     const filters = action.config.filters.reduce((accum, filter) => {
 
       const key = Math.random().toString().slice(2, 18);
-      accum[key] = Object.assign({}, filter, {userMin: filter.min, userMax: filter.max, key});
+      accum[key] = Object.assign({}, filter, {min: null, max: null, userMin: null, userMax: null, key});
 
       filterList.push(key);
 
@@ -89,25 +89,31 @@ const filters = (state = initialState, action) => {
     const newFilters = _.reduce(ranges, (accum, value, aggKey) => {
       let [key, field] = aggKey.split('_');
 
-      if (field === 'id') return accum;
+      if (field === 'id' || value === null) return accum;
 
       // we might have already updated the old filter with the min value
       // retrieve it from the accumulator in progress instead of the state
       let newFilter = _.has(accum, key) ? accum[key] : _.cloneDeep(state[key]);
       newFilter[field] = value; // where field is {min|max}
+      accum[key] = newFilter;
 
-      if (field === 'min') {
+      // on the first pass, go ahead and force a change on userMin and userMax
+      if (field === 'min' && _.isNull(newFilter.userMin)) {
         newFilter.userMin = value;
-      } else if (field === 'max') {
+      } else if (field === 'max' && _.isNull(newFilter.userMax)) {
         newFilter.userMax = value;
       }
-
-      accum[key] = newFilter;
 
       return accum;
     }, {});
 
-    return Object.assign({}, state, newFilters, {rangesLoaded: true});
+    // _.each(newFilters, f => {
+    //
+    //   f.userMin = Math.min(Math.max(f.userMin, f.min), f.max);
+    //   f.userMax = Math.min(Math.max(f.userMax, f.min), f.max);
+    // });
+
+    return Object.assign({}, state, newFilters);
 
   default:
     return state;

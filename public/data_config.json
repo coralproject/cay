@@ -22,10 +22,8 @@
       "field": "count",
       "template": "statistics.comments.<%= dimension %>.all.count",
       "description": "total comments",
-      "min": 0,
-      "max": 500,
       "collection": "user_statistics",
-      "type": "numberRange"
+      "type": "intRange"
     },
     {
       "name": "Replied",
@@ -33,10 +31,8 @@
       "field": "replied_count",
       "template": "statistics.comments.<%= dimension %>.all.replied_count",
       "description": "replies they have written to others",
-      "min": 0,
-      "max": 500,
       "collection": "user_statistics",
-      "type": "numberRange"
+      "type": "intRange"
     },
     {
       "name": "Replies",
@@ -44,10 +40,8 @@
       "field": "reply_count",
       "template": "statistics.comments.<%= dimension %>.all.reply_count",
       "description": "times other have replied to them",
-      "min": 0,
-      "max": 500,
       "collection": "user_statistics",
-      "type": "numberRange"
+      "type": "intRange"
     },
     {
       "name": "Replies per Comment",
@@ -55,8 +49,6 @@
       "field": "replied_ratio",
       "template": "statistics.comments.<%= dimension %>.all.replied_ratio",
       "description": "Percent of comments that are replies",
-      "min": 0,
-      "max": 1,
       "collection": "user_statistics",
       "type": "percentRange"
     },
@@ -66,10 +58,8 @@
       "field": "reply_ratio",
       "template": "statistics.comments.<%= dimension %>.all.reply_ratio",
       "description": "Replies from others per comment",
-      "min": 0,
-      "max": 50,
       "collection": "user_statistics",
-      "type": "numberRange"
+      "type": "floatRange"
     },
     {
       "name": "Average Wordcount",
@@ -77,10 +67,8 @@
       "field": "word_count_average",
       "template": "statistics.comments.<%= dimension %>.all.word_count_average",
       "description": "Average words per post",
-      "min": 0,
-      "max": 1000,
       "collection": "user_statistics",
-      "type": "numberRange"
+      "type": "floatRange"
     },
     {
       "name": "Percent SystemFlagged",
@@ -88,8 +76,6 @@
       "field": "SystemFlagged",
       "template": "statistics.comments.<%= dimension %>.ratios.SystemFlagged",
       "description": "Percent of comments SystemFlagged",
-      "min": 0,
-      "max": 1,
       "collection": "user_statistics",
       "type": "percentRange"
     }

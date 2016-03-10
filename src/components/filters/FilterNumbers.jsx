@@ -2,7 +2,7 @@ import React from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
 import {filterChanged} from '../../actions';
-import _ from 'lodash';
+import {clamp} from '../../utils';
 // import Flex from '../layout/Flex';
 
 import Card from '../cards/Card';
@@ -41,7 +41,7 @@ export default class FilterNumbers extends React.Component {
     super(props);
     this.state = {
       symbol: 'GTLT',
-      step: props.userMax - props.userMin <= 5 ? 0.01 : 1,
+      step: (props.type === 'floatRange' || props.type === 'percentRange') ? 0.01 : 1,
       equals: null
     };
   }
@@ -57,6 +57,10 @@ export default class FilterNumbers extends React.Component {
   }
   static defaultProps = {
     fieldName: 'UNDEFINED___'
+  }
+
+  componentWillReceiveProps(props) {
+    this.setState({step: (props.type === 'floatRange' || props.type === 'percentRange') ? 0.01 : 1});
   }
 
   handleSymbolClick(){
@@ -99,8 +103,11 @@ export default class FilterNumbers extends React.Component {
   }
   renderGTLT() {
 
-    var min = (this.props.isPercentage) ? Math.floor(this.props.userMin * 100) : this.props.userMin;
-    var max = (this.props.isPercentage) ? Math.floor(this.props.userMax * 100) : this.props.userMax;
+    const clampedUserMin = clamp(this.props.userMin, this.props.min, this.props.max);
+    const clampedUserMax = clamp(this.props.userMax, this.props.min, this.props.max);
+
+    var min = (this.props.isPercentage) ? Math.floor(clampedUserMin * 100) : clampedUserMin;
+    var max = (this.props.isPercentage) ? Math.floor(clampedUserMax * 100) : clampedUserMax;
 
     return (
       <div>
@@ -110,8 +117,8 @@ export default class FilterNumbers extends React.Component {
             min={this.props.min}
             max={this.props.max}
             step={this.state.step}
-            defaultValue={[this.props.userMin, this.props.userMax]}
-            value={[this.props.userMin, this.props.userMax]}
+            defaultValue={[clampedUserMin, clampedUserMax]}
+            value={[clampedUserMin, clampedUserMax]}
             onChange={this.updateSlider.bind(this)}
             withBars/>
         </div>
@@ -145,59 +152,3 @@ export default class FilterNumbers extends React.Component {
     );
   }
 }
-
-
-/*
-
-propTypes: {
-    // You can declare that a prop is a specific JS primitive. By default, these
-    // are all optional.
-    optionalArray: React.PropTypes.array,
-    optionalBool: React.PropTypes.bool,
-    optionalFunc: React.PropTypes.func,
-    optionalNumber: React.PropTypes.number,
-    optionalObject: React.PropTypes.object,
-    optionalString: React.PropTypes.string,
-
-    // Anything that can be rendered: numbers, strings, elements or an array
-    // (or fragment) containing these types.
-    optionalNode: React.PropTypes.node,
-
-    // A React element.
-    optionalElement: React.PropTypes.element,
-
-    // You can also declare that a prop is an instance of a class. This uses
-    // JS's instanceof operator.
-    optionalMessage: React.PropTypes.instanceOf(Message),
-
-    // You can ensure that your prop is limited to specific values by treating
-    // it as an enum.
-    optionalEnum: React.PropTypes.oneOf(['News', 'Photos']),
-
-    // An object that could be one of many types
-    optionalUnion: React.PropTypes.oneOfType([
-      React.PropTypes.string,
-      React.PropTypes.number,
-      React.PropTypes.instanceOf(Message)
-    ]),
-
-    // An array of a certain type
-    optionalArrayOf: React.PropTypes.arrayOf(React.PropTypes.number),
-
-    // An object with property values of a certain type
-    optionalObjectOf: React.PropTypes.objectOf(React.PropTypes.number),
-
-    // An object taking on a particular shape
-    optionalObjectWithShape: React.PropTypes.shape({
-      color: React.PropTypes.string,
-      fontSize: React.PropTypes.number
-    }),
-
-    // You can chain any of the above with `isRequired` to make sure a warning
-    // is shown if the prop isn't provided.
-    requiredFunc: React.PropTypes.func.isRequired,
-
-    // A value of any data type
-    requiredAny: React.PropTypes.any.isRequired,
-
-*/

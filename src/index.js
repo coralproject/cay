@@ -91,7 +91,7 @@ const loadConfig = (requiredKeys, file, actionType) => {
     .then(res => res.json())
     .then(config => {
       requiredKeys.forEach(key => {
-        if (typeof config[key] === "undefined") throw new Error(`${key} is not set in ${file}. Coral will not work correctly.`);
+        if (typeof config[key] === 'undefined') throw new Error(`${key} is not set in ${file}. Coral will not work correctly.`);
         window[key] = config[key];
       });
 

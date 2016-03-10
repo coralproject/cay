@@ -41,7 +41,7 @@ export default class FilterNumbers extends React.Component {
     super(props);
     this.state = {
       symbol: 'GTLT',
-      step: props.userMax - props.userMin <= 5 ? 0.01 : 1,
+      step: props.max - props.min <= 5 ? 0.01 : 1,
       equals: null
     };
   }
@@ -57,6 +57,10 @@ export default class FilterNumbers extends React.Component {
   }
   static defaultProps = {
     fieldName: 'UNDEFINED___'
+  }
+
+  componentWillReceiveProps(props) {
+    this.setState({step: props.max - props.min <= 5 ? 0.01 : 1});
   }
 
   handleSymbolClick(){

@@ -101,7 +101,9 @@ export default class UserFilters extends React.Component {
   }
 
   getActiveFiltersFromConfig() {
-    const userFilters = window.filters.filter(f => f.collection === 'user_statistics');
+
+    const filters = this.props.filterList.map(key => this.props[key]);
+    const userFilters = filters.filter(f => f.collection === 'user_statistics');
     return userFilters.map((f,i) => {
       let filterComponent;
       if (f.type === 'numberRange' || f.type === 'percentRange') {
@@ -110,10 +112,10 @@ export default class UserFilters extends React.Component {
             key={i}
             min={f.min}
             max={f.max}
-            userMin={this.props[f.field].userMin}
-            userMax={this.props[f.field].userMax}
+            userMin={f.userMin}
+            userMax={f.userMax}
             description={f.description}
-            fieldName={f.field}
+            fieldName={f.key}
             isPercentage={f.type === 'percentRange'} />
         );
       } else if (f.type === 'dateRange') {

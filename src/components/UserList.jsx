@@ -25,11 +25,16 @@ export default class UserList extends React.Component {
     this.props.dispatch(userSelected(user));
     this.props.dispatch(fetchCommentsByUser(user._id));
   }
-
+  setAsActiveHandler(index) {
+    this.setState({activeUserIndex: index});
+  }
   getUserList(users) {
     return users.map((user, i) => {
       return (
         <UserRow {...this.props}
+          active={this.state.activeUserIndex === i ? true : false}
+          setAsActive={this.setAsActiveHandler.bind(this)}
+          activeIndex={i}
           user={user}
           onClick={this.getUser.bind(this)}
           key={i} />

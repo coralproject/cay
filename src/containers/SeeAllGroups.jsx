@@ -39,7 +39,8 @@ class SeeAllGroups extends React.Component {
   }
   componentWillMount() {
     // redirect user to /login if they're not logged in
-    if (!this.props.authorized) {
+    //   TODO: refactor: pass in a function that calculates auth state
+    if (window.requireLogin && !this.props.authorized) {
       let {router} = this.context;
       return router.push('/login');
     }

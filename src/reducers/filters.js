@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import * as types from '../actions';
 
 let initialState = {
@@ -23,24 +24,31 @@ let initialState = {
 const filters = (state = initialState, action) => {
   switch (action.type) {
 
+  // this should run before any ReactDOM stuff happens
   case types.DATA_CONFIG_LOADED:
+    const filterList = [];
     const filters = action.config.filters.reduce((accum, filter) => {
-      accum[filter.field] = filter;
-      accum[filter.field].userMin = filter.min;
-      accum[filter.field].userMax = filter.max;
+
+      const key = Math.random().toString().slice(2, 18);
+      accum[key] = Object.assign({}, filter, {userMin: filter.min, userMax: filter.max, key});
+
+      filterList.push(key);
+
       return accum;
     }, {});
-    return Object.assign({}, state, filters);
+    return Object.assign({}, state, filters, {filterList});
 
   case types.CREATE_QUERY:
     return Object.assign({}, state, {loadingUserList: true});
 
   case types.RECEIVE_USER_LIST:
-    console.log(action);
     return Object.assign({}, state, {loadingUserList: false});
 
   case types.FILTER_CHANGED:
-    return Object.assign({}, state, { [action.fieldName]: action.data, counter: action.counter });
+
+    const oldFilter = state[action.fieldName];
+    const newFilter = Object.assign({}, oldFilter, action.data);
+    return Object.assign({}, state, { [action.fieldName]: newFilter, counter: action.counter });
 
   case types.REQUEST_ALL_TAGS:
     return Object.assign({}, state, {loadingTags: true});
@@ -74,6 +82,32 @@ const filters = (state = initialState, action) => {
 
   case types.SET_SPECIFIC_BREAKDOWN:
     return Object.assign({}, state, {specificBreakdown: action.specificBreakdown, counter: action.counter});
+
+  case types.RECEIVE_FILTER_RANGES:
+    const ranges = action.data.results[0].Docs[0];
+
+    const newFilters = _.reduce(ranges, (accum, value, aggKey) => {
+      let [key, field] = aggKey.split('_');
+
+      if (field === 'id') return accum;
+
+      // we might have already updated the old filter with the min value
+      // retrieve it from the accumulator in progress instead of the state
+      let newFilter = _.has(accum, key) ? accum[key] : _.cloneDeep(state[key]);
+      newFilter[field] = value; // where field is {min|max}
+
+      if (field === 'min') {
+        newFilter.userMin = value;
+      } else if (field === 'max') {
+        newFilter.userMax = value;
+      }
+
+      accum[key] = newFilter;
+
+      return accum;
+    }, {});
+
+    return Object.assign({}, state, newFilters, {rangesLoaded: true});
 
   default:
     return state;

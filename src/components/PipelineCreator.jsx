@@ -3,6 +3,7 @@
 import React from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
+import {getFilterRanges} from '../actions';
 import Button from './Button';
 import Spinner from './Spinner';
 
@@ -16,6 +17,9 @@ export default class PipelineCreator extends React.Component {
     super(props);
   }
 
+  componentDidMount() {
+    this.props.dispatch(getFilterRanges('user'));
+  }
   // we don't want to request 10000 hourly intervals,
   // so compute resonable bin size
   getSensibleInterval(start, end) {

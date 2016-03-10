@@ -1,7 +1,5 @@
 import * as types from '../actions';
-import min from 'lodash/collection/min';
-import max from 'lodash/collection/max';
-import map from 'lodash/collection/map';
+import _ from 'lodash';
 
 const data_exploration = (state = {
   authors: [],
@@ -29,8 +27,8 @@ const data_exploration = (state = {
     /* TODO this assumes it has the property 'start' */
     if (state.datasetName !== action.data.results[0].Name) {
       pipelineTimeRange = {
-        pipelineRangeStart: min(map(action.data.results[0].Docs, 'start')) * 1000,
-        pipelineRangeEnd: max(map(action.data.results[0].Docs, 'start')) * 1000
+        pipelineRangeStart: _.min(_.map(action.data.results[0].Docs, 'start')) * 1000,
+        pipelineRangeEnd: _.max(_.map(action.data.results[0].Docs, 'start')) * 1000
       };
     }
     return Object.assign({}, state, {

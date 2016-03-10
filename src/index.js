@@ -97,8 +97,8 @@ const loadConfig = (requiredKeys, file, actionType) => {
 
       store.dispatch({type: actionType, config});
     }).catch(err => {
-      console.log(`unable to load ${file}`);
-      console.log(err.stack);
+      console.error(`Unable to load ${file}`);
+      console.error(err.stack);
     });
 };
 
@@ -110,8 +110,8 @@ const setupData = loadConfig(requiredDataKeys, './data_config.json', 'DATA_CONFI
 Promise.all([setupEnv, setupData]).then(() => {
   ReactDOM.render(<Root/>, document.getElementById('root'));
 }).catch(err => {
-  console.log('something happened in react');
-  console.log(err.stack);
+  console.error('An Error occured rendering the <Root> element.');
+  console.error(err.stack);
 }); // there is no catch here because we want redbox-react to display the error screen (on dev)
 
 // prevent browser from navigating backwards if you hit the backspace key

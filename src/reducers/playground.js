@@ -411,6 +411,9 @@ const playground = (state = initialState, action) => {
     toggleGroupsUpdater[action.groupIndex].togglers[action.togglerIndex].status = action.status;
     return Object.assign({}, state, { toggleGroups: toggleGroupsUpdater });
 
+  case types.SEND_COMMENT:
+    return Object.assign({}, state, { comments: [ action.comment, ...state.comments ] });
+
   default:
     console.log('Not a Playground action:', action.type);
     return state;

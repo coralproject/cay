@@ -4,6 +4,7 @@ export const SET_TOGGLER = "SET_TOGGLER";
 export const SET_TOPIC = "SET_TOPIC";
 export const LIKE_COMMENT = "LIKE_COMMENT";
 export const UNLIKE_COMMENT = "UNLIKE_COMMENT";
+export const SEND_COMMENT = "SEND_COMMENT";
 
 export const showCustomizer = () => {
   return {
@@ -44,6 +45,13 @@ export const unLikeComment = (index) => {
   return {
     type: UNLIKE_COMMENT,
     index: index
+  };
+};
+
+export const sendComment = (comment) => {
+  return {
+    type: SEND_COMMENT,
+    comment: comment
   };
 };
 

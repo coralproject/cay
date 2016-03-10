@@ -115,6 +115,7 @@ const styles = {
     height: '100%',
     overflowY: 'auto',
     'float': 'left',
+    background: 'linear-gradient(to right, rgba(247,114,96,1) 0%, rgba(252,149,70,1) 100%)',
     [mediaQueries.desktop]: {
       width: '40%'
     },
@@ -221,3 +222,4 @@ const styles = {
     zIndex: '9000'
   }
 };
+

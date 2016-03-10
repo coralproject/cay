@@ -29,14 +29,13 @@ class CommentContent extends React.Component {
     if (this.props.togglerGroups["content"].togglers["emoji"].status) {
       content = ReactEmoji.emojify(content);
     }
-    return content;
+    return { __html: content };
   }
 
   render() {
 
     return (
-      <div style={ styles.commentContent }>
-        { this.formatContent(this.filterContent(this.props.content)) }
+      <div style={ styles.commentContent } dangerouslySetInnerHTML={ this.formatContent(this.filterContent(this.props.content)) }>
       </div>
     );
 

@@ -48,7 +48,7 @@
       "category": "Response",
       "field": "replied_ratio",
       "template": "statistics.comments.<%= dimension %>.all.replied_ratio",
-      "description": "Percent of comments that are replies",
+      "description": "% comments that are replies",
       "collection": "user_statistics",
       "type": "percentRange"
     },
@@ -75,7 +75,7 @@
       "category": "Moderation",
       "field": "SystemFlagged",
       "template": "statistics.comments.<%= dimension %>.ratios.SystemFlagged",
-      "description": "Percent of comments SystemFlagged",
+      "description": "% comments SystemFlagged",
       "collection": "user_statistics",
       "type": "percentRange"
     }

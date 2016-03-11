@@ -68,7 +68,7 @@
       "template": "statistics.comments.<%= dimension %>.all.word_count_average",
       "description": "Average words per post",
       "collection": "user_statistics",
-      "type": "floatRange"
+      "type": "intRange"
     },
     {
       "name": "Percent SystemFlagged",

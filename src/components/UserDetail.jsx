@@ -102,14 +102,14 @@ export default class UserDetail extends React.Component {
     let statsList = [];
     if (this.props.selectedUser &&  _.has(this.props, 'statistics.comments.all.all')) {
       statsList = statsList.concat([
-        <Stat term="total comment count" description={this.props.statistics.comments.all.all.count} />,
-        <Stat term="replied count" description={this.props.statistics.comments.all.all.replied_count} />,
-        <Stat term="reply count" description={this.props.statistics.comments.all.all.reply_count} />,
-        <Stat term="reply ratio" description={this.props.statistics.comments.all.all.reply_ratio} />
+        <Stat term="Total comment count" description={this.props.statistics.comments.all.all.count} />,
+        <Stat term="Total replies received" description={this.props.statistics.comments.all.all.replied_count} />,
+        <Stat term="Total replies written" description={this.props.statistics.comments.all.all.reply_count} />,
+        <Stat term="% comments that are replies" description={Math.floor(this.props.statistics.comments.all.all.reply_ratio * 100) + '%'} />
       ]);
 
       if (_.has(this.props, 'statistics.comments.all.CommunityFlagged')) {
-        statsList.push(<Stat term="community flagged" description={this.props.statistics.comments.all.CommunityFlagged.count} />);
+        statsList.push(<Stat term="Community flagged" description={this.props.statistics.comments.all.CommunityFlagged.count} />);
       }
       return statsList;
     } else {
@@ -147,7 +147,7 @@ export default class UserDetail extends React.Component {
             <div style={styles.topPart}>
               <Avatar style={styles.avatar} src="./img/user_portrait_placeholder.png" size={100} />
             </div>
-            <p><MdLocalOffer /> Add / Remove Tags for this Commenter</p>
+            <p><MdLocalOffer /> Add/remove Tags for this Commenter</p>
             <Select
               multi={true}
               value={this.state.selectedTags}

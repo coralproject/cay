@@ -145,7 +145,7 @@ export default class UserDetail extends React.Component {
           <div>
             <Heading size="medium">{this.props.name}</Heading>
             <div style={styles.topPart}>
-              <Avatar style={styles.avatar} src={this.props.avatar || ''} size={200} />
+              <Avatar style={styles.avatar} src="./img/user_portrait_placeholder.png" size={100} />
             </div>
             <p><MdLocalOffer /> Add / Remove Tags for this Commenter</p>
             <Select

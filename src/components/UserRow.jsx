@@ -4,6 +4,8 @@ import {connect} from 'react-redux';
 import ListItem from './lists/ListItem';
 import CharacterIcon from './CharacterIcon';
 
+import settings from '../settings';
+
 @connect(state => state.pipelines)
 @Radium
 export default class UserRow extends React.Component {
@@ -19,16 +21,19 @@ export default class UserRow extends React.Component {
 
   handleClick() {
     this.props.onClick(this.props.user);
-    this.props.setAsActive(this.props.activeIndex)
+    this.props.setAsActive(this.props.activeIndex);
   }
 
   render() {
     const {user} = this.props;
     const leftAvatar = (
-      <CharacterIcon size="medium" color={"#1f77b4"}>
+      <CharacterIcon size="medium" color={settings.primaryColor}>
         { user.name.charAt(0).toUpperCase() }
       </CharacterIcon>
     );
+
+    const repliedPercent = Math.floor(user.statistics.comments.all.all.replied_ratio * 100) + '%';
+    const replyPercent = Math.floor(user.statistics.comments.all.all.reply_ratio * 100) + '%';
 
     return (
       <ListItem
@@ -38,7 +43,7 @@ export default class UserRow extends React.Component {
         leftAvatar={leftAvatar}>
         {user.name}
         <p style={styles.sub}>
-          Comments {user.statistics.comments.all.all.count} | replied ratio {user.statistics.comments.all.all.replied_ratio.toFixed(2)} | reply ratio {user.statistics.comments.all.all.reply_ratio.toFixed(2)}
+          Comments: {user.statistics.comments.all.all.count} | Replies received: {repliedPercent} | Replies written: {replyPercent}
         </p>
       </ListItem>
     );

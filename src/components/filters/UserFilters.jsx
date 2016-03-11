@@ -111,6 +111,8 @@ export default class UserFilters extends React.Component {
     return userFilters.map((f,i) => {
       let filterComponent;
       if (f.type === 'intRange' || f.type === 'percentRange' || f.type === 'floatRange') {
+        // capitalize first letter of description
+        const fmtDesc = f.description.charAt(0).toUpperCase() + f.description.slice(1, f.description.length);
         filterComponent = (
           <FilterNumbers
             key={i}
@@ -118,7 +120,7 @@ export default class UserFilters extends React.Component {
             max={f.max}
             userMin={f.userMin}
             userMax={f.userMax}
-            description={f.description}
+            description={fmtDesc}
             fieldName={f.key}
             type={f.type}
             isPercentage={f.type === 'percentRange'} />
@@ -140,16 +142,16 @@ export default class UserFilters extends React.Component {
             Filters
           </Heading>
         </div>
-        <p style={ styles.legend }>Limit User activity to:</p>
+        <p style={ styles.legend }>Limit user activity to:</p>
         <Select
           ref="breakdown"
           value={this.props.breakdown}
           onChange={this.updateBreakdown.bind(this)}
           style={ styles.filterDropdown }
           options={[
-            {label: 'all', value: 'all'},
-            {label: 'author', value: 'author'},
-            {label: 'section', value: 'section'}
+            {label: 'All', value: 'all'},
+            {label: 'Author', value: 'author'},
+            {label: 'Section', value: 'section'}
           ]} />
 
         {this.getSpecific()}
@@ -157,12 +159,12 @@ export default class UserFilters extends React.Component {
         <p style={styles.legend}>Show me Users that have:</p>
         {this.getActiveFiltersFromConfig()}
 
-        <p style={styles.legend}>Filter by Tags <span style={styles.comingSoon}>Coming Soon!</span></p>
+        <p style={styles.legend}>Filter by tags <span style={styles.comingSoon}>coming soon!</span></p>
 
-        <p>Include Users with these Tags:</p>
+        <p>Include users with these tags</p>
         <Select multi={true} style={ styles.filterDropdown } options={this.getTags()} />
 
-        <p>Exclude Users with these Tags:</p>
+        <p>Exclude users with these tags</p>
         <Select multi={true} style={ styles.filterDropdown } options={this.getTags()} />
       </div>
     );

@@ -15,7 +15,7 @@ import configureStore from './store';
 import UserManager from './containers/UserManager';
 import TagManager from './containers/TagManager';
 import Login from './containers/Login';
-import Playground from './containers/playground';
+import Playground from './containers/Playground';
 // import DataExplorer from './containers/DataExplorer';
 import SeeAllGroups from './containers/SeeAllGroups.jsx';
 import GroupDetail from './containers/GroupDetail';

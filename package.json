@@ -59,6 +59,7 @@
     "react-datepicker": "^0.21.0",
     "react-dnd": "^2.1.2",
     "react-dnd-html5-backend": "^2.1.2",
+    "react-document-title": "^2.0.1",
     "react-dom": "^0.14.3",
     "react-emoji": "^0.4.1",
     "react-emoji-picker": "^1.0.10",

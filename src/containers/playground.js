@@ -9,6 +9,8 @@ import Customizer from '../components/playground/Customizer';
 import Preview from '../components/playground/Preview';
 import Wizard from '../components/playground/Wizard';
 
+import DocumentTitle from 'react-document-title';
+
 import mediaQueries from '../playgroundSettings';
 
 // Playground CSS
@@ -36,62 +38,66 @@ class Playground extends React.Component {
       : null;
 
     return (
-      <div>
+      <DocumentTitle title="Coral Playground">
 
-        <div style={ [ styles.playgroundContainer, , this.state.wizardIsOpen ? styles.blurred : '' ] }>
+        <div>
 
-          <div style={ styles.playgroundLeftPane }>
+          <div style={ [ styles.playgroundContainer, , this.state.wizardIsOpen ? styles.blurred : '' ] }>
 
-            <div style={ [ styles.playGround ] }>
+            <div style={ styles.playgroundLeftPane }>
 
-              <img src="http://coralproject.github.io/design/img/logos/coralWordMark-1.5.png" style={ styles.logo } />
-              
-              <div style={ styles.heading }>
+              <div style={ [ styles.playGround ] }>
 
-                <h1 style={ styles.headingTitle }>Playground</h1>
+                <img src="http://coralproject.github.io/design/img/logos/coralWordMark-1.5.png" style={ styles.logo } />
+                
+                <div style={ styles.heading }>
 
-                <div style={ styles.playgroundIntro }>
+                  <h1 style={ styles.headingTitle }>Playground</h1>
 
-                  <p style={ styles.playgroundIntroText }>
-                    What does an ideal commenting system looks like to you?<br />
-                    <br />
-                    The playground showcases the various elements you would usually find in commentary sections all over the web.
-                    <br />
-                    Use the controls to tweak the UI and explore how it affects the comment box and the stream. You can also try the features on the comment box and the stream itself. <br />
-                    <br />
-                    Learn about online comments and the issues they are facing, <br />
-                    through the contextual sidebar.<br />
-                    <br />
-                    Share your thoughts on the problems addressed by each solution.
-                  </p>
+                  <div style={ styles.playgroundIntro }>
 
-                  <button style={ styles.wizardButton } onClick={ this.onWizardClick.bind(this) }>Use the Wizard</button>
+                    <p style={ styles.playgroundIntroText }>
+                      What does an ideal commenting system looks like to you?<br />
+                      <br />
+                      The playground showcases the various elements you would usually find in commentary sections all over the web.
+                      <br />
+                      Use the controls to tweak the UI and explore how it affects the comment box and the stream. You can also try the features on the comment box and the stream itself. <br />
+                      <br />
+                      Learn about online comments and the issues they are facing, <br />
+                      through the contextual sidebar.<br />
+                      <br />
+                      Share your thoughts on the problems addressed by each solution.
+                    </p>
+
+                    <button style={ styles.wizardButton } onClick={ this.onWizardClick.bind(this) }>Use the Wizard</button>
+
+                  </div>
 
                 </div>
 
-              </div>
+                <Customizer />
+                
+                Medal, Trophy and Badge icons by Zlatko Najdenovski from the Noun Project
 
-              <Customizer />
-              
-              Medal, Trophy and Badge icons by Zlatko Najdenovski from the Noun Project
+              </div>
 
             </div>
 
+            <div style={ styles.playgroundMiddlePane }>
+              <Preview />
+            </div>
+
+            <div style={ styles.playgroundRightPane }></div>
+
+            <Sidebar />
+
           </div>
 
-          <div style={ styles.playgroundMiddlePane }>
-            <Preview />
-          </div>
-
-          <div style={ styles.playgroundRightPane }></div>
-
-          <Sidebar />
+          { wizard }
 
         </div>
 
-        { wizard }
-
-      </div>
+      </DocumentTitle>
     );
   }
 }

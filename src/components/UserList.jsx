@@ -55,7 +55,7 @@ export default class UserList extends React.Component {
     <div style={ [ styles.base, this.props.style ] }>
       <div style={ styles.columnHeader }>
         <Heading size="medium">
-          { window.L.t('Users') }
+          <span style={styles.groupHeader}>{ window.L.t('group') }</span> (106 { window.L.t('users')})
         </Heading>
       </div>
 
@@ -79,6 +79,9 @@ const styles = {
   },
   columnHeader: {
     height: 50
+  },
+  groupHeader: {
+    textTransform: 'capitalize'
   },
   card: {
     margin: 0,

@@ -7,9 +7,9 @@ import {fetchPipelinesIfNotFetched} from '../actions';
 import Page from './Page';
 import ContentHeader from '../components/ContentHeader';
 import UserList from '../components/UserList';
-import UserDetail from '../components/UserDetail';
-
-import UserFormulaContainer from '../components/UserFormulaContainer';
+import PipelineCreator from '../components/PipelineCreator';
+import Button from '../components/Button';
+import FaFloopyO from 'react-icons/lib/fa/floppy-o';
 
 @connect(state => state.pipelines)
 @Radium
@@ -39,12 +39,18 @@ export default class GroupCreator extends React.Component {
 
         <ContentHeader title={ window.L.t('Group Creator') } />
 
-        <div style={styles.base}>
-          <UserFormulaContainer/>
+        <p>There are 106 active users on Politics, with between 0 and 10000 comments, between 50% and 100% comments accepted.</p>
 
-          <UserList
-            style={styles.userList}
-            users={this.props.users} />
+        <div style={styles.base}>
+          <PipelineCreator userOnly={true}/>
+
+          <div style={styles.rightPanel}>
+            <Button category="primary" style={{float: 'right'}}>
+              Save Group <FaFloopyO style={styles.saveIcon} />
+
+            </Button>
+            <UserList style={styles.userList} users={this.props.users} />
+          </div>
 
         </div>
 
@@ -58,13 +64,16 @@ const styles = {
     minHeight: 250
   },
   pipelineList: {
-    flex: 1,
+    flex: 1
+  },
+  rightPanel: {
+    flex: 1
   },
   userList: {
-    flex: 1,
+    marginTop: 5
   },
-  userDetail: {
-    flex: 2,
-    marginRight: 5
+  saveIcon: {
+    width: 25,
+    height: 25
   }
 };

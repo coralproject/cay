@@ -11,6 +11,8 @@ import FaEllipsisH from 'react-icons/lib/fa/ellipsis-h';
 import MdPlace from 'react-icons/lib/md/place';
 import MdComment from 'react-icons/lib/md/comment';
 
+import mediaQueries from '../../playgroundSettings';
+
 @connect(state => state.playground)
 @Radium
 class ProfileInfo extends React.Component {
@@ -108,10 +110,25 @@ var styles = {
     maxWidth: '750px',
     marginBottom: '30px',
     display: 'flex',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    [mediaQueries.mobile]: {
+      display: 'block'
+    }
   },
   profilePicPane: {
-    width: '180px'
+    width: '180px',
+    [mediaQueries.mobile]: {
+      width: '120px',
+      position: 'absolute',
+      top: '0px',
+      left: '0px'
+    }
+  },
+  profilePicture: {
+    [mediaQueries.mobile]: {
+      width: '120px',
+      height: '120px'
+    }
   },
   profileLeftPane: {
     width: '250px',
@@ -119,6 +136,10 @@ var styles = {
     borderRight: '1px solid #ccc',
     verticalAlign: 'top',
     padding: '20px',
+    [mediaQueries.mobile]: {
+      width: '100%',
+      paddingLeft: '140px'
+    }
   },
   profileCenterPane: {
     minHeight: '150px',

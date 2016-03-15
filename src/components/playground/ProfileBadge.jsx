@@ -2,6 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 
+import mediaQueries from '../../playgroundSettings';
+
 @connect(state => state.playground)
 @Radium
 class ProfileBadge extends React.Component {
@@ -10,7 +12,7 @@ class ProfileBadge extends React.Component {
 
     return (
       <div style={ styles.profileBadge } onClick={ this.props.profileClickHandler }>
-        <img style={ styles.profilePicture } width="60" height="60" src={ "/img/playground/profile" + this.props.user + ".jpg" } /><br />
+        <img style={ styles.profilePicture } width="60" height="60" src={ "/img/playground/profile" + this.props.user + ".jpg" } />
         <h4 style={ styles.userName }>
           { 
             this.props.togglerGroups['privacy'].togglers['anonymity'].status ? 
@@ -34,12 +36,29 @@ var styles = {
     left: '0px',
     textAlign: 'center',
     cursor: 'pointer',
-    width: '60px'
+    width: '60px',
+    [mediaQueries.tablet]: {
+      width: '80%',
+      height: '40px',
+      textAlign: 'left',
+      lineHeight: '40px'
+    }
   },
   profilePicture: {
-    borderRadius: '30px'
+    borderRadius: '30px',
+    [mediaQueries.tablet]: {
+      'float': 'left',
+      marginRight: '10px',
+      width: '40px',
+      height: '40px'
+    }
   },
   userName: {
-    fontSize: '10pt'
+    fontSize: '10pt',
+    'float': 'left',
+    marginRight: '10px',
+    height: '40px',
+    wordWrap: 'break-word',
+    maxWidth: '100%'
   }
 };

@@ -4,6 +4,18 @@ const initialState = {
   customizerIsVisible: false,
   currentSidebarTopic: null,
   togglerGroups: { 
+    'layout': {
+      name: 'Layout',
+      togglers: {
+        'hiddenbydefault': {
+          label: 'Hidden by default is ON',
+          offLabel: 'Hidden by default is OFF',
+          description: 'Hides comments until a user clicks to read them.',
+          status: false,
+          topic: 'hiddenbydefault'
+        }
+      }
+    },
     'moderation': {
       name: 'Moderation',
       togglers: {

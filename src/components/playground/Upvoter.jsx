@@ -13,9 +13,9 @@ class Upvoter extends React.Component {
 
     return (
       <div style={ styles.upvoter }>
-        <FaCaretUp />
+        <FaCaretUp style={ styles.voteUp } />
         <div style={ styles.number }>33</div>
-        <FaCaretDown />
+        <FaCaretDown style={ styles.voteDown } />
       </div>
     );
 
@@ -30,9 +30,17 @@ var styles = {
     position: 'absolute',
     cursor: 'pointer',
     width: '80px',
-    top: '0',
     right: '0',
+    bottom: '0',
     textAlign: 'center'
+  },
+  voteUp: {
+    fontSize: '24px',
+    marginBottom: '5px'
+  },
+  voteDown: {
+    fontSize: '24px',
+    marginTop: '5px'
   },
   number: {
     fontSize: '14pt',

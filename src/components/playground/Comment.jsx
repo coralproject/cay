@@ -9,6 +9,8 @@ import ActionsBar from './ActionsBar';
 import Upvoter from './Upvoter';
 import CommentTools from './CommentTools';
 
+import mediaQueries from '../../playgroundSettings';
+
 @connect(state => state.playground)
 @Radium
 class Comment extends React.Component {
@@ -54,10 +56,14 @@ var styles = {
     borderBottom: '1px solid #ddd',
     padding: '20px 0px 20px 75px',
     position: 'relative',
-    minHeight: '100px'
+    minHeight: '100px',
+    [mediaQueries.tablet]: {
+      padding: '75px 0px 20px 0px'
+    }
   },
   commentContent: {
-    cursor: 'pointer'
+    cursor: 'pointer',
+    position: 'relative'
   },
   withUpvoter: {
     paddingRight: '80px'

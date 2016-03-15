@@ -8,6 +8,14 @@ import ReactEmoji from 'react-emoji';
 class CommentContent extends React.Component {
 
   filterContent(content) {
+    /*
+      This pattern searches for tags within comment content,
+      those tags relate to the Playground's settings as in:
+
+      {moderation.muting}...something...{/moderation.muting}
+
+      So we can show some mutations inside the content.
+    */
     var tagSearchPattern = /{(.+)}(.*){\/(\1)}/;
     var matches = content.match(tagSearchPattern);
     var filteredContent = content;

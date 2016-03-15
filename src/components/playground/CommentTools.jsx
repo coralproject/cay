@@ -5,6 +5,8 @@ import Radium from 'radium';
 import ReportingTool from './ReportingTool';
 import ReactionTools from './ReactionTools';
 
+import mediaQueries from '../../playgroundSettings';
+
 @connect(state => state.playground)
 @Radium
 class CommentTools extends React.Component {
@@ -104,7 +106,10 @@ var styles = {
     background: '#fafafa',
     lineHeight: '60px',
     width: '100%',
-    margin: '0'
+    margin: '0',
+    [mediaQueries.tablet]: {
+      height: 'auto'
+    }
   },
   commentToolsOption: {
     display: 'inline-block',
@@ -116,6 +121,13 @@ var styles = {
     ':hover': {
       background: '#F77260',
       color: 'white'
+    },
+    [mediaQueries.tablet]: {
+      display: 'block',
+      padding: '0 20px',
+      width: '100%',
+      textAlign: 'left',
+      borderBottom: '1px solid #ddd'
     }
   },
   reportingToolOverlay: {

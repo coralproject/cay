@@ -25,10 +25,9 @@ class Customizer extends React.Component {
       <div style={ styles.customizer }>
         <div style={ styles.customizeToggler } onClick={ this.onCustomizerTogglerClick.bind(this) }>
           <h2 style={ styles.customizeTogglerTitle }>
-            <MdSettings />
+            <MdSettings style={ styles.customizerIcon } />
             <span style={ styles.customizeTogglerTitleSpan }>Customize</span>
           </h2>
-          <button style={ styles.customizeTogglerButton }><FaCaretDown /></button>
         </div>
         <CustomizerSettings />
       </div>
@@ -50,8 +49,13 @@ var styles = {
       padding: '20px'
     }
   },
+  customizerIcon: {
+    marginTop: '-10px',
+    marginRight: '5px'
+  },
   customizeToggler: {
     borderBottom: '1px solid #ccc',
+    paddingBottom: '10px',
     position: 'relative',
     fontSize: '16pt',
     cursor: 'pointer'

@@ -167,10 +167,10 @@ const styles = {
     color: 'white',
     textAlign: 'center',
     [mediaQueries.desktop]: {
-      fontSize: '48px'
+      fontSize: '38px'
     },
     [mediaQueries.tablet]: {
-      fontSize: '38px'
+      fontSize: '36px'
     }
   },
   playgroundIntro: {

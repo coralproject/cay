@@ -6,6 +6,8 @@ import MdThumbUp from 'react-icons/lib/md/thumb-up';
 import FaSmileO from 'react-icons/lib/fa/smile-o';
 import FaEllipsisH from 'react-icons/lib/fa/ellipsis-h';
 
+import mediaQueries from '../../playgroundSettings';
+
 import { likeComment, unLikeComment } from '../../actions/playground';
 
 @connect(state => state.playground)
@@ -35,7 +37,7 @@ class ActionsBar extends React.Component {
         { 
           this.props.togglerGroups['interaction'].togglers['likes'].status ? 
             <div onClick={ this.likeClickHandler.bind(this, this.props.index) } style={ [ styles.actionBarButton, this.props.liked ? styles.liked : null ] }>
-              <MdThumbUp />
+              <MdThumbUp />&nbsp;
               { this.props.likes } Likes
             </div>
           : null
@@ -43,7 +45,7 @@ class ActionsBar extends React.Component {
         { 
           this.props.togglerGroups['interaction'].togglers['reactions'].status ? 
             <div onClick={ this.reactionClickHandler.bind(this) } style={ styles.actionBarButton }>
-              <FaSmileO />
+              <FaSmileO />&nbsp;
               { this.props.likes } Reactions
             </div>
           : null
@@ -51,7 +53,7 @@ class ActionsBar extends React.Component {
         { 
           true ? 
             <div style={ styles.actionBarButton } onClick={ this.moreClickHandler.bind(this) }>
-              <FaEllipsisH />
+              <FaEllipsisH />&nbsp;
               More actions
             </div>
           : null
@@ -76,7 +78,11 @@ var styles = {
     cursor: 'pointer',
     'float': 'left',
     padding: '0 10px',
-    lineHeight: '30px'
+    lineHeight: '30px',
+    [mediaQueries.tablet]: {
+      display: 'block',
+      'float': 'none'
+    }
   },
   clear: {
     clear: 'both'

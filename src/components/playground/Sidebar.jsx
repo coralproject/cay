@@ -12,6 +12,16 @@ import FaTwitter from 'react-icons/lib/fa/twitter';
 @Radium
 class Sidebar extends React.Component { 
 
+  constructor(props) {
+    super(props);
+    this.state = { expanded: false };
+  }
+
+  onExpandClick() {
+    this.setState({ expanded: !this.state.expanded });
+    console.log(this.state.expanded);
+  }
+
   render() {
 
     var sideBarLinks = this.props.currentSidebarTopic && 
@@ -43,12 +53,13 @@ class Sidebar extends React.Component {
       </div>
     : 
       <p>
-        This sidebar will show you contextual information about the various settings and elements in the playground.
+        This area will show you contextual information about the various settings and elements in the playground.
       </p>
     ;
    
     return (
-      <div style={ styles.sideBar }>
+      <div style={ [ styles.sideBar, this.state.expanded ? styles.expandedSidebar : '' ] }>
+        <div style={ styles.expandLink } onClick={ this.onExpandClick.bind(this) }>Expand</div>
         { sideBarContent }
       </div>
     );  
@@ -60,6 +71,15 @@ class Sidebar extends React.Component {
 export default Sidebar;
 
 var styles = {
+  expandLink: {
+    position: 'absolute',
+    backgroundColor: 'red',
+    top: '-30px',
+    height: '30px',
+    right: '20px',
+    padding: '0 20px',
+    lineHeight: '30px'
+  },
   sideBar: {
     position: 'fixed',
     right: '0px',
@@ -70,17 +90,24 @@ var styles = {
     zIndex: '75000',
     color: 'white',
     padding: '30px',
+    transition: 'height .5s',
     [mediaQueries.desktop]: {
       width: '100%',
       top: 'auto',
       bottom: '0px',
-      height: '200px'
+      height: '120px'
     },
     [mediaQueries.tablet]: {
       width: '100%',
       top: 'auto',
       bottom: '0px',
-      height: '200px'
+      height: '120px'
+    }
+  },
+  expandedSidebar: {
+    height: '90%',
+    [mediaQueries.tablet]: {
+      height: '90%'
     }
   },
   sideBarTitle: {
@@ -88,7 +115,10 @@ var styles = {
     fontSize: '24pt',
     marginBottom: '30px',
     fontFamily: 'Josefin Slab',
-    textTransform: 'uppercase'
+    textTransform: 'uppercase',
+    [mediaQueries.tablet]: {
+      fontSize: '16pt'
+    }
   },
   sideBarDescription: {
     fontSize: '12pt',
@@ -106,7 +136,15 @@ var styles = {
     color: '#55acee'
   },
   tweets: {
-    marginBottom: '40px'
+    marginBottom: '40px',
+    [mediaQueries.tablet]: {
+      width: '29.3%',
+      margin: '0 2%',
+      'float': 'left'
+    },
+    [mediaQueries.mobile]: {
+      display: 'none'
+    }
   },
   twitterTitle: {
     fontFamily: 'Fira Sans',
@@ -121,18 +159,23 @@ var styles = {
     [mediaQueries.desktop]: {
       width: '33.3%',
       'float': 'left'
-    }
-  },
-  tweets: {
-    [mediaQueries.desktop]: {
-      width: '33.3%',
-      'float': 'left'
+    },
+    [mediaQueries.mobile]: {
+      width: '100%',
+      'float': 'none'
     }
   },
   sideBarReferences: {
     [mediaQueries.desktop]: {
       width: '33.3%',
       'float': 'left'
+    },
+    [mediaQueries.mobile]: {
+      width: '100%',
+      'float': 'none'
     }
+  },
+  expandButton: {
+
   }
 };

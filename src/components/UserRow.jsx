@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import ListItem from './lists/ListItem';
 import CharacterIcon from './CharacterIcon';
 
-@connect(state => state.pipelines)
+@connect(state => state.groups)
 @Radium
 export default class UserRow extends React.Component {
   static propTypes = {

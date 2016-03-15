@@ -74,7 +74,7 @@ const filters = (state = initialState, action) => {
       authors: action.data.results[0].Docs
     });
 
-  case types.PIPELINE_RECEIVED:
+  case types.QUERYSET_RECEIVED:
     return Object.assign({}, state, { loadingUserList: false });
 
   case types.SET_BREAKDOWN:

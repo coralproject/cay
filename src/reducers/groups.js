@@ -3,11 +3,11 @@ import * as types from '../actions';
 const initialState = {
   authorized: localStorage.authorized || false,
   loading: false,
-  loadingPipeline: false,
+  loadingQueryset: false,
   loadingTags: false,
   pipesLoaded: false,
   selectedUser: null,
-  pipelines: [],
+  querysets: [],
   users: [],
   comments: [],
   groups: [],
@@ -16,18 +16,18 @@ const initialState = {
   loadingUserComments: false
 };
 
-const pipelines = (state = initialState, action) => {
+const groups = (state = initialState, action) => {
 
   switch (action.type) {
 
-  case types.PIPELINES_REQUEST:
+  case types.QUERYSETS_REQUEST:
     return Object.assign({}, state, {loading: true});
 
-  case types.PIPELINES_REQUEST_FAILURE:
-    return Object.assign({}, state, {loading: false, showTheError: 'failed to load pipelines from server'});
+  case types.QUERYSETS_REQUEST_FAILURE:
+    return Object.assign({}, state, {loading: false, showTheError: 'failed to load querysets from server'});
 
-  case types.PIPELINE_REQUEST_FAILURE:
-    return Object.assign({}, state, {loadingPipeline: false, showTheError: 'failed to load ' + action.pipelineName});
+  case types.QUERYSET_REQUEST_FAILURE:
+    return Object.assign({}, state, {loadingQueryset: false, showTheError: 'failed to load ' + action.querysetName});
 
   case types.REQUEST_ALL_TAGS:
     return Object.assign({}, state, {loadingTags: true});
@@ -35,29 +35,30 @@ const pipelines = (state = initialState, action) => {
   case types.RECEIVE_ALL_TAGS:
     return Object.assign({}, state, {loadingTags: false, tags: action.tags});
 
-  case types.PIPELINES_RECEIVED:
+  case types.QUERYSETS_RECEIVED:
+    console.log('QUERYSETS_RECEIVED', action);
     return Object.assign({}, state,
       {
         loading: false,
         // this probably isn't the final way to do this.
         // queries will eventually be length > 1
-        groups: action.pipelines,
-        pipelines: action.pipelines.filter(pipe => {
-          return pipe.queries[0].collection === 'user_statistics' && pipe.name !== 'user_search';
+        groups: action.querysets,
+        querysets: action.querysets.filter(qs => {
+          return qs.queries[0].collection === 'user_statistics' && qs.name !== 'user_search';
         })
       }
     );
 
-  case types.PIPELINE_SELECTED:
+  case types.QUERYSET_SELECTED:
     return state;
 
-  case types.PIPELINE_REQUEST:
-    return Object.assign({}, state, {loadingPipeline: true}); // query one pipeline?
+  case types.QUERYSET_REQUEST:
+    return Object.assign({}, state, {loadingQueryset: true}); // query one query_set?
 
   // query_set executed. receive a list of users.
-  case types.PIPELINE_RECEIVED:
+  case types.QUERYSET_RECEIVED:
 
-    return Object.assign({}, state, { loadingPipeline: false, users: action.data.results[0].Docs});
+    return Object.assign({}, state, { loadingQueryset: false, users: action.data.results[0].Docs});
 
   case types.USER_SELECTED:
     return Object.assign({}, state, {selectedUser: action.user});
@@ -99,4 +100,4 @@ const pipelines = (state = initialState, action) => {
   }
 };
 
-export default pipelines;
+export default groups;

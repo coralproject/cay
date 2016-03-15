@@ -25,7 +25,7 @@ class DataExplorerVisualization extends React.Component {
       expect this function to grow as the possibilities do...
       we'll continually refactor this out to make it more general
       but this is hard at this point (1/26) because we don't know what the possibilities are.
-      for the 1/28 deadline, it will not be very abstract, checking pipeline names and such
+      for the 1/28 deadline, it will not be very abstract, checking query_set names and such
     */
 
     let visualization;
@@ -140,4 +140,3 @@ class DataExplorerVisualization extends React.Component {
 }
 
 export default DataExplorerVisualization;
-

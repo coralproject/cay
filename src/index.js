@@ -104,8 +104,8 @@ const loadConfig = (requiredKeys, file, actionType) => {
 
 const requiredEnvKeys = [ 'xeniaHost', 'pillarHost', 'basicAuthorization', 'environment', 'googleAnalyticsId', 'requireLogin' ];
 const requiredDataKeys = ['filters', 'dimensions'];
-const setupEnv = loadConfig(requiredEnvKeys, './config.json', 'CONFIG_LOADED');
-const setupData = loadConfig(requiredDataKeys, './data_config.json', 'DATA_CONFIG_LOADED');
+const setupEnv = loadConfig(requiredEnvKeys, '/config.json', 'CONFIG_LOADED');
+const setupData = loadConfig(requiredDataKeys, '/data_config.json', 'DATA_CONFIG_LOADED');
 
 Promise.all([setupEnv, setupData]).then(() => {
   ReactDOM.render(<Root/>, document.getElementById('root'));

@@ -9,10 +9,10 @@ const data_exploration = (state = {
   loadingSections: false,
   dataset: null,
   datasetName: null,
-  pipelineRangeStart: null,
-  pipelineRangeEnd: null,
+  querysetRangeStart: null,
+  querysetRangeEnd: null,
   error: null,
-  pipelines: [],
+  querysets: [],
   sections: []
 }, action) => {
   switch (action.type) {
@@ -22,13 +22,13 @@ const data_exploration = (state = {
       error: null
     });
   case types.RECEIVE_DATA_EXPLORATION_DATASET:
-    let pipelineTimeRange = {};
+    let querysetTimeRange = {};
     /* if it's a new dataset, we need new max and min timescales */
     /* TODO this assumes it has the property 'start' */
     if (state.datasetName !== action.data.results[0].Name) {
-      pipelineTimeRange = {
-        pipelineRangeStart: _.min(_.map(action.data.results[0].Docs, 'start')) * 1000,
-        pipelineRangeEnd: _.max(_.map(action.data.results[0].Docs, 'start')) * 1000
+      querysetTimeRange = {
+        querysetRangeStart: _.min(_.map(action.data.results[0].Docs, 'start')) * 1000,
+        querysetRangeEnd: _.max(_.map(action.data.results[0].Docs, 'start')) * 1000
       };
     }
     return Object.assign({}, state, {
@@ -36,7 +36,7 @@ const data_exploration = (state = {
       dataset: action.data.results[0].Docs,
       datasetName: action.data.results[0].Name,
       error: null
-    }, pipelineTimeRange);
+    }, querysetTimeRange);
   case types.DATA_EXPLORATION_FETCH_ERROR:
     return Object.assign({}, state, {
       loading: false,
@@ -50,7 +50,7 @@ const data_exploration = (state = {
   case types.RECEIVE_EXPLORER_CONTROLS:
     return Object.assign({}, state, {
       loadingControls: false,
-      pipelines: action.pipelines
+      querysets: action.querysets
     });
 
   case types.REQUEST_SECTIONS:

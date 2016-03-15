@@ -9,7 +9,7 @@ import FilterFactory from './filters/FilterFactory';
 
 @connect(state => state.filters)
 @Radium
-export default class PipelineCreator extends React.Component {
+export default class QuerysetCreator extends React.Component {
 
   constructor(props) {
     super(props);

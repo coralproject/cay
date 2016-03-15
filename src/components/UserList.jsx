@@ -9,7 +9,7 @@ import Spinner from './Spinner';
 
 import { Lang } from '../lang';
 
-@connect(state => state.pipelines)
+@connect(state => state.groups)
 @Lang
 @Radium
 export default class UserList extends React.Component {
@@ -60,7 +60,7 @@ export default class UserList extends React.Component {
       </div>
 
       {
-        this.props.loadingPipeline ?
+        this.props.loadingQueryset ?
           <div style={ styles.loading }>
             <Spinner /> Loading...
           </div>

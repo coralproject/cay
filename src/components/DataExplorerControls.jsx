@@ -32,7 +32,7 @@ class ExplorerControls extends React.Component {
 
   handleControlChange() {
 
-    const pipeline = this.refs.pipelines.value;
+    const queryset = this.refs.querysets.value;
 
     let dateRange;
 
@@ -49,7 +49,7 @@ class ExplorerControls extends React.Component {
     }
 
     this.props.getControlValues({
-      pipeline,
+      queryset,
       dateRange
     });
   }
@@ -62,8 +62,8 @@ class ExplorerControls extends React.Component {
     });
   }
 
-  mapOptions(pipeline, i) {
-    return (<option key={i} value={pipeline.name}>{pipeline.name.replace(/_/g, ' ')}</option>);
+  mapOptions(queryset, i) {
+    return (<option key={i} value={queryset.name}>{queryset.name.replace(/_/g, ' ')}</option>);
   }
 
   makeKeysOptions(obj) {
@@ -74,8 +74,8 @@ class ExplorerControls extends React.Component {
     return options;
   }
 
-  handlePipelineCreationStartClick () {
-    this.setState({pipelineCreationMode: true})
+  handleQuerysetCreationStartClick () {
+    this.setState({querysetCreationMode: true})
 
   }
 
@@ -93,9 +93,9 @@ class ExplorerControls extends React.Component {
         <select
           onChange={this.handleControlChange.bind(this)}
           style={styles.select}
-          ref="pipelines">
+          ref="querysets">
           <option value={"DEFAULT_VALUE"}> Select an existing question... </option>
-          {this.props.pipelines.map(this.mapOptions)}
+          {this.props.querysets.map(this.mapOptions)}
         </select>
         <span
           style={{
@@ -103,7 +103,7 @@ class ExplorerControls extends React.Component {
           }}
           > or </span>
         <button
-        onClick={this.handlePipelineCreationStartClick.bind(this)}
+        onClick={this.handleQuerysetCreationStartClick.bind(this)}
         style={{
           border: 0,
           backgroundColor: "#F87F70",
@@ -114,7 +114,7 @@ class ExplorerControls extends React.Component {
           cursor: "pointer"
         }}> + Ask a new question </button>
         {
-          this.props.dataset && !this.state.pipelineCreationMode ?
+          this.props.dataset && !this.state.querysetCreationMode ?
           <div>
             <p>Date Range</p>
             <Slider

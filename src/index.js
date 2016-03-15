@@ -12,7 +12,7 @@ import { DevTools, DebugPanel, LogMonitor } from 'redux-devtools/lib/react';
 import configureStore from './store';
 
 // import Dashboard from './containers/Dashboard';
-import UserManager from './containers/UserManager';
+import GroupCreator from './containers/GroupCreator';
 import TagManager from './containers/TagManager';
 import Login from './containers/Login';
 // import DataExplorer from './containers/DataExplorer';
@@ -69,10 +69,10 @@ class Root extends React.Component {
       <div>
         <Provider store={store}>
           <Router history={browserHistory} onUpdate={ this.logPageView }>
-            <Route path="/" component={UserManager} />
+            <Route path="/" component={GroupCreator} />
             <Route path="login" component={Login} />
             <Route path="about" component={About} />
-            <Route path="group-creator" component={UserManager} />
+            <Route path="group-creator" component={GroupCreator} />
             <Route path="tag-manager" component={TagManager} />
             <Route path="groups" component={SeeAllGroups}/>
             <Route path="group/:name" component={GroupDetail} />

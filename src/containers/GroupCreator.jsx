@@ -13,7 +13,7 @@ import UserFormulaContainer from '../components/UserFormulaContainer';
 
 @connect(state => state.pipelines)
 @Radium
-export default class UserManager extends React.Component {
+export default class GroupCreator extends React.Component {
 
   static contextTypes = {
     router: PropTypes.object.isRequired
@@ -45,10 +45,6 @@ export default class UserManager extends React.Component {
           <UserList
             style={styles.userList}
             users={this.props.users} />
-
-          <UserDetail
-            {...this.props.selectedUser}
-            style={styles.userDetail} />
 
         </div>
 

@@ -75,9 +75,7 @@ export default class UserList extends React.Component {
 
 const styles = {
   base: {
-    paddingLeft: 20,
-    minWidth: 350,
-    maxWidth: 350
+    paddingLeft: 20
   },
   columnHeader: {
     height: 50

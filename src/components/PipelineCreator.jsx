@@ -4,8 +4,6 @@ import React from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
 import {getFilterRanges} from '../actions';
-import Button from './Button';
-import Spinner from './Spinner';
 
 import FilterFactory from './filters/FilterFactory';
 

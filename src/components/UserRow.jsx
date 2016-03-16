@@ -44,7 +44,7 @@ export default class UserRow extends React.Component {
         onClick={this.handleClick.bind(this)}
         leftAvatar={leftAvatar}>
         {user.name}
-        <img style={styles.avatar} src="./img/user_portrait_placeholder.png" />
+        <img style={styles.avatar} src="/img/user_portrait_placeholder.png" />
         <p style={styles.sub}>
           Comments: {user.statistics.comments.all.all.count}<br />
           Replies received: {repliedPercent}<br />

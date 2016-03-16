@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 
-import {fetchQuerysetsIfNotFetched} from '../actions';
+import {fetchQuerysetsIfNotFetched, saveQueryFromState} from '../actions';
 
 import Page from './Page';
 import ContentHeader from '../components/ContentHeader';
@@ -32,7 +32,8 @@ export default class GroupCreator extends React.Component {
   }
 
   saveGroup() {
-
+    // all the code triggered here needs to be moved to a xenia package
+    this.props.dispatch(saveQueryFromState());
   }
 
   render() {

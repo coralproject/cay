@@ -61,6 +61,9 @@ export const SET_SPECIFIC_BREAKDOWN = 'SET_SPECIFIC_BREAKDOWN';
 export const REQUEST_FILTER_RANGES = 'REQUEST_FILTER_RANGES';
 export const RECEIVE_FILTER_RANGES = 'RECEIVE_FILTER_RANGES';
 
+export const QUERYSET_SAVE_SUCCESS = 'QUERYSET_SAVE_SUCCESS';
+export const QUERYSET_SAVE_FAILED = 'QUERYSET_SAVE_FAILED';
+
 /* config */
 
 const getInit = (method) => {
@@ -75,8 +78,6 @@ const getInit = (method) => {
 
   return init;
 };
-
-const apiPrefix = '1.0/'; // maybe later we'll be at api 2.0
 
 export const selectQueryset = (queryset) => {
   return {
@@ -155,7 +156,7 @@ export const fetchQueryset = (querysetName) => {
   return (dispatch) => {
     dispatch(requestQueryset(querysetName));
 
-    fetch(window.xeniaHost + '/' + apiPrefix + 'exec/' + querysetName, getInit())
+    fetch(window.xeniaHost + '/1.0/exec/' + querysetName, getInit())
       .then(response => response.json())
       .then(queryset => dispatch(receiveQueryset(queryset)))
       .catch(err => dispatch(requestQuerysetFailure(err)));
@@ -229,7 +230,7 @@ export const setBreakdown = (breakdown) => {
 export const setSpecificBreakdown = (specificBreakdown) => {
   return (dispatch, getState) => {
     let counter = getState().filters.counter;
-    counter++
+    counter++;
     dispatch({
       type: SET_SPECIFIC_BREAKDOWN,
       specificBreakdown: specificBreakdown,
@@ -256,7 +257,7 @@ export const loginUser = (username, password) => {
 };
 
 export const fetchCommentsByUser = (user_id) => {
-  const url = `${window.xeniaHost}/${apiPrefix}exec/comments_by_user?user_id=${user_id}`;
+  const url = `${window.xeniaHost}/1.0/exec/comments_by_user?user_id=${user_id}`;
   return (dispatch) => {
 
     dispatch(clearUserDetailComments());
@@ -340,7 +341,7 @@ const convert = (json) => {
 };
 
 export const createQuerysetValueChanged = (config) => {
-  const url = window.xeniaHost + '/' + apiPrefix + 'exec';
+  const url = window.xeniaHost + '/1.0/exec';
 
   return (dispatch, getState) => {
 
@@ -365,7 +366,7 @@ export const createQuerysetValueChanged = (config) => {
 
 export const fetchDataExplorationDataset = (field, queryParams) => {
   const queryParamString = queryParams ? convert(queryParams) : '';
-  const url = window.xeniaHost + '/' + apiPrefix + 'exec/' + field + queryParamString;
+  const url = window.xeniaHost + '/1.0/exec/' + field + queryParamString;
 
   return (dispatch, getState) => {
 
@@ -553,7 +554,7 @@ export const getFilterRanges = () => {
       queries: [
         {
           name: 'ranges',
-          type: 'queryset',
+          type: 'pipeline',
           collection: 'user_statistics',
           commands: [ { $group } ],
           return: true
@@ -564,7 +565,7 @@ export const getFilterRanges = () => {
 
     dispatch({type: 'REQUEST_FILTER_RANGES'});
 
-    const url = window.xeniaHost + '/' + apiPrefix + 'exec';
+    const url = window.xeniaHost + '/1.0/exec';
 
     var init = getInit('POST');
     init.body = JSON.stringify(query);
@@ -604,7 +605,7 @@ export const createQuery = (query) => {
 
 export const makeQueryFromState = (/*type*/) => {
   return (dispatch, getState) => {
-    console.log('function that calls async')
+    console.log('function that calls async');
     // make a query from the current state
     const filterState = getState().filters;
     const filters = filterState.filterList.map(key => filterState[key]);
@@ -643,7 +644,7 @@ export const makeQueryFromState = (/*type*/) => {
       queries: [
         {
           name: 'user_search',
-          type: 'queryset',
+          type: 'pipeline',
           collection: 'user_statistics',
           commands: [
             ...matches,
@@ -673,12 +674,86 @@ export const makeQueryFromState = (/*type*/) => {
   };
 };
 
+// yikes. lots of this code is replicated above.
+// time to make a xenia library
+export const saveQueryFromState = (queryName, modDescription) => {
+  return (dispatch, getState) => {
+    console.log('function that calls async');
+    // make a query from the current state
+    const filterState = getState().filters;
+    const filters = filterState.filterList.map(key => filterState[key]);
+
+    let matches = _.flatten(_.map(filters, filter => {
+      let dbField;
+      if (filterState.breakdown === 'author') {
+        dbField = _.template(filter.template)({dimension: 'author.' + filterState.specificBreakdown});
+      } else if (filterState.breakdown === 'section') {
+        dbField = _.template(filter.template)({dimension: 'section.' + filterState.specificBreakdown});
+      } else { // all
+        dbField = _.template(filter.template)({dimension: 'all'});
+      }
+
+      var matches = [];
+
+      // Only create match statements for non-defaults
+      if (filter.min !== filter.userMin) {
+        matches.push( {$match: {[dbField]: {$gte: clamp(filter.userMin, filter.min, filter.max)}}});
+      }
+
+      if (filter.max !== filter.userMax) {
+        matches.push( {$match: {[dbField]: {$lte: clamp(filter.userMax, filter.min, filter.max)}}});
+      }
+
+      return matches;
+
+    }));
+
+    let query = {
+      name: queryName,
+      desc: modDescription,
+      pre_script: '',
+      pst_script: '',
+      params: [],
+      queries: [
+        {
+          name: queryName,
+          type: 'pipeline',
+          collection: 'user_statistics',
+          commands: [
+            ...matches,
+            {$skip: 0},
+            {$limit: 20}
+          ],
+          return: true
+        }
+      ],
+      enabled: true
+    };
+
+    doPutQueryFromState(query, dispatch);
+
+  };
+};
+
+const doPutQueryFromState = (query, dispatch) => {
+  const url = window.xeniaHost + '/1.0/query';
+  let init = getInit('PUT');
+  init.body = JSON.stringify(query);
+
+  fetch(url, init)
+    .then(() => { // if response.status < 400
+      dispatch({type: QUERYSET_SAVE_SUCCESS});
+    }).catch(error => {
+      dispatch({type: QUERYSET_SAVE_FAILED, error});
+    });
+};
+
 const doMakeQueryFromStateAsync = _.debounce((query, dispatch)=>{
-  console.log('actual async')
+  console.log('actual async');
   dispatch(requestQueryset());
   dispatch(createQuery(query));
 
-  const url = window.xeniaHost + '/' + apiPrefix + 'exec';
+  const url = window.xeniaHost + '/1.0/exec';
 
   var init = getInit('POST');
   init.body = JSON.stringify(query);
@@ -691,8 +766,7 @@ const doMakeQueryFromStateAsync = _.debounce((query, dispatch)=>{
     .catch(err => {
       dispatch(dataExplorationFetchError(err));
     });
-},1000)
-
+}, 1000);
 
 const receiveUpsertedUser = (user) => {
   return {

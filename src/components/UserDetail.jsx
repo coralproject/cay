@@ -23,7 +23,7 @@ import CommentDetailList from './CommentDetailList';
 
 import { Lang } from '../lang';
 
-@connect(state => state.pipelines)
+@connect(state => state.groups)
 @Lang
 @Radium
 export default class UserDetail extends React.Component {

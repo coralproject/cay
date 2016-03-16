@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
-import {fetchPipeline} from '../actions';
+import {fetchQueryset} from '../actions';
 import _ from 'lodash';
 
 import Page from './Page';
@@ -9,12 +9,12 @@ import ContentHeader from '../components/ContentHeader';
 import UserList from '../components/UserList';
 import UserDetail from '../components/UserDetail';
 
-@connect(state => state.pipelines)
+@connect(state => state.groups)
 @Radium
 export default class GroupDetail extends React.Component {
 
   componentWillMount() {
-    this.props.dispatch(fetchPipeline(this.props.params.name));
+    this.props.dispatch(fetchQueryset(this.props.params.name));
   }
 
   getGroupDescription(name) {
@@ -51,7 +51,7 @@ const styles = {
     minHeight: 250
   },
   userList: {
-    flex: 1,
+    flex: 1
   },
   userDetail: {
     flex: 2

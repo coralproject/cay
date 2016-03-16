@@ -64,7 +64,7 @@ var styles = {
     padding: '40px',
     color: '#3d3d3d',
     [mediaQueries.tablet]: {
-      padding: '20px'
+      padding: '20px 20px 120px 20px'
     }
   },
   previewIcon: {

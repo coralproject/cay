@@ -31,7 +31,7 @@ var styles = {
     cursor: 'pointer',
     width: '80px',
     right: '0',
-    bottom: '0',
+    top: '0',
     textAlign: 'center'
   },
   voteUp: {

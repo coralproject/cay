@@ -77,7 +77,11 @@ class Playground extends React.Component {
 
                 <Customizer />
                 
-                Medal, Trophy and Badge icons by Zlatko Najdenovski from the Noun Project
+                {/*
+                <div style={ styles.footer }>
+                  Medal, Trophy and Badge icons by Zlatko Najdenovski from the Noun Project
+                </div>
+                */}
 
               </div>
 
@@ -112,9 +116,9 @@ const styles = {
     position: 'fixed',
     [mediaQueries.tablet]: {
       position: 'relative',
-      height: 'auto'
-    },
-    overflowY: 'scroll'
+      height: 'auto',
+      overflowY: 'auto'
+    }
   },
   playgroundLeftPane: {
     width: '35%',

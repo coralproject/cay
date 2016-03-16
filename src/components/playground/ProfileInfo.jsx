@@ -37,9 +37,9 @@ class ProfileInfo extends React.Component {
           { 
             this.props.togglerGroups['privacy'].togglers['public_profile'].status ? 
               <div>
-                <div style={ styles.profileBullet }><FaClockO /> Member for { user.membershipAge }</div>
-                <div style={ styles.profileBullet }><MdPlace /> { user.location }</div>
-                <div style={ styles.profileBullet }><FaMortarBoard /> { user.education }</div>
+                <div style={ styles.profileBullet }><FaClockO style={ styles.profileBulletIcon } /> Member for { user.membershipAge }</div>
+                <div style={ styles.profileBullet }><MdPlace style={ styles.profileBulletIcon } /> { user.location }</div>
+                <div style={ styles.profileBullet }><FaMortarBoard style={ styles.profileBulletIcon } /> { user.education }</div>
               </div>            
             : ''
           }
@@ -63,8 +63,8 @@ class ProfileInfo extends React.Component {
                 {
                   user.badges.map((badge, i) => {
                     return (
-                      <div key={ i }>
-                        <CoralIcon size="medium" name={ badge.icon } color={ badge.color } /> { badge.name }
+                      <div key={ i } style={ styles.badge }>
+                        <CoralIcon style={ styles.badgeIcon } size="medium" name={ badge.icon } color={ badge.color } /> { badge.name }
                       </div>
                     );
                   })
@@ -99,7 +99,8 @@ export default ProfileInfo;
 var styles = {
   userName: {
     fontSize: '16pt',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    wordWrap: 'break-word'
   },
   profileInfo: {
     background: '#eee',
@@ -138,7 +139,11 @@ var styles = {
     padding: '20px',
     [mediaQueries.mobile]: {
       width: '100%',
-      paddingLeft: '140px'
+      paddingLeft: '140px',
+      borderRight: 'none'
+    },
+    [mediaQueries.table]: {
+      borderRight: 'none'
     }
   },
   profileCenterPane: {
@@ -146,14 +151,23 @@ var styles = {
     borderRight: '1px solid #ccc',
     verticalAlign: 'top',
     padding: '20px 10px',
-    flexGrow: '2'
+    flexGrow: '2',
+    [mediaQueries.tablet]: {
+      borderRight: 'none',
+      borderTop: '1px solid #ccc'
+    }
   }, 
   profileRightPane: {
     width: '45px',
     minHeight: '150px',
     verticalAlign: 'top',
     position: 'relative',
-    textAlign: 'center'
+    textAlign: 'center',
+    [mediaQueries.tablet]: {
+      width: 'auto',
+      minHeight: 'auto',
+      borderTop: '1px solid #ccc'
+    }
   }, 
   profileStat: {
     marginBottom: '10px'
@@ -164,14 +178,52 @@ var styles = {
   },
   rightPaneAction: {
     height: '40px',
-    lineHeight: '40px'
+    lineHeight: '40px',
+    [mediaQueries.tablet]: {
+      'float': 'left',
+      width: '40px',
+      height: '40px',
+      lineHeight: '40px'
+    }
   },
   moreActions: {
     position: 'absolute',
     bottom: '5px',
-    left: '7px'
+    left: '7px',
+    [mediaQueries.tablet]: {
+      position: 'relative',
+      'float': 'left',
+      bottom: 'auto',
+      left: 'auto',
+      width: '40px',
+      height: '40px',
+      lineHeight: '40px'
+    }
   },
   clearfix: {
     'clear': 'both'
+  },
+  profileBullet: {
+    position: 'relative',
+    paddingLeft: '15px',
+    marginBottom: '10px'
+  },
+  profileBulletIcon: {
+    position: 'absolute',
+    left: '0px'
+  },
+  badge: {
+    position: 'relative',
+    paddingLeft: '30px',
+    height: '30px',
+    marginBottom: '5px',
+    lineHeight: '30px'
+  },
+  badgeIcon: {
+    position: 'absolute',
+    left: '0px',
+    height: '20px',
+    width: '20px',
+    lineHeight: '32px'
   }
 };

@@ -7,6 +7,8 @@ import TwitterStream from './TwitterStream';
 import mediaQueries from '../../playgroundSettings';
 
 import FaTwitter from 'react-icons/lib/fa/twitter';
+import FaChevronUp from 'react-icons/lib/fa/chevron-up';
+import FaChevronDown from 'react-icons/lib/fa/chevron-down';
 
 @connect(state => state.playground)
 @Radium
@@ -59,7 +61,14 @@ class Sidebar extends React.Component {
    
     return (
       <div style={ [ styles.sideBar, this.state.expanded ? styles.expandedSidebar : '' ] }>
-        <div style={ styles.expandLink } onClick={ this.onExpandClick.bind(this) }>Expand</div>
+        <div style={ styles.expandLink } onClick={ this.onExpandClick.bind(this) }>
+          { 
+            this.state.expanded ?
+              <span><FaChevronDown /> Collapse</span>
+            :
+              <span><FaChevronUp /> Expand</span>
+          }
+        </div>
         { sideBarContent }
       </div>
     );  
@@ -73,12 +82,13 @@ export default Sidebar;
 var styles = {
   expandLink: {
     position: 'absolute',
-    backgroundColor: 'red',
+    backgroundColor: '#3B60A8',
     top: '-30px',
     height: '30px',
     right: '20px',
-    padding: '0 20px',
-    lineHeight: '30px'
+    padding: '0 10px',
+    lineHeight: '30px',
+    cursor: 'pointer'
   },
   sideBar: {
     position: 'fixed',
@@ -108,6 +118,9 @@ var styles = {
     height: '90%',
     [mediaQueries.tablet]: {
       height: '90%'
+    },
+    [mediaQueries.desktop]: {
+      height: '50%'
     }
   },
   sideBarTitle: {

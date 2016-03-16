@@ -4,6 +4,8 @@ import Radium from 'radium';
 
 import { setToggler } from '../../actions/playground';
 
+import mediaQueries from '../../playgroundSettings';
+
 @connect(state => state.playground)
 @Radium
 class Wizard extends React.Component {
@@ -96,6 +98,12 @@ var styles = {
     color: 'black',
     boxShadow: '0 0 20px rgba(0,0,0,.5)',
     zIndex: '99999',
-    borderRadius: '4px'
+    borderRadius: '4px',
+    [mediaQueries.tablet]: {
+      width: '100%',
+      left: '0px',
+      top: '50px',
+      marginLeft: '0px'
+    }
   }
 };

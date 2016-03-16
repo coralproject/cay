@@ -33,9 +33,22 @@ class CommentContent extends React.Component {
 
   }
 
-  formatContent(content) {
+  // This function should prepare the content to be rendered as HTML
+  // within a 'dangerouslySetInnerHTML' call.
+  formatContent(content) {   
     if (this.props.togglerGroups["content"].togglers["emoji"].status) {
       content = ReactEmoji.emojify(content);
+      // After running emojify, we get an array of strings (which may contain HTML)
+      // and objects holding the Emojis
+      content = content.map((obj) => {
+        if (typeof obj == "object") {
+          // We render the Emojis as plain HTML, 
+          // or they would render as "[Object object]"
+          return React.renderToString(<span>{ obj }</span>);
+        } else {
+          return obj;
+        }
+      }).join("");
     }
     return { __html: content };
   }

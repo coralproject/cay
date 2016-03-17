@@ -6,8 +6,12 @@ export const TAG_REQUEST_STARTED = 'TAG_REQUEST_STARTED';
 export const TAG_REQUEST_SUCCESS = 'TAG_REQUEST_SUCCESS';
 export const TAG_REQUEST_FAILURE = 'TAG_REQUEST_FAILURE';
 
+export const REQUEST_ALL_TAGS = 'REQUEST_ALL_TAGS';
+export const RECEIVE_ALL_TAGS = 'RECEIVE_ALL_TAGS';
+export const ALL_TAGS_REQUEST_ERROR = 'ALL_TAGS_REQUEST_ERROR';
+
 var getInit = (body, method) => {
-  
+
   var headers = new Headers({ 'Accept': 'application/json', 'Content-Type': 'application/json' });
   var init = {
     method: method || 'POST',
@@ -40,8 +44,8 @@ export const storeTag = (tagName, tagDescription, index, oldValue) => {
     dispatch(tagRequestStarted());
 
     var preparedTag = { 'name': tagName, 'description': tagDescription };
-    if (typeof oldValue != "undefined") {
-      preparedTag["old_name"] = oldValue;
+    if (typeof oldValue != 'undefined') {
+      preparedTag['old_name'] = oldValue;
     }
     fetch(window.pillarHost + API_PREFIX + 'tag', getInit(preparedTag))
       .then(response => response.text())
@@ -51,7 +55,7 @@ export const storeTag = (tagName, tagDescription, index, oldValue) => {
           var responseJson = JSON.parse(responseText);
           dispatch(tagRequestSuccess(responseJson, index, 'create'));
         } catch(e) {
-          dispatch(tagRequestFailure(responseText));  
+          dispatch(tagRequestFailure(responseText));
         }
       })
       .catch(error => dispatch(tagRequestFailure(error)));
@@ -88,4 +92,48 @@ export const tagRequestFailure = (err) => {
     type: TAG_REQUEST_FAILURE,
     err
   };
+};
+
+
+const receiveAllTags = (tags) => {
+  return {
+    type: RECEIVE_ALL_TAGS,
+    tags
+  };
+};
+
+const requestAllTags = () => {
+  return {
+    type: REQUEST_ALL_TAGS
+  };
+};
+
+const allTagsRequestError = (err) => {
+  return {
+    type: ALL_TAGS_REQUEST_ERROR,
+    err
+  };
+};
+
+export const fetchAllTags = () => {
+  const url = window.pillarHost + '/api/tags';
+
+  return (dispatch, getState) => {
+    if (!getState().loadingTags) {
+      dispatch(requestAllTags());
+
+      fetch(url)
+        .then(res => {
+          return res.json();
+        })
+        .then(json => {
+          dispatch(receiveAllTags(json));
+        }).catch(err => {
+          dispatch(allTagsRequestError(err));
+        });
+    } else {
+      return {type: 'NOOP'};
+    }
+  };
+
 };

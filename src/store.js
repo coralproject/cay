@@ -4,7 +4,7 @@ import { devTools } from 'redux-devtools';
 import createHistory from 'history/lib/createBrowserHistory';
 import createDebounce from 'redux-debounce';
 
-import rootReducer from '../reducers';
+import rootReducer from 'app/MainReducer';
 
 const debounceConfig = {
   userMangerFilters: 500

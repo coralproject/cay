@@ -12,7 +12,10 @@ module.exports = {
     publicPath: '/dist/'
   },
   resolve: {
-    root: [path.resolve(__dirname, 'src')],
+    root: [
+      path.resolve(__dirname, 'src'),
+      path.resolve(__dirname, 'css')
+    ],
     extensions: ['', '.js', '.jsx']
   },
   plugins: [

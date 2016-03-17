@@ -9,14 +9,14 @@ import { Provider } from 'react-redux';
 // Redux Devtools
 import { DevTools, DebugPanel, LogMonitor } from 'redux-devtools/lib/react';
 
-import configureStore from './store';
+import configureStore from './store.js';
 
 // import Dashboard from './containers/Dashboard';
 import GroupCreator from './containers/GroupCreator';
 import TagManager from './containers/TagManager';
 import Login from './containers/Login';
 // import DataExplorer from './containers/DataExplorer';
-import SeeAllGroups from './containers/SeeAllGroups.jsx';
+import SeeAllGroups from './containers/SeeAllGroups';
 import GroupDetail from './containers/GroupDetail';
 import NoMatch from './containers/NoMatch';
 import About from './containers/About';

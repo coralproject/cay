@@ -13,6 +13,7 @@ module.exports = {
     publicPath: '/'
   },
   resolve: {
+    root: [path.resolve(__dirname, 'src')],
     extensions: ['', '.js', '.jsx']
   },
   plugins: [

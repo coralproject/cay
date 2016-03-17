@@ -7,7 +7,7 @@ import {fetchQuerysetsIfNotFetched, saveQueryFromState} from '../actions';
 import Page from './Page';
 import ContentHeader from '../components/ContentHeader';
 import UserList from '../components/UserList';
-import QuerysetCreator from '../components/QuerysetCreator';
+import GroupFilters from '../components/GroupFilters';
 import Button from '../components/Button';
 import FaFloopyO from 'react-icons/lib/fa/floppy-o';
 
@@ -47,7 +47,7 @@ export default class GroupCreator extends React.Component {
         <p>There are 106 active users on Politics, with between 0 and 10000 comments, between 50% and 100% comments accepted.</p>
 
         <div style={styles.base}>
-          <QuerysetCreator userOnly={true}/>
+          <GroupFilters userOnly={true}/>
 
           <div style={styles.rightPanel}>
             <Button onClick={this.saveGroup} category="primary" style={{float: 'right'}}>

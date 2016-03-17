@@ -6,7 +6,7 @@ import Page from './Page';
 import Card from '../components/cards/Card';
 import DataExplorerVisualization from '../components/DataExplorerVisualization';
 import ExplorerTutorial from '../components/DataExplorerTutorial';
-import QuerysetCreator from '../components/QuerysetCreator';
+import GroupFilters from '../components/GroupFilters';
 import Flex from '../components/layout/Flex';
 import _ from 'lodash';
 
@@ -84,7 +84,7 @@ class DataExplorer extends React.Component {
               getNonActionFiringControlValues={this.getNonActionFiringControlValues.bind(this)}
               getControlValues={this.getControlValues.bind(this)}
               querysets={this.props.querysets} />*/}
-            <QuerysetCreator
+            <GroupFilters
               authors={this.props.authors}
               sections={this.props.sections}
               dispatch={this.props.dispatch} />

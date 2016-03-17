@@ -2,7 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 
-import { Editor, EditorState, RichUtils, convertToRaw } from 'draft-js';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+
+import { Editor, EditorState, RichUtils, Modifier, convertToRaw, SelectionState } from 'draft-js';
 
 import { sendComment } from '../../actions/playground';
 
@@ -59,8 +61,12 @@ class CommentBox extends React.Component {
     
   }
 
-  setEmoji() {
-
+  onSelectEmoji(emoji) {
+    var { editorState } = this.state;
+    var selectionState = editorState.getSelection();
+    var contentState = editorState.getCurrentContent();
+    var modifiedState = Modifier.replaceText(contentState, selectionState, emoji);
+    this.setState({ showEmojiPicker: false, editorState: EditorState.createWithContent(modifiedState) });
   }
 
   toggleEmojiPicker() {
@@ -71,7 +77,7 @@ class CommentBox extends React.Component {
     if(this.state.showEmojiPicker) {
       return (
         <EmojiPicker
-          style={styles.emojiPickerStyles} onSelect={this.setEmoji}
+          style={styles.emojiPickerStyles} onSelect={this.onSelectEmoji.bind(this)}
           query={this.state.emoji}
         />
       )
@@ -149,11 +155,12 @@ var styles = {
     position: 'relative'
   },
   toolBar: {
-    backgroundColor: '#eee',
-    borderBottom: '1px solid #aaa'
+    backgroundColor: '#white',
+    borderBottom: '1px solid #ccc'
   },
   commentBox: {
-    backgroundColor: '#F77260',
+    backgroundColor: '#f0f0f0',
+    border: '1px solid #F77260',
     padding: '20px',
     borderRadius: '8px'
   },
@@ -183,7 +190,7 @@ var styles = {
   toolBarButton: {
     cursor: 'pointer',
     padding: '10px',
-    borderRight: '1px solid #aaa',
+    borderRight: '1px solid #eee',
     borderTop: '0',
     borderLeft: '0',
     borderBottom: '0',
@@ -191,7 +198,8 @@ var styles = {
     fontSize: '12pt'
   },
   toolBarActive: {
-    background: 'rgba(0,0,0,.3)'
+    background: '#F77260',
+    color: '#fff'
   },
   heart: {
     color: '#900'

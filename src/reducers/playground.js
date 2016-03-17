@@ -161,7 +161,17 @@ const initialState = {
       likes: 28,
       liked: false,
       reactions: ['heart', 'ok_woman'],
-      upvoted: false
+      upvoted: false,
+      replies: [
+        {
+          user: 2,
+          content: "This is a reply from another user.",
+          likes: 9,
+          liked: false,
+          reactions: ['heart', 'ok_woman'],
+          upvoted: false
+        }
+      ]
     },
     {
       user: 1,

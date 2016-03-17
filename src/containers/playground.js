@@ -13,6 +13,8 @@ import DocumentTitle from 'react-document-title';
 
 import mediaQueries from '../playgroundSettings';
 
+import MdHelpOutline from 'react-icons/lib/md/help-outline';
+
 // Playground CSS
 require('../../css/playground.css');
 require('../../fonts/playground/coral-icon-font.css');
@@ -57,21 +59,30 @@ class Playground extends React.Component {
                   <div style={ styles.playgroundIntro }>
 
                     <p style={ styles.playgroundIntroText }>
-                      What does an ideal commenting system looks like to you?<br />
-                      <br />
-                      The playground showcases the various elements you would usually find in commentary sections all over the web.
-                      <br />
-                      Use the controls to tweak the UI and explore how it affects the comment box and the stream. You can also try the features on the comment box and the stream itself. <br />
-                      <br />
-                      Learn about online comments and the issues they are facing, <br />
-                      through the contextual sidebar.<br />
-                      <br />
-                      Share your thoughts on the problems addressed by each solution.
+                      An interactive catalog<br />of commenting tools
                     </p>
 
                     <button style={ styles.wizardButton } onClick={ this.onWizardClick.bind(this) }>Use the Wizard</button>
 
                   </div>
+
+                </div>
+
+                <div style={ styles.about }>
+
+                  <h2 style={ styles.aboutTitle }>
+                    <MdHelpOutline style={ styles.aboutIcon } />
+                    <span style={ styles.aboutTitleSpan }>ABOUT</span>
+                  </h2>
+
+                  The playground showcases the various elements you would usually find in commentary sections all over the web.
+                  <br />
+                  Use the controls to tweak the UI and explore how it affects the comment box and the stream. You can also try the features on the comment box and the stream itself. <br />
+                  <br />
+                  Learn about online comments and the issues they are facing, <br />
+                  through the contextual sidebar.<br />
+                  <br />
+                  Share your thoughts on the problems addressed by each solution.
 
                 </div>
 
@@ -230,6 +241,21 @@ const styles = {
     width: '100%',
     height: '100%',
     zIndex: '9000'
+  },
+  about: {
+    background: 'rgb(241, 235, 224)',
+    padding: '40px'
+  },
+  aboutIcon: {
+    marginTop: '-10px',
+    marginRight: '5px'
+  },
+  aboutTitleSpan: {
+    fontSize: '24pt',
+    fontFamily: 'Fira Sans',
+    fontWeight: '300',
+    textTransform: 'uppercase'
   }
+
 };
 

@@ -8,19 +8,29 @@ import Comment from './Comment';
 @Radium
 class Stream extends React.Component {
 
+  getComments(comments, depth = 0) {
+    return comments.map((comment, i) => { 
+      return (
+        <div style={ { paddingLeft: (depth * 30) + 'px' } }>
+          <Comment {...comment} key={ i } index={ i } />
+          {
+            comment.replies ? 
+              this.getComments(comment.replies, depth + 1)
+            : 
+              null
+          }
+        </div>
+      );
+    })
+  }
+
   render() {
 
     return (
       <div style={ styles.stream }>
-      { 
-        this.props.comments.map((comment, i) => { 
-          return (
-            <Comment {...comment} key={ i } index={ i } />
-          );
-        })
-      }
+      { this.getComments(this.props.comments) }
       </div>
-      );
+    );
 
   }
 }

@@ -22,71 +22,74 @@ class ProfileInfo extends React.Component {
     var user = this.props.users[this.props.user];
 
     return (
-      <div style={ styles.profileInfo }>
-        <div style={ styles.profilePicPane }>
-          <img style={ styles.profilePicture } width="180" height="180" src={ "/img/playground/profile" + this.props.user + ".jpg" } /><br />
-        </div>
-        <div style={ styles.profileLeftPane }>
-          <h3 style={ styles.userName }>
-            { 
-              this.props.togglerGroups['privacy'].togglers['anonymity'].status ? 
-              user.nickName : 
-              user.realName 
-            }
-          </h3><br />
-          { 
-            this.props.togglerGroups['privacy'].togglers['public_profile'].status ? 
-              <div>
-                <div style={ styles.profileBullet }><FaClockO style={ styles.profileBulletIcon } /> Member for { user.membershipAge }</div>
-                <div style={ styles.profileBullet }><MdPlace style={ styles.profileBulletIcon } /> { user.location }</div>
-                <div style={ styles.profileBullet }><FaMortarBoard style={ styles.profileBulletIcon } /> { user.education }</div>
-              </div>            
-            : ''
-          }
-        </div>
-        <div style={ styles.profileCenterPane }>
-          <div>
-            <div style={ styles.profileStat }>
-              <span style={ styles.profileTotal }>{ user.comments }</span> comments
-            </div>
-            <div style={ styles.profileStat }>
-              <span style={ styles.profileTotal }>{ user.points }</span> points
-            </div>
-            <div style={ styles.profileStat }>
-              <span style={ styles.profileTotal }>{ user.upvoteBalance }%</span> upvotes
-            </div>
-            <div style={ styles.clearfix }></div>
+      <div style={ styles.profileInfoWrapper }>
+        <div style={ styles.profileInfo }>
+          <div style={ styles.profilePicPane }>
+            <img style={ styles.profilePicture } width="180" height="180" src={ "/img/playground/profile" + this.props.user + ".jpg" } /><br />
           </div>
-          { 
-            this.props.togglerGroups['reputation'].togglers['badges'].status ? 
-              <div>
-                {
-                  user.badges.map((badge, i) => {
-                    return (
-                      <div key={ i } style={ styles.badge }>
-                        <CoralIcon style={ styles.badgeIcon } size="medium" name={ badge.icon } color={ badge.color } /> { badge.name }
-                      </div>
-                    );
-                  })
-                }
+          <div style={ styles.profileLeftPane }>
+            <h3 style={ styles.userName }>
+              { 
+                this.props.togglerGroups['privacy'].togglers['anonymity'].status ? 
+                user.nickName : 
+                user.realName 
+              }
+            </h3><br />
+            { 
+              this.props.togglerGroups['privacy'].togglers['public_profile'].status ? 
+                <div>
+                  <div style={ styles.profileBullet }><FaClockO style={ styles.profileBulletIcon } /> Member for { user.membershipAge }</div>
+                  <div style={ styles.profileBullet }><MdPlace style={ styles.profileBulletIcon } /> { user.location }</div>
+                  <div style={ styles.profileBullet }><FaMortarBoard style={ styles.profileBulletIcon } /> { user.education }</div>
+                </div>            
+              : ''
+            }
+          </div>
+          <div style={ styles.profileCenterPane }>
+            <div>
+              <div style={ styles.profileStat }>
+                <span style={ styles.profileTotal }>{ user.comments }</span> comments
               </div>
-            : ''
-          }
+              <div style={ styles.profileStat }>
+                <span style={ styles.profileTotal }>{ user.points }</span> points
+              </div>
+              <div style={ styles.profileStat }>
+                <span style={ styles.profileTotal }>{ user.upvoteBalance }%</span> upvotes
+              </div>
+              <div style={ styles.clearfix }></div>
+            </div>
+            { 
+              this.props.togglerGroups['reputation'].togglers['badges'].status ? 
+                <div>
+                  {
+                    user.badges.map((badge, i) => {
+                      return (
+                        <div key={ i } style={ styles.badge }>
+                          <CoralIcon style={ styles.badgeIcon } size="medium" name={ badge.icon } color={ badge.color } /> { badge.name }
+                        </div>
+                      );
+                    })
+                  }
+                </div>
+              : ''
+            }
+          </div>
+          <div style={ styles.profileRightPane }>
+            { 
+              this.props.togglerGroups['community'].togglers['privatemessages'].status ? 
+                <div style={ styles.rightPaneAction }><MdComment /></div> : 
+                null
+            }
+            { 
+              this.props.togglerGroups['moderation'].togglers['muting'].status ? 
+                <div style={ styles.rightPaneAction }><FaHandPaperO /></div> : 
+                null
+            }
+            <div style={ styles.moreActions }><FaEllipsisH /></div>
+          </div>
+          <div style={ styles.clearfix }></div>
         </div>
-        <div style={ styles.profileRightPane }>
-          { 
-            this.props.togglerGroups['community'].togglers['privatemessages'].status ? 
-              <div style={ styles.rightPaneAction }><MdComment /></div> : 
-              null
-          }
-          { 
-            this.props.togglerGroups['moderation'].togglers['muting'].status ? 
-              <div style={ styles.rightPaneAction }><FaHandPaperO /></div> : 
-              null
-          }
-          <div style={ styles.moreActions }><FaEllipsisH /></div>
-        </div>
-        <div style={ styles.clearfix }></div>
+        <div style={ styles.profileInfoSpacer }></div>
       </div>
     );
 
@@ -105,16 +108,17 @@ var styles = {
   profileInfo: {
     background: '#eee',
     position: 'relative',
-    minHeight: '100px',
     fontSize: '9pt',
     width: '100%',
     maxWidth: '750px',
-    marginBottom: '30px',
     display: 'flex',
     flexDirection: 'row',
     [mediaQueries.mobile]: {
       display: 'block'
     }
+  },
+  profileInfoSpacer: {
+    height: '30px'
   },
   profilePicPane: {
     width: '180px',

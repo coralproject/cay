@@ -50,3 +50,47 @@ p {
   z-index: 3;
 }
 
+
+/* comment stream transitions */
+.profileinfo-enter {
+  max-height: 0;
+  overflow: hidden;
+}
+
+.profileinfo-enter.profileinfo-enter-active {
+  max-height: 600px;
+  transition: all 500ms linear;
+}
+
+.profileinfo-leave {
+  max-height: 600px;
+  overflow: hidden;
+}
+
+.profileinfo-leave.profileinfo-leave-active {
+  max-height: 0;
+  overflow: hidden;
+  transition: all 500ms ease-out;
+}
+
+/* commentTools transition */
+.commentTools-enter {
+  max-height: 0;
+  overflow: hidden;
+}
+
+.commentTools-enter.commentTools-enter-active {
+  max-height: 200px;
+  transition: all 500ms linear;
+}
+
+.commentTools-leave {
+  max-height: 200px;
+  overflow: hidden;
+}
+
+.commentTools-leave.commentTools-leave-active {
+  max-height: 0;
+  overflow: hidden;
+  transition: all 500ms ease-out;
+}

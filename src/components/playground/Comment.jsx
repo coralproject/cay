@@ -2,6 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+
 import ProfileBadge from './ProfileBadge';
 import ProfileInfo from './ProfileInfo';
 import CommentContent from './CommentContent';
@@ -30,7 +32,9 @@ class Comment extends React.Component {
 
     return (
       <div style={ styles.comment }>
-        { profileInfoSection }
+        <ReactCSSTransitionGroup transitionName="profileinfo" transitionAppear={ false }>
+          { profileInfoSection }
+        </ReactCSSTransitionGroup>
         <ProfileBadge profileClickHandler={ this.onProfileClick.bind(this) } user={ this.props.user } />
         <div onClick={ this.onCommentContentClick.bind(this) } style={ [ styles.commentContent, this.props.togglerGroups['interaction'].togglers['upvotes'].status ? styles.withUpvoter : null ] }>
           <CommentContent content={ this.props.content } />
@@ -41,9 +45,11 @@ class Comment extends React.Component {
           }
         </div>
         <ActionsBar { ...this.props } moreClickHandler={ this.onCommentContentClick.bind(this) } index={ this.props.index } />
-        { commentTools }
+        <ReactCSSTransitionGroup transitionName="commentTools" transitionAppear={ false }>
+          { commentTools }
+        </ReactCSSTransitionGroup>
       </div>
-      );
+    );
 
   }
 }

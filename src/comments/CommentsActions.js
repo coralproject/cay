@@ -1,10 +1,11 @@
+import {authXenia} from 'auth/AuthActions';
+
 export const COMMENT_CLICK = 'COMMENT_CLICK';
 export const COMMENTS_REQUEST = 'COMMENTS_REQUEST';
 export const COMMENTS_SUCCESS = 'COMMENTS_SUCCESS';
 export const COMMENTS_FAIL = 'COMMENTS_FAIL';
 export const STORE_COMMENTS = 'STORE_COMMENTS';
 export const CLEAR_USER_DETAIL_COMMENTS = 'CLEAR_USER_DETAIL_COMMENTS';
-
 
 
 export const requestComments = () => {
@@ -34,7 +35,7 @@ export const fetchCommentsByUser = (user_id) => {
     dispatch(clearUserDetailComments());
     dispatch(requestComments());
 
-    var myRequest = new Request(url, getInit());
+    var myRequest = new Request(url, authXenia());
 
     fetch(myRequest)
       .then(response => response.json())

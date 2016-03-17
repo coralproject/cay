@@ -1,7 +1,8 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
-import {userSelected, fetchCommentsByUser} from 'users/UsersActions';
+import {userSelected} from 'users/UsersActions';
+import {fetchCommentsByUser} from 'comments/CommentsActions';
 
 import UserRow from 'users/UserRow';
 import Heading from 'components/Heading';

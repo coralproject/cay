@@ -4,7 +4,9 @@ import _ from 'lodash';
 
 import {connect} from 'react-redux';
 
-import {fetchAllTags, upsertUser, fetchCommentsByUser, clearUserDetailComments} from 'users/UsersActions';
+import {fetchAllTags} from 'tags/TagActions';
+import {upsertUser} from 'users/UsersActions';
+import {fetchCommentsByUser, clearUserDetailComments} from 'comments/CommentsActions';
 
 import Avatar from 'users/Avatar';
 import Tab from 'components/tabs/Tab';

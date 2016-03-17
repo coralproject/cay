@@ -1,8 +1,8 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 
-import Card from './cards/Card';
-import CardHeader from './cards/CardHeader';
+import Card from 'components/cards/Card';
+import CardHeader from 'components/cards/CardHeader';
 
 @Radium
 export default class CommentCard extends React.Component {

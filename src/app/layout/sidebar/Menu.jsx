@@ -2,15 +2,15 @@ import React from 'react';
 import Radium from 'radium';
 import {Link} from 'react-router';
 
-import MenuItem from './MenuItem';
+import MenuItem from 'app/layout/sidebar/MenuItem';
 
 import MdBuild from 'react-icons/lib/md/build';
 import MdSettings from 'react-icons/lib/md/settings';
 import MdInfoOutline from 'react-icons/lib/md/info-outline';
 import MdGroup from 'react-icons/lib/md/group';
 
-import { Lang } from '../../../lang';
-import settings from '../../../settings';
+import { Lang } from 'i18n/lang';
+import settings from 'settings';
 
 @Lang
 @Radium

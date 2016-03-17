@@ -5,12 +5,12 @@ import Radium from 'radium';
 import { connect } from 'react-redux';
 import {Link} from 'react-router';
 // import { FOO } from '../actions';
-import Page from './Page';
-import {fetchQuerysetsIfNotFetched} from '../actions';
+import Page from 'app/layout/Page';
+import {fetchQuerysetsIfNotFetched} from 'groups/GroupActions';
 // import Sentence from '../components/Sentence';
-import Card from '../components/cards/Card';
-import CardHeader from '../components/cards/CardHeader';
-import ContentHeader from '../components/ContentHeader';
+import Card from 'components/cards/Card';
+import CardHeader from 'components/cards/CardHeader';
+import ContentHeader from 'components/ContentHeader';
 
 @connect(state => state.groups)
 @Radium
@@ -94,8 +94,8 @@ const styles = {
     display: 'flex'
   },
   sentenceHeading: {
-    margin: "10px 0px",
-    textTransform: "uppercase",
+    margin: '10px 0px',
+    textTransform: 'uppercase',
     fontWeight: 500
   },
   actionsContainer: {

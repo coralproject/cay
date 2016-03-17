@@ -1,14 +1,14 @@
 import React from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
-import {filterChanged} from '../../actions';
-import {clamp} from '../../utils';
+import {filterChanged} from 'filters/FiltersActions';
+import {clamp} from 'components/utils/math';
 // import Flex from '../layout/Flex';
 
-import Card from '../cards/Card';
-import CardHeader from '../cards/CardHeader';
+import Card from 'components/cards/Card';
+import CardHeader from 'components/cards/CardHeader';
 
-import Slider from '../Slider';
+import Slider from 'components/Slider';
 
 const style = {
   // symbol: {

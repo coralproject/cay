@@ -4,7 +4,7 @@
   It is used by webpack to compile translations into the build.
   Ref: https://webpack.github.io/docs/context.html (require.context)
 */
-var req = require.context('../lang', true, /\.json.*$/);  
+var req = require.context('../../lang', true, /\.json.*$/);
 var exports = {};
 
 req.keys().forEach(function (file) {

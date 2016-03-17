@@ -1,20 +1,21 @@
 import React from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
+
+import {fetchAllTags} from 'tags/TagActions';
+import { makeQueryFromState } from 'groups/GroupActions';
 import {
-  fetchAllTags,
   fetchSections,
   fetchAuthors,
   setBreakdown,
   setSpecificBreakdown,
-  getFilterRanges,
-  makeQueryFromState
-} from '../../actions';
+  getFilterRanges} from 'filters/FiltersActions';
+
 
 import Select from 'react-select';
-import FilterNumbers from './FilterNumbers';
+import FilterNumbers from 'filters/FilterNumbers';
 
-import Heading from '../Heading';
+import Heading from 'components/Heading';
 
 
 @connect(state => state.filters)

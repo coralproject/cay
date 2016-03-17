@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import * as types from '../actions';
+import * as types from 'filters/FiltersActions';
 
 let initialState = {
   tags: [],

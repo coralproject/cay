@@ -3,9 +3,9 @@
 import React from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
-import {getFilterRanges} from '../actions';
+import {getFilterRanges} from 'filters/FiltersActions';
 
-import FilterFactory from './filters/FilterFactory';
+import FilterFactory from 'filters/FilterFactory';
 
 @connect(state => state.filters)
 @Radium

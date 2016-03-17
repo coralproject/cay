@@ -1,13 +1,13 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
-import {filterChanged} from '../../actions';
+import {filterChanged} from 'filters/FiltersActions';
 import Radium from 'radium';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 
-import Slider from '../Slider';
-import Card from '../cards/Card';
-import CardHeader from '../cards/CardHeader';
+import Slider from 'components/Slider';
+import Card from 'components/cards/Card';
+import CardHeader from 'components/cards/CardHeader';
 
 @connect()
 @Radium

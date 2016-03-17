@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
-import {filterChanged} from '../../actions';
+import {filterChanged} from 'filters/FiltersActions';
 
 import TextField from '../forms/TextField';
 

@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import {authXenia} from 'auth/AuthActions';
 
 export const REQUEST_SECTIONS = 'REQUEST_SECTIONS';
@@ -9,7 +10,6 @@ export const FILTER_CHANGED = 'FILTER_CHANGED';
 
 export const SET_BREAKDOWN = 'SET_BREAKDOWN';
 export const SET_SPECIFIC_BREAKDOWN = 'SET_SPECIFIC_BREAKDOWN';
-
 
 export const requestSections = () => {
   return {

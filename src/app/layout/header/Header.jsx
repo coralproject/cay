@@ -1,13 +1,12 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
-import {logout} from '../../../actions';
+import {logout} from 'auth/AuthActions';
 
-// import Searchbar from '../../forms/Searchbar';
 import MdMenu from 'react-icons/lib/md/menu';
-import Button from '../../Button';
-import LanguageSwitcher from '../LanguageSwitcher';
-import settings from '../../../settings';
+import Button from 'components/Button';
+import LanguageSwitcher from 'app/layout/LanguageSwitcher';
+import settings from 'settings';
 
 @connect()
 @Radium

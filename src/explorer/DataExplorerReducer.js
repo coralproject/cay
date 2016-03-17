@@ -1,4 +1,4 @@
-import * as types from '../actions';
+import * as types from 'explorer/DataExplorerActions';
 import _ from 'lodash';
 
 const data_exploration = (state = {

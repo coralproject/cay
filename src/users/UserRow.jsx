@@ -1,8 +1,8 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
-import ListItem from './lists/ListItem';
-import CharacterIcon from './CharacterIcon';
+import ListItem from 'components/lists/ListItem';
+import CharacterIcon from 'components/CharacterIcon';
 
 @connect(state => state.groups)
 @Radium

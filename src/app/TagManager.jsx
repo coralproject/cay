@@ -2,28 +2,28 @@ import React, {PropTypes} from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 
-import Page from './Page';
-import ContentHeader from '../components/ContentHeader';
-import InPlaceEditor from '../components/forms/InPlaceEditor';
-import Tagger from '../components/forms/Tagger';
+import Page from 'app/layout/Page';
+import ContentHeader from 'components/ContentHeader';
+import InPlaceEditor from 'components/forms/InPlaceEditor';
+import Tagger from 'components/forms/Tagger';
 
-import Table from '../components/tables/Table';
-import TableHead from '../components/tables/TableHead';
-import TableHeader from '../components/tables/TableHeader';
-import TableBody from '../components/tables/TableBody';
-import TableRow from '../components/tables/TableRow';
-import TableCell from '../components/tables/TableCell';
+import Table from 'components/tables/Table';
+import TableHead from 'components/tables/TableHead';
+import TableHeader from 'components/tables/TableHeader';
+import TableBody from 'components/tables/TableBody';
+import TableRow from 'components/tables/TableRow';
+import TableCell from 'components/tables/TableCell';
 
-import { storeTag, getTags, deleteTag } from '../actions/tags';
+import { storeTag, getTags, deleteTag } from 'tags/TagActions';
 
 import FaSpinner from 'react-icons/lib/fa/spinner';
 import MdDelete from 'react-icons/lib/md/delete';
 
-import settings from '../settings';
+import settings from 'settings';
 
-import { Lang } from '../lang';
+import { Lang } from 'i18n/lang';
 
-require('../../css/react-tag-input.css');
+require('react-tag-input.css');
 
 @Lang
 @connect(state => state.tags)
@@ -168,7 +168,7 @@ export default class TagManager extends React.Component {
           }
 
           {
-            this.props.tags && this.props.tags.length ? 
+            this.props.tags && this.props.tags.length ?
               <div>
                 <p>
                   { "Click on a tag's name or description to edit it." }
@@ -183,7 +183,7 @@ export default class TagManager extends React.Component {
                   </TableBody>
                 </Table>
               </div>
-            : 
+            :
               <p style={ styles.noTags }>No tags created yet.</p>
           }
         </div>

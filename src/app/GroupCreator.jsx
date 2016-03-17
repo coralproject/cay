@@ -2,13 +2,13 @@ import React, {PropTypes} from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 
-import {fetchQuerysetsIfNotFetched, saveQueryFromState} from '../actions';
+import {fetchQuerysetsIfNotFetched, saveQueryFromState} from 'groups/GroupActions';
 
-import Page from './Page';
-import ContentHeader from '../components/ContentHeader';
-import UserList from '../components/UserList';
-import GroupFilters from '../components/GroupFilters';
-import Button from '../components/Button';
+import Page from 'app/layout/Page';
+import ContentHeader from 'components/ContentHeader';
+import UserList from 'users/UserList';
+import GroupFilters from 'groups/GroupFilters';
+import Button from 'components/Button';
 import FaFloopyO from 'react-icons/lib/fa/floppy-o';
 
 @connect(state => state.groups)

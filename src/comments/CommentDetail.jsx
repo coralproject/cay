@@ -1,10 +1,10 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 
-import settings from '../settings';
-import DateTime from './utils/DateTime';
-import Card from './cards/Card';
-import CardHeader from './cards/CardHeader';
+import settings from 'settings';
+import DateTime from 'components/utils/DateTime';
+import Card from 'components/cards/Card';
+import CardHeader from 'components/cards/CardHeader';
 
 @Radium
 export default class CommentDetail extends React.Component {

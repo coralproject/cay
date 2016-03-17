@@ -1,7 +1,7 @@
 import React from 'react';
 import Radium from 'radium';
 
-import CommentDetail from './CommentDetail';
+import CommentDetail from 'comments/CommentDetail';
 
 @Radium
 export default class CommentDetailList extends React.Component {

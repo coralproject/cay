@@ -1,7 +1,7 @@
-import * as index from '../actions';
-import * as tagActions from '../actions/tags';
+import * as tagsActions from 'tags/TagActions';
+import * as authActions from 'auth/AuthActions';
 
-const types = Object.assign({}, index, tagActions);
+const types = Object.assign({}, tagsActions, authActions);
 
 const initialState = {
   loading: false,

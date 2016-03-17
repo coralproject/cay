@@ -4,24 +4,22 @@ import _ from 'lodash';
 
 import {connect} from 'react-redux';
 
-import {fetchAllTags, upsertUser, fetchCommentsByUser, clearUserDetailComments} from '../actions';
+import {fetchAllTags, upsertUser, fetchCommentsByUser, clearUserDetailComments} from 'users/UsersActions';
 
-import Avatar from './Avatar';
-import Tab from './tabs/Tab';
-import Tabs from './tabs/Tabs';
-import Stats from './stats/Stats';
-import Stat from './stats/Stat';
-import Heading from './Heading';
+import Avatar from 'users/Avatar';
+import Tab from 'components/tabs/Tab';
+import Tabs from 'components/tabs/Tabs';
+import Stats from 'components/stats/Stats';
+import Stat from 'components/stats/Stat';
+import Heading from 'components/Heading';
 import MdLocalOffer from 'react-icons/lib/md/local-offer';
-
-import Spinner from './Spinner';
 
 // import Tagger from './forms/Tagger';
 import Select from 'react-select';
 
-import CommentDetailList from './CommentDetailList';
+import CommentDetailList from 'comments/CommentDetailList';
 
-import { Lang } from '../lang';
+import { Lang } from 'i18n/lang';
 
 @connect(state => state.groups)
 @Lang

@@ -1,13 +1,17 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
-import { fetchDataExplorationDataset, fetchAuthorsAndSections, populateControlsReducer } from '../actions';
+
+import {fetchDataExplorationDataset, populateControlsReducer} from 'explorer/DataExplorerActions';
+
+
+import { fetchAuthors, fetchSections } from 'filters/FiltersActions';
 import Page from './Page';
 import Card from '../components/cards/Card';
-import DataExplorerVisualization from '../components/DataExplorerVisualization';
-import ExplorerTutorial from '../components/DataExplorerTutorial';
-import GroupFilters from '../components/GroupFilters';
-import Flex from '../components/layout/Flex';
+import DataExplorerVisualization from 'components/DataExplorerVisualization';
+import ExplorerTutorial from 'components/DataExplorerTutorial';
+import GroupFilters from 'groups/GroupFilters';
+import Flex from 'app/layout/Flex';
 import _ from 'lodash';
 
 @connect(state => state.dataExplorer)
@@ -16,7 +20,8 @@ class DataExplorer extends React.Component {
 
   componentWillMount() {
     this.props.dispatch(populateControlsReducer());
-    this.props.dispatch(fetchAuthorsAndSections());
+    this.props.dispatch(fetchAuthors());
+    this.props.dispatch(fetchSections());
   }
 
   controlsUpdatedGoGetDataset(queryset, dateRange) {

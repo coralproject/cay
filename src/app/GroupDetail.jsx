@@ -1,13 +1,13 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
-import {fetchQueryset} from '../actions';
+import {fetchQueryset} from 'groups/GroupActions';
 import _ from 'lodash';
 
-import Page from './Page';
-import ContentHeader from '../components/ContentHeader';
-import UserList from '../components/UserList';
-import UserDetail from '../components/UserDetail';
+import Page from 'app/layout/Page';
+import ContentHeader from 'components/ContentHeader';
+import UserList from 'users/UserList';
+import UserDetail from 'users/UserDetail';
 
 @connect(state => state.groups)
 @Radium

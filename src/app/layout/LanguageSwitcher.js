@@ -5,7 +5,7 @@ import MdLanguage from 'react-icons/lib/md/language';
 import MdArrowDropDown from 'react-icons/lib/md/arrow-drop_down';
 import MdCheck from 'react-icons/lib/md/check';
 
-import { Lang } from '../../lang';
+import { Lang } from 'i18n/lang';
 
 @Lang
 @Radium

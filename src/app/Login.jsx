@@ -1,15 +1,14 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
-import {Link} from 'react-router';
 
-import settings from '../settings';
+import settings from 'settings';
 import color from 'color';
 
-import {login} from '../actions';
+import {login} from 'auth/AuthActions';
 
-import Button from '../components/Button';
-import TextField from '../components/forms/TextField';
+import Button from 'components/Button';
+import TextField from 'components/forms/TextField';
 
 @connect(state => state.auth)
 @Radium

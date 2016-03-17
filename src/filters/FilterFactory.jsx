@@ -3,9 +3,9 @@ import _ from 'lodash';
 // even without extending React.Component wat.
 import React from 'react';
 
-import UserFilters from './UserFilters';
-import CommentFilters from './CommentFilters';
-import AssetFilters from './AssetFilters';
+import UserFilters from 'filters/UserFilters';
+import CommentFilters from 'filters/CommentFilters';
+import AssetFilters from 'filters/AssetFilters';
 
 function ObjectId() { }
 

@@ -1,13 +1,13 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
-import {userSelected, fetchCommentsByUser} from '../actions';
+import {userSelected, fetchCommentsByUser} from 'users/UsersActions';
 
-import UserRow from './UserRow';
-import Heading from './Heading';
-import Spinner from './Spinner';
+import UserRow from 'users/UserRow';
+import Heading from 'components/Heading';
+import Spinner from 'components/Spinner';
 
-import { Lang } from '../lang';
+import { Lang } from 'i18n/lang';
 
 @connect(state => state.groups)
 @Lang

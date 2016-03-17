@@ -1,7 +1,7 @@
 var React = require('react');
 var ReactTestUtils = require('react-addons-test-utils');
 var chai = require('chai');
-var List = require('../../../src/components/lists/List');
+var List = require('components/lists/List');
 
 describe('List component', function () {
 

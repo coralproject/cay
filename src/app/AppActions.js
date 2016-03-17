@@ -1,2 +1,1 @@
 export const CONFIG_LOADED = 'CONFIG_LOADED';
-export const DATA_CONFIG_LOADED = 'DATA_CONFIG_LOADED';

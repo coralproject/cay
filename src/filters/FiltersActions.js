@@ -6,10 +6,14 @@ export const RECEIVE_SECTIONS = 'RECEIVE_SECTIONS';
 export const REQUEST_AUTHORS = 'REQUEST_AUTHORS';
 export const RECEIVE_AUTHORS = 'RECEIVE_AUTHORS';
 
+export const DATA_CONFIG_LOADED = 'DATA_CONFIG_LOADED';
+
 export const FILTER_CHANGED = 'FILTER_CHANGED';
 
 export const SET_BREAKDOWN = 'SET_BREAKDOWN';
 export const SET_SPECIFIC_BREAKDOWN = 'SET_SPECIFIC_BREAKDOWN';
+
+export const RECEIVE_FILTER_RANGES = 'RECEIVE_FILTER_RANGES';
 
 export const requestSections = () => {
   return {
@@ -138,8 +142,8 @@ export const getFilterRanges = () => {
     fetch(url, init)
       .then(res => res.json())
       .then(data => {
-        console.log('RECEIVE_FILTER_RANGES', data);
-        dispatch({type: 'RECEIVE_FILTER_RANGES', data});
+        console.log(RECEIVE_FILTER_RANGES, data);
+        dispatch({type: RECEIVE_FILTER_RANGES, data});
       }).catch(err => {
         console.log(err);
       });

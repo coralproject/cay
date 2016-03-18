@@ -4,13 +4,13 @@ import {clamp} from '../utils';
 export const CONFIG_LOADED = 'CONFIG_LOADED';
 export const DATA_CONFIG_LOADED = 'DATA_CONFIG_LOADED';
 
-export const PIPELINE_SELECTED = 'PIPELINE_SELECTED';
-export const PIPELINE_REQUEST = 'PIPELINE_REQUEST'; // request data for a single pipeline
-export const PIPELINES_REQUEST = 'PIPELINES_REQUEST';
-export const PIPELINES_REQUEST_FAILURE = 'PIPELINES_REQUEST_FAILURE';
-export const PIPELINE_REQUEST_FAILURE = 'PIPELINE_REQUEST_FAILURE';
-export const PIPELINES_RECEIVED = 'PIPELINES_RECEIVED';
-export const PIPELINE_RECEIVED = 'PIPELINE_RECEIVED';
+export const QUERYSET_SELECTED = 'QUERYSET_SELECTED';
+export const QUERYSET_REQUEST = 'QUERYSET_REQUEST'; // request data for a single queryset
+export const QUERYSETS_REQUEST = 'QUERYSETS_REQUEST';
+export const QUERYSETS_REQUEST_FAILURE = 'QUERYSETS_REQUEST_FAILURE';
+export const QUERYSET_REQUEST_FAILURE = 'QUERYSET_REQUEST_FAILURE';
+export const QUERYSETS_RECEIVED = 'QUERYSETS_RECEIVED';
+export const QUERYSET_RECEIVED = 'QUERYSET_RECEIVED';
 
 export const LOGIN_INIT = 'LOGIN_INIT'; // user has clicked the Sign In button
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS'; // login request success
@@ -61,6 +61,9 @@ export const SET_SPECIFIC_BREAKDOWN = 'SET_SPECIFIC_BREAKDOWN';
 export const REQUEST_FILTER_RANGES = 'REQUEST_FILTER_RANGES';
 export const RECEIVE_FILTER_RANGES = 'RECEIVE_FILTER_RANGES';
 
+export const QUERYSET_SAVE_SUCCESS = 'QUERYSET_SAVE_SUCCESS';
+export const QUERYSET_SAVE_FAILED = 'QUERYSET_SAVE_FAILED';
+
 /* config */
 
 const getInit = (method) => {
@@ -76,46 +79,44 @@ const getInit = (method) => {
   return init;
 };
 
-const apiPrefix = '1.0/'; // maybe later we'll be at api 2.0
-
-export const selectPipeline = (pipeline) => {
+export const selectQueryset = (queryset) => {
   return {
-    type: PIPELINE_SELECTED,
-    pipeline
+    type: QUERYSET_SELECTED,
+    queryset
   };
 };
 
-export const requestPipeline = (pipeline) => {
+export const requestQueryset = (queryset) => {
   return {
-    type: PIPELINE_REQUEST,
-    pipeline
+    type: QUERYSET_REQUEST,
+    queryset
   };
 };
 
-export const requestPipelines = () => {
+export const requestQuerysets = () => {
   return {
-    type: PIPELINES_REQUEST
+    type: QUERYSETS_REQUEST
   };
 };
 
-export const receivePipelines = (pipelines) => {
+export const receiveQuerysets = (querysets) => {
   return {
-    type: PIPELINES_RECEIVED,
-    pipelines
+    type: QUERYSETS_RECEIVED,
+    querysets
   };
 };
 
-export const requestPipelinesFailure = (err) => {
+export const requestQuerysetsFailure = (err) => {
   return {
-    type: PIPELINES_REQUEST_FAILURE,
+    type: QUERYSETS_REQUEST_FAILURE,
     err
   };
 };
 
-export const fetchPipelinesIfNotFetched = () => {
+export const fetchQuerysetsIfNotFetched = () => {
   return (dispatch, getState) => {
-    if (! getState().pipelines.loading) {
-      return dispatch(fetchPipelines());
+    if (! getState().groups.loading) {
+      return dispatch(fetchQuerysets());
     }
     return {
       type: 'NOOP'
@@ -124,48 +125,48 @@ export const fetchPipelinesIfNotFetched = () => {
 };
 
 // get deep list of query_sets
-export const fetchPipelines = () => {
+export const fetchQuerysets = () => {
   return (dispatch) => {
 
-    dispatch(requestPipelines());
+    dispatch(requestQuerysets());
 
     fetch(window.xeniaHost + '/1.0/query', getInit())
       .then(response => response.json())
-      .then(pipelines => dispatch(receivePipelines(pipelines)))
-      .catch(err => dispatch(requestPipelinesFailure(err)));
+      .then(querysets => dispatch(receiveQuerysets(querysets)))
+      .catch(err => dispatch(requestQuerysetsFailure(err)));
   };
 };
 
-export const requestPipelineFailure = (err) => {
+export const requestQuerysetFailure = (err) => {
   return {
-    type: PIPELINE_REQUEST_FAILURE,
+    type: QUERYSET_REQUEST_FAILURE,
     err
   };
 };
 
-export const receivePipeline = (data) => {
+export const receiveQueryset = (data) => {
   return {
-    type: PIPELINE_RECEIVED,
+    type: QUERYSET_RECEIVED,
     data
   };
 };
 
 // execute a query_set
-export const fetchPipeline = (pipelineName) => {
+export const fetchQueryset = (querysetName) => {
   return (dispatch) => {
-    dispatch(requestPipeline(pipelineName));
+    dispatch(requestQueryset(querysetName));
 
-    fetch(window.xeniaHost + '/' + apiPrefix + 'exec/' + pipelineName, getInit())
+    fetch(window.xeniaHost + '/1.0/exec/' + querysetName, getInit())
       .then(response => response.json())
-      .then(pipeline => dispatch(receivePipeline(pipeline)))
-      .catch(err => dispatch(requestPipelineFailure(err)));
+      .then(queryset => dispatch(receiveQueryset(queryset)))
+      .catch(err => dispatch(requestQuerysetFailure(err)));
   };
 };
 
-export const executeCustomPipeline = pipeline => {
+export const executeCustomQueryset = queryset => {
   return {
-    type: 'EXECUTE_CUSTOM_PIPELINE',
-    pipeline
+    type: 'EXECUTE_CUSTOM_QUERYSET',
+    queryset
   };
 };
 
@@ -229,7 +230,7 @@ export const setBreakdown = (breakdown) => {
 export const setSpecificBreakdown = (specificBreakdown) => {
   return (dispatch, getState) => {
     let counter = getState().filters.counter;
-    counter++
+    counter++;
     dispatch({
       type: SET_SPECIFIC_BREAKDOWN,
       specificBreakdown: specificBreakdown,
@@ -256,7 +257,7 @@ export const loginUser = (username, password) => {
 };
 
 export const fetchCommentsByUser = (user_id) => {
-  const url = `${window.xeniaHost}/${apiPrefix}exec/comments_by_user?user_id=${user_id}`;
+  const url = `${window.xeniaHost}/1.0/exec/comments_by_user?user_id=${user_id}`;
   return (dispatch) => {
 
     dispatch(clearUserDetailComments());
@@ -339,8 +340,8 @@ const convert = (json) => {
     }).join('&');
 };
 
-export const createPipelineValueChanged = (config) => {
-  const url = window.xeniaHost + '/' + apiPrefix + 'exec';
+export const createQuerysetValueChanged = (config) => {
+  const url = window.xeniaHost + '/1.0/exec';
 
   return (dispatch, getState) => {
 
@@ -365,7 +366,7 @@ export const createPipelineValueChanged = (config) => {
 
 export const fetchDataExplorationDataset = (field, queryParams) => {
   const queryParamString = queryParams ? convert(queryParams) : '';
-  const url = window.xeniaHost + '/' + apiPrefix + 'exec/' + field + queryParamString;
+  const url = window.xeniaHost + '/1.0/exec/' + field + queryParamString;
 
   return (dispatch, getState) => {
 
@@ -392,10 +393,10 @@ const requestControls = () => {
   };
 };
 
-const receiveControls = (pipelines) => {
+const receiveControls = (querysets) => {
   return {
     type: RECEIVE_EXPLORER_CONTROLS,
-    pipelines
+    querysets
   };
 };
 
@@ -407,7 +408,7 @@ export const populateControlsReducer = () => {
 
     fetch(url, getInit())
       .then(res => res.json())
-      .then(pipelines => dispatch(receiveControls(pipelines)))
+      .then(querysets => dispatch(receiveControls(querysets)))
       .catch(err => console.log(err));
   };
 };
@@ -564,7 +565,7 @@ export const getFilterRanges = () => {
 
     dispatch({type: 'REQUEST_FILTER_RANGES'});
 
-    const url = window.xeniaHost + '/' + apiPrefix + 'exec';
+    const url = window.xeniaHost + '/1.0/exec';
 
     var init = getInit('POST');
     init.body = JSON.stringify(query);
@@ -604,7 +605,7 @@ export const createQuery = (query) => {
 
 export const makeQueryFromState = (/*type*/) => {
   return (dispatch, getState) => {
-    console.log('function that calls async')
+    console.log('function that calls async');
     // make a query from the current state
     const filterState = getState().filters;
     const filters = filterState.filterList.map(key => filterState[key]);
@@ -673,12 +674,86 @@ export const makeQueryFromState = (/*type*/) => {
   };
 };
 
+// yikes. lots of this code is replicated above.
+// time to make a xenia library
+export const saveQueryFromState = (queryName, modDescription) => {
+  return (dispatch, getState) => {
+    console.log('function that calls async');
+    // make a query from the current state
+    const filterState = getState().filters;
+    const filters = filterState.filterList.map(key => filterState[key]);
+
+    let matches = _.flatten(_.map(filters, filter => {
+      let dbField;
+      if (filterState.breakdown === 'author') {
+        dbField = _.template(filter.template)({dimension: 'author.' + filterState.specificBreakdown});
+      } else if (filterState.breakdown === 'section') {
+        dbField = _.template(filter.template)({dimension: 'section.' + filterState.specificBreakdown});
+      } else { // all
+        dbField = _.template(filter.template)({dimension: 'all'});
+      }
+
+      var matches = [];
+
+      // Only create match statements for non-defaults
+      if (filter.min !== filter.userMin) {
+        matches.push( {$match: {[dbField]: {$gte: clamp(filter.userMin, filter.min, filter.max)}}});
+      }
+
+      if (filter.max !== filter.userMax) {
+        matches.push( {$match: {[dbField]: {$lte: clamp(filter.userMax, filter.min, filter.max)}}});
+      }
+
+      return matches;
+
+    }));
+
+    let query = {
+      name: queryName,
+      desc: modDescription,
+      pre_script: '',
+      pst_script: '',
+      params: [],
+      queries: [
+        {
+          name: queryName,
+          type: 'pipeline',
+          collection: 'user_statistics',
+          commands: [
+            ...matches,
+            {$skip: 0},
+            {$limit: 20}
+          ],
+          return: true
+        }
+      ],
+      enabled: true
+    };
+
+    doPutQueryFromState(query, dispatch);
+
+  };
+};
+
+const doPutQueryFromState = (query, dispatch) => {
+  const url = window.xeniaHost + '/1.0/query';
+  let init = getInit('PUT');
+  init.body = JSON.stringify(query);
+
+  fetch(url, init)
+    .then(() => { // if response.status < 400
+      dispatch({type: QUERYSET_SAVE_SUCCESS});
+    }).catch(error => {
+      dispatch({type: QUERYSET_SAVE_FAILED, error});
+    });
+};
+
 const doMakeQueryFromStateAsync = _.debounce((query, dispatch)=>{
-  console.log('actual async')
-  dispatch(requestPipeline());
+  console.log('actual async');
+  dispatch(requestQueryset());
   dispatch(createQuery(query));
 
-  const url = window.xeniaHost + '/' + apiPrefix + 'exec';
+  const url = window.xeniaHost + '/1.0/exec';
 
   var init = getInit('POST');
   init.body = JSON.stringify(query);
@@ -686,13 +761,12 @@ const doMakeQueryFromStateAsync = _.debounce((query, dispatch)=>{
   fetch(url, init)
     .then(response => response.json())
     .then(json => {
-      dispatch(receivePipeline(json));
+      dispatch(receiveQueryset(json));
     })
     .catch(err => {
       dispatch(dataExplorationFetchError(err));
     });
-},1000)
-
+}, 1000);
 
 const receiveUpsertedUser = (user) => {
   return {

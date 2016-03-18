@@ -30,7 +30,7 @@
       "category": "Activity",
       "field": "replied_count",
       "template": "statistics.comments.<%= dimension %>.all.replied_count",
-      "description": "replies they have written to others",
+      "description": "total replies written",
       "collection": "user_statistics",
       "type": "intRange"
     },
@@ -39,7 +39,7 @@
       "category": "Response",
       "field": "reply_count",
       "template": "statistics.comments.<%= dimension %>.all.reply_count",
-      "description": "times other have replied to them",
+      "description": "total replies received",
       "collection": "user_statistics",
       "type": "intRange"
     },
@@ -48,7 +48,7 @@
       "category": "Response",
       "field": "replied_ratio",
       "template": "statistics.comments.<%= dimension %>.all.replied_ratio",
-      "description": "Percent of comments that are replies",
+      "description": "% comments that are replies",
       "collection": "user_statistics",
       "type": "percentRange"
     },
@@ -57,7 +57,7 @@
       "category": "Response",
       "field": "reply_ratio",
       "template": "statistics.comments.<%= dimension %>.all.reply_ratio",
-      "description": "Replies from others per comment",
+      "description": "Replies received per comment",
       "collection": "user_statistics",
       "type": "floatRange"
     },
@@ -68,14 +68,14 @@
       "template": "statistics.comments.<%= dimension %>.all.word_count_average",
       "description": "Average words per post",
       "collection": "user_statistics",
-      "type": "floatRange"
+      "type": "intRange"
     },
     {
       "name": "Percent SystemFlagged",
       "category": "Moderation",
       "field": "SystemFlagged",
       "template": "statistics.comments.<%= dimension %>.ratios.SystemFlagged",
-      "description": "Percent of comments SystemFlagged",
+      "description": "% comments flagged by the system",
       "collection": "user_statistics",
       "type": "percentRange"
     }

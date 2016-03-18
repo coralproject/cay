@@ -6,7 +6,7 @@ import Page from './Page';
 import Card from '../components/cards/Card';
 import DataExplorerVisualization from '../components/DataExplorerVisualization';
 import ExplorerTutorial from '../components/DataExplorerTutorial';
-import PipelineCreator from '../components/PipelineCreator';
+import QuerysetCreator from '../components/QuerysetCreator';
 import Flex from '../components/layout/Flex';
 import _ from 'lodash';
 
@@ -19,8 +19,8 @@ class DataExplorer extends React.Component {
     this.props.dispatch(fetchAuthorsAndSections());
   }
 
-  controlsUpdatedGoGetDataset(pipeline, dateRange) {
-    this.props.dispatch(fetchDataExplorationDataset(pipeline, dateRange));
+  controlsUpdatedGoGetDataset(queryset, dateRange) {
+    this.props.dispatch(fetchDataExplorationDataset(queryset, dateRange));
   }
 
   // we don't want to request 10000 hourly intervals,
@@ -45,7 +45,7 @@ class DataExplorer extends React.Component {
     const startDate = values.dateRange[0];
     const endDate = values.dateRange[1];
 
-    this.controlsUpdatedGoGetDataset(values.pipeline, {
+    this.controlsUpdatedGoGetDataset(values.queryset, {
       start: Math.floor(startDate / 1000),
       end: Math.floor(endDate / 1000),
       duration: this.getSensibleInterval(startDate, endDate),
@@ -79,12 +79,12 @@ class DataExplorer extends React.Component {
           <Card style={styles.pane}>
             {/*<ExplorerControls
               dataset={this.props.dataset}
-              rangeStart={this.props.pipelineRangeStart}
-              rangeEnd={this.props.pipelineRangeEnd}
+              rangeStart={this.props.querysetRangeStart}
+              rangeEnd={this.props.querysetRangeEnd}
               getNonActionFiringControlValues={this.getNonActionFiringControlValues.bind(this)}
               getControlValues={this.getControlValues.bind(this)}
-              pipelines={this.props.pipelines} />*/}
-            <PipelineCreator
+              querysets={this.props.querysets} />*/}
+            <QuerysetCreator
               authors={this.props.authors}
               sections={this.props.sections}
               dispatch={this.props.dispatch} />

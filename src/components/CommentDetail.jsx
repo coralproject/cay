@@ -34,8 +34,7 @@ const styles = {
   date: {
     fontWeight: 'bold',
     marginBottom: '10px',
-    paddingBottom: '10px',
-    borderBottom: '1px solid #ddd'
+    paddingBottom: '10px'
   },
   commentContent: {
     color: 'black',

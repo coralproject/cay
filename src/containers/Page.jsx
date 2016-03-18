@@ -11,6 +11,8 @@ import Sidebar from 'react-sidebar';
 import Header from '../components/layout/header/Header';
 import Menu from '../components/layout/sidebar/Menu';
 
+import settings from '../settings';
+
 @Radium
 class Page extends React.Component {
 
@@ -30,11 +32,7 @@ class Page extends React.Component {
 
   componentWillMount() {
     var mql = window.matchMedia('(min-width: 800px)');
-    if (mql.addEventListener) {
-      mql.addEventListener(this.mediaQueryChanged.bind(this));
-    } else { // wtf Firefox.
-      mql.addListener(this.mediaQueryChanged.bind(this));
-    }
+    mql.addListener(this.mediaQueryChanged.bind(this));
     this.setState({mql: mql, sidebarDocked: mql.matches});
   }
 
@@ -84,8 +82,8 @@ export default Page;
 
 const styles = {
   wrapper:  {
-    backgroundColor: '#ecf0f5',
-    minHeight: (window.innerHeight - 50) + 'px',
-    padding: '20px'
+    backgroundColor: settings.bgColorBase,
+    height: window.innerHeight - 50,
+    padding: 20
   }
 };

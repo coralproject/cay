@@ -12,7 +12,7 @@ import { DevTools, DebugPanel, LogMonitor } from 'redux-devtools/lib/react';
 import configureStore from './store';
 
 // import Dashboard from './containers/Dashboard';
-import UserManager from './containers/UserManager';
+import GroupCreator from './containers/GroupCreator';
 import TagManager from './containers/TagManager';
 import Login from './containers/Login';
 import Playground from './containers/Playground';
@@ -70,10 +70,10 @@ class Root extends React.Component {
       <div>
         <Provider store={store}>
           <Router history={browserHistory} onUpdate={ this.logPageView }>
-            <Route path="/" component={UserManager} />
+            <Route path="/" component={GroupCreator} />
             <Route path="login" component={Login} />
             <Route path="about" component={About} />
-            <Route path="group-creator" component={UserManager} />
+            <Route path="group-creator" component={GroupCreator} />
             <Route path="tag-manager" component={TagManager} />
             <Route path="playground" component={Playground}/>
             <Route path="groups" component={SeeAllGroups}/>
@@ -106,8 +106,8 @@ const loadConfig = (requiredKeys, file, actionType) => {
 
 const requiredEnvKeys = [ 'xeniaHost', 'pillarHost', 'basicAuthorization', 'environment', 'googleAnalyticsId', 'requireLogin' ];
 const requiredDataKeys = ['filters', 'dimensions'];
-const setupEnv = loadConfig(requiredEnvKeys, './config.json', 'CONFIG_LOADED');
-const setupData = loadConfig(requiredDataKeys, './data_config.json', 'DATA_CONFIG_LOADED');
+const setupEnv = loadConfig(requiredEnvKeys, '/config.json', 'CONFIG_LOADED');
+const setupData = loadConfig(requiredDataKeys, '/data_config.json', 'DATA_CONFIG_LOADED');
 
 Promise.all([setupEnv, setupData]).then(() => {
   ReactDOM.render(<Root/>, document.getElementById('root'));

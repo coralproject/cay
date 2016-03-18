@@ -9,7 +9,7 @@ const settings = {
   highlightColor: '#006FC7',
   transitionAll: 'all ease .3s',
   bgColorOffset: '#f8f8f8',
-  bgColorBase: '#ffffff',
+  bgColorBase: '#ecf0f5',
   borderColorBase: '#D2D6DE',
   borderRadiusBase: 4,
   borderStyleBase: 'solid',

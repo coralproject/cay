@@ -6,17 +6,13 @@ import { connect } from 'react-redux';
 import {Link} from 'react-router';
 // import { FOO } from '../actions';
 import Page from './Page';
-import {fetchPipelinesIfNotFetched, selectPipeline, fetchPipeline} from '../actions';
-import Sentence from '../components/Sentence';
+import {fetchQuerysetsIfNotFetched} from '../actions';
+// import Sentence from '../components/Sentence';
 import Card from '../components/cards/Card';
 import CardHeader from '../components/cards/CardHeader';
 import ContentHeader from '../components/ContentHeader';
-import Button from '../components/Button';
 
-// const style = {
-// };
-
-@connect(state => state.pipelines)
+@connect(state => state.groups)
 @Radium
 class SeeAllGroups extends React.Component {
   constructor(props) {
@@ -45,7 +41,7 @@ class SeeAllGroups extends React.Component {
       return router.push('/login');
     }
 
-    this.props.dispatch(fetchPipelinesIfNotFetched());
+    this.props.dispatch(fetchQuerysetsIfNotFetched());
   }
   getStyles() {
     return {
@@ -56,7 +52,7 @@ class SeeAllGroups extends React.Component {
   }
   renderGroups() {
     console.log(this.props);
-    const groups = this.props.pipelines.map((group, i) => {
+    const groups = this.props.querysets.map((group, i) => {
 
       return (
         <Card style={styles.groupCard} key={i}>
@@ -80,7 +76,7 @@ class SeeAllGroups extends React.Component {
         styles.base,
         this.props.style
       ]}>
-        <ContentHeader title={ window.L.t('Commenter Groups') } />
+        <ContentHeader title={ window.L.t('Group Lists') } />
         <div style={styles.cardHolder}>
           {this.renderGroups()}
         </div>

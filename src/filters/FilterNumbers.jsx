@@ -111,7 +111,14 @@ export default class FilterNumbers extends React.Component {
 
     return (
       <div>
-        <span style={{float: 'left', position: 'relative', top: -6}}> {min} - {max}{this.props.isPercentage ? '%' : ''}</span>
+        <span
+          style={{
+            float: 'left',
+            position: 'relative',
+            top: -6
+          }}>
+          {min} - {max}{this.props.isPercentage ? '%' : ''}
+        </span>
         <div style={{marginTop: 12, marginLeft: 70, width: 200}}>
           <Slider
             min={this.props.min}

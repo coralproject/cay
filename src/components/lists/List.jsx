@@ -1,7 +1,7 @@
 import React from 'react';
 import Radium from 'radium';
 
-import settings from 'settings';
+import settings from '../../settings';
 
 export default class List extends React.Component {
   render() {

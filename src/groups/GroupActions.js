@@ -54,6 +54,7 @@ export const requestQuerysetsFailure = (err) => {
   };
 };
 
+/* xenia_package */
 export const fetchQuerysetsIfNotFetched = () => {
   return (dispatch, getState) => {
     if (! getState().groups.loading) {
@@ -65,6 +66,7 @@ export const fetchQuerysetsIfNotFetched = () => {
   };
 };
 
+/* xenia_package */
 // get deep list of query_sets
 export const fetchQuerysets = () => {
   return (dispatch) => {
@@ -92,6 +94,7 @@ export const receiveQueryset = (data) => {
   };
 };
 
+/* xenia_package */
 // execute a query_set
 export const fetchQueryset = (querysetName) => {
   return (dispatch) => {
@@ -119,6 +122,7 @@ export const createQuery = (query) => {
   };
 };
 
+/* xenia_package */
 export const makeQueryFromState = (/*type*/) => {
   return (dispatch, getState) => {
     console.log('function that calls async');
@@ -190,6 +194,7 @@ export const makeQueryFromState = (/*type*/) => {
   };
 };
 
+/* xenia_package */
 // yikes. lots of this code is replicated above.
 // time to make a xenia library
 export const saveQueryFromState = (queryName, modDescription) => {
@@ -250,7 +255,7 @@ export const saveQueryFromState = (queryName, modDescription) => {
 
   };
 };
-
+/* xenia_package */
 const doPutQueryFromState = (query, dispatch) => {
   const url = window.xeniaHost + '/1.0/query';
   let init = authXenia('PUT');
@@ -263,7 +268,7 @@ const doPutQueryFromState = (query, dispatch) => {
       dispatch({type: QUERYSET_SAVE_FAILED, error});
     });
 };
-
+/* xenia_package */
 const doMakeQueryFromStateAsync = _.debounce((query, dispatch)=>{
   console.log('actual async');
   dispatch(requestQueryset());

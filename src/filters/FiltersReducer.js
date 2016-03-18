@@ -86,6 +86,7 @@ const filters = (state = initialState, action) => {
   case types.RECEIVE_FILTER_RANGES:
     const ranges = action.data.results[0].Docs[0];
 
+    /* xenia_package */
     const newFilters = _.reduce(ranges, (accum, value, aggKey) => {
       let [key, field] = aggKey.split('_');
 

@@ -32,6 +32,7 @@ export const fetchSections = () => {
   return (dispatch) => {
     dispatch(requestSections());
 
+    /* xenia_package */
     fetch(window.xeniaHost + '/1.0/exec/dimension_section_list', authXenia())
       .then(response => response.json())
       .then(json => dispatch(receiveSections(json)))
@@ -56,6 +57,7 @@ export const fetchAuthors = () => {
   return dispatch => {
     dispatch(requestAuthors());
 
+    /* xenia_package */
     fetch(window.xeniaHost + '/1.0/exec/dimension_author_list', authXenia())
       .then(response => response.json())
       .then(json => dispatch(receiveAuthors(json)))
@@ -84,7 +86,7 @@ export const setSpecificBreakdown = (specificBreakdown) => {
   };
 };
 
-
+/* xenia_package */
 export const getFilterRanges = () => {
 
   return (dispatch, getState) => {

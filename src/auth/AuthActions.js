@@ -26,6 +26,7 @@ const loginFailure = (err) => {
   };
 };
 
+/* xenia_package */
 export const authXenia = (method) => {
   const headers = new Headers({'Authorization': window.basicAuthorization});
 
@@ -39,6 +40,7 @@ export const authXenia = (method) => {
   return init;
 };
 
+
 export const login = (email, password) => {
   return (dispatch, getState) => {
 
@@ -47,7 +49,7 @@ export const login = (email, password) => {
     }
 
     dispatch(loginInit(email, password));
-
+    /* xenia_package */
     fetch(`./auth.php?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`)
       .then(response => response.json())
       .then(json => {

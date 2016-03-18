@@ -2,14 +2,14 @@ import * as types from 'comments/CommentsActions';
 
 const initialState = {
   loading: false,
-  items: null
+  items: [] // eventually this will be multiple arrays for multiple displayed lists
 };
 
 const comments = (state = initialState, action) => {
   switch (action.type) {
 
   case types.CLEAR_COMMENT_ITEMS:
-    return Object.assign({}, state, {items: null});
+    return Object.assign({}, state, {items: []});
 
   case types.COMMENT_CLICK:
     return state;
@@ -28,7 +28,7 @@ const comments = (state = initialState, action) => {
     );
 
   case types.COMMENTS_FAIL:
-    return Object.assign({}, state, {items: null});
+    return Object.assign({}, state, {items: []});
 
   default:
     return state;

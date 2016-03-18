@@ -6,7 +6,8 @@ const types = Object.assign({}, tagsActions, authActions);
 const initialState = {
   loading: false,
   loadingTags: false,
-  authorized: window.localStorage.authorized || false
+  authorized: window.localStorage.authorized || false,
+  items: []
 };
 
 const tags = (state = initialState, action) => {
@@ -47,6 +48,12 @@ const tags = (state = initialState, action) => {
 
   case types.LOGGED_OUT:
     return Object.assign({}, state, {authorized: false});
+
+  case types.REQUEST_ALL_TAGS:
+    return Object.assign({}, state, {loadingTags: true});
+
+  case types.RECEIVE_ALL_TAGS:
+    return Object.assign({}, state, {loadingTags: false, items: action.tags});
 
   default:
     // console.log('no reducer matches:', action.type);

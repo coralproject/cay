@@ -1,10 +1,8 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import {connect} from 'react-redux';
 import ListItem from 'components/lists/ListItem';
 import CharacterIcon from 'components/CharacterIcon';
 
-@connect(state => state.groups)
 @Radium
 export default class UserRow extends React.Component {
   static propTypes = {
@@ -17,10 +15,10 @@ export default class UserRow extends React.Component {
     active: true
   }
 
-
   handleClick() {
-    this.props.onClick(this.props.user);
+    console.log('UserRow.handleClick', this.props);
     this.props.setAsActive(this.props.activeIndex);
+    this.props.onClick(this.props.user);
   }
 
   render() {

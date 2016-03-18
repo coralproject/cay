@@ -1,12 +1,6 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import _ from 'lodash';
-
-import {connect} from 'react-redux';
-
-import {fetchAllTags} from 'tags/TagActions';
-import {upsertUser} from 'users/UsersActions';
-import {fetchCommentsByUser, clearCommentItems} from 'comments/CommentsActions';
 
 import Avatar from 'users/Avatar';
 import Tab from 'components/tabs/Tab';
@@ -23,14 +17,6 @@ import CommentDetailList from 'comments/CommentDetailList';
 
 import { Lang } from 'i18n/lang';
 
-const mapStateToProps = (state) => {
-  return {
-    comments: state.comments,
-    users: state.users
-  };
-};
-
-@connect(mapStateToProps)
 @Lang
 @Radium
 export default class UserDetail extends React.Component {
@@ -40,51 +26,30 @@ export default class UserDetail extends React.Component {
     this.state = {selectedTags: []};
   }
 
-  componentWillMount() {
-    // comments might have been loaded for another user.
-    this.props.dispatch(clearCommentItems());
-    this.props.dispatch(fetchAllTags());
+  static propTypes = {
+    commentsLoading: PropTypes.bool.isRequired
   }
 
-  componentWillUpdate(nextProps) {
-    if (nextProps.selectedUser && nextProps.userDetailComments === null) {
-      nextProps.dispatch(fetchCommentsByUser(nextProps.selectedUser._id));
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.selectedUser) {
-      this.setState({selectedTags: nextProps.selectedUser.tags});
-    }
-  }
-
-  // getUserTags(user) {
-  //   console.log('\n\n', user);
-  //   var tags = [];
-  //   if (user && user.tags && user.tags.length) {
-  //     for (var i in user.tags) {
-  //       tags.push({
-  //         id: user.tags[i] + Math.random(),
-  //         text: user.tags[i]
-  //       });
-  //     }
+  // componentWillMount() {
+  //   // comments might have been loaded for another user.
+  //   this.props.dispatch(fetchAllTags());
+  // }
+  //
+  // componentWillUpdate(nextProps) {
+  //   if (nextProps.comments.items === null) {
+  //     console.log('fetchCommentsByUser');
+  //     nextProps.dispatch(fetchCommentsByUser(nextProps._id));
   //   }
-  //   return tags;
   // }
 
-  // onTagsChange(tags) {
-  //   if (this.props.selectedUser && this.props.selectedUser._id) {
-  //     var preparedUser = {};
-  //     preparedUser.id = this.props.selectedUser._id;
-  //     preparedUser.name = this.props.selectedUser.user_name;
-  //     preparedUser.avatar = this.props.selectedUser.avatar;
-  //     preparedUser.status = this.props.selectedUser.status;
-  //     preparedUser.tags = tags.map(tag => tag.text);
-  //     this.props.dispatch(upsertUser(preparedUser));
+  // componentWillReceiveProps(nextProps) {
+  //   if (nextProps._id) {
+  //     this.setState({selectedTags: nextProps.tags});
   //   }
   // }
 
   getTags() {
+    return [];
     return this.props.tags.map(tag => {
       return {label: tag.name, value: tag.name};
     });
@@ -92,8 +57,8 @@ export default class UserDetail extends React.Component {
 
   updateTags(tags) {
     this.setState({selectedTags: tags.map(tag => tag.value)});
-    if (this.props.selectedUser && this.props.selectedUser._id) {
-      var s = this.props.selectedUser;
+    if (_.has(this.props, '_id')) {
+      var s = this.props;
       var preparedUser = {
         id: s._id,
         name: s.user_name,
@@ -101,13 +66,14 @@ export default class UserDetail extends React.Component {
         status: s.status,
         tags: this.state.selectedTags.slice()
       };
-      this.props.dispatch(upsertUser(preparedUser));
+      // this.props.dispatch(upsertUser(preparedUser));
     }
   }
 
   getStats() {
     let statsList = [];
-    if (this.props.selectedUser &&  _.has(this.props, 'statistics.comments.all.all')) {
+    console.log('getStats', this.props);
+    if (_.has(this.props, 'statistics.comments.all.all')) {
       statsList = statsList.concat([
         <Stat term="Total comment count" description={this.props.statistics.comments.all.all.count} />,
         <Stat term="Total replies received" description={this.props.statistics.comments.all.all.replied_count} />,
@@ -126,9 +92,9 @@ export default class UserDetail extends React.Component {
   createDetailsMarkup() {
     return (
       <div>
-        <Heading size="medium">{this.props.name}</Heading>
+        <Heading size="medium">{this.props.user.name}</Heading>
         <div style={styles.topPart}>
-          <Avatar style={styles.avatar} src="./img/user_portrait_placeholder.png" size={100} />
+          <Avatar style={styles.avatar} src="/img/user_portrait_placeholder.png" size={100} />
         </div>
         <p><MdLocalOffer /> Add/remove Tags for this Commenter</p>
         <Select
@@ -146,12 +112,12 @@ export default class UserDetail extends React.Component {
           <Tab title="Activity">
 
             {
-              this.props.comments.loading || !this.props.comments.items ?
+              this.props.commentsLoading || !this.props.comments.length ?
               'Loading Comments...' :
               (
                 <CommentDetailList
-                  user={this.props.users.selectedUser}
-                  comments={this.props.comments.items} />
+                  user={this.props}
+                  comments={this.props.comments} />
               )
             }
           </Tab>
@@ -168,11 +134,12 @@ export default class UserDetail extends React.Component {
     );
   }
   render() {
+    console.log('UserDetail', this.props, this.props._id);
+
     return (
       <div style={[styles.base, this.props.style]}>
         {
-          !this.props.users.selectedUser ? this.renderSpinner() :
-          this.createDetailsMarkup()
+          !this.props.user ? this.renderSpinner() : this.createDetailsMarkup()
         }
       </div>
     );

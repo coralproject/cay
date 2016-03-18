@@ -1,8 +1,6 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
-import {userSelected} from 'users/UsersActions';
-import {fetchCommentsByUser} from 'comments/CommentsActions';
 
 import UserRow from 'users/UserRow';
 import Heading from 'components/Heading';
@@ -10,7 +8,7 @@ import Spinner from 'components/Spinner';
 
 import { Lang } from 'i18n/lang';
 
-@connect(state => state.groups)
+@connect()
 @Lang
 @Radium
 export default class UserList extends React.Component {
@@ -22,14 +20,17 @@ export default class UserList extends React.Component {
     }).isRequired).isRequired
   }
 
-  getUser(user) {
-    this.props.dispatch(userSelected(user));
-    this.props.dispatch(fetchCommentsByUser(user._id));
+  userSelected(user) {
+    console.log('user!', user);
+    this.props.userSelected(user);
   }
   setAsActiveHandler(index) {
-    this.setState({activeUserIndex: index});
+    console.log('setAsActiveHandler', index);
+    // this.setState({activeUserIndex: index});
   }
+
   getUserList(users) {
+    console.log('getUserList');
     return users.map((user, i) => {
       return (
         <UserRow {...this.props}
@@ -37,13 +38,15 @@ export default class UserList extends React.Component {
           setAsActive={this.setAsActiveHandler.bind(this)}
           activeIndex={i}
           user={user}
-          onClick={this.getUser.bind(this)}
+          onClick={this.userSelected.bind(this)}
           key={i} />
       );
     });
   }
 
   render() {
+
+    console.log('UserList.render', this.props);
 
     var noUsersMessage = (<p style={ styles.noUsers }>
       No users loaded yet,<br />

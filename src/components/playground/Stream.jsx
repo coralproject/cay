@@ -14,7 +14,7 @@ class Stream extends React.Component {
         <div style={ { paddingLeft: (depth * 30) + 'px' } }>
           <Comment {...comment} key={ i } index={ i } />
           {
-            comment.replies ? 
+            this.props.togglerGroups.stream.togglers.replies.status && comment.replies ? 
               this.getComments(comment.replies, depth + 1)
             : 
               null

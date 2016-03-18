@@ -13,7 +13,6 @@ const initialState = {
   groups: [],
   tags: [],
   userDetailComments: null,
-  loadingUserComments: false
 };
 
 const groups = (state = initialState, action) => {
@@ -59,25 +58,6 @@ const groups = (state = initialState, action) => {
   case types.QUERYSET_RECEIVED:
 
     return Object.assign({}, state, { loadingQueryset: false, users: action.data.results[0].Docs});
-
-  case types.USER_SELECTED:
-    return Object.assign({}, state, {selectedUser: action.user});
-
-  case types.COMMENTS_REQUEST:
-    return Object.assign({}, state, {loadingUserComments: true});
-
-  case types.COMMENTS_SUCCESS:
-    return Object.assign(
-      {},
-      state,
-      {
-        loadingUserComments: false,
-        userDetailComments: action.data.results[0].Docs
-      }
-    );
-
-  case types.CLEAR_USER_DETAIL_COMMENTS:
-    return Object.assign({}, state, {userDetailComments: null});
 
   case types.LOGIN_SUCCESS:
     return Object.assign({}, state, {authorized: true});

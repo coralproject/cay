@@ -5,6 +5,7 @@ import groups from 'groups/GroupReducer';
 import dataExplorer from 'explorer/DataExplorerReducer';
 import tags from 'tags/TagReducer';
 import filters from 'filters/FiltersReducer';
+import users from 'users/UsersReducer';
 
 const rootReducer = combineReducers({
   groups,
@@ -12,7 +13,8 @@ const rootReducer = combineReducers({
   comments,
   dataExplorer,
   tags,
-  filters
+  filters,
+  users
 });
 
 export default rootReducer;

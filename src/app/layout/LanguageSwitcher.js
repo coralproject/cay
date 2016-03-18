@@ -65,6 +65,16 @@ class LanguageSwitcher extends React.Component {
             }
           </button>
         </li>
+        <li style={ styles.dropdownOption }>
+          <button key={ 2 } style={ styles.languageButton } onClick={ this.switchLanguage.bind(this, 'es') }>
+            Spanish
+            {
+              this.props.currentLocale == 'es' ?
+                <span style={ styles.check }><MdCheck /></span>
+              : null
+            }
+          </button>
+        </li>
       </ul>
     : null;
 

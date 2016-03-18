@@ -6,7 +6,7 @@ import {connect} from 'react-redux';
 
 import {fetchAllTags} from 'tags/TagActions';
 import {upsertUser} from 'users/UsersActions';
-import {fetchCommentsByUser, clearUserDetailComments} from 'comments/CommentsActions';
+import {fetchCommentsByUser, clearCommentItems} from 'comments/CommentsActions';
 
 import Avatar from 'users/Avatar';
 import Tab from 'components/tabs/Tab';
@@ -23,7 +23,14 @@ import CommentDetailList from 'comments/CommentDetailList';
 
 import { Lang } from 'i18n/lang';
 
-@connect(state => state.groups)
+const mapStateToProps = (state) => {
+  return {
+    comments: state.comments,
+    users: state.users
+  };
+};
+
+@connect(mapStateToProps)
 @Lang
 @Radium
 export default class UserDetail extends React.Component {
@@ -35,7 +42,7 @@ export default class UserDetail extends React.Component {
 
   componentWillMount() {
     // comments might have been loaded for another user.
-    this.props.dispatch(clearUserDetailComments());
+    this.props.dispatch(clearCommentItems());
     this.props.dispatch(fetchAllTags());
   }
 
@@ -116,70 +123,57 @@ export default class UserDetail extends React.Component {
       return <Stat term="Commenter Stat" description="select a commenter to see details" />;
     }
   }
+  createDetailsMarkup() {
+    return (
+      <div>
+        <Heading size="medium">{this.props.name}</Heading>
+        <div style={styles.topPart}>
+          <Avatar style={styles.avatar} src="./img/user_portrait_placeholder.png" size={100} />
+        </div>
+        <p><MdLocalOffer /> Add/remove Tags for this Commenter</p>
+        <Select
+          multi={true}
+          value={this.state.selectedTags}
+          onChange={this.updateTags.bind(this)}
+          options={this.getTags()}
+        />
+        <Tabs initialSelectedIndex={0} style={styles.tabs}>
+          <Tab title="About">
+            <Stats>
+              { this.getStats() }
+            </Stats>
+          </Tab>
+          <Tab title="Activity">
 
-  render() {
-
-    /*
-    var tagger = this.props.tags ?
-      <div style={ styles.tags }>
-        <Tagger
-          onChange={ this.onTagsChange.bind(this) }
-          tagList={ this.props.tags }
-          tags={ this.getUserTags(this.props.selectedUser) }
-          freeForm={ false }
-          type="user"
-          id={
-            this.props.selectedUser && this.props.selectedUser._id ?
-              this.props.selectedUser._id :
-              1
+            {
+              this.props.comments.loading || !this.props.comments.items ?
+              'Loading Comments...' :
+              (
+                <CommentDetailList
+                  user={this.props.users.selectedUser}
+                  comments={this.props.comments.items} />
+              )
             }
-          />
+          </Tab>
+          <Tab title="Notes">
+            <p>Watch out for her comments on Climate stories, she often corrects mistakes.</p>
+          </Tab>
+        </Tabs>
       </div>
-    : null;
-    */
-
+    );
+  }
+  renderSpinner() {
+    return (
+      <span>Select a user to see details</span>
+    );
+  }
+  render() {
     return (
       <div style={[styles.base, this.props.style]}>
-      {
-        this.props.name ?
-          <div>
-            <Heading size="medium">{this.props.name}</Heading>
-            <div style={styles.topPart}>
-              <Avatar style={styles.avatar} src="./img/user_portrait_placeholder.png" size={100} />
-            </div>
-            <p><MdLocalOffer /> Add/remove Tags for this Commenter</p>
-            <Select
-              multi={true}
-              value={this.state.selectedTags}
-              onChange={this.updateTags.bind(this)}
-              options={this.getTags()}
-            />
-            <Tabs initialSelectedIndex={0} style={styles.tabs}>
-              <Tab title="About">
-                <Stats>
-                  { this.getStats() }
-                </Stats>
-              </Tab>
-              <Tab title="Activity">
-
-                {
-                  this.props.loadingUserComments || !this.props.userDetailComments ?
-                  'Loading Comments...' :
-                  (
-                    <CommentDetailList
-                      user={this.props.selectedUser}
-                      comments={this.props.userDetailComments} />
-                  )
-                }
-              </Tab>
-              <Tab title="Notes">
-                <p>Watch out for her comments on Climate stories, she often corrects mistakes.</p>
-              </Tab>
-            </Tabs>
-          </div>
-        :
-          <span>Select a user to see details</span>
-      }
+        {
+          !this.props.users.selectedUser ? this.renderSpinner() :
+          this.createDetailsMarkup()
+        }
       </div>
     );
   }

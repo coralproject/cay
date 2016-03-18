@@ -53,23 +53,23 @@ export default class UserList extends React.Component {
     var userListContent = this.props.users.length ? this.getUserList(this.props.users) : noUsersMessage;
 
     return (
-    <div style={ [ styles.base, this.props.style ] }>
-      <div style={ styles.columnHeader }>
-        <Heading size="medium">
-          <span style={styles.groupHeader}>{ window.L.t('group') }</span> (106 { window.L.t('users')})
-        </Heading>
+      <div style={ [ styles.base, this.props.style ] }>
+        <div style={ styles.columnHeader }>
+          <Heading size="medium">
+            <span style={styles.groupHeader}>{ window.L.t('group') }</span> (106 { window.L.t('users')})
+          </Heading>
+        </div>
+
+        {
+          this.props.loadingQueryset ?
+            <div style={ styles.loading }>
+              <Spinner /> Loading...
+            </div>
+          :
+            userListContent
+        }
+
       </div>
-
-      {
-        this.props.loadingQueryset ?
-          <div style={ styles.loading }>
-            <Spinner /> Loading...
-          </div>
-        :
-          userListContent
-      }
-
-    </div>
     );
   }
 }

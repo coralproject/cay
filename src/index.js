@@ -32,6 +32,7 @@ window.L = new LangSugar();
 
 window.L.addTranslations(messages['en'], 'en');
 window.L.addTranslations(messages['de'], 'de');
+window.L.addTranslations(messages['es'], 'es');
 window.L.setLocale('en');
 
 require('reset.css');

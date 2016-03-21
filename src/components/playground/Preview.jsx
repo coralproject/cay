@@ -22,6 +22,11 @@ class Preview extends React.Component {
     this.setState({ commentsAreVisible: true });
   }
 
+  onHideCommentsClick() {
+    console.log("Hide");
+    this.setState({ commentsAreVisible: false }); 
+  }
+
   render() {
 
     return (
@@ -30,6 +35,12 @@ class Preview extends React.Component {
           <h2 style={ styles.previewBarTitle }>
             <span style={ styles.previewTitleSpan }>PREVIEW</span>
           </h2>
+          {
+            this.props.togglerGroups.layout.togglers.hiddenbydefault.status &&
+            this.state.commentsAreVisible ?
+              <button style={ styles.hideComments } onClick={ this.onHideCommentsClick.bind(this) }>Hide comments</button>
+            : null
+          }
         </div>
 
         { 
@@ -91,11 +102,20 @@ var styles = {
     borderBottom: '1px solid #ccc',
     position: 'relative',
     fontSize: '16pt',
-    paddingBottom: '10px'
+    paddingBottom: '10px',
+    position: 'relative'
   },
   previewTitleSpan: {
     fontFamily: 'Fira Sans',
     fontWeight: '300',
     fontSize: '24pt'
+  },
+  hideComments: {
+    position: 'absolute',
+    right: '0px',
+    top: '0px',
+    background: '#eee',
+    padding: '5px 10px',
+    border: '1px solid #aaa'
   }
 };

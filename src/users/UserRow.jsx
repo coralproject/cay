@@ -9,16 +9,19 @@ export default class UserRow extends React.Component {
     onClick: PropTypes.func.isRequired,
     active: React.PropTypes.bool,
     setAsActive: React.PropTypes.func,
-    activeIndex: React.PropTypes.number
+    activeIndex: React.PropTypes.number,
+    disabled: React.PropTypes.bool
   }
   static defaultProps = {
     active: true
   }
 
   handleClick() {
-    console.log('UserRow.handleClick', this.props);
-    this.props.setAsActive(this.props.activeIndex);
-    this.props.onClick(this.props.user);
+    if (!this.props.disabled) {
+      console.log('UserRow.handleClick', this.props);
+      this.props.setAsActive(this.props.activeIndex);
+      this.props.onClick(this.props.user);
+    }
   }
 
   render() {
@@ -38,7 +41,7 @@ export default class UserRow extends React.Component {
     return (
       <ListItem
         active={this.props.active}
-        style={[styles.base, this.props.style]}
+        style={[styles.base, this.props.disabled && styles.disabled, this.props.style]}
         onClick={this.handleClick.bind(this)}
         leftAvatar={leftAvatar}>
         {user.name}
@@ -58,6 +61,9 @@ const styles = {
     cursor: 'pointer',
     overflow: 'hidden',
     height: 100
+  },
+  disabled: {
+    cursor: 'auto'
   },
   sub: {
     marginTop: 4,

@@ -73,16 +73,16 @@ export default class UserDetail extends React.Component {
   getStats() {
     let statsList = [];
     console.log('getStats', this.props);
-    if (_.has(this.props, 'statistics.comments.all.all')) {
+    if (_.has(this.props, 'user.statistics.comments.all.all')) {
       statsList = statsList.concat([
-        <Stat term="Total comment count" description={this.props.statistics.comments.all.all.count} />,
-        <Stat term="Total replies received" description={this.props.statistics.comments.all.all.replied_count} />,
-        <Stat term="Total replies written" description={this.props.statistics.comments.all.all.reply_count} />,
-        <Stat term="% comments that are replies" description={Math.floor(this.props.statistics.comments.all.all.reply_ratio * 100) + '%'} />
+        <Stat term="Total comment count" description={this.props.user.statistics.comments.all.all.count} />,
+        <Stat term="Total replies received" description={this.props.user.statistics.comments.all.all.replied_count} />,
+        <Stat term="Total replies written" description={this.props.user.statistics.comments.all.all.reply_count} />,
+        <Stat term="% comments that are replies" description={Math.floor(this.props.user.statistics.comments.all.all.reply_ratio * 100) + '%'} />
       ]);
 
-      if (_.has(this.props, 'statistics.comments.all.CommunityFlagged')) {
-        statsList.push(<Stat term="Community flagged" description={this.props.statistics.comments.all.CommunityFlagged.count} />);
+      if (_.has(this.props, 'user.statistics.comments.all.CommunityFlagged')) {
+        statsList.push(<Stat term="Community flagged" description={this.props.user.statistics.comments.all.CommunityFlagged.count} />);
       }
       return statsList;
     } else {

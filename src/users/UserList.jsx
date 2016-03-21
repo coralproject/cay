@@ -17,12 +17,15 @@ export default class UserList extends React.Component {
     users: PropTypes.arrayOf(PropTypes.shape({
       name: PropTypes.string.isRequired,
       _id: PropTypes.string.idRequired
-    }).isRequired).isRequired
+    }).isRequired).isRequired,
+    disabled: PropTypes.bool
   }
 
   userSelected(user) {
-    console.log('user!', user);
-    this.props.userSelected(user);
+    if(!this.props.disabled) {
+      console.log('user!', user);
+      this.props.userSelected(user);
+    }
   }
   setAsActiveHandler(index) {
     console.log('setAsActiveHandler', index);

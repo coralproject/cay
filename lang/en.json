@@ -21,5 +21,6 @@
   "Group List": "Group List",
   "users": "users",
   "group": "group",
-  "Group Lists": "Group Lists"
+  "Group Lists": "Group Lists",
+  "num_users": "%{smart_count} user |||| %{smart_count} users"
 }

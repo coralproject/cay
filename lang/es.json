@@ -21,5 +21,6 @@
   "Group List": "Lista de Grupos",
   "users": "usuarios",
   "group": "grupo",
-  "Group Lists": "Listas de Grupo"
+  "Group Lists": "Listas de Grupo",
+  "num_users": "%{smart_count} usuario |||| %{smart_count} usuarios"
 }

@@ -2,6 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 
+import moment from 'moment';
+
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 import ProfileBadge from './ProfileBadge';
@@ -68,6 +70,7 @@ class Comment extends React.Component {
             this.props.users[this.props.user].realName 
           }
         </h4>
+        <div style={ styles.date }>{ moment().fromNow() }</div>
         <ReactCSSTransitionGroup transitionName="profileinfo" transitionAppear={ false }>
           { profileInfoSection }
         </ReactCSSTransitionGroup>
@@ -116,7 +119,6 @@ var styles = {
     color: '#333',
     marginBottom: '5px',
     cursor: 'pointer',
-    lineHeight: '24px',
     position: 'relative'
   },
   commentContent: {
@@ -142,5 +144,10 @@ var styles = {
   },
   withBadge: {
     paddingLeft: '20px'
+  },
+  date: {
+    fontSize: '10pt',
+    color: '#999',
+    marginBottom: '5px'
   }
 };

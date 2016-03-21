@@ -140,7 +140,7 @@ var styles = {
     width: '24px',
     position: 'absolute',
     left: '-8px',
-    top: '-4px'
+    top: '-8px'
   },
   withBadge: {
     paddingLeft: '20px'

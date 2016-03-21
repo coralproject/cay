@@ -8,6 +8,11 @@ import Comment from './Comment';
 @Radium
 class Stream extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.state = { activeTab: 'all' };
+  }
+
   getComments(comments, depth = 0, parentIndex = false, parents = []) {
     var parents = parents;
     return comments.map((comment, i) => { 
@@ -25,11 +30,29 @@ class Stream extends React.Component {
     })
   }
 
+  onTabClick(tab, e) {
+    this.setState({ activeTab: tab })
+  }
+
   render() {
 
     return (
       <div style={ styles.stream }>
-      { this.getComments(this.props.comments) }
+        {
+          this.props.togglerGroups.moderation.togglers.staffpicks.status ? 
+            <div>
+              <div style={ styles.streamTabs }>
+                <button style={ [ styles.streamTab, this.state.activeTab == 'all' ? styles.activeTab : null ] } onClick={ this.onTabClick.bind(this, 'all') }>All</button>
+                <button style={ [ styles.streamTab, this.state.activeTab == 'staff' ? styles.activeTab : null ] } onClick={ this.onTabClick.bind(this, 'staff') }>Staff Picks</button>
+              </div>
+              <div>
+                { this.getComments(this.props.comments) }
+              </div>
+
+            </div>
+          : 
+            this.getComments(this.props.comments)
+        }      
       </div>
     );
 
@@ -41,5 +64,28 @@ export default Stream;
 
 var styles = {
   stream: {
+  },
+  streamTabs: {
+    borderBottom: '1px solid #ddd'
+  },
+  streamTab: {
+    borderTop: '3px solid #ccc',
+    borderRight: '1px solid #ddd',
+    borderLeft: '1px solid #ddd',
+    borderBottom: '1px solid #ddd',
+    padding: '15px',
+    fontSize: '14pt',
+    fontWeight: '600',
+    background: '#f0f0f0',
+    marginTop: '10px',
+    marginRight: '-1px',
+    marginBottom: '-1px',
+    cursor: 'pointer',
+    outline: 'none'
+  },
+  activeTab: {
+    borderTop: '3px solid red',
+    borderBottom: '1px solid white',
+    background: 'white'
   }
 };

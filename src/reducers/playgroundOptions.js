@@ -21,6 +21,13 @@ const togglerGroups = {
   'moderation': {
     name: 'Moderation',
     togglers: {
+      'staffpicks': {
+        label: 'Staff Picks is ON',
+        offLabel: 'Staff Picks is OFF',
+        description: 'Shows a tab separating staff picks from other comments.',
+        status: false,
+        topic: 'staffpicks'
+      },
       'muting': {
         label: 'Block/mute is ON',
         offLabel: 'Block/mute is OFF',

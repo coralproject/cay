@@ -7,6 +7,7 @@ const comments = [
     reactions: ['heart', 'ok_woman'],
     upvotes: 87,
     upvoted: false,
+    staffPick: true,
     replies: [
       {
         user: 2,
@@ -64,7 +65,8 @@ const comments = [
             liked: false,
             reactions: ['heart', 'ok_woman'],
             upvotes: 45,
-            upvoted: false
+            upvoted: false,
+            staffPick: true
           }
         ]
       }

@@ -2,8 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 
-import CommentBox from './commentBox';
-import Stream from './stream';
+import CommentBox from './CommentBox';
+import Stream from './Stream';
 
 import MdComment from 'react-icons/lib/md/comment';
 

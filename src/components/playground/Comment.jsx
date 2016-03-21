@@ -11,6 +11,8 @@ import ActionsBar from './ActionsBar';
 import Upvoter from './Upvoter';
 import CommentTools from './CommentTools';
 
+import CoralIcon from '../../components/CoralIcon';
+
 import mediaQueries from '../../playgroundSettings';
 
 @connect(state => state.playground)
@@ -34,6 +36,8 @@ class Comment extends React.Component {
     if (this.props.togglerGroups.layout.togglers.profilepictures.status) leftPadding += 75;
     if (this.props.depth > 0) leftPadding += 25;
 
+    var user = this.props.users[this.props.user];
+
     return (
       <div style={ 
         [ 
@@ -42,7 +46,22 @@ class Comment extends React.Component {
           this.props.depth > 0 ? { borderLeft: '1px solid #ddd' } : null
         ]
       }>
-        <h4 style={ styles.userName }>
+        <h4 style={ [ styles.userName, this.props.togglerGroups['reputation'].togglers['badges'].status && user.badges && user.badges.length ? styles.withBadge : null ] } onClick={ this.onProfileClick.bind(this) }>
+          { 
+            this.props.togglerGroups['reputation'].togglers['badges'].status ? 
+              <span>
+                {
+                  user.badges && user.badges.length ? 
+                    <CoralIcon 
+                      style={ styles.badgeIcon } 
+                      size="medium" 
+                      name={ user.badges[0].icon } 
+                      color={ user.badges[0].color } />
+                  : null
+                }
+              </span>
+            : null
+          }
           { 
             this.props.togglerGroups['privacy'].togglers['anonymity'].status ? 
             this.props.users[this.props.user].nickName : 
@@ -95,7 +114,10 @@ var styles = {
     fontSize: '11pt',
     fontWeight: '600',
     color: '#333',
-    marginBottom: '5px'
+    marginBottom: '5px',
+    cursor: 'pointer',
+    lineHeight: '24px',
+    position: 'relative'
   },
   commentContent: {
     cursor: 'pointer',
@@ -109,5 +131,16 @@ var styles = {
   },
   noPicture: {
     paddingLeft: '0px'
+  },
+  badgeIcon: {
+    height: '24px',
+    lineHeight: '24px',
+    width: '24px',
+    position: 'absolute',
+    left: '-8px',
+    top: '-4px'
+  },
+  withBadge: {
+    paddingLeft: '20px'
   }
 };

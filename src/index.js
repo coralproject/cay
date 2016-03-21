@@ -9,40 +9,40 @@ import { Provider } from 'react-redux';
 // Redux Devtools
 import { DevTools, DebugPanel, LogMonitor } from 'redux-devtools/lib/react';
 
-import configureStore from './store';
+import configureStore from 'store.js';
 
 // import Dashboard from './containers/Dashboard';
-import GroupCreator from './containers/GroupCreator';
-import TagManager from './containers/TagManager';
-import Login from './containers/Login';
-// import DataExplorer from './containers/DataExplorer';
-import SeeAllGroups from './containers/SeeAllGroups.jsx';
-import GroupDetail from './containers/GroupDetail';
-import NoMatch from './containers/NoMatch';
-import About from './containers/About';
-import Feedback from './containers/Feedback';
+import GroupCreator from 'app/GroupCreator';
+import TagManager from 'app/TagManager';
+import Login from 'app/Login';
+// import DataExplorer from 'app/DataExplorer';
+import SeeAllGroups from 'app/SeeAllGroups';
+import GroupDetail from 'app/GroupDetail';
+import NoMatch from 'app/NoMatch';
+import About from 'app/About';
 
 import ga from 'react-ga';
 
 const store = configureStore();
 
-import messages from './messages'; // Lang does not know where did you get your messages from.
+import messages from 'i18n/messages'; // Lang does not know where did you get your messages from.
 
-import LangSugar from './lang';
+import LangSugar from 'i18n/lang';
 window.L = new LangSugar();
 
 window.L.addTranslations(messages['en'], 'en');
 window.L.addTranslations(messages['de'], 'de');
+window.L.addTranslations(messages['es'], 'es');
 window.L.setLocale('en');
 
-require('../css/reset.css');
-require('../css/global.css');
+require('reset.css');
+require('global.css');
 
-require('../css/react-select.css');
+require('react-select.css');
 
 require('../fonts/glyphicons-halflings-regular.woff');
 
-import { Lang } from './lang';
+import { Lang } from 'i18n/lang';
 @Lang
 class Root extends React.Component {
 

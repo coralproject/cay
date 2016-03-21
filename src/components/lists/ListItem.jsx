@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React from 'react';
 import Radium from 'radium';
 
-import settings from '../../settings';
+import settings from 'settings';
 
 @Radium
 export default class ListItem extends React.Component {

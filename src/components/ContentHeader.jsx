@@ -1,9 +1,9 @@
 import React from 'react';
 import Radium from 'radium';
 
-import Heading from './Heading';
+import Heading from 'components/Heading';
 
-import { Lang } from '../lang';
+import { Lang } from 'i18n/lang';
 
 @Lang
 class ContentHeader extends React.Component {

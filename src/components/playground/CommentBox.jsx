@@ -6,7 +6,7 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 import { Editor, EditorState, RichUtils, Modifier, convertToRaw, SelectionState } from 'draft-js';
 
-import { sendComment } from '../../actions/playground';
+import { sendComment, replyComment } from '../../actions/playground';
 
 import backdraft from 'backdraft-js';
 
@@ -41,6 +41,10 @@ class CommentBox extends React.Component {
 
   onSendClick() {
 
+    if (this.props.replyMode) {
+      this.props.replyCallback();
+    }
+
     var markup = {
       'BOLD': ['<strong>', '</strong>'],
       'ITALIC': ['<em>', '</em>']
@@ -57,8 +61,13 @@ class CommentBox extends React.Component {
       reactions: [],
       upvoted: false
     };
-    this.props.dispatch(sendComment(preparedComment));
-    
+
+    if (this.props.replyMode) {
+      this.props.dispatch(replyComment(preparedComment, this.props.parents));
+    } else {
+      this.props.dispatch(sendComment(preparedComment));  
+    }
+
   }
 
   onSelectEmoji(emoji) {
@@ -126,8 +135,13 @@ class CommentBox extends React.Component {
         </div>
       : '';
     return (
-      <div style={ styles.commentBox }>
-        <h3 style={ styles.commentBoxTitle }><span style={ styles.postingAs }>Posting as </span><strong style={ styles.strong }>{ this.props.togglerGroups['privacy'].togglers['anonymity'].status ? 'coolcat' : 'Jane Doe' }</strong></h3>
+      <div style={ [ styles.commentBox, this.props.replyMode ? styles.replyMode : '' ] }>
+        { 
+          !this.props.replyMode ?  
+            <h3 style={ styles.commentBoxTitle }><span style={ styles.postingAs }>Posting as </span><strong style={ styles.strong }>{ this.props.togglerGroups['privacy'].togglers['anonymity'].status ? 'coolcat' : 'Jane Doe' }</strong></h3>
+          : 
+            null
+        }
         { toolBar }
         <div style={ styles.draftJsEditor }>
           { this.emojiPicker() }
@@ -155,14 +169,17 @@ var styles = {
     position: 'relative'
   },
   toolBar: {
-    backgroundColor: '#white',
-    borderBottom: '1px solid #ccc'
+    backgroundColor: 'white',
+    borderBottom: '1px solid #ddd'
   },
   commentBox: {
     backgroundColor: '#f0f0f0',
-    border: '1px solid #F77260',
+    border: '1px solid #aaa',
     padding: '20px',
     borderRadius: '8px'
+  },
+  replyMode: {
+    padding: '4px'
   },
   commentBoxActions: {
     padding: '20px',
@@ -174,7 +191,8 @@ var styles = {
     color: 'white',
     borderRadius: '4px',
     border: 'none',
-    background: '#083',
+    background: 'linear-gradient(to right, rgba(247,114,96,1) 0%, rgba(252,149,70,1) 100%)',
+    fontSize: '12pt',
     cursor: 'pointer'
   },
   commentBoxContent: {
@@ -194,7 +212,7 @@ var styles = {
     borderTop: '0',
     borderLeft: '0',
     borderBottom: '0',
-    background: 'none',
+    background: 'white',
     fontSize: '12pt'
   },
   toolBarActive: {
@@ -202,13 +220,17 @@ var styles = {
     color: '#fff'
   },
   heart: {
-    color: '#900'
+    color: '#900',
+    position: 'absolute',
+    left: '20px',
+    top: '20px'
   },
   safetyTips: {
-    background: 'white',
-    padding: '20px',
+    background: '#fafafa',
+    padding: '20px 20px 20px 50px',
     color: '#999',
-    borderTop: '1px solid #eee'
+    borderTop: '1px solid #eee',
+    position: 'relative'
   },
   strong: {
     fontWeight: 'bold',

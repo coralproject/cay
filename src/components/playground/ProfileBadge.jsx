@@ -11,15 +11,15 @@ class ProfileBadge extends React.Component {
   render() {
 
     return (
-      <div style={ styles.profileBadge } onClick={ this.props.profileClickHandler }>
+      <div style={[ styles.profileBadge, this.props.style ]} onClick={ this.props.profileClickHandler }>
         <img style={ styles.profilePicture } width="60" height="60" src={ "/img/playground/profile" + this.props.user + ".jpg" } />
-        <h4 style={ styles.userName }>
+        {/*<h4 style={ styles.userName }>
           { 
             this.props.togglerGroups['privacy'].togglers['anonymity'].status ? 
             this.props.users[this.props.user].nickName : 
             this.props.users[this.props.user].realName 
           }
-        </h4>
+        </h4>*/}
       </div>
       );
 

@@ -5,17 +5,54 @@ import Radium from 'radium';
 import FaCaretUp from 'react-icons/lib/fa/caret-up';
 import FaCaretDown from 'react-icons/lib/fa/caret-down';
 
+import { upVoteComment, downVoteComment } from '../../actions/playground';
+
 @connect(state => state.playground)
 @Radium
 class Upvoter extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.state = { upVoted: false, downVoted: false }
+  }
+
+  onVoteButtonClick(direction, index, parents, e) {
+    e.stopPropagation();
+    switch (direction) {
+      case 'up':
+        if (this.state.downVoted) {
+          this.setState({ upVoted: false, downVoted: false });  
+        } else {
+          this.setState({ upVoted: true, downVoted: false });  
+        }
+        this.props.dispatch(upVoteComment(index, parents))
+      break;
+      
+      case 'down':
+        if (this.state.upVoted) {
+          this.setState({ upVoted: false, downVoted: false });  
+        } else {
+          this.setState({ upVoted: false, downVoted: true });  
+        }
+        this.props.dispatch(downVoteComment(index, parents))
+      break;
+    }
+  }
+
   render() {
+
+    var voteUpStyles = styles.voteUp;
+
 
     return (
       <div style={ styles.upvoter }>
-        <FaCaretUp style={ styles.voteUp } />
-        <div style={ styles.number }>33</div>
-        <FaCaretDown style={ styles.voteDown } />
+        <div onClick={ this.onVoteButtonClick.bind(this, 'up', this.props.index, this.props.parents) } style={ [ styles.voteButtonWrapper, this.state.upVoted ? styles.activeArrowUp : null ] }>
+          <FaCaretUp style={ styles.voteUp } />
+        </div>
+        <div style={ styles.number }>{ this.props.upvotes }</div>
+        <div onClick={ this.onVoteButtonClick.bind(this, 'down', this.props.index, this.props.parents) } style={ [ styles.voteButtonWrapper, this.state.downVoted ? styles.activeArrowDown : null ] }>
+          <FaCaretDown style={ styles.voteDown } />
+        </div>
       </div>
     );
 
@@ -28,19 +65,32 @@ export default Upvoter;
 var styles = {
   upvoter: {
     position: 'absolute',
-    cursor: 'pointer',
-    width: '80px',
+    width: '50px',
     right: '0',
-    top: '0',
+    top: '-10px',
     textAlign: 'center'
   },
   voteUp: {
-    fontSize: '24px',
-    marginBottom: '5px'
+    fontSize: '39px',
+    marginBottom: '5px',
   },
   voteDown: {
-    fontSize: '24px',
-    marginTop: '5px'
+    fontSize: '39px',
+    marginTop: '5px',
+  },
+  activeArrowUp: {
+    color: '#6C6',
+    transition: 'color .5s'
+  },
+  activeArrowDown: {
+    color: '#C66',
+    transition: 'color .5s'
+  },
+  voteButtonWrapper: {
+    cursor: 'pointer',
+    padding: '0',
+    color: '#aaa',
+    transition: 'color .5s'
   },
   number: {
     fontSize: '14pt',

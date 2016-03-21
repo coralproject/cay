@@ -1,96 +1,10 @@
 import * as types from '../actions/playground';
 import togglerGroups from './playgroundOptions';
+import comments from './playgroundComments';
 
 const initialState = {
   customizerIsVisible: false,
   currentSidebarTopic: null,
-  comments: [
-    {
-      user: 0,
-      content: "{community.mentions} Hello, @coolcat{/community.mentions}. Clinton is a smart guy, but I only started to trust or like him was when he was no longer running. And here he is running for his wife, Hillary. For him to lecture Sanders, or the public about Sanders, on the subject of honesty or integrity, is too much. I don't buy it. {content.emoji}:smile:{/content.emoji}",
-      likes: 28,
-      liked: false,
-      reactions: ['heart', 'ok_woman'],
-      upvoted: false,
-      replies: [
-        {
-          user: 2,
-          content: "This is a reply from another user.",
-          likes: 9,
-          liked: false,
-          reactions: ['heart', 'ok_woman'],
-          upvoted: false,
-          replies: [
-            {
-              user: 1,
-              content: "This is a SECOND reply from another user.",
-              likes: 9,
-              liked: false,
-              reactions: ['heart', 'ok_woman'],
-              upvoted: false
-            }
-          ]
-        }
-      ]
-    },
-    {
-      user: 1,
-      content: 'Testing some emojis. :ok_woman: :heart: :bowtie: :hankey:  :horse_racing:',
-      likes: 11,
-      liked: false,
-      reactions: ['heart', 'ok_woman'],
-      upvoted: false
-    },
-    {
-      user: 2,
-      content: "Hillary placed a bet a few years ago, that the system was corrupt, that SuperPAC's were the only way to go in the post-Citizens United era, and that she could get speaking fees from Wall St. and still come across as being less in-their-pocket than her Republican rivals.",
-      likes: 4,
-      liked: false,
-      reactions: ['heart', 'ok_woman'],
-      upvoted: false
-    },
-    {
-      user: 1,
-      content: "Is it possible that Bill is going off script here? It would be hard to believe the campaign is encouraging this. Maybe he's become a difficult to control wildcard.",
-      likes: 7,
-      liked: false,
-      reactions: ['heart', 'ok_woman'],
-      upvoted: false
-    },
-    {
-      user: 3,
-      content: "Sanders will keep the high road because so many young people are supporting him. Ignore the side show!",
-      likes: 2,
-      liked: false,
-      reactions: ['heart', 'ok_woman'],
-      upvoted: false
-    },
-    {
-      user: 2,
-      content: "Bill's petty and pathetic remarks should be enough to make any undecided voter vote for Bernie. It's sad to see Bill shilling for Hillary in such a vulgar way.",
-      likes: 9,
-      liked: false,
-      reactions: ['heart', 'ok_woman'],
-      upvoted: false
-    },
-    {
-      user: 1,
-      content: "What sickness that the Clintons think they can criticize anybody about anything. They are greedy, hypocritical, untruthful sociopaths who will take those qualities to the White House in less than a year. ",
-      likes: 1,
-      liked: false,
-      reactions: ['heart', 'ok_woman'],
-      upvoted: false
-    },
-    {
-      user: 0,
-      content: "Anybody but Clinton. Heck, I would even vote for Sarah Palin before I would vote for Hillary Clinton. At least Palin appears to be honest, and she is not part of a corrupt political machine.",
-      likes: 24,
-      liked: false,
-      reactions: ['heart', 'ok_woman'],
-      upvoted: false
-    },
-
-  ],
   wizardSteps: [
     {
       content: 'Do you think users should be able to remain anonymous (using a nickname)?',
@@ -246,6 +160,17 @@ const initialState = {
 };
 
 initialState.togglerGroups = togglerGroups;
+initialState.comments = comments;
+
+// Uses the parents list to traverse the
+// comments array recursively
+function findComment(comments, parents, i) {
+  if (parents && i < (parents.length - 1)) {
+    return findComment(comments[parents[i]].replies, parents, i + 1);
+  } else {
+    return comments[parents[i]];
+  }
+}
 
 const playground = (state = initialState, action) => {
 
@@ -257,33 +182,47 @@ const playground = (state = initialState, action) => {
   case types.HIDE_CUSTOMIZER:
     return Object.assign({}, state, { customizerIsVisible: false });
 
+  case types.UPVOTE_COMMENT:
+    var commentsCopy = state.comments.slice();
+    var repliedComment = findComment(commentsCopy, action.parents, 0);
+    if (repliedComment.downvoted) {
+      repliedComment.upvoted = false;
+      repliedComment.downvoted = false;
+      repliedComment.upvotes++;
+    } else if (!repliedComment.upvoted) {
+      repliedComment.upvoted = true;
+      repliedComment.downvoted = false;
+      repliedComment.upvotes++;
+    }
+    return Object.assign({}, state, { comments: commentsCopy });
+
+  case types.DOWNVOTE_COMMENT:
+    var commentsCopy = state.comments.slice();
+    var repliedComment = findComment(commentsCopy, action.parents, 0);
+    if (repliedComment.upvoted) {
+      repliedComment.upvoted = false;
+      repliedComment.downvoted = false;
+      repliedComment.upvotes--;
+    } else if (!repliedComment.downvoted) {
+      repliedComment.upvoted = false;
+      repliedComment.downvoted = true;
+      repliedComment.upvotes--;
+    }
+    return Object.assign({}, state, { comments: commentsCopy });
+
   case types.LIKE_COMMENT:
     var commentsCopy = state.comments.slice();
-
-    var updatedComment = commentsCopy[action.index];
-    updatedComment.liked = true;
-    updatedComment.likes++;
-
-    var updatedComments = commentsCopy
-      .slice(0, action.index)
-      .concat([updatedComment])
-      .concat(commentsCopy.slice(action.index + 1));
-
-    return Object.assign({}, state, { comments: updatedComments });
+    var repliedComment = findComment(commentsCopy, action.parents, 0);
+    repliedComment.liked = true;
+    repliedComment.likes++;
+    return Object.assign({}, state, { comments: commentsCopy });
 
   case types.UNLIKE_COMMENT:
     var commentsCopy = state.comments.slice();
-
-    var updatedComment = commentsCopy[action.index];
-    updatedComment.liked = false;
-    updatedComment.likes--;
-
-    var updatedComments = commentsCopy
-      .slice(0, action.index)
-      .concat([updatedComment])
-      .concat(commentsCopy.slice(action.index + 1));
-
-    return Object.assign({}, state, { comments: updatedComments });
+    var repliedComment = findComment(commentsCopy, action.parents, 0);
+    repliedComment.liked = false;
+    repliedComment.likes--;
+    return Object.assign({}, state, { comments: commentsCopy });
 
   case types.SET_TOPIC:
     return Object.assign({}, state, { currentSidebarTopic: action.topic });
@@ -295,8 +234,18 @@ const playground = (state = initialState, action) => {
     toggleGroupsUpdater[action.groupIndex].togglers[action.togglerIndex].status = action.status;
     return Object.assign({}, state, { toggleGroups: toggleGroupsUpdater });
 
+  case types.REPLY_COMMENT:
+    
+    var commentsCopy = state.comments.slice();
+    var repliedComment = findComment(commentsCopy, action.parents, 0);
+    if (!repliedComment.replies) repliedComment.replies = [];
+    repliedComment.replies.push(action.comment);
+
+    return Object.assign({}, state, { comments: commentsCopy });
+
   case types.SEND_COMMENT:
-    return Object.assign({}, state, { comments: [ action.comment, ...state.comments ] });
+    var commentsCopy = state.comments.slice();
+    return Object.assign({}, state, { comments: [ action.comment, ...commentsCopy ] });
 
   default:
     console.log('Not a Playground action:', action.type);

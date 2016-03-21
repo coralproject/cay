@@ -5,7 +5,6 @@ import Radium from 'radium';
 import CommentBox from './commentBox';
 import Stream from './stream';
 
-import MdRemoveRedEye from 'react-icons/lib/md/remove-red-eye';
 import MdComment from 'react-icons/lib/md/comment';
 
 import mediaQueries from '../../playgroundSettings';
@@ -29,8 +28,7 @@ class Preview extends React.Component {
       <div style={ styles.preview }>
         <div style={ styles.previewBar }>
           <h2 style={ styles.previewBarTitle }>
-            <MdRemoveRedEye style={ styles.previewIcon } />
-            <span style={ styles.previewTitleSpan }>Preview</span>
+            <span style={ styles.previewTitleSpan }>PREVIEW</span>
           </h2>
         </div>
 
@@ -63,6 +61,8 @@ var styles = {
     background: 'white',
     padding: '40px',
     color: '#3d3d3d',
+    minHeight: '500px',
+    position: 'relative',
     [mediaQueries.tablet]: {
       padding: '20px 20px 120px 20px'
     }

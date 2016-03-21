@@ -5,6 +5,9 @@ export const SET_TOPIC = "SET_TOPIC";
 export const LIKE_COMMENT = "LIKE_COMMENT";
 export const UNLIKE_COMMENT = "UNLIKE_COMMENT";
 export const SEND_COMMENT = "SEND_COMMENT";
+export const REPLY_COMMENT = "REPLY_COMMENT";
+export const UPVOTE_COMMENT = "UPVOTE_COMMENT";
+export const DOWNVOTE_COMMENT = "DOWNVOTE_COMMENT";
 
 export const showCustomizer = () => {
   return {
@@ -34,17 +37,35 @@ export const setTopic = (topic) => {
   };
 };
 
-export const likeComment = (index) => {
+export const likeComment = (index, parents) => {
   return {
     type: LIKE_COMMENT,
-    index: index
+    index: index,
+    parents
   };
 };
 
-export const unLikeComment = (index) => {
+export const unLikeComment = (index, parents) => {
   return {
     type: UNLIKE_COMMENT,
-    index: index
+    index: index,
+    parents
+  };
+};
+
+export const upVoteComment = (index, parents) => {
+  return {
+    type: UPVOTE_COMMENT,
+    index: index,
+    parents
+  };
+};
+
+export const downVoteComment = (index, parents) => {
+  return {
+    type: DOWNVOTE_COMMENT,
+    index: index,
+    parents
   };
 };
 
@@ -52,6 +73,14 @@ export const sendComment = (comment) => {
   return {
     type: SEND_COMMENT,
     comment: comment
+  };
+};
+
+export const replyComment = (comment, parents) => {
+  return {
+    type: REPLY_COMMENT,
+    comment: comment,
+    parents: parents
   };
 };
 

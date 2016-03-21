@@ -6,9 +6,6 @@ import CustomizerSettings from './CustomizerSettings';
 
 import mediaQueries from '../../playgroundSettings';
 
-import MdSettings from 'react-icons/lib/md/settings';
-import FaCaretDown from 'react-icons/lib/fa/caret-down';
-
 @connect(state => state.playground)
 @Radium
 class Customizer extends React.Component {
@@ -25,7 +22,6 @@ class Customizer extends React.Component {
       <div style={ styles.customizer }>
         <div style={ styles.customizeToggler } onClick={ this.onCustomizerTogglerClick.bind(this) }>
           <h2 style={ styles.customizeTogglerTitle }>
-            <MdSettings style={ styles.customizerIcon } />
             <span style={ styles.customizeTogglerTitleSpan }>Customize</span>
           </h2>
         </div>

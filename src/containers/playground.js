@@ -71,7 +71,6 @@ class Playground extends React.Component {
                 <div style={ styles.about }>
 
                   <h2 style={ styles.aboutTitle }>
-                    <MdHelpOutline style={ styles.aboutIcon } />
                     <span style={ styles.aboutTitleSpan }>ABOUT</span>
                   </h2>
 
@@ -136,7 +135,7 @@ const styles = {
     height: '100%',
     overflowY: 'auto',
     'float': 'left',
-    background: 'linear-gradient(to right, rgba(247,114,96,1) 0%, rgba(252,149,70,1) 100%)',
+    background: 'linear-gradient(to right, rgba(247,114,96,1) 0%, rgba(252,149,70,1) 100%)', 
     [mediaQueries.desktop]: {
       width: '40%'
     },

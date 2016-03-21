@@ -8,8 +8,15 @@ const togglerGroups = {
         description: 'Hides comments until a user clicks to read them.',
         status: false,
         topic: 'hiddenbydefault'
+      },
+      'profilepictures': {
+        label: 'Profile pictures are ON',
+        offLabel: 'Profile pictures are OFF',
+        description: 'Whether to show profile pictures or not.',
+        status: false,
+        topic: 'profilepictures'
       }
-    }
+    },
   },
   'moderation': {
     name: 'Moderation',
@@ -107,8 +114,8 @@ const togglerGroups = {
     name: 'Stream',
     togglers: {
       'replies': {
-        label: 'Replies are ON',
-        offLabel: 'Replies are OFF',
+        label: 'Nested Replies are ON',
+        offLabel: 'Nested Replies are OFF',
         description: 'Allows nested replies on comments.',
         status: false,
         topic: 'replies'

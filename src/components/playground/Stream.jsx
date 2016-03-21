@@ -8,14 +8,15 @@ import Comment from './Comment';
 @Radium
 class Stream extends React.Component {
 
-  getComments(comments, depth = 0) {
+  getComments(comments, depth = 0, parentIndex = false, parents = []) {
+    var parents = parents;
     return comments.map((comment, i) => { 
       return (
-        <div style={ { paddingLeft: (depth * 30) + 'px' } }>
-          <Comment {...comment} key={ i } index={ i } />
+        <div style={ depth > 0 ? { marginLeft: '25px' } : null }>
+          <Comment {...comment} key={ i } index={ i } depth={ depth } parents={ parents.concat([i]) } />
           {
             this.props.togglerGroups.stream.togglers.replies.status && comment.replies ? 
-              this.getComments(comment.replies, depth + 1)
+              this.getComments(comment.replies, depth + 1, i, parents.concat([i]))
             : 
               null
           }

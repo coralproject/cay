@@ -6,6 +6,8 @@ import MdThumbUp from 'react-icons/lib/md/thumb-up';
 import FaSmileO from 'react-icons/lib/fa/smile-o';
 import FaEllipsisH from 'react-icons/lib/fa/ellipsis-h';
 
+import CommentBox from './CommentBox';
+
 import mediaQueries from '../../playgroundSettings';
 
 import { likeComment, unLikeComment } from '../../actions/playground';
@@ -14,20 +16,27 @@ import { likeComment, unLikeComment } from '../../actions/playground';
 @Radium
 class ActionsBar extends React.Component {
 
-  likeClickHandler(index) {
+  likeClickHandler(index, parents) {
     if (!this.props.liked) {
-      this.props.dispatch(likeComment(index));
+      this.props.dispatch(likeComment(index, parents));
     } else {
-      this.props.dispatch(unLikeComment(index));
+      this.props.dispatch(unLikeComment(index, parents));
     }
+  }
+
+  replyClickHandler() {
+    this.setState({ showReplyBox: !this.state.showReplyBox })
+  }
+
+  onReplyHandler() {
+    this.setState({ showReplyBox: false });
   }
 
   moreClickHandler() {
     if (this.props.moreClickHandler) { this.props.moreClickHandler(); }
   }
 
-  reactionClickHandler() {
-    
+  reactionClickHandler() {    
   }
 
   render() {
@@ -35,8 +44,16 @@ class ActionsBar extends React.Component {
     return (
       <div style={ styles.statsBar }>
         { 
+          this.props.togglerGroups.stream.togglers.replies.status ? 
+            <div onClick={ this.replyClickHandler.bind(this, this.props.index) } style={ styles.actionBarButton }>
+              <MdThumbUp />&nbsp;
+              Reply
+            </div>
+          : null
+        }
+        { 
           this.props.togglerGroups['interaction'].togglers['likes'].status ? 
-            <div onClick={ this.likeClickHandler.bind(this, this.props.index) } style={ [ styles.actionBarButton, this.props.liked ? styles.liked : null ] }>
+            <div onClick={ this.likeClickHandler.bind(this, this.props.index, this.props.parents) } style={ [ styles.actionBarButton, this.props.liked ? styles.liked : null ] }>
               <MdThumbUp />&nbsp;
               { this.props.likes } Likes
             </div>
@@ -44,7 +61,7 @@ class ActionsBar extends React.Component {
         }
         { 
           this.props.togglerGroups['interaction'].togglers['reactions'].status ? 
-            <div onClick={ this.reactionClickHandler.bind(this) } style={ styles.actionBarButton }>
+            <div onClick={ this.reactionClickHandler.bind(this, this.props.index, this.props.parents) } style={ styles.actionBarButton }>
               <FaSmileO />&nbsp;
               { this.props.likes } Reactions
             </div>
@@ -54,11 +71,17 @@ class ActionsBar extends React.Component {
           true ? 
             <div style={ styles.actionBarButton } onClick={ this.moreClickHandler.bind(this) }>
               <FaEllipsisH />&nbsp;
-              More actions
+              More
             </div>
           : null
         }
         <div style={ styles.clear }></div>
+        {
+          !!this.state.showReplyBox ? 
+            <CommentBox replyMode={ true } replyCallback={ this.onReplyHandler.bind(this) } threadIndex={ this.props.index } parents={ this.props.parents } />
+          : 
+            null
+        }
       </div>
     );
 
@@ -77,8 +100,8 @@ var styles = {
   actionBarButton: {
     cursor: 'pointer',
     'float': 'left',
-    padding: '0 10px',
-    lineHeight: '30px',
+    padding: '0 20px',
+    lineHeight: '40px',
     [mediaQueries.tablet]: {
       display: 'block',
       'float': 'none'

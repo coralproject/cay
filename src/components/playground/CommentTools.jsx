@@ -14,8 +14,7 @@ class CommentTools extends React.Component {
   options = [
     { title: 'Ignore User', key: 'ignore' },
     { title: 'Report', key: 'report' },
-    { title: 'React...', key: 'react' },
-    { title: 'Reply', key: 'reply' },
+    { title: 'Delete', key: 'delete' },
     { title: 'Share', key: 'share' }
   ]
 
@@ -74,16 +73,13 @@ class CommentTools extends React.Component {
             Report
           </div>
           {
-            this.props.togglerGroups['interaction'].togglers['reactions'].status ?            
-              <div key="react" style={ styles.commentToolsOption } onClick={ this.onOptionClick.bind(this, 'react') }>
-                React
+            this.props.togglerGroups['reputation'].togglers['privileges'].status ?
+              <div key="delete" style={ styles.commentToolsOption } onClick={ this.onOptionClick.bind(this, 'delete') }>
+                Delete
               </div>
             : 
               null
           }
-          <div key="reply" style={ styles.commentToolsOption } onClick={ this.onOptionClick.bind(this, 'reply') }>
-            Reply
-          </div>
           <div key="share" style={ styles.commentToolsOption } onClick={ this.onOptionClick.bind(this, 'share') }>
             Share
           </div>

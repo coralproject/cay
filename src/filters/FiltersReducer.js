@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import * as types from 'filters/FiltersActions';
 
 let initialState = {
@@ -26,6 +25,9 @@ const filters = (state = initialState, action) => {
 
   // this should run before any ReactDOM stuff happens
   case types.DATA_CONFIG_LOADED:
+
+    console.log("--------------------DATA_CONFIG_LOADED-----------------\n\n\n", action);
+
     const filterList = [];
     const filters = action.config.filters.reduce((accum, filter) => {
 
@@ -36,6 +38,7 @@ const filters = (state = initialState, action) => {
 
       return accum;
     }, {});
+
     return Object.assign({}, state, filters, {filterList});
 
   case types.CREATE_QUERY:
@@ -84,37 +87,16 @@ const filters = (state = initialState, action) => {
     return Object.assign({}, state, {specificBreakdown: action.specificBreakdown, counter: action.counter});
 
   case types.RECEIVE_FILTER_RANGES:
-    const ranges = action.data.results[0].Docs[0];
 
-    /* xenia_package */
-    const newFilters = _.reduce(ranges, (accum, value, aggKey) => {
-      let [key, field] = aggKey.split('_');
+    console.log('FiltersReducer.RECEIVE_FILTER_RANGES', action.data);
 
-      if (field === 'id' || value === null) return accum;
-
-      // we might have already updated the old filter with the min value
-      // retrieve it from the accumulator in progress instead of the state
-      let newFilter = _.has(accum, key) ? accum[key] : _.cloneDeep(state[key]);
-      newFilter[field] = value; // where field is {min|max}
-      accum[key] = newFilter;
-
-      // on the first pass, go ahead and force a change on userMin and userMax
-      if (field === 'min' && _.isNull(newFilter.userMin)) {
-        newFilter.userMin = value;
-      } else if (field === 'max' && _.isNull(newFilter.userMax)) {
-        newFilter.userMax = value;
-      }
-
-      return accum;
-    }, {});
-
-    // _.each(newFilters, f => {
-    //
-    //   f.userMin = Math.min(Math.max(f.userMin, f.min), f.max);
-    //   f.userMax = Math.min(Math.max(f.userMax, f.min), f.max);
+    // const newFilters = Object.keys(action.data).map(key => {
+    //   return Object.assign({}, state[key], action.data[key]);
     // });
+    //
+    // console.log('newFilters', newFilters);
 
-    return Object.assign({}, state, newFilters);
+    return Object.assign({}, state, ...action.data);
 
   default:
     return state;

@@ -86,12 +86,47 @@ export const setSpecificBreakdown = (specificBreakdown) => {
   };
 };
 
+const parseFilterRanges = (ranges) => {
+
+  const newFilters = _.reduce(ranges, (accum, value, aggKey) => {
+    let [key, field] = aggKey.split('_');
+
+    if (field === 'id' || value === null) return accum;
+
+    console.log('key', key);
+
+    // we might have already updated the old filter with the min value
+    // retrieve it from the accumulator in progress instead of the state
+    let newFilter = _.has(accum, key) ? accum[key] : {};
+    newFilter[field] = value; // where field is {min|max}
+    accum[key] = newFilter;
+
+    // on the first pass, go ahead and force a change on userMin and userMax
+    if (field === 'min' && _.isNull(newFilter.userMin)) {
+      newFilter.userMin = value;
+    } else if (field === 'max' && _.isNull(newFilter.userMax)) {
+      newFilter.userMax = value;
+    }
+
+    return accum;
+  }, {});
+
+  console.log('ranges', ranges);
+  console.log('newFilters', newFilters);
+
+  return _.map(newFilters, (filter, key) => {
+    return {[key]: filter};
+  });
+};
+
 /* xenia_package */
 export const getFilterRanges = () => {
 
   return (dispatch, getState) => {
     let filterState = getState().filters;
     let $group = filterState.filterList.reduce((accum, key) => {
+
+      console.log('fetching filter ranges', key);
 
       let dimension;
       if (filterState.breakdown === 'author') {
@@ -144,8 +179,8 @@ export const getFilterRanges = () => {
     fetch(url, init)
       .then(res => res.json())
       .then(data => {
-        console.log(RECEIVE_FILTER_RANGES, data);
-        dispatch({type: RECEIVE_FILTER_RANGES, data});
+        const doc = data.results[0].Docs[0];
+        dispatch({type: RECEIVE_FILTER_RANGES, data: parseFilterRanges(doc)});
       }).catch(err => {
         console.log(err);
       });

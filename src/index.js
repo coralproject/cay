@@ -3,7 +3,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 // React Router
-import { browserHistory, Router, Route } from 'react-router';
+import { browserHistory, Router, Route, Redirect } from 'react-router';
 // React Redux
 import { Provider } from 'react-redux';
 // Redux Devtools
@@ -69,7 +69,7 @@ class Root extends React.Component {
       <div>
         <Provider store={store}>
           <Router history={browserHistory} onUpdate={ this.logPageView }>
-            <Route path="/" component={GroupCreator} />
+            <Redirect from="/" to="group-creator" />
             <Route path="login" component={Login} />
             <Route path="about" component={About} />
             <Route path="group-creator" component={GroupCreator} />

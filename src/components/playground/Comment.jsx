@@ -13,6 +13,7 @@ import ActionsBar from './ActionsBar';
 import Upvoter from './Upvoter';
 import CommentTools from './CommentTools';
 
+import FaCog from 'react-icons/lib/fa/cog';
 import CoralIcon from '../../components/CoralIcon';
 
 import mediaQueries from '../../playgroundSettings';
@@ -21,7 +22,7 @@ import mediaQueries from '../../playgroundSettings';
 @Radium
 class Comment extends React.Component {
 
-  onCommentContentClick() {
+  onToolsClick() {
     this.setState({ toolsExpanded: !this.state.toolsExpanded });
   }
 
@@ -40,7 +41,11 @@ class Comment extends React.Component {
 
     var user = this.props.users[this.props.user];
 
+    var pulsateTools = this.props.pulseAnimation && this.props.pulseTarget == "commentTools";
+    var pulsateName = this.props.pulseAnimation && this.props.pulseTarget == "commentName";
+
     return (
+
       <div style={ 
         [ 
           styles.comment,
@@ -48,7 +53,18 @@ class Comment extends React.Component {
           this.props.depth > 0 ? { borderLeft: '1px solid #ddd' } : null
         ]
       }>
-        <h4 style={ [ styles.userName, this.props.togglerGroups['reputation'].togglers['badges'].status && user.badges && user.badges.length ? styles.withBadge : null ] } onClick={ this.onProfileClick.bind(this) }>
+        <h4 style={ [ 
+              styles.userName, 
+              this.props.togglerGroups['reputation'].togglers['badges'].status && 
+                user.badges && 
+                user.badges.length ? 
+                  styles.withBadge 
+                : null,
+                pulsateName ? styles.colorPulse : null
+           ] } 
+           onClick={ this.onProfileClick.bind(this) }>
+
+          <ReactCSSTransitionGroup transitionName="fade" transitionAppear={ false }>
           { 
             this.props.togglerGroups['reputation'].togglers['badges'].status ? 
               <span>
@@ -64,6 +80,7 @@ class Comment extends React.Component {
               </span>
             : null
           }
+          </ReactCSSTransitionGroup>
           { 
             this.props.togglerGroups['privacy'].togglers['anonymity'].status ? 
             this.props.users[this.props.user].nickName : 
@@ -81,7 +98,7 @@ class Comment extends React.Component {
             null
         }
         
-        <div onClick={ this.onCommentContentClick.bind(this) } style={ [ styles.commentContent, this.props.togglerGroups['interaction'].togglers['upvotes'].status ? styles.withUpvoter : null ] }>
+        <div style={ [ styles.commentContent, this.props.togglerGroups['interaction'].togglers['upvotes'].status ? styles.withUpvoter : null ] }>
           <CommentContent content={ this.props.content } />
           { 
             this.props.togglerGroups['interaction'].togglers['upvotes'].status ? 
@@ -89,7 +106,10 @@ class Comment extends React.Component {
             null
           }
         </div>
-        <ActionsBar { ...this.props } moreClickHandler={ this.onCommentContentClick.bind(this) } />
+        <ActionsBar { ...this.props } />
+
+        <div style={ [ styles.moreTools, pulsateTools ? styles.zoomPulse : null ] } onClick={ this.onToolsClick.bind(this) }><FaCog /></div>
+
         <ReactCSSTransitionGroup transitionName="commentTools" transitionAppear={ false }>
           { commentTools }
         </ReactCSSTransitionGroup>
@@ -149,5 +169,25 @@ var styles = {
     fontSize: '10pt',
     color: '#999',
     marginBottom: '5px'
+  },
+  moreTools: {
+    position: 'absolute',
+    right: '0px',
+    fontSize: '20px',
+    padding: '0 5px',
+    color: '#666',
+    top: '20px',
+    cursor: 'pointer',
+    opacity: '.35',
+    transition: 'opacity .5s',
+    ':hover': {
+      opacity: '1'
+    }
+  },
+  colorPulse: {
+    animation: 'colorPulse 1000ms linear 5'
+  },
+  zoomPulse: {
+    animation: 'zoomPulse 1000ms linear 5'
   }
 };

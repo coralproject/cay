@@ -75,18 +75,18 @@ class ProfileInfo extends React.Component {
             : ''
           }
 
-          <div style={ styles.profileRightPane }>
+          <div style={ styles.profileTools }>
             { 
               this.props.togglerGroups['community'].togglers['privatemessages'].status ? 
-                <div style={ styles.rightPaneAction }><MdComment /></div> : 
+                <div style={ styles.profileToolsButton }><MdComment /> Send message</div> : 
                 null
             }
             { 
               this.props.togglerGroups['moderation'].togglers['muting'].status ? 
-                <div style={ styles.rightPaneAction }><FaHandPaperO /></div> : 
+                <div style={ styles.profileToolsButton }><FaHandPaperO /> Block user</div> : 
                 null
             }
-            <div style={ styles.moreActions }><FaEllipsisH /></div>
+            {/*<div style={ styles.moreActions }><FaEllipsisH /></div>*/}
           </div>
           <div style={ styles.clearfix }></div>
         </div>
@@ -157,6 +157,7 @@ var styles = {
     borderBottom: '1px solid #ccc',
     padding: '20px 10px',
     display: 'flex',
+    background: '#fafafa',
     flexDirection: 'row',
     [mediaQueries.tablet]: {
       borderRight: 'none',
@@ -168,27 +169,23 @@ var styles = {
     flexGrow: 1,
     textAlign: 'center'
   },
-  profileRightPane: {
-    width: '45px',
-    minHeight: '150px',
+  profileTools: {
     verticalAlign: 'top',
     position: 'relative',
     textAlign: 'center',
-    [mediaQueries.tablet]: {
-      width: 'auto',
-      minHeight: 'auto',
-      borderTop: '1px solid #ccc'
-    }
+    borderTop: '1px solid #ccc'
   }, 
   profileTotal: {
     fontSize: '22pt',
     fontWeight: 'bold'
   },
-  rightPaneAction: {
+  profileToolsButton: {
     height: '40px',
     lineHeight: '40px',
+    padding: '0 20px',
+    display: 'inline-block',
+    fontSize: '12pt',
     [mediaQueries.tablet]: {
-      'float': 'left',
       width: '40px',
       height: '40px',
       lineHeight: '40px'
@@ -223,15 +220,18 @@ var styles = {
   badge: {
     position: 'relative',
     paddingLeft: '30px',
-    height: '30px',
+    height: '40px',
     marginBottom: '5px',
-    lineHeight: '30px'
+    lineHeight: '40px',
+    fontSize: '12pt'
   },
   badgeIcon: {
     position: 'absolute',
     left: '0px',
-    height: '20px',
-    width: '20px',
-    lineHeight: '32px'
+    top: '5px',
+    height: '40px',
+    width: '40px',
+    lineHeight: '40px',
+    fontSize: '40px'
   }
 };

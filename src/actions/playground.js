@@ -8,6 +8,8 @@ export const SEND_COMMENT = "SEND_COMMENT";
 export const REPLY_COMMENT = "REPLY_COMMENT";
 export const UPVOTE_COMMENT = "UPVOTE_COMMENT";
 export const DOWNVOTE_COMMENT = "DOWNVOTE_COMMENT";
+export const START_PULSATING = "START_PULSATING";
+export const STOP_PULSATING = "STOP_PULSATING";
 
 export const showCustomizer = () => {
   return {
@@ -84,3 +86,16 @@ export const replyComment = (comment, parents) => {
   };
 };
 
+export const startPulsating = (target) => {
+  return {
+    type: START_PULSATING,
+    target: target
+  };
+};
+
+export const stopPulsating = (target) => {
+  return {
+    type: START_PULSATING,
+    target: target
+  };
+};

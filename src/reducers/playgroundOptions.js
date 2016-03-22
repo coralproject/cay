@@ -33,7 +33,8 @@ const togglerGroups = {
         offLabel: 'Block/mute is OFF',
         description: 'Blocking users will hide their posts from the comment stream.',
         status: false,
-        topic: 'muting'
+        topic: 'muting',
+        pulseTarget: 'commentName'
       }
     }
   },
@@ -45,14 +46,16 @@ const togglerGroups = {
         offLabel: 'Anonymity is OFF',
         description: 'This means pseudonyms (nicknames) are allowed.',
         status: false,
-        topic: 'anonymity'
+        topic: 'anonymity',
+        pulseTarget: 'commentName'
       },
       'public_profile': {
         label: 'Public Profile is ON',
         offLabel: 'Public Profile is OFF',
         description: 'Visitors are able to see your public profile.',
         status: false,
-        topic: 'public_profile'
+        topic: 'public_profile',
+        pulseTarget: 'commentName'
       }
     }
   },
@@ -67,11 +70,12 @@ const togglerGroups = {
         topic: 'badges'
       },
       'privileges': {
-        label: 'Privileges are ON',
-        offLabel: 'Privileges are OFF',
+        label: 'Moderation Privileges are ON',
+        offLabel: 'Moderation Privileges are OFF',
         description: 'Many reputation systems allow certain privileges (as moderating others) as you gain reputation.',
         status: false,
-        topic: 'privileges'
+        topic: 'privileges',
+        pulseTarget: 'commentTools'
       }
     }
   },

@@ -5,6 +5,8 @@ import comments from './playgroundComments';
 const initialState = {
   customizerIsVisible: false,
   currentSidebarTopic: null,
+  pulseAnimation: false,
+  pulseTarget: '',
   wizardSteps: [
     {
       content: 'Do you think users should be able to remain anonymous (using a nickname)?',
@@ -231,8 +233,16 @@ const playground = (state = initialState, action) => {
 
     var toggleGroupsUpdater = {};
     toggleGroupsUpdater[action.groupIndex] = { togglers: state.togglerGroups[action.groupIndex].togglers };
-    toggleGroupsUpdater[action.groupIndex].togglers[action.togglerIndex].status = action.status;
-    return Object.assign({}, state, { toggleGroups: toggleGroupsUpdater });
+    toggleGroupsUpdater[action.groupIndex].togglers[action.togglerIndex].status = action.status;     
+    
+    var animate = false;
+    var target = "";
+    if (action.status && state.togglerGroups[action.groupIndex].togglers[action.togglerIndex].pulseTarget) {
+      animate = true,
+      target = state.togglerGroups[action.groupIndex].togglers[action.togglerIndex].pulseTarget;
+    }
+
+    return Object.assign({}, state, { toggleGroups: toggleGroupsUpdater, pulseAnimation: animate, pulseTarget: target });
 
   case types.REPLY_COMMENT:
     
@@ -246,6 +256,12 @@ const playground = (state = initialState, action) => {
   case types.SEND_COMMENT:
     var commentsCopy = state.comments.slice();
     return Object.assign({}, state, { comments: [ action.comment, ...commentsCopy ] });
+
+  case types.START_PULSATING:
+    return Object.assign({}, state, { pulseAnimation: true, pulseTarget: action.target });
+
+  case types.STOP_PULSATING:
+    return Object.assign({}, state, { pulseAnimation: true, pulseTarget: action.target });
 
   default:
     console.log('Not a Playground action:', action.type);

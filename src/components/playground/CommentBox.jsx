@@ -59,7 +59,8 @@ class CommentBox extends React.Component {
       likes: 0,
       liked: false,
       reactions: [],
-      upvoted: false
+      upvoted: false,
+      upvotes: 0
     };
 
     if (this.props.replyMode) {
@@ -142,7 +143,9 @@ class CommentBox extends React.Component {
           : 
             null
         }
-        { toolBar }
+        <ReactCSSTransitionGroup transitionName="fade" transitionAppear={ false }>
+          { toolBar }
+        </ReactCSSTransitionGroup>
         <div style={ styles.draftJsEditor }>
           { this.emojiPicker() }
           <Editor ref="draftJsEditor" editorState={editorState} onChange={this.onChange} />

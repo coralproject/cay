@@ -94,3 +94,44 @@ p {
   overflow: hidden;
   transition: all 500ms ease-out;
 }
+
+/* comment stream transitions */
+.profileinfo-enter {
+  max-height: 0;
+  overflow: hidden;
+}
+
+.profileinfo-enter.profileinfo-enter-active {
+  max-height: 600px;
+  transition: all 500ms linear;
+}
+
+.profileinfo-leave {
+  max-height: 600px;
+  overflow: hidden;
+}
+
+.profileinfo-leave.profileinfo-leave-active {
+  max-height: 0;
+  overflow: hidden;
+  transition: all 500ms ease-out;
+}
+
+/* fade transition */
+.fade-enter {
+  opacity: 0;
+}
+
+.fade-enter.fade-enter-active {
+  opacity: 1;
+  transition: all 500ms linear;
+}
+
+.fade-leave {
+  opacity: 1;
+}
+
+.fade-leave.fade-leave-active {
+  opacity: 0;
+  transition: all 500ms ease-out;
+}

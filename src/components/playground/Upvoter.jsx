@@ -66,8 +66,8 @@ var styles = {
   upvoter: {
     position: 'absolute',
     width: '50px',
-    right: '0',
-    top: '-10px',
+    right: '-10px',
+    top: '-15px',
     textAlign: 'center'
   },
   voteUp: {

@@ -4,7 +4,6 @@ import Radium from 'radium';
 
 import MdThumbUp from 'react-icons/lib/md/thumb-up';
 import FaSmileO from 'react-icons/lib/fa/smile-o';
-import FaEllipsisH from 'react-icons/lib/fa/ellipsis-h';
 
 import CommentBox from './CommentBox';
 
@@ -30,10 +29,6 @@ class ActionsBar extends React.Component {
 
   onReplyHandler() {
     this.setState({ showReplyBox: false });
-  }
-
-  moreClickHandler() {
-    if (this.props.moreClickHandler) { this.props.moreClickHandler(); }
   }
 
   reactionClickHandler() {    
@@ -64,14 +59,6 @@ class ActionsBar extends React.Component {
             <div onClick={ this.reactionClickHandler.bind(this, this.props.index, this.props.parents) } style={ styles.actionBarButton }>
               <FaSmileO />&nbsp;
               { this.props.likes } Reactions
-            </div>
-          : null
-        }
-        { 
-          true ? 
-            <div style={ styles.actionBarButton } onClick={ this.moreClickHandler.bind(this) }>
-              <FaEllipsisH />&nbsp;
-              More
             </div>
           : null
         }

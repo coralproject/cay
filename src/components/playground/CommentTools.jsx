@@ -97,22 +97,22 @@ export default CommentTools;
 
 var styles = {
   commentTools: {
-    height: '60px',
-    borderTop: '1px solid #ddd',
+    position: 'absolute',
+    width: '200px',
+    border: '1px solid #ddd',
+    boxShadow: '0 2px 8px #888',
+    borderRadius: '5px',
     background: '#fafafa',
-    lineHeight: '60px',
-    width: '100%',
+    lineHeight: '1',
     margin: '0',
-    [mediaQueries.tablet]: {
-      height: 'auto'
-    }
+    right: '0',
+    top: '50px',
+    zIndex: '99999'
   },
   commentToolsOption: {
-    display: 'inline-block',
-    width: '20%',
     margin: '0',
-    padding: '0',
-    textAlign: 'center',
+    padding: '15px',
+    textAlign: 'left',
     cursor: 'pointer',
     ':hover': {
       background: '#F77260',
@@ -120,7 +120,7 @@ var styles = {
     },
     [mediaQueries.tablet]: {
       display: 'block',
-      padding: '0 20px',
+      padding: '0 10px',
       width: '100%',
       textAlign: 'left',
       borderBottom: '1px solid #ddd'

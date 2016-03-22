@@ -28,8 +28,6 @@ const filters = (state = initialState, action) => {
   // this should run before any ReactDOM stuff happens
   case types.DATA_CONFIG_LOADED:
 
-    console.log('--------------------DATA_CONFIG_LOADED-----------------\n\n\n', action);
-
     const filterList = [];
     const filters = action.config.filters.reduce((accum, filter, i) => {
 
@@ -90,14 +88,10 @@ const filters = (state = initialState, action) => {
 
   case types.RECEIVE_FILTER_RANGES:
 
-    console.log('FiltersReducer.RECEIVE_FILTER_RANGES', action.data);
-
-    const newFilters = Object.keys(action.data).map(key => {
-      console.log('RECEIVE_FILTER_RANGES', key, state[key], action.data[key]);
-      return Object.assign({}, state[key], action.data[key]);
-    });
-
-    console.log('newFilters', newFilters);
+    const newFilters = _.reduce(action.data, (accum, filter, key) => {
+      accum[key] = Object.assign({}, state[key], action.data[key]);
+      return accum;
+    }, {});
 
     return Object.assign({}, state, newFilters);
 

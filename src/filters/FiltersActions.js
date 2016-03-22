@@ -99,8 +99,6 @@ const parseFilterRanges = (ranges, filterState) => {
 
     if (field === 'id' || value === null) return accum;
 
-    console.log('key', key);
-
     // we might have already updated the old filter with the min value
     // retrieve it from the accumulator in progress instead of the state
     let newFilter = _.has(accum, key) ? accum[key] : {};
@@ -116,9 +114,6 @@ const parseFilterRanges = (ranges, filterState) => {
 
     return accum;
   }, {});
-
-  console.log('ranges', ranges);
-  console.log('newFilters', newFilters);
 
   return newFilters;
 };

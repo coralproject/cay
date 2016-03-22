@@ -1,9 +1,12 @@
+import _ from 'lodash';
 import * as types from 'filters/FiltersActions';
 
 let initialState = {
+  configLoaded: false,
   tags: [],
   authors: [],
   sections: [],
+  loadingFilters: false,
   loadingUserList: false,
   loadingAuthors: false,
   loadingSections: false,
@@ -14,24 +17,23 @@ let initialState = {
   breakdown: 'all',
   counter: 0, // this is a signal for ajax consumed by userFilters
   specificBreakdown: ''
-  // 'stats.accept_ratio': {userMin: 0, userMax: 1},
-  // 'stats.replies_per_comment': {userMin: 0, userMax: 1},
-  // 'stats.comments.total': {userMin: 0, userMax: 10000},
-  // 'stats.replies': {userMin: 0, userMax: 1000}
 };
 
 const filters = (state = initialState, action) => {
   switch (action.type) {
 
+  case types.DATA_CONFIG_REQUEST:
+    return Object.assign({}, state, {loadingFilters: true});
+
   // this should run before any ReactDOM stuff happens
   case types.DATA_CONFIG_LOADED:
 
-    console.log("--------------------DATA_CONFIG_LOADED-----------------\n\n\n", action);
+    console.log('--------------------DATA_CONFIG_LOADED-----------------\n\n\n', action);
 
     const filterList = [];
-    const filters = action.config.filters.reduce((accum, filter) => {
+    const filters = action.config.filters.reduce((accum, filter, i) => {
 
-      const key = Math.random().toString().slice(2, 18);
+      const key = `filter${i}`;
       accum[key] = Object.assign({}, filter, {min: null, max: null, userMin: null, userMax: null, key});
 
       filterList.push(key);
@@ -39,7 +41,7 @@ const filters = (state = initialState, action) => {
       return accum;
     }, {});
 
-    return Object.assign({}, state, filters, {filterList});
+    return Object.assign({}, state, filters, {filterList}, {configLoaded: true});
 
   case types.CREATE_QUERY:
     return Object.assign({}, state, {loadingUserList: true});
@@ -90,13 +92,14 @@ const filters = (state = initialState, action) => {
 
     console.log('FiltersReducer.RECEIVE_FILTER_RANGES', action.data);
 
-    // const newFilters = Object.keys(action.data).map(key => {
-    //   return Object.assign({}, state[key], action.data[key]);
-    // });
-    //
-    // console.log('newFilters', newFilters);
+    const newFilters = Object.keys(action.data).map(key => {
+      console.log('RECEIVE_FILTER_RANGES', key, state[key], action.data[key]);
+      return Object.assign({}, state[key], action.data[key]);
+    });
 
-    return Object.assign({}, state, ...action.data);
+    console.log('newFilters', newFilters);
+
+    return Object.assign({}, state, newFilters);
 
   default:
     return state;

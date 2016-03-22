@@ -11,6 +11,8 @@ import { DevTools, DebugPanel, LogMonitor } from 'redux-devtools/lib/react';
 
 import configureStore from 'store.js';
 
+import { fetchFilterConfig } from 'filters/FiltersActions';
+import { fetchConfig } from 'app/AppActions';
 // import Dashboard from './containers/Dashboard';
 import GroupCreator from 'app/GroupCreator';
 import TagManager from 'app/TagManager';
@@ -86,33 +88,17 @@ class Root extends React.Component {
   }
 }
 
-const loadConfig = (requiredKeys, file, actionType) => {
-  return fetch(file)
-    .then(res => res.json())
-    .then(config => {
-      requiredKeys.forEach(key => {
-        if (typeof config[key] === 'undefined') throw new Error(`${key} is not set in ${file}. Coral will not work correctly.`);
-        window[key] = config[key];
-      });
+store.dispatch(fetchConfig());
+store.dispatch(fetchFilterConfig());
 
-      store.dispatch({type: actionType, config});
-    }).catch(err => {
-      console.error(`Unable to load ${file}`);
-      console.error(err.stack);
-    });
-};
-
-const requiredEnvKeys = [ 'xeniaHost', 'pillarHost', 'basicAuthorization', 'environment', 'googleAnalyticsId', 'requireLogin' ];
-const requiredDataKeys = ['filters', 'dimensions'];
-const setupEnv = loadConfig(requiredEnvKeys, '/config.json', 'CONFIG_LOADED');
-const setupData = loadConfig(requiredDataKeys, '/data_config.json', 'DATA_CONFIG_LOADED');
-
-Promise.all([setupEnv, setupData]).then(() => {
-  ReactDOM.render(<Root/>, document.getElementById('root'));
-}).catch(err => {
-  console.error('An Error occured rendering the <Root> element.');
-  console.error(err.stack);
-}); // there is no catch here because we want redbox-react to display the error screen (on dev)
+const configInterval = setInterval(() => {
+  console.log('store', store);
+  const state = store.getState();
+  if (state.app.configLoaded && state.filters.configLoaded) {
+    window.clearInterval(configInterval);
+    ReactDOM.render(<Root/>, document.getElementById('root'));
+  }
+}, 1000);
 
 // prevent browser from navigating backwards if you hit the backspace key
 document.addEventListener('keydown', function (e) {

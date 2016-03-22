@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import {clamp} from 'components/utils/math';
-import {authXenia} from 'auth/AuthActions';
+import {authXenia} from 'app/AppActions';
 
 export const QUERYSET_SELECTED = 'QUERYSET_SELECTED';
 export const QUERYSET_REQUEST = 'QUERYSET_REQUEST'; // request data for a single queryset
@@ -285,6 +285,6 @@ const doMakeQueryFromStateAsync = _.debounce((query, dispatch)=>{
       dispatch(receiveQueryset(json));
     })
     .catch(err => {
-      dispatch(dataExplorationFetchError(err));
+      // dispatch(dataExplorationFetchError(err));
     });
 }, 1000);

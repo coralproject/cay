@@ -94,7 +94,7 @@ export const setSpecificBreakdown = (specificBreakdown) => {
 
 const parseFilterRanges = (ranges, filterState) => {
 
-  const newFilters = ranges.reduce((accum, value, aggKey) => {
+  const newFilters = _.reduce(ranges, (accum, value, aggKey) => {
     let [key, field] = aggKey.split('_');
 
     if (field === 'id' || value === null) return accum;

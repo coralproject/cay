@@ -69,11 +69,13 @@ export const fetchQuerysetsIfNotFetched = () => {
 /* xenia_package */
 // get deep list of query_sets
 export const fetchQuerysets = () => {
-  return (dispatch) => {
+  return (dispatch, getState) => {
+
+    const app = getState().app;
 
     dispatch(requestQuerysets());
 
-    fetch(window.xeniaHost + '/1.0/query', authXenia())
+    fetch(`${app.xeniaHost}/1.0/query`, authXenia())
       .then(response => response.json())
       .then(querysets => dispatch(receiveQuerysets(querysets)))
       .catch(err => dispatch(requestQuerysetsFailure(err)));
@@ -97,10 +99,11 @@ export const receiveQueryset = (data) => {
 /* xenia_package */
 // execute a query_set
 export const fetchQueryset = (querysetName) => {
-  return (dispatch) => {
+  return (dispatch, getState) => {
+    const app = getState().app;
     dispatch(requestQueryset(querysetName));
 
-    fetch(window.xeniaHost + '/1.0/exec/' + querysetName, authXenia())
+    fetch(`${app.xeniaHost}/1.0/exec/${querysetName}`, authXenia())
       .then(response => response.json())
       .then(queryset => dispatch(receiveQueryset(queryset)))
       .catch(err => dispatch(requestQuerysetFailure(err)));
@@ -128,6 +131,7 @@ export const makeQueryFromState = (/*type*/) => {
     console.log('function that calls async');
     // make a query from the current state
     const filterState = getState().filters;
+    const app = getState().app;
     const filters = filterState.filterList.map(key => filterState[key]);
 
     let matches = _.flatten(_.map(filters, filter => {
@@ -189,7 +193,7 @@ export const makeQueryFromState = (/*type*/) => {
       enabled: true
     };
 
-    doMakeQueryFromStateAsync(query, dispatch);
+    doMakeQueryFromStateAsync(query, dispatch, app);
 
   };
 };
@@ -203,6 +207,7 @@ export const saveQueryFromState = (queryName, modDescription) => {
     // make a query from the current state
     const filterState = getState().filters;
     const filters = filterState.filterList.map(key => filterState[key]);
+    const app = getState().app;
 
     let matches = _.flatten(_.map(filters, filter => {
       let dbField;
@@ -251,13 +256,13 @@ export const saveQueryFromState = (queryName, modDescription) => {
       enabled: true
     };
 
-    doPutQueryFromState(query, dispatch);
+    doPutQueryFromState(query, dispatch, app);
 
   };
 };
 /* xenia_package */
-const doPutQueryFromState = (query, dispatch) => {
-  const url = window.xeniaHost + '/1.0/query';
+const doPutQueryFromState = (query, dispatch, app) => {
+  const url = `${app.xeniaHost}/1.0/query`;
   let init = authXenia('PUT');
   init.body = JSON.stringify(query);
 
@@ -269,12 +274,12 @@ const doPutQueryFromState = (query, dispatch) => {
     });
 };
 /* xenia_package */
-const doMakeQueryFromStateAsync = _.debounce((query, dispatch)=>{
+const doMakeQueryFromStateAsync = _.debounce((query, dispatch, app)=>{
   console.log('actual async');
   dispatch(requestQueryset());
   dispatch(createQuery(query));
 
-  const url = window.xeniaHost + '/1.0/exec';
+  const url = `${app.xeniaHost}/1.0/exec`;
 
   var init = authXenia('POST');
   init.body = JSON.stringify(query);

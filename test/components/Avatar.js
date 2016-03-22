@@ -2,7 +2,7 @@ var React = require('react');
 var ReactTestUtils = require('react-addons-test-utils');
 var assert = require('chai').assert;
 
-var Avatar = require('../../src/components/Avatar');
+var Avatar = require('../../src/users/Avatar');
 
 describe('Avatar component', function () {
   beforeEach('render and locate element', function () {

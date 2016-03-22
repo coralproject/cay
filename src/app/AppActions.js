@@ -1,0 +1,1 @@
+export const CONFIG_LOADED = 'CONFIG_LOADED';

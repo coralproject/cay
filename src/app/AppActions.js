@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 export const CONFIG_REQUEST = 'CONFIG_REQUEST';
 export const CONFIG_LOADED = 'CONFIG_LOADED';
 export const CONFIG_ERROR = 'CONFIG_ERROR';
@@ -17,28 +15,24 @@ export const fetchConfig = () => {
       .then(res => res.json())
       .then(config => {
 
-        const allKeys = _.map(requiredKeys, key => {
-          return !_.isUndefined(config[key]);
-        });
+        const allKeysDefined = requiredKeys.every(key => 'undefined' !== typeof config[key]);
 
-        if (!_.every(allKeys)) {
-          throw new Error(`missing required keys on confgi.json. Must define ${requiredKeys.join('|')}`);
+        if (!allKeysDefined) {
+          throw new Error(`missing required keys on config.json. Must define ${requiredKeys.join('|')}`);
         }
 
         dispatch({type: CONFIG_LOADED, config});
-      }).catch(err => {
-        return dispatch({type: CONFIG_ERROR, message: err.message});
-      });
+      }).catch(({message}) => dispatch({type: CONFIG_ERROR, message}));
   };
 };
 
 /* xenia_package */
-export const authXenia = (method) => {
+export const authXenia = (method = 'GET') => {
   // what? window? see note in AppActions.js
   const headers = new Headers({'Authorization': window.basicAuthorization});
 
   const init = {
-    method: method || 'GET',
+    method: method,
     headers: headers,
     mode: 'cors',
     cache: 'default'

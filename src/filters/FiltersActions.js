@@ -38,7 +38,7 @@ export const fetchSections = () => {
     const app = getState().app;
 
     /* xenia_package */
-    fetch(app.xeniaHost + '/1.0/exec/dimension_section_list', authXenia())
+    fetch(`${app.xeniaHost}/1.0/exec/dimension_section_list`, authXenia())
       .then(response => response.json())
       .then(json => dispatch(receiveSections(json)))
       .catch(err => {
@@ -64,7 +64,7 @@ export const fetchAuthors = () => {
     const app = getState().app;
 
     /* xenia_package */
-    fetch(app.xeniaHost + '/1.0/exec/dimension_author_list', authXenia())
+    fetch(`${app.xeniaHost}/1.0/exec/dimension_author_list`, authXenia())
       .then(response => response.json())
       .then(json => dispatch(receiveAuthors(json)))
       .catch(err => {
@@ -94,7 +94,7 @@ export const setSpecificBreakdown = (specificBreakdown) => {
 
 const parseFilterRanges = (ranges, filterState) => {
 
-  const newFilters = _.reduce(ranges, (accum, value, aggKey) => {
+  const newFilters = ranges.reduce((accum, value, aggKey) => {
     let [key, field] = aggKey.split('_');
 
     if (field === 'id' || value === null) return accum;
@@ -169,7 +169,7 @@ export const getFilterRanges = () => {
     dispatch({type: REQUEST_FILTER_RANGES});
 
     const app = getState().app;
-    const url = app.xeniaHost + '/1.0/exec';
+    const url = `${app.xeniaHost}/1.0/exec`;
 
     var init = authXenia('POST');
     init.body = JSON.stringify(query);
@@ -213,20 +213,18 @@ export const fetchFilterConfig = () => {
       .then(res => res.json())
       .then(config => {
 
-        const allKeys = _.map(requiredKeys, key => {
-          return !_.isUndefined(config[key]);
-        });
+        const allKeysDefined = requiredKeys.every(key => 'undefined' !== typeof config[key]);
 
-        if (!_.every(allKeys)) {
+        if (!allKeysDefined) {
           throw new Error(`missing required keys on data_config.json. Must define ${requiredKeys.join('|')}`);
         }
 
         dispatch({type: DATA_CONFIG_LOADED, config});
 
-      }).catch(err => {
+      }).catch(({message}) => {
         // should probably check instanceof on the error here.
         // we end up in this catch if the file is missing altogether
-        return dispatch({type: DATA_CONFIG_ERROR, message: err.message});
+        return dispatch({type: DATA_CONFIG_ERROR, message});
       });
 
   };

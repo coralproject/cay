@@ -49,6 +49,11 @@ class Root extends React.Component {
   constructor(props){
     super(props);
     ga.initialize(window.googleAnalyticsId, { debug: (process && process.env.NODE_ENV !== 'production') });
+    window.addEventListener('error', e => ga.event({
+      category: 'JS Error',
+      action: e.message,
+      label: e.stack
+    }));
   }
 
   logPageView() {

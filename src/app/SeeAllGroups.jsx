@@ -91,7 +91,9 @@ export default SeeAllGroups;
 
 const styles = {
   cardHolder: {
-    display: 'flex'
+    display: 'flex',
+    justifyContent: 'flex-start',
+    flexWrap: 'wrap'
   },
   sentenceHeading: {
     margin: '10px 0px',
@@ -105,8 +107,12 @@ const styles = {
     marginRight: 20
   },
   groupCard: {
-    flex: 1,
-    margin: '20px 20px 0 0'
+    margin: '20px 20px 0 0',
+    width: '370px',
+    height: '150px',
+    '@media (max-width: 1000px)': {
+      'width': '90%'
+    }
   }
 };
 

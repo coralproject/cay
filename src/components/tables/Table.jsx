@@ -45,8 +45,6 @@ export default class Table extends React.Component {
 const styles = {
   base: {
     margin: '20px 0',
-    width: '70%',
-    maxWidth: '900px',
     borderRadius: '4px',
     border: '1px solid ' + settings.blueGrey,
     background: 'white',

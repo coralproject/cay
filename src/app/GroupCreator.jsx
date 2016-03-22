@@ -47,7 +47,9 @@ export default class GroupCreator extends React.Component {
         <p>There are 106 active users on Politics, with between 0 and 10000 comments, between 50% and 100% comments accepted.</p>
 
         <div style={styles.base}>
-          <GroupFilters userOnly={true}/>
+          <div style={styles.filters}>
+            <GroupFilters userOnly={true}/>
+          </div>
 
           <div style={styles.rightPanel}>
             <Button onClick={this.saveGroup.bind(this)} category="primary" style={{float: 'right'}}>
@@ -68,17 +70,28 @@ export default class GroupCreator extends React.Component {
 const styles = {
   base: {
     display: 'flex',
-    minHeight: 250
+    minHeight: 250,
+    justifyContent: 'flex-start',
+    flexWrap: 'wrap'
   },
   rightPanel: {
     flex: 1
   },
   userList: {
     marginTop: 5,
-    height: '100%'
+    height: '100%',
+    minWidth: 400,
+    '@media (max-width: 1000px)': {
+      marginLeft: -20
+    }
   },
   saveIcon: {
     width: 25,
     height: 25
+  },
+  filters: {
+    '@media (max-width: 1000px)': {
+      'width': '100%'
+    }
   }
 };

@@ -125,8 +125,6 @@ export const getFilterRanges = () => {
     let filterState = getState().filters;
     let $group = filterState.filterList.reduce((accum, key) => {
 
-      console.log('fetching filter ranges', key);
-
       let dimension;
       if (filterState.breakdown === 'author') {
         dimension = 'author.' + filterState.specificBreakdown;
@@ -223,7 +221,6 @@ export const fetchFilterConfig = () => {
           throw new Error(`missing required keys on data_config.json. Must define ${requiredKeys.join('|')}`);
         }
 
-        console.log('~~~~~ about to dispatch DATA_CONFIG_LOADED~~~~~~~~~~~~~~~~');
         dispatch({type: DATA_CONFIG_LOADED, config});
 
       }).catch(err => {

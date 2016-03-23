@@ -166,7 +166,6 @@ export const getFilterRanges = () => {
     xenia(query).exec()
       .then(data => {
         const doc = data.results[0].Docs[0];
-        console.log('gs',getState());
         let counter = getState().filters.counter;
         counter++;
 

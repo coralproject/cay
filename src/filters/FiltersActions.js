@@ -15,7 +15,7 @@ export const FILTER_CHANGED = 'FILTER_CHANGED';
 export const SET_BREAKDOWN = 'SET_BREAKDOWN';
 export const SET_SPECIFIC_BREAKDOWN = 'SET_SPECIFIC_BREAKDOWN';
 
-export const REQUEST_FILTER_RANGES = 'REQUEST_FILTER_RANGES';
+// export const REQUEST_FILTER_RANGES = 'REQUEST_FILTER_RANGES';
 export const RECEIVE_FILTER_RANGES = 'RECEIVE_FILTER_RANGES';
 
 export const requestSections = () => {
@@ -166,7 +166,7 @@ export const getFilterRanges = () => {
       enabled: true
     };
 
-    dispatch({type: REQUEST_FILTER_RANGES});
+    // dispatch({type: REQUEST_FILTER_RANGES});
 
     const app = getState().app;
     const url = `${app.xeniaHost}/1.0/exec`;

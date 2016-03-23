@@ -142,18 +142,18 @@ export const makeQueryFromState = (/*type*/) => {
         dbField = _.template(filter.template)({dimension: 'all'});
       }
 
-      var matches = [];
+      var _matches = [];
 
       // Only create match statements for non-defaults
       if (filter.min !== filter.userMin) {
-        matches.push( {$match: {[dbField]: {$gte: clamp(filter.userMin, filter.min, filter.max)}}});
+        _matches.push( {$match: {[dbField]: {$gte: clamp(filter.userMin, filter.min, filter.max)}}});
       }
 
       if (filter.max !== filter.userMax) {
-        matches.push( {$match: {[dbField]: {$lte: clamp(filter.userMax, filter.min, filter.max)}}});
+        _matches.push( {$match: {[dbField]: {$lte: clamp(filter.userMax, filter.min, filter.max)}}});
       }
 
-      return matches;
+      return _matches;
 
     }));
 

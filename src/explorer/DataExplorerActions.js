@@ -1,4 +1,4 @@
-import {authXenia} from 'auth/AuthActions';
+import {authXenia} from 'app/AppActions';
 
 export const REQUEST_DATA_EXPLORATION_DATASET = 'REQUEST_DATA_EXPLORATION_DATASET';
 export const RECEIVE_DATA_EXPLORATION_DATASET = 'RECEIVE_DATA_EXPLORATION_DATASET';

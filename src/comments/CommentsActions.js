@@ -1,4 +1,4 @@
-import {authXenia} from 'auth/AuthActions';
+import {authXenia} from 'app/AppActions';
 
 export const COMMENT_CLICK = 'COMMENT_CLICK';
 export const COMMENTS_REQUEST = 'COMMENTS_REQUEST';

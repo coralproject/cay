@@ -1,18 +1,21 @@
 import _ from 'lodash';
-import {authXenia} from 'auth/AuthActions';
+import {authXenia} from 'app/AppActions';
 
 export const REQUEST_SECTIONS = 'REQUEST_SECTIONS';
 export const RECEIVE_SECTIONS = 'RECEIVE_SECTIONS';
 export const REQUEST_AUTHORS = 'REQUEST_AUTHORS';
 export const RECEIVE_AUTHORS = 'RECEIVE_AUTHORS';
 
+export const DATA_CONFIG_REQUEST = 'DATA_CONFIG_REQUEST';
 export const DATA_CONFIG_LOADED = 'DATA_CONFIG_LOADED';
+export const DATA_CONFIG_ERROR = 'DATA_CONFIG_ERROR';
 
 export const FILTER_CHANGED = 'FILTER_CHANGED';
 
 export const SET_BREAKDOWN = 'SET_BREAKDOWN';
 export const SET_SPECIFIC_BREAKDOWN = 'SET_SPECIFIC_BREAKDOWN';
 
+export const REQUEST_FILTER_RANGES = 'REQUEST_FILTER_RANGES';
 export const RECEIVE_FILTER_RANGES = 'RECEIVE_FILTER_RANGES';
 
 export const requestSections = () => {
@@ -29,11 +32,13 @@ export const receiveSections = (data) => {
 };
 
 export const fetchSections = () => {
-  return (dispatch) => {
+  return (dispatch, getState) => {
     dispatch(requestSections());
 
+    const app = getState().app;
+
     /* xenia_package */
-    fetch(window.xeniaHost + '/1.0/exec/dimension_section_list', authXenia())
+    fetch(`${app.xeniaHost}/1.0/exec/dimension_section_list`, authXenia())
       .then(response => response.json())
       .then(json => dispatch(receiveSections(json)))
       .catch(err => {
@@ -54,11 +59,12 @@ export const receiveAuthors = (data) => {
 };
 
 export const fetchAuthors = () => {
-  return dispatch => {
+  return (dispatch, getState) => {
     dispatch(requestAuthors());
+    const app = getState().app;
 
     /* xenia_package */
-    fetch(window.xeniaHost + '/1.0/exec/dimension_author_list', authXenia())
+    fetch(`${app.xeniaHost}/1.0/exec/dimension_author_list`, authXenia())
       .then(response => response.json())
       .then(json => dispatch(receiveAuthors(json)))
       .catch(err => {
@@ -84,6 +90,32 @@ export const setSpecificBreakdown = (specificBreakdown) => {
       counter
     });
   };
+};
+
+const parseFilterRanges = (ranges, filterState) => {
+
+  const newFilters = _.reduce(ranges, (accum, value, aggKey) => {
+    let [key, field] = aggKey.split('_');
+
+    if (field === 'id' || value === null) return accum;
+
+    // we might have already updated the old filter with the min value
+    // retrieve it from the accumulator in progress instead of the state
+    let newFilter = _.has(accum, key) ? accum[key] : {};
+    newFilter[field] = value; // where field is {min|max}
+    accum[key] = newFilter;
+
+    // on the first pass, go ahead and force a change on userMin and userMax
+    if (field === 'min' && _.isNull(filterState[key].userMin)) {
+      newFilter.userMin = value;
+    } else if (field === 'max' && _.isNull(filterState[key].userMax)) {
+      newFilter.userMax = value;
+    }
+
+    return accum;
+  }, {});
+
+  return newFilters;
 };
 
 /* xenia_package */
@@ -134,9 +166,10 @@ export const getFilterRanges = () => {
       enabled: true
     };
 
-    dispatch({type: 'REQUEST_FILTER_RANGES'});
+    dispatch({type: REQUEST_FILTER_RANGES});
 
-    const url = window.xeniaHost + '/1.0/exec';
+    const app = getState().app;
+    const url = `${app.xeniaHost}/1.0/exec`;
 
     var init = authXenia('POST');
     init.body = JSON.stringify(query);
@@ -144,8 +177,8 @@ export const getFilterRanges = () => {
     fetch(url, init)
       .then(res => res.json())
       .then(data => {
-        console.log(RECEIVE_FILTER_RANGES, data);
-        dispatch({type: RECEIVE_FILTER_RANGES, data});
+        const doc = data.results[0].Docs[0];
+        dispatch({type: RECEIVE_FILTER_RANGES, data: parseFilterRanges(doc, filterState)});
       }).catch(err => {
         console.log(err);
       });
@@ -163,5 +196,36 @@ export const filterChanged = (fieldName, data) => {
       data,
       counter
     });
+  };
+};
+
+export const fetchFilterConfig = () => {
+  return (dispatch, getState) => {
+
+    const filters = getState().filters;
+    const requiredKeys = ['filters', 'dimensions'];
+
+    if (filters.loadingFilters || filters.configLoaded) return {type: 'NOOP'};
+
+    dispatch({type: DATA_CONFIG_REQUEST});
+
+    fetch('/data_config.json')
+      .then(res => res.json())
+      .then(config => {
+
+        const allKeysDefined = requiredKeys.every(key => 'undefined' !== typeof config[key]);
+
+        if (!allKeysDefined) {
+          throw new Error(`missing required keys on data_config.json. Must define ${requiredKeys.join('|')}`);
+        }
+
+        dispatch({type: DATA_CONFIG_LOADED, config});
+
+      }).catch(({message}) => {
+        // should probably check instanceof on the error here.
+        // we end up in this catch if the file is missing altogether
+        return dispatch({type: DATA_CONFIG_ERROR, message});
+      });
+
   };
 };

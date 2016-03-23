@@ -178,7 +178,6 @@ export const getFilterRanges = () => {
       .then(res => res.json())
       .then(data => {
         const doc = data.results[0].Docs[0];
-        console.log('gs',getState())
         let counter = getState().filters.counter;
         counter++;
 

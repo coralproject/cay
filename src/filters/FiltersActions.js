@@ -82,12 +82,12 @@ export const setBreakdown = (breakdown) => {
 
 export const setSpecificBreakdown = (specificBreakdown) => {
   return (dispatch, getState) => {
-    let counter = getState().filters.counter;
-    counter++;
+    // let counter = getState().filters.counter;
+    // counter++;
     dispatch({
       type: SET_SPECIFIC_BREAKDOWN,
-      specificBreakdown: specificBreakdown,
-      counter
+      specificBreakdown: specificBreakdown
+      // counter
     });
   };
 };
@@ -178,7 +178,15 @@ export const getFilterRanges = () => {
       .then(res => res.json())
       .then(data => {
         const doc = data.results[0].Docs[0];
-        dispatch({type: RECEIVE_FILTER_RANGES, data: parseFilterRanges(doc, filterState)});
+        console.log('gs',getState())
+        let counter = getState().filters.counter;
+        counter++;
+
+        dispatch({
+          type: RECEIVE_FILTER_RANGES,
+          data: parseFilterRanges(doc, filterState),
+          counter
+        });
       }).catch(err => {
         console.log(err);
       });

@@ -2,11 +2,8 @@ import React from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
 
-import {fetchAllTags} from 'tags/TagActions';
 import { makeQueryFromState } from 'groups/GroupActions';
 import {
-  fetchSections,
-  fetchAuthors,
   setBreakdown,
   setSpecificBreakdown,
   getFilterRanges} from 'filters/FiltersActions';
@@ -26,12 +23,6 @@ export default class UserFilters extends React.Component {
     super(props);
   }
 
-  componentWillMount() {
-    this.props.dispatch(fetchAllTags());
-    this.props.dispatch(fetchSections());
-    this.props.dispatch(fetchAuthors());
-    this.props.dispatch(makeQueryFromState('user'));
-  }
   componentWillUpdate(nextProps) {
     /*
       only a filter or breakdown change updates the counter in the reducer.

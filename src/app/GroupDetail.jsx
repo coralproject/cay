@@ -37,7 +37,7 @@ export default class GroupDetail extends React.Component {
   }
 
   componentWillUpdate() {
-    console.log('GroupDetail will update');
+    // console.log('GroupDetail will update');
   }
 
   updateUser(user) {
@@ -46,7 +46,6 @@ export default class GroupDetail extends React.Component {
   }
 
   render() {
-    console.log('GroupDetail.render', this.props);
     return (
       <Page>
         <ContentHeader title={this.props.params.name} />

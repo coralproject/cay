@@ -23,7 +23,6 @@ const groups = (state = initialState, action) => {
     return Object.assign({}, state, {loadingQueryset: false, showTheError: 'failed to load ' + action.querysetName});
 
   case types.QUERYSETS_RECEIVED:
-    console.log('QUERYSETS_RECEIVED', action);
     return Object.assign({}, state,
       {
         loading: false,

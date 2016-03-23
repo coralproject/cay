@@ -128,7 +128,6 @@ export const createQuery = (query) => {
 /* xenia_package */
 export const makeQueryFromState = (/*type*/) => {
   return (dispatch, getState) => {
-    console.log('function that calls async');
     // make a query from the current state
     const filterState = getState().filters;
     const app = getState().app;
@@ -203,7 +202,6 @@ export const makeQueryFromState = (/*type*/) => {
 // time to make a xenia library
 export const saveQueryFromState = (queryName, modDescription) => {
   return (dispatch, getState) => {
-    console.log('function that calls async');
     // make a query from the current state
     const filterState = getState().filters;
     const filters = filterState.filterList.map(key => filterState[key]);
@@ -275,7 +273,6 @@ const doPutQueryFromState = (query, dispatch, app) => {
 };
 /* xenia_package */
 const doMakeQueryFromStateAsync = _.debounce((query, dispatch, app)=>{
-  console.log('actual async');
   dispatch(requestQueryset());
   dispatch(createQuery(query));
 

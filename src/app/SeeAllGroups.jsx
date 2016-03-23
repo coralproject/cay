@@ -51,7 +51,7 @@ class SeeAllGroups extends React.Component {
     };
   }
   renderGroups() {
-    console.log(this.props);
+    // console.log(this.props);
     const groups = this.props.querysets.map((group, i) => {
 
       return (

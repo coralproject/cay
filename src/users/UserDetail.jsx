@@ -37,7 +37,6 @@ export default class UserDetail extends React.Component {
   //
   // componentWillUpdate(nextProps) {
   //   if (nextProps.comments.items === null) {
-  //     console.log('fetchCommentsByUser');
   //     nextProps.dispatch(fetchCommentsByUser(nextProps._id));
   //   }
   // }
@@ -72,7 +71,6 @@ export default class UserDetail extends React.Component {
 
   getStats() {
     let statsList = [];
-    console.log('getStats', this.props);
     if (_.has(this.props, 'user.statistics.comments.all.all')) {
       statsList = statsList.concat([
         <Stat term="Total comment count" description={this.props.user.statistics.comments.all.all.count} />,
@@ -134,7 +132,6 @@ export default class UserDetail extends React.Component {
     );
   }
   render() {
-    console.log('UserDetail', this.props, this.props._id);
 
     return (
       <div style={[styles.base, this.props.style]}>

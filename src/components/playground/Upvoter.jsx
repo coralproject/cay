@@ -5,7 +5,7 @@ import Radium from 'radium';
 import FaCaretUp from 'react-icons/lib/fa/caret-up';
 import FaCaretDown from 'react-icons/lib/fa/caret-down';
 
-import { upVoteComment, downVoteComment } from '../../actions/playground';
+import { upVoteComment, downVoteComment } from 'playground/PlaygroundActions';
 
 @connect(state => state.playground)
 @Radium

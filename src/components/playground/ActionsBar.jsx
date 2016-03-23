@@ -9,7 +9,7 @@ import CommentBox from './CommentBox';
 
 import mediaQueries from '../../playgroundSettings';
 
-import { likeComment, unLikeComment } from '../../actions/playground';
+import { likeComment, unLikeComment } from 'playground/PlaygroundActions';
 
 @connect(state => state.playground)
 @Radium

@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 
-import { setToggler, setTopic } from '../../actions/playground';
+import { setToggler, setTopic } from 'playground/PlaygroundActions';
 
 import Switch from '../../components/forms/Switch';
 

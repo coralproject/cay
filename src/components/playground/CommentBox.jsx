@@ -6,7 +6,7 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 import { Editor, EditorState, RichUtils, Modifier, convertToRaw, SelectionState } from 'draft-js';
 
-import { sendComment, replyComment } from '../../actions/playground';
+import { sendComment, replyComment } from 'playground/PlaygroundActions';
 
 import backdraft from 'backdraft-js';
 

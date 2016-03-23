@@ -98,7 +98,6 @@ store.dispatch(fetchFilterConfig());
 
 // yikes. if we can think of a more redux-y way to do this, I'm all ears.
 const configInterval = setInterval(() => {
-  console.log('store', store);
   const state = store.getState();
   if (state.app.configLoaded && state.filters.configLoaded) {
     window.clearInterval(configInterval);

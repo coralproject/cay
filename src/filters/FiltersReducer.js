@@ -84,7 +84,14 @@ const filters = (state = initialState, action) => {
     return Object.assign({}, state, {breakdown: action.breakdown});
 
   case types.SET_SPECIFIC_BREAKDOWN:
-    return Object.assign({}, state, {specificBreakdown: action.specificBreakdown, counter: action.counter});
+    return Object.assign(
+      {},
+      state,
+      {
+        specificBreakdown: action.specificBreakdown,
+        // counter: action.counter
+      }
+    );
 
   case types.RECEIVE_FILTER_RANGES:
 
@@ -93,7 +100,7 @@ const filters = (state = initialState, action) => {
       return accum;
     }, {});
 
-    return Object.assign({}, state, newFilters);
+    return Object.assign( {}, state, newFilters, {counter: action.counter});
 
   default:
     return state;

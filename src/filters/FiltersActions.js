@@ -15,7 +15,7 @@ export const FILTER_CHANGED = 'FILTER_CHANGED';
 export const SET_BREAKDOWN = 'SET_BREAKDOWN';
 export const SET_SPECIFIC_BREAKDOWN = 'SET_SPECIFIC_BREAKDOWN';
 
-export const REQUEST_FILTER_RANGES = 'REQUEST_FILTER_RANGES';
+// export const REQUEST_FILTER_RANGES = 'REQUEST_FILTER_RANGES';
 export const RECEIVE_FILTER_RANGES = 'RECEIVE_FILTER_RANGES';
 
 export const requestSections = () => {
@@ -82,12 +82,12 @@ export const setBreakdown = (breakdown) => {
 
 export const setSpecificBreakdown = (specificBreakdown) => {
   return (dispatch, getState) => {
-    let counter = getState().filters.counter;
-    counter++;
+    // let counter = getState().filters.counter;
+    // counter++;
     dispatch({
       type: SET_SPECIFIC_BREAKDOWN,
-      specificBreakdown: specificBreakdown,
-      counter
+      specificBreakdown: specificBreakdown
+      // counter
     });
   };
 };
@@ -166,7 +166,7 @@ export const getFilterRanges = () => {
       enabled: true
     };
 
-    dispatch({type: REQUEST_FILTER_RANGES});
+    // dispatch({type: REQUEST_FILTER_RANGES});
 
     const app = getState().app;
     const url = `${app.xeniaHost}/1.0/exec`;
@@ -178,7 +178,15 @@ export const getFilterRanges = () => {
       .then(res => res.json())
       .then(data => {
         const doc = data.results[0].Docs[0];
-        dispatch({type: RECEIVE_FILTER_RANGES, data: parseFilterRanges(doc, filterState)});
+        console.log('gs',getState())
+        let counter = getState().filters.counter;
+        counter++;
+
+        dispatch({
+          type: RECEIVE_FILTER_RANGES,
+          data: parseFilterRanges(doc, filterState),
+          counter
+        });
       }).catch(err => {
         console.log(err);
       });

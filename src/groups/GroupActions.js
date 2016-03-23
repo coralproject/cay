@@ -10,7 +10,6 @@ export const QUERYSET_REQUEST_FAILURE = 'QUERYSET_REQUEST_FAILURE';
 export const QUERYSETS_RECEIVED = 'QUERYSETS_RECEIVED';
 export const QUERYSET_RECEIVED = 'QUERYSET_RECEIVED';
 
-export const REQUEST_FILTER_RANGES = 'REQUEST_FILTER_RANGES';
 export const RECEIVE_FILTER_RANGES = 'RECEIVE_FILTER_RANGES';
 
 export const QUERYSET_SAVE_SUCCESS = 'QUERYSET_SAVE_SUCCESS';
@@ -128,7 +127,6 @@ export const createQuery = (query) => {
 /* xenia_package */
 export const makeQueryFromState = (/*type*/) => {
   return (dispatch, getState) => {
-    console.log('function that calls async');
     // make a query from the current state
     const filterState = getState().filters;
     const app = getState().app;
@@ -144,18 +142,18 @@ export const makeQueryFromState = (/*type*/) => {
         dbField = _.template(filter.template)({dimension: 'all'});
       }
 
-      var matches = [];
+      var _matches = [];
 
       // Only create match statements for non-defaults
       if (filter.min !== filter.userMin) {
-        matches.push( {$match: {[dbField]: {$gte: clamp(filter.userMin, filter.min, filter.max)}}});
+        _matches.push( {$match: {[dbField]: {$gte: clamp(filter.userMin, filter.min, filter.max)}}});
       }
 
       if (filter.max !== filter.userMax) {
-        matches.push( {$match: {[dbField]: {$lte: clamp(filter.userMax, filter.min, filter.max)}}});
+        _matches.push( {$match: {[dbField]: {$lte: clamp(filter.userMax, filter.min, filter.max)}}});
       }
 
-      return matches;
+      return _matches;
 
     }));
 
@@ -203,7 +201,6 @@ export const makeQueryFromState = (/*type*/) => {
 // time to make a xenia library
 export const saveQueryFromState = (queryName, modDescription) => {
   return (dispatch, getState) => {
-    console.log('function that calls async');
     // make a query from the current state
     const filterState = getState().filters;
     const filters = filterState.filterList.map(key => filterState[key]);
@@ -275,7 +272,6 @@ const doPutQueryFromState = (query, dispatch, app) => {
 };
 /* xenia_package */
 const doMakeQueryFromStateAsync = _.debounce((query, dispatch, app)=>{
-  console.log('actual async');
   dispatch(requestQueryset());
   dispatch(createQuery(query));
 

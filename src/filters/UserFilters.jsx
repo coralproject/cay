@@ -13,7 +13,7 @@ import Select from 'react-select';
 import FilterNumbers from 'filters/FilterNumbers';
 
 import Heading from 'components/Heading';
-
+import Sentence from 'groups/Sentence';
 
 @connect(state => state.filters)
 @Radium
@@ -133,6 +133,7 @@ export default class UserFilters extends React.Component {
           <Heading size="medium">
             Filters
           </Heading>
+          <Sentence/>
         </div>
         <p style={ styles.legend }>Limit user activity to:</p>
         <Select

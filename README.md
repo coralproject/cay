@@ -20,14 +20,35 @@ The basic idea is that the build process results in a `bundle.js` file containin
 
 ```
 .
-+-- public
++-- .github
++-- assets               -> nginx config
++-- css
++-- dist                 -> built files
++-- fonts
++-- lang
++-- public               -> images and config
+   config.json           -> environment variables and such
+   data_config.json      -> filters and dimension defs
 +-- src
-|  +-- actions           -> descriptions of action types for redux
-|  +-- components        -> all of the non-stateful React components
-|  +-- containers        -> stateful React components
-|  +-- layout            -> non-stateful components, but control the major parts of the page
-|  +-- reducers          -> redux reducers
-|  +-- store             -> redux store
+|  +-- app
+|    +-- layout
+|    AppActions.js
+|    AppReducer.js
+|    MainReducer.js
+     ... other page-level (stateful) components
+|  +-- auth
+|  +-- comments          -> any UI and redux for Comments
+|  +-- components        -> re-usable generic UI components
+|  +-- explorer          -> data visualization explorer domain
+|  +-- filters           -> any UI and redux for Filters
+|  +-- groups            -> any UI and redux for Groups
+|  +-- i18n              -> internationalization wrappers
+|  +-- tags              -> any UI and redux for Tags
+|  +-- users             -> any UI and redux for Users
+index.js                 -> entry point for app
+settings.js              -> colors for the app
+store.js                 -> redux store
+
 +-- test                 -> mirrors the src folder
 ```
 

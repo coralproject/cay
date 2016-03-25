@@ -132,9 +132,9 @@ export default class UserFilters extends React.Component {
         <div style={ styles.columnHeader }>
           <Heading size="medium">
             Filters
-          </Heading>
-          <Sentence/>
+          </Heading>  
         </div>
+        <Sentence/> {/* connects to FiltersReducer directly atm*/}
         <p style={ styles.legend }>Limit user activity to:</p>
         <Select
           ref="breakdown"

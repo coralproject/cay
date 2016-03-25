@@ -303,8 +303,7 @@ var Slider = React.createClass({
   _buildHandleStyle: function (offset, i) {
     var style = {
       position: 'absolute',
-      willChange: this.state.index >= 0 ? this._posMinKey() : '',
-      zIndex: this.state.zIndices.indexOf(i) + 1
+      willChange: this.state.index >= 0 ? this._posMinKey() : ''
     };
     style[this._posMinKey()] = offset + 'px';
     return style;

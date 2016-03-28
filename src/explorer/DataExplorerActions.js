@@ -1,4 +1,4 @@
-import {authXenia} from 'auth/AuthActions';
+import {authXenia} from 'app/AppActions';
 
 export const REQUEST_DATA_EXPLORATION_DATASET = 'REQUEST_DATA_EXPLORATION_DATASET';
 export const RECEIVE_DATA_EXPLORATION_DATASET = 'RECEIVE_DATA_EXPLORATION_DATASET';
@@ -42,9 +42,8 @@ const convert = (json) => {
 };
 
 export const createQuerysetValueChanged = (config) => {
-  const url = window.xeniaHost + '/1.0/exec';
-
   return (dispatch, getState) => {
+    const url = getState().app.xeniaHost + '/1.0/exec';
 
     if (!getState().dataExplorer.loading) {
 
@@ -67,9 +66,9 @@ export const createQuerysetValueChanged = (config) => {
 
 export const fetchDataExplorationDataset = (field, queryParams) => {
   const queryParamString = queryParams ? convert(queryParams) : '';
-  const url = window.xeniaHost + '/1.0/exec/' + field + queryParamString;
 
   return (dispatch, getState) => {
+    const url = getState().app.xeniaHost + '/1.0/exec/' + field + queryParamString;
 
     if (!getState().dataExplorer.loading) {
 
@@ -102,9 +101,8 @@ const receiveControls = (querysets) => {
 };
 
 export const populateControlsReducer = () => {
-  const url = window.xeniaHost + '/1.0/query';
-
-  return (dispatch) => {
+  return (dispatch, getState) => {
+    const url = getState().app.xeniaHost + '/1.0/query';
     dispatch(requestControls());
 
     fetch(url, authXenia())

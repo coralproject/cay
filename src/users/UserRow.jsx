@@ -18,7 +18,6 @@ export default class UserRow extends React.Component {
 
   handleClick() {
     if (!this.props.disabled) {
-      console.log('UserRow.handleClick', this.props);
       this.props.setAsActive(this.props.activeIndex);
       this.props.onClick(this.props.user);
     }

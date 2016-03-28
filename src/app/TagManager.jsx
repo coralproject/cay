@@ -38,7 +38,6 @@ export default class TagManager extends React.Component {
 
   componentWillMount() {
 
-    console.log('TagManager.componentWillMount', this.props);
     // redirect to login page if user is not authorized
     //   TODO: refactor: pass in a function that calculates auth state
     if (window.requireLogin && !this.props.authorized) {

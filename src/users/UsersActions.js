@@ -35,8 +35,6 @@ const userUpsertRequestError = (err) => {
 };
 
 export const upsertUser = (preparedObject) => {
-  const url = window.pillarHost + '/api/user';
-
   return (dispatch, getState) => {
     if (!getState().upsertingUser) {
       dispatch(requestUserUpsert());
@@ -51,7 +49,7 @@ export const upsertUser = (preparedObject) => {
         body: JSON.stringify(preparedObject)
       };
 
-      fetch(url, init)
+      fetch(getState().app.pillarHost + '/api/user', init)
         .then(res => res.json())
         .then(json => {
           dispatch(receiveUpsertedUser(json));

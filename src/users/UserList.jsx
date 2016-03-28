@@ -23,17 +23,17 @@ export default class UserList extends React.Component {
 
   userSelected(user) {
     if(!this.props.disabled) {
-      console.log('user!', user);
+      // console.log('user!', user);
       this.props.userSelected(user);
     }
   }
   setAsActiveHandler(index) {
-    console.log('setAsActiveHandler', index);
+    // console.log('setAsActiveHandler', index);
     // this.setState({activeUserIndex: index});
   }
 
   getUserList(users) {
-    console.log('getUserList');
+    // console.log('getUserList');
     return users.map((user, i) => {
       return (
         <UserRow {...this.props}
@@ -48,8 +48,6 @@ export default class UserList extends React.Component {
   }
 
   render() {
-
-    console.log('UserList.render', this.props);
 
     var noUsersMessage = (<p style={ styles.noUsers }>
       No users loaded yet,<br />

@@ -28,9 +28,9 @@ var getInit = (body, method) => {
 
 // Functions
 export const getTags = () => {
-  return (dispatch) => {
+  return (dispatch, getState) => {
     dispatch(tagRequestStarted());
-    fetch(window.pillarHost + API_PREFIX + 'tags', getInit(null, 'GET'))
+    fetch(getState().app.pillarHost + API_PREFIX + 'tags', getInit(null, 'GET'))
       .then(
         response => response.json()
       )
@@ -40,14 +40,14 @@ export const getTags = () => {
 };
 
 export const storeTag = (tagName, tagDescription, index, oldValue) => {
-  return (dispatch) => {
+  return (dispatch, getState) => {
     dispatch(tagRequestStarted());
 
     var preparedTag = { 'name': tagName, 'description': tagDescription };
     if (typeof oldValue != 'undefined') {
       preparedTag['old_name'] = oldValue;
     }
-    fetch(window.pillarHost + API_PREFIX + 'tag', getInit(preparedTag))
+    fetch(getState().app.pillarHost + API_PREFIX + 'tag', getInit(preparedTag))
       .then(response => response.text())
       .then(responseText => {
         // Temporary fix, errors from pillar are not in JSON notation.
@@ -63,9 +63,9 @@ export const storeTag = (tagName, tagDescription, index, oldValue) => {
 };
 
 export const deleteTag = (tagName, tagDescription, index) => {
-  return (dispatch) => {
+  return (dispatch, getState) => {
     dispatch(tagRequestStarted());
-    fetch(window.pillarHost + API_PREFIX + 'tag', getInit({ 'name': tagName, 'description': tagDescription }, 'DELETE'))
+    fetch(getState().app.pillarHost + API_PREFIX + 'tag', getInit({ 'name': tagName, 'description': tagDescription }, 'DELETE'))
       .then(response => response)
       .then(deletedTag => dispatch(tagRequestSuccess(deletedTag, index, 'delete')))
       .catch(error => dispatch(tagRequestFailure(error)));
@@ -116,13 +116,11 @@ const allTagsRequestError = (err) => {
 };
 
 export const fetchAllTags = () => {
-  const url = window.pillarHost + '/api/tags';
-
   return (dispatch, getState) => {
     if (!getState().loadingTags) {
       dispatch(requestAllTags());
 
-      fetch(url)
+      fetch(getState().app.pillarHost + '/api/tags')
         .then(res => {
           return res.json();
         })

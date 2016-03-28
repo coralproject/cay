@@ -26,21 +26,6 @@ const loginFailure = (err) => {
   };
 };
 
-/* xenia_package */
-export const authXenia = (method) => {
-  const headers = new Headers({'Authorization': window.basicAuthorization});
-
-  const init = {
-    method: method || 'GET',
-    headers: headers,
-    mode: 'cors',
-    cache: 'default'
-  };
-
-  return init;
-};
-
-
 export const login = (email, password) => {
   return (dispatch, getState) => {
 

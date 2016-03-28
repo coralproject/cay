@@ -1,14 +1,13 @@
 import React from 'react';
 import Radium from 'radium';
-import _ from 'lodash';
+// import _ from 'lodash';
 // import Flex from './layout/Flex';
-import moment from 'moment';
-import {connect} from 'react-redux';
+// import moment from 'moment';
+// import {connect} from 'react-redux';
 
 // const style = {
 // };
 
-@connect(state => state.filters)
 @Radium
 class Sentence extends React.Component {
   constructor(props) {
@@ -53,11 +52,11 @@ class Sentence extends React.Component {
       if (!this.isDefault(filterName)) {
         nonDefaultFilters.push(
           <span>
-            {` ${this.props[filterName].description}`}
             {` between`}
             {` ${this.props[filterName].userMin}`}
-            {` &`}
+            {` and`}
             {` ${this.props[filterName].userMax}`}
+            {` ${this.props[filterName].description}`}
           </span>
         );
       }

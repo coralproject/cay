@@ -13,5 +13,6 @@
   "Description": "Beschreibung",
   "Tag": "Etikett",
   "Tag Manager": "Etikett-Manager",
-  "Settings": "Einstellungen"
+  "Settings": "Einstellungen",
+  "num_users": "%{smart_count} user |||| %{smart_count} users"
 }

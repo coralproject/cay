@@ -51,7 +51,6 @@ export const createQuerysetValueChanged = (config) => {
 
       var init = authXenia('POST');
       init.body = JSON.stringify(config);
-
       fetch(url, init)
         .then(response => response.json())
         .then(json => {

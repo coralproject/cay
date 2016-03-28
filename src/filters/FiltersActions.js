@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import {xenia, authXenia} from 'app/AppActions';
+import {xenia} from 'app/AppActions';
 
 export const REQUEST_SECTIONS = 'REQUEST_SECTIONS';
 export const RECEIVE_SECTIONS = 'RECEIVE_SECTIONS';

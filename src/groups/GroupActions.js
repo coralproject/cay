@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import {clamp} from 'components/utils/math';
-import {authXenia} from 'app/AppActions';
+import {xenia} from 'app/AppActions';
 
 export const QUERYSET_SELECTED = 'QUERYSET_SELECTED';
 export const QUERYSET_REQUEST = 'QUERYSET_REQUEST'; // request data for a single queryset
@@ -74,8 +74,7 @@ export const fetchQuerysets = () => {
 
     dispatch(requestQuerysets());
 
-    fetch(`${app.xeniaHost}/1.0/query`, authXenia())
-      .then(response => response.json())
+    xenia().getQueries()
       .then(querysets => dispatch(receiveQuerysets(querysets)))
       .catch(err => dispatch(requestQuerysetsFailure(err)));
   };
@@ -98,12 +97,11 @@ export const receiveQueryset = (data) => {
 /* xenia_package */
 // execute a query_set
 export const fetchQueryset = (querysetName) => {
-  return (dispatch, getState) => {
-    const app = getState().app;
+  return (dispatch) => {
     dispatch(requestQueryset(querysetName));
 
-    fetch(`${app.xeniaHost}/1.0/exec/${querysetName}`, authXenia())
-      .then(response => response.json())
+    xenia()
+      .exec(querysetName)
       .then(queryset => dispatch(receiveQueryset(queryset)))
       .catch(err => dispatch(requestQuerysetFailure(err)));
   };
@@ -200,6 +198,7 @@ export const makeQueryFromState = (/*type*/) => {
 // yikes. lots of this code is replicated above.
 // time to make a xenia library
 export const saveQueryFromState = (queryName, modDescription) => {
+
   return (dispatch, getState) => {
     // make a query from the current state
     const filterState = getState().filters;
@@ -258,12 +257,8 @@ export const saveQueryFromState = (queryName, modDescription) => {
   };
 };
 /* xenia_package */
-const doPutQueryFromState = (query, dispatch, app) => {
-  const url = `${app.xeniaHost}/1.0/query`;
-  let init = authXenia('PUT');
-  init.body = JSON.stringify(query);
-
-  fetch(url, init)
+const doPutQueryFromState = (query, dispatch) => {
+  xenia(query).saveQuery()
     .then(() => { // if response.status < 400
       dispatch({type: QUERYSET_SAVE_SUCCESS});
     }).catch(error => {
@@ -271,21 +266,16 @@ const doPutQueryFromState = (query, dispatch, app) => {
     });
 };
 /* xenia_package */
-const doMakeQueryFromStateAsync = _.debounce((query, dispatch, app)=>{
+const doMakeQueryFromStateAsync = _.debounce((query, dispatch)=>{
   dispatch(requestQueryset());
   dispatch(createQuery(query));
 
-  const url = `${app.xeniaHost}/1.0/exec`;
-
-  var init = authXenia('POST');
-  init.body = JSON.stringify(query);
-
-  fetch(url, init)
-    .then(response => response.json())
+  xenia(query)
+  .exec()
     .then(json => {
       dispatch(receiveQueryset(json));
     })
-    .catch(err => {
+    .catch(() => {
       // dispatch(dataExplorationFetchError(err));
     });
 }, 1000);

@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import {authXenia} from 'app/AppActions';
+import {xenia, authXenia} from 'app/AppActions';
 
 export const REQUEST_SECTIONS = 'REQUEST_SECTIONS';
 export const RECEIVE_SECTIONS = 'RECEIVE_SECTIONS';
@@ -32,14 +32,11 @@ export const receiveSections = (data) => {
 };
 
 export const fetchSections = () => {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     dispatch(requestSections());
 
-    const app = getState().app;
-
     /* xenia_package */
-    fetch(`${app.xeniaHost}/1.0/exec/dimension_section_list`, authXenia())
-      .then(response => response.json())
+    xenia().exec('dimension_section_list')
       .then(json => dispatch(receiveSections(json)))
       .catch(err => {
         console.log('oh no. failed to get section list', err);
@@ -59,13 +56,11 @@ export const receiveAuthors = (data) => {
 };
 
 export const fetchAuthors = () => {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     dispatch(requestAuthors());
-    const app = getState().app;
 
     /* xenia_package */
-    fetch(`${app.xeniaHost}/1.0/exec/dimension_author_list`, authXenia())
-      .then(response => response.json())
+    xenia().exec('dimension_author_list')
       .then(json => dispatch(receiveAuthors(json)))
       .catch(err => {
         console.log('you failed to get the authors list!', err);
@@ -81,7 +76,7 @@ export const setBreakdown = (breakdown) => {
 };
 
 export const setSpecificBreakdown = (specificBreakdown) => {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     // let counter = getState().filters.counter;
     // counter++;
     dispatch({
@@ -168,17 +163,10 @@ export const getFilterRanges = () => {
 
     // dispatch({type: REQUEST_FILTER_RANGES});
 
-    const app = getState().app;
-    const url = `${app.xeniaHost}/1.0/exec`;
-
-    var init = authXenia('POST');
-    init.body = JSON.stringify(query);
-
-    fetch(url, init)
-      .then(res => res.json())
+    xenia(query).exec()
       .then(data => {
         const doc = data.results[0].Docs[0];
-        console.log('gs',getState())
+        console.log('gs',getState());
         let counter = getState().filters.counter;
         counter++;
 

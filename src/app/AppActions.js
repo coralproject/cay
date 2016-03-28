@@ -2,6 +2,8 @@ export const CONFIG_REQUEST = 'CONFIG_REQUEST';
 export const CONFIG_LOADED = 'CONFIG_LOADED';
 export const CONFIG_ERROR = 'CONFIG_ERROR';
 
+import XeniaDriver from 'xenia-driver';
+
 export const fetchConfig = () => {
   return (dispatch, getState) => {
     const app = getState().app;
@@ -39,4 +41,11 @@ export const authXenia = (method = 'GET') => {
   };
 
   return init;
+};
+
+/* Xenia driver instance */
+export let xenia;
+
+export const configXenia = config => {
+  xenia = XeniaDriver(config.xeniaHost + '/1.0', config.basicAuthorization);
 };

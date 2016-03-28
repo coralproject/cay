@@ -20,6 +20,7 @@ const app = (state = initialState, action) => {
     // if I don't do this, I'd have to implement some insane redux middleware
     // only to unwind it after the xenia package anyway.
     window.basicAuthorization = action.config.basicAuthorization;
+    types.configXenia(action.config);
 
     return Object.assign(
       {},

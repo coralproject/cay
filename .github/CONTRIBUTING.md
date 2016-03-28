@@ -97,7 +97,6 @@ To come as we write more tests.
 
 ### Documentation Styleguide
 
-* Use [AtomDoc](https://github.com/atom/atomdoc).
 * Use [Markdown](https://daringfireball.net/projects/markdown).
 * Reference methods and classes in markdown with the custom `{}` notation:
     * Reference classes with `{ClassName}`

@@ -21,7 +21,6 @@ class Sidebar extends React.Component {
 
   onExpandClick() {
     this.setState({ expanded: !this.state.expanded });
-    console.log(this.state.expanded);
   }
 
   render() {
@@ -34,7 +33,7 @@ class Sidebar extends React.Component {
           {
             this.props.topics[this.props.currentSidebarTopic].links.map((link, i) => {
               return (
-                  <a key={ i } style={ styles.sideBarLinks } href="{ link.href }">{ link.friendlyName }</a>
+                  <a key={ i } style={ styles.sideBarLinks } href="{ link.href }">{ link.title }</a>
               );
             })
           }
@@ -150,6 +149,11 @@ var styles = {
   },
   tweets: {
     marginBottom: '40px',
+    [mediaQueries.desktop]: {
+      width: '29.3%',
+      margin: '0 2%',
+      'float': 'left'
+    },
     [mediaQueries.tablet]: {
       width: '29.3%',
       margin: '0 2%',

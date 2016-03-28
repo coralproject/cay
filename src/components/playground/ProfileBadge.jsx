@@ -13,13 +13,12 @@ class ProfileBadge extends React.Component {
     return (
       <div style={[ styles.profileBadge, this.props.style ]} onClick={ this.props.profileClickHandler }>
         <img style={ styles.profilePicture } width="60" height="60" src={ "/img/playground/profile" + this.props.user + ".jpg" } />
-        {/*<h4 style={ styles.userName }>
-          { 
-            this.props.togglerGroups['privacy'].togglers['anonymity'].status ? 
-            this.props.users[this.props.user].nickName : 
-            this.props.users[this.props.user].realName 
-          }
-        </h4>*/}
+        {
+          this.props.togglerGroups['community'].togglers['following'].status ? 
+            <button style={ styles.followButton }>FOLLOW</button>
+          : 
+            null
+        }
       </div>
       );
 
@@ -60,5 +59,14 @@ var styles = {
     height: '40px',
     wordWrap: 'break-word',
     maxWidth: '100%'
+  },
+  followButton: {
+    border: '1px solid #ccc',
+    background: '#eee',
+    padding: '5px',
+    fontSize: '8pt',
+    borderRadius: '4px',
+    margin: 'auto',
+    cursor: 'pointer'
   }
 };

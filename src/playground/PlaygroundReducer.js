@@ -3,6 +3,7 @@ import * as types from 'playground/PlaygroundActions';
 // These files could be moved somewhere else, as config files.
 import togglerGroups from 'playground/playgroundOptions';
 import comments from 'playground/playgroundComments';
+import topics from 'playground/playgroundTopics';
 
 const initialState = {
   customizerIsVisible: false,
@@ -25,67 +26,6 @@ const initialState = {
       affectedToggler: 'rich_content'
     }
   ],
-  topics: {
-    'anonymity': {
-      title: 'Anonymity',
-      description: 'Some users prefer being anonymous to express their opinions freely, others think that this leads to...',
-      hashtag: 'Anonymity',
-      links: [
-        {
-          friendlyName: 'Anonymity - Wikipedia',
-          href: 'https://en.wikipedia.org/wiki/Anonymity'
-        },
-        {
-          friendlyName: 'Anonymity - Electronic Frontier Foundation',
-          href: 'https://www.eff.org/es/issues/anonymity'
-        }
-      ]
-    },
-    'public_profile': {
-      title: 'Public Profiles',
-      description: 'Having a public profile on a community allows people to find you with different search methods. Some users prefer not to be searchable or having a public profile at all.',
-      hashtag: 'PublicProfiles',
-      links: [
-        {
-          friendlyName: '(links pending)',
-          href: 'https://en.wikipedia.org/wiki/Anonymity'
-        }
-      ]
-    },
-    'emoji': {
-      title: 'Emojis',
-      description: 'After years of different emoticon packs and instant messengers, Emojis made it into a standard. They can be used to convey emotions and feelings in conversation, but they can also lead to introducing noise if abused.',
-      hashtag: 'Emojis',
-      links: [
-        {
-          friendlyName: 'Emojipedia',
-          href: 'http://emojipedia.org/'
-        }
-      ]
-    },
-    'badges': {
-      title: 'Badges',
-      description: 'Badges are a way to show recognition on diffent aspects of a user\'s community participation...',
-      hashtag: 'Badges',
-      links: [
-        {
-          friendlyName: 'Badges - Poynter.org',
-          href: 'http://www.poynter.org/2011/how-badges-help-news-websites-build-community-make-money/140653/'
-        }
-      ]
-    },
-    'muting': {
-      title: 'Blocking & Muting Users',
-      description: 'Muting a user is the most basic way to avoid unwanted behaviour on your comment stream...',
-      hashtag: 'Blocking',
-      links: [
-        {
-          friendlyName: '(link pending)',
-          href: 'http://#'
-        }
-      ]
-    }
-  },
   users: [
     {
       nickName: 'democrateel',
@@ -165,6 +105,7 @@ const initialState = {
 
 initialState.togglerGroups = togglerGroups;
 initialState.comments = comments;
+initialState.topics = topics;
 
 // Uses the parents list to traverse the
 // comments array recursively

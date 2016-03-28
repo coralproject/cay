@@ -105,25 +105,35 @@ const togglerGroups = {
         label: 'Reactions are ON',
         offLabel: 'Reactions are OFF',
         description: 'Enables Reactions (other than likes) on comments.',
-        status: false
+        status: false,
+        topic: 'reactions'
       },
       'likes': {
         label: 'Likes are ON',
         offLabel: 'Likes are OFF',
         description: 'Enables likes on comments, no dislikes, just likes.',
-        status: false
+        status: false,
+        topic: 'likes'
       },
       'upvotes': {
         label: 'Up/Down voting is ON',
         offLabel: 'Up/Down voting is OFF',
         description: 'Enables up/down voting on comments.',
-        status: false
+        status: false,
+        topic: 'upvotes'
       }
     }
   },
   'stream': {
     name: 'Stream',
     togglers: {
+      'permalinks': {
+        label: 'Permalinks are ON',
+        offLabel: 'Permalinks are OFF',
+        description: 'Displays a link to a specific comment on a thread.',
+        status: false,
+        topic: 'permalinks'
+      },
       'replies': {
         label: 'Nested Replies are ON',
         offLabel: 'Nested Replies are OFF',
@@ -148,7 +158,7 @@ const togglerGroups = {
         offLabel: 'Mentions are OFF',
         description: 'Mentions are often used as...',
         status: false,
-        topic: 'replies'
+        topic: 'mentions'
       },
       'following': {
         label: 'Following is ON',

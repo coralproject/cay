@@ -86,6 +86,13 @@ class Comment extends React.Component {
             this.props.users[this.props.user].nickName : 
             this.props.users[this.props.user].realName 
           }
+          {
+            !this.props.togglerGroups['layout'].togglers['profilepictures'].status && 
+            this.props.togglerGroups['community'].togglers['following'].status ? 
+              <button style={ styles.followButton }>FOLLOW</button>
+            : 
+              null
+          }
         </h4>
         <div style={ styles.date }>{ moment().fromNow() }</div>
         <ReactCSSTransitionGroup transitionName="profileinfo" transitionAppear={ false }>
@@ -189,5 +196,14 @@ var styles = {
   },
   zoomPulse: {
     animation: 'zoomPulse 1000ms linear 5'
+  },
+  followButton: {
+    border: '1px solid #ccc',
+    background: '#eee',
+    padding: '5px',
+    fontSize: '8pt',
+    borderRadius: '4px',
+    marginLeft: '5px',
+    cursor: 'pointer'
   }
 };

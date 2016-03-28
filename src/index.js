@@ -76,13 +76,13 @@ class Root extends React.Component {
       <div>
         <Provider store={store}>
           <Router history={browserHistory} onUpdate={ this.logPageView }>
-            <Redirect from="/" to="group-creator" />
+            <Redirect from="/" to="search-creator" />
             <Route path="login" component={Login} />
             <Route path="about" component={About} />
-            <Route path="group-creator" component={GroupCreator} />
+            <Route path="search-creator" component={GroupCreator} />
             <Route path="tag-manager" component={TagManager} />
-            <Route path="groups" component={SeeAllGroups}/>
-            <Route path="group/:name" component={GroupDetail} />
+            <Route path="saved-searches" component={SeeAllGroups}/>
+            <Route path="saved-search/:name" component={GroupDetail} />
             <Route path="*" component={NoMatch} />
             {/*<Route path="explore" component={DataExplorer} />*/}
           </Router>

@@ -94,12 +94,17 @@ export const receiveQueryset = (data) => {
 
 /* xenia_package */
 // execute a query_set
-export const fetchQueryset = (querysetName) => {
+export const fetchQueryset = (querysetName, page = 0) => {
   return (dispatch) => {
-    dispatch(requestQueryset(querysetName));
+    dispatch(requestQueryset(querysetName, page));
 
     xenia()
-      .exec(querysetName)
+      .getQuery(querysetName).then(res => console.log('pepe', res));
+
+    xenia()
+      .limit(20)
+      .skip(20 * page)
+      .exec()
       .then(queryset => dispatch(receiveQueryset(queryset)))
       .catch(err => dispatch(requestQuerysetFailure(err)));
   };
@@ -121,7 +126,7 @@ export const createQuery = (query) => {
 };
 
 /* xenia_package */
-export const makeQueryFromState = (/*type*/) => {
+export const makeQueryFromState = (type, page = 0) => {
   return (dispatch, getState) => {
     // make a query from the current state
     const filterState = getState().filters;
@@ -167,7 +172,7 @@ export const makeQueryFromState = (/*type*/) => {
           commands: [
             ...matches,
             // {$sort: {'statistics.comments.all.all.count': -1}},
-            {$skip: 0},
+            {$skip: page * 20},
             {$limit: 20}
             // {
             //   $redact: {

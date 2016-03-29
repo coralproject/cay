@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
+import Infinite from 'react-infinite';
 
 import UserRow from 'users/UserRow';
 import Heading from 'components/Heading';
@@ -21,6 +22,11 @@ export default class UserList extends React.Component {
     disabled: PropTypes.bool
   }
 
+  constructor(props) {
+    super(props);
+    this.state = { page: 0 };
+  }
+
   userSelected(user) {
     if(!this.props.disabled) {
       // console.log('user!', user);
@@ -32,19 +38,34 @@ export default class UserList extends React.Component {
     // this.setState({activeUserIndex: index});
   }
 
+  handleInfiniteLoad () {
+    console.log('llegue');
+    this.props.onPagination(this.state.page);
+    this.setState({
+      page: this.state.page + 1
+    });
+  }
+
   getUserList(users) {
     // console.log('getUserList');
-    return users.map((user, i) => {
-      return (
-        <UserRow {...this.props}
-          active={this.state.activeUserIndex === i ? true : false}
-          setAsActive={this.setAsActiveHandler.bind(this)}
-          activeIndex={i}
-          user={user}
-          onClick={this.userSelected.bind(this)}
-          key={i} />
-      );
-    });
+    return (
+      <Infinite
+        elementHeight={100}
+        containerHeight={500}
+        infiniteLoadBeginEdgeOffset={100}
+        onInfiniteLoad={this.handleInfiniteLoad.bind(this)}
+        >
+        {users.map((user, i) =>
+          <UserRow {...this.props}
+            active={this.state.activeUserIndex === i ? true : false}
+            setAsActive={this.setAsActiveHandler.bind(this)}
+            activeIndex={i}
+            user={user}
+            onClick={this.userSelected.bind(this)}
+            key={i} />
+        )}
+      </Infinite>
+    );
   }
 
   render() {

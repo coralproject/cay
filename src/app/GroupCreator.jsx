@@ -47,6 +47,11 @@ export default class GroupCreator extends React.Component {
     this.props.dispatch(saveQueryFromState(`Group ${randomId}`, 'Sample group description'));
   }
 
+
+  onPagination(page = 0) {
+    this.props.dispatch(makeQueryFromState('user', page));
+  }
+
   render() {
 
     return (
@@ -66,7 +71,10 @@ export default class GroupCreator extends React.Component {
 
             </Button>
             <div style={styles.userList}>
-              <UserList disabled={true} userSelected={()=>{}} users={this.props.users} />
+              <UserList
+                onPagination={this.onPagination.bind(this)}
+                disabled={true} userSelected={()=>{}}
+                users={this.props.users} />
             </div>
           </div>
 

@@ -45,6 +45,10 @@ export default class GroupDetail extends React.Component {
     this.props.dispatch(fetchCommentsByUser(user._id));
   }
 
+  onPagination(page = 0) {
+    this.props.dispatch(fetchQueryset(this.props.params.name, page));
+  }
+
   render() {
     return (
       <Page>
@@ -52,6 +56,7 @@ export default class GroupDetail extends React.Component {
         <p>{this.getGroupDescription(this.props.params.name)}</p>
         <div style={styles.base}>
           <UserList
+            onPagination={this.onPagination.bind(this)}
             userSelected={this.updateUser.bind(this)}
             loadingQueryset={this.props.groups.loadingQueryset}
             style={styles.userList}

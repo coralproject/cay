@@ -86,13 +86,17 @@ class Sentence extends React.Component {
   render() {
     console.log('sentence sees', this.props);
     const styles = this.getStyles();
+    const filters = this.getFilters();
     return (
       <div style={[
         styles.container,
         this.props.style
       ]}>
         <p>
-          Users {this.getSpecific()} {this.getFilters()}
+          Users
+          {this.getSpecific()}
+          {filters.length > 0 ? ' with ' : ''}
+          {filters}
         </p>
       </div>
     );

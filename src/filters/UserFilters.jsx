@@ -69,7 +69,7 @@ export default class UserFilters extends React.Component {
   }
 
   setSpecificBreakdown(specificBreakdown) {
-    let newValue = specificBreakdown ? specificBreakdown.value : '';
+    let newValue = specificBreakdown !== null ? specificBreakdown.value : '';
     this.props.dispatch(setSpecificBreakdown(newValue));
     this.props.dispatch(getFilterRanges('user'));
   }

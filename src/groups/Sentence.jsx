@@ -75,6 +75,7 @@ class Sentence extends React.Component {
             {` and`}
             {` ${this.props[filterName].userMax}`}
             {` ${this.props[filterName].description}`}
+            {`,`}
           </span>
         );
       }

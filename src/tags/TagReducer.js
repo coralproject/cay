@@ -18,8 +18,8 @@ const tags = (state = initialState, action) => {
     return Object.assign({}, state, {loading: true, hasErrors: false });
 
   case types.TAG_REQUEST_SUCCESS:
-    switch (action.requestType) {
     let tagsCopy;
+    switch (action.requestType) {
     case 'create':
       if (typeof action.index !== 'undefined') {
         var firstSlice = state.tags.slice(0, action.index);

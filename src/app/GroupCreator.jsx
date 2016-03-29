@@ -62,7 +62,7 @@ export default class GroupCreator extends React.Component {
 
           <div style={styles.rightPanel}>
             <Button onClick={this.saveGroup.bind(this)} category="primary" style={{float: 'right'}}>
-              Save Group <FaFloopyO style={styles.saveIcon} />
+              Save Search <FaFloopyO style={styles.saveIcon} />
 
             </Button>
             <div style={styles.userList}>

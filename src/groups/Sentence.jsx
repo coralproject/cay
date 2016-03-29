@@ -36,14 +36,32 @@ class Sentence extends React.Component {
     };
   }
 
-  isDefault (filterName) {
+  isDefault(filterName) {
     let isDefault = true;
-    const maxDifferent = this.props[filterName].userMax != this.props[filterName].max;
-    const minDifferent = this.props[filterName].userMin != this.props[filterName].min;
+    const f = this.props[filterName];
+    const maxDifferent = f.userMax !== f.max || f.userMax > f.max;
+    const minDifferent = f.userMin !== f.min;
     if (maxDifferent || minDifferent) {
       isDefault = false;
     }
     return isDefault;
+  }
+
+  formatName(name) {
+    name = name.replace("-", " ")
+    return name.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+  }
+
+  getSpecific() {
+    let breakdown = " in all authors and sections";
+    if (this.props.specificBreakdown) {
+      breakdown = (
+        <span>
+        {` users who submitted comments to ${this.props.breakdown} ${this.formatName(this.props.specificBreakdown)} `}
+        </span>
+      );
+    }
+    return breakdown;
   }
 
   getFilters() {
@@ -73,7 +91,7 @@ class Sentence extends React.Component {
         this.props.style
       ]}>
         <p>
-          Users with {this.getFilters()}
+          Users {this.getSpecific()} {this.getFilters()}
         </p>
       </div>
     );

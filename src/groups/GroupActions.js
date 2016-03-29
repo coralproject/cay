@@ -99,9 +99,6 @@ export const fetchQueryset = (querysetName, page = 0) => {
     dispatch(requestQueryset(querysetName, page));
 
     xenia()
-      .getQuery(querysetName).then(res => console.log('pepe', res));
-
-    xenia()
       .limit(20)
       .skip(20 * page)
       .exec()

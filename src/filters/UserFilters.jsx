@@ -69,8 +69,8 @@ export default class UserFilters extends React.Component {
   }
 
   setSpecificBreakdown(specificBreakdown) {
-    // console.log('setSpecificBreakdown', specificBreakdown.value);
-    this.props.dispatch(setSpecificBreakdown(specificBreakdown.value));
+    let newValue = specificBreakdown !== null ? specificBreakdown.value : '';
+    this.props.dispatch(setSpecificBreakdown(newValue));
     this.props.dispatch(getFilterRanges('user'));
   }
 
@@ -89,9 +89,18 @@ export default class UserFilters extends React.Component {
 
   updateBreakdown(breakdown) {
     // console.log('updateBreakdown', breakdown);
-    this.props.dispatch(setBreakdown(breakdown.value));
+    let newValue;
+    if (breakdown === null && this.props.breakdown !== 'all') {
+      newValue = 'all';
+    } else if (breakdown === null) { // if we're already on all, just do nothing
+      return;
+    } else {
+      newValue = breakdown.value;
+    }
+
+    this.props.dispatch(setBreakdown(newValue));
     this.props.dispatch(setSpecificBreakdown(''));
-    if (breakdown.value === 'all') {
+    if (newValue === 'all') {
       this.props.dispatch(getFilterRanges('user'));
     }
   }

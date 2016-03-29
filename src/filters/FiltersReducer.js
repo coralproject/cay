@@ -23,7 +23,7 @@ const filters = (state = initialState, action) => {
   switch (action.type) {
 
   case types.DATA_CONFIG_REQUEST:
-    return Object.assign({}, state, {loadingFilters: true});
+    return {...state, loadingFilters: true};
 
   // this should run before any ReactDOM stuff happens
   case types.DATA_CONFIG_LOADED:
@@ -39,59 +39,52 @@ const filters = (state = initialState, action) => {
       return accum;
     }, {});
 
-    return Object.assign({}, state, filters, {filterList}, {configLoaded: true});
+    return {...state, ...filters, filterList, configLoaded: true};
+
+    // return Object.assign({}, state, filters, {filterList}, {configLoaded: true});
 
   case types.CREATE_QUERY:
-    return Object.assign({}, state, {loadingUserList: true});
+    return {...state, loadingUserList: true};
 
   case types.RECEIVE_USER_LIST:
-    return Object.assign({}, state, {loadingUserList: false});
+    return {...state, loadingUserList: false};
 
   case types.FILTER_CHANGED:
 
     const oldFilter = state[action.fieldName];
-    const newFilter = Object.assign({}, oldFilter, action.data);
-    return Object.assign({}, state, { [action.fieldName]: newFilter, counter: action.counter });
+    const newFilter = {...oldFilter, ...action.data};
+
+    return {...state, [action.fieldName]: newFilter, counter: action.counter};
 
   case types.REQUEST_ALL_TAGS:
-    return Object.assign({}, state, {loadingTags: true});
+    return {...state, loadingTags: true};
 
   case types.RECEIVE_ALL_TAGS:
-    return Object.assign({}, state, {loadingTags: false, tags: action.tags});
+    return {...state, loadingTags: false, tags: action.tags};
 
   case types.ALL_TAGS_REQUEST_ERROR:
-    return Object.assign({}, state, {loadingTags: false, tagError: 'Failed to load tags ' + action.err});
+    return {...state, loadingTags: false, tagError: `Failed to load tags ${action.err}`};
 
   case types.REQUEST_SECTIONS:
-    return Object.assign({}, state, {loadingSections: true});
+    return {...state, loadingSections: true};
 
   case types.RECEIVE_SECTIONS:
-    return Object.assign({}, state, { sections: action.data.results[0].Docs });
+    return {...state, sections: action.data.results[0].Docs };
 
   case types.REQUEST_AUTHORS:
-    return Object.assign({}, state, {loadingAuthors: true});
+    return {...state, loadingAuthors: true};
 
   case types.RECEIVE_AUTHORS:
-    return Object.assign({}, state, {
-      loadingAuthors: false,
-      authors: action.data.results[0].Docs
-    });
+    return {...state, loadingAuthors: false, authors: action.data.results[0].Docs };
 
   case types.QUERYSET_RECEIVED:
-    return Object.assign({}, state, { loadingUserList: false });
+    return {...state, loadingUserList: false };
 
   case types.SET_BREAKDOWN:
-    return Object.assign({}, state, {breakdown: action.breakdown});
+    return {...state, breakdown: action.breakdown};
 
   case types.SET_SPECIFIC_BREAKDOWN:
-    return Object.assign(
-      {},
-      state,
-      {
-        specificBreakdown: action.specificBreakdown,
-        // counter: action.counter
-      }
-    );
+    return {...state, specificBreakdown: action.specificBreakdown};
 
   case types.RECEIVE_FILTER_RANGES:
 
@@ -100,7 +93,7 @@ const filters = (state = initialState, action) => {
       return accum;
     }, {});
 
-    return Object.assign( {}, state, newFilters, {counter: action.counter});
+    return {...state, ...newFilters, counter: action.counter};
 
   default:
     return state;

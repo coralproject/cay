@@ -16,10 +16,11 @@
   "Settings": "Settings",
   "Squads": "Squads",
   "Missing": "Missing",
-  "Group Creator": "Group Creator",
+  "Search Creator": "Search Creator",
   "Commenters": "Commenters",
-  "Group List": "Group List",
+  "Saved Searches": "Saved Searches",
   "users": "users",
-  "group": "group",
-  "Group Lists": "Group Lists"
+  "results": "results",
+  "Saved Search Lists": "Saved Search Lists",
+  "Tag Action Failed": "Tag Action Failed"
 }

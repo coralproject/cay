@@ -39,7 +39,7 @@ class Sentence extends React.Component {
   isDefault(filterName) {
     let isDefault = true;
     const f = this.props[filterName];
-    const maxDifferent = f.userMax !== f.max || f.userMax > f.max;
+    const maxDifferent = f.userMax !== f.max && f.userMax < f.max;
     const minDifferent = f.userMin !== f.min;
     if (maxDifferent || minDifferent) {
       isDefault = false;

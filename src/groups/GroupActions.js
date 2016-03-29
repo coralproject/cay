@@ -142,7 +142,6 @@ export const makeQueryFromState = (/*type*/) => {
 
       var _matches = [];
 
-      _matches.push({$match: {[dbField]: {$exists: true}}});
       // Only create match statements for non-defaults
       if (filter.min !== filter.userMin) {
         _matches.push( {$match: {[dbField]: {$gte: clamp(filter.userMin, filter.min, filter.max)}}});

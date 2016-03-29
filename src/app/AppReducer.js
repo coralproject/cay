@@ -13,6 +13,10 @@ const app = (state = initialState, action) => {
 
   /* put some app-level actions here. probably error reporting */
 
+  case types.CONFIG_ERROR:
+    // probably do some error handling here
+    return state;
+
   default:
     return state;
   }

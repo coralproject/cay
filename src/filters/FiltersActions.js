@@ -121,9 +121,9 @@ export const getFilterRanges = () => {
     let $group = filterState.filterList.reduce((accum, key) => {
 
       let dimension;
-      if (filterState.breakdown === 'author') {
+      if (filterState.breakdown === 'author' && filterState.specificBreakdown !== '') {
         dimension = 'author.' + filterState.specificBreakdown;
-      } else if (filterState.breakdown === 'section') {
+      } else if (filterState.breakdown === 'section' && filterState.specificBreakdown !== '') {
         dimension = 'section.' + filterState.specificBreakdown;
       } else { // all
         dimension = 'all';

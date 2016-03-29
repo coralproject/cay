@@ -60,7 +60,7 @@ export default class UserList extends React.Component {
       <div style={ [ styles.base, this.props.style ] }>
         <div style={ styles.columnHeader }>
           <Heading size="medium">
-            <span style={styles.groupHeader}>{ window.L.t('group') }</span> (106 { window.L.t('users')})
+            <span style={styles.groupHeader}>{ window.L.t('results') }</span> (106 { window.L.t('users')})
           </Heading>
         </div>
 

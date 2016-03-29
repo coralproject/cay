@@ -12,7 +12,7 @@ const app = (state = initialState, action) => {
   switch (action.type) {
 
   case types.CONFIG_REQUEST:
-    return Object.assign({}, state, {loadingConfig: true});
+    return {...state, loadingConfig: true};
 
   case types.CONFIG_LOADED:
 
@@ -22,18 +22,10 @@ const app = (state = initialState, action) => {
     window.basicAuthorization = action.config.basicAuthorization;
     types.configXenia(action.config);
 
-    return Object.assign(
-      {},
-      state,
-      {loadingConfig: false, configLoaded: true},
-      action.config
-    );
+    return {...state, loadingConfig: false, configLoaded: true, ...action.config};
 
   case types.CONFIG_ERROR:
-    return Object.assign({}, state, {
-      loadingConfig: false,
-      configErrorMessage: action.message
-    });
+    return {...state, loadingConfig: false, configErrorMessage: action.message };
 
   default:
     return state;

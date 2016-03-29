@@ -68,9 +68,7 @@ export const fetchQuerysetsIfNotFetched = () => {
 /* xenia_package */
 // get deep list of query_sets
 export const fetchQuerysets = () => {
-  return (dispatch, getState) => {
-
-    const app = getState().app;
+  return (dispatch) => {
 
     dispatch(requestQuerysets());
 
@@ -132,9 +130,9 @@ export const makeQueryFromState = (/*type*/) => {
 
     let matches = _.flatten(_.map(filters, filter => {
       let dbField;
-      if (filterState.breakdown === 'author') {
+      if (filterState.breakdown === 'author' && filterState.specificBreakdown !== '') {
         dbField = _.template(filter.template)({dimension: 'author.' + filterState.specificBreakdown});
-      } else if (filterState.breakdown === 'section') {
+      } else if (filterState.breakdown === 'section' && filterState.specificBreakdown !== '') {
         dbField = _.template(filter.template)({dimension: 'section.' + filterState.specificBreakdown});
       } else { // all
         dbField = _.template(filter.template)({dimension: 'all'});

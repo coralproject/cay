@@ -61,8 +61,8 @@ class SeeAllGroups extends React.Component {
           <div style={styles.actionsContainer}>
             <Link
               style={styles.viewGroupLink}
-              to={`/group/${group.name}`}>View Group</Link>
-            <span>Edit Group (coming soon)</span>
+              to={`/saved-search/${group.name}`}>View Search Details</Link>
+            <span>Edit Search (coming soon)</span>
           </div>
         </Card>
       );
@@ -76,7 +76,7 @@ class SeeAllGroups extends React.Component {
         styles.base,
         this.props.style
       ]}>
-        <ContentHeader title={ window.L.t('Group Lists') } />
+        <ContentHeader title={ window.L.t('Saved Searches') } />
         <div style={styles.cardHolder}>
           {this.renderGroups()}
         </div>

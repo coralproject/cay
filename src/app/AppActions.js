@@ -30,7 +30,7 @@ export const fetchConfig = () => {
 
 /* xenia_package */
 export const authXenia = (method = 'GET') => {
-  // what? window? see note in AppActions.js
+  // what? window? this is only being used for DataExplorerActions, which needs a refactor
   const headers = new Headers({'Authorization': window.basicAuthorization});
 
   const init = {
@@ -46,6 +46,9 @@ export const authXenia = (method = 'GET') => {
 /* Xenia driver instance */
 export let xenia;
 
-export const configXenia = config => {
-  xenia = XeniaDriver(config.xeniaHost + '/1.0', config.basicAuthorization);
+export const configXenia = () => {
+  return (dispatch, getState) => {
+    const app = getState().app;
+    xenia = XeniaDriver(app.xeniaHost + '/1.0', app.basicAuthorization);
+  };
 };

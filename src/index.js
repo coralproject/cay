@@ -11,8 +11,7 @@ import { DevTools, DebugPanel, LogMonitor } from 'redux-devtools/lib/react';
 
 import configureStore from 'store.js';
 
-import { fetchFilterConfig } from 'filters/FiltersActions';
-import { fetchConfig } from 'app/AppActions';
+import { configXenia } from 'app/AppActions';
 // import Dashboard from './containers/Dashboard';
 import GroupCreator from 'app/GroupCreator';
 import TagManager from 'app/TagManager';
@@ -25,7 +24,7 @@ import About from 'app/About';
 
 import ga from 'react-ga';
 
-const store = configureStore();
+let store;
 
 import messages from 'i18n/messages'; // Lang does not know where did you get your messages from.
 
@@ -93,17 +92,34 @@ class Root extends React.Component {
   }
 }
 
-store.dispatch(fetchConfig());
-store.dispatch(fetchFilterConfig());
+const loadConfig = (route) => {
+  return fetch(route).then(res => res.json());
+};
 
-// yikes. if we can think of a more redux-y way to do this, I'm all ears.
-const configInterval = setInterval(() => {
-  const state = store.getState();
-  if (state.app.configLoaded && state.filters.configLoaded) {
-    window.clearInterval(configInterval);
+// entry point for the app
+Promise.all([loadConfig('/config.json'), loadConfig('/data_config.json')])
+  .then(results => {
+
+    const [app, filters] = results;
+
+    const requiredKeys = [ 'xeniaHost', 'pillarHost', 'basicAuthorization', 'environment', 'googleAnalyticsId', 'requireLogin' ];
+    const allKeysDefined = requiredKeys.every(key => 'undefined' !== typeof app[key]);
+
+    if (!allKeysDefined) {
+      throw new Error(`missing required keys on config.json. Must define ${requiredKeys.join('|')}`);
+    }
+
+    // load config into initialState so it's ALWAYS available
+    store = configureStore({app});
+
+    store.dispatch(configXenia());
+    store.dispatch({type: 'DATA_CONFIG_LOADED', config: filters});
+
     ReactDOM.render(<Root/>, document.getElementById('root'));
-  }
-}, 1000);
+  })
+  .catch(err => {
+    console.error(err.stack);
+  });
 
 // prevent browser from navigating backwards if you hit the backspace key
 document.addEventListener('keydown', function (e) {

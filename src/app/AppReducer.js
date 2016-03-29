@@ -11,21 +11,7 @@ const initialState = {
 const app = (state = initialState, action) => {
   switch (action.type) {
 
-  case types.CONFIG_REQUEST:
-    return {...state, loadingConfig: true};
-
-  case types.CONFIG_LOADED:
-
-    // whoa! this is a stopgap until I write the xenia package.
-    // if I don't do this, I'd have to implement some insane redux middleware
-    // only to unwind it after the xenia package anyway.
-    window.basicAuthorization = action.config.basicAuthorization;
-    types.configXenia(action.config);
-
-    return {...state, loadingConfig: false, configLoaded: true, ...action.config};
-
-  case types.CONFIG_ERROR:
-    return {...state, loadingConfig: false, configErrorMessage: action.message };
+  /* put some app-level actions here. probably error reporting */
 
   default:
     return state;

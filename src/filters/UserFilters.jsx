@@ -160,13 +160,6 @@ export default class UserFilters extends React.Component {
         <p style={styles.legend}>Show me Users that have:</p>
         {this.getActiveFiltersFromConfig()}
 
-        <p style={styles.legend}>Filter by tags <span style={styles.comingSoon}>coming soon!</span></p>
-
-        <p>Include users with these tags</p>
-        <Select multi={true} style={ styles.filterDropdown } options={this.getTags()} />
-
-        <p>Exclude users with these tags</p>
-        <Select multi={true} style={ styles.filterDropdown } options={this.getTags()} />
       </div>
     );
   }

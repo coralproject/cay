@@ -55,8 +55,6 @@ export default class GroupCreator extends React.Component {
 
         <ContentHeader title={ window.L.t('Search Creator') } />
 
-        <p>There are 106 active users on Politics, with between 0 and 10000 comments, between 50% and 100% comments accepted.</p>
-
         <div style={styles.base}>
           <GroupFilters userOnly={true}/>
 

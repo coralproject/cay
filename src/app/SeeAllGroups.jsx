@@ -51,7 +51,7 @@ class SeeAllGroups extends React.Component {
     };
   }
   renderGroups() {
-    // console.log(this.props);
+
     const groups = this.props.querysets.map((group, i) => {
 
       return (
@@ -67,22 +67,25 @@ class SeeAllGroups extends React.Component {
         </Card>
       );
     });
+
     return groups;
+
   }
   render() {
-    return (
-    <Page>
-      <div style={[
-        styles.base,
-        this.props.style
-      ]}>
-        <ContentHeader title={ window.L.t('Saved Searches') } />
-        <div style={styles.cardHolder}>
-          {this.renderGroups()}
-        </div>
-      </div>
 
-    </Page>
+    return (
+      <Page>
+        <div style={[
+          styles.base,
+          this.props.style
+        ]}>
+          <ContentHeader title={ window.L.t('Saved Searches') } />
+          <div style={styles.cardHolder}>
+            {this.renderGroups()}
+          </div>
+        </div>
+
+      </Page>
     );
   }
 }

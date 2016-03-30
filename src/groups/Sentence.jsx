@@ -100,10 +100,14 @@ class Sentence extends React.Component {
             {` and`}
             {
               this.props[filterName].type === 'percentRange' ?
-              ` ${Math.floor(this.props[filterName].userMax * 100)}` : 
+              ` ${Math.floor(this.props[filterName].userMax * 100)}` :
               ` ${this.props[filterName].userMax}`
             }
-            {` ${this.props[filterName].description}`}
+            {
+              this.props[filterName].type === 'percentRange' ?
+              `${this.props[filterName].description}` : 
+              ` ${this.props[filterName].description}`
+            }
             {i === indexOfLastNonDefault ? `.` : `, `}
           </span>
         );

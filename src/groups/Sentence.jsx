@@ -37,18 +37,16 @@ class Sentence extends React.Component {
   }
 
   isDefault(filterName) {
-    let isDefault = true;
     const f = this.props[filterName];
     const maxDifferent = f.userMax !== f.max && f.userMax < f.max;
     const minDifferent = f.userMin !== f.min;
-    if (maxDifferent || minDifferent) {
-      isDefault = false;
-    }
-    return isDefault;
+    return !(maxDifferent || minDifferent);
   }
 
   formatName(name) {
+    /* removes hyphen */
     name = name.replace("-", " ")
+    /* title case */
     return name.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
   }
 

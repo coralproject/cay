@@ -9,7 +9,7 @@ class MenuItem extends React.Component {
   render() {
     return (
       <li style={styles.base}>
-        <Link style={styles.link} to={this.props.target}>
+        <Link style={styles.link} to={this.props.target} activeStyle={styles.base[':hover']}>
           <span style={ styles.icon }>{this.props.icon}</span>
           <span>{this.props.name}</span>
         </Link>
@@ -20,7 +20,6 @@ class MenuItem extends React.Component {
 
 const styles = {
   base: {
-    padding: '0 10px 0 5px',
     lineHeight: '40px',
     height: '40px',
     backgroundColor: 'transparent',

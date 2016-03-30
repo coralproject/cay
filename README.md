@@ -2,10 +2,12 @@
 
 Cay, a community moderation tool (front-end)
 
-## Getting started
+## Quickstart
 
+- make sure you have your other services set up and running [xenia](https://github.com/coralproject/xenia) [pillar](https://github.com/coralproject/pillar)
 - `git clone git@github.com:CoralProject/cay.git && cd cay`
 - `npm install`
+- set up your `/config.json` file with the locations of your hosted services. A sample file is at `public/config.sample.json` and currently must be placed at the root of the hosting directory for Cay.
 - `npm start`
 
 You'll need to be running `v5.0.0` of node, we recommend using `nvm` to manage node installations.
@@ -20,14 +22,35 @@ The basic idea is that the build process results in a `bundle.js` file containin
 
 ```
 .
-+-- public
++-- .github
++-- assets               -> nginx config
++-- css
++-- dist                 -> built files
++-- fonts
++-- lang
++-- public               -> images and config
+   config.json           -> environment variables and such
+   data_config.json      -> filters and dimension defs
 +-- src
-|  +-- actions           -> descriptions of action types for redux
-|  +-- components        -> all of the non-stateful React components
-|  +-- containers        -> stateful React components
-|  +-- layout            -> non-stateful components, but control the major parts of the page
-|  +-- reducers          -> redux reducers
-|  +-- store             -> redux store
+|  +-- app
+|    +-- layout
+|    AppActions.js
+|    AppReducer.js
+|    MainReducer.js
+     ... other page-level (stateful) components
+|  +-- auth
+|  +-- comments          -> any UI and redux for Comments
+|  +-- components        -> re-usable generic UI components
+|  +-- explorer          -> data visualization explorer domain
+|  +-- filters           -> any UI and redux for Filters
+|  +-- groups            -> any UI and redux for Groups
+|  +-- i18n              -> internationalization wrappers
+|  +-- tags              -> any UI and redux for Tags
+|  +-- users             -> any UI and redux for Users
+index.js                 -> entry point for app
+settings.js              -> colors for the app
+store.js                 -> redux store
+
 +-- test                 -> mirrors the src folder
 ```
 
@@ -49,12 +72,6 @@ We will not accept commits or pushes to the `master` branch, as the latest versi
 
 Packaging for production involves building the js and css files with `npm run build`. This will nuke and re-populate the `/dist` folder. After these files are copied to the server, a valid `config.json` file must live in the root of the directory from which the front-end assets are served. There is a `config.sample.json` in the `/public` directory for your reference.
 
-Replace the values in `config.json` with the hostnames for your specific development/deployment setup.
-
-#### Code of conduct
-Please be civil when discussing contributions to the Cay front end code and the Coral Project. If in doubt, please consult our [Code of Conduct](https://github.com/coralproject/reef/blob/master/CODE-OF-CONDUCT.md).
-
 ## TODO:
 - how to internationalize (R2L languages)
 - how to continue to make things accessible
-- how to create a production build of bundle.js

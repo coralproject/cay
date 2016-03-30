@@ -1,4 +1,4 @@
-import {authXenia} from 'auth/AuthActions';
+import {xenia} from 'app/AppActions';
 
 export const COMMENT_CLICK = 'COMMENT_CLICK';
 export const COMMENTS_REQUEST = 'COMMENTS_REQUEST';
@@ -31,19 +31,14 @@ export const receiveCommentsFailure = (err) => {
 /* xenia_package */
 export const fetchCommentsByUser = (user_id) => {
 
-  const url = `${window.xeniaHost}/1.0/exec/comments_by_user?user_id=${user_id}`;
   return (dispatch) => {
-
     dispatch(clearCommentItems());
     dispatch(requestComments());
 
-    var myRequest = new Request(url, authXenia());
-
-    fetch(myRequest)
-      .then(response => response.json())
-      .then(json => {
-        dispatch(receiveComments(json));
-        dispatch(storeComments(json));
+    xenia().exec('comments_by_user', {user_id})
+      .then(data => {
+        dispatch(receiveComments(data));
+        dispatch(storeComments(data));
       })
       .catch(err => dispatch(receiveCommentsFailure(err)));
   };

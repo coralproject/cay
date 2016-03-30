@@ -23,17 +23,17 @@ export default class UserList extends React.Component {
 
   userSelected(user) {
     if(!this.props.disabled) {
-      console.log('user!', user);
+      // console.log('user!', user);
       this.props.userSelected(user);
     }
   }
   setAsActiveHandler(index) {
-    console.log('setAsActiveHandler', index);
+    // console.log('setAsActiveHandler', index);
     // this.setState({activeUserIndex: index});
   }
 
   getUserList(users) {
-    console.log('getUserList');
+    // console.log('getUserList');
     return users.map((user, i) => {
       return (
         <UserRow {...this.props}
@@ -49,22 +49,21 @@ export default class UserList extends React.Component {
 
   render() {
 
-    console.log('UserList.render', this.props);
-
     var noUsersMessage = (<p style={ styles.noUsers }>
       No users loaded yet,<br />
       create a filter on the left to load users.
     </p>);
 
     var userListContent = this.props.users.length ? this.getUserList(this.props.users) : noUsersMessage;
-
     return (
       <div style={ [ styles.base, this.props.style ] }>
         <div style={ styles.columnHeader }>
+        {/*  Removed until number is live
           <Heading size="medium">
-            <span style={styles.groupHeader}>{ window.L.t('group') }</span> (106 { window.L.t('users')})
+            <span style={styles.groupHeader}>{ window.L.t('results') }</span> (106 { window.L.t('users')})
           </Heading>
-        </div>
+        */}
+      </div>
 
         {
           this.props.loadingQueryset ?

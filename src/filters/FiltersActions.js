@@ -1,18 +1,21 @@
 import _ from 'lodash';
-import {authXenia} from 'auth/AuthActions';
+import {xenia} from 'app/AppActions';
 
 export const REQUEST_SECTIONS = 'REQUEST_SECTIONS';
 export const RECEIVE_SECTIONS = 'RECEIVE_SECTIONS';
 export const REQUEST_AUTHORS = 'REQUEST_AUTHORS';
 export const RECEIVE_AUTHORS = 'RECEIVE_AUTHORS';
 
+export const DATA_CONFIG_REQUEST = 'DATA_CONFIG_REQUEST';
 export const DATA_CONFIG_LOADED = 'DATA_CONFIG_LOADED';
+export const DATA_CONFIG_ERROR = 'DATA_CONFIG_ERROR';
 
 export const FILTER_CHANGED = 'FILTER_CHANGED';
 
 export const SET_BREAKDOWN = 'SET_BREAKDOWN';
 export const SET_SPECIFIC_BREAKDOWN = 'SET_SPECIFIC_BREAKDOWN';
 
+// export const REQUEST_FILTER_RANGES = 'REQUEST_FILTER_RANGES';
 export const RECEIVE_FILTER_RANGES = 'RECEIVE_FILTER_RANGES';
 
 export const requestSections = () => {
@@ -33,8 +36,7 @@ export const fetchSections = () => {
     dispatch(requestSections());
 
     /* xenia_package */
-    fetch(window.xeniaHost + '/1.0/exec/dimension_section_list', authXenia())
-      .then(response => response.json())
+    xenia().exec('dimension_section_list')
       .then(json => dispatch(receiveSections(json)))
       .catch(err => {
         console.log('oh no. failed to get section list', err);
@@ -54,12 +56,11 @@ export const receiveAuthors = (data) => {
 };
 
 export const fetchAuthors = () => {
-  return dispatch => {
+  return (dispatch) => {
     dispatch(requestAuthors());
 
     /* xenia_package */
-    fetch(window.xeniaHost + '/1.0/exec/dimension_author_list', authXenia())
-      .then(response => response.json())
+    xenia().exec('dimension_author_list')
       .then(json => dispatch(receiveAuthors(json)))
       .catch(err => {
         console.log('you failed to get the authors list!', err);
@@ -75,15 +76,41 @@ export const setBreakdown = (breakdown) => {
 };
 
 export const setSpecificBreakdown = (specificBreakdown) => {
-  return (dispatch, getState) => {
-    let counter = getState().filters.counter;
-    counter++;
+  return (dispatch) => {
+    // let counter = getState().filters.counter;
+    // counter++;
     dispatch({
       type: SET_SPECIFIC_BREAKDOWN,
-      specificBreakdown: specificBreakdown,
-      counter
+      specificBreakdown: specificBreakdown
+      // counter
     });
   };
+};
+
+const parseFilterRanges = (ranges, filterState) => {
+
+  const newFilters = _.reduce(ranges, (accum, value, aggKey) => {
+    let [key, field] = aggKey.split('_');
+
+    if (field === 'id' || value === null) return accum;
+
+    // we might have already updated the old filter with the min value
+    // retrieve it from the accumulator in progress instead of the state
+    let newFilter = _.has(accum, key) ? accum[key] : {};
+    newFilter[field] = value; // where field is {min|max}
+    accum[key] = newFilter;
+
+    // on the first pass, go ahead and force a change on userMin and userMax
+    if (field === 'min' && _.isNull(filterState[key].userMin)) {
+      newFilter.userMin = value;
+    } else if (field === 'max' && _.isNull(filterState[key].userMax)) {
+      newFilter.userMax = value;
+    }
+
+    return accum;
+  }, {});
+
+  return newFilters;
 };
 
 /* xenia_package */
@@ -94,9 +121,9 @@ export const getFilterRanges = () => {
     let $group = filterState.filterList.reduce((accum, key) => {
 
       let dimension;
-      if (filterState.breakdown === 'author') {
+      if (filterState.breakdown === 'author' && filterState.specificBreakdown !== '') {
         dimension = 'author.' + filterState.specificBreakdown;
-      } else if (filterState.breakdown === 'section') {
+      } else if (filterState.breakdown === 'section' && filterState.specificBreakdown !== '') {
         dimension = 'section.' + filterState.specificBreakdown;
       } else { // all
         dimension = 'all';
@@ -134,18 +161,20 @@ export const getFilterRanges = () => {
       enabled: true
     };
 
-    dispatch({type: 'REQUEST_FILTER_RANGES'});
+    // dispatch({type: REQUEST_FILTER_RANGES});
 
-    const url = window.xeniaHost + '/1.0/exec';
-
-    var init = authXenia('POST');
-    init.body = JSON.stringify(query);
-
-    fetch(url, init)
-      .then(res => res.json())
+    xenia(query).exec()
       .then(data => {
-        console.log(RECEIVE_FILTER_RANGES, data);
-        dispatch({type: RECEIVE_FILTER_RANGES, data});
+        const doc = data.results[0].Docs[0];
+        console.log('gs',getState());
+        let counter = getState().filters.counter;
+        counter++;
+
+        dispatch({
+          type: RECEIVE_FILTER_RANGES,
+          data: parseFilterRanges(doc, filterState),
+          counter
+        });
       }).catch(err => {
         console.log(err);
       });
@@ -163,5 +192,36 @@ export const filterChanged = (fieldName, data) => {
       data,
       counter
     });
+  };
+};
+
+export const fetchFilterConfig = () => {
+  return (dispatch, getState) => {
+
+    const filters = getState().filters;
+    const requiredKeys = ['filters', 'dimensions'];
+
+    if (filters.loadingFilters || filters.configLoaded) return {type: 'NOOP'};
+
+    dispatch({type: DATA_CONFIG_REQUEST});
+
+    fetch('/data_config.json')
+      .then(res => res.json())
+      .then(config => {
+
+        const allKeysDefined = requiredKeys.every(key => 'undefined' !== typeof config[key]);
+
+        if (!allKeysDefined) {
+          throw new Error(`missing required keys on data_config.json. Must define ${requiredKeys.join('|')}`);
+        }
+
+        dispatch({type: DATA_CONFIG_LOADED, config});
+
+      }).catch(({message}) => {
+        // should probably check instanceof on the error here.
+        // we end up in this catch if the file is missing altogether
+        return dispatch({type: DATA_CONFIG_ERROR, message});
+      });
+
   };
 };

@@ -2,11 +2,8 @@ import React from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
 
-import {fetchAllTags} from 'tags/TagActions';
 import { makeQueryFromState } from 'groups/GroupActions';
 import {
-  fetchSections,
-  fetchAuthors,
   setBreakdown,
   setSpecificBreakdown,
   getFilterRanges} from 'filters/FiltersActions';
@@ -26,12 +23,6 @@ export default class UserFilters extends React.Component {
     super(props);
   }
 
-  componentWillMount() {
-    this.props.dispatch(fetchAllTags());
-    this.props.dispatch(fetchSections());
-    this.props.dispatch(fetchAuthors());
-    this.props.dispatch(makeQueryFromState('user'));
-  }
   componentWillUpdate(nextProps) {
     /*
       only a filter or breakdown change updates the counter in the reducer.
@@ -78,8 +69,8 @@ export default class UserFilters extends React.Component {
   }
 
   setSpecificBreakdown(specificBreakdown) {
-    // console.log('setSpecificBreakdown', specificBreakdown.value);
-    this.props.dispatch(setSpecificBreakdown(specificBreakdown.value));
+    let newValue = specificBreakdown !== null ? specificBreakdown.value : '';
+    this.props.dispatch(setSpecificBreakdown(newValue));
     this.props.dispatch(getFilterRanges('user'));
   }
 
@@ -98,9 +89,18 @@ export default class UserFilters extends React.Component {
 
   updateBreakdown(breakdown) {
     // console.log('updateBreakdown', breakdown);
-    this.props.dispatch(setBreakdown(breakdown.value));
+    let newValue;
+    if (breakdown === null && this.props.breakdown !== 'all') {
+      newValue = 'all';
+    } else if (breakdown === null) { // if we're already on all, just do nothing
+      return;
+    } else {
+      newValue = breakdown.value;
+    }
+
+    this.props.dispatch(setBreakdown(newValue));
     this.props.dispatch(setSpecificBreakdown(''));
-    if (breakdown.value === 'all') {
+    if (newValue === 'all') {
       this.props.dispatch(getFilterRanges('user'));
     }
   }
@@ -160,13 +160,6 @@ export default class UserFilters extends React.Component {
         <p style={styles.legend}>Show me Users that have:</p>
         {this.getActiveFiltersFromConfig()}
 
-        <p style={styles.legend}>Filter by tags <span style={styles.comingSoon}>coming soon!</span></p>
-
-        <p>Include users with these tags</p>
-        <Select multi={true} style={ styles.filterDropdown } options={this.getTags()} />
-
-        <p>Exclude users with these tags</p>
-        <Select multi={true} style={ styles.filterDropdown } options={this.getTags()} />
       </div>
     );
   }

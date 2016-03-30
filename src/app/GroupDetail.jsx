@@ -37,7 +37,7 @@ export default class GroupDetail extends React.Component {
   }
 
   componentWillUpdate() {
-    console.log('GroupDetail will update');
+    // console.log('GroupDetail will update');
   }
 
   updateUser(user) {
@@ -46,7 +46,6 @@ export default class GroupDetail extends React.Component {
   }
 
   render() {
-    console.log('GroupDetail.render', this.props);
     return (
       <Page>
         <ContentHeader title={this.props.params.name} />
@@ -72,12 +71,16 @@ export default class GroupDetail extends React.Component {
 const styles = {
   base: {
     display: 'flex',
-    minHeight: 250
+    minHeight: 250,
+    flexWrap: 'wrap-reverse',
+    justifyContent: 'flex-start'
   },
   userList: {
-    flex: 1
+    flex: 1,
+    minWidth: 315
   },
   userDetail: {
-    flex: 2
+    flex: 2,
+    minWidth: 630
   }
 };

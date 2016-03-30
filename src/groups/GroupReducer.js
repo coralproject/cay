@@ -14,16 +14,23 @@ const groups = (state = initialState, action) => {
   switch (action.type) {
 
   case types.QUERYSETS_REQUEST:
-    return Object.assign({}, state, {loading: true});
+    return {...state, loading: true};
 
   case types.QUERYSETS_REQUEST_FAILURE:
-    return Object.assign({}, state, {loading: false, showTheError: 'failed to load querysets from server'});
+    return {
+      ...state,
+      loading: false,
+      showTheError: 'failed to load querysets from server'
+    };
 
   case types.QUERYSET_REQUEST_FAILURE:
-    return Object.assign({}, state, {loadingQueryset: false, showTheError: 'failed to load ' + action.querysetName});
+    return {
+      ...state,
+      loadingQueryset: false,
+      showTheError: `failed to load ${action.querysetName}`
+    };
 
   case types.QUERYSETS_RECEIVED:
-    console.log('QUERYSETS_RECEIVED', action);
     return Object.assign({}, state,
       {
         loading: false,
@@ -40,18 +47,18 @@ const groups = (state = initialState, action) => {
     return state;
 
   case types.QUERYSET_REQUEST:
-    return Object.assign({}, state, {loadingQueryset: true}); // query one query_set?
+    return {...state, loadingQueryset: true}; // query one query_set?
 
   // query_set executed. receive a list of users.
   case types.QUERYSET_RECEIVED:
 
-    return Object.assign({}, state, { loadingQueryset: false, users: action.data.results[0].Docs});
+    return {...state, loadingQueryset: false, users: action.data.results[0].Docs};
 
   case types.LOGIN_SUCCESS:
-    return Object.assign({}, state, {authorized: true});
+    return {...state, authorized: true};
 
   case types.LOGGED_OUT:
-    return Object.assign({}, state, {authorized: false});
+    return {...state, authorized: false};
 
   default:
     // console.log('no reducer matches:', action.type);

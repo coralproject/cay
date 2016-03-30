@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import {clamp} from 'components/utils/math';
-import {authXenia} from 'auth/AuthActions';
+import {xenia} from 'app/AppActions';
 
 export const QUERYSET_SELECTED = 'QUERYSET_SELECTED';
 export const QUERYSET_REQUEST = 'QUERYSET_REQUEST'; // request data for a single queryset
@@ -10,7 +10,6 @@ export const QUERYSET_REQUEST_FAILURE = 'QUERYSET_REQUEST_FAILURE';
 export const QUERYSETS_RECEIVED = 'QUERYSETS_RECEIVED';
 export const QUERYSET_RECEIVED = 'QUERYSET_RECEIVED';
 
-export const REQUEST_FILTER_RANGES = 'REQUEST_FILTER_RANGES';
 export const RECEIVE_FILTER_RANGES = 'RECEIVE_FILTER_RANGES';
 
 export const QUERYSET_SAVE_SUCCESS = 'QUERYSET_SAVE_SUCCESS';
@@ -73,8 +72,7 @@ export const fetchQuerysets = () => {
 
     dispatch(requestQuerysets());
 
-    fetch(window.xeniaHost + '/1.0/query', authXenia())
-      .then(response => response.json())
+    xenia().getQueries()
       .then(querysets => dispatch(receiveQuerysets(querysets)))
       .catch(err => dispatch(requestQuerysetsFailure(err)));
   };
@@ -100,8 +98,8 @@ export const fetchQueryset = (querysetName) => {
   return (dispatch) => {
     dispatch(requestQueryset(querysetName));
 
-    fetch(window.xeniaHost + '/1.0/exec/' + querysetName, authXenia())
-      .then(response => response.json())
+    xenia()
+      .exec(querysetName)
       .then(queryset => dispatch(receiveQueryset(queryset)))
       .catch(err => dispatch(requestQuerysetFailure(err)));
   };
@@ -125,33 +123,33 @@ export const createQuery = (query) => {
 /* xenia_package */
 export const makeQueryFromState = (/*type*/) => {
   return (dispatch, getState) => {
-    console.log('function that calls async');
     // make a query from the current state
     const filterState = getState().filters;
+    const app = getState().app;
     const filters = filterState.filterList.map(key => filterState[key]);
 
     let matches = _.flatten(_.map(filters, filter => {
       let dbField;
-      if (filterState.breakdown === 'author') {
+      if (filterState.breakdown === 'author' && filterState.specificBreakdown !== '') {
         dbField = _.template(filter.template)({dimension: 'author.' + filterState.specificBreakdown});
-      } else if (filterState.breakdown === 'section') {
+      } else if (filterState.breakdown === 'section' && filterState.specificBreakdown !== '') {
         dbField = _.template(filter.template)({dimension: 'section.' + filterState.specificBreakdown});
       } else { // all
         dbField = _.template(filter.template)({dimension: 'all'});
       }
 
-      var matches = [];
+      var _matches = [];
 
       // Only create match statements for non-defaults
       if (filter.min !== filter.userMin) {
-        matches.push( {$match: {[dbField]: {$gte: clamp(filter.userMin, filter.min, filter.max)}}});
+        _matches.push( {$match: {[dbField]: {$gte: clamp(filter.userMin, filter.min, filter.max)}}});
       }
 
       if (filter.max !== filter.userMax) {
-        matches.push( {$match: {[dbField]: {$lte: clamp(filter.userMax, filter.min, filter.max)}}});
+        _matches.push( {$match: {[dbField]: {$lte: clamp(filter.userMax, filter.min, filter.max)}}});
       }
 
-      return matches;
+      return _matches;
 
     }));
 
@@ -189,7 +187,7 @@ export const makeQueryFromState = (/*type*/) => {
       enabled: true
     };
 
-    doMakeQueryFromStateAsync(query, dispatch);
+    doMakeQueryFromStateAsync(query, dispatch, app);
 
   };
 };
@@ -198,11 +196,12 @@ export const makeQueryFromState = (/*type*/) => {
 // yikes. lots of this code is replicated above.
 // time to make a xenia library
 export const saveQueryFromState = (queryName, modDescription) => {
+
   return (dispatch, getState) => {
-    console.log('function that calls async');
     // make a query from the current state
     const filterState = getState().filters;
     const filters = filterState.filterList.map(key => filterState[key]);
+    const app = getState().app;
 
     let matches = _.flatten(_.map(filters, filter => {
       let dbField;
@@ -251,17 +250,13 @@ export const saveQueryFromState = (queryName, modDescription) => {
       enabled: true
     };
 
-    doPutQueryFromState(query, dispatch);
+    doPutQueryFromState(query, dispatch, app);
 
   };
 };
 /* xenia_package */
 const doPutQueryFromState = (query, dispatch) => {
-  const url = window.xeniaHost + '/1.0/query';
-  let init = authXenia('PUT');
-  init.body = JSON.stringify(query);
-
-  fetch(url, init)
+  xenia(query).saveQuery()
     .then(() => { // if response.status < 400
       dispatch({type: QUERYSET_SAVE_SUCCESS});
     }).catch(error => {
@@ -270,21 +265,15 @@ const doPutQueryFromState = (query, dispatch) => {
 };
 /* xenia_package */
 const doMakeQueryFromStateAsync = _.debounce((query, dispatch)=>{
-  console.log('actual async');
   dispatch(requestQueryset());
   dispatch(createQuery(query));
 
-  const url = window.xeniaHost + '/1.0/exec';
-
-  var init = authXenia('POST');
-  init.body = JSON.stringify(query);
-
-  fetch(url, init)
-    .then(response => response.json())
+  xenia(query)
+  .exec()
     .then(json => {
       dispatch(receiveQueryset(json));
     })
-    .catch(err => {
-      dispatch(dataExplorationFetchError(err));
+    .catch(() => {
+      // dispatch(dataExplorationFetchError(err));
     });
 }, 1000);

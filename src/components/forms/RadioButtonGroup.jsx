@@ -9,7 +9,6 @@ export default class RadioButtonGroup extends React.Component {
     super(props);
 
     const children = React.Children.toArray(this.props.children);
-    console.log('children', children);
     let selectedIndex = _.findIndex(children, child => {
       return child.props.checked === 'checked'
     });
@@ -22,7 +21,6 @@ export default class RadioButtonGroup extends React.Component {
   }
 
   handleClick(index, value) {
-    console.log('handleClick', index);
     this.setState({selectedIndex: index, value: value});
   }
 

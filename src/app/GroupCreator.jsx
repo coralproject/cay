@@ -68,7 +68,9 @@ export default class GroupCreator extends React.Component {
         <ContentHeader title={ window.L.t('Search Creator') } />
 
         <div style={styles.base}>
-          <GroupFilters userOnly={true}/>
+          <div style={styles.filters}>
+            <GroupFilters userOnly={true}/>
+          </div>
 
           <div style={styles.rightPanel}>
            {/* Removing until implemented
@@ -98,7 +100,9 @@ export default class GroupCreator extends React.Component {
 const styles = {
   base: {
     display: 'flex',
-    minHeight: 250
+    minHeight: 250,
+    justifyContent: 'flex-start',
+    flexWrap: 'wrap'
   },
   rightPanel: {
     flex: 1
@@ -106,6 +110,10 @@ const styles = {
   userListContainer: {
     marginTop: 5,
     height: '100%',
+    minWidth: 400,
+    '@media (max-width: 1000px)': {
+      marginLeft: -20
+    },
     display: 'flex',
     width: '100%'
   },
@@ -123,5 +131,10 @@ const styles = {
   saveIcon: {
     width: 25,
     height: 25
+  },
+  filters: {
+    '@media (max-width: 1000px)': {
+      'width': '100%'
+    }
   }
 };

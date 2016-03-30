@@ -172,7 +172,7 @@ export default class TagManager extends React.Component {
                 <p>
                   { "Click on a tag's name or description to edit it." }
                 </p>
-                <Table striped={ true } multiSelect={ false } hasActions={ true } isLoading={ this.props.loadingTags } loadingMessage="Loading tags...">
+                <Table style={styles.table} striped={ true } multiSelect={ false } hasActions={ true } isLoading={ this.props.loadingTags } loadingMessage="Loading tags...">
                   <TableHead>
                     <TableHeader>{ window.L.t('Tag') }</TableHeader>
                     <TableHeader>{ window.L.t('Description') }</TableHeader>
@@ -313,5 +313,9 @@ const styles = {
   },
   tdPadding: {
     padding: '5px'
+  },
+  table: {
+    maxWidth: '900px',
+    width: '100%'
   }
 };

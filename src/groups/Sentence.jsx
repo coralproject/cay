@@ -64,16 +64,23 @@ class Sentence extends React.Component {
 
   getFilters() {
     let nonDefaultFilters = [];
-    this.props.filterList.map((filterName) => {
+    let indexOfLastNonDefault;
+    this.props.filterList.map((filterName, i) => {
+      if (!this.isDefault(filterName)) {
+        indexOfLastNonDefault = i;
+      }
+    });
+
+    this.props.filterList.map((filterName, i) => {
       if (!this.isDefault(filterName)) {
         nonDefaultFilters.push(
           <span>
-            {` between`}
+            {i === indexOfLastNonDefault ? ` and between` : ` between`}
             {` ${this.props[filterName].userMin}`}
             {` and`}
             {` ${this.props[filterName].userMax}`}
             {` ${this.props[filterName].description}`}
-            {`,`}
+            {i === indexOfLastNonDefault ? `.` : `, `}
           </span>
         );
       }

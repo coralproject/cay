@@ -15,7 +15,7 @@ let initialState = {
   'last_login': null,
   'member_since': null,
   breakdown: 'all',
-  counter: 0, // this is a signal for ajax consumed by userFilters' componentWillUpdate
+  counter: 0, // this is a signal for ajax consumed by userFilters
   specificBreakdown: ''
 };
 

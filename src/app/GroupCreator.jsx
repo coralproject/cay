@@ -102,7 +102,7 @@ const styles = {
     display: 'flex',
     minHeight: 250,
     justifyContent: 'flex-start',
-    flexWrap: 'wrap'
+    flexWrap: 'no-wrap'
   },
   rightPanel: {
     flex: 1

@@ -3,48 +3,64 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 // React Router
-import { browserHistory, Router, Route } from 'react-router';
+import { browserHistory, Router, Route, Redirect } from 'react-router';
 // React Redux
 import { Provider } from 'react-redux';
 // Redux Devtools
 import { DevTools, DebugPanel, LogMonitor } from 'redux-devtools/lib/react';
 
-import {configLoaded} from './actions';
+import configureStore from 'store.js';
 
-import configureStore from './store';
-
+import { fetchFilterConfig } from 'filters/FiltersActions';
+import { fetchConfig } from 'app/AppActions';
 // import Dashboard from './containers/Dashboard';
-import UserManager from './containers/UserManager';
-import TagManager from './containers/TagManager';
-import Login from './containers/Login';
-// import DataExplorer from './containers/DataExplorer';
-import SeeAllGroups from './containers/SeeAllGroups.jsx';
-import GroupDetail from './containers/GroupDetail';
-import NoMatch from './containers/NoMatch';
-import About from './containers/About';
-import Feedback from './containers/Feedback';
+import GroupCreator from 'app/GroupCreator';
+import TagManager from 'app/TagManager';
+import Login from 'app/Login';
+// import DataExplorer from 'app/DataExplorer';
+import SeeAllGroups from 'app/SeeAllGroups';
+import GroupDetail from 'app/GroupDetail';
+import NoMatch from 'app/NoMatch';
+import About from 'app/About';
+
+import ga from 'react-ga';
 
 const store = configureStore();
 
-import messages from './messages'; // Lang does not know where did you get your messages from.
+import messages from 'i18n/messages'; // Lang does not know where did you get your messages from.
 
-import LangSugar from './lang';
+import LangSugar from 'i18n/lang';
 window.L = new LangSugar();
 
 window.L.addTranslations(messages['en'], 'en');
 window.L.addTranslations(messages['de'], 'de');
+window.L.addTranslations(messages['es'], 'es');
 window.L.setLocale('en');
 
-require('../css/reset.css');
-require('../css/global.css');
+require('reset.css');
+require('global.css');
 
-require('../css/react-select.css');
+require('react-select.css');
 
 require('../fonts/glyphicons-halflings-regular.woff');
 
-import { Lang } from './lang';
+import { Lang } from 'i18n/lang';
 @Lang
 class Root extends React.Component {
+
+  constructor(props){
+    super(props);
+    ga.initialize(window.googleAnalyticsId, { debug: (process && process.env.NODE_ENV !== 'production') });
+    window.addEventListener('error', e => ga.event({
+      category: 'JS Error',
+      action: e.message,
+      label: e.stack
+    }));
+  }
+
+  logPageView() {
+    ga.pageview(this.state.location.pathname);
+  }
 
   render() {
 
@@ -59,14 +75,14 @@ class Root extends React.Component {
     return (
       <div>
         <Provider store={store}>
-          <Router history={browserHistory}>
-            <Route path="/" component={UserManager} />
+          <Router history={browserHistory} onUpdate={ this.logPageView }>
+            <Redirect from="/" to="search-creator" />
             <Route path="login" component={Login} />
             <Route path="about" component={About} />
-            <Route path="group-creator" component={UserManager} />
+            <Route path="search-creator" component={GroupCreator} />
             <Route path="tag-manager" component={TagManager} />
-            <Route path="groups" component={SeeAllGroups}/>
-            <Route path="group/:name" component={GroupDetail} />
+            <Route path="saved-searches" component={SeeAllGroups}/>
+            <Route path="saved-search/:name" component={GroupDetail} />
             <Route path="*" component={NoMatch} />
             {/*<Route path="explore" component={DataExplorer} />*/}
           </Router>
@@ -77,29 +93,17 @@ class Root extends React.Component {
   }
 }
 
-fetch('/config.json')
-  .then(res => res.json())
-  .then(config => {
+store.dispatch(fetchConfig());
+store.dispatch(fetchFilterConfig());
 
-    for (var key in config) {
-      window[key] = config[key];
-    }
-
-    if (!window.xeniaHost) throw new Error('xeniaHost is not set in config.json. Coral will not work correctly.');
-    if (!window.pillarHost) throw new Error('pillarHost is not set in config.json. Coral will not work correctly.');
-    if (!window.basicAuthorization) throw new Error('basicAuthorization is not set in config.json. Coral will not work correctly');
-    if (!window.filters) throw new Error('filters is not set in config.json');
-
-    // set state here.
-    store.dispatch({type: 'CONFIG_LOADED', config});
-
+// yikes. if we can think of a more redux-y way to do this, I'm all ears.
+const configInterval = setInterval(() => {
+  const state = store.getState();
+  if (state.app.configLoaded && state.filters.configLoaded) {
+    window.clearInterval(configInterval);
     ReactDOM.render(<Root/>, document.getElementById('root'));
-  })
-  .catch(err => {
-
-    console.error('Error while fetching config.json: ', err);
-    document.body.innerHTML = 'you need to create ./config.json, or it is invalid JSON, or something blew up somewhere in react :/';
-  });
+  }
+}, 1000);
 
 // prevent browser from navigating backwards if you hit the backspace key
 document.addEventListener('keydown', function (e) {

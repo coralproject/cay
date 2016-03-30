@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React from 'react';
 import Radium from 'radium';
 
-import settings from '../../settings';
+import settings from 'settings';
 
 @Radium
 export default class ListItem extends React.Component {
@@ -29,6 +29,7 @@ export default class ListItem extends React.Component {
         styles.base,
         left && styles.baseWithLeft,
         right && styles.baseWithRight,
+        this.props.active && styles.active,
         this.props.style
       ]}>
         {left}
@@ -55,6 +56,11 @@ const styles = {
       borderRight: '1px solid #fff',
       borderBottom: '1px solid #ddd'
     }
+  },
+  active: {
+    backgroundColor: 'white',
+    borderRight: '1px solid #fff',
+    borderBottom: '1px solid #ddd'
   },
   baseWithLeft: {
     paddingLeft: 60

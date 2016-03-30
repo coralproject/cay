@@ -2,7 +2,7 @@ import React from 'react';
 import Radium from 'radium';
 
 @Radium
-class Header extends React.Component {
+class Heading extends React.Component {
   render() {
     return (
       <p style={[
@@ -51,4 +51,4 @@ const styles = {
   }
 }
 
-export default Header;
+export default Heading;

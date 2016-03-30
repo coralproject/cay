@@ -3,7 +3,7 @@
   "Trust Score": "Trust Score",
   "some optional subhead": "some optional subhead",
   "About": "About",
-  "Pipeline List": "Pipeline List",
+  "Queryset List": "Queryset List",
   "Status": "Status",
   "Last Login": "Last Login",
   "Member Since": "Member Since",
@@ -16,8 +16,11 @@
   "Settings": "Settings",
   "Squads": "Squads",
   "Missing": "Missing",
-  "Group Creator": "Group Creator",
+  "Search Creator": "Search Creator",
   "Commenters": "Commenters",
-  "Group List": "Group List",
-  "Users": "Users"
+  "Saved Searches": "Saved Searches",
+  "users": "users",
+  "results": "results",
+  "Saved Search Lists": "Saved Search Lists",
+  "Tag Action Failed": "Tag Action Failed"
 }

@@ -18,6 +18,13 @@ export const CREATE_QUERY = 'CREATE_QUERY';
 
 export const SUBMIT_CUSTOM_QUERY = 'SUBMIT_CUSTOM_QUERY';
 
+export const PILLAR_SEARCHLIST_REQUEST = 'PILLAR_SEARCHLIST_REQUEST';
+export const PILLAR_SEARCHLIST_SUCCESS = 'PILLAR_SEARCHLIST_SUCCESS';
+export const PILLAR_SEARCHLIST_FAILED = 'PILLAR_SEARCHLIST_FAILED';
+
+export const PILLAR_SEARCH_SAVE_INIT = 'PILLAR_SEARCH_SAVE_INIT';
+export const PILLAR_SEARCH_SAVE_SUCCESS = 'PILLAR_SEARCH_SAVE_SUCCESS';
+export const PILLAR_SEARCH_SAVE_FAILED = 'PILLAR_SEARCH_SAVE_FAILED';
 
 export const selectQueryset = (queryset) => {
   return {
@@ -78,6 +85,46 @@ export const fetchQuerysets = () => {
   };
 };
 
+const requestSearches = () => {
+  return {type: PILLAR_SEARCHLIST_REQUEST};
+};
+
+const receivedSearches = (searches) => {
+  return {type: PILLAR_SEARCHLIST_SUCCESS, searches};
+};
+
+const searchesFailed = (error) => {
+  return {type: PILLAR_SEARCHLIST_FAILED, error};
+};
+
+export const fetchSearches = () => {
+  return (dispatch, getState) => {
+    dispatch(requestSearches());
+
+    const app = getState().app;
+
+    fetch(app.pillarHost + '/api/searches')
+      .then(resp => resp.json())
+      .then(searches => {
+        dispatch(receivedSearches(searches));
+      })
+      .catch(error => {
+        dispatch(searchesFailed(error));
+      });
+  };
+};
+
+export const fetchSearchesIfNotFetched = () => {
+  return (dispatch, getState) => {
+    if (!getState().groups.loadingSearches) {
+      return dispatch(fetchSearches());
+    }
+    return {
+      type: 'NOOP'
+    };
+  };
+};
+
 export const requestQuerysetFailure = (err) => {
   return {
     type: QUERYSET_REQUEST_FAILURE,
@@ -121,7 +168,7 @@ export const createQuery = (query) => {
 };
 
 /* xenia_package */
-export const makeQueryFromState = (/*type*/) => {
+export const makeQueryFromState = (type, page = 0) => {
   return (dispatch, getState) => {
     // make a query from the current state
     const filterState = getState().filters;
@@ -154,7 +201,7 @@ export const makeQueryFromState = (/*type*/) => {
     }));
 
     let query = {
-      name: 'user_search',
+      name: 'user_search_' + Date.now(),
       desc: 'user search currently. this is going to be more dynamic in the future',
       pre_script: '',
       pst_script: '',
@@ -166,26 +213,16 @@ export const makeQueryFromState = (/*type*/) => {
           collection: 'user_statistics',
           commands: [
             ...matches,
-            // {$sort: {'statistics.comments.all.all.count': -1}},
-            {$skip: 0},
+            {$skip: page * 20},
             {$limit: 20}
-            // {
-            //   $redact: {
-            //     $cond: {
-            //       if: {
-            //         $eq: [{$ifNull: ['$reply_comments', true]}, true]
-            //       },
-            //       then: '$$DESCEND',
-            //       else: '$$PRUNE'
-            //     }
-            //   }
-            // }
           ],
           return: true
         }
       ],
       enabled: true
     };
+
+    dispatch(createQuery(query));
 
     doMakeQueryFromStateAsync(query, dispatch, app);
 
@@ -195,70 +232,48 @@ export const makeQueryFromState = (/*type*/) => {
 /* xenia_package */
 // yikes. lots of this code is replicated above.
 // time to make a xenia library
-export const saveQueryFromState = (queryName, modDescription) => {
+export const saveQueryFromState = (queryName) => {
 
   return (dispatch, getState) => {
     // make a query from the current state
-    const filterState = getState().filters;
-    const filters = filterState.filterList.map(key => filterState[key]);
-    const app = getState().app;
+    const {groups, app} = getState();
 
-    let matches = _.flatten(_.map(filters, filter => {
-      let dbField;
-      if (filterState.breakdown === 'author') {
-        dbField = _.template(filter.template)({dimension: 'author.' + filterState.specificBreakdown});
-      } else if (filterState.breakdown === 'section') {
-        dbField = _.template(filter.template)({dimension: 'section.' + filterState.specificBreakdown});
-      } else { // all
-        dbField = _.template(filter.template)({dimension: 'all'});
-      }
-
-      var matches = [];
-
-      // Only create match statements for non-defaults
-      if (filter.min !== filter.userMin) {
-        matches.push( {$match: {[dbField]: {$gte: clamp(filter.userMin, filter.min, filter.max)}}});
-      }
-
-      if (filter.max !== filter.userMax) {
-        matches.push( {$match: {[dbField]: {$lte: clamp(filter.userMax, filter.min, filter.max)}}});
-      }
-
-      return matches;
-
-    }));
-
-    let query = {
-      name: queryName,
-      desc: modDescription,
-      pre_script: '',
-      pst_script: '',
-      params: [],
-      queries: [
-        {
-          name: queryName,
-          type: 'pipeline',
-          collection: 'user_statistics',
-          commands: [
-            ...matches,
-            {$skip: 0},
-            {$limit: 20}
-          ],
-          return: true
-        }
-      ],
-      enabled: true
-    };
-
-    doPutQueryFromState(query, dispatch, app);
+    doPutQuery(groups.activeQuery, dispatch, app);
 
   };
 };
 /* xenia_package */
-const doPutQueryFromState = (query, dispatch) => {
+const doPutQuery = (query, dispatch, app) => {
   xenia(query).saveQuery()
     .then(() => { // if response.status < 400
-      dispatch({type: QUERYSET_SAVE_SUCCESS});
+      dispatch({type: QUERYSET_SAVE_SUCCESS, name: query.name});
+      // now save it to pillar?
+
+      const body = {
+        name: query.name,
+        description: query.desc,
+        query : query,
+        tag : Math.random().toString().slice(-10),
+        filters : [] // how do we serialize the filters?
+      };
+
+      /*
+
+      {"id":"56fc126479770e0006b8bc97","name":"my-first-search","description":"wow, this description is super interesting","query":"this-is-the-name-of-a-xenia-query","tag":"name-of-tag","date_created":"2016-03-30T17:52:36.279477937Z","date_updated":"0001-01-01T00:00:00Z"}
+
+      */
+
+      dispatch({type: PILLAR_SEARCH_SAVE_INIT});
+      fetch(app.pillarHost, {method: 'POST', body})
+        .then(resp => resp.json())
+        .then(search => {
+          // do something with savedSearch?
+          dispatch({type: PILLAR_SEARCH_SAVE_SUCCESS, search});
+        })
+        .catch(error => {
+          dispatch({type: PILLAR_SEARCH_SAVE_FAILED, error});
+        });
+
     }).catch(error => {
       dispatch({type: QUERYSET_SAVE_FAILED, error});
     });
@@ -266,7 +281,6 @@ const doPutQueryFromState = (query, dispatch) => {
 /* xenia_package */
 const doMakeQueryFromStateAsync = _.debounce((query, dispatch)=>{
   dispatch(requestQueryset());
-  dispatch(createQuery(query));
 
   xenia(query)
   .exec()

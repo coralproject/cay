@@ -4,12 +4,16 @@ const initialState = {
   authorized: localStorage.authorized || false,
   loading: false,
   loadingQueryset: false,
+  activeQuery: null,
+  pendingSavedSearch: null, // when the search is being prepared to be saved in pillar
   querysets: [],
   users: [],
-  groups: []
+  groups: [],
+  searches: [],
+  savingSearch: false
 };
 
-const groups = (state = initialState, action) => {
+const searches = (state = initialState, action) => {
 
   switch (action.type) {
 
@@ -43,6 +47,9 @@ const groups = (state = initialState, action) => {
       }
     );
 
+  case types.CREATE_QUERY: // store the query so it can be easily saved to pillar
+    return {...state, activeQuery: action.query};
+
   case types.QUERYSET_SELECTED:
     return state;
 
@@ -54,11 +61,23 @@ const groups = (state = initialState, action) => {
 
     return {...state, loadingQueryset: false, users: action.data.results[0].Docs};
 
-  case types.LOGIN_SUCCESS:
-    return {...state, authorized: true};
+  case types.PILLAR_SEARCHLIST_REQUEST:
+    return {...state, loadingSearches: true};
 
-  case types.LOGGED_OUT:
-    return {...state, authorized: false};
+  case types.PILLAR_SEARCHLIST_SUCCESS:
+    return {...state, searches: action.searches, loadingSearches: false};
+
+  case types.PILLAR_SEARCHLIST_FAILED:
+    return {...state, loadingSearches: false, searchListError: action.error};
+
+  case types.PILLAR_SEARCH_SAVE_REQUEST:
+    return {...state, savingSearch: true};
+
+  case types.PILLAR_SEARCH_SAVE_SUCCESS:
+    return {...state, savingSearch: false};
+
+  case types.PILLAR_SEARCH_SAVE_FAILED:
+    return {...state, savingSearch: false};
 
   default:
     // console.log('no reducer matches:', action.type);
@@ -66,4 +85,4 @@ const groups = (state = initialState, action) => {
   }
 };
 
-export default groups;
+export default searches;

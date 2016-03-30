@@ -6,15 +6,19 @@ import { connect } from 'react-redux';
 import {Link} from 'react-router';
 // import { FOO } from '../actions';
 import Page from 'app/layout/Page';
-import {fetchQuerysetsIfNotFetched} from 'groups/GroupActions';
+import {fetchSearchesIfNotFetched} from 'groups/GroupActions';
 // import Sentence from '../components/Sentence';
 import Card from 'components/cards/Card';
 import CardHeader from 'components/cards/CardHeader';
 import ContentHeader from 'components/ContentHeader';
 
-@connect(state => state.groups)
+const mapStateToProps = (state) => {
+  return {groups: state.groups, app: state.app, auth: state.auth};
+};
+
+@connect(mapStateToProps)
 @Radium
-class SeeAllGroups extends React.Component {
+class SeeAllSearches extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -36,12 +40,12 @@ class SeeAllGroups extends React.Component {
   componentWillMount() {
     // redirect user to /login if they're not logged in
     //   TODO: refactor: pass in a function that calculates auth state
-    if (window.requireLogin && !this.props.authorized) {
+    if (this.props.app.requireLogin && !this.props.auth.authorized) {
       let {router} = this.context;
       return router.push('/login');
     }
 
-    this.props.dispatch(fetchQuerysetsIfNotFetched());
+    this.props.dispatch(fetchSearchesIfNotFetched());
   }
   getStyles() {
     return {
@@ -52,16 +56,16 @@ class SeeAllGroups extends React.Component {
   }
   renderGroups() {
 
-    const groups = this.props.querysets.map((group, i) => {
+    const groups = this.props.groups.searches.map((search, i) => {
 
       return (
         <Card style={styles.groupCard} key={i}>
-          <CardHeader>{group.name}</CardHeader>
-          <p>{group.desc}</p>
+          <CardHeader>{search.name}</CardHeader>
+          <p>{search.description}</p>
           <div style={styles.actionsContainer}>
             <Link
               style={styles.viewGroupLink}
-              to={`/saved-search/${group.name}`}>View Search Details</Link>
+              to={`/saved-search/${search.name}`}>View Search Details</Link>
             <span>Edit Search (coming soon)</span>
           </div>
         </Card>
@@ -90,7 +94,7 @@ class SeeAllGroups extends React.Component {
   }
 }
 
-export default SeeAllGroups;
+export default SeeAllSearches;
 
 const styles = {
   cardHolder: {

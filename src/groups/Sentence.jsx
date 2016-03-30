@@ -90,11 +90,19 @@ class Sentence extends React.Component {
     this.props.filterList.map((filterName, i) => {
       if (!this.isDefault(filterName)) {
         nonDefaultFilters.push(
-          <span>
+          <span style={{color: this.randomColor(i)}}>
             {i === indexOfLastNonDefault ? ` and between` : ` between`}
-            {` ${this.props[filterName].userMin}`}
+            {
+              this.props[filterName].type === 'percentRange' ?
+              ` ${Math.floor(this.props[filterName].userMin * 100)}` :
+              ` ${this.props[filterName].userMin}`
+            }
             {` and`}
-            {` ${this.props[filterName].userMax}`}
+            {
+              this.props[filterName].type === 'percentRange' ?
+              ` ${Math.floor(this.props[filterName].userMax * 100)}` : 
+              ` ${this.props[filterName].userMax}`
+            }
             {` ${this.props[filterName].description}`}
             {i === indexOfLastNonDefault ? `.` : `, `}
           </span>

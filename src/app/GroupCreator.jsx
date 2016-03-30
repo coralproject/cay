@@ -59,10 +59,11 @@ export default class GroupCreator extends React.Component {
           <GroupFilters userOnly={true}/>
 
           <div style={styles.rightPanel}>
+           {/* Removing until implemented
             <Button onClick={this.saveGroup.bind(this)} category="primary" style={{float: 'right'}}>
               Save Search <FaFloopyO style={styles.saveIcon} />
-
             </Button>
+            */}
             <div style={styles.userList}>
               <UserList disabled={true} userSelected={()=>{}} users={this.props.users} />
             </div>

@@ -77,7 +77,10 @@ export default class GroupCreator extends React.Component {
             </Button>
             */}
             <div style={styles.userListContainer}>
-              <UserList style={styles.userList} users={this.props.groups.users} userSelected={this.updateUser.bind(this)} />
+              <UserList
+                style={styles.userList}
+                loadingQueryset={this.props.groups.loadingQueryset}
+                users={this.props.groups.users} userSelected={this.updateUser.bind(this)} />
               <UserDetail
                 commentsLoading={this.props.comments.loading}
                 user={this.props.users.selectedUser}

@@ -55,7 +55,6 @@ export default class UserList extends React.Component {
     </p>);
 
     var userListContent = this.props.users.length ? this.getUserList(this.props.users) : noUsersMessage;
-
     return (
       <div style={ [ styles.base, this.props.style ] }>
         <div style={ styles.columnHeader }>
@@ -64,7 +63,7 @@ export default class UserList extends React.Component {
             <span style={styles.groupHeader}>{ window.L.t('results') }</span> (106 { window.L.t('users')})
           </Heading>
         */}
-        </div>
+      </div>
 
         {
           this.props.loadingQueryset ?

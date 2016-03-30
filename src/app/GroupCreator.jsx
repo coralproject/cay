@@ -67,24 +67,25 @@ export default class GroupCreator extends React.Component {
 
         <ContentHeader title={ window.L.t('Search Creator') } />
 
-        <p>There are 106 active users on Politics, with between 0 and 10000 comments, between 50% and 100% comments accepted.</p>
-
         <div style={styles.base}>
           <GroupFilters userOnly={true}/>
 
           <div style={styles.rightPanel}>
+           {/* Removing until implemented
             <Button onClick={this.saveGroup.bind(this)} category="primary" style={{float: 'right'}}>
               Save Search <FaFloopyO style={styles.saveIcon} />
-
             </Button>
+            */}
             <div style={styles.userListContainer}>
-              <UserList style={styles.userList} users={this.props.groups.users} userSelected={this.updateUser.bind(this)} />
+              <UserList
+                style={styles.userList}
+                loadingQueryset={this.props.groups.loadingQueryset}
+                users={this.props.groups.users} userSelected={this.updateUser.bind(this)} />
               <UserDetail
                 commentsLoading={this.props.comments.loading}
                 user={this.props.users.selectedUser}
                 comments={this.props.comments.items}
                 style={styles.userDetail} />
-
             </div>
           </div>
 

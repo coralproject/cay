@@ -36,7 +36,8 @@ class Clauses extends React.Component {
       container: {
         display: "flex",
         flexWrap: "wrap",
-        alignItems: "flex-start"
+        alignItems: "flex-start",
+        marginBottom: 20
       },
       clause: {
         backgroundColor: 'darkGrey',

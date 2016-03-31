@@ -84,6 +84,7 @@ const styles = {
   wrapper:  {
     backgroundColor: settings.bgColorBase,
     height: window.innerHeight - 50,
-    padding: 20
+    padding: 20,
+    position: 'relative'
   }
 };

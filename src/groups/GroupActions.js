@@ -222,6 +222,7 @@ export const makeQueryFromState = (type, page = 0) => {
       enabled: true
     };
 
+    console.log('createQuery', query);
     dispatch(createQuery(query));
 
     doMakeQueryFromStateAsync(query, dispatch, app);
@@ -236,25 +237,33 @@ export const saveQueryFromState = (queryName) => {
 
   return (dispatch, getState) => {
     // make a query from the current state
-    const {groups, app} = getState();
+    const state = getState();
+    const {groups} = state;
 
-    doPutQuery(groups.activeQuery, dispatch, app);
+    console.log('about to doPutQuery');
+    doPutQuery(groups.activeQuery, dispatch, state);
 
   };
 };
 /* xenia_package */
-const doPutQuery = (query, dispatch, app) => {
+const doPutQuery = (query, dispatch, state) => {
+
+  console.log('about to xenia.saveQuery');
   xenia(query).saveQuery()
     .then(() => { // if response.status < 400
       dispatch({type: QUERYSET_SAVE_SUCCESS, name: query.name});
       // now save it to pillar?
+      const filterList = state.filters.filterList;
+
+      // filter list should include dimensions?
+      // filter list should only include non-defaults?
 
       const body = {
         name: query.name,
         description: query.desc,
         query : query,
         tag : Math.random().toString().slice(-10),
-        filters : [] // how do we serialize the filters?
+        filters : _.map(filterList, filterKey => state.filters[filterKey])
       };
 
       /*
@@ -264,7 +273,7 @@ const doPutQuery = (query, dispatch, app) => {
       */
 
       dispatch({type: PILLAR_SEARCH_SAVE_INIT});
-      fetch(app.pillarHost, {method: 'POST', body})
+      fetch(state.app.pillarHost, {method: 'POST', body})
         .then(resp => resp.json())
         .then(search => {
           // do something with savedSearch?

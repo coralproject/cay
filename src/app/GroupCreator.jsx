@@ -2,6 +2,8 @@ import React, {PropTypes} from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 
+import settings from 'settings';
+
 import {userSelected} from 'users/UsersActions';
 import {fetchCommentsByUser} from 'comments/CommentsActions';
 import {saveQueryFromState} from 'groups/GroupActions';
@@ -19,6 +21,8 @@ import UserDetail from 'users/UserDetail';
 import GroupFilters from 'groups/GroupFilters';
 import Button from 'components/Button';
 import FaFloopyO from 'react-icons/lib/fa/floppy-o';
+import Modal from 'components/modal/Modal';
+import TextField from 'components/forms/TextField';
 
 @connect(state => ({
   groups: state.groups,
@@ -27,6 +31,11 @@ import FaFloopyO from 'react-icons/lib/fa/floppy-o';
 }))
 @Radium
 export default class GroupCreator extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {saveModalOpen: false};
+  }
 
   static contextTypes = {
     router: PropTypes.object.isRequired
@@ -53,10 +62,19 @@ export default class GroupCreator extends React.Component {
     this.props.dispatch(fetchCommentsByUser(user._id));
   }
 
-  saveGroup() {
+  openModal() {
+    this.setState({saveModalOpen: true});
+  }
+
+  cancelSave() {
+    this.setState({saveModalOpen: false});
+  }
+
+  confirmSave() {
     // all the code triggered here needs to be moved to a xenia package
     const randomId = Math.floor(Math.random() * 99999);
     this.props.dispatch(saveQueryFromState(`Group ${randomId}`, 'Sample group description'));
+    // show a saving icon or something?
   }
 
   render() {
@@ -73,7 +91,7 @@ export default class GroupCreator extends React.Component {
           </div>
 
           <div style={styles.rightPanel}>
-            <Button onClick={this.saveGroup.bind(this)} category="primary" style={{float: 'right'}}>
+            <Button onClick={this.openModal.bind(this)} category="primary" style={{float: 'right'}}>
               Save Search <FaFloopyO style={styles.saveIcon} />
             </Button>
             <div style={styles.userListContainer}>
@@ -90,6 +108,16 @@ export default class GroupCreator extends React.Component {
           </div>
 
         </div>
+
+        <Modal
+          isOpen={this.state.saveModalOpen}
+          confirmAction={this.confirmSave.bind(this)}
+          cancelAction={this.cancelSave.bind(this)}>
+          <TextField label="Name" />
+          <p style={styles.modalLabel}>Description</p>
+          <textarea style={styles.descriptionInput}></textarea>
+          <TextField label="Tag Commenters" />
+        </Modal>
 
       </Page>
     );
@@ -125,6 +153,17 @@ const styles = {
     maxWidth: 350,
     flex: 1,
     float: 'left'
+  },
+  modalLabel: {
+    fontSize: 16,
+    marginTop: 16
+  },
+  descriptionInput: {
+    padding: 8,
+    fontSize: 20,
+    minHeight: 120,
+    border: '1px solid ' + settings.mediumGrey,
+    borderRadius: 3
   },
   saveIcon: {
     width: 25,

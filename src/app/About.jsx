@@ -60,7 +60,8 @@ const styles = {
 
   },
   logo: {
-    width: 500
+    maxWidth: 500,
+    width: '80%'
   }
 
 }

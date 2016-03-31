@@ -88,6 +88,6 @@
     "webpack-dev-middleware": "^1.5.1",
     "webpack-hot-middleware": "^2.7.1",
     "whatwg-fetch": "^0.11.0",
-    "xenia-driver": "github:coralproject/xenia-driver-js"
+    "xenia-driver": "0.0.1"
   }
 }

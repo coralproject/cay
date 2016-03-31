@@ -2,6 +2,8 @@ import React, {PropTypes} from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 
+import {userSelected} from 'users/UsersActions';
+import {fetchCommentsByUser} from 'comments/CommentsActions';
 import {saveQueryFromState} from 'groups/GroupActions';
 import { fetchAllTags } from 'tags/TagActions';
 import { makeQueryFromState } from 'groups/GroupActions';
@@ -13,11 +15,16 @@ import {
 import Page from 'app/layout/Page';
 import ContentHeader from 'components/ContentHeader';
 import UserList from 'users/UserList';
+import UserDetail from 'users/UserDetail';
 import GroupFilters from 'groups/GroupFilters';
 import Button from 'components/Button';
 import FaFloopyO from 'react-icons/lib/fa/floppy-o';
 
-@connect(state => state.groups)
+@connect(state => ({
+  groups: state.groups,
+  comments: state.comments,
+  users: state.users
+}))
 @Radium
 export default class GroupCreator extends React.Component {
 
@@ -29,7 +36,7 @@ export default class GroupCreator extends React.Component {
   componentWillMount() {
     // redirect user to /login if they're not logged in
     //   TODO: refactor: pass in a function that calculates auth state
-    if (window.requireLogin && !this.props.authorized) {
+    if (window.requireLogin && !this.props.groups.authorized) {
       let {router} = this.context;
       return router.push('/login');
     }
@@ -41,12 +48,16 @@ export default class GroupCreator extends React.Component {
     this.props.dispatch(makeQueryFromState('user'));
   }
 
+  updateUser(user) {
+    this.props.dispatch(userSelected(user));
+    this.props.dispatch(fetchCommentsByUser(user._id));
+  }
+
   saveGroup() {
     // all the code triggered here needs to be moved to a xenia package
     const randomId = Math.floor(Math.random() * 99999);
     this.props.dispatch(saveQueryFromState(`Group ${randomId}`, 'Sample group description'));
   }
-
 
   onPagination(page = 0) {
     this.props.dispatch(makeQueryFromState('user', page));
@@ -60,21 +71,33 @@ export default class GroupCreator extends React.Component {
 
         <ContentHeader title={ window.L.t('Search Creator') } />
 
-        <p>There are 106 active users on Politics, with between 0 and 10000 comments, between 50% and 100% comments accepted.</p>
-
         <div style={styles.base}>
-          <GroupFilters userOnly={true}/>
+          <div style={styles.filters}>
+            <GroupFilters userOnly={true}/>
+          </div>
 
           <div style={styles.rightPanel}>
+           {/* Removing until implemented
             <Button onClick={this.saveGroup.bind(this)} category="primary" style={{float: 'right'}}>
               Save Search <FaFloopyO style={styles.saveIcon} />
-
             </Button>
             <div style={styles.userList}>
               <UserList
                 onPagination={this.onPagination.bind(this)}
                 disabled={true} userSelected={()=>{}}
                 users={this.props.users} />
+            */}
+            <div style={styles.userListContainer}>
+              <UserList
+                onPagination={this.onPagination.bind(this)}
+                style={styles.userList}
+                loadingQueryset={this.props.groups.loadingQueryset}
+                users={this.props.groups.users} userSelected={this.updateUser.bind(this)} />
+              <UserDetail
+                commentsLoading={this.props.comments.loading}
+                user={this.props.users.selectedUser}
+                comments={this.props.comments.items}
+                style={styles.userDetail} />
             </div>
           </div>
 
@@ -87,17 +110,43 @@ export default class GroupCreator extends React.Component {
 const styles = {
   base: {
     display: 'flex',
-    minHeight: 250
+    minHeight: 250,
+    justifyContent: 'flex-start',
+    flexWrap: 'no-wrap'
   },
   rightPanel: {
     flex: 1
   },
-  userList: {
+  userListContainer: {
     marginTop: 5,
-    height: '100%'
+    height: 800,
+    minWidth: 400,
+    '@media (max-width: 1000px)': {
+      marginLeft: -20
+    },
+    display: 'flex',
+    width: '100%'
+  },
+  userDetail: {
+    flex: 2,
+    paddingLeft: 20,
+    marginLeft: 20,
+    height: 500
+
+  },
+  userList: {
+    minWidth: 350,
+    maxWidth: 350,
+    flex: 1,
+    float: 'left'
   },
   saveIcon: {
     width: 25,
     height: 25
+  },
+  filters: {
+    '@media (max-width: 1000px)': {
+      'width': '100%'
+    }
   }
 };

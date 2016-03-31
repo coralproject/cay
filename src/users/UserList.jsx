@@ -39,7 +39,6 @@ export default class UserList extends React.Component {
   }
 
   handleInfiniteLoad () {
-    console.log('llegue');
     this.props.onPagination(this.state.page);
     this.setState({
       page: this.state.page + 1
@@ -47,12 +46,12 @@ export default class UserList extends React.Component {
   }
 
   getUserList(users) {
-    // console.log('getUserList');
+    console.log('pepe', this.props);
     return (
       <Infinite
         elementHeight={100}
-        containerHeight={500}
-        infiniteLoadBeginEdgeOffset={100}
+        containerHeight={users.length * 100 - 1000}
+        isInfiniteLoading={true}
         onInfiniteLoad={this.handleInfiniteLoad.bind(this)}
         >
         {users.map((user, i) =>
@@ -76,14 +75,15 @@ export default class UserList extends React.Component {
     </p>);
 
     var userListContent = this.props.users.length ? this.getUserList(this.props.users) : noUsersMessage;
-
     return (
       <div style={ [ styles.base, this.props.style ] }>
         <div style={ styles.columnHeader }>
+        {/*  Removed until number is live
           <Heading size="medium">
             <span style={styles.groupHeader}>{ window.L.t('results') }</span> (106 { window.L.t('users')})
           </Heading>
-        </div>
+        */}
+      </div>
 
         {
           this.props.loadingQueryset ?

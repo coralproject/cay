@@ -76,12 +76,15 @@ export default class GroupDetail extends React.Component {
 const styles = {
   base: {
     display: 'flex',
-    minHeight: 250
+    flexWrap: 'wrap',
+    justifyContent: 'flex-start'
   },
   userList: {
-    flex: 1
+    flex: 1,
+    minWidth: 315
   },
   userDetail: {
-    flex: 2
+    flex: 2,
+    minWidth: 630
   }
 };

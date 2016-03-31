@@ -51,7 +51,7 @@ class SeeAllGroups extends React.Component {
     };
   }
   renderGroups() {
-    // console.log(this.props);
+
     const groups = this.props.querysets.map((group, i) => {
 
       return (
@@ -67,22 +67,25 @@ class SeeAllGroups extends React.Component {
         </Card>
       );
     });
+
     return groups;
+
   }
   render() {
-    return (
-    <Page>
-      <div style={[
-        styles.base,
-        this.props.style
-      ]}>
-        <ContentHeader title={ window.L.t('Saved Searches') } />
-        <div style={styles.cardHolder}>
-          {this.renderGroups()}
-        </div>
-      </div>
 
-    </Page>
+    return (
+      <Page>
+        <div style={[
+          styles.base,
+          this.props.style
+        ]}>
+          <ContentHeader title={ window.L.t('Saved Searches') } />
+          <div style={styles.cardHolder}>
+            {this.renderGroups()}
+          </div>
+        </div>
+
+      </Page>
     );
   }
 }
@@ -91,7 +94,9 @@ export default SeeAllGroups;
 
 const styles = {
   cardHolder: {
-    display: 'flex'
+    display: 'flex',
+    justifyContent: 'flex-start',
+    flexWrap: 'wrap'
   },
   sentenceHeading: {
     margin: '10px 0px',
@@ -105,8 +110,12 @@ const styles = {
     marginRight: 20
   },
   groupCard: {
-    flex: 1,
-    margin: '20px 20px 0 0'
+    margin: '20px 20px 0 0',
+    width: '370px',
+    height: '150px',
+    '@media (max-width: 1000px)': {
+      'width': '90%'
+    }
   }
 };
 

@@ -233,7 +233,7 @@ export const makeQueryFromState = (type, page = 0) => {
 /* xenia_package */
 // yikes. lots of this code is replicated above.
 // time to make a xenia library
-export const saveQueryFromState = (queryName) => {
+export const saveQueryFromState = (queryName, desc, tag) => {
 
   return (dispatch, getState) => {
     // make a query from the current state
@@ -241,12 +241,12 @@ export const saveQueryFromState = (queryName) => {
     const {groups} = state;
 
     console.log('about to doPutQuery');
-    doPutQuery(groups.activeQuery, dispatch, state);
+    doPutQuery(groups.activeQuery, dispatch, state, ...arguments);
 
   };
 };
 /* xenia_package */
-const doPutQuery = (query, dispatch, state) => {
+const doPutQuery = (query, dispatch, state, name, desc, tag) => {
 
   console.log('about to xenia.saveQuery');
   xenia(query).saveQuery()
@@ -259,10 +259,10 @@ const doPutQuery = (query, dispatch, state) => {
       // filter list should only include non-defaults?
 
       const body = {
-        name: query.name,
-        description: query.desc,
-        query : query,
-        tag : Math.random().toString().slice(-10),
+        name,
+        description: desc,
+        query,
+        tag,
         filters : _.map(filterList, filterKey => state.filters[filterKey])
       };
 

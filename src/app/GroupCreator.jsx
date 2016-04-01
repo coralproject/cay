@@ -70,11 +70,25 @@ export default class GroupCreator extends React.Component {
     this.setState({saveModalOpen: false});
   }
 
+  updateSearchName(searchName) {
+    this.setState({searchName});
+  }
+
+  updateSearcDesc(searchDesc) {
+    this.setState({searchDesc});
+  }
+
+  updateSearchTag(searchTag) {
+    this.setState({searchTag});
+  }
+
   confirmSave() {
-    // all the code triggered here needs to be moved to a xenia package
-    const randomId = Math.floor(Math.random() * 99999);
-    this.props.dispatch(saveQueryFromState(`Group ${randomId}`, 'Sample group description'));
     // show a saving icon or something?
+    const name = this.state.searchName;
+    const desc = this.state.searchDesc;
+    const tag = this.state.searchTag;
+
+    this.props.dispatch(saveQueryFromState(name, desc, tag));
   }
 
   render() {
@@ -113,10 +127,12 @@ export default class GroupCreator extends React.Component {
           isOpen={this.state.saveModalOpen}
           confirmAction={this.confirmSave.bind(this)}
           cancelAction={this.cancelSave.bind(this)}>
-          <TextField label="Name" />
+          <TextField label="Name" onChange={this.updateSearchName.bind(this)}/>
           <p style={styles.modalLabel}>Description</p>
-          <textarea style={styles.descriptionInput}></textarea>
-          <TextField label="Tag Commenters" />
+          <textarea
+            style={styles.descriptionInput}
+            onChange={this.updateSearcDesc.bind(this)}></textarea>
+          <TextField label="Tag Commenters" onChange={this.updateSearchTag.bind(this)} />
         </Modal>
 
       </Page>
@@ -162,6 +178,7 @@ const styles = {
     padding: 8,
     fontSize: 20,
     minHeight: 120,
+    width: '100%',
     border: '1px solid ' + settings.mediumGrey,
     borderRadius: 3
   },

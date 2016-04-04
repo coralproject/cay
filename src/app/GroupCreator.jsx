@@ -45,7 +45,7 @@ export default class GroupCreator extends React.Component {
     this.props.dispatch(fetchAllTags());
     this.props.dispatch(fetchSections());
     this.props.dispatch(fetchAuthors());
-    this.props.dispatch(makeQueryFromState('user'));
+    this.props.dispatch(makeQueryFromState('user', 0, true));
   }
 
   updateUser(user) {
@@ -119,26 +119,17 @@ const styles = {
   },
   userListContainer: {
     marginTop: 5,
-    height: 800,
-    minWidth: 400,
-    '@media (max-width: 1000px)': {
-      marginLeft: -20
-    },
-    display: 'flex',
-    width: '100%'
+    height: 900,
+    display: 'flex'
   },
   userDetail: {
     flex: 2,
-    paddingLeft: 20,
-    marginLeft: 20,
-    height: 500
-
+    paddingLeft: 40,
+    height: 900
   },
   userList: {
     minWidth: 350,
-    maxWidth: 350,
-    flex: 1,
-    float: 'left'
+    flex: 1
   },
   saveIcon: {
     width: 25,

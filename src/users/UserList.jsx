@@ -46,12 +46,12 @@ export default class UserList extends React.Component {
   }
 
   getUserList(users) {
-    console.log('pepe', this.props);
     return (
       <Infinite
         elementHeight={100}
-        containerHeight={users.length * 100 - 1000}
-        isInfiniteLoading={true}
+        containerHeight={900}
+        infiniteLoadBeginEdgeOffset={200}
+        styles={{scrollableStyle: {'width': '350'}}}
         onInfiniteLoad={this.handleInfiniteLoad.bind(this)}
         >
         {users.map((user, i) =>

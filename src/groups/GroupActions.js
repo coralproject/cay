@@ -85,16 +85,17 @@ export const requestQuerysetFailure = (err) => {
   };
 };
 
-export const receiveQueryset = (data) => {
+export const receiveQueryset = (data, replace) => {
   return {
     type: QUERYSET_RECEIVED,
-    data
+    data,
+    replace
   };
 };
 
 /* xenia_package */
 // execute a query_set
-export const fetchQueryset = (querysetName, page = 0) => {
+export const fetchQueryset = (querysetName, page = 0, replace = false) => {
   return (dispatch) => {
     dispatch(requestQueryset(querysetName, page));
 
@@ -102,7 +103,7 @@ export const fetchQueryset = (querysetName, page = 0) => {
       .limit(20)
       .skip(20 * page)
       .exec()
-      .then(queryset => dispatch(receiveQueryset(queryset)))
+      .then(queryset => dispatch(receiveQueryset(queryset, replace)))
       .catch(err => dispatch(requestQuerysetFailure(err)));
   };
 };
@@ -123,7 +124,7 @@ export const createQuery = (query) => {
 };
 
 /* xenia_package */
-export const makeQueryFromState = (type, page = 0) => {
+export const makeQueryFromState = (type, page = 0, replace = false) => {
   return (dispatch, getState) => {
     // make a query from the current state
     const filterState = getState().filters;
@@ -189,7 +190,7 @@ export const makeQueryFromState = (type, page = 0) => {
       enabled: true
     };
 
-    doMakeQueryFromStateAsync(query, dispatch, app);
+    doMakeQueryFromStateAsync(query, dispatch, app, replace);
 
   };
 };
@@ -266,14 +267,14 @@ const doPutQueryFromState = (query, dispatch) => {
     });
 };
 /* xenia_package */
-const doMakeQueryFromStateAsync = _.debounce((query, dispatch)=>{
+const doMakeQueryFromStateAsync = _.debounce((query, dispatch, app, replace)=>{
   dispatch(requestQueryset());
   dispatch(createQuery(query));
 
   xenia(query)
   .exec()
     .then(json => {
-      dispatch(receiveQueryset(json));
+      dispatch(receiveQueryset(json, replace));
     })
     .catch(() => {
       // dispatch(dataExplorationFetchError(err));

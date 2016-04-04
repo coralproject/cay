@@ -25,7 +25,7 @@ const mapStateToProps = state => {
 export default class GroupDetail extends React.Component {
 
   componentWillMount() {
-    this.props.dispatch(fetchQueryset(this.props.params.name));
+    this.props.dispatch(fetchQueryset(this.props.params.name, 0, true));
   }
 
   getGroupDescription(name) {
@@ -76,15 +76,12 @@ export default class GroupDetail extends React.Component {
 const styles = {
   base: {
     display: 'flex',
-    flexWrap: 'wrap',
     justifyContent: 'flex-start'
   },
   userList: {
-    flex: 1,
     minWidth: 315
   },
   userDetail: {
-    flex: 2,
-    minWidth: 630
+    flex: 2
   }
 };

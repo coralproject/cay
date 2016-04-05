@@ -1,6 +1,6 @@
 const comments = [
   {
-    user: 0,
+    user: 1,
     content: "{community.mentions} Hello, @coolcat. {/community.mentions}Clinton is a smart guy, but I only started to trust or like him was when he was no longer running. And here he is running for his wife, Hillary. For him to lecture Sanders, or the public about Sanders, on the subject of honesty or integrity, is too much. I don't buy it. {content.emoji}:smile:{/content.emoji}",
     likes: 28,
     liked: false,
@@ -106,16 +106,17 @@ const comments = [
     liked: false,
     reactions: ['heart', 'ok_woman'],
     upvotes: 30,
-    upvoted: false
+    upvoted: false,
   },
   {
-    user: 0,
+    user: 3,
     content: "Anybody but Clinton. Heck, I would even vote for Sarah Palin before I would vote for Hillary Clinton. At least Palin appears to be honest, and she is not part of a corrupt political machine.",
     likes: 24,
     liked: false,
     reactions: ['heart', 'ok_woman'],
     upvotes: 22,
-    upvoted: false
+    upvoted: false,
+    staffPick: true
   },
 
 ];

@@ -29,6 +29,24 @@ class Preview extends React.Component {
 
   render() {
 
+
+    var guidelines = this.props.togglerGroups['community'].togglers['guidelines'].status ? 
+        <div style={ styles.guidelines }>
+          We aim to create a safe and sustainable environment for discussion. That means:
+          
+          <ul>
+            <li>Be supportive of each other</li>
+            <li>Criticize ideas, not people</li>
+            <li>Flag bad behavior</li>
+            <li>Follow the rules</li>
+          </ul>
+
+          <p>The best contributions will be featured on the site and in our newsletter.</p>
+          <a href="#">Click here to read our community guidelines and harassment policy.</a>
+        </div>
+      : 
+        null;
+
     return (
       <div style={ styles.preview }>
         <div style={ styles.previewBar }>
@@ -49,6 +67,7 @@ class Preview extends React.Component {
 
             <div style={ styles.sandBox }>
               <p style={ styles.sandBoxIntro }>This is a sandbox only, this preview will be reset every time you reload the page.</p>
+              {guidelines}
               <CommentBox />
               <Stream />
             </div>
@@ -117,5 +136,12 @@ var styles = {
     background: '#eee',
     padding: '5px 10px',
     border: '1px solid #aaa'
+  },
+  guidelines: {
+    padding: '20px',
+    lineHeight: '1.1',
+    color: '#222',
+    background: '#eee',
+    marginBottom: '20px'
   }
 };

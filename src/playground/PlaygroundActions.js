@@ -2,6 +2,7 @@ export const SHOW_CUSTOMIZER = "SHOW_CUSTOMIZER";
 export const HIDE_CUSTOMIZER = "HIDE_CUSTOMIZER";
 export const SET_TOGGLER = "SET_TOGGLER";
 export const SET_TOPIC = "SET_TOPIC";
+export const DELETE_COMMENT = "DELETE_COMMENT";
 export const LIKE_COMMENT = "LIKE_COMMENT";
 export const UNLIKE_COMMENT = "UNLIKE_COMMENT";
 export const SEND_COMMENT = "SEND_COMMENT";
@@ -10,6 +11,9 @@ export const UPVOTE_COMMENT = "UPVOTE_COMMENT";
 export const DOWNVOTE_COMMENT = "DOWNVOTE_COMMENT";
 export const START_PULSATING = "START_PULSATING";
 export const STOP_PULSATING = "STOP_PULSATING";
+export const FOLLOW_USER = "FOLLOW_USER";
+export const UNFOLLOW_USER = "UNFOLLOW_USER";
+export const BLOCK_USER = "BLOCK_USER";
 
 export const showCustomizer = () => {
   return {
@@ -32,6 +36,27 @@ export const setToggler = (groupIndex, togglerIndex, status) => {
   };
 };
 
+export const blockUser = (user) => {
+  return {
+    type: BLOCK_USER,
+    user: user
+  };
+};
+
+export const followUser = (user) => {
+  return {
+    type: FOLLOW_USER,
+    user: user
+  };
+};
+
+export const unFollowUser = (user) => {
+  return {
+    type: UNFOLLOW_USER,
+    user: user
+  };
+};
+
 export const setTopic = (topic) => {
   return {
     type: SET_TOPIC,
@@ -39,10 +64,18 @@ export const setTopic = (topic) => {
   };
 };
 
+export const deleteComment = (index, parents) => {
+  return {
+    type: DELETE_COMMENT,
+    index,
+    parents
+  };
+};
+
 export const likeComment = (index, parents) => {
   return {
     type: LIKE_COMMENT,
-    index: index,
+    index,
     parents
   };
 };
@@ -50,7 +83,7 @@ export const likeComment = (index, parents) => {
 export const unLikeComment = (index, parents) => {
   return {
     type: UNLIKE_COMMENT,
-    index: index,
+    index,
     parents
   };
 };
@@ -58,7 +91,7 @@ export const unLikeComment = (index, parents) => {
 export const upVoteComment = (index, parents) => {
   return {
     type: UPVOTE_COMMENT,
-    index: index,
+    index,
     parents
   };
 };
@@ -66,7 +99,7 @@ export const upVoteComment = (index, parents) => {
 export const downVoteComment = (index, parents) => {
   return {
     type: DOWNVOTE_COMMENT,
-    index: index,
+    index,
     parents
   };
 };

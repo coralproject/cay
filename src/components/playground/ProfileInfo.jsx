@@ -12,10 +12,15 @@ import MdPlace from 'react-icons/lib/md/place';
 import MdComment from 'react-icons/lib/md/comment';
 
 import mediaQueries from '../../playgroundSettings';
+import { blockUser } from 'playground/playgroundActions';
 
 @connect(state => state.playground)
 @Radium
 class ProfileInfo extends React.Component {
+
+  blockClickHandler(user) {
+    this.props.dispatch(blockUser(user));
+  }
 
   render() {
 
@@ -47,17 +52,27 @@ class ProfileInfo extends React.Component {
               }
             </div>
           </div>
-          <div style={ styles.profileStats }>
-            <div style={ styles.profileStat }>
-              <span style={ styles.profileTotal }>{ user.comments }</span><br />comments
-            </div>
-            <div style={ styles.profileStat }>
-              <span style={ styles.profileTotal }>{ user.points }</span><br />points
-            </div>
-            <div style={ styles.profileStat }>
-              <span style={ styles.profileTotal }>{ user.upvoteBalance }%</span><br />upvotes
-            </div>
-          </div>
+
+          { 
+            this.props.togglerGroups['reputation'].togglers['stats'].status ? 
+              <div style={ styles.profileStats }>
+                <div style={ styles.profileStat }>
+                  <span style={ styles.profileTotal }>{ user.comments }</span><br />comments
+                </div>
+                <div style={ styles.profileStat }>
+                  <span style={ styles.profileTotal }>{ user.points }</span><br />points
+                </div>
+                { 
+                  this.props.togglerGroups['interaction'].togglers['upvotes'].status ? 
+                    <div style={ styles.profileStat }>
+                      <span style={ styles.profileTotal }>{ user.upvoteBalance }%</span><br />upvotes
+                    </div>
+                  : 
+                  null
+                }
+              </div>
+            : null
+          }
 
           { 
             this.props.togglerGroups['reputation'].togglers['badges'].status ? 
@@ -83,7 +98,7 @@ class ProfileInfo extends React.Component {
             }
             { 
               this.props.togglerGroups['moderation'].togglers['muting'].status ? 
-                <div style={ styles.profileToolsButton }><FaHandPaperO /> Block user</div> : 
+                <div onClick={ this.blockClickHandler.bind(this, this.props.user) } style={ styles.profileToolsButton }><FaHandPaperO /> Block user</div> : 
                 null
             }
             {/*<div style={ styles.moreActions }><FaEllipsisH /></div>*/}
@@ -185,6 +200,7 @@ var styles = {
     padding: '0 20px',
     display: 'inline-block',
     fontSize: '12pt',
+    cursor: 'pointer',
     [mediaQueries.tablet]: {
       width: '40px',
       height: '40px',

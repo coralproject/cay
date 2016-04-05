@@ -10,24 +10,33 @@ class Stream extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { activeTab: 'all' };
+    this.state = { activeTab: 'all', commentCount: 0 };
+    this.commentCounter = 0;
+    console.log(this.props.blockedUsers);
   }
 
   getComments(comments, depth = 0, parentIndex = false, parents = []) {
     var parents = parents;
     return comments.map((comment, i) => { 
-      return (
-        <div style={ depth > 0 ? { marginLeft: '25px' } : null }>
-          <Comment {...comment} key={ i } index={ i } depth={ depth } parents={ parents.concat([i]) } />
-          {
-            this.props.togglerGroups.stream.togglers.replies.status && comment.replies ? 
-              this.getComments(comment.replies, depth + 1, i, parents.concat([i]))
-            : 
-              null
-          }
-        </div>
-      );
-    })
+      if (
+            this.props.blockedUsers.indexOf(comment.user) == -1 && 
+            (this.state.activeTab == 'all' || (this.state.activeTab == 'staff' && comment.staffPick))
+         ) 
+      {
+        this.commentCounter++;
+        return (
+          <div style={ depth > 0 ? { marginLeft: '25px' } : null }>
+            <Comment {...comment} key={ i } index={ i } depth={ depth } parents={ parents.concat([i]) } />
+            {
+              this.props.togglerGroups.stream.togglers.replies.status && comment.replies ? 
+                this.getComments(comment.replies, depth + 1, i, parents.concat([i]))
+              : 
+                null
+            }
+          </div>
+        );
+      }
+    });
   }
 
   onTabClick(tab, e) {
@@ -36,6 +45,9 @@ class Stream extends React.Component {
 
   render() {
 
+    this.commentCounter = 0;
+    var comments = this.getComments(this.props.comments);
+    
     return (
       <div style={ styles.stream }>
         {
@@ -46,12 +58,16 @@ class Stream extends React.Component {
                 <button style={ [ styles.streamTab, this.state.activeTab == 'staff' ? styles.activeTab : null ] } onClick={ this.onTabClick.bind(this, 'staff') }>Staff Picks</button>
               </div>
               <div>
-                { this.getComments(this.props.comments) }
+                <p style={ styles.commentCount }>{ this.commentCounter } comments</p>
+                { comments }
               </div>
 
             </div>
           : 
-            this.getComments(this.props.comments)
+            <div>
+              <p style={ styles.commentCount }>{ this.commentCounter } comments</p>
+              { comments }
+            </div>
         }      
       </div>
     );
@@ -87,5 +103,11 @@ var styles = {
     borderTop: '3px solid red',
     borderBottom: '1px solid white',
     background: 'white'
+  },
+  commentCount: {
+    padding: '10px 0 0 0',
+    fontStyle: 'italic',
+    fontSize: '11pt',
+    color: '#888'
   }
 };

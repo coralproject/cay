@@ -62,6 +62,13 @@ const togglerGroups = {
   'reputation': {
     name: 'Reputation',
     togglers: {
+      'stats': {
+        label: 'Statistics are ON',
+        offLabel: 'Statistics are OFF',
+        description: 'Reputation statistics...',
+        status: false,
+        topic: 'stats'
+      },
       'badges': {
         label: 'Badges are ON',
         offLabel: 'Badges are OFF',
@@ -153,6 +160,13 @@ const togglerGroups = {
   'community': {
     name: 'Community',
     togglers: {
+      'guidelines': {
+        label: 'Guidelines are ON',
+        offLabel: 'Guidelines are OFF',
+        description: 'Show community guidelines on top of the comment box.',
+        status: false,
+        topic: 'guidelines'
+      },
       'mentions': {
         label: 'Mentions are ON',
         offLabel: 'Mentions are OFF',

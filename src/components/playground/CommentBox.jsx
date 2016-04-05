@@ -135,11 +135,12 @@ class CommentBox extends React.Component {
           }
         </div>
       : '';
+
     return (
       <div style={ [ styles.commentBox, this.props.replyMode ? styles.replyMode : '' ] }>
         { 
           !this.props.replyMode ?  
-            <h3 style={ styles.commentBoxTitle }><span style={ styles.postingAs }>Posting as </span><strong style={ styles.strong }>{ this.props.togglerGroups['privacy'].togglers['anonymity'].status ? 'coolcat' : 'Jane Doe' }</strong></h3>
+            <h3 style={ styles.commentBoxTitle }><span style={ styles.postingAs }>Posting as </span><strong style={ styles.strong }>{ this.props.togglerGroups['privacy'].togglers['anonymity'].status ? 'bogususer123' : 'Bogus Jones' }</strong></h3>
           : 
             null
         }
@@ -157,7 +158,7 @@ class CommentBox extends React.Component {
           <span style={ styles.heart }><FaHeart /></span> Dont engage in personal attacks! Remember you can always use the report tools.
         </div>
       </div>
-      );
+    );
 
   }
 }

@@ -10,6 +10,8 @@ const initialState = {
   currentSidebarTopic: null,
   pulseAnimation: false,
   pulseTarget: '',
+  followedUsers: [],
+  blockedUsers: [],
   wizardSteps: [
     {
       content: 'Do you think users should be able to remain anonymous (using a nickname)?',
@@ -28,8 +30,8 @@ const initialState = {
   ],
   users: [
     {
-      nickName: 'democrateel',
-      realName: 'Eelary Clintoon',
+      nickName: 'bogususer123',
+      realName: 'Bogus Jones',
       comments: 1912,
       points: 1244,
       membershipAge: '2 years',
@@ -121,6 +123,16 @@ const playground = (state = initialState, action) => {
 
   switch (action.type) {
 
+  case types.FOLLOW_USER:
+    var followedUsersCopy = state.followedUsers.slice();
+    followedUsersCopy.push(action.user);
+    return Object.assign({}, state, { followedUsers: followedUsersCopy });
+
+  case types.BLOCK_USER:
+    var blockedUsersCopy = state.blockedUsers.slice();
+    blockedUsersCopy.push(action.user);
+    return Object.assign({}, state, { blockedUsers: blockedUsersCopy });
+
   case types.SHOW_CUSTOMIZER:
     return Object.assign({}, state, { customizerIsVisible: true });
 
@@ -186,6 +198,14 @@ const playground = (state = initialState, action) => {
     }
 
     return Object.assign({}, state, { toggleGroups: toggleGroupsUpdater, pulseAnimation: animate, pulseTarget: target });
+
+  case types.DELETE_COMMENT:   
+
+    var commentsCopy = state.comments.slice();
+    var repliedComment = findComment(commentsCopy, action.parents, 0);
+    var commentsFilter = commentsCopy.filter(function(item){ return item != repliedComment })  
+
+    return Object.assign({}, state, { comments: commentsFilter });
 
   case types.REPLY_COMMENT:
     

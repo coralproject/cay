@@ -10,7 +10,6 @@ import { Provider } from 'react-redux';
 import { DevTools, DebugPanel, LogMonitor } from 'redux-devtools/lib/react';
 
 import configureStore from 'store.js';
-
 import { fetchFilterConfig } from 'filters/FiltersActions';
 import { fetchConfig } from 'app/AppActions';
 // import Dashboard from './containers/Dashboard';
@@ -23,6 +22,7 @@ import GroupDetail from 'app/GroupDetail';
 import NoMatch from 'app/NoMatch';
 import About from 'app/About';
 
+import registerServiceWorker from 'serviceworker!./sw.js';
 import ga from 'react-ga';
 
 const store = configureStore();
@@ -43,6 +43,10 @@ require('global.css');
 require('react-select.css');
 
 require('../fonts/glyphicons-halflings-regular.woff');
+
+if ('serviceWorker' in navigator) {
+  registerServiceWorker({ scope: '/' }).then(() => {}, () => {});
+}
 
 import { Lang } from 'i18n/lang';
 @Lang
@@ -103,7 +107,7 @@ const configInterval = setInterval(() => {
     window.clearInterval(configInterval);
     ReactDOM.render(<Root/>, document.getElementById('root'));
   }
-}, 1000);
+}, 50);
 
 // prevent browser from navigating backwards if you hit the backspace key
 document.addEventListener('keydown', function (e) {

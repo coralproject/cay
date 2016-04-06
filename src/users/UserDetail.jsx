@@ -146,8 +146,11 @@ export default class UserDetail extends React.Component {
 const styles = {
   base: {
     background: 'white',
-    padding: 20,
-    marginTop: '50px'
+    paddingTop: 20,
+    paddingRight: 20,
+    paddingBottom: 20,
+    paddingLeft: 20,
+    marginTop: 50
   },
   topPart: {
     display: 'flex',

@@ -23,9 +23,11 @@ export default class ModalHeader extends React.Component {
 
 const styles = {
   base: {
-    padding: 8,
     borderBottom: '1px solid ' + settings.mediumGrey,
-    paddingBottom: 16
+    paddingBottom: 16,
+    paddingTop: 8,
+    paddingLeft: 8,
+    paddingRight: 8
   },
   ex: {
     fontSize: 40,

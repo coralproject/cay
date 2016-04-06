@@ -13,7 +13,10 @@ import Select from 'react-select';
 import FilterNumbers from 'filters/FilterNumbers';
 
 import Heading from 'components/Heading';
+<<<<<<< HEAD
+=======
 
+>>>>>>> master
 
 @connect(state => state.filters)
 @Radium

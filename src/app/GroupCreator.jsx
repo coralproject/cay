@@ -19,6 +19,7 @@ import UserDetail from 'users/UserDetail';
 import GroupFilters from 'groups/GroupFilters';
 import Button from 'components/Button';
 import FaFloopyO from 'react-icons/lib/fa/floppy-o';
+import Clauses from 'groups/Clauses';
 
 @connect(state => ({
   groups: state.groups,

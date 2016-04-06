@@ -14,7 +14,6 @@ import FilterNumbers from 'filters/FilterNumbers';
 
 import Heading from 'components/Heading';
 
-
 @connect(state => state.filters)
 @Radium
 export default class UserFilters extends React.Component {

@@ -174,8 +174,13 @@ export const makeQueryFromState = (type, page = 0) => {
     const filterState = getState().filters;
     const app = getState().app;
     const filters = filterState.filterList.map(key => filterState[key]);
+    const x = xenia({
+      name: 'user_search',
+      desc: 'user search currently. this is going to be more dynamic in the future'
+    });
 
-    let matches = _.flatten(_.map(filters, filter => {
+    x.addQuery();
+    filters.forEach(filter => {
       let dbField;
       if (filterState.breakdown === 'author' && filterState.specificBreakdown !== '') {
         dbField = _.template(filter.template)({dimension: 'author.' + filterState.specificBreakdown});
@@ -185,54 +190,25 @@ export const makeQueryFromState = (type, page = 0) => {
         dbField = _.template(filter.template)({dimension: 'all'});
       }
 
-      var _matches = [];
-
       // Only create match statements for non-defaults
       if (filter.min !== filter.userMin) {
-        _matches.push( {$match: {[dbField]: {$gte: clamp(filter.userMin, filter.min, filter.max)}}});
+        x.match({[dbField]: {$gte: clamp(filter.userMin, filter.min, filter.max)}});
       }
 
       if (filter.max !== filter.userMax) {
-        _matches.push( {$match: {[dbField]: {$lte: clamp(filter.userMax, filter.min, filter.max)}}});
+        x.match({[dbField]: {$lte: clamp(filter.userMax, filter.min, filter.max)}});
       }
+    });
 
-      return _matches;
+    // doMakeQueryFromStateAsync(query, dispatch, app);
+    x.skip(0)
+    .limit(20)
+    .include(['name', 'avatar', 'statistics.comments']);
 
-    }));
-
-    let query = {
-      name: 'user_search_' + Date.now(),
-      desc: 'user search currently. this is going to be more dynamic in the future',
-      pre_script: '',
-      pst_script: '',
-      params: [],
-      queries: [
-        {
-          name: 'user_search',
-          type: 'pipeline',
-          collection: 'user_statistics',
-          commands: [
-            ...matches,
-            {$skip: page * 20},
-            {$limit: 20}
-          ],
-          return: true
-        }
-      ],
-      enabled: true
-    };
-
-    console.log('createQuery', query);
-    dispatch(createQuery(query));
-
-    doMakeQueryFromStateAsync(query, dispatch, app);
-
+    doMakeQueryFromStateAsync(x, dispatch, app);
   };
 };
 
-/* xenia_package */
-// yikes. lots of this code is replicated above.
-// time to make a xenia library
 export const saveQueryFromState = (queryName, desc, tag) => {
 
   return (dispatch, getState) => {
@@ -241,7 +217,7 @@ export const saveQueryFromState = (queryName, desc, tag) => {
     const {groups} = state;
 
     console.log('about to doPutQuery');
-    doPutQuery(groups.activeQuery, dispatch, state, ...arguments);
+    doPutQuery(groups.activeQuery, dispatch, state, queryName, desc, tag);
 
   };
 };
@@ -291,12 +267,9 @@ const doPutQuery = (query, dispatch, state, name, desc, tag) => {
 const doMakeQueryFromStateAsync = _.debounce((query, dispatch)=>{
   dispatch(requestQueryset());
 
-  xenia(query)
-  .exec()
-    .then(json => {
-      dispatch(receiveQueryset(json));
-    })
-    .catch(() => {
-      // dispatch(dataExplorationFetchError(err));
-    });
+  dispatch(createQuery(query._data));
+
+  query.exec()
+    .then(json => dispatch(receiveQueryset(json)))
+    .catch(() => {});
 }, 1000);

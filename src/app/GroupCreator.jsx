@@ -2,6 +2,8 @@ import React, {PropTypes} from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 
+import {userSelected} from 'users/UsersActions';
+import {fetchCommentsByUser} from 'comments/CommentsActions';
 import {saveQueryFromState} from 'groups/GroupActions';
 import { fetchAllTags } from 'tags/TagActions';
 import { makeQueryFromState } from 'groups/GroupActions';
@@ -13,12 +15,17 @@ import {
 import Page from 'app/layout/Page';
 import ContentHeader from 'components/ContentHeader';
 import UserList from 'users/UserList';
+import UserDetail from 'users/UserDetail';
 import GroupFilters from 'groups/GroupFilters';
 import Button from 'components/Button';
 import FaFloopyO from 'react-icons/lib/fa/floppy-o';
 import Clauses from 'groups/Clauses';
 
-@connect(state => state.groups)
+@connect(state => ({
+  groups: state.groups,
+  comments: state.comments,
+  users: state.users
+}))
 @Radium
 export default class GroupCreator extends React.Component {
 
@@ -30,7 +37,7 @@ export default class GroupCreator extends React.Component {
   componentWillMount() {
     // redirect user to /login if they're not logged in
     //   TODO: refactor: pass in a function that calculates auth state
-    if (window.requireLogin && !this.props.authorized) {
+    if (window.requireLogin && !this.props.groups.authorized) {
       let {router} = this.context;
       return router.push('/login');
     }
@@ -40,6 +47,11 @@ export default class GroupCreator extends React.Component {
     this.props.dispatch(fetchSections());
     this.props.dispatch(fetchAuthors());
     this.props.dispatch(makeQueryFromState('user'));
+  }
+
+  updateUser(user) {
+    this.props.dispatch(userSelected(user));
+    this.props.dispatch(fetchCommentsByUser(user._id));
   }
 
   saveGroup() {
@@ -55,17 +67,28 @@ export default class GroupCreator extends React.Component {
       <Page>
 
         <ContentHeader title={ window.L.t('Search Creator') } />
-        <Clauses/>
+
         <div style={styles.base}>
-          <GroupFilters userOnly={true}/>
+          <div style={styles.filters}>
+            <GroupFilters userOnly={true}/>
+          </div>
 
           <div style={styles.rightPanel}>
+           {/* Removing until implemented
             <Button onClick={this.saveGroup.bind(this)} category="primary" style={{float: 'right'}}>
               Save Search <FaFloopyO style={styles.saveIcon} />
-
             </Button>
-            <div style={styles.userList}>
-              <UserList disabled={true} userSelected={()=>{}} users={this.props.users} />
+            */}
+            <div style={styles.userListContainer}>
+              <UserList
+                style={styles.userList}
+                loadingQueryset={this.props.groups.loadingQueryset}
+                users={this.props.groups.users} userSelected={this.updateUser.bind(this)} />
+              <UserDetail
+                commentsLoading={this.props.comments.loading}
+                user={this.props.users.selectedUser}
+                comments={this.props.comments.items}
+                style={styles.userDetail} />
             </div>
           </div>
 
@@ -78,17 +101,41 @@ export default class GroupCreator extends React.Component {
 const styles = {
   base: {
     display: 'flex',
-    minHeight: 250
+    minHeight: 250,
+    justifyContent: 'flex-start',
+    flexWrap: 'no-wrap'
   },
   rightPanel: {
     flex: 1
   },
-  userList: {
+  userListContainer: {
     marginTop: 5,
-    height: '100%'
+    height: '100%',
+    minWidth: 400,
+    '@media (max-width: 1000px)': {
+      marginLeft: -20
+    },
+    display: 'flex',
+    width: '100%'
+  },
+  userDetail: {
+    flex: 2,
+    paddingLeft: 20,
+    marginLeft: 20
+  },
+  userList: {
+    minWidth: 350,
+    maxWidth: 350,
+    flex: 1,
+    float: 'left'
   },
   saveIcon: {
     width: 25,
     height: 25
+  },
+  filters: {
+    '@media (max-width: 1000px)': {
+      'width': '100%'
+    }
   }
 };

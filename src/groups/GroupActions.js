@@ -127,8 +127,13 @@ export const makeQueryFromState = (/*type*/) => {
     const filterState = getState().filters;
     const app = getState().app;
     const filters = filterState.filterList.map(key => filterState[key]);
+    const x = xenia({
+      name: 'user_search',
+      desc: 'user search currently. this is going to be more dynamic in the future'
+    });
 
-    let matches = _.flatten(_.map(filters, filter => {
+    x.addQuery();
+    filters.forEach(filter => {
       let dbField;
       if (filterState.breakdown === 'author' && filterState.specificBreakdown !== '') {
         dbField = _.template(filter.template)({dimension: 'author.' + filterState.specificBreakdown});
@@ -138,57 +143,21 @@ export const makeQueryFromState = (/*type*/) => {
         dbField = _.template(filter.template)({dimension: 'all'});
       }
 
-      var _matches = [];
-
       // Only create match statements for non-defaults
       if (filter.min !== filter.userMin) {
-        _matches.push( {$match: {[dbField]: {$gte: clamp(filter.userMin, filter.min, filter.max)}}});
+        x.match({[dbField]: {$gte: clamp(filter.userMin, filter.min, filter.max)}});
       }
 
       if (filter.max !== filter.userMax) {
-        _matches.push( {$match: {[dbField]: {$lte: clamp(filter.userMax, filter.min, filter.max)}}});
+        x.match({[dbField]: {$lte: clamp(filter.userMax, filter.min, filter.max)}});
       }
+    });
 
-      return _matches;
+    x.skip(0)
+    .limit(20)
+    .include(['name', 'avatar', 'statistics.comments']);
 
-    }));
-
-    let query = {
-      name: 'user_search',
-      desc: 'user search currently. this is going to be more dynamic in the future',
-      pre_script: '',
-      pst_script: '',
-      params: [],
-      queries: [
-        {
-          name: 'user_search',
-          type: 'pipeline',
-          collection: 'user_statistics',
-          commands: [
-            ...matches,
-            // {$sort: {'statistics.comments.all.all.count': -1}},
-            {$skip: 0},
-            {$limit: 20}
-            // {
-            //   $redact: {
-            //     $cond: {
-            //       if: {
-            //         $eq: [{$ifNull: ['$reply_comments', true]}, true]
-            //       },
-            //       then: '$$DESCEND',
-            //       else: '$$PRUNE'
-            //     }
-            //   }
-            // }
-          ],
-          return: true
-        }
-      ],
-      enabled: true
-    };
-
-    doMakeQueryFromStateAsync(query, dispatch, app);
-
+    doMakeQueryFromStateAsync(x, dispatch, app);
   };
 };
 
@@ -202,8 +171,13 @@ export const saveQueryFromState = (queryName, modDescription) => {
     const filterState = getState().filters;
     const filters = filterState.filterList.map(key => filterState[key]);
     const app = getState().app;
+    const x = xenia({
+      name: queryName,
+      desc: modDescription
+    });
 
-    let matches = _.flatten(_.map(filters, filter => {
+    x.addQuery();
+    filters.forEach(filter => {
       let dbField;
       if (filterState.breakdown === 'author') {
         dbField = _.template(filter.template)({dimension: 'author.' + filterState.specificBreakdown});
@@ -213,67 +187,34 @@ export const saveQueryFromState = (queryName, modDescription) => {
         dbField = _.template(filter.template)({dimension: 'all'});
       }
 
-      var matches = [];
-
       // Only create match statements for non-defaults
       if (filter.min !== filter.userMin) {
-        matches.push( {$match: {[dbField]: {$gte: clamp(filter.userMin, filter.min, filter.max)}}});
+        x.match({[dbField]: {$gte: clamp(filter.userMin, filter.min, filter.max)}});
       }
 
       if (filter.max !== filter.userMax) {
-        matches.push( {$match: {[dbField]: {$lte: clamp(filter.userMax, filter.min, filter.max)}}});
+        x.match({[dbField]: {$lte: clamp(filter.userMax, filter.min, filter.max)}});
       }
+    });
 
-      return matches;
-
-    }));
-
-    let query = {
-      name: queryName,
-      desc: modDescription,
-      pre_script: '',
-      pst_script: '',
-      params: [],
-      queries: [
-        {
-          name: queryName,
-          type: 'pipeline',
-          collection: 'user_statistics',
-          commands: [
-            ...matches,
-            {$skip: 0},
-            {$limit: 20}
-          ],
-          return: true
-        }
-      ],
-      enabled: true
-    };
-
-    doPutQueryFromState(query, dispatch, app);
-
+    x.skip(0)
+    .limit(20)
+    .include(['name', 'avatar', 'statistics.comments']);
+    doPutQueryFromState(x, dispatch, app);
   };
 };
 /* xenia_package */
 const doPutQueryFromState = (query, dispatch) => {
-  xenia(query).saveQuery()
-    .then(() => { // if response.status < 400
-      dispatch({type: QUERYSET_SAVE_SUCCESS});
-    }).catch(error => {
-      dispatch({type: QUERYSET_SAVE_FAILED, error});
-    });
+  query.saveQuery()
+    .then(() => dispatch({type: QUERYSET_SAVE_SUCCESS})) // if response.status < 400
+    .catch(error => dispatch({type: QUERYSET_SAVE_FAILED, error}));
 };
 /* xenia_package */
 const doMakeQueryFromStateAsync = _.debounce((query, dispatch)=>{
   dispatch(requestQueryset());
-  dispatch(createQuery(query));
+  dispatch(createQuery(query._data));
 
-  xenia(query)
-  .exec()
-    .then(json => {
-      dispatch(receiveQueryset(json));
-    })
-    .catch(() => {
-      // dispatch(dataExplorationFetchError(err));
-    });
+  query.exec()
+    .then(json => dispatch(receiveQueryset(json)))
+    .catch(() => {});
 }, 1000);

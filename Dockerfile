@@ -1,4 +1,4 @@
 # cat Dockerfile 
-FROM nginx
+FROM nginx:alpine
 COPY dist /usr/share/nginx/html
 COPY assets/nginx.conf /etc/nginx/

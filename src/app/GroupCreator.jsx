@@ -67,6 +67,7 @@ export default class GroupCreator extends React.Component {
       <Page>
 
         <ContentHeader title={ window.L.t('Search Creator') } />
+        <Clauses/>
 
         <div style={styles.base}>
           <div style={styles.filters}>

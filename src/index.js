@@ -41,6 +41,7 @@ require('reset.css');
 require('global.css');
 
 require('react-select.css');
+require('react-datepicker.min.css');
 
 require('../fonts/glyphicons-halflings-regular.woff');
 

@@ -97,6 +97,14 @@ const parseFilterRanges = (ranges, filterState) => {
     // we might have already updated the old filter with the min value
     // retrieve it from the accumulator in progress instead of the state
     let newFilter = _.has(accum, key) ? accum[key] : {};
+
+    const possibleDateValue = new Date(value);
+    // if it's a Date, change the type
+    console.log('parsed value', aggKey, value, possibleDateValue);
+    if (_.isDate(possibleDateValue) && !isNaN(possibleDateValue)) {
+      value = possibleDateValue;
+    }
+
     newFilter[field] = value; // where field is {min|max}
     accum[key] = newFilter;
 
@@ -143,11 +151,11 @@ export const getFilterRanges = () => {
         };
       } else {
         accum[key + '_min'] = {
-          $min: '$' + _.tempate(filterState[key].template)({dimension}) + '.first'
+          $min: '$' + _.template(filterState[key].template)({dimension}) + '.first'
         };
 
-        accum[key + '_max'] + {
-          $min: '$' + _.template(filterState[key].template)({dimension}) + '.last'
+        accum[key + '_max'] = {
+          $max: '$' + _.template(filterState[key].template)({dimension}) + '.last'
         };
 
       }

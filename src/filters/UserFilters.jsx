@@ -11,6 +11,7 @@ import {
 
 import Select from 'react-select';
 import FilterNumbers from 'filters/FilterNumbers';
+import FilterDate from 'filters/FilterDate';
 
 import Heading from 'components/Heading';
 
@@ -126,7 +127,17 @@ export default class UserFilters extends React.Component {
             isPercentage={f.type === 'percentRange'} />
         );
       } else if (f.type === 'dateRange') {
-        filterComponent = null;
+        filterComponent = (
+          <FilterDate
+            key={i}
+            min={f.min}
+            max={f.max}
+            userMin={f.userMin}
+            userMax={f.userMax}
+            description={f.description}
+            type={f.type}
+            fieldName={f.key} />
+        );
       }
 
       return filterComponent;

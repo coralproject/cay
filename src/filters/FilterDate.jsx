@@ -4,6 +4,7 @@ import {filterChanged} from 'filters/FiltersActions';
 import Radium from 'radium';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
+import _ from 'lodash';
 
 import Slider from 'components/Slider';
 import Card from 'components/cards/Card';
@@ -14,38 +15,54 @@ import CardHeader from 'components/cards/CardHeader';
 export default class FilterDate extends React.Component {
 
   static propTypes = {
-    start: PropTypes.string,
-    end: PropTypes.string,
-    min: PropTypes.string,
-    max: PropTypes.string,
+    userMin: PropTypes.instanceOf(Date),
+    userMax: PropTypes.instanceOf(Date),
+    min: PropTypes.instanceOf(Date),
+    max: PropTypes.instanceOf(Date),
     fieldName: PropTypes.string.isRequired
   }
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      min: moment(this.props.min || '2003-05-13'),
-      max: moment(this.props.max || '2015-01-01'),
-      start: moment(this.props.start || '2013-01-01'),
-      end: moment(this.props.end || '2013-09-01')
-    };
+  // constructor(props) {
+  //   super(props);
+  //   this.state = {
+  //     min: moment(props.min),
+  //     max: moment(props.max),
+  //     userMin: moment(props.userMin),
+  //     userMax: moment(props.userMax)
+  //   };
+  // }
+
+  componentWillReceiveProps(props) {
+    // set local state?
   }
 
   // called after either <DatePicker /> changes
-  updateDateRange(ref, moment) {
+  updateDateRange(ref, m) {
+    let newRange;
     if (ref === 'date_start') {
-      this.setState({start: moment});
+      newRange = {userMin: m.toDate(), userMax: this.props.userMax};
     } else {
-      this.setState({end: moment});
+      newRange = {userMin: this.props.userMin, userMax: m.toDate()};
     }
+    this.props.dispatch(filterChanged(this.props.fieldName, newRange));
+    console.log('updateDateRange', ref, moment);
+    // if (ref === 'date_start') {
+    //   this.setState({start: moment});
+    // } else {
+    //   this.setState({end: moment});
+    // }
   }
 
+  // {values} is an array of unix timestamps
+  // [timestampStart, timestampEnd]
   updateSlider(values) {
-    this.props.dispatch(filterChanged(this.props.fieldName, values));
-    this.setState({
-      start: moment.unix(values[0]),
-      end: moment.unix(values[1])
-    });
+    console.log('updateSlider', values);
+    const newRange = {userMin: new Date(values[0]), userMax: new Date(values[1])};
+    this.props.dispatch(filterChanged(this.props.fieldName, newRange));
+    // this.setState({
+    //   userMin: moment.unix(values[0]),
+    //   userMax: moment.unix(values[1])
+    // });
   }
 
   render() {
@@ -54,25 +71,30 @@ export default class FilterDate extends React.Component {
       <Card style={[styles.base, this.props.style]}>
         <CardHeader>{this.props.fieldName}</CardHeader>
 
-        <Slider
-          min={this.state.min.unix()}
-          max={this.state.max.unix()}
-          defaultValue={[this.state.start.unix(), this.state.end.unix()]}
-          value={[this.state.start.unix(), this.state.end.unix()]}
-          onChange={this.updateSlider.bind(this)}
-          withBars />
+        {
+          _.isDate(this.props.userMin) && _.isDate(this.props.userMax) ?
+          <Slider
+            min={this.props.userMin.getTime()}
+            max={this.props.userMax.getTime()}
+            defaultValue={[this.props.userMin.getTime(), this.props.userMax.getTime()]}
+            value={[this.props.userMin.getTime(), this.props.userMax.getTime()]}
+            onChange={this.updateSlider.bind(this)}
+            withBars /> : 'loading date ranges'
+        }
+
+
 
         <div style={styles.row}>
           <div style={styles.cell}>
             <p style={styles.label}>between</p>
             <DatePicker
-              selected={this.state.start}
+              selected={moment(this.props.userMin)}
               onChange={this.updateDateRange.bind(this, 'date_start')} />
           </div>
           <div style={styles.cell}>
             <p style={styles.label}>and</p>
             <DatePicker
-              selected={this.state.end}
+              selected={moment(this.props.userMax)}
               onChange={this.updateDateRange.bind(this, 'date_end')} />
           </div>
         </div>

@@ -22,16 +22,6 @@ export default class FilterDate extends React.Component {
     fieldName: PropTypes.string.isRequired
   }
 
-  constructor(props) {
-    super(props);
-    console.log('FilterDate constructor', props);
-  }
-
-  componentWillReceiveProps(props) {
-    // set local state?
-    console.log('FilterDate.componentWillReceiveProps', props);
-  }
-
   // called after either <DatePicker /> changes
   updateDateRange(ref, m) {
     let newRange;
@@ -46,7 +36,6 @@ export default class FilterDate extends React.Component {
   // {values} is an array of unix timestamps
   // [timestampStart, timestampEnd]
   updateSlider(values) {
-    console.log('updateSlider', values);
     const newRange = {userMin: new Date(values[0]), userMax: new Date(values[1])};
     this.props.dispatch(filterChanged(this.props.fieldName, newRange));
   }

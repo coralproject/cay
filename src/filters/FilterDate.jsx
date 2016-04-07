@@ -22,16 +22,6 @@ export default class FilterDate extends React.Component {
     fieldName: PropTypes.string.isRequired
   }
 
-  // constructor(props) {
-  //   super(props);
-  //   this.state = {
-  //     min: moment(props.min),
-  //     max: moment(props.max),
-  //     userMin: moment(props.userMin),
-  //     userMax: moment(props.userMax)
-  //   };
-  // }
-
   componentWillReceiveProps(props) {
     // set local state?
   }
@@ -45,12 +35,6 @@ export default class FilterDate extends React.Component {
       newRange = {userMin: this.props.userMin, userMax: m.toDate()};
     }
     this.props.dispatch(filterChanged(this.props.fieldName, newRange));
-    console.log('updateDateRange', ref, moment);
-    // if (ref === 'date_start') {
-    //   this.setState({start: moment});
-    // } else {
-    //   this.setState({end: moment});
-    // }
   }
 
   // {values} is an array of unix timestamps
@@ -59,17 +43,13 @@ export default class FilterDate extends React.Component {
     console.log('updateSlider', values);
     const newRange = {userMin: new Date(values[0]), userMax: new Date(values[1])};
     this.props.dispatch(filterChanged(this.props.fieldName, newRange));
-    // this.setState({
-    //   userMin: moment.unix(values[0]),
-    //   userMax: moment.unix(values[1])
-    // });
   }
 
   render() {
 
     return (
       <Card style={[styles.base, this.props.style]}>
-        <CardHeader>{this.props.fieldName}</CardHeader>
+        <CardHeader>{this.props.description}</CardHeader>
 
         {
           _.isDate(this.props.userMin) && _.isDate(this.props.userMax) ?

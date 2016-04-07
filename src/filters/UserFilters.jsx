@@ -112,7 +112,8 @@ export default class UserFilters extends React.Component {
     const userFilters = filters.filter(f => f.collection === 'user_statistics');
     return userFilters.map((f,i) => {
       let filterComponent;
-      const fmtDesc = _.map(f.description.split(' '), _.capitalize).join(' ');
+
+      const inTitleCase = _.map(f.description.split(' '), _.capitalize).join(' ');
       if (f.type === 'intRange' || f.type === 'percentRange' || f.type === 'floatRange') {
 
         filterComponent = (
@@ -122,7 +123,7 @@ export default class UserFilters extends React.Component {
             max={f.max}
             userMin={f.userMin}
             userMax={f.userMax}
-            description={fmtDesc}
+            description={inTitleCase}
             fieldName={f.key}
             type={f.type}
             isPercentage={f.type === 'percentRange'} />
@@ -135,7 +136,7 @@ export default class UserFilters extends React.Component {
             max={f.max}
             userMin={f.userMin}
             userMax={f.userMax}
-            description={fmtDesc}
+            description={inTitleCase}
             type={f.type}
             fieldName={f.key} />
         );

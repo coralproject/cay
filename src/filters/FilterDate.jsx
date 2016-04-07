@@ -22,8 +22,14 @@ export default class FilterDate extends React.Component {
     fieldName: PropTypes.string.isRequired
   }
 
+  constructor(props) {
+    super(props);
+    console.log('FilterDate constructor', props);
+  }
+
   componentWillReceiveProps(props) {
     // set local state?
+    console.log('FilterDate.componentWillReceiveProps', props);
   }
 
   // called after either <DatePicker /> changes
@@ -54,8 +60,8 @@ export default class FilterDate extends React.Component {
         {
           _.isDate(this.props.userMin) && _.isDate(this.props.userMax) ?
           <Slider
-            min={this.props.userMin.getTime()}
-            max={this.props.userMax.getTime()}
+            min={this.props.min.getTime()}
+            max={this.props.max.getTime()}
             defaultValue={[this.props.userMin.getTime(), this.props.userMax.getTime()]}
             value={[this.props.userMin.getTime(), this.props.userMax.getTime()]}
             onChange={this.updateSlider.bind(this)}

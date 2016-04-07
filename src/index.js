@@ -11,7 +11,7 @@ import { DevTools, DebugPanel, LogMonitor } from 'redux-devtools/lib/react';
 
 import configureStore from 'store.js';
 
-import { configXenia } from 'app/AppActions';
+import { configXenia, configError } from 'app/AppActions';
 // import Dashboard from './containers/Dashboard';
 import GroupCreator from 'app/GroupCreator';
 import TagManager from 'app/TagManager';
@@ -106,7 +106,9 @@ Promise.all([loadConfig('/config.json'), loadConfig('/data_config.json')])
     const allKeysDefined = requiredKeys.every(key => 'undefined' !== typeof app[key]);
 
     if (!allKeysDefined) {
-      throw new Error(`missing required keys on config.json. Must define ${requiredKeys.join('|')}`);
+      const message = `missing required keys on config.json. Must define ${requiredKeys.join('|')}`;
+      store.dispatch(configError(message));
+      throw new Error(message);
     }
 
     // load config into initialState so it's ALWAYS available

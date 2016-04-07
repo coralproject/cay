@@ -15,7 +15,7 @@ const app = (state = initialState, action) => {
 
   case types.CONFIG_ERROR:
     // probably do some error handling here
-    return state;
+    return {...state, configErrorMessage: action.message};
 
   default:
     return state;

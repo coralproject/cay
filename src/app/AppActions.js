@@ -26,3 +26,7 @@ export const configXenia = () => {
     xenia = XeniaDriver(app.xeniaHost + '/1.0', app.basicAuthorization);
   };
 };
+
+export const configError = (message) => {
+  return {type: CONFIG_ERROR, message};
+};

@@ -22,9 +22,6 @@ let initialState = {
 const filters = (state = initialState, action) => {
   switch (action.type) {
 
-  case types.DATA_CONFIG_REQUEST:
-    return {...state, loadingFilters: true};
-
   // this should run before any ReactDOM stuff happens
   case types.DATA_CONFIG_LOADED:
 

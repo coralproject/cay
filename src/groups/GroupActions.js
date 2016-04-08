@@ -175,7 +175,7 @@ export const makeQueryFromState = (type, page = 0) => {
     const app = getState().app;
     const filters = filterState.filterList.map(key => filterState[key]);
     const x = xenia({
-      name: 'user_search',
+      name: 'user_search_' + Math.random().toString().slice(-10),
       desc: 'user search currently. this is going to be more dynamic in the future'
     });
 
@@ -259,7 +259,7 @@ const doPutQuery = (dispatch, state, name, desc, tag) => {
       const body = {
         name,
         description: desc,
-        query,
+        query: query.name,
         tag,
         filters: {
           filterValues,

@@ -6,13 +6,9 @@ import settings from 'settings';
 
 import {userSelected} from 'users/UsersActions';
 import {fetchCommentsByUser} from 'comments/CommentsActions';
-import {saveQueryFromState} from 'groups/GroupActions';
+import {saveQueryFromState, makeQueryFromState} from 'groups/GroupActions';
 import { fetchAllTags } from 'tags/TagActions';
-import { makeQueryFromState } from 'groups/GroupActions';
-import {
-  fetchSections,
-  fetchAuthors
-} from 'filters/FiltersActions';
+import { fetchSections, fetchAuthors } from 'filters/FiltersActions';
 
 import Page from 'app/layout/Page';
 import ContentHeader from 'components/ContentHeader';
@@ -21,6 +17,7 @@ import UserDetail from 'users/UserDetail';
 import GroupFilters from 'groups/GroupFilters';
 import Button from 'components/Button';
 import FaFloopyO from 'react-icons/lib/fa/floppy-o';
+import MdEdit from 'react-icons/lib/md/edit';
 import Modal from 'components/modal/Modal';
 import TextField from 'components/forms/TextField';
 import Clauses from 'groups/Clauses';
@@ -107,6 +104,9 @@ export default class GroupCreator extends React.Component {
           </div>
 
           <div style={styles.rightPanel}>
+            <Button category="disabled" style={{float: 'right', marginLeft: 10}}>
+              Edit Search <MdEdit style={styles.saveIcon} />
+            </Button>
             <Button onClick={this.openModal.bind(this)} category="primary" style={{float: 'right'}}>
               Save Search <FaFloopyO style={styles.saveIcon} />
             </Button>

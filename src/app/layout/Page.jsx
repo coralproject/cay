@@ -83,8 +83,11 @@ export default Page;
 const styles = {
   wrapper:  {
     backgroundColor: settings.bgColorBase,
-    height: window.innerHeight - 50,
+    top: 50,
+    right: 0,
+    left: 0,
+    bottom: 0,
     padding: 20,
-    position: 'relative'
+    position: 'absolute'
   }
 };

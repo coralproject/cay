@@ -84,14 +84,14 @@ export default class UserList extends React.Component {
           </Heading>
         */}
       </div>
+        {userListContent}
 
         {
           this.props.loadingQueryset ?
             <div style={ styles.loading }>
               <Spinner /> Loading...
-            </div>
-          :
-            userListContent
+            </div> :
+            ''
         }
 
       </div>

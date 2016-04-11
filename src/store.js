@@ -3,7 +3,7 @@ import thunk from 'redux-thunk';
 import { devTools } from 'redux-devtools';
 import createHistory from 'history/lib/createBrowserHistory';
 import createDebounce from 'redux-debounce';
-import {middleware as socketMiddleware} from 'sockets';
+import {middleware as socket} from 'sockets';
 
 import rootReducer from 'app/MainReducer';
 

@@ -38,6 +38,7 @@
     "webpack-module-hot-accept": "^1.0.4"
   },
   "dependencies": {
+    "amqplib": "^0.4.1",
     "color": "^0.10.1",
     "css-loader": "^0.21.0",
     "d3": "^3.5.12",

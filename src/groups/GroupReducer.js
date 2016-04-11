@@ -75,7 +75,7 @@ const searches = (state = initialState, action) => {
     return {...state, savingSearch: true};
 
   case types.PILLAR_SEARCH_SAVE_SUCCESS:
-    return {...state, savingSearch: false};
+    return {...state, savingSearch: false, recentSavedSearch: action.search};
 
   case types.PILLAR_SEARCH_SAVE_FAILED:
     return {...state, savingSearch: false};

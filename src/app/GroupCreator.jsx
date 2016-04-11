@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
+import {Link} from 'react-router';
 
 import settings from 'settings';
 
@@ -140,7 +141,17 @@ export default class GroupCreator extends React.Component {
           <TextField label="Tag Commenters" onChange={this.updateSearchTag.bind(this)} />
         </Modal>
 
-        <StatusBar loading={this.props.groups.savingSearch}>Saving Search...</StatusBar>
+        <StatusBar
+          loading={this.props.groups.savingSearch}
+          visible={this.props.groups.savingSearch || this.props.groups.recentSavedSearch}>
+          {
+            this.props.groups.recentSavedSearch ?
+              (<Link style={styles.searchDetail} to={`/searches/${this.props.groups.recentSavedSearch.query}`}>
+                View Your Saved Search [{this.props.groups.recentSavedSearch.name}] →
+              </Link>) :
+              'Saving Search...'
+          }
+        </StatusBar>
 
       </Page>
     );
@@ -197,5 +208,9 @@ const styles = {
     '@media (max-width: 1000px)': {
       'width': '100%'
     }
+  },
+  searchDetail: {
+    color: 'white',
+    textDecoration: 'none'
   }
 };

@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import Radium, {Style} from 'radium';
+import Radium from 'radium';
 
 import settings from 'settings';
 
@@ -7,7 +7,8 @@ import settings from 'settings';
 export default class StatusBar extends React.Component {
 
   static propTypes = {
-    loading: PropTypes.bool
+    loading: PropTypes.bool,
+    visible: PropTypes.bool
   }
 
   render() {
@@ -15,12 +16,15 @@ export default class StatusBar extends React.Component {
       <div style={[
         styles.base,
         styles.loading,
-        this.props.loading && styles.loadingActive,
+        this.props.visible && styles.visible,
         this.props.style
       ]}>
         <span style={styles.message}>{this.props.children}</span>
-        <div style={styles.spinner}>
-          <img src="/img/android-icon-36x36.png" />
+        <div style={[
+          styles.spinner,
+          this.props.loading && styles.spinnerVisible
+        ]}>
+          <img src="/img/logo_white.png" width="36px" height="36px" />
         </div>
       </div>
     );
@@ -33,21 +37,26 @@ const styles = {
     top: 0,
     left: 0,
     right: 0,
-    background: settings.brandColor,
-    padding: 20,
-    opacity: 0.95
+    background: settings.grey,
+    padding: 20
   },
   message: {
+    fontWeight: 'bold',
+    fontSize: '30px',
     color: 'white'
   },
   loading: {
     display: 'none'
   },
-  loadingActive: {
+  visible: {
     display: 'block'
   },
   spinner: {
     float: 'right',
-    animation: 'load 2s infinite ease'
+    animation: 'load 2s infinite ease',
+    display: 'none'
+  },
+  spinnerVisible: {
+    display: 'block'
   }
 };

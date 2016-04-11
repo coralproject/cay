@@ -20,6 +20,7 @@ import FaFloopyO from 'react-icons/lib/fa/floppy-o';
 import MdEdit from 'react-icons/lib/md/edit';
 import Modal from 'components/modal/Modal';
 import TextField from 'components/forms/TextField';
+import StatusBar from 'components/StatusBar';
 import Clauses from 'groups/Clauses';
 
 @connect(state => ({
@@ -86,6 +87,8 @@ export default class GroupCreator extends React.Component {
     const desc = this.state.searchDesc;
     const tag = this.state.searchTag;
 
+    this.setState({saveModalOpen: false});
+
     this.props.dispatch(saveQueryFromState(name, desc, tag));
   }
 
@@ -136,6 +139,8 @@ export default class GroupCreator extends React.Component {
             onChange={this.updateSearcDesc.bind(this)}></textarea>
           <TextField label="Tag Commenters" onChange={this.updateSearchTag.bind(this)} />
         </Modal>
+
+        <StatusBar loading={this.props.groups.savingSearch}>Saving Search...</StatusBar>
 
       </Page>
     );

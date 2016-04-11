@@ -64,13 +64,14 @@ const searches = (state = initialState, action) => {
   case types.PILLAR_SEARCHLIST_REQUEST:
     return {...state, loadingSearches: true};
 
+  // list of all saved searches fetched from Pillar
   case types.PILLAR_SEARCHLIST_SUCCESS:
     return {...state, searches: action.searches, loadingSearches: false};
 
   case types.PILLAR_SEARCHLIST_FAILED:
     return {...state, loadingSearches: false, searchListError: action.error};
 
-  case types.PILLAR_SEARCH_SAVE_REQUEST:
+  case types.PILLAR_SEARCH_SAVE_INIT:
     return {...state, savingSearch: true};
 
   case types.PILLAR_SEARCH_SAVE_SUCCESS:

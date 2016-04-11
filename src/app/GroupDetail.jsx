@@ -2,7 +2,7 @@ import React from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
 import {userSelected} from 'users/UsersActions';
-import {fetchQueryset} from 'groups/GroupActions';
+import {fetchQueryset, fetchSearches} from 'groups/GroupActions';
 import {fetchCommentsByUser} from 'comments/CommentsActions';
 import _ from 'lodash';
 
@@ -25,7 +25,7 @@ const mapStateToProps = state => {
 export default class GroupDetail extends React.Component {
 
   componentWillMount() {
-    this.props.dispatch(fetchQueryset(this.props.params.name));
+    this.props.dispatch(fetchQueryset(this.props.params.query_set));
   }
 
   getGroupDescription(name) {
@@ -48,8 +48,8 @@ export default class GroupDetail extends React.Component {
   render() {
     return (
       <Page>
-        <ContentHeader title={this.props.params.name} />
-        <p>{this.getGroupDescription(this.props.params.name)}</p>
+        <ContentHeader title={this.props.params.query_set} />
+        <p>{this.getGroupDescription(this.props.params.query_set)}</p>
         <div style={styles.base}>
           <UserList
             userSelected={this.updateUser.bind(this)}

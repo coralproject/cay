@@ -140,7 +140,7 @@ export const receiveQueryset = (data) => {
 };
 
 /* xenia_package */
-// execute a query_set
+// execute a saved query_set
 export const fetchQueryset = (querysetName) => {
   return (dispatch) => {
     dispatch(requestQueryset(querysetName));
@@ -201,7 +201,7 @@ export const makeQueryFromState = (type, page = 0) => {
     });
 
     // doMakeQueryFromStateAsync(query, dispatch, app);
-    x.skip(page)
+    x.skip(page * 20)
     .limit(20)
     .include(['name', 'avatar', 'statistics.comments']);
 
@@ -214,6 +214,8 @@ export const saveQueryFromState = (queryName, desc, tag) => {
   return (dispatch, getState) => {
     // make a query from the current state
     const state = getState();
+
+    dispatch({type: PILLAR_SEARCH_SAVE_INIT, query: state.groups.activeQuery});
 
     console.log('about to doPutQuery');
     doPutQuery(dispatch, state, queryName, desc, tag);
@@ -236,14 +238,10 @@ const doPutQuery = (dispatch, state, name, desc, tag) => {
   xenia(query).saveQuery()
     .then(() => { // if response.status < 400
       dispatch({type: QUERYSET_SAVE_SUCCESS, name: query.name});
-      // now save it to pillar?
+      // save it to pillar
       const filterList = state.filters.filterList;
 
-      // filter list should include dimensions.
-      // filter list should only include non-defaults
-      // we need to write some utilify functions for getting the non-defaults
-
-      let filterValues = _.compact(_.map(filterList, stateKey => {
+      let values = _.compact(_.map(filterList, stateKey => {
         const f = state.filters[stateKey];
         // this will return the ENTIRE filter if only the min OR max was changed.
         // is this the behavior we want?
@@ -254,15 +252,15 @@ const doPutQuery = (dispatch, state, name, desc, tag) => {
         }
       }));
 
-      console.log(filterValues);
+      console.log(values);
 
       const body = {
-        name,
-        description: desc,
-        query: query.name,
-        tag,
+        name, // the human-readable user-entered name
+        description: desc, // user-entered string
+        query: query.name, // the name of the xenia query
+        tag, // unique name of live-tag
         filters: {
-          filterValues,
+          values,
           breakdown: state.filters.breakdown,
           specificBreakdown: state.filters.specificBreakdown
         }
@@ -274,7 +272,6 @@ const doPutQuery = (dispatch, state, name, desc, tag) => {
 
       */
 
-      dispatch({type: PILLAR_SEARCH_SAVE_INIT});
       fetch(state.app.pillarHost + '/api/search', {method: 'POST', body: JSON.stringify(body)})
         .then(resp => resp.json())
         .then(search => {

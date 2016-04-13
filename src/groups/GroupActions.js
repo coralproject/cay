@@ -26,6 +26,10 @@ export const PILLAR_SEARCH_SAVE_INIT = 'PILLAR_SEARCH_SAVE_INIT';
 export const PILLAR_SEARCH_SAVE_SUCCESS = 'PILLAR_SEARCH_SAVE_SUCCESS';
 export const PILLAR_SEARCH_SAVE_FAILED = 'PILLAR_SEARCH_SAVE_FAILED';
 
+export const PILLAR_SEARCH_DELETE_INIT = 'PILLAR_SEARCH_DELETE_INIT';
+export const PILLAR_SEARCH_DELETED = 'PILLAR_SEARCH_DELETED';
+export const PILLAR_SEARCH_DELETE_FAILURE = 'PILLAR_SEARCH_DELETE_FAILURE';
+
 export const selectQueryset = (queryset) => {
   return {
     type: QUERYSET_SELECTED,
@@ -296,3 +300,26 @@ const doMakeQueryFromStateAsync = _.debounce((query, dispatch)=>{
     .then(json => dispatch(receiveQueryset(json)))
     .catch(() => {});
 }, 1000);
+
+export const deleteSearch = search => {
+  return (dispatch, getState) => {
+    const app = getState().app;
+
+
+    console.log('delete search', search);
+
+    dispatch({type: PILLAR_SEARCH_DELETE_INIT, search});
+
+    xenia().deleteQuery(search.query).then(data => {
+      console.log('xenia query deleted', data);
+      return fetch(`${app.pillarHost}/api/search/${search.id}`, {method: 'DELETE'});
+    })
+    .then(resp => {
+      console.log(PILLAR_SEARCH_DELETED, resp);
+      dispatch({type: PILLAR_SEARCH_DELETED, search});
+    })
+    .catch(error => {
+      dispatch({type: PILLAR_SEARCH_DELETE_FAILURE, error});
+    });
+  };
+};

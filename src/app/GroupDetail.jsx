@@ -25,6 +25,7 @@ const mapStateToProps = state => {
 export default class GroupDetail extends React.Component {
 
   componentWillMount() {
+    this.props.dispatch(fetchSearches());
     this.props.dispatch(fetchQueryset(this.props.params.query_set));
   }
 

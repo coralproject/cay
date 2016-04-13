@@ -130,6 +130,7 @@ export default class GroupCreator extends React.Component {
         </div>
 
         <Modal
+          title="Save Search"
           isOpen={this.state.saveModalOpen}
           confirmAction={this.confirmSave.bind(this)}
           cancelAction={this.cancelSave.bind(this)}>

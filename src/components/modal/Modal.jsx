@@ -10,7 +10,8 @@ export default class Modal extends React.Component {
   static propTypes = {
     cancelAction: PropTypes.func.isRequired,
     confirmAction: PropTypes.func.isRequired,
-    isOpen: PropTypes.bool.isRequired
+    isOpen: PropTypes.bool.isRequired,
+    title: PropTypes.string.isRequired
   }
 
   render() {
@@ -21,7 +22,7 @@ export default class Modal extends React.Component {
         this.props.style
       ]}>
         <Card style={styles.modalContainer}>
-          <ModalHeader title="Save Search" cancelAction={this.props.cancelAction} />
+          <ModalHeader title={this.props.title} cancelAction={this.props.cancelAction} />
           {this.props.children}
           <ModalFooter
             confirmText={this.props.confirmText}

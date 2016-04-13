@@ -6,11 +6,13 @@ import { connect } from 'react-redux';
 import {Link} from 'react-router';
 // import { FOO } from '../actions';
 import Page from 'app/layout/Page';
-import {fetchSearchesIfNotFetched} from 'groups/GroupActions';
+import {fetchSearchesIfNotFetched, deleteSearch} from 'groups/GroupActions';
 // import Sentence from '../components/Sentence';
 import Card from 'components/cards/Card';
 import CardHeader from 'components/cards/CardHeader';
 import ContentHeader from 'components/ContentHeader';
+import Button from 'components/Button';
+import Modal from 'components/modal/Modal';
 
 const mapStateToProps = (state) => {
   return {groups: state.groups, app: state.app, auth: state.auth};
@@ -21,9 +23,7 @@ const mapStateToProps = (state) => {
 class SeeAllSearches extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-
-    };
+    this.state = { deleteModalOpen: false };
   }
   static propTypes = {
     /* react */
@@ -47,6 +47,20 @@ class SeeAllSearches extends React.Component {
 
     this.props.dispatch(fetchSearchesIfNotFetched());
   }
+
+  confirmDelete() {
+    this.setState({deleteModalOpen: false});
+    this.props.dispatch(deleteSearch(this.state.pendingDeleteSearch));
+  }
+
+  cancelDelete() {
+    this.setState({pendingDeleteSearch: null, deleteModalOpen: false});
+  }
+
+  openDeleteModal(search) {
+    this.setState({pendingDeleteSearch: search, deleteModalOpen: true});
+  }
+
   getStyles() {
     return {
       base: {
@@ -61,6 +75,13 @@ class SeeAllSearches extends React.Component {
       return (
         <Card style={styles.groupCard} key={i}>
           <CardHeader>{search.name}</CardHeader>
+          <Button
+            size="small"
+            category="danger"
+            style={styles.deleteButton}
+            onClick={this.openDeleteModal.bind(this, search)}>
+            Delete
+          </Button>
           <p>{search.description}</p>
           <div style={styles.actionsContainer}>
             <Link
@@ -89,6 +110,22 @@ class SeeAllSearches extends React.Component {
           </div>
         </div>
 
+        {
+          this.state.pendingDeleteSearch ?
+          (
+            <Modal
+              title="Really delete saved search?"
+              isOpen={this.state.deleteModalOpen}
+              confirmAction={this.confirmDelete.bind(this, this.state.pendingDeleteSearch)}
+              cancelAction={this.cancelDelete.bind(this, this.state.pendingDeleteSearch)}>
+              <p>Search Name {this.state.pendingDeleteSearch.name}</p>
+              <p>Description: {this.state.pendingDeleteSearch.description}</p>
+            </Modal>
+          )
+          : null
+        }
+
+
       </Page>
     );
   }
@@ -114,11 +151,20 @@ const styles = {
     marginRight: 20
   },
   groupCard: {
-    margin: '20px 20px 0 0',
+    marginBottom: 0,
+    marginTop: 20,
+    marginRight: 20,
+    marginLeft: 0,
     width: '370px',
     height: '150px',
+    position: 'relative',
     '@media (max-width: 1000px)': {
       'width': '90%'
     }
+  },
+  deleteButton: {
+    position: 'absolute',
+    top: 8,
+    right: 8
   }
 };

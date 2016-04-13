@@ -80,6 +80,15 @@ const searches = (state = initialState, action) => {
   case types.PILLAR_SEARCH_SAVE_FAILED:
     return {...state, savingSearch: false};
 
+  case types.PILLAR_SEARCH_DELETE_INIT:
+    return {...state, pendingDeleteSearch: action.search};
+
+  case types.PILLAR_SEARCH_DELETED:
+    return {...state, pendingDeleteSearch: null};
+
+  case types.PILLAR_SEARCH_DELETE_FAILURE:
+    return {...state, pendingDeleteSearch: null};
+
   default:
     // console.log('no reducer matches:', action.type);
     return state;

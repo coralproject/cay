@@ -31,6 +31,13 @@ const style = {
     // 'focus': {
     //   outline: 0
     // }
+  },
+  minMaxInputs: {
+    padding: "7px 10px",
+    border: "1px solid lightgrey",
+    borderRadius: 3
+
+
   }
 };
 
@@ -67,36 +74,23 @@ export default class FilterNumbers extends React.Component {
     const newSymbol = this.state.symbol === 'GTLT' ? 'EQUALS' : 'GTLT';
     this.setState({symbol: newSymbol});
   }
-  handleGTChanged(e) {
-    this.props.dispatch(filterChanged(this.props.fieldName, {userMin: e.target.value}));
+  onMinChanged() {
+    return (e) => {
+      const clampedUserMax = clamp(this.props.userMax, this.props.min, this.props.max);
+      const max = (this.props.isPercentage) ? Math.floor(clampedUserMax * 100) : clampedUserMax;
+      const value = e.target.value > max ? max : e.target.value;
+
+      this.props.dispatch(filterChanged(this.props.fieldName, {userMin: value}));
+    };
   }
-  handleLTChanged(e) {
-    this.props.dispatch(filterChanged(this.props.fieldName, {userMax: e.target.value}));
-  }
-  // handleEqualChanged(e) {
-  //   this.setState({equals: e.target.value});
-  // }
-  handleGTKeyDown(e) {
-    let userMin;
-    if (e.which === 38) {
-      userMin = Math.min(this.props.userMin + this.state.step, this.props.max);
-      this.props.dispatch(filterChanged(this.props.fieldName, {userMin, userMax: this.props.userMax}));
-    }
-    if (e.which === 40) {
-      userMin = Math.max(this.props.userMin - this.state.step, this.props.min);
-      this.props.dispatch(filterChanged(this.props.fieldName, {userMin, userMax: this.props.userMax}));
-    }
-  }
-  handleLTKeyDown(e) {
-    let userMax;
-    if (e.which === 38) {
-      userMax = Math.min(this.props.userMax + this.state.step, this.props.max);
-      this.props.dispatch(filterChanged(this.props.fieldName, {userMax, userMin: this.props.userMin}));
-    }
-    if (e.which === 40) {
-      userMax = Math.max(this.props.userMax - this.state.step, this.props.min);
-      this.props.dispatch(filterChanged(this.props.fieldName, {userMax, userMin: this.props.userMin}));
-    }
+  onMaxChanged() {
+    return (e) => {
+      const clampedUserMin = clamp(this.props.userMin, this.props.min, this.props.max);
+      const min = (this.props.isPercentage) ? Math.floor(clampedUserMin * 100) : clampedUserMin;
+      const value = e.target.value < min ? min : e.target.value;
+
+      this.props.dispatch(filterChanged(this.props.fieldName, {userMax: value}));
+    };
   }
   updateSlider(values) {
     this.props.dispatch(filterChanged(this.props.fieldName, {userMin: values[0], userMax: values[1]}));
@@ -111,15 +105,21 @@ export default class FilterNumbers extends React.Component {
 
     return (
       <div>
-        <span
-          style={{
-            float: 'left',
-            position: 'relative',
-            top: -6
-          }}>
-          {min} - {max}{this.props.isPercentage ? '%' : ''}
-        </span>
-        <div style={{marginTop: 12, marginLeft: 70, width: 200}}>
+        <div>
+          <input
+            onChange={this.onMinChanged().bind(this)}
+            style={style.minMaxInputs}
+            type="text"
+            value={`${min > max ? max : min}${this.props.isPercentage ? '%' : ''}`}/>
+          {` - `}
+          <input
+            onChange={this.onMaxChanged().bind(this)}
+            style={style.minMaxInputs}
+            type="text"
+            value={`${max}${this.props.isPercentage ? '%' : ''}`}/>
+
+        </div>
+        <div style={{marginTop: 12, width: '90%'}}>
           <Slider
             min={this.props.min}
             max={this.props.max}
@@ -159,3 +159,31 @@ export default class FilterNumbers extends React.Component {
     );
   }
 }
+
+
+
+// handleEqualChanged(e) {
+//   this.setState({equals: e.target.value});
+// }
+// handleGTKeyDown(e) {
+//   let userMin;
+//   if (e.which === 38) {
+//     userMin = Math.min(this.props.userMin + this.state.step, this.props.max);
+//     this.props.dispatch(filterChanged(this.props.fieldName, {userMin, userMax: this.props.userMax}));
+//   }
+//   if (e.which === 40) {
+//     userMin = Math.max(this.props.userMin - this.state.step, this.props.min);
+//     this.props.dispatch(filterChanged(this.props.fieldName, {userMin, userMax: this.props.userMax}));
+//   }
+// }
+// handleLTKeyDown(e) {
+//   let userMax;
+//   if (e.which === 38) {
+//     userMax = Math.min(this.props.userMax + this.state.step, this.props.max);
+//     this.props.dispatch(filterChanged(this.props.fieldName, {userMax, userMin: this.props.userMin}));
+//   }
+//   if (e.which === 40) {
+//     userMax = Math.max(this.props.userMax - this.state.step, this.props.min);
+//     this.props.dispatch(filterChanged(this.props.fieldName, {userMax, userMin: this.props.userMin}));
+//   }
+// }

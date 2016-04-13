@@ -74,8 +74,8 @@ export default class GroupCreator extends React.Component {
     this.setState({searchName});
   }
 
-  updateSearcDesc(searchDesc) {
-    this.setState({searchDesc});
+  updateSearcDesc(e) {
+    this.setState({searchDesc: e.target.value});
   }
 
   updateSearchTag(searchTag) {
@@ -138,7 +138,7 @@ export default class GroupCreator extends React.Component {
           <textarea
             style={styles.descriptionInput}
             onChange={this.updateSearcDesc.bind(this)}></textarea>
-          <TextField label="Tag Commenters" onChange={this.updateSearchTag.bind(this)} />
+          <TextField label="Tag Name" onChange={this.updateSearchTag.bind(this)} />
         </Modal>
 
         <StatusBar

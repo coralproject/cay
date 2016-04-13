@@ -252,7 +252,7 @@ const doPutQuery = (dispatch, state, name, desc, tag) => {
         }
       }));
 
-      console.log(values);
+      console.log('description?', desc);
 
       const body = {
         name, // the human-readable user-entered name

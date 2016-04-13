@@ -214,22 +214,9 @@ const doPutQueryFromState = (query, dispatch) => {
 /* xenia_package */
 const doMakeQueryFromStateAsync = _.debounce((query, dispatch, app, replace)=>{
   dispatch(requestQueryset());
-<<<<<<< HEAD
-  dispatch(createQuery(query));
-
-  xenia(query)
-  .exec()
-    .then(json => {
-      dispatch(receiveQueryset(json, replace));
-    })
-    .catch(() => {
-      // dispatch(dataExplorationFetchError(err));
-    });
-=======
   dispatch(createQuery(query._data));
 
   query.exec()
-    .then(json => dispatch(receiveQueryset(json)))
+    .then(json => dispatch(receiveQueryset(json, replace)))
     .catch(() => {});
->>>>>>> master
 }, 1000);

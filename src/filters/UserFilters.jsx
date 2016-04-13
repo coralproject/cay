@@ -1,6 +1,7 @@
 import React from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
+import _ from 'lodash';
 
 import { makeQueryFromState } from 'groups/GroupActions';
 import {
@@ -11,6 +12,7 @@ import {
 
 import Select from 'react-select';
 import FilterNumbers from 'filters/FilterNumbers';
+import FilterDate from 'filters/FilterDate';
 
 import Heading from 'components/Heading';
 
@@ -110,9 +112,10 @@ export default class UserFilters extends React.Component {
     const userFilters = filters.filter(f => f.collection === 'user_statistics');
     return userFilters.map((f,i) => {
       let filterComponent;
+
+      const inTitleCase = _.map(f.description.split(' '), _.capitalize).join(' ');
       if (f.type === 'intRange' || f.type === 'percentRange' || f.type === 'floatRange') {
-        // capitalize first letter of description
-        const fmtDesc = f.description.charAt(0).toUpperCase() + f.description.slice(1, f.description.length);
+
         filterComponent = (
           <FilterNumbers
             key={i}
@@ -120,13 +123,23 @@ export default class UserFilters extends React.Component {
             max={f.max}
             userMin={f.userMin}
             userMax={f.userMax}
-            description={fmtDesc}
+            description={inTitleCase}
             fieldName={f.key}
             type={f.type}
             isPercentage={f.type === 'percentRange'} />
         );
       } else if (f.type === 'dateRange') {
-        filterComponent = null;
+        filterComponent = (
+          <FilterDate
+            key={i}
+            min={f.min}
+            max={f.max}
+            userMin={f.userMin}
+            userMax={f.userMax}
+            description={inTitleCase}
+            type={f.type}
+            fieldName={f.key} />
+        );
       }
 
       return filterComponent;

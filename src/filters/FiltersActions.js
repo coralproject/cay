@@ -96,6 +96,14 @@ const parseFilterRanges = (ranges, filterState) => {
     // we might have already updated the old filter with the min value
     // retrieve it from the accumulator in progress instead of the state
     let newFilter = _.has(accum, key) ? accum[key] : {};
+
+    const possibleDateValue = new Date(value);
+    // if it's a Date, change the type
+    console.log('parsed value', aggKey, value, possibleDateValue);
+    if (_.isDate(possibleDateValue) && !isNaN(possibleDateValue)) {
+      value = possibleDateValue;
+    }
+
     newFilter[field] = value; // where field is {min|max}
     accum[key] = newFilter;
 
@@ -112,7 +120,7 @@ const parseFilterRanges = (ranges, filterState) => {
   return newFilters;
 };
 
-/* xenia_package */
+// HERE BE DRAGONS
 export const getFilterRanges = () => {
 
   return (dispatch, getState) => {
@@ -127,17 +135,29 @@ export const getFilterRanges = () => {
       } else { // all
         dimension = 'all';
       }
-      const field = '$' + _.template(filterState[key].template)({dimension});
 
       // if you change this naming convention
       // you must update the RECEIVE_FILTER_RANGES in reducers/filters.js
-      accum[key + '_min'] = {
-        $min: field
-      };
 
-      accum[key + '_max'] = {
-        $max: field
-      };
+      if (filterState[key].type !== 'dateRange') {
+        const field = '$' + _.template(filterState[key].template)({dimension});
+        accum[key + '_min'] = {
+          $min: field
+        };
+
+        accum[key + '_max'] = {
+          $max: field
+        };
+      } else {
+        accum[key + '_min'] = {
+          $min: '$' + _.template(filterState[key].template)({dimension}) + '.first'
+        };
+
+        accum[key + '_max'] = {
+          $max: '$' + _.template(filterState[key].template)({dimension}) + '.last'
+        };
+
+      }
 
       return accum;
     }, {_id: null});

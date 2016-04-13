@@ -45,7 +45,7 @@ require('react-datepicker.min.css');
 
 require('../fonts/glyphicons-halflings-regular.woff');
 
-if ('serviceWorker' in navigator) {
+if ('serviceWorker' in navigator && process && process.env.NODE_ENV === 'production') {
   registerServiceWorker({ scope: '/' }).then(() => {}, () => {});
 }
 

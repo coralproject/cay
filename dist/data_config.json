@@ -78,6 +78,15 @@
       "description": "% comments flagged by the system",
       "collection": "user_statistics",
       "type": "percentRange"
+    },
+    {
+      "name": "User Activity Times",
+      "category": "Activity",
+      "field": "activity_range",
+      "template": "statistics.comments.<%= dimension %>.all",
+      "description": "the first and last time the user commented",
+      "collection": "user_statistics",
+      "type": "dateRange"
     }
   ]
 }

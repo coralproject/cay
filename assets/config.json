@@ -1,0 +1,71 @@
+{
+ "xeniaHost": "${XENIA_URL}",
+ "pillarHost": "${PILLAR_URL}",
+ "environment": "${ENV}",
+ "brand": "${PROJECT}",
+ "googleAnalyticsId": "${GAID}",
+ "requireLogin": ${DO_AUTH},
+ "basicAuthorization": "Basic ${AUTH_TOKEN}",
+ "dimensions": [
+   {
+       "name": "all",
+       "label": "Anywhere",
+       "value": "all"
+   },
+   {
+       "name": "sections",
+       "label": "In a section",
+       "value": "sections",
+       "querySet": "dimension_section_list",
+       "labelField": "description",
+       "valueField": "description"
+   }
+  ],
+  "filters": [
+        {
+            "name": "Comments",
+            "category": "Activity",
+            "field": "count",
+            "template": "statistics.comments.<%= dimension %>.all.count",
+            "description": "total comments",
+            "min": 0,
+            "max": 500,
+            "collection": "user_statistics",
+            "type": "numberRange"
+        },
+        {
+            "name": "Replied",
+            "category": "Activity",
+            "field": "replied_count",
+            "template": "statistics.comments.<%= dimension %>.all.replied_count",
+            "description": "replies they have written to others",
+            "min": 0,
+            "max": 500,
+            "collection": "user_statistics",
+            "type": "numberRange"
+        },
+        {
+            "name": "Replies",
+            "category": "Response",
+            "field": "reply_count",
+            "template": "statistics.comments.<%= dimension %>.all.reply_count",
+            "description": "times other have replied to them",
+            "min": 0,
+            "max": 500,
+            "collection": "user_statistics",
+            "type": "numberRange"
+        },
+        {
+            "name": "Replies per Comment",
+            "category": "Response",
+            "field": "reply_ratio",
+            "template": "statistics.comments.<%= dimension %>.all.reply_ratio",
+            "description": "replies received per comment",
+            "min": 0,
+            "max": 500,
+            "collection": "user_statistics",
+            "type": "numberRange"
+        }
+  ]
+}
+

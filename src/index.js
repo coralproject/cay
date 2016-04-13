@@ -10,8 +10,8 @@ import { Provider } from 'react-redux';
 import { DevTools, DebugPanel, LogMonitor } from 'redux-devtools/lib/react';
 
 import configureStore from 'store.js';
-
 import { configXenia, configError } from 'app/AppActions';
+
 // import Dashboard from './containers/Dashboard';
 import GroupCreator from 'app/GroupCreator';
 import TagManager from 'app/TagManager';
@@ -22,6 +22,7 @@ import GroupDetail from 'app/GroupDetail';
 import NoMatch from 'app/NoMatch';
 import About from 'app/About';
 
+import registerServiceWorker from 'serviceworker!./sw.js';
 import ga from 'react-ga';
 
 let store;
@@ -43,6 +44,10 @@ require('react-select.css');
 require('react-datepicker.min.css');
 
 require('../fonts/glyphicons-halflings-regular.woff');
+
+if ('serviceWorker' in navigator && process && process.env.NODE_ENV === 'production') {
+  registerServiceWorker({ scope: '/' }).then(() => {}, () => {});
+}
 
 import { Lang } from 'i18n/lang';
 @Lang

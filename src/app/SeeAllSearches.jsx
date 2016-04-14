@@ -1,13 +1,9 @@
 import React from 'react';
 import Radium from 'radium';
-// import _ from 'lodash';
-// import Flex from './layout/Flex';
 import { connect } from 'react-redux';
 import {Link} from 'react-router';
-// import { FOO } from '../actions';
 import Page from 'app/layout/Page';
 import {fetchSearchesIfNotFetched, deleteSearch} from 'groups/GroupActions';
-// import Sentence from '../components/Sentence';
 import Card from 'components/cards/Card';
 import CardHeader from 'components/cards/CardHeader';
 import ContentHeader from 'components/ContentHeader';

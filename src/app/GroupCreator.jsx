@@ -108,10 +108,10 @@ export default class GroupCreator extends React.Component {
           </div>
 
           <div style={styles.rightPanel}>
-            <Button category="disabled" style={{float: 'right', marginLeft: 10}}>
+            <Button category="disabled" style={styles.editButton}>
               Edit Search <MdEdit style={styles.saveIcon} />
             </Button>
-            <Button onClick={this.openModal.bind(this)} category="primary" style={{float: 'right'}}>
+            <Button onClick={this.openModal.bind(this)} category="primary" style={styles.saveButton}>
               Save Search <FaFloopyO style={styles.saveIcon} />
             </Button>
             <div style={styles.userListContainer}>
@@ -213,5 +213,12 @@ const styles = {
   searchDetail: {
     color: 'white',
     textDecoration: 'none'
+  },
+  saveButton: {
+    float: 'right'
+  },
+  editButton: {
+    float: 'right',
+    marginLeft: 10
   }
 };

@@ -25,8 +25,7 @@ const mapStateToProps = state => {
 export default class GroupDetail extends React.Component {
 
   componentWillMount() {
-    this.props.dispatch(fetchSearches());
-    this.props.dispatch(fetchQueryset(this.props.params.query_set));
+    this.props.dispatch(fetchQueryset(this.props.params.query_set, 0, true));
   }
 
   getGroupDescription(name) {
@@ -46,6 +45,10 @@ export default class GroupDetail extends React.Component {
     this.props.dispatch(fetchCommentsByUser(user._id));
   }
 
+  onPagination(page = 0) {
+    this.props.dispatch(fetchQueryset(this.props.params.name, page));
+  }
+
   render() {
     return (
       <Page>
@@ -53,6 +56,7 @@ export default class GroupDetail extends React.Component {
         <p>{this.getGroupDescription(this.props.params.query_set)}</p>
         <div style={styles.base}>
           <UserList
+            onPagination={this.onPagination.bind(this)}
             userSelected={this.updateUser.bind(this)}
             loadingQueryset={this.props.groups.loadingQueryset}
             style={styles.userList}
@@ -72,16 +76,12 @@ export default class GroupDetail extends React.Component {
 const styles = {
   base: {
     display: 'flex',
-    minHeight: 250,
-    flexWrap: 'wrap-reverse',
     justifyContent: 'flex-start'
   },
   userList: {
-    flex: 1,
     minWidth: 315
   },
   userDetail: {
-    flex: 2,
-    minWidth: 630
+    flex: 2
   }
 };

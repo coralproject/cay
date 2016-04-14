@@ -136,22 +136,25 @@ export const requestQuerysetFailure = (err) => {
   };
 };
 
-export const receiveQueryset = (data) => {
+export const receiveQueryset = (data, replace) => {
   return {
     type: QUERYSET_RECEIVED,
-    data
+    data,
+    replace
   };
 };
 
 /* xenia_package */
 // execute a saved query_set
-export const fetchQueryset = (querysetName) => {
+export const fetchQueryset = (querysetName, page = 0, replace = false) => {
   return (dispatch) => {
-    dispatch(requestQueryset(querysetName));
+    dispatch(requestQueryset(querysetName, page));
 
     xenia()
-      .exec(querysetName)
-      .then(queryset => dispatch(receiveQueryset(queryset)))
+      .limit(20)
+      .skip(20 * page)
+      .exec()
+      .then(queryset => dispatch(receiveQueryset(queryset, replace)))
       .catch(err => dispatch(requestQuerysetFailure(err)));
   };
 };
@@ -208,7 +211,6 @@ export const makeQueryFromState = (type, page = 0) => {
     x.skip(page * 20)
     .limit(20)
     .include(['name', 'avatar', 'statistics.comments']);
-
     doMakeQueryFromStateAsync(x, dispatch, app);
   };
 };
@@ -298,13 +300,13 @@ const doPutQuery = (dispatch, state, name, desc, tag) => {
     });
 };
 /* xenia_package */
-const doMakeQueryFromStateAsync = _.debounce((query, dispatch)=>{
+const doMakeQueryFromStateAsync = _.debounce((query, dispatch, app, replace)=>{
   dispatch(requestQueryset());
 
   dispatch(createQuery(query._data));
 
   query.exec()
-    .then(json => dispatch(receiveQueryset(json)))
+    .then(json => dispatch(receiveQueryset(json, replace)))
     .catch(() => {});
 }, 1000);
 

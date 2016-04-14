@@ -236,7 +236,14 @@ the filters object only stores non-default values and the dimension breakdowns
 */
 const doPutQuery = (dispatch, state, name, desc, tag) => {
 
-  const query = state.groups.activeQuery;
+  const query = _.cloneDeep(state.groups.activeQuery);
+
+  // strip out $limt and $skip commands before saving
+  query.queries[0].commands = _.filter(query.queries[0].commands, (value) => {
+    return _.isUndefined(value.$skip) && _.isUndefined(value.$limit);
+  });
+
+  console.log('commands', query.queries[0].commands);
 
   console.log('about to xenia.saveQuery');
   xenia(query).saveQuery()

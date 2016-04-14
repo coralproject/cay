@@ -14,6 +14,8 @@ import ContentHeader from 'components/ContentHeader';
 import Button from 'components/Button';
 import Modal from 'components/modal/Modal';
 
+import settings from 'settings';
+
 const mapStateToProps = (state) => {
   return {groups: state.groups, app: state.app, auth: state.auth};
 };
@@ -82,7 +84,16 @@ class SeeAllSearches extends React.Component {
             onClick={this.openDeleteModal.bind(this, search)}>
             Delete
           </Button>
-          <p>{search.description}</p>
+          <p style={styles.searchDescription}>{search.description}</p>
+          <ul>
+            {search.filters.values.map((value, i) => {
+              return (
+                <li style={styles.filterValue} key={i}>
+                  between {value.userMin} and {value.userMax} {value.description}
+                </li>
+              );
+            })}
+          </ul>
           <div style={styles.actionsContainer}>
             <Link
               style={styles.viewGroupLink}
@@ -155,8 +166,7 @@ const styles = {
     marginTop: 20,
     marginRight: 20,
     marginLeft: 0,
-    width: '370px',
-    height: '150px',
+    width: 370,
     position: 'relative',
     '@media (max-width: 1000px)': {
       'width': '90%'
@@ -166,5 +176,16 @@ const styles = {
     position: 'absolute',
     top: 8,
     right: 8
+  },
+  searchDescription: {
+    marginBottom: 10,
+    fontSize: 18
+  },
+  filterValue: {
+    backgroundColor: settings.darkGrey,
+    color: 'white',
+    padding: 10,
+    marginBottom: 5,
+    borderRadius: 4
   }
 };

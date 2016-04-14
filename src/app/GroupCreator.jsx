@@ -46,7 +46,7 @@ export default class GroupCreator extends React.Component {
     this.props.dispatch(fetchAllTags());
     this.props.dispatch(fetchSections());
     this.props.dispatch(fetchAuthors());
-    this.props.dispatch(makeQueryFromState('user'));
+    this.props.dispatch(makeQueryFromState('user', 0, true));
   }
 
   updateUser(user) {
@@ -58,6 +58,10 @@ export default class GroupCreator extends React.Component {
     // all the code triggered here needs to be moved to a xenia package
     const randomId = Math.floor(Math.random() * 99999);
     this.props.dispatch(saveQueryFromState(`Group ${randomId}`, 'Sample group description'));
+  }
+
+  onPagination(page = 0) {
+    this.props.dispatch(makeQueryFromState('user', page));
   }
 
   render() {
@@ -79,9 +83,15 @@ export default class GroupCreator extends React.Component {
             <Button onClick={this.saveGroup.bind(this)} category="primary" style={{float: 'right'}}>
               Save Search <FaFloopyO style={styles.saveIcon} />
             </Button>
+            <div style={styles.userList}>
+              <UserList
+                onPagination={this.onPagination.bind(this)}
+                disabled={true} userSelected={()=>{}}
+                users={this.props.users} />
             */}
             <div style={styles.userListContainer}>
               <UserList
+                onPagination={this.onPagination.bind(this)}
                 style={styles.userList}
                 loadingQueryset={this.props.groups.loadingQueryset}
                 users={this.props.groups.users} userSelected={this.updateUser.bind(this)} />
@@ -111,24 +121,17 @@ const styles = {
   },
   userListContainer: {
     marginTop: 5,
-    height: '100%',
-    minWidth: 400,
-    '@media (max-width: 1000px)': {
-      marginLeft: -20
-    },
-    display: 'flex',
-    width: '100%'
+    height: 900,
+    display: 'flex'
   },
   userDetail: {
     flex: 2,
-    paddingLeft: 20,
-    marginLeft: 20
+    paddingLeft: 40,
+    height: 900
   },
   userList: {
     minWidth: 350,
-    maxWidth: 350,
-    flex: 1,
-    float: 'left'
+    flex: 1
   },
   saveIcon: {
     width: 25,

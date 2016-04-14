@@ -35,7 +35,7 @@ export default class UserFilters extends React.Component {
     }
   }
   updateUserList() {
-    this.props.dispatch(makeQueryFromState('user'));
+    this.props.dispatch(makeQueryFromState('user', 0, true));
   }
   getTags() {
     return this.props.tags.map(tag => {

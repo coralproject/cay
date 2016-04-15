@@ -314,18 +314,15 @@ export const deleteSearch = search => {
   return (dispatch, getState) => {
     const app = getState().app;
 
-
-    console.log('delete search', search);
-
     dispatch({type: PILLAR_SEARCH_DELETE_INIT, search});
 
     xenia().deleteQuery(search.query).then(data => {
-      console.log('xenia query deleted', data);
       return fetch(`${app.pillarHost}/api/search/${search.id}`, {method: 'DELETE'});
     })
     .then(resp => {
-      console.log(PILLAR_SEARCH_DELETED, resp);
       dispatch({type: PILLAR_SEARCH_DELETED, search});
+
+      dispatch(fetchSearches()); // now that our search is deleted, refresh the list of searches.
     })
     .catch(error => {
       dispatch({type: PILLAR_SEARCH_DELETE_FAILURE, error});

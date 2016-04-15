@@ -100,7 +100,7 @@ const parseFilterRanges = (ranges, filterState) => {
     const possibleDateValue = new Date(value);
     // if it's a Date, change the type
     console.log('parsed value', aggKey, value, possibleDateValue);
-    if (_.isDate(possibleDateValue) && !isNaN(possibleDateValue)) {
+    if (_.isString(value) && _.isDate(possibleDateValue) && !isNaN(possibleDateValue)) {
       value = possibleDateValue;
     }
 

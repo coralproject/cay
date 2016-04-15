@@ -93,7 +93,7 @@ class SeeAllSearches extends React.Component {
           <div style={styles.actionsContainer}>
             <Link
               style={styles.viewGroupLink}
-              to={`/saved-search/${search.query}`}>View Search Details</Link>
+              to={`/saved-search/${search.id}`}>View Search Details</Link>
             <span>Edit Search (coming soon)</span>
           </div>
         </Card>

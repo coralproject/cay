@@ -44,51 +44,6 @@ export const requestQueryset = (queryset) => {
   };
 };
 
-export const requestQuerysets = () => {
-  return {
-    type: QUERYSETS_REQUEST
-  };
-};
-
-export const receiveQuerysets = (querysets) => {
-  return {
-    type: QUERYSETS_RECEIVED,
-    querysets
-  };
-};
-
-export const requestQuerysetsFailure = (err) => {
-  return {
-    type: QUERYSETS_REQUEST_FAILURE,
-    err
-  };
-};
-
-/* xenia_package */
-export const fetchQuerysetsIfNotFetched = () => {
-  return (dispatch, getState) => {
-    if (! getState().groups.loading) {
-      return dispatch(fetchQuerysets());
-    }
-    return {
-      type: 'NOOP'
-    };
-  };
-};
-
-/* xenia_package */
-// get deep list of query_sets
-export const fetchQuerysets = () => {
-  return (dispatch) => {
-
-    dispatch(requestQuerysets());
-
-    xenia().getQueries()
-      .then(querysets => dispatch(receiveQuerysets(querysets)))
-      .catch(err => dispatch(requestQuerysetsFailure(err)));
-  };
-};
-
 const requestSearches = () => {
   return {type: PILLAR_SEARCHLIST_REQUEST};
 };

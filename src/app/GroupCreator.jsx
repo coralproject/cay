@@ -175,7 +175,8 @@ const styles = {
   userListContainer: {
     marginTop: 5,
     height: 900,
-    display: 'flex'
+    display: 'flex',
+    clear: 'both'
   },
   userDetail: {
     flex: 2,

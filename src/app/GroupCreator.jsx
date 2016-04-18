@@ -151,7 +151,7 @@ export default class GroupCreator extends React.Component {
           visible={this.props.groups.savingSearch || !!this.props.groups.recentSavedSearch}>
           {
             this.props.groups.recentSavedSearch ?
-              (<Link style={styles.searchDetail} to={`/saved-search/${this.props.groups.recentSavedSearch.query}`}>
+              (<Link style={styles.searchDetail} to={`/saved-search/${this.props.groups.recentSavedSearch.id}`}>
                 View Your Saved Search [{this.props.groups.recentSavedSearch.name}] →
               </Link>) :
               'Saving Search...'

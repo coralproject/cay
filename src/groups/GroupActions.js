@@ -268,6 +268,7 @@ const doMakeQueryFromStateAsync = _.debounce((query, dispatch, app, replace)=>{
 export const deleteSearch = search => {
   return (dispatch, getState) => {
     const app = getState().app;
+    const groups = getState().groups;
 
     dispatch({type: PILLAR_SEARCH_DELETE_INIT, search});
 
@@ -275,11 +276,15 @@ export const deleteSearch = search => {
       return fetch(`${app.pillarHost}/api/search/${search.id}`, {method: 'DELETE'});
     })
     .then(resp => {
-      dispatch({type: PILLAR_SEARCH_DELETED, search});
+      const newSearches = groups.searches.concat();
+      // splice out deleted search
+      newSearches.splice(_.indexOf(_.map(newSearches, 'id'), search.id), 1);
 
-      dispatch(fetchSearches()); // now that our search is deleted, refresh the list of searches.
+      dispatch({type: PILLAR_SEARCH_DELETED, search, newSearches});
     })
     .catch(error => {
+      console.error('failed to delete search', error);
+      console.error(error.stack);
       dispatch({type: PILLAR_SEARCH_DELETE_FAILURE, error});
     });
   };

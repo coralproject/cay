@@ -50,7 +50,9 @@ const searches = (state = initialState, action) => {
     return {...state, savingSearch: true};
 
   case types.PILLAR_SEARCH_SAVE_SUCCESS:
-    return {...state, savingSearch: false, recentSavedSearch: action.search};
+    // mark the search as recent so the mod can view its details
+    // push it onto the array of saved searches
+    return {...state, savingSearch: false, recentSavedSearch: action.search, searches: state.searches.concat(action.search)};
 
   case types.PILLAR_SEARCH_SAVE_FAILED:
     return {...state, savingSearch: false};
@@ -59,7 +61,8 @@ const searches = (state = initialState, action) => {
     return {...state, pendingDeleteSearch: action.search};
 
   case types.PILLAR_SEARCH_DELETED:
-    return {...state, pendingDeleteSearch: null};
+    // slice the deleted search out by id?
+    return {...state, pendingDeleteSearch: null, searches: action.newSearches};
 
   case types.PILLAR_SEARCH_DELETE_FAILURE:
     return {...state, pendingDeleteSearch: null};

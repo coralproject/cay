@@ -3,7 +3,7 @@ import Radium from 'radium';
 import { connect } from 'react-redux';
 import {Link} from 'react-router';
 import Page from 'app/layout/Page';
-import {fetchSearchesIfNotFetched, deleteSearch} from 'groups/GroupActions';
+import {fetchSearchesIfNotFetched, deleteSearch} from 'search/SearchActions';
 import Card from 'components/cards/Card';
 import CardHeader from 'components/cards/CardHeader';
 import ContentHeader from 'components/ContentHeader';
@@ -13,7 +13,7 @@ import Modal from 'components/modal/Modal';
 import settings from 'settings';
 
 const mapStateToProps = (state) => {
-  return {groups: state.groups, app: state.app, auth: state.auth};
+  return {searches: state.searches, app: state.app, auth: state.auth};
 };
 
 @connect(mapStateToProps)
@@ -66,12 +66,12 @@ class SeeAllSearches extends React.Component {
       }
     };
   }
-  renderGroups() {
+  renderSearches() {
 
-    const groups = this.props.groups.searches.map((search, i) => {
+    const searches = this.props.searches.searches.map((search, i) => {
 
       return (
-        <Card style={styles.groupCard} key={i}>
+        <Card style={styles.searchCard} key={i}>
           <CardHeader>{search.name}</CardHeader>
           <Button
             size="small"
@@ -92,7 +92,7 @@ class SeeAllSearches extends React.Component {
           </ul>
           <div style={styles.actionsContainer}>
             <Link
-              style={styles.viewGroupLink}
+              style={styles.viewSearchLink}
               to={`/saved-search/${search.id}`}>View Search Details</Link>
             <span>Edit Search (coming soon)</span>
           </div>
@@ -100,7 +100,7 @@ class SeeAllSearches extends React.Component {
       );
     });
 
-    return groups;
+    return searches;
 
   }
   render() {
@@ -113,7 +113,7 @@ class SeeAllSearches extends React.Component {
         ]}>
           <ContentHeader title={ window.L.t('Saved Searches') } />
           <div style={styles.cardHolder}>
-            {this.renderGroups()}
+            {this.renderSearches()}
           </div>
         </div>
 
@@ -154,10 +154,10 @@ const styles = {
   actionsContainer: {
     marginTop: 20
   },
-  viewGroupLink: {
+  viewSearchLink: {
     marginRight: 20
   },
-  groupCard: {
+  searchCard: {
     marginBottom: 0,
     marginTop: 20,
     marginRight: 20,

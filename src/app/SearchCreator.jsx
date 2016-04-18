@@ -7,7 +7,7 @@ import settings from 'settings';
 
 import {userSelected} from 'users/UsersActions';
 import {fetchCommentsByUser} from 'comments/CommentsActions';
-import {saveQueryFromState, makeQueryFromState} from 'groups/GroupActions';
+import {saveQueryFromState, makeQueryFromState} from 'search/SearchActions';
 import { fetchAllTags } from 'tags/TagActions';
 import { fetchSections, fetchAuthors } from 'filters/FiltersActions';
 
@@ -15,22 +15,22 @@ import Page from 'app/layout/Page';
 import ContentHeader from 'components/ContentHeader';
 import UserList from 'users/UserList';
 import UserDetail from 'users/UserDetail';
-import GroupFilters from 'groups/GroupFilters';
+import SearchFilters from 'search/SearchFilters';
 import Button from 'components/Button';
 import FaFloopyO from 'react-icons/lib/fa/floppy-o';
 import MdEdit from 'react-icons/lib/md/edit';
 import Modal from 'components/modal/Modal';
 import TextField from 'components/forms/TextField';
 import StatusBar from 'components/StatusBar';
-import Clauses from 'groups/Clauses';
+import Clauses from 'search/Clauses';
 
 @connect(state => ({
-  groups: state.groups,
+  searches: state.searches,
   comments: state.comments,
   users: state.users
 }))
 @Radium
-export default class GroupCreator extends React.Component {
+export default class SearchCreator extends React.Component {
 
   constructor(props) {
     super(props);
@@ -45,7 +45,7 @@ export default class GroupCreator extends React.Component {
   componentWillMount() {
     // redirect user to /login if they're not logged in
     //   TODO: refactor: pass in a function that calculates auth state
-    if (window.requireLogin && !this.props.groups.authorized) {
+    if (window.requireLogin && !this.props.searches.authorized) {
       let {router} = this.context;
       return router.push('/login');
     }
@@ -108,7 +108,7 @@ export default class GroupCreator extends React.Component {
 
         <div style={styles.base}>
           <div style={styles.filters}>
-            <GroupFilters userOnly={true}/>
+            <SearchFilters userOnly={true}/>
           </div>
 
           <div style={styles.rightPanel}>
@@ -121,8 +121,8 @@ export default class GroupCreator extends React.Component {
             <div style={styles.userListContainer}>
               <UserList
                 onPagination={this.onPagination.bind(this)}
-                loadingQueryset={this.props.groups.loadingQueryset}
-                users={this.props.groups.users} userSelected={this.updateUser.bind(this)} />
+                loadingQueryset={this.props.searches.loadingQueryset}
+                users={this.props.searches.users} userSelected={this.updateUser.bind(this)} />
               <UserDetail
                 commentsLoading={this.props.comments.loading}
                 user={this.props.users.selectedUser}
@@ -147,12 +147,12 @@ export default class GroupCreator extends React.Component {
         </Modal>
 
         <StatusBar
-          loading={this.props.groups.savingSearch}
-          visible={this.props.groups.savingSearch || !!this.props.groups.recentSavedSearch}>
+          loading={this.props.searches.savingSearch}
+          visible={this.props.searches.savingSearch || !!this.props.searches.recentSavedSearch}>
           {
-            this.props.groups.recentSavedSearch ?
-              (<Link style={styles.searchDetail} to={`/saved-search/${this.props.groups.recentSavedSearch.id}`}>
-                View Your Saved Search [{this.props.groups.recentSavedSearch.name}] →
+            this.props.searches.recentSavedSearch ?
+              (<Link style={styles.searchDetail} to={`/saved-search/${this.props.searches.recentSavedSearch.id}`}>
+                View Your Saved Search [{this.props.searches.recentSavedSearch.name}] →
               </Link>) :
               'Saving Search...'
           }

@@ -3,7 +3,7 @@ import Radium from 'radium';
 import {connect} from 'react-redux';
 import _ from 'lodash';
 
-import { makeQueryFromState } from 'groups/GroupActions';
+import { makeQueryFromState } from 'search/SearchActions';
 import {
   setBreakdown,
   setSpecificBreakdown,

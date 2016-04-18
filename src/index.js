@@ -13,12 +13,12 @@ import configureStore from 'store.js';
 import { configXenia, configError } from 'app/AppActions';
 
 // import Dashboard from './containers/Dashboard';
-import GroupCreator from 'app/GroupCreator';
+import SearchCreator from 'app/SearchCreator';
 import TagManager from 'app/TagManager';
 import Login from 'app/Login';
 // import DataExplorer from 'app/DataExplorer';
 import SeeAllSearches from 'app/SeeAllSearches';
-import GroupDetail from 'app/GroupDetail';
+import SearchDetail from 'app/SearchDetail';
 import NoMatch from 'app/NoMatch';
 import About from 'app/About';
 
@@ -84,10 +84,10 @@ class Root extends React.Component {
             <Redirect from="/" to="search-creator" />
             <Route path="login" component={Login} />
             <Route path="about" component={About} />
-            <Route path="search-creator" component={GroupCreator} />
+            <Route path="search-creator" component={SearchCreator} />
             <Route path="tag-manager" component={TagManager} />
             <Route path="saved-searches" component={SeeAllSearches}/>
-            <Route path="saved-search/:id" component={GroupDetail} />
+            <Route path="saved-search/:id" component={SearchDetail} />
             <Route path="*" component={NoMatch} />
             {/*<Route path="explore" component={DataExplorer} />*/}
           </Router>

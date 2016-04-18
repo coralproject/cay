@@ -75,7 +75,7 @@ export const fetchSearches = () => {
 
 export const fetchSearchesIfNotFetched = () => {
   return (dispatch, getState) => {
-    if (!getState().groups.loadingSearches) {
+    if (!getState().searches.loadingSearches) {
       return dispatch(fetchSearches());
     }
     return {
@@ -176,7 +176,7 @@ export const saveQueryFromState = (queryName, desc, tag) => {
     // make a query from the current state
     const state = getState();
 
-    dispatch({type: PILLAR_SEARCH_SAVE_INIT, query: state.groups.activeQuery});
+    dispatch({type: PILLAR_SEARCH_SAVE_INIT, query: state.searches.activeQuery});
 
     console.log('about to doPutQuery');
     doPutQuery(dispatch, state, queryName, desc, tag);
@@ -193,7 +193,7 @@ the filters object only stores non-default values and the dimension breakdowns
 */
 const doPutQuery = (dispatch, state, name, desc, tag) => {
 
-  const query = _.cloneDeep(state.groups.activeQuery);
+  const query = _.cloneDeep(state.searches.activeQuery);
 
   // strip out $limt and $skip commands before saving
   query.queries[0].commands = _.filter(query.queries[0].commands, (value) => {
@@ -268,7 +268,7 @@ const doMakeQueryFromStateAsync = _.debounce((query, dispatch, app, replace)=>{
 export const deleteSearch = search => {
   return (dispatch, getState) => {
     const app = getState().app;
-    const groups = getState().groups;
+    const searches = getState().searches;
 
     dispatch({type: PILLAR_SEARCH_DELETE_INIT, search});
 
@@ -276,7 +276,7 @@ export const deleteSearch = search => {
       return fetch(`${app.pillarHost}/api/search/${search.id}`, {method: 'DELETE'});
     })
     .then(resp => {
-      const newSearches = groups.searches.concat();
+      const newSearches = searches.searches.concat();
       // splice out deleted search
       newSearches.splice(_.indexOf(_.map(newSearches, 'id'), search.id), 1);
 

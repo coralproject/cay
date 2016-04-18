@@ -17,7 +17,7 @@ import GroupCreator from 'app/GroupCreator';
 import TagManager from 'app/TagManager';
 import Login from 'app/Login';
 // import DataExplorer from 'app/DataExplorer';
-import SeeAllGroups from 'app/SeeAllGroups';
+import SeeAllSearches from 'app/SeeAllSearches';
 import GroupDetail from 'app/GroupDetail';
 import NoMatch from 'app/NoMatch';
 import About from 'app/About';
@@ -86,8 +86,8 @@ class Root extends React.Component {
             <Route path="about" component={About} />
             <Route path="search-creator" component={GroupCreator} />
             <Route path="tag-manager" component={TagManager} />
-            <Route path="saved-searches" component={SeeAllGroups}/>
-            <Route path="saved-search/:name" component={GroupDetail} />
+            <Route path="saved-searches" component={SeeAllSearches}/>
+            <Route path="saved-search/:id" component={GroupDetail} />
             <Route path="*" component={NoMatch} />
             {/*<Route path="explore" component={DataExplorer} />*/}
           </Router>

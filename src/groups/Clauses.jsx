@@ -7,6 +7,8 @@ import {connect} from 'react-redux';
 import PercentClause from './PercentClause';
 import IntClause from './IntClause';
 
+import settings from 'settings';
+
 // const style = {
 // };
 
@@ -34,16 +36,16 @@ class Clauses extends React.Component {
   getStyles() {
     return {
       container: {
-        display: "flex",
-        flexWrap: "wrap",
-        alignItems: "flex-start",
+        display: 'flex',
+        flexWrap: 'wrap',
+        alignItems: 'flex-start',
         marginBottom: 20
       },
       clause: {
-        backgroundColor: 'darkGrey',
+        backgroundColor: settings.darkGrey,
         color: 'white',
         padding: '10px 20px',
-        margin: "20px 20px 0px 0px",
+        margin: '20px 20px 0px 0px',
         borderRadius: 4
       }
     };

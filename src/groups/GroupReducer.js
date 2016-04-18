@@ -4,24 +4,16 @@ const initialState = {
   authorized: localStorage.authorized || false,
   loading: false,
   loadingQueryset: false,
-  querysets: [],
+  activeQuery: null,
+  pendingSavedSearch: null, // when the search is being prepared to be saved in pillar
   users: [],
-  groups: []
+  searches: [],
+  savingSearch: false
 };
 
-const groups = (state = initialState, action) => {
+const searches = (state = initialState, action) => {
 
   switch (action.type) {
-
-  case types.QUERYSETS_REQUEST:
-    return {...state, loading: true};
-
-  case types.QUERYSETS_REQUEST_FAILURE:
-    return {
-      ...state,
-      loading: false,
-      showTheError: 'failed to load querysets from server'
-    };
 
   case types.QUERYSET_REQUEST_FAILURE:
     return {
@@ -30,18 +22,8 @@ const groups = (state = initialState, action) => {
       showTheError: `failed to load ${action.querysetName}`
     };
 
-  case types.QUERYSETS_RECEIVED:
-    return Object.assign({}, state,
-      {
-        loading: false,
-        // this probably isn't the final way to do this.
-        // queries will eventually be length > 1
-        groups: action.querysets,
-        querysets: action.querysets.filter(qs => {
-          return qs.queries[0].collection === 'user_statistics' && qs.name !== 'user_search';
-        })
-      }
-    );
+  case types.CREATE_QUERY: // store the query so it can be easily saved to pillar
+    return {...state, activeQuery: action.query};
 
   case types.QUERYSET_SELECTED:
     return state;
@@ -54,11 +36,36 @@ const groups = (state = initialState, action) => {
     const users =  action.replace ? [...action.data.results[0].Docs] : [...state.users, ...action.data.results[0].Docs];
     return {...state, loadingQueryset: false, users};
 
-  case types.LOGIN_SUCCESS:
-    return {...state, authorized: true};
+  case types.PILLAR_SEARCHLIST_REQUEST:
+    return {...state, loadingSearches: true};
 
-  case types.LOGGED_OUT:
-    return {...state, authorized: false};
+  // list of all saved searches fetched from Pillar
+  case types.PILLAR_SEARCHLIST_SUCCESS:
+    return {...state, searches: action.searches, loadingSearches: false};
+
+  case types.PILLAR_SEARCHLIST_FAILED:
+    return {...state, loadingSearches: false, searchListError: action.error};
+
+  case types.PILLAR_SEARCH_SAVE_INIT:
+    return {...state, savingSearch: true};
+
+  case types.PILLAR_SEARCH_SAVE_SUCCESS:
+    // mark the search as recent so the mod can view its details
+    // push it onto the array of saved searches
+    return {...state, savingSearch: false, recentSavedSearch: action.search, searches: state.searches.concat(action.search)};
+
+  case types.PILLAR_SEARCH_SAVE_FAILED:
+    return {...state, savingSearch: false};
+
+  case types.PILLAR_SEARCH_DELETE_INIT:
+    return {...state, pendingDeleteSearch: action.search};
+
+  case types.PILLAR_SEARCH_DELETED:
+    // slice the deleted search out by id?
+    return {...state, pendingDeleteSearch: null, searches: action.newSearches};
+
+  case types.PILLAR_SEARCH_DELETE_FAILURE:
+    return {...state, pendingDeleteSearch: null};
 
   default:
     // console.log('no reducer matches:', action.type);
@@ -66,4 +73,4 @@ const groups = (state = initialState, action) => {
   }
 };
 
-export default groups;
+export default searches;

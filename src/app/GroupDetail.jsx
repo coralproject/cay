@@ -2,7 +2,7 @@ import React from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
 import {userSelected} from 'users/UsersActions';
-import {fetchQueryset} from 'groups/GroupActions';
+import {fetchQueryset, fetchSearches} from 'groups/GroupActions';
 import {fetchCommentsByUser} from 'comments/CommentsActions';
 import _ from 'lodash';
 
@@ -25,15 +25,7 @@ const mapStateToProps = state => {
 export default class GroupDetail extends React.Component {
 
   componentWillMount() {
-    this.props.dispatch(fetchQueryset(this.props.params.name, 0, true));
-  }
-
-  getGroupDescription(name) {
-    if (this.props.groups.length) {
-      return _.find(this.props.groups, {name}).desc;
-    } else {
-      return '';
-    }
+    this.props.dispatch(fetchQueryset(this.props.params.id, 0, true));
   }
 
   componentWillUpdate() {
@@ -50,10 +42,13 @@ export default class GroupDetail extends React.Component {
   }
 
   render() {
+
+    const search = _.find(this.props.groups.searches, {id: this.props.params.id});
+
     return (
       <Page>
-        <ContentHeader title={this.props.params.name} />
-        <p>{this.getGroupDescription(this.props.params.name)}</p>
+        <ContentHeader title={search.name} />
+        <p style={styles.description}>Description: {search.description}</p>
         <div style={styles.base}>
           <UserList
             onPagination={this.onPagination.bind(this)}
@@ -83,5 +78,8 @@ const styles = {
   },
   userDetail: {
     flex: 2
+  },
+  description: {
+    fontSize: 18
   }
 };

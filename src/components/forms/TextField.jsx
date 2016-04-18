@@ -12,7 +12,9 @@ export default class TextField extends React.Component {
 
   static propTypes = {
     onChange: PropTypes.func,
-    value: PropTypes.string
+    value: PropTypes.string,
+    label: PropTypes.string,
+    error: PropTypes.string
   }
 
   handleChange(event) {

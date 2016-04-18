@@ -1,16 +1,15 @@
 import React, {PropTypes} from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
+import {Link} from 'react-router';
+
+import settings from 'settings';
 
 import {userSelected} from 'users/UsersActions';
 import {fetchCommentsByUser} from 'comments/CommentsActions';
-import {saveQueryFromState} from 'groups/GroupActions';
+import {saveQueryFromState, makeQueryFromState} from 'groups/GroupActions';
 import { fetchAllTags } from 'tags/TagActions';
-import { makeQueryFromState } from 'groups/GroupActions';
-import {
-  fetchSections,
-  fetchAuthors
-} from 'filters/FiltersActions';
+import { fetchSections, fetchAuthors } from 'filters/FiltersActions';
 
 import Page from 'app/layout/Page';
 import ContentHeader from 'components/ContentHeader';
@@ -19,6 +18,10 @@ import UserDetail from 'users/UserDetail';
 import GroupFilters from 'groups/GroupFilters';
 import Button from 'components/Button';
 import FaFloopyO from 'react-icons/lib/fa/floppy-o';
+import MdEdit from 'react-icons/lib/md/edit';
+import Modal from 'components/modal/Modal';
+import TextField from 'components/forms/TextField';
+import StatusBar from 'components/StatusBar';
 import Clauses from 'groups/Clauses';
 
 @connect(state => ({
@@ -28,6 +31,11 @@ import Clauses from 'groups/Clauses';
 }))
 @Radium
 export default class GroupCreator extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {saveModalOpen: false};
+  }
 
   static contextTypes = {
     router: PropTypes.object.isRequired
@@ -54,10 +62,35 @@ export default class GroupCreator extends React.Component {
     this.props.dispatch(fetchCommentsByUser(user._id));
   }
 
-  saveGroup() {
-    // all the code triggered here needs to be moved to a xenia package
-    const randomId = Math.floor(Math.random() * 99999);
-    this.props.dispatch(saveQueryFromState(`Group ${randomId}`, 'Sample group description'));
+  openModal() {
+    this.setState({saveModalOpen: true});
+  }
+
+  cancelSave() {
+    this.setState({saveModalOpen: false});
+  }
+
+  updateSearchName(searchName) {
+    this.setState({searchName});
+  }
+
+  updateSearcDesc(e) {
+    this.setState({searchDesc: e.target.value});
+  }
+
+  updateSearchTag(searchTag) {
+    this.setState({searchTag});
+  }
+
+  confirmSave() {
+    // show a saving icon or something?
+    const name = this.state.searchName;
+    const desc = this.state.searchDesc;
+    const tag = this.state.searchTag;
+
+    this.setState({saveModalOpen: false});
+
+    this.props.dispatch(saveQueryFromState(name, desc, tag));
   }
 
   onPagination(page = 0) {
@@ -79,20 +112,15 @@ export default class GroupCreator extends React.Component {
           </div>
 
           <div style={styles.rightPanel}>
-           {/* Removing until implemented
-            <Button onClick={this.saveGroup.bind(this)} category="primary" style={{float: 'right'}}>
+            <Button category="disabled" style={styles.editButton}>
+              Edit Search <MdEdit style={styles.saveIcon} />
+            </Button>
+            <Button onClick={this.openModal.bind(this)} category="primary" style={styles.saveButton}>
               Save Search <FaFloopyO style={styles.saveIcon} />
             </Button>
-            <div style={styles.userList}>
-              <UserList
-                onPagination={this.onPagination.bind(this)}
-                disabled={true} userSelected={()=>{}}
-                users={this.props.users} />
-            */}
             <div style={styles.userListContainer}>
               <UserList
                 onPagination={this.onPagination.bind(this)}
-                style={styles.userList}
                 loadingQueryset={this.props.groups.loadingQueryset}
                 users={this.props.groups.users} userSelected={this.updateUser.bind(this)} />
               <UserDetail
@@ -104,6 +132,31 @@ export default class GroupCreator extends React.Component {
           </div>
 
         </div>
+
+        <Modal
+          title="Save Search"
+          isOpen={this.state.saveModalOpen}
+          confirmAction={this.confirmSave.bind(this)}
+          cancelAction={this.cancelSave.bind(this)}>
+          <TextField label="Name" onChange={this.updateSearchName.bind(this)}/>
+          <p style={styles.modalLabel}>Description</p>
+          <textarea
+            style={styles.descriptionInput}
+            onChange={this.updateSearcDesc.bind(this)}></textarea>
+          <TextField label="Tag Name" onChange={this.updateSearchTag.bind(this)} />
+        </Modal>
+
+        <StatusBar
+          loading={this.props.groups.savingSearch}
+          visible={this.props.groups.savingSearch || !!this.props.groups.recentSavedSearch}>
+          {
+            this.props.groups.recentSavedSearch ?
+              (<Link style={styles.searchDetail} to={`/saved-search/${this.props.groups.recentSavedSearch.id}`}>
+                View Your Saved Search [{this.props.groups.recentSavedSearch.name}] →
+              </Link>) :
+              'Saving Search...'
+          }
+        </StatusBar>
 
       </Page>
     );
@@ -122,7 +175,8 @@ const styles = {
   userListContainer: {
     marginTop: 5,
     height: 900,
-    display: 'flex'
+    display: 'flex',
+    clear: 'both'
   },
   userDetail: {
     flex: 2,
@@ -133,6 +187,18 @@ const styles = {
     minWidth: 350,
     flex: 1
   },
+  modalLabel: {
+    fontSize: 16,
+    marginTop: 16
+  },
+  descriptionInput: {
+    padding: 8,
+    fontSize: 20,
+    minHeight: 120,
+    width: '100%',
+    border: '1px solid ' + settings.mediumGrey,
+    borderRadius: 3
+  },
   saveIcon: {
     width: 25,
     height: 25
@@ -141,5 +207,16 @@ const styles = {
     '@media (max-width: 1000px)': {
       'width': '100%'
     }
+  },
+  searchDetail: {
+    color: 'white',
+    textDecoration: 'none'
+  },
+  saveButton: {
+    float: 'right'
+  },
+  editButton: {
+    float: 'right',
+    marginLeft: 10
   }
 };

@@ -40,12 +40,6 @@ const filters = (state = initialState, action) => {
 
     // return Object.assign({}, state, filters, {filterList}, {configLoaded: true});
 
-  case types.CREATE_QUERY:
-    return {...state, loadingUserList: true};
-
-  case types.RECEIVE_USER_LIST:
-    return {...state, loadingUserList: false};
-
   case types.FILTER_CHANGED:
 
     const oldFilter = state[action.fieldName];

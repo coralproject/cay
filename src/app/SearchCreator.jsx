@@ -10,6 +10,8 @@ import {fetchCommentsByUser} from 'comments/CommentsActions';
 import {saveQueryFromState, makeQueryFromState} from 'search/SearchActions';
 import { fetchAllTags } from 'tags/TagActions';
 import { fetchSections, fetchAuthors } from 'filters/FiltersActions';
+import { populateDistributionStore } from 'filters/FiltersActions';
+
 
 import Page from 'app/layout/Page';
 import ContentHeader from 'components/ContentHeader';
@@ -54,7 +56,7 @@ export default class SearchCreator extends React.Component {
     this.props.dispatch(fetchAllTags());
     this.props.dispatch(fetchSections());
     this.props.dispatch(fetchAuthors());
-    // this.props.dispatch(populateDistributionStore());
+    this.props.dispatch(populateDistributionStore());
 
     this.props.dispatch(makeQueryFromState('user', 0, true));
   }

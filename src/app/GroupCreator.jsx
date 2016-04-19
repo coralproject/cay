@@ -6,6 +6,7 @@ import {userSelected} from 'users/UsersActions';
 import {fetchCommentsByUser} from 'comments/CommentsActions';
 import {saveQueryFromState} from 'groups/GroupActions';
 import { fetchAllTags } from 'tags/TagActions';
+import { populateDistributionStore } from 'filters/FiltersActions';
 import { makeQueryFromState } from 'groups/GroupActions';
 import {
   fetchSections,
@@ -41,11 +42,11 @@ export default class GroupCreator extends React.Component {
       let {router} = this.context;
       return router.push('/login');
     }
-
     /* set up the initial default / unfiltered view, this was previously in UserFilters */
     this.props.dispatch(fetchAllTags());
     this.props.dispatch(fetchSections());
     this.props.dispatch(fetchAuthors());
+    // this.props.dispatch(populateDistributionStore());
     this.props.dispatch(makeQueryFromState('user'));
   }
 

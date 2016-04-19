@@ -16,7 +16,8 @@ let initialState = {
   'member_since': null,
   breakdown: 'all',
   counter: 0, // this is a signal for ajax consumed by userFilters
-  specificBreakdown: ''
+  specificBreakdown: '',
+  distributions: null
 };
 
 const filters = (state = initialState, action) => {
@@ -79,6 +80,9 @@ const filters = (state = initialState, action) => {
 
   case types.SET_BREAKDOWN:
     return {...state, breakdown: action.breakdown};
+
+  case types.FETCH_DISTRIBUTIONS_SUCCESS:
+    return {...state, distributions: action.distros};
 
   case types.SET_SPECIFIC_BREAKDOWN:
     return {...state, specificBreakdown: action.specificBreakdown};

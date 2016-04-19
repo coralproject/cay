@@ -8,10 +8,7 @@ import {saveQueryFromState} from 'groups/GroupActions';
 import { fetchAllTags } from 'tags/TagActions';
 import { populateDistributionStore } from 'filters/FiltersActions';
 import { makeQueryFromState } from 'groups/GroupActions';
-import {
-  fetchSections,
-  fetchAuthors
-} from 'filters/FiltersActions';
+import { fetchSections, fetchAuthors } from 'filters/FiltersActions';
 
 import Page from 'app/layout/Page';
 import ContentHeader from 'components/ContentHeader';

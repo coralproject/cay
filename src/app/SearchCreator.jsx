@@ -54,6 +54,8 @@ export default class SearchCreator extends React.Component {
     this.props.dispatch(fetchAllTags());
     this.props.dispatch(fetchSections());
     this.props.dispatch(fetchAuthors());
+    // this.props.dispatch(populateDistributionStore());
+
     this.props.dispatch(makeQueryFromState('user', 0, true));
   }
 

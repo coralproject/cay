@@ -78,7 +78,7 @@ class SeeAllSearches extends React.Component {
             category="danger"
             style={styles.deleteButton}
             onClick={this.openDeleteModal.bind(this, search)}>
-            Delete
+            {window.L.t('Delete')}
           </Button>
           <p style={styles.searchDescription}>{search.description}</p>
           <ul>
@@ -93,8 +93,8 @@ class SeeAllSearches extends React.Component {
           <div style={styles.actionsContainer}>
             <Link
               style={styles.viewSearchLink}
-              to={`/saved-search/${search.id}`}>View Search Details</Link>
-            <span>Edit Search (coming soon)</span>
+              to={`/saved-search/${search.id}`}>{window.L.t('View Search Details')}</Link>
+            <span>{window.L.t('Edit Search')} ({window.L.t('coming soon')})</span>
           </div>
         </Card>
       );
@@ -121,12 +121,12 @@ class SeeAllSearches extends React.Component {
           this.state.pendingDeleteSearch ?
           (
             <Modal
-              title="Really delete saved search?"
+              title={window.L.t('Really delete saved search?')}
               isOpen={this.state.deleteModalOpen}
               confirmAction={this.confirmDelete.bind(this, this.state.pendingDeleteSearch)}
               cancelAction={this.cancelDelete.bind(this, this.state.pendingDeleteSearch)}>
-              <p>Search Name {this.state.pendingDeleteSearch.name}</p>
-              <p>Description: {this.state.pendingDeleteSearch.description}</p>
+              <p>{window.L.t('Search Name')} {this.state.pendingDeleteSearch.name}</p>
+              <p>{window.L.t('Description')}: {this.state.pendingDeleteSearch.description}</p>
             </Modal>
           )
           : null

@@ -95,7 +95,8 @@ export const receiveQueryset = (data, replace) => {
   return {
     type: QUERYSET_RECEIVED,
     data,
-    replace
+    replace,
+    userCount: data.results[1].Docs[0].count
   };
 };
 
@@ -131,6 +132,9 @@ export const createQuery = (query) => {
 
 /* xenia_package */
 export const makeQueryFromState = (type, page = 0) => {
+
+  const pageSize = 20;
+
   return (dispatch, getState) => {
     // make a query from the current state
     const filterState = getState().filters;
@@ -141,31 +145,39 @@ export const makeQueryFromState = (type, page = 0) => {
       desc: 'user search currently. this is going to be more dynamic in the future'
     });
 
+    const addMatches = x => {
+      filters.forEach(filter => {
+        let dbField;
+        if (filterState.breakdown === 'author' && filterState.specificBreakdown !== '') {
+          dbField = _.template(filter.template)({dimension: 'author.' + filterState.specificBreakdown});
+        } else if (filterState.breakdown === 'section' && filterState.specificBreakdown !== '') {
+          dbField = _.template(filter.template)({dimension: 'section.' + filterState.specificBreakdown});
+        } else { // all
+          dbField = _.template(filter.template)({dimension: 'all'});
+        }
+
+        // Only create match statements for non-defaults
+        if (filter.min !== filter.userMin) {
+          x.match({[dbField]: {$gte: clamp(filter.userMin, filter.min, filter.max)}});
+        }
+
+        if (filter.max !== filter.userMax) {
+          x.match({[dbField]: {$lte: clamp(filter.userMax, filter.min, filter.max)}});
+        }
+      });
+
+      return x;
+    };
+
     x.addQuery();
-    filters.forEach(filter => {
-      let dbField;
-      if (filterState.breakdown === 'author' && filterState.specificBreakdown !== '') {
-        dbField = _.template(filter.template)({dimension: 'author.' + filterState.specificBreakdown});
-      } else if (filterState.breakdown === 'section' && filterState.specificBreakdown !== '') {
-        dbField = _.template(filter.template)({dimension: 'section.' + filterState.specificBreakdown});
-      } else { // all
-        dbField = _.template(filter.template)({dimension: 'all'});
-      }
 
-      // Only create match statements for non-defaults
-      if (filter.min !== filter.userMin) {
-        x.match({[dbField]: {$gte: clamp(filter.userMin, filter.min, filter.max)}});
-      }
+    addMatches(x).skip(page * pageSize)
+      .limit(pageSize)
+      .include(['name', 'avatar', 'statistics.comments']);
 
-      if (filter.max !== filter.userMax) {
-        x.match({[dbField]: {$lte: clamp(filter.userMax, filter.min, filter.max)}});
-      }
-    });
+    // get the counts?
+    addMatches(x.addQuery()).group({_id: null, count: {$sum: 1}});
 
-    // doMakeQueryFromStateAsync(query, dispatch, app);
-    x.skip(page * 20)
-    .limit(20)
-    .include(['name', 'avatar', 'statistics.comments']);
     doMakeQueryFromStateAsync(x, dispatch, app);
   };
 };
@@ -273,9 +285,11 @@ export const deleteSearch = search => {
     dispatch({type: PILLAR_SEARCH_DELETE_INIT, search});
 
     xenia().deleteQuery(search.query).then(data => {
+      console.info('query_set deleted from xenia', data);
       return fetch(`${app.pillarHost}/api/search/${search.id}`, {method: 'DELETE'});
     })
     .then(resp => {
+      console.info('search deleted from pillar', resp);
       const newSearches = searches.searches.concat();
       // splice out deleted search
       newSearches.splice(_.indexOf(_.map(newSearches, 'id'), search.id), 1);

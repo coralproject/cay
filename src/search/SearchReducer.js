@@ -8,7 +8,8 @@ const initialState = {
   pendingSavedSearch: null, // when the search is being prepared to be saved in pillar
   users: [],
   searches: [],
-  savingSearch: false
+  savingSearch: false,
+  userCount: 0
 };
 
 const searches = (state = initialState, action) => {
@@ -34,7 +35,7 @@ const searches = (state = initialState, action) => {
   // query_set executed. receive a list of users.
   case types.QUERYSET_RECEIVED:
     const users =  action.replace ? [...action.data.results[0].Docs] : [...state.users, ...action.data.results[0].Docs];
-    return {...state, loadingQueryset: false, users};
+    return {...state, loadingQueryset: false, users, userCount: action.userCount};
 
   case types.PILLAR_SEARCHLIST_REQUEST:
     return {...state, loadingSearches: true};

@@ -19,7 +19,8 @@ export default class UserList extends React.Component {
       name: PropTypes.string.isRequired,
       _id: PropTypes.string.idRequired
     }).isRequired).isRequired,
-    disabled: PropTypes.bool
+    disabled: PropTypes.bool,
+    total: PropTypes.number
   }
 
   constructor(props) {
@@ -78,11 +79,9 @@ export default class UserList extends React.Component {
     return (
       <div style={ [ styles.base, this.props.style ] }>
         <div style={ styles.columnHeader }>
-        {/*  Removed until number is live
           <Heading size="medium">
-            <span style={styles.groupHeader}>{ window.L.t('results') }</span> (106 { window.L.t('users')})
+            <span style={styles.groupHeader}>{ window.L.t('results') }</span> ({this.props.total || 'awaiting pillar #s'} { window.L.t('users')})
           </Heading>
-        */}
       </div>
         {userListContent}
 

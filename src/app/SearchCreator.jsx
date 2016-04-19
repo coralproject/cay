@@ -120,6 +120,7 @@ export default class SearchCreator extends React.Component {
             </Button>
             <div style={styles.userListContainer}>
               <UserList
+                total={this.props.searches.userCount}
                 onPagination={this.onPagination.bind(this)}
                 loadingQueryset={this.props.searches.loadingQueryset}
                 users={this.props.searches.users} userSelected={this.updateUser.bind(this)} />

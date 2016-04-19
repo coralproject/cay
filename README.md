@@ -43,7 +43,7 @@ The basic idea is that the build process results in a `bundle.js` file containin
 |  +-- components        -> re-usable generic UI components
 |  +-- explorer          -> data visualization explorer domain
 |  +-- filters           -> any UI and redux for Filters
-|  +-- groups            -> any UI and redux for Groups
+|  +-- search            -> any UI and redux for Searches
 |  +-- i18n              -> internationalization wrappers
 |  +-- tags              -> any UI and redux for Tags
 |  +-- users             -> any UI and redux for Users

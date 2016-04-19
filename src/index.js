@@ -10,18 +10,19 @@ import { Provider } from 'react-redux';
 import { DevTools, DebugPanel, LogMonitor } from 'redux-devtools/lib/react';
 
 import configureStore from 'store.js';
-
 import { configXenia, configError } from 'app/AppActions';
+
 // import Dashboard from './containers/Dashboard';
-import GroupCreator from 'app/GroupCreator';
+import SearchCreator from 'app/SearchCreator';
 import TagManager from 'app/TagManager';
 import Login from 'app/Login';
 // import DataExplorer from 'app/DataExplorer';
-import SeeAllGroups from 'app/SeeAllGroups';
-import GroupDetail from 'app/GroupDetail';
+import SeeAllSearches from 'app/SeeAllSearches';
+import SearchDetail from 'app/SearchDetail';
 import NoMatch from 'app/NoMatch';
 import About from 'app/About';
 
+import registerServiceWorker from 'serviceworker!./sw.js';
 import ga from 'react-ga';
 
 let store;
@@ -40,8 +41,13 @@ require('reset.css');
 require('global.css');
 
 require('react-select.css');
+require('react-datepicker.min.css');
 
 require('../fonts/glyphicons-halflings-regular.woff');
+
+if ('serviceWorker' in navigator && process && process.env.NODE_ENV === 'production') {
+  registerServiceWorker({ scope: '/' }).then(() => {}, () => {});
+}
 
 import { Lang } from 'i18n/lang';
 @Lang
@@ -78,10 +84,10 @@ class Root extends React.Component {
             <Redirect from="/" to="search-creator" />
             <Route path="login" component={Login} />
             <Route path="about" component={About} />
-            <Route path="search-creator" component={GroupCreator} />
+            <Route path="search-creator" component={SearchCreator} />
             <Route path="tag-manager" component={TagManager} />
-            <Route path="saved-searches" component={SeeAllGroups}/>
-            <Route path="saved-search/:name" component={GroupDetail} />
+            <Route path="saved-searches" component={SeeAllSearches}/>
+            <Route path="saved-search/:id" component={SearchDetail} />
             <Route path="*" component={NoMatch} />
             {/*<Route path="explore" component={DataExplorer} />*/}
           </Router>

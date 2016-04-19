@@ -9,7 +9,7 @@ import FilterFactory from 'filters/FilterFactory';
 
 @connect(state => state.filters)
 @Radium
-export default class GroupFilters extends React.Component {
+export default class SearchFilters extends React.Component {
 
   constructor(props) {
     super(props);

@@ -2,7 +2,7 @@ import React from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
 import {userSelected} from 'users/UsersActions';
-import {fetchQueryset} from 'groups/GroupActions';
+import {fetchQueryset} from 'search/SearchActions';
 import {fetchCommentsByUser} from 'comments/CommentsActions';
 import _ from 'lodash';
 
@@ -13,31 +13,22 @@ import UserDetail from 'users/UserDetail';
 
 const mapStateToProps = state => {
   return {
-    groups: state.groups,
+    searches: state.searches,
     users: state.users,
     comments: state.comments
   };
 };
 
-// @connect(state => state.groups)
 @connect(mapStateToProps)
 @Radium
-export default class GroupDetail extends React.Component {
+export default class SearchDetail extends React.Component {
 
   componentWillMount() {
-    this.props.dispatch(fetchQueryset(this.props.params.name));
-  }
-
-  getGroupDescription(name) {
-    if (this.props.groups.length) {
-      return _.find(this.props.groups, {name}).desc;
-    } else {
-      return '';
-    }
+    this.props.dispatch(fetchQueryset(this.props.params.id, 0, true));
   }
 
   componentWillUpdate() {
-    // console.log('GroupDetail will update');
+    // console.log('SearchDetail will update');
   }
 
   updateUser(user) {
@@ -45,17 +36,25 @@ export default class GroupDetail extends React.Component {
     this.props.dispatch(fetchCommentsByUser(user._id));
   }
 
+  onPagination(page = 0) {
+    this.props.dispatch(fetchQueryset(this.props.params.name, page));
+  }
+
   render() {
+
+    const search = _.find(this.props.searches.searches, {id: this.props.params.id});
+
     return (
       <Page>
-        <ContentHeader title={this.props.params.name} />
-        <p>{this.getGroupDescription(this.props.params.name)}</p>
+        <ContentHeader title={search.name} />
+        <p style={styles.description}>Description: {search.description}</p>
         <div style={styles.base}>
           <UserList
+            onPagination={this.onPagination.bind(this)}
             userSelected={this.updateUser.bind(this)}
-            loadingQueryset={this.props.groups.loadingQueryset}
+            loadingQueryset={this.props.searches.loadingQueryset}
             style={styles.userList}
-            users={this.props.groups.users} />
+            users={this.props.searches.users} />
 
           <UserDetail
             commentsLoading={this.props.comments.loading}
@@ -71,16 +70,15 @@ export default class GroupDetail extends React.Component {
 const styles = {
   base: {
     display: 'flex',
-    minHeight: 250,
-    flexWrap: 'wrap-reverse',
     justifyContent: 'flex-start'
   },
   userList: {
-    flex: 1,
     minWidth: 315
   },
   userDetail: {
-    flex: 2,
-    minWidth: 630
+    flex: 2
+  },
+  description: {
+    fontSize: 18
   }
 };

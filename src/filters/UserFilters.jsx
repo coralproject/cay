@@ -1,8 +1,9 @@
 import React from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
+import _ from 'lodash';
 
-import { makeQueryFromState } from 'groups/GroupActions';
+import { makeQueryFromState } from 'search/SearchActions';
 import {
   setBreakdown,
   setSpecificBreakdown,
@@ -12,6 +13,7 @@ import {
 import Select from 'react-select';
 import FilterNumbers from 'filters/FilterNumbers';
 import FilterNumberPercent from 'filters/FilterNumberPercent';
+import FilterDate from 'filters/FilterDate';
 
 import Heading from 'components/Heading';
 
@@ -34,7 +36,7 @@ export default class UserFilters extends React.Component {
     }
   }
   updateUserList() {
-    this.props.dispatch(makeQueryFromState('user'));
+    this.props.dispatch(makeQueryFromState('user', 0, true));
   }
   getTags() {
     return this.props.tags.map(tag => {
@@ -112,6 +114,7 @@ export default class UserFilters extends React.Component {
     return userFilters.map((f,i) => {
       let filterComponent;
       const fmtDesc = f.description.charAt(0).toUpperCase() + f.description.slice(1, f.description.length);
+		const inTitleCase = _.map(f.description.split(' '), _.capitalize).join(' ');
 
       if (f.type === 'percentRange') {
         filterComponent = (
@@ -134,12 +137,22 @@ export default class UserFilters extends React.Component {
             max={f.max}
             userMin={f.userMin}
             userMax={f.userMax}
-            description={fmtDesc}
+            description={inTitleCase}
             fieldName={f.key}
             type={f.type}/>
         );
       } else if (f.type === 'dateRange') {
-        filterComponent = null;
+        filterComponent = (
+          <FilterDate
+            key={i}
+            min={f.min}
+            max={f.max}
+            userMin={f.userMin}
+            userMax={f.userMax}
+            description={inTitleCase}
+            type={f.type}
+            fieldName={f.key} />
+        );
       }
 
       return filterComponent;

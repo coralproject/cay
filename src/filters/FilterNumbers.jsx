@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import {filterChanged} from 'filters/FiltersActions';
 import {clamp} from 'components/utils/math';
 // import Flex from '../layout/Flex';
+import {VictoryLine} from 'victory';
 
 import Card from 'components/cards/Card';
 import CardHeader from 'components/cards/CardHeader';
@@ -33,8 +34,8 @@ const style = {
     // }
   },
   minMaxInputs: {
-    padding: "7px 10px",
-    border: "1px solid lightgrey",
+    padding: '7px 10px',
+    border: '1px solid lightgrey',
     borderRadius: 3
 
 
@@ -76,85 +77,107 @@ export default class FilterNumbers extends React.Component {
   }
   onMinChanged() {
     return (e) => {
-      const clampedUserMax = clamp(this.props.userMax, this.props.min, this.props.max);
-      const max = (this.props.isPercentage) ? Math.floor(clampedUserMax * 100) : clampedUserMax;
-      const value = e.target.value > max ? max : e.target.value;
+      // const clampedUserMax = clamp(this.props.userMax, this.props.min, this.props.max);
+      // const max = (this.props.isPercentage) ? Math.floor(clampedUserMax * 100) : clampedUserMax;
+      // const value = e.target.value > max ? max : e.target.value;
 
-      this.props.dispatch(filterChanged(this.props.fieldName, {userMin: value}));
+      this.props.dispatch(filterChanged(this.props.fieldName, {userMin: e.target.value}));
     };
   }
   onMaxChanged() {
     return (e) => {
-      const clampedUserMin = clamp(this.props.userMin, this.props.min, this.props.max);
-      const min = (this.props.isPercentage) ? Math.floor(clampedUserMin * 100) : clampedUserMin;
-      const value = e.target.value < min ? min : e.target.value;
+      // const clampedUserMin = clamp(this.props.userMin, this.props.min, this.props.max);
+      // const min = (this.props.isPercentage) ? Math.floor(clampedUserMin * 100) : clampedUserMin;
+      // const value = e.target.value < min ? min : e.target.value;
 
-      this.props.dispatch(filterChanged(this.props.fieldName, {userMax: value}));
+      this.props.dispatch(filterChanged(this.props.fieldName, {userMax: e.target.value}));
     };
   }
   updateSlider(values) {
     this.props.dispatch(filterChanged(this.props.fieldName, {userMin: values[0], userMax: values[1]}));
   }
-  renderGTLT() {
+  makeSparklines() {
+    /* this logic is going to change - it's only for total comments */
+    const totalCommentsDistro = this.props.distributions.map((bucket, i) => {
+      return {
+        x: i,
+        y: bucket.total
+      }
+    });
 
+
+
+    return (
+      <VictoryLine
+        domain={[0, 20]}
+        padding={{
+          right: 40,
+          top: 0
+        }}
+        height={30}
+        width={200}
+        data={totalCommentsDistro}
+        interpolation='stepAfter'
+        style={{
+          parent: {
+            position: 'relative',
+            top: -2
+          },
+          data: {
+            stroke: 'rgb(200,200,200)',
+            strokeWidth: 1
+          },
+          labels: {fontSize: 12}
+        }}
+      />
+    );
+  }
+  renderHelpText() {
+    let help = "";
+
+    if (this.props.userMax < this.props.userMin) {
+      help = "Max cannot be less than min"
+    }
+
+    return help;
+  }
+  render() {
     const clampedUserMin = clamp(this.props.userMin, this.props.min, this.props.max);
     const clampedUserMax = clamp(this.props.userMax, this.props.min, this.props.max);
 
-    var min = (this.props.isPercentage) ? Math.floor(clampedUserMin * 100) : clampedUserMin;
-    var max = (this.props.isPercentage) ? Math.floor(clampedUserMax * 100) : clampedUserMax;
+    const min = clampedUserMin;
+    const max = clampedUserMax;
 
     return (
-      <div>
+      <Card>
+        <div style={{
+          marginTop: 0,
+          marginBottom: 10,
+          display: "flex",
+          alignItems: "flex-start",
+          justifyContent: "space-between"
+        }}>
+        <span style={{marginBottom: 10, marginRight: 20}}>{this.props.description}</span>
+        { this.props.distributions ? this.makeSparklines() : "" }
+        </div>
         <div>
           <input
             onChange={this.onMinChanged().bind(this)}
             style={style.minMaxInputs}
-            type="text"
-            value={`${min > max ? max : min}${this.props.isPercentage ? '%' : ''}`}/>
+            type='text'
+            value={
+             `${this.props.userMin}`
+            }/>
           {` - `}
           <input
             onChange={this.onMaxChanged().bind(this)}
             style={style.minMaxInputs}
-            type="text"
-            value={`${max}${this.props.isPercentage ? '%' : ''}`}/>
-
+            type='text'
+            value={
+             `${this.props.userMax}`
+            }/>     ​
         </div>
-        <div style={{marginTop: 12, width: '90%'}}>
-          <Slider
-            min={this.props.min}
-            max={this.props.max}
-            step={this.state.step}
-            defaultValue={[clampedUserMin, clampedUserMax]}
-            value={[clampedUserMin, clampedUserMax]}
-            onChange={this.updateSlider.bind(this)}
-            withBars/>
-        </div>
-      </div>
-    );
-  }
-  renderEQUALS() {
-    return (
-      <div>
-        {/* will be a component */}
-        <span> {this.props.description} </span>
-        <span style={style.symbol} onClick={this.handleSymbolClick.bind(this)}>{'='}</span>
-        <input
-          onFocus={this.popEqualsSlider}
-          style={style.sliderInput}
-          onChange={this.handleEqualChanged.bind(this)}
-          value={this.state.equals || this.props.min}/>
-      </div>
-    );
-  }
-  render() {
-    return (
-      <Card>
-        <CardHeader>{this.props.description}</CardHeader>
-        {
-          this.state.symbol === 'GTLT' ?
-            this.renderGTLT() :
-            this.renderEQUALS()
-        }
+        <p style={{marginTop: 10, color: "red"}}>{this.renderHelpText()}</p>
       </Card>
     );
   }

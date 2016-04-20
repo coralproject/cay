@@ -4,7 +4,6 @@ import {connect} from 'react-redux';
 import {filterChanged} from 'filters/FiltersActions';
 import {clamp} from 'components/utils/math';
 // import Flex from '../layout/Flex';
-import {VictoryLine} from 'victory';
 
 import Card from 'components/cards/Card';
 import CardHeader from 'components/cards/CardHeader';
@@ -34,8 +33,8 @@ const style = {
     // }
   },
   minMaxInputs: {
-    padding: '7px 10px',
-    border: '1px solid lightgrey',
+    padding: "7px 10px",
+    border: "1px solid lightgrey",
     borderRadius: 3
 
 
@@ -71,17 +70,13 @@ export default class FilterNumbers extends React.Component {
     this.setState({step: (props.type === 'floatRange' || props.type === 'percentRange') ? 0.01 : 1});
   }
 
-  handleSymbolClick(){
-    const newSymbol = this.state.symbol === 'GTLT' ? 'EQUALS' : 'GTLT';
-    this.setState({symbol: newSymbol});
-  }
   onMinChanged() {
     return (e) => {
       // const clampedUserMax = clamp(this.props.userMax, this.props.min, this.props.max);
       // const max = (this.props.isPercentage) ? Math.floor(clampedUserMax * 100) : clampedUserMax;
       // const value = e.target.value > max ? max : e.target.value;
 
-      this.props.dispatch(filterChanged(this.props.fieldName, {userMin: e.target.value}));
+      this.props.dispatch(filterChanged(this.props.fieldName, {userMin: e.target.value/100}));
     };
   }
   onMaxChanged() {
@@ -90,50 +85,18 @@ export default class FilterNumbers extends React.Component {
       // const min = (this.props.isPercentage) ? Math.floor(clampedUserMin * 100) : clampedUserMin;
       // const value = e.target.value < min ? min : e.target.value;
 
-      this.props.dispatch(filterChanged(this.props.fieldName, {userMax: e.target.value}));
+      this.props.dispatch(filterChanged(this.props.fieldName, {userMax: e.target.value/100}));
     };
   }
   updateSlider(values) {
     this.props.dispatch(filterChanged(this.props.fieldName, {userMin: values[0], userMax: values[1]}));
   }
-  makeSparklines() {
-    /* this logic is going to change - it's only for total comments */
-    const totalCommentsDistro = this.props.distributions.map((bucket, i) => {
-      return {
-        x: i,
-        y: bucket.total
-      }
-    });
-
-
-
-    return (
-      <VictoryLine
-        domain={[0, 20]}
-        padding={{
-          right: 40,
-          top: 0
-        }}
-        height={30}
-        width={200}
-        data={totalCommentsDistro}
-        interpolation='stepAfter'
-        style={{
-          parent: {
-            position: 'relative',
-            top: -2
-          },
-          data: {
-            stroke: 'rgb(200,200,200)',
-            strokeWidth: 1
-          },
-          labels: {fontSize: 12}
-        }}
-      />
-    );
-  }
   renderHelpText() {
     let help = "";
+
+    if (this.props.userMin > this.props.userMax) {
+      help = "Min cannot be greater than max"
+    }
 
     if (this.props.userMax < this.props.userMin) {
       help = "Max cannot be less than min"
@@ -145,39 +108,30 @@ export default class FilterNumbers extends React.Component {
     const clampedUserMin = clamp(this.props.userMin, this.props.min, this.props.max);
     const clampedUserMax = clamp(this.props.userMax, this.props.min, this.props.max);
 
-    const min = clampedUserMin;
-    const max = clampedUserMax;
+    var min = Math.floor(clampedUserMin * 100);
+    var max = Math.floor(clampedUserMax * 100);
 
     return (
       <Card>
-        <div style={{
-          marginTop: 0,
-          marginBottom: 10,
-          display: "flex",
-          alignItems: "flex-start",
-          justifyContent: "space-between"
-        }}>
-        <span style={{marginBottom: 10, marginRight: 20}}>{this.props.description}</span>
-        { this.props.distributions ? this.makeSparklines() : "" }
-        </div>
-        <div>
-          <input
-            onChange={this.onMinChanged().bind(this)}
-            style={style.minMaxInputs}
-            type='text'
-            value={
-             `${this.props.userMin}`
-            }/>
-          {` - `}
-          <input
-            onChange={this.onMaxChanged().bind(this)}
-            style={style.minMaxInputs}
-            type='text'
-            value={
-             `${this.props.userMax}`
-            }/>     ​
-        </div>
-        <p style={{marginTop: 10, color: "red"}}>{this.renderHelpText()}</p>
+        <CardHeader>{this.props.description}</CardHeader>
+          <div>
+            <input
+              onChange={this.onMinChanged().bind(this)}
+              style={style.minMaxInputs}
+              type="text"
+              value={
+                `${Math.floor(this.props.userMin*100)}`
+              }/>
+            {` - `}
+            <input
+              onChange={this.onMaxChanged().bind(this)}
+              style={style.minMaxInputs}
+              type="text"
+              value={
+                `${Math.floor(this.props.userMax*100)}`
+              }/>
+            {this.renderHelpText()}
+          </div>
       </Card>
     );
   }

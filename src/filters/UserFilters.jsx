@@ -12,6 +12,7 @@ import {
 
 import Select from 'react-select';
 import FilterNumbers from 'filters/FilterNumbers';
+import FilterNumberPercent from 'filters/FilterNumberPercent';
 import FilterDate from 'filters/FilterDate';
 
 import Heading from 'components/Heading';
@@ -112,10 +113,23 @@ export default class UserFilters extends React.Component {
     const userFilters = filters.filter(f => f.collection === 'user_statistics');
     return userFilters.map((f,i) => {
       let filterComponent;
+      const fmtDesc = f.description.charAt(0).toUpperCase() + f.description.slice(1, f.description.length);
+		const inTitleCase = _.map(f.description.split(' '), _.capitalize).join(' ');
 
-      const inTitleCase = _.map(f.description.split(' '), _.capitalize).join(' ');
-      if (f.type === 'intRange' || f.type === 'percentRange' || f.type === 'floatRange') {
-
+      if (f.type === 'percentRange') {
+        filterComponent = (
+          <FilterNumberPercent
+            key={i}
+            min={f.min}
+            max={f.max}
+            userMin={f.userMin}
+            userMax={f.userMax}
+            description={fmtDesc}
+            fieldName={f.key}
+            type={f.type}/>
+        );
+      } else if (f.type === 'intRange' || f.type === 'floatRange') {
+        // capitalize first letter of description
         filterComponent = (
           <FilterNumbers
             key={i}
@@ -125,8 +139,7 @@ export default class UserFilters extends React.Component {
             userMax={f.userMax}
             description={inTitleCase}
             fieldName={f.key}
-            type={f.type}
-            isPercentage={f.type === 'percentRange'} />
+            type={f.type}/>
         );
       } else if (f.type === 'dateRange') {
         filterComponent = (

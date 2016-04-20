@@ -9,6 +9,11 @@ export const RECEIVE_AUTHORS = 'RECEIVE_AUTHORS';
 export const DATA_CONFIG_LOADED = 'DATA_CONFIG_LOADED';
 export const DATA_CONFIG_ERROR = 'DATA_CONFIG_ERROR';
 
+export const FETCH_DISTRIBUTIONS = 'FETCH_DISTRIBUTIONS';
+export const FETCH_DISTRIBUTIONS_SUCCESS = 'FETCH_DISTRIBUTIONS_SUCCESS';
+export const FETCH_DISTRIBUTIONS_ERROR = 'FETCH_DISTRIBUTIONS_ERROR';
+
+
 export const FILTER_CHANGED = 'FILTER_CHANGED';
 
 export const SET_BREAKDOWN = 'SET_BREAKDOWN';
@@ -35,11 +40,7 @@ export const fetchSections = () => {
     dispatch(requestSections());
 
     /* xenia_package */
-    xenia().exec('dimension_section_list')
-      .then(json => dispatch(receiveSections(json)))
-      .catch(err => {
-        console.log('oh no. failed to get section list', err);
-      });
+
   };
 };
 
@@ -242,5 +243,56 @@ export const fetchFilterConfig = () => {
         return dispatch({type: DATA_CONFIG_ERROR, message});
       });
 
+  };
+};
+
+const fetchDistributions = () => {
+  return {
+    type: FETCH_DISTRIBUTIONS
+  };
+};
+
+const fetchDistributionsSuccess = (data) => {
+  return {
+    type: FETCH_DISTRIBUTIONS_SUCCESS,
+    data: data
+  };
+};
+
+const fetchDistributionsError = (err) => {
+  return {
+    type: FETCH_DISTRIBUTIONS_ERROR,
+    data: err
+  };
+};
+
+export const populateDistributionStore = () => {
+  return (dispatch) => {
+    xenia()
+      .match({'statistics.comments.all.all.count': {$lte: 10}})
+      .project({
+        count: {
+          $subtract: [
+            "$statistics.comments.all.all.count",
+            {
+              $mod: ["$statistics.comments.all.all.count", 1]
+            }
+          ]
+        },
+        _id: false,
+      })
+      .group({
+        _id: "$count",
+        total: {$sum: 1}
+      })
+      .exec().then((data, err) => {
+        if (err) {console.log('get dist error',err)}
+        // console.log('distributions', data);
+        // console.log('distro', _.sortByOrder(data.results[0].Docs, "_id", ['asc']))
+        dispatch({
+          type: FETCH_DISTRIBUTIONS_SUCCESS,
+          distros: _.sortByOrder(data.results[0].Docs, "_id", ['asc'])
+        })
+      });
   };
 };

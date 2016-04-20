@@ -98,14 +98,13 @@ export default class FilterNumbers extends React.Component {
   }
   makeSparklines() {
     /* this logic is going to change - it's only for total comments */
-    const totalCommentsDistro = this.props.distributions.map((bucket, i) => {
+
+    const totalCommentsDistro = this.props.distributions[this.props[this.props.fieldName].field].map((bucket, i) => {
       return {
         x: i,
         y: bucket.total
-      }
+      };
     });
-
-
 
     return (
       <VictoryLine

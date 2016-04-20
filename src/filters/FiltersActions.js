@@ -100,7 +100,7 @@ const parseFilterRanges = (ranges, filterState) => {
 
     const possibleDateValue = new Date(value);
     // if it's a Date, change the type
-    console.log('parsed value', aggKey, value, possibleDateValue);
+    // console.log('parsed value', aggKey, value, possibleDateValue);
     if (_.isString(value) && _.isDate(possibleDateValue) && !isNaN(possibleDateValue)) {
       value = possibleDateValue;
     }
@@ -186,7 +186,7 @@ export const getFilterRanges = () => {
     xenia(query).exec()
       .then(data => {
         const doc = data.results[0].Docs[0];
-        console.log('gs',getState());
+        // console.log('gs',getState());
         let counter = getState().filters.counter;
         counter++;
 
@@ -266,33 +266,55 @@ const fetchDistributionsError = (err) => {
   };
 };
 
+
+const distributionForInput = (x, inputValue) => {
+  return x.addQuery().project({
+    count: {
+      $subtract: [
+        '$statistics.comments.all.all.'+inputValue,
+        {
+          $mod: ['$statistics.comments.all.all.'+inputValue, 10]
+        }
+      ]
+    },
+    _id: false
+  })
+  .group({
+    _id: '$count',
+    total: {$sum: 1}
+  })
+  .sort({
+    '_id': 1
+  });
+};
+
+const inputValues = [
+  'count',
+  'replied_count',
+  'replied_ratio',
+  'reply_count',
+  'reply_ratio',
+  'word_count_average'
+];
+
 export const populateDistributionStore = () => {
   return (dispatch) => {
-    xenia()
-      .match({'statistics.comments.all.all.count': {$lte: 10}})
-      .project({
-        count: {
-          $subtract: [
-            "$statistics.comments.all.all.count",
-            {
-              $mod: ["$statistics.comments.all.all.count", 1]
-            }
-          ]
-        },
-        _id: false,
-      })
-      .group({
-        _id: "$count",
-        total: {$sum: 1}
-      })
-      .exec().then((data, err) => {
-        if (err) {console.log('get dist error',err)}
-        // console.log('distributions', data);
-        // console.log('distro', _.sortByOrder(data.results[0].Docs, "_id", ['asc']))
-        dispatch({
-          type: FETCH_DISTRIBUTIONS_SUCCESS,
-          distros: _.sortByOrder(data.results[0].Docs, "_id", ['asc'])
-        })
+    const x = xenia({name: 'distributions'});
+
+    inputValues.map((inputValue) => {
+      distributionForInput(x, inputValue);
+    });
+
+    x.exec().then((data, err) => {
+      if (err) {console.log('get dist error',err);}
+      const merged = {};
+      data.results.map((result, i) => {
+        merged[inputValues[i]] = result.Docs;
       });
+      dispatch({
+        type: FETCH_DISTRIBUTIONS_SUCCESS,
+        distros: merged
+      });
+    });
   };
 };

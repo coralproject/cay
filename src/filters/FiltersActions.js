@@ -268,12 +268,14 @@ const fetchDistributionsError = (err) => {
 
 
 const distributionForInput = (x, inputValue) => {
-  return x.addQuery().project({
+  return x.addQuery()
+  // .match({['statistics.comments.all.all.'+inputValue]: {$lte: 15}})
+  .project({
     count: {
       $subtract: [
         '$statistics.comments.all.all.'+inputValue,
         {
-          $mod: ['$statistics.comments.all.all.'+inputValue, 10]
+          $mod: ['$statistics.comments.all.all.'+inputValue, 15]
         }
       ]
     },

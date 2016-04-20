@@ -116,7 +116,7 @@ export default class FilterNumbers extends React.Component {
         height={30}
         width={200}
         data={totalCommentsDistro}
-        interpolation='stepAfter'
+        interpolation='linear'
         style={{
           parent: {
             position: 'relative',

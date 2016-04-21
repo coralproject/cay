@@ -30,6 +30,8 @@ export const PILLAR_SEARCH_DELETE_INIT = 'PILLAR_SEARCH_DELETE_INIT';
 export const PILLAR_SEARCH_DELETED = 'PILLAR_SEARCH_DELETED';
 export const PILLAR_SEARCH_DELETE_FAILURE = 'PILLAR_SEARCH_DELETE_FAILURE';
 
+export const CLEAR_USER_LIST = 'CLEAR_USER_LIST';
+
 export const selectQueryset = (queryset) => {
   return {
     type: QUERYSET_SELECTED,
@@ -302,4 +304,8 @@ export const deleteSearch = search => {
       dispatch({type: PILLAR_SEARCH_DELETE_FAILURE, error});
     });
   };
+};
+
+export const clearUserList = () => {
+  return {type: CLEAR_USER_LIST};
 };

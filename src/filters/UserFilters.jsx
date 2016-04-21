@@ -3,7 +3,7 @@ import Radium from 'radium';
 import {connect} from 'react-redux';
 import _ from 'lodash';
 
-import { makeQueryFromState } from 'search/SearchActions';
+import { makeQueryFromState, clearUserList } from 'search/SearchActions';
 import {
   setBreakdown,
   setSpecificBreakdown,
@@ -35,6 +35,7 @@ export default class UserFilters extends React.Component {
     }
   }
   updateUserList() {
+    this.props.dispatch(clearUserList());
     this.props.dispatch(makeQueryFromState('user', 0, true));
   }
   getTags() {

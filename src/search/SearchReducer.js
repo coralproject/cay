@@ -68,6 +68,9 @@ const searches = (state = initialState, action) => {
   case types.PILLAR_SEARCH_DELETE_FAILURE:
     return {...state, pendingDeleteSearch: null};
 
+  case types.CLEAR_USER_LIST:
+    return {...state, users: []};
+
   default:
     // console.log('no reducer matches:', action.type);
     return state;

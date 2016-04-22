@@ -150,6 +150,8 @@ export const makeQueryFromState = (type, page = 0) => {
     const addMatches = x => {
       filters.forEach(filter => {
         let dbField;
+
+        // get the name of the mongo db field we want to $match on.
         if (filterState.breakdown === 'author' && filterState.specificBreakdown !== '') {
           dbField = _.template(filter.template)({dimension: 'author.' + filterState.specificBreakdown});
         } else if (filterState.breakdown === 'section' && filterState.specificBreakdown !== '') {
@@ -159,25 +161,30 @@ export const makeQueryFromState = (type, page = 0) => {
         }
 
         // Only create match statements for non-defaults
-        if (filter.min !== filter.userMin) {
-          x.match({[dbField]: {$gte: clamp(filter.userMin, filter.min, filter.max)}});
+        // user min and user max are stored for UX purposes.
+        // filter.userMax and filter.max COULD be different values, but be equivalent in the UI (visually)
+        const clampedUserMin = clamp(filter.userMin, filter.min, filter.max);
+        const clampedUserMax = clamp(filter.userMax, filter.min, filter.max);
+
+        // convert everything to numbers since Dates must be sent to xenia as epoch numbers
+        // this will break if a string literal is ever a filter value since NaN !== NaN
+        if (+filter.min !== +clampedUserMin) {
+          x.match({[dbField]: {$gte: +clampedUserMin}});
         }
 
-        if (filter.max !== filter.userMax) {
-          x.match({[dbField]: {$lte: clamp(filter.userMax, filter.min, filter.max)}});
+        if (+filter.max !== +clampedUserMax) {
+          x.match({[dbField]: {$lte: +clampedUserMax}});
         }
       });
 
       return x;
     };
 
-    x.addQuery();
-
-    addMatches(x).skip(page * pageSize)
+    addMatches(x.addQuery()).skip(page * pageSize)
       .limit(pageSize)
       .include(['name', 'avatar', 'statistics.comments']);
 
-    // get the counts?
+    // get the counts
     addMatches(x.addQuery()).group({_id: null, count: {$sum: 1}});
 
     doMakeQueryFromStateAsync(x, dispatch, app);

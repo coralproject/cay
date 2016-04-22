@@ -111,7 +111,6 @@ export default class FilterNumbers extends React.Component {
 
     const min = clampedUserMin;
     const max = clampedUserMax;
-    console.log('num',this.props.distributions[this.props[this.props.fieldName].field])
 
     return (
       <Card>

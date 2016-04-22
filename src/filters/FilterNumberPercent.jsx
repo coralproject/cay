@@ -110,25 +110,10 @@ export default class FilterNumbers extends React.Component {
     var min = Math.floor(clampedUserMin * 100);
     var max = Math.floor(clampedUserMax * 100);
 
-    console.log('0000000000000000000',this.props)
-    console.log('11111111111111111',this.props[this.props.fieldName])
-    console.log('2222222222222222222222',this.props[this.props.fieldName].field)
-    console.log('33333333333333333333',this.props.distributions[this.props[this.props.fieldName].field])
-
-
-
     return (
       <Card>
         <CardHeader>
           <span style={{marginBottom: 10, marginRight: 20}}>{this.props.description}</span>
-          {/*
-            this.props.distributions ?
-            <Sparkline
-              distribution={
-                this.props.distributions[this.props[this.props.fieldName].field]
-              }/> :
-              ''
-          */}
         </CardHeader>
           <div>
             <input

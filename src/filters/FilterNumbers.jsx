@@ -4,10 +4,10 @@ import {connect} from 'react-redux';
 import {filterChanged} from 'filters/FiltersActions';
 import {clamp} from 'components/utils/math';
 // import Flex from '../layout/Flex';
-import {VictoryLine} from 'victory';
 
 import Card from 'components/cards/Card';
 import CardHeader from 'components/cards/CardHeader';
+import Sparkline from 'filters/Sparkline';
 
 import Slider from 'components/Slider';
 
@@ -96,41 +96,6 @@ export default class FilterNumbers extends React.Component {
   updateSlider(values) {
     this.props.dispatch(filterChanged(this.props.fieldName, {userMin: values[0], userMax: values[1]}));
   }
-  makeSparklines() {
-    /* this logic is going to change - it's only for total comments */
-
-    const totalCommentsDistro = this.props.distributions[this.props[this.props.fieldName].field].map((bucket, i) => {
-      return {
-        x: i,
-        y: bucket.total
-      };
-    });
-
-    return (
-      <VictoryLine
-        domain={[0, 20]}
-        padding={{
-          right: 40,
-          top: 0
-        }}
-        height={30}
-        width={200}
-        data={totalCommentsDistro}
-        interpolation='linear'
-        style={{
-          parent: {
-            position: 'relative',
-            top: -2
-          },
-          data: {
-            stroke: 'rgb(200,200,200)',
-            strokeWidth: 1
-          },
-          labels: {fontSize: 12}
-        }}
-      />
-    );
-  }
   renderHelpText() {
     let help = "";
 
@@ -146,6 +111,7 @@ export default class FilterNumbers extends React.Component {
 
     const min = clampedUserMin;
     const max = clampedUserMax;
+    console.log('num',this.props.distributions[this.props[this.props.fieldName].field])
 
     return (
       <Card>
@@ -157,7 +123,14 @@ export default class FilterNumbers extends React.Component {
           justifyContent: "space-between"
         }}>
         <span style={{marginBottom: 10, marginRight: 20}}>{this.props.description}</span>
-        { this.props.distributions ? this.makeSparklines() : "" }
+        {
+          this.props.distributions ?
+          <Sparkline
+            distribution={
+              this.props.distributions[this.props[this.props.fieldName].field]
+            }/> :
+            ""
+        }
         </div>
         <div>
           <input

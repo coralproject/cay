@@ -7,6 +7,7 @@ import {clamp} from 'components/utils/math';
 
 import Card from 'components/cards/Card';
 import CardHeader from 'components/cards/CardHeader';
+import Sparkline from 'filters/Sparkline';
 
 import Slider from 'components/Slider';
 
@@ -33,11 +34,9 @@ const style = {
     // }
   },
   minMaxInputs: {
-    padding: "7px 10px",
-    border: "1px solid lightgrey",
+    padding: '7px 10px',
+    border: '1px solid lightgrey',
     borderRadius: 3
-
-
   }
 };
 
@@ -92,14 +91,14 @@ export default class FilterNumbers extends React.Component {
     this.props.dispatch(filterChanged(this.props.fieldName, {userMin: values[0], userMax: values[1]}));
   }
   renderHelpText() {
-    let help = "";
+    let help = '';
 
     if (this.props.userMin > this.props.userMax) {
-      help = "Min cannot be greater than max"
+      help = 'Min cannot be greater than max'
     }
 
     if (this.props.userMax < this.props.userMin) {
-      help = "Max cannot be less than min"
+      help = 'Max cannot be less than min'
     }
 
     return help;
@@ -113,12 +112,22 @@ export default class FilterNumbers extends React.Component {
 
     return (
       <Card>
-        <CardHeader>{this.props.description}</CardHeader>
+        <CardHeader>
+          <span style={{marginBottom: 10, marginRight: 20}}>{this.props.description}</span>
+          {/*
+            this.props.distributions ?
+            <Sparkline
+              distribution={
+                this.props.distributions[this.props[this.props.fieldName].field]
+              }/> :
+              ''
+          */}
+        </CardHeader>
           <div>
             <input
               onChange={this.onMinChanged().bind(this)}
               style={style.minMaxInputs}
-              type="text"
+              type='text'
               value={
                 `${Math.floor(this.props.userMin*100)}`
               }/>
@@ -126,7 +135,7 @@ export default class FilterNumbers extends React.Component {
             <input
               onChange={this.onMaxChanged().bind(this)}
               style={style.minMaxInputs}
-              type="text"
+              type='text'
               value={
                 `${Math.floor(this.props.userMax*100)}`
               }/>

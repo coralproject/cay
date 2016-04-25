@@ -163,16 +163,19 @@ export const makeQueryFromState = (type, page = 0) => {
         // Only create match statements for non-defaults
         // user min and user max are stored for UX purposes.
         // filter.userMax and filter.max COULD be different values, but be equivalent in the UI (visually)
+        // filter.min and filter.max change when the ranges are populated from the server
         const clampedUserMin = clamp(filter.userMin, filter.min, filter.max);
         const clampedUserMax = clamp(filter.userMax, filter.min, filter.max);
 
         // convert everything to numbers since Dates must be sent to xenia as epoch numbers
         // this will break if a string literal is ever a filter value since NaN !== NaN
         if (+filter.min !== +clampedUserMin) {
+          console.log(`${dbField} filter.min ${+filter.min} clampedUserMin ${+clampedUserMin}`);
           x.match({[dbField]: {$gte: +clampedUserMin}});
         }
 
         if (+filter.max !== +clampedUserMax) {
+          console.log(`${dbField} filter.max ${+filter.max} clampedUserMin ${+clampedUserMax}`);
           x.match({[dbField]: {$lte: +clampedUserMax}});
         }
       });

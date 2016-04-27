@@ -1,36 +1,10 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
 import Radium from 'radium';
-import settings from '../../settings';
+import TextField from 'components/forms/TextField';
+import settings from 'settings';
 
 @Radium
-export default class TextField extends React.Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {value: props.value || '', focused: false};
-  }
-
-  static propTypes = {
-    onChange: PropTypes.func,
-    value: PropTypes.string,
-    label: PropTypes.string,
-    error: PropTypes.string
-  }
-
-  handleChange(event) {
-    this.setState({value: event.target.value});
-    if (typeof this.props.onChange === 'function') {
-      this.props.onChange(event.target.value);
-    }
-  }
-
-  handleFocus(event) {
-    this.setState({focused: true});
-  }
-
-  handleBlur(event) {
-    this.setState({focused: false});
-  }
+export default class TextArea extends TextField {
 
   render() {
     return (
@@ -42,7 +16,7 @@ export default class TextField extends React.Component {
         ]}>
           {this.props.label}
         </label>
-        <input
+        <textarea
           placeholder={this.props.label}
           value={this.state.value}
           style={styles.input}
@@ -85,7 +59,7 @@ const styles = {
     color: settings.infoColor
   },
   input: {
-    padding: '0 0 0 8px',
+    padding: '0 0 0 6px',
     position: 'relative',
     width: '100%',
     height: '100%',
@@ -93,7 +67,7 @@ const styles = {
     outline: 'none',
     backgroundColor: 'transparent',
     boxSizing: 'border-box',
-    marginTop: 14,
+    marginTop: 40,
     fontSize: 'inherit',
     color: settings.darkerGrey
   },
@@ -102,7 +76,7 @@ const styles = {
     borderColor: 'transparent',
     borderBottom: '1px solid ' + settings.grey,
     width: '100%',
-    bottom: -4,
+    bottom: -50,
     height: 0,
     boxSizing: 'content-box'
   },

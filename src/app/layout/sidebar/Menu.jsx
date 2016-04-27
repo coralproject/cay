@@ -8,6 +8,7 @@ import MdBuild from 'react-icons/lib/md/build';
 import MdSettings from 'react-icons/lib/md/settings';
 import MdInfoOutline from 'react-icons/lib/md/info-outline';
 import MdGroup from 'react-icons/lib/md/group';
+import MdArtTrack from 'react-icons/lib/md/art-track';
 
 import { Lang } from 'i18n/lang';
 import settings from 'settings';
@@ -26,6 +27,7 @@ class Menu extends React.Component {
           <MenuItem name={ window.L.t('Saved Searches') } target="/saved-searches" icon={<MdGroup />} />
           <MenuItem name={ window.L.t('Search Creator') } target="/search-creator" icon={<MdBuild />} />
           <MenuItem name={ window.L.t('Tag Manager') } target="/tag-manager" icon={<MdSettings />}/>
+          <MenuItem name="Ask" target="asks" icon={<MdArtTrack />}/>
           <MenuItem name={ window.L.t('About') } target="/about" icon={<MdInfoOutline />}/>
           {/*<MenuItem name="Settings" target="/settings" icon={<MdSettings />} />*/}
         </ul>

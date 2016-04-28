@@ -40,4 +40,4 @@ const styles = {
   row: {
     cursor: 'pointer'
   }
-}
+};

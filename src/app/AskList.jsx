@@ -34,7 +34,7 @@ export default class AskList extends React.Component {
   }
 
   onConfirmClick() {
-    var askToDelete = this.state.tagToDelete;
+    var askToDelete = this.state.askToDelete;
     this.setState({ confirmAskName: '', showConfirmDialog: false, tagToDelete: null });
     this.props.dispatch(deleteAsk(...askToDelete));
   }
@@ -73,7 +73,7 @@ export default class AskList extends React.Component {
             <TableHeader>{ window.L.t('Answers') }</TableHeader>
           </TableHead>
           <TableBody>
-            {this.props.asks.map(this.renderRow.bind(this))}
+            {this.props.asks.items.map(this.renderRow.bind(this))}
           </TableBody>
         </Table>
         {
@@ -143,4 +143,4 @@ const styles = {
     left: '30px',
     bottom: '30px'
   }
-}
+};

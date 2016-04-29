@@ -170,12 +170,10 @@ export const makeQueryFromState = (type, page = 0) => {
         // convert everything to numbers since Dates must be sent to xenia as epoch numbers
         // this will break if a string literal is ever a filter value since NaN !== NaN
         if (+filter.min !== +clampedUserMin) {
-          console.log(`${dbField} filter.min ${+filter.min} clampedUserMin ${+clampedUserMin}`);
           x.match({[dbField]: {$gte: +clampedUserMin}});
         }
 
         if (+filter.max !== +clampedUserMax) {
-          console.log(`${dbField} filter.max ${+filter.max} clampedUserMin ${+clampedUserMax}`);
           x.match({[dbField]: {$lte: +clampedUserMax}});
         }
       });

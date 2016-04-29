@@ -39,8 +39,6 @@ const filters = (state = initialState, action) => {
 
   case types.FILTER_CHANGED:
 
-    console.log(types.FILTER_CHANGED, action);
-
     const oldFilter = state[action.fieldName];
     const newFilter = {...oldFilter, ...action.data};
 

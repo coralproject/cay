@@ -22,6 +22,7 @@ import SearchDetail from 'app/SearchDetail';
 import NoMatch from 'app/NoMatch';
 import About from 'app/About';
 
+import Playground from 'app/Playground';
 import registerServiceWorker from 'serviceworker!./sw.js';
 import ga from 'react-ga';
 
@@ -86,6 +87,7 @@ class Root extends React.Component {
             <Route path="about" component={About} />
             <Route path="search-creator" component={SearchCreator} />
             <Route path="tag-manager" component={TagManager} />
+            <Route path="playground" component={Playground}/>
             <Route path="saved-searches" component={SeeAllSearches}/>
             <Route path="saved-search/:id" component={SearchDetail} />
             <Route path="*" component={NoMatch} />

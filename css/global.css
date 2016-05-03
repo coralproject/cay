@@ -12,7 +12,15 @@ figure, figcaption, footer, header, hgroup,
 menu, nav, output, ruby, section, summary,
 time, mark, audio, video {
   font-family: "Fira Sans", "Open Sans", "Helvetica Neue", "Helvetica", "sans-serif";
-  font-weight: 300;
+  /*font-weight: 300;*/
+}
+
+strong {
+  font-weight: 600;
+}
+
+em {
+  font-style: italic;
 }
 
 body {
@@ -42,3 +50,88 @@ p {
   z-index: 3;
 }
 
+
+/* comment stream transitions */
+.profileinfo-enter {
+  max-height: 0;
+  overflow: hidden;
+}
+
+.profileinfo-enter.profileinfo-enter-active {
+  max-height: 600px;
+  transition: all 500ms linear;
+}
+
+.profileinfo-leave {
+  max-height: 600px;
+  overflow: hidden;
+}
+
+.profileinfo-leave.profileinfo-leave-active {
+  max-height: 0;
+  overflow: hidden;
+  transition: all 500ms ease-out;
+}
+
+/* commentTools transition */
+.commentTools-enter {
+  max-height: 0;
+  overflow: hidden;
+}
+
+.commentTools-enter.commentTools-enter-active {
+  max-height: 200px;
+  transition: all 500ms linear;
+}
+
+.commentTools-leave {
+  max-height: 200px;
+  overflow: hidden;
+}
+
+.commentTools-leave.commentTools-leave-active {
+  max-height: 0;
+  overflow: hidden;
+  transition: all 500ms ease-out;
+}
+
+/* comment stream transitions */
+.profileinfo-enter {
+  max-height: 0;
+  overflow: hidden;
+}
+
+.profileinfo-enter.profileinfo-enter-active {
+  max-height: 600px;
+  transition: all 500ms linear;
+}
+
+.profileinfo-leave {
+  max-height: 600px;
+  overflow: hidden;
+}
+
+.profileinfo-leave.profileinfo-leave-active {
+  max-height: 0;
+  overflow: hidden;
+  transition: all 500ms ease-out;
+}
+
+/* fade transition */
+.fade-enter {
+  opacity: 0;
+}
+
+.fade-enter.fade-enter-active {
+  opacity: 1;
+  transition: all 500ms linear;
+}
+
+.fade-leave {
+  opacity: 1;
+}
+
+.fade-leave.fade-leave-active {
+  opacity: 0;
+  transition: all 500ms ease-out;
+}

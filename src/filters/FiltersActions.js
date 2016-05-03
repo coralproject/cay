@@ -14,6 +14,8 @@ export const FILTER_CHANGED = 'FILTER_CHANGED';
 export const SET_BREAKDOWN = 'SET_BREAKDOWN';
 export const SET_SPECIFIC_BREAKDOWN = 'SET_SPECIFIC_BREAKDOWN';
 
+export const RESET_FILTERS = 'RESET_FILTERS';
+
 // export const REQUEST_FILTER_RANGES = 'REQUEST_FILTER_RANGES';
 export const RECEIVE_FILTER_RANGES = 'RECEIVE_FILTER_RANGES';
 
@@ -99,7 +101,6 @@ const parseFilterRanges = (ranges, filterState) => {
 
     const possibleDateValue = new Date(value);
     // if it's a Date, change the type
-    console.log('parsed value', aggKey, value, possibleDateValue);
     if (_.isString(value) && _.isDate(possibleDateValue) && !isNaN(possibleDateValue)) {
       value = possibleDateValue;
     }
@@ -243,4 +244,8 @@ export const fetchFilterConfig = () => {
       });
 
   };
+};
+
+export const resetFilters = () => {
+  return {type: RESET_FILTERS};
 };

@@ -10,24 +10,23 @@ import { Provider } from 'react-redux';
 import { DevTools, DebugPanel, LogMonitor } from 'redux-devtools/lib/react';
 
 import configureStore from 'store.js';
+import { configXenia, configError } from 'app/AppActions';
 
-import { fetchFilterConfig } from 'filters/FiltersActions';
-import { fetchConfig } from 'app/AppActions';
 // import Dashboard from './containers/Dashboard';
-import GroupCreator from 'app/GroupCreator';
+import SearchCreator from 'app/SearchCreator';
 import TagManager from 'app/TagManager';
 import Login from 'app/Login';
 // import DataExplorer from 'app/DataExplorer';
-import SeeAllGroups from 'app/SeeAllGroups';
-import GroupDetail from 'app/GroupDetail';
+import SeeAllSearches from 'app/SeeAllSearches';
+import SearchDetail from 'app/SearchDetail';
 import NoMatch from 'app/NoMatch';
 import About from 'app/About';
 
 import Playground from 'app/Playground';
-
+import registerServiceWorker from 'serviceworker!./sw.js';
 import ga from 'react-ga';
 
-const store = configureStore();
+let store;
 
 import messages from 'i18n/messages'; // Lang does not know where did you get your messages from.
 
@@ -37,14 +36,19 @@ window.L = new LangSugar();
 window.L.addTranslations(messages['en'], 'en');
 window.L.addTranslations(messages['de'], 'de');
 window.L.addTranslations(messages['es'], 'es');
-window.L.setLocale('en');
+window.L.setLocale(window.L.locale);
 
 require('reset.css');
 require('global.css');
 
 require('react-select.css');
+require('react-datepicker.min.css');
 
 require('../fonts/glyphicons-halflings-regular.woff');
+
+if ('serviceWorker' in navigator && process && process.env.NODE_ENV === 'production') {
+  registerServiceWorker({ scope: '/' }).then(() => {}, () => {});
+}
 
 import { Lang } from 'i18n/lang';
 @Lang
@@ -78,14 +82,14 @@ class Root extends React.Component {
       <div>
         <Provider store={store}>
           <Router history={browserHistory} onUpdate={ this.logPageView }>
-            <Redirect from="/" to="group-creator" />
+            <Redirect from="/" to="search-creator" />
             <Route path="login" component={Login} />
             <Route path="about" component={About} />
-            <Route path="group-creator" component={GroupCreator} />
+            <Route path="search-creator" component={SearchCreator} />
             <Route path="tag-manager" component={TagManager} />
-            <Route path="groups" component={SeeAllGroups}/>
-            <Route path="group/:name" component={GroupDetail} />
             <Route path="playground" component={Playground}/>
+            <Route path="saved-searches" component={SeeAllSearches}/>
+            <Route path="saved-search/:id" component={SearchDetail} />
             <Route path="*" component={NoMatch} />
             {/*<Route path="explore" component={DataExplorer} />*/}
           </Router>
@@ -96,17 +100,36 @@ class Root extends React.Component {
   }
 }
 
-store.dispatch(fetchConfig());
-store.dispatch(fetchFilterConfig());
+const loadConfig = (route) => {
+  return fetch(route).then(res => res.json());
+};
 
-// yikes. if we can think of a more redux-y way to do this, I'm all ears.
-const configInterval = setInterval(() => {
-  const state = store.getState();
-  if (state.app.configLoaded && state.filters.configLoaded) {
-    window.clearInterval(configInterval);
+// entry point for the app
+Promise.all([loadConfig('/config.json'), loadConfig('/data_config.json')])
+  .then(results => {
+
+    const [app, filters] = results;
+
+    const requiredKeys = [ 'xeniaHost', 'pillarHost', 'basicAuthorization', 'environment', 'googleAnalyticsId', 'requireLogin' ];
+    const allKeysDefined = requiredKeys.every(key => 'undefined' !== typeof app[key]);
+
+    if (!allKeysDefined) {
+      const message = `missing required keys on config.json. Must define ${requiredKeys.join('|')}`;
+      store.dispatch(configError(message));
+      throw new Error(message);
+    }
+
+    // load config into initialState so it's ALWAYS available
+    store = configureStore({app});
+
+    store.dispatch(configXenia());
+    store.dispatch({type: 'DATA_CONFIG_LOADED', config: filters});
+
     ReactDOM.render(<Root/>, document.getElementById('root'));
-  }
-}, 1000);
+  })
+  .catch(err => {
+    console.error(err.stack);
+  });
 
 // prevent browser from navigating backwards if you hit the backspace key
 document.addEventListener('keydown', function (e) {
@@ -133,4 +156,3 @@ document.addEventListener('keydown', function (e) {
     e.preventDefault();
   }
 });
-

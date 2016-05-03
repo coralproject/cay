@@ -1,8 +1,9 @@
 import React from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
+import _ from 'lodash';
 
-import { makeQueryFromState } from 'groups/GroupActions';
+import { makeQueryFromState } from 'search/SearchActions';
 import {
   setBreakdown,
   setSpecificBreakdown,
@@ -11,9 +12,9 @@ import {
 
 import Select from 'react-select';
 import FilterNumbers from 'filters/FilterNumbers';
+import FilterDate from 'filters/FilterDate';
 
 import Heading from 'components/Heading';
-
 
 @connect(state => state.filters)
 @Radium
@@ -34,7 +35,7 @@ export default class UserFilters extends React.Component {
     }
   }
   updateUserList() {
-    this.props.dispatch(makeQueryFromState('user'));
+    this.props.dispatch(makeQueryFromState('user', 0, true));
   }
   getTags() {
     return this.props.tags.map(tag => {
@@ -69,8 +70,8 @@ export default class UserFilters extends React.Component {
   }
 
   setSpecificBreakdown(specificBreakdown) {
-    // console.log('setSpecificBreakdown', specificBreakdown.value);
-    this.props.dispatch(setSpecificBreakdown(specificBreakdown.value));
+    let newValue = specificBreakdown !== null ? specificBreakdown.value : '';
+    this.props.dispatch(setSpecificBreakdown(newValue));
     this.props.dispatch(getFilterRanges('user'));
   }
 
@@ -89,9 +90,18 @@ export default class UserFilters extends React.Component {
 
   updateBreakdown(breakdown) {
     // console.log('updateBreakdown', breakdown);
-    this.props.dispatch(setBreakdown(breakdown.value));
+    let newValue;
+    if (breakdown === null && this.props.breakdown !== 'all') {
+      newValue = 'all';
+    } else if (breakdown === null) { // if we're already on all, just do nothing
+      return;
+    } else {
+      newValue = breakdown.value;
+    }
+
+    this.props.dispatch(setBreakdown(newValue));
     this.props.dispatch(setSpecificBreakdown(''));
-    if (breakdown.value === 'all') {
+    if (newValue === 'all') {
       this.props.dispatch(getFilterRanges('user'));
     }
   }
@@ -102,9 +112,10 @@ export default class UserFilters extends React.Component {
     const userFilters = filters.filter(f => f.collection === 'user_statistics');
     return userFilters.map((f,i) => {
       let filterComponent;
+
+      const inTitleCase = _.map(f.description.split(' '), _.capitalize).join(' ');
       if (f.type === 'intRange' || f.type === 'percentRange' || f.type === 'floatRange') {
-        // capitalize first letter of description
-        const fmtDesc = f.description.charAt(0).toUpperCase() + f.description.slice(1, f.description.length);
+
         filterComponent = (
           <FilterNumbers
             key={i}
@@ -112,13 +123,23 @@ export default class UserFilters extends React.Component {
             max={f.max}
             userMin={f.userMin}
             userMax={f.userMax}
-            description={fmtDesc}
+            description={inTitleCase}
             fieldName={f.key}
             type={f.type}
             isPercentage={f.type === 'percentRange'} />
         );
       } else if (f.type === 'dateRange') {
-        filterComponent = null;
+        filterComponent = (
+          <FilterDate
+            key={i}
+            min={f.min}
+            max={f.max}
+            userMin={f.userMin}
+            userMax={f.userMax}
+            description={inTitleCase}
+            type={f.type}
+            fieldName={f.key} />
+        );
       }
 
       return filterComponent;
@@ -151,13 +172,6 @@ export default class UserFilters extends React.Component {
         <p style={styles.legend}>Show me Users that have:</p>
         {this.getActiveFiltersFromConfig()}
 
-        <p style={styles.legend}>Filter by tags <span style={styles.comingSoon}>coming soon!</span></p>
-
-        <p>Include users with these tags</p>
-        <Select multi={true} style={ styles.filterDropdown } options={this.getTags()} />
-
-        <p>Exclude users with these tags</p>
-        <Select multi={true} style={ styles.filterDropdown } options={this.getTags()} />
       </div>
     );
   }
@@ -165,8 +179,7 @@ export default class UserFilters extends React.Component {
 
 const styles = {
   base: {
-    minWidth: 300,
-    maxWidth: 300
+    minWidth: 300
   },
   columnHeader: {
     height: 50

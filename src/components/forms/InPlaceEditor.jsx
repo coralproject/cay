@@ -83,7 +83,7 @@ export default class InPlaceEditor extends React.Component {
       <div style={ styles.validationError }>
         { this.props.validationMessage }
       </div>
-    : 
+    :
       null;
 
     return (
@@ -91,22 +91,22 @@ export default class InPlaceEditor extends React.Component {
         {
           this.state.isEditing ?
             <div style={ styles.textAndButtonWrapper }>
-              <input 
+              <input
                 ref={function(input) {
                   if (input != null) {
                     input.focus();
                   }
-                }} 
-                onClick={ this.onWrapperClick.bind(this) } 
+                }}
+                onClick={ this.onWrapperClick.bind(this) }
                 onFocus={ this.handleFocus.bind(this) }
-                style={ styles.textField } 
-                type="text" 
-                value={ this.state.value } 
-                onChange={ this.handleChange.bind(this) } 
+                style={ styles.textField }
+                type="text"
+                value={ this.state.value }
+                onChange={ this.handleChange.bind(this) }
                 onKeyPress={ this.handleKeyPress.bind(this) } />
               <button style={ styles.button } onClick={ this.handleSave.bind(this) }>Save</button>
             </div>
-          : 
+          :
             <div style={ styles.editableText } onClick={ this.handleClick.bind(this, value) }>{ value }</div>
         }
         { validationMessage }
@@ -118,7 +118,7 @@ export default class InPlaceEditor extends React.Component {
 const styles = {
   base: {
     fontSize: '16px',
-    width: '400px',
+    //width: '400px',
     display: 'block',
     position: 'relative',
     backgroundColor: 'transparent'

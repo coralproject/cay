@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 import app from 'app/AppReducer';
 import auth from 'auth/AuthReducer';
 import comments from 'comments/CommentReducer';
-import groups from 'groups/GroupReducer';
+import searches from 'search/SearchReducer';
 import dataExplorer from 'explorer/DataExplorerReducer';
 import tags from 'tags/TagReducer';
 import filters from 'filters/FiltersReducer';
@@ -11,7 +11,7 @@ import playground from 'playground/PlaygroundReducer';
 
 const rootReducer = combineReducers({
   app,
-  groups,
+  searches,
   auth,
   comments,
   dataExplorer,

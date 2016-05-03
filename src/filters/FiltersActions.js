@@ -1,12 +1,11 @@
 import _ from 'lodash';
-import {authXenia} from 'app/AppActions';
+import {xenia} from 'app/AppActions';
 
 export const REQUEST_SECTIONS = 'REQUEST_SECTIONS';
 export const RECEIVE_SECTIONS = 'RECEIVE_SECTIONS';
 export const REQUEST_AUTHORS = 'REQUEST_AUTHORS';
 export const RECEIVE_AUTHORS = 'RECEIVE_AUTHORS';
 
-export const DATA_CONFIG_REQUEST = 'DATA_CONFIG_REQUEST';
 export const DATA_CONFIG_LOADED = 'DATA_CONFIG_LOADED';
 export const DATA_CONFIG_ERROR = 'DATA_CONFIG_ERROR';
 
@@ -32,14 +31,11 @@ export const receiveSections = (data) => {
 };
 
 export const fetchSections = () => {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     dispatch(requestSections());
 
-    const app = getState().app;
-
     /* xenia_package */
-    fetch(`${app.xeniaHost}/1.0/exec/dimension_section_list`, authXenia())
-      .then(response => response.json())
+    xenia().exec('dimension_section_list')
       .then(json => dispatch(receiveSections(json)))
       .catch(err => {
         console.log('oh no. failed to get section list', err);
@@ -59,13 +55,11 @@ export const receiveAuthors = (data) => {
 };
 
 export const fetchAuthors = () => {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     dispatch(requestAuthors());
-    const app = getState().app;
 
     /* xenia_package */
-    fetch(`${app.xeniaHost}/1.0/exec/dimension_author_list`, authXenia())
-      .then(response => response.json())
+    xenia().exec('dimension_author_list')
       .then(json => dispatch(receiveAuthors(json)))
       .catch(err => {
         console.log('you failed to get the authors list!', err);
@@ -81,7 +75,7 @@ export const setBreakdown = (breakdown) => {
 };
 
 export const setSpecificBreakdown = (specificBreakdown) => {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     // let counter = getState().filters.counter;
     // counter++;
     dispatch({
@@ -102,6 +96,14 @@ const parseFilterRanges = (ranges, filterState) => {
     // we might have already updated the old filter with the min value
     // retrieve it from the accumulator in progress instead of the state
     let newFilter = _.has(accum, key) ? accum[key] : {};
+
+    const possibleDateValue = new Date(value);
+    // if it's a Date, change the type
+    console.log('parsed value', aggKey, value, possibleDateValue);
+    if (_.isString(value) && _.isDate(possibleDateValue) && !isNaN(possibleDateValue)) {
+      value = possibleDateValue;
+    }
+
     newFilter[field] = value; // where field is {min|max}
     accum[key] = newFilter;
 
@@ -118,7 +120,7 @@ const parseFilterRanges = (ranges, filterState) => {
   return newFilters;
 };
 
-/* xenia_package */
+// HERE BE DRAGONS
 export const getFilterRanges = () => {
 
   return (dispatch, getState) => {
@@ -126,24 +128,36 @@ export const getFilterRanges = () => {
     let $group = filterState.filterList.reduce((accum, key) => {
 
       let dimension;
-      if (filterState.breakdown === 'author') {
+      if (filterState.breakdown === 'author' && filterState.specificBreakdown !== '') {
         dimension = 'author.' + filterState.specificBreakdown;
-      } else if (filterState.breakdown === 'section') {
+      } else if (filterState.breakdown === 'section' && filterState.specificBreakdown !== '') {
         dimension = 'section.' + filterState.specificBreakdown;
       } else { // all
         dimension = 'all';
       }
-      const field = '$' + _.template(filterState[key].template)({dimension});
 
       // if you change this naming convention
       // you must update the RECEIVE_FILTER_RANGES in reducers/filters.js
-      accum[key + '_min'] = {
-        $min: field
-      };
 
-      accum[key + '_max'] = {
-        $max: field
-      };
+      if (filterState[key].type !== 'dateRange') {
+        const field = '$' + _.template(filterState[key].template)({dimension});
+        accum[key + '_min'] = {
+          $min: field
+        };
+
+        accum[key + '_max'] = {
+          $max: field
+        };
+      } else {
+        accum[key + '_min'] = {
+          $min: '$' + _.template(filterState[key].template)({dimension}) + '.first'
+        };
+
+        accum[key + '_max'] = {
+          $max: '$' + _.template(filterState[key].template)({dimension}) + '.last'
+        };
+
+      }
 
       return accum;
     }, {_id: null});
@@ -168,17 +182,10 @@ export const getFilterRanges = () => {
 
     // dispatch({type: REQUEST_FILTER_RANGES});
 
-    const app = getState().app;
-    const url = `${app.xeniaHost}/1.0/exec`;
-
-    var init = authXenia('POST');
-    init.body = JSON.stringify(query);
-
-    fetch(url, init)
-      .then(res => res.json())
+    xenia(query).exec()
       .then(data => {
         const doc = data.results[0].Docs[0];
-        console.log('gs',getState())
+        console.log('gs',getState());
         let counter = getState().filters.counter;
         counter++;
 

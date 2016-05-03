@@ -5,7 +5,7 @@ import Radium from 'radium';
 import CoralIcon from '../../components/CoralIcon';
 
 import FaClockO from 'react-icons/lib/fa/clock-o';
-import FaMortarBoard from 'react-icons/lib/fa/mortar-board';
+//import FaMortarBoard from 'react-icons/lib/fa/mortar-board';
 import FaHandPaperO from 'react-icons/lib/fa/hand-paper-o';
 import FaEllipsisH from 'react-icons/lib/fa/ellipsis-h';
 import MdPlace from 'react-icons/lib/md/place';
@@ -35,26 +35,26 @@ class ProfileInfo extends React.Component {
             </div>
             <div style={ styles.profileLeftPane }>
               <h3 style={ styles.userName }>
-                { 
-                  this.props.togglerGroups['privacy'].togglers['anonymity'].status ? 
-                  user.nickName : 
-                  user.realName 
+                {
+                  this.props.togglerGroups['privacy'].togglers['anonymity'].status ?
+                  user.nickName :
+                  user.realName
                 }
               </h3><br />
-              { 
-                this.props.togglerGroups['privacy'].togglers['public_profile'].status ? 
+              {
+                this.props.togglerGroups['privacy'].togglers['public_profile'].status ?
                   <div>
                     <div style={ styles.profileBullet }><FaClockO style={ styles.profileBulletIcon } /> Member for { user.membershipAge }</div>
                     <div style={ styles.profileBullet }><MdPlace style={ styles.profileBulletIcon } /> { user.location }</div>
                     <div style={ styles.profileBullet }><FaMortarBoard style={ styles.profileBulletIcon } /> { user.education }</div>
-                  </div>            
+                  </div>
                 : ''
               }
             </div>
           </div>
 
-          { 
-            this.props.togglerGroups['reputation'].togglers['stats'].status ? 
+          {
+            this.props.togglerGroups['reputation'].togglers['stats'].status ?
               <div style={ styles.profileStats }>
                 <div style={ styles.profileStat }>
                   <span style={ styles.profileTotal }>{ user.comments }</span><br />comments
@@ -62,20 +62,20 @@ class ProfileInfo extends React.Component {
                 <div style={ styles.profileStat }>
                   <span style={ styles.profileTotal }>{ user.points }</span><br />points
                 </div>
-                { 
-                  this.props.togglerGroups['interaction'].togglers['upvotes'].status ? 
+                {
+                  this.props.togglerGroups['interaction'].togglers['upvotes'].status ?
                     <div style={ styles.profileStat }>
                       <span style={ styles.profileTotal }>{ user.upvoteBalance }%</span><br />upvotes
                     </div>
-                  : 
+                  :
                   null
                 }
               </div>
             : null
           }
 
-          { 
-            this.props.togglerGroups['reputation'].togglers['badges'].status ? 
+          {
+            this.props.togglerGroups['reputation'].togglers['badges'].status ?
               <div>
                 {
                   user.badges.map((badge, i) => {
@@ -91,14 +91,14 @@ class ProfileInfo extends React.Component {
           }
 
           <div style={ styles.profileTools }>
-            { 
-              this.props.togglerGroups['community'].togglers['privatemessages'].status ? 
-                <div style={ styles.profileToolsButton }><MdComment /> Send message</div> : 
+            {
+              this.props.togglerGroups['community'].togglers['privatemessages'].status ?
+                <div style={ styles.profileToolsButton }><MdComment /> Send message</div> :
                 null
             }
-            { 
-              this.props.togglerGroups['moderation'].togglers['muting'].status ? 
-                <div onClick={ this.blockClickHandler.bind(this, this.props.user) } style={ styles.profileToolsButton }><FaHandPaperO /> Block user</div> : 
+            {
+              this.props.togglerGroups['moderation'].togglers['muting'].status ?
+                <div onClick={ this.blockClickHandler.bind(this, this.props.user) } style={ styles.profileToolsButton }><FaHandPaperO /> Block user</div> :
                 null
             }
             {/*<div style={ styles.moreActions }><FaEllipsisH /></div>*/}
@@ -178,7 +178,7 @@ var styles = {
       borderRight: 'none',
       borderTop: '1px solid #ccc'
     }
-  }, 
+  },
   profileStat: {
     marginBottom: '10px',
     flexGrow: 1,
@@ -189,7 +189,7 @@ var styles = {
     position: 'relative',
     textAlign: 'center',
     borderTop: '1px solid #ccc'
-  }, 
+  },
   profileTotal: {
     fontSize: '22pt',
     fontWeight: 'bold'

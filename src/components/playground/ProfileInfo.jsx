@@ -5,7 +5,7 @@ import Radium from 'radium';
 import CoralIcon from '../../components/CoralIcon';
 
 import FaClockO from 'react-icons/lib/fa/clock-o';
-//import FaMortarBoard from 'react-icons/lib/fa/mortar-board';
+import FaGraduationCap from 'react-icons/lib/fa/graduation-cap';
 import FaHandPaperO from 'react-icons/lib/fa/hand-paper-o';
 import FaEllipsisH from 'react-icons/lib/fa/ellipsis-h';
 import MdPlace from 'react-icons/lib/md/place';
@@ -46,7 +46,7 @@ class ProfileInfo extends React.Component {
                   <div>
                     <div style={ styles.profileBullet }><FaClockO style={ styles.profileBulletIcon } /> Member for { user.membershipAge }</div>
                     <div style={ styles.profileBullet }><MdPlace style={ styles.profileBulletIcon } /> { user.location }</div>
-                    <div style={ styles.profileBullet }><FaMortarBoard style={ styles.profileBulletIcon } /> { user.education }</div>
+                    <div style={ styles.profileBullet }><FaGraduationCap style={ styles.profileBulletIcon } /> { user.education }</div>
                   </div>
                 : ''
               }

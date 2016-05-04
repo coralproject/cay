@@ -10,6 +10,7 @@ import { Provider } from 'react-redux';
 
 import configureStore from 'store.js';
 import { configXenia, configError } from 'app/AppActions';
+import {StyleRoot} from 'radium';
 
 // import Dashboard from './containers/Dashboard';
 import SearchCreator from 'app/SearchCreator';
@@ -69,7 +70,7 @@ class Root extends React.Component {
   render() {
 
     return (
-      <div>
+      <StyleRoot>
         <Provider store={store}>
           <Router history={browserHistory} onUpdate={ this.logPageView }>
             <Redirect from="/" to="search-creator" />
@@ -83,7 +84,7 @@ class Root extends React.Component {
             {/*<Route path="explore" component={DataExplorer} />*/}
           </Router>
         </Provider>
-      </div>
+      </StyleRoot>
     );
   }
 }

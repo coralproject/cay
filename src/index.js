@@ -7,7 +7,6 @@ import { browserHistory, Router, Route, Redirect } from 'react-router';
 // React Redux
 import { Provider } from 'react-redux';
 // Redux Devtools
-import { DevTools, DebugPanel, LogMonitor } from 'redux-devtools/lib/react';
 
 import configureStore from 'store.js';
 import { configXenia, configError } from 'app/AppActions';
@@ -69,14 +68,6 @@ class Root extends React.Component {
 
   render() {
 
-    if (process && process.env.NODE_ENV !== 'production') {
-      var debug = (
-        <DebugPanel top right bottom>
-          <DevTools store={store} visibleOnLoad={false} monitor={LogMonitor} />
-        </DebugPanel>
-      );
-    }
-
     return (
       <div>
         <Provider store={store}>
@@ -92,7 +83,6 @@ class Root extends React.Component {
             {/*<Route path="explore" component={DataExplorer} />*/}
           </Router>
         </Provider>
-        {debug}
       </div>
     );
   }

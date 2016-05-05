@@ -114,7 +114,7 @@ export default class UserFilters extends React.Component {
     return userFilters.map((f,i) => {
       let filterComponent;
       const fmtDesc = f.description.charAt(0).toUpperCase() + f.description.slice(1, f.description.length);
-		const inTitleCase = _.map(f.description.split(' '), _.capitalize).join(' ');
+      const inTitleCase = _.map(f.description.split(' '), _.capitalize).join(' ');
 
       if (f.type === 'percentRange') {
         filterComponent = (

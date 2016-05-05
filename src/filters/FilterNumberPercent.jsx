@@ -12,14 +12,6 @@ import Sparkline from 'filters/Sparkline';
 import Slider from 'components/Slider';
 
 const style = {
-  // symbol: {
-  //   padding: '8px 10px',
-  //   backgroundColor: 'rgb(240,240,240)',
-  //   margin: 5,
-  //   color: 'rgb(100,100,100)',
-  //   borderRadius: 3,
-  //   fontWeight: 300
-  // },
   sliderInput: {
     backgroundColor: 'rgb(245, 245, 245)',
     border: 'none',
@@ -71,19 +63,11 @@ export default class FilterNumbers extends React.Component {
 
   onMinChanged() {
     return (e) => {
-      // const clampedUserMax = clamp(this.props.userMax, this.props.min, this.props.max);
-      // const max = (this.props.isPercentage) ? Math.floor(clampedUserMax * 100) : clampedUserMax;
-      // const value = e.target.value > max ? max : e.target.value;
-
       this.props.dispatch(filterChanged(this.props.fieldName, {userMin: e.target.value/100}));
     };
   }
   onMaxChanged() {
     return (e) => {
-      // const clampedUserMin = clamp(this.props.userMin, this.props.min, this.props.max);
-      // const min = (this.props.isPercentage) ? Math.floor(clampedUserMin * 100) : clampedUserMin;
-      // const value = e.target.value < min ? min : e.target.value;
-
       this.props.dispatch(filterChanged(this.props.fieldName, {userMax: e.target.value/100}));
     };
   }
@@ -93,22 +77,21 @@ export default class FilterNumbers extends React.Component {
   renderHelpText() {
     let help = '';
 
-    if (this.props.userMin > this.props.userMax) {
-      help = 'Min cannot be greater than max'
+    if (this.props.userMax > this.props.max) {
+      help = `Max cannot be greater than ${this.props.max}`;
     }
 
-    if (this.props.userMax < this.props.userMin) {
-      help = 'Max cannot be less than min'
+    if (this.props.userMin < this.props.min) {
+      help = `Min cannot be less than ${this.props.min}`;
+    }
+
+    if (this.props.userMin > this.props.userMax) {
+      help = 'Min cannot be greater than max';
     }
 
     return help;
   }
   render() {
-    const clampedUserMin = clamp(this.props.userMin, this.props.min, this.props.max);
-    const clampedUserMax = clamp(this.props.userMax, this.props.min, this.props.max);
-
-    var min = Math.floor(clampedUserMin * 100);
-    var max = Math.floor(clampedUserMax * 100);
 
     return (
       <Card>
@@ -119,49 +102,17 @@ export default class FilterNumbers extends React.Component {
             <input
               onChange={this.onMinChanged().bind(this)}
               style={style.minMaxInputs}
-              type='text'
-              value={
-                `${Math.floor(this.props.userMin*100)}`
-              }/>
+              type='number'
+              value={Math.floor(this.props.userMin*100)}/>
             {` - `}
             <input
               onChange={this.onMaxChanged().bind(this)}
               style={style.minMaxInputs}
-              type='text'
-              value={
-                `${Math.floor(this.props.userMax*100)}`
-              }/>
-            {this.renderHelpText()}
+              type='number'
+              value={Math.floor(this.props.userMax*100)}/>
+            <p style={{marginTop: 10, color: 'red'}}>{this.renderHelpText()}</p>
           </div>
       </Card>
     );
   }
 }
-
-
-
-// handleEqualChanged(e) {
-//   this.setState({equals: e.target.value});
-// }
-// handleGTKeyDown(e) {
-//   let userMin;
-//   if (e.which === 38) {
-//     userMin = Math.min(this.props.userMin + this.state.step, this.props.max);
-//     this.props.dispatch(filterChanged(this.props.fieldName, {userMin, userMax: this.props.userMax}));
-//   }
-//   if (e.which === 40) {
-//     userMin = Math.max(this.props.userMin - this.state.step, this.props.min);
-//     this.props.dispatch(filterChanged(this.props.fieldName, {userMin, userMax: this.props.userMax}));
-//   }
-// }
-// handleLTKeyDown(e) {
-//   let userMax;
-//   if (e.which === 38) {
-//     userMax = Math.min(this.props.userMax + this.state.step, this.props.max);
-//     this.props.dispatch(filterChanged(this.props.fieldName, {userMax, userMin: this.props.userMin}));
-//   }
-//   if (e.which === 40) {
-//     userMax = Math.max(this.props.userMax - this.state.step, this.props.min);
-//     this.props.dispatch(filterChanged(this.props.fieldName, {userMax, userMin: this.props.userMin}));
-//   }
-// }

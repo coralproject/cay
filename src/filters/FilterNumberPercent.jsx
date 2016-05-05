@@ -29,8 +29,6 @@ const style = {
     padding: '7px 10px',
     border: '1px solid lightgrey',
     borderRadius: 3
-
-
   }
 };
 
@@ -63,18 +61,14 @@ export default class FilterNumbers extends React.Component {
     this.setState({step: (props.type === 'floatRange' || props.type === 'percentRange') ? 0.01 : 1});
   }
 
-  handleSymbolClick(){
-    const newSymbol = this.state.symbol === 'GTLT' ? 'EQUALS' : 'GTLT';
-    this.setState({symbol: newSymbol});
-  }
   onMinChanged() {
     return (e) => {
-      this.props.dispatch(filterChanged(this.props.fieldName, {userMin: e.target.value}));
+      this.props.dispatch(filterChanged(this.props.fieldName, {userMin: e.target.value/100}));
     };
   }
   onMaxChanged() {
     return (e) => {
-      this.props.dispatch(filterChanged(this.props.fieldName, {userMax: e.target.value}));
+      this.props.dispatch(filterChanged(this.props.fieldName, {userMax: e.target.value/100}));
     };
   }
   updateSlider(values) {
@@ -98,39 +92,26 @@ export default class FilterNumbers extends React.Component {
     return help;
   }
   render() {
+
     return (
       <Card>
-        <div style={{
-          marginTop: 0,
-          marginBottom: 10,
-          display: 'flex',
-          alignItems: 'flex-start',
-          justifyContent: 'space-between'
-        }}>
-        <span style={{marginBottom: 10, marginRight: 20}}>{this.props.description}</span>
-        {
-          this.props.distributions ?
-          <Sparkline
-            distribution={
-              this.props.distributions[this.props[this.props.fieldName].field]
-            }/> :
-            ''
-        }
-        </div>
-        <div>
-          <input
-            onChange={this.onMinChanged().bind(this)}
-            style={style.minMaxInputs}
-            type='number'
-            value={this.props.userMin}/>
-          {` - `}
-          <input
-            onChange={this.onMaxChanged().bind(this)}
-            style={style.minMaxInputs}
-            type='number'
-            value={this.props.userMax}/>
-        </div>
-        <p style={{marginTop: 10, color: 'red'}}>{this.renderHelpText()}</p>
+        <CardHeader>
+          <span style={{marginBottom: 10, marginRight: 20}}>{this.props.description}</span>
+        </CardHeader>
+          <div>
+            <input
+              onChange={this.onMinChanged().bind(this)}
+              style={style.minMaxInputs}
+              type='number'
+              value={Math.floor(this.props.userMin*100)}/>
+            {` - `}
+            <input
+              onChange={this.onMaxChanged().bind(this)}
+              style={style.minMaxInputs}
+              type='number'
+              value={Math.floor(this.props.userMax*100)}/>
+            <p style={{marginTop: 10, color: 'red'}}>{this.renderHelpText()}</p>
+          </div>
       </Card>
     );
   }

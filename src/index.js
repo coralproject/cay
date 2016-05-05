@@ -7,10 +7,10 @@ import { browserHistory, Router, Route, Redirect } from 'react-router';
 // React Redux
 import { Provider } from 'react-redux';
 // Redux Devtools
-import { DevTools, DebugPanel, LogMonitor } from 'redux-devtools/lib/react';
 
 import configureStore from 'store.js';
 import { configXenia, configError } from 'app/AppActions';
+import {StyleRoot} from 'radium';
 
 // import Dashboard from './containers/Dashboard';
 import SearchCreator from 'app/SearchCreator';
@@ -69,16 +69,8 @@ class Root extends React.Component {
 
   render() {
 
-    if (process && process.env.NODE_ENV !== 'production') {
-      var debug = (
-        <DebugPanel top right bottom>
-          <DevTools store={store} visibleOnLoad={false} monitor={LogMonitor} />
-        </DebugPanel>
-      );
-    }
-
     return (
-      <div>
+      <StyleRoot>
         <Provider store={store}>
           <Router history={browserHistory} onUpdate={ this.logPageView }>
             <Redirect from="/" to="search-creator" />
@@ -92,8 +84,7 @@ class Root extends React.Component {
             {/*<Route path="explore" component={DataExplorer} />*/}
           </Router>
         </Provider>
-        {debug}
-      </div>
+      </StyleRoot>
     );
   }
 }
@@ -141,6 +132,7 @@ document.addEventListener('keydown', function (e) {
         d.type.toUpperCase() === 'FILE' ||
         d.type.toUpperCase() === 'EMAIL' ||
         d.type.toUpperCase() === 'SEARCH' ||
+        d.type.toUpperCase() === 'NUMBER' ||
         d.type.toUpperCase() === 'DATE' )
       ) || d.tagName.toUpperCase() === 'TEXTAREA') {
       doPrevent = d.readOnly || d.disabled;

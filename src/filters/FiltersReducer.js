@@ -6,14 +6,11 @@ let initialState = {
   tags: [],
   authors: [],
   sections: [],
+  dirtyFilters: [], // non-default filters
   loadingFilters: false,
   loadingUserList: false,
   loadingAuthors: false,
   loadingSections: false,
-  'user_name': null,
-  'status': null,
-  'last_login': null,
-  'member_since': null,
   breakdown: 'all',
   counter: 0, // this is a signal for ajax consumed by userFilters
   specificBreakdown: '',
@@ -89,6 +86,9 @@ const filters = (state = initialState, action) => {
     }, {});
 
     return {...state, ...newFilters, counter: action.counter};
+
+  case types.RESET_FILTERS:
+    return {...state, dirtyFilters: []};
 
   default:
     return state;

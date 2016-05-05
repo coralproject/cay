@@ -9,8 +9,8 @@ import {userSelected} from 'users/UsersActions';
 import {fetchCommentsByUser} from 'comments/CommentsActions';
 import {saveQueryFromState, makeQueryFromState} from 'search/SearchActions';
 import { fetchAllTags } from 'tags/TagActions';
-import { fetchSections, fetchAuthors } from 'filters/FiltersActions';
 import { populateDistributionStore } from 'filters/FiltersActions';
+import { fetchSections, fetchAuthors, resetFilters } from 'filters/FiltersActions';
 
 
 import Page from 'app/layout/Page';
@@ -53,6 +53,7 @@ export default class SearchCreator extends React.Component {
     }
 
     /* set up the initial default / unfiltered view, this was previously in UserFilters */
+    // this.props.dispatch(resetFilters());
     this.props.dispatch(fetchAllTags());
     this.props.dispatch(fetchSections());
     this.props.dispatch(fetchAuthors());
@@ -124,6 +125,7 @@ export default class SearchCreator extends React.Component {
             </Button>
             <div style={styles.userListContainer}>
               <UserList
+                total={this.props.searches.userCount}
                 onPagination={this.onPagination.bind(this)}
                 loadingQueryset={this.props.searches.loadingQueryset}
                 users={this.props.searches.users} userSelected={this.updateUser.bind(this)} />

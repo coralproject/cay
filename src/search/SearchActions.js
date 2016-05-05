@@ -30,6 +30,8 @@ export const PILLAR_SEARCH_DELETE_INIT = 'PILLAR_SEARCH_DELETE_INIT';
 export const PILLAR_SEARCH_DELETED = 'PILLAR_SEARCH_DELETED';
 export const PILLAR_SEARCH_DELETE_FAILURE = 'PILLAR_SEARCH_DELETE_FAILURE';
 
+export const CLEAR_USER_LIST = 'CLEAR_USER_LIST';
+
 export const selectQueryset = (queryset) => {
   return {
     type: QUERYSET_SELECTED,
@@ -95,7 +97,8 @@ export const receiveQueryset = (data, replace) => {
   return {
     type: QUERYSET_RECEIVED,
     data,
-    replace
+    replace,
+    userCount: data.results[1].Docs[0].count
   };
 };
 
@@ -131,6 +134,9 @@ export const createQuery = (query) => {
 
 /* xenia_package */
 export const makeQueryFromState = (type, page = 0) => {
+
+  const pageSize = 20;
+
   return (dispatch, getState) => {
     // make a query from the current state
     const filterState = getState().filters;
@@ -141,31 +147,47 @@ export const makeQueryFromState = (type, page = 0) => {
       desc: 'user search currently. this is going to be more dynamic in the future'
     });
 
-    x.addQuery();
-    filters.forEach(filter => {
-      let dbField;
-      if (filterState.breakdown === 'author' && filterState.specificBreakdown !== '') {
-        dbField = _.template(filter.template)({dimension: 'author.' + filterState.specificBreakdown});
-      } else if (filterState.breakdown === 'section' && filterState.specificBreakdown !== '') {
-        dbField = _.template(filter.template)({dimension: 'section.' + filterState.specificBreakdown});
-      } else { // all
-        dbField = _.template(filter.template)({dimension: 'all'});
-      }
+    const addMatches = x => {
+      filters.forEach(filter => {
+        let dbField;
 
-      // Only create match statements for non-defaults
-      if (filter.min !== filter.userMin) {
-        x.match({[dbField]: {$gte: clamp(filter.userMin, filter.min, filter.max)}});
-      }
+        // get the name of the mongo db field we want to $match on.
+        if (filterState.breakdown === 'author' && filterState.specificBreakdown !== '') {
+          dbField = _.template(filter.template)({dimension: 'author.' + filterState.specificBreakdown});
+        } else if (filterState.breakdown === 'section' && filterState.specificBreakdown !== '') {
+          dbField = _.template(filter.template)({dimension: 'section.' + filterState.specificBreakdown});
+        } else { // all
+          dbField = _.template(filter.template)({dimension: 'all'});
+        }
 
-      if (filter.max !== filter.userMax) {
-        x.match({[dbField]: {$lte: clamp(filter.userMax, filter.min, filter.max)}});
-      }
-    });
+        // Only create match statements for non-defaults
+        // user min and user max are stored for UX purposes.
+        // filter.userMax and filter.max COULD be different values, but be equivalent in the UI (visually)
+        // filter.min and filter.max change when the ranges are populated from the server
+        const clampedUserMin = clamp(filter.userMin, filter.min, filter.max);
+        const clampedUserMax = clamp(filter.userMax, filter.min, filter.max);
 
-    // doMakeQueryFromStateAsync(query, dispatch, app);
-    x.skip(page * 20)
-    .limit(20)
-    .include(['name', 'avatar', 'statistics.comments']);
+        // convert everything to numbers since Dates must be sent to xenia as epoch numbers
+        // this will break if a string literal is ever a filter value since NaN !== NaN
+        if (+filter.min !== +clampedUserMin) {
+          x.match({[dbField]: {$gte: +clampedUserMin}});
+        }
+
+        if (+filter.max !== +clampedUserMax) {
+          x.match({[dbField]: {$lte: +clampedUserMax}});
+        }
+      });
+
+      return x;
+    };
+
+    addMatches(x.addQuery()).skip(page * pageSize)
+      .limit(pageSize)
+      .include(['name', 'avatar', 'statistics.comments']);
+
+    // get the counts
+    addMatches(x.addQuery()).group({_id: null, count: {$sum: 1}});
+
     doMakeQueryFromStateAsync(x, dispatch, app);
   };
 };
@@ -273,9 +295,11 @@ export const deleteSearch = search => {
     dispatch({type: PILLAR_SEARCH_DELETE_INIT, search});
 
     xenia().deleteQuery(search.query).then(data => {
+      console.info('query_set deleted from xenia', data);
       return fetch(`${app.pillarHost}/api/search/${search.id}`, {method: 'DELETE'});
     })
     .then(resp => {
+      console.info('search deleted from pillar', resp);
       const newSearches = searches.searches.concat();
       // splice out deleted search
       newSearches.splice(_.indexOf(_.map(newSearches, 'id'), search.id), 1);
@@ -288,4 +312,8 @@ export const deleteSearch = search => {
       dispatch({type: PILLAR_SEARCH_DELETE_FAILURE, error});
     });
   };
+};
+
+export const clearUserList = () => {
+  return {type: CLEAR_USER_LIST};
 };

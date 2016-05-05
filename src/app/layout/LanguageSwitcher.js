@@ -2,7 +2,7 @@ import React from 'react';
 import Radium from 'radium';
 
 import MdLanguage from 'react-icons/lib/md/language';
-import MdArrowDropDown from 'react-icons/lib/md/arrow-drop_down';
+import MdArrowDropDown from 'react-icons/lib/md/arrow-drop-down';
 import MdCheck from 'react-icons/lib/md/check';
 
 import { Lang } from 'i18n/lang';

@@ -141,6 +141,7 @@ document.addEventListener('keydown', function (e) {
         d.type.toUpperCase() === 'FILE' ||
         d.type.toUpperCase() === 'EMAIL' ||
         d.type.toUpperCase() === 'SEARCH' ||
+        d.type.toUpperCase() === 'NUMBER' ||
         d.type.toUpperCase() === 'DATE' )
       ) || d.tagName.toUpperCase() === 'TEXTAREA') {
       doPrevent = d.readOnly || d.disabled;

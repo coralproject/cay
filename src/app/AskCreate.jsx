@@ -17,7 +17,15 @@ export default class AskCreate extends Component {
     router: PropTypes.object.isRequired
   };
 
+  constructor(props, context) {
+    super(props, context);
+    this.state = {
+      activeField: null
+    }
+  }
+
   render() {
+    const {activeField} = this.state;
     return (
       <Page>
         <ContentHeader title={window.L.t('Create a new ask')} />
@@ -34,10 +42,17 @@ export default class AskCreate extends Component {
               <AskComponent key={i} type={type} />
             ))}
           </div>
-          <FormDiagram />
+          <FormDiagram onSelect={this.onFieldSelect.bind(this)} />
+          <FieldSettings field={activeField} />
         </div>
       </Page>
     );
+  }
+
+  onFieldSelect(field) {
+    this.setState({
+      activeField: field
+    });
   }
 }
 
@@ -47,13 +62,19 @@ const askTarget = {
     const hoverBoundingRect = React.findDOMNode(component).getBoundingClientRect();
     const hoverClientY = clientOffset.y - (hoverBoundingRect.top);
     const style = styles.askComponent();
+
     const hoverIndex = Math.floor(hoverClientY / (style.height + style.marginBottom / 2));
     const fields = component.state.fields.slice();
-    const index = Math.min(fields.length, hoverIndex);
-    //console.log(index, hoverIndex);
-    fields.splice(index, 0, monitor.getItem().type);
+    if (monitor.getItem().onList) {
+      const index = Math.min(fields.length - 1, hoverIndex);
+      const id = monitor.getItem().id;
+      fields[id] = fields[index];
+      fields[index] = monitor.getItem().type;
+    } else {
+      const index = Math.min(fields.length, hoverIndex);
+      fields.splice(index, 0, monitor.getItem().type);
+    }
     component.setState({ fields });
-
   }
 };
 
@@ -76,7 +97,7 @@ class FormDiagram extends Component {
     return connectDropTarget(
       <div style={styles.formDiagram}>
         {fields.map((field, i) => (
-          <AskComponent type={field} key={i} />
+          <AskComponent onList={true} type={field} id={i} key={i} />
         ))}
       </div>
     );
@@ -86,7 +107,9 @@ class FormDiagram extends Component {
 const askSource = {
   beginDrag(props) {
     return {
-      type: props.type
+      type: props.type,
+      id: props.id,
+      onList: props.onList
     };
   }
 };
@@ -112,13 +135,24 @@ class AskComponent extends Component {
   }
 }
 
+class FieldSettings extends Component {
+  render() {
+    return (
+      <div style={styles.fieldSettings}>
+        <h3>Settings</h3>
+      </div>
+    );
+  }
+}
+
 const styles = {
   textField: {
     marginRight: 20
   },
   builderContainer: {
     display: 'flex',
-    justifyContent: 'space-around'
+    justifyContent: 'space-between',
+    marginTop: 20
   },
   askComponent: function(isDragging) {
     return {
@@ -133,12 +167,15 @@ const styles = {
   },
   typesContainer: {
     flex: 1,
-    margin: 20
+    marginRight: 20
   },
   formDiagram: {
     background: '#fff',
     flex: 2,
     height: 500,
-    margin: 20
+    marginRight: 20
+  },
+  fieldSettings: {
+    flex: 1
   }
 };

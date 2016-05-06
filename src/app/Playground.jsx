@@ -28,12 +28,12 @@ class Playground extends React.Component {
   }
 
   hideWizard() {
-    this.setState({ wizardIsOpen: false }); 
+    this.setState({ wizardIsOpen: false });
   }
 
   render() {
 
-    var wizard = this.state.wizardIsOpen ? 
+    var wizard = this.state.wizardIsOpen ?
       <div style={ styles.wizardOverlay } onClick={ this.hideWizard.bind(this) }>
         <Wizard hideWizard={ this.hideWizard.bind(this) } />
       </div>
@@ -51,7 +51,7 @@ class Playground extends React.Component {
               <div style={ [ styles.playGround ] }>
 
                 <img src="http://coralproject.github.io/design/img/logos/coralWordMark-1.5.png" style={ styles.logo } />
-                
+
                 <div style={ styles.heading }>
 
                   <h1 style={ styles.headingTitle }>Playground</h1>
@@ -86,7 +86,7 @@ class Playground extends React.Component {
                 </div>
 
                 <Customizer />
-                
+
                 {/*
                 <div style={ styles.footer }>
                   Medal, Trophy and Badge icons by Zlatko Najdenovski from the Noun Project
@@ -135,7 +135,7 @@ const styles = {
     height: '100%',
     overflowY: 'auto',
     'float': 'left',
-    background: 'linear-gradient(to right, rgba(247,114,96,1) 0%, rgba(252,149,70,1) 100%)', 
+    background: 'linear-gradient(to right, rgba(247,114,96,1) 0%, rgba(252,149,70,1) 100%)',
     [mediaQueries.desktop]: {
       width: '40%'
     },
@@ -146,7 +146,7 @@ const styles = {
     }
   },
   playgroundMiddlePane: {
-    width: '50%',
+    width: '65%',
     height: '100%',
     overflowY: 'auto',
     'float': 'left',
@@ -182,7 +182,7 @@ const styles = {
   headingTitle: {
     fontFamily: 'Josefin Slab',
     textTransform: 'uppercase',
-    fontSize: '75px',
+    fontSize: '45px',
     fontWeight: '600',
     color: 'white',
     textAlign: 'center',
@@ -257,4 +257,3 @@ const styles = {
   }
 
 };
-

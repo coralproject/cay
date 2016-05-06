@@ -28,7 +28,8 @@ class CommentBox extends React.Component {
     super(props);
     this.state = {
       editorState: EditorState.createEmpty(),
-      showEmojiPicker: false
+      showEmojiPicker: false,
+      selectedRating: null
     };
     this.onChange = (editorState) => this.setState({editorState});
   }
@@ -49,7 +50,7 @@ class CommentBox extends React.Component {
       'BOLD': ['<strong>', '</strong>'],
       'ITALIC': ['<em>', '</em>']
     };
-    
+
     var contentState = this.state.editorState.getCurrentContent();
     var htmlContent = backdraft(convertToRaw(contentState), markup).join("<br />");
 
@@ -66,7 +67,7 @@ class CommentBox extends React.Component {
     if (this.props.replyMode) {
       this.props.dispatch(replyComment(preparedComment, this.props.parents));
     } else {
-      this.props.dispatch(sendComment(preparedComment));  
+      this.props.dispatch(sendComment(preparedComment));
     }
 
   }
@@ -77,6 +78,10 @@ class CommentBox extends React.Component {
     var contentState = editorState.getCurrentContent();
     var modifiedState = Modifier.replaceText(contentState, selectionState, emoji);
     this.setState({ showEmojiPicker: false, editorState: EditorState.createWithContent(modifiedState) });
+  }
+
+  onRatingClick(rating) {
+    this.setState({ selectedRating: rating });
   }
 
   toggleEmojiPicker() {
@@ -97,40 +102,40 @@ class CommentBox extends React.Component {
   render() {
 
     const {editorState} = this.state;
-    var inlineStyles = [];    
+    var inlineStyles = [];
     editorState.getCurrentInlineStyle().map((style) => {
       inlineStyles.push(style);
     });
 
-    var toolBar = this.props.togglerGroups['content'].togglers['rich_content'].status 
+    var toolBar = this.props.togglerGroups['content'].togglers['rich_content'].status
       || this.props.togglerGroups['content'].togglers['emoji'].status
       ?
       <div style={ styles.toolBar }>
-          {  
-            this.props.togglerGroups['content'].togglers['rich_content'].status ? 
+          {
+            this.props.togglerGroups['content'].togglers['rich_content'].status ?
               <span>
-                <button 
-                  onClick={ this.onToolBarClick.bind(this, 'BOLD') } 
+                <button
+                  onClick={ this.onToolBarClick.bind(this, 'BOLD') }
                   style={ [ styles.toolBarButton, inlineStyles.indexOf('BOLD') >= 0 ? styles.toolBarActive : "" ] }>
                   <MdFormatBold />
                 </button>
-                <button 
-                  onClick={ this.onToolBarClick.bind(this, 'ITALIC') } 
+                <button
+                  onClick={ this.onToolBarClick.bind(this, 'ITALIC') }
                   style={ [ styles.toolBarButton, inlineStyles.indexOf('ITALIC') >= 0 ? styles.toolBarActive : "" ] }>
                   <MdFormatItalic />
                 </button>
                 <button style={ styles.toolBarButton }><MdLink /></button>
                 <button style={ styles.toolBarButton }><MdFormatQuote /></button>
               </span>
-            : 
+            :
               ''
           }
-          {  
-            this.props.togglerGroups['content'].togglers['emoji'].status ? 
+          {
+            this.props.togglerGroups['content'].togglers['emoji'].status ?
               <span>
                 <button onClick={ this.toggleEmojiPicker.bind(this) } style={ styles.toolBarButton }><FaSmileO /></button>
               </span>
-            : 
+            :
               ''
           }
         </div>
@@ -138,10 +143,10 @@ class CommentBox extends React.Component {
 
     return (
       <div style={ [ styles.commentBox, this.props.replyMode ? styles.replyMode : '' ] }>
-        { 
-          !this.props.replyMode ?  
+        {
+          !this.props.replyMode ?
             <h3 style={ styles.commentBoxTitle }><span style={ styles.postingAs }>Posting as </span><strong style={ styles.strong }>{ this.props.togglerGroups['privacy'].togglers['anonymity'].status ? 'bogususer123' : 'Bogus Jones' }</strong></h3>
-          : 
+          :
             null
         }
         <ReactCSSTransitionGroup transitionName="fade" transitionAppear={ false }>
@@ -152,6 +157,16 @@ class CommentBox extends React.Component {
           <Editor ref="draftJsEditor" editorState={editorState} onChange={this.onChange} />
         </div>
         <div style={ styles.commentBoxActions }>
+          {
+            this.props.replyMode && this.props.togglerGroups['experimental'].togglers['replyrating'].status ?
+              <div style={ styles.replyRating }>
+                <span onClick={ this.onRatingClick.bind(this, 'agree') } style={ [ styles.replyAgree, this.state.selectedRating == 'agree' ? styles.activeRating : '' ] }>Agree</span>
+                <span onClick={ this.onRatingClick.bind(this, 'neutral') } style={ [ styles.replyNeutral, this.state.selectedRating == 'neutral' ? styles.activeRating : '' ] }>Neutral</span>
+                <span onClick={ this.onRatingClick.bind(this, 'disagree') } style={ [ styles.replyDisagree, this.state.selectedRating == 'disagree' ? styles.activeRating : '' ] }>Disagree</span>
+              </div>
+            :
+              null
+          }
           <button style={ styles.sendButton } onClick={ this.onSendClick.bind(this) }>Post</button>
         </div>
         <div style={ styles.safetyTips }>
@@ -189,6 +204,37 @@ var styles = {
     padding: '20px',
     background: 'white',
     textAlign: 'right'
+  },
+  replyRating: {
+    display: 'inline-block',
+    marginRight: '10px',
+    borderRadius: '4px'
+  },
+  replyAgree: {
+    background: '#BEB',
+    color: 'black',
+    cursor: 'pointer',
+    padding: '13px',
+    borderRadius: '4px 0 0 4px',
+    opacity: .5
+  },
+  replyNeutral: {
+    background: '#EEE',
+    color: 'black',
+    cursor: 'pointer',
+    padding: '13px',
+    opacity: .5
+  },
+  replyDisagree: {
+    background: '#EBB',
+    color: 'black',
+    cursor: 'pointer',
+    padding: '13px',
+    borderRadius: '0 4px 4px 0',
+    opacity: .5
+  },
+  activeRating: {
+    opacity: 1
   },
   sendButton: {
     padding: '10px 15px',
@@ -245,7 +291,7 @@ var styles = {
   },
   emojiPickerStyles: {
     position: 'absolute',
-    left: 0, 
+    left: 0,
     top: '0px',
     backgroundColor: 'white',
     width: '100%',

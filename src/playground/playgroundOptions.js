@@ -1,4 +1,23 @@
-const togglerGroups = { 
+const togglerGroups = {
+  'content': {
+    name: 'Content',
+    togglers: {
+      'rich_content': {
+        label: 'Rich content is ON',
+        offLabel: 'Rich content is OFF',
+        description: 'Using bold or italic typefaces, possibly adding images.',
+        status: false,
+        topic: 'rich_content'
+      },
+      'emoji': {
+        label: 'Emojis are ON',
+        offLabel: 'Emojis are OFF',
+        description: 'Emojis and other types of emoticons are widely used to convey emotion.',
+        status: false,
+        topic: 'emoji'
+      }
+    }
+  },
   'layout': {
     name: 'Layout',
     togglers: {
@@ -44,9 +63,17 @@ const togglerGroups = {
       'anonymity': {
         label: 'Anonymity is ON',
         offLabel: 'Anonymity is OFF',
-        description: 'This means pseudonyms (nicknames) are allowed.',
+        description: 'Enabling users to remain completely anonymous (no real names or nicknames).',
         status: false,
         topic: 'anonymity',
+        pulseTarget: 'commentName'
+      },
+      'pseudonyms': {
+        label: 'Pseudonyms are ON',
+        offLabel: 'Pseudonyms are OFF',
+        description: 'This means pseudonyms (nicknames) are allowed.',
+        status: false,
+        topic: 'pseudonyms',
         pulseTarget: 'commentName'
       },
       'public_profile': {
@@ -83,25 +110,6 @@ const togglerGroups = {
         status: false,
         topic: 'privileges',
         pulseTarget: 'commentTools'
-      }
-    }
-  },
-  'content': {
-    name: 'Content',
-    togglers: {
-      'rich_content': {
-        label: 'Rich content is ON',
-        offLabel: 'Rich content is OFF',
-        description: 'Using bold or italic typefaces, possibly adding images.',
-        status: false,
-        topic: 'rich_content'
-      },
-      'emoji': {
-        label: 'Emojis are ON',
-        offLabel: 'Emojis are OFF',
-        description: 'Emojis and other types of emoticons are widely used to convey emotion.',
-        status: false,
-        topic: 'emoji'
       }
     }
   },
@@ -187,6 +195,18 @@ const togglerGroups = {
         description: 'Allows sending private messages between users.',
         status: false,
         topic: 'privatemessages'
+      }
+    }
+  },
+  'experimental': {
+    name: 'Experimental',
+    togglers: {
+      'replyrating': {
+        label: 'Reply Rating is ON',
+        offLabel: 'Reply Rating is OFF',
+        description: 'Asks for a reply rating before posting a Reply. Enable Nested Replies to see it in action.',
+        status: false,
+        topic: 'replyrating'
       }
     }
   }

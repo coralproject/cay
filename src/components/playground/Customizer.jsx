@@ -38,7 +38,7 @@ export default Customizer;
 
 var styles = {
   customizer: {
-    padding: '40px',
+    padding: '40px 40px 200px 40px',
     background: '#F1EBE0',
     color: '#3d3d3d',
     [mediaQueries.tablet]: {
@@ -77,4 +77,3 @@ var styles = {
   }
 
 };
-

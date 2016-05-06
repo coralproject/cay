@@ -10,7 +10,7 @@ import FaChevronDown from 'react-icons/lib/fa/chevron-down';
 
 @connect(state => state.playground)
 @Radium
-class Sidebar extends React.Component { 
+class Sidebar extends React.Component {
 
   constructor(props) {
     super(props);
@@ -23,7 +23,7 @@ class Sidebar extends React.Component {
 
   render() {
 
-    var sideBarLinks = this.props.currentSidebarTopic && 
+    var sideBarLinks = this.props.currentSidebarTopic &&
       this.props.topics[this.props.currentSidebarTopic] &&
       this.props.topics[this.props.currentSidebarTopic].links ?
       <div style={ styles.sideBarReferences }>
@@ -31,14 +31,14 @@ class Sidebar extends React.Component {
           {
             this.props.topics[this.props.currentSidebarTopic].links.map((link, i) => {
               return (
-                  <a key={ i } style={ styles.sideBarLinks } href="{ link.href }">{ link.title }</a>
+                  <a target="_blank" key={ i } style={ styles.sideBarLinks } href={ link.href }>{ link.title }</a>
               );
             })
           }
       </div>
     : '';
 
-    var sideBarContent = this.props.currentSidebarTopic && this.props.topics[this.props.currentSidebarTopic] ? 
+    var sideBarContent = this.props.currentSidebarTopic && this.props.topics[this.props.currentSidebarTopic] ?
       <div>
         <div style={ styles.sideBarTopic }>
           <h2 style={ styles.sideBarTitle }>{ this.props.topics[this.props.currentSidebarTopic].title }</h2>
@@ -46,16 +46,16 @@ class Sidebar extends React.Component {
         </div>
         { sideBarLinks }
       </div>
-    : 
+    :
       <p>
         This area will show you contextual information about the various settings and elements in the playground.
       </p>
     ;
-   
+
     return (
       <div style={ [ styles.sideBar, this.state.expanded ? styles.expandedSidebar : '' ] }>
         <div style={ styles.expandLink } onClick={ this.onExpandClick.bind(this) }>
-          { 
+          {
             this.state.expanded ?
               <span><FaChevronDown /> Collapse</span>
             :
@@ -64,7 +64,7 @@ class Sidebar extends React.Component {
         </div>
         { sideBarContent }
       </div>
-    );  
+    );
 
   }
 }
@@ -85,21 +85,16 @@ var styles = {
   },
   sideBar: {
     position: 'fixed',
-    right: '0px',
-    top: '0px',
-    height: '100%',
-    width: '15%',
+    width: '100%',
+    top: 'auto',
+    bottom: '0px',
+    height: '120px',
     backgroundColor: '#3B60A8',
     zIndex: '75000',
     color: 'white',
     padding: '30px',
     transition: 'height .5s',
-    [mediaQueries.desktop]: {
-      width: '100%',
-      top: 'auto',
-      bottom: '0px',
-      height: '120px'
-    },
+    boxShadow: '0 0 20px #bbb',
     [mediaQueries.tablet]: {
       width: '100%',
       top: 'auto',

@@ -11,7 +11,6 @@ import { Provider } from 'react-redux';
 import configureStore from 'store.js';
 import { configXenia, configError } from 'app/AppActions';
 import {StyleRoot} from 'radium';
-
 // import Dashboard from './containers/Dashboard';
 import SearchCreator from 'app/SearchCreator';
 import TagManager from 'app/TagManager';

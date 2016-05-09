@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import ReactDOM from 'react-dom';
 import { DragDropContext, DropTarget, DragSource } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import Radium from 'radium';
@@ -59,7 +60,7 @@ export default class AskCreate extends Component {
 const askTarget = {
   drop(props, monitor, component) {
     const clientOffset = monitor.getClientOffset();
-    const hoverBoundingRect = React.findDOMNode(component).getBoundingClientRect();
+    const hoverBoundingRect = ReactDOM.findDOMNode(component).getBoundingClientRect();
     const hoverClientY = clientOffset.y - (hoverBoundingRect.top);
     const style = styles.askComponent();
 

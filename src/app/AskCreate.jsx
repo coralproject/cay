@@ -22,7 +22,7 @@ export default class AskCreate extends Component {
     super(props, context);
     this.state = {
       activeField: null
-    }
+    };
   }
 
   render() {
@@ -43,7 +43,7 @@ export default class AskCreate extends Component {
               <AskComponent key={i} type={type} />
             ))}
           </div>
-          <FormDiagram onSelect={this.onFieldSelect.bind(this)} />
+          <FormDiagram onFieldSelect={this.onFieldSelect.bind(this)} />
           <FieldSettings field={activeField} />
         </div>
       </Page>
@@ -84,7 +84,8 @@ const askTarget = {
 }))
 class FormDiagram extends Component {
   static propTypes = {
-    connectDropTarget: PropTypes.func.isRequired
+    connectDropTarget: PropTypes.func.isRequired,
+    onFieldSelect: PropTypes.func
   };
 
   constructor(props, context) {
@@ -93,12 +94,13 @@ class FormDiagram extends Component {
   }
 
   render() {
-    const {connectDropTarget} = this.props;
+    const {connectDropTarget, onFieldSelect} = this.props;
     const {fields} = this.state;
     return connectDropTarget(
       <div style={styles.formDiagram}>
         {fields.map((field, i) => (
-          <AskComponent onList={true} type={field} id={i} key={i} />
+          <AskComponent onFieldSelect={onFieldSelect}
+            onList={true} type={field} id={i} key={i} />
         ))}
       </div>
     );
@@ -129,20 +131,49 @@ class AskComponent extends Component {
   render() {
     const { isDragging, connectDragSource, type } = this.props;
     return connectDragSource(
-      <div style={styles.askComponent(isDragging)}>
+      <div onClick={this.onClick.bind(this)} style={styles.askComponent(isDragging)}>
         {type}
       </div>
     );
+  }
+
+  onClick() {
+    const {onList, type, onFieldSelect} = this.props;
+    if (onList) {
+      onFieldSelect(type);
+    }
   }
 }
 
 class FieldSettings extends Component {
   render() {
+    const {field} = this.props;
+    if(!field) return (<span></span>);
     return (
       <div style={styles.fieldSettings}>
         <h3>Settings</h3>
+        {this.renderSettings()}
       </div>
     );
+  }
+
+  renderSettings() {
+    const {field} = this.props;
+    switch(field) {
+    case 'text':
+      return (
+        <div>
+          <input placeholder='maxLength' />
+        </div>
+      );
+    case 'email':
+      return (
+        <div>
+          <label>Required</label>
+          <input type="checkbox" />
+        </div>
+      );
+    }
   }
 }
 

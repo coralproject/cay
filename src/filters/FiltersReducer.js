@@ -6,17 +6,15 @@ let initialState = {
   tags: [],
   authors: [],
   sections: [],
+  dirtyFilters: [], // non-default filters
   loadingFilters: false,
   loadingUserList: false,
   loadingAuthors: false,
   loadingSections: false,
-  'user_name': null,
-  'status': null,
-  'last_login': null,
-  'member_since': null,
   breakdown: 'all',
   counter: 0, // this is a signal for ajax consumed by userFilters
-  specificBreakdown: ''
+  specificBreakdown: '',
+  distributions: null
 };
 
 const filters = (state = initialState, action) => {
@@ -74,6 +72,9 @@ const filters = (state = initialState, action) => {
   case types.SET_BREAKDOWN:
     return {...state, breakdown: action.breakdown};
 
+  case types.FETCH_DISTRIBUTIONS_SUCCESS:
+    return {...state, distributions: action.distros};
+
   case types.SET_SPECIFIC_BREAKDOWN:
     return {...state, specificBreakdown: action.specificBreakdown};
 
@@ -85,6 +86,9 @@ const filters = (state = initialState, action) => {
     }, {});
 
     return {...state, ...newFilters, counter: action.counter};
+
+  case types.RESET_FILTERS:
+    return {...state, dirtyFilters: []};
 
   default:
     return state;

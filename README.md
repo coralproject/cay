@@ -1,6 +1,6 @@
 # Cay
 
-Cay, a community moderation tool (front-end)
+The front-end admin panel for [coralproject.net](Coral Project) apps.
 
 ## Quickstart
 
@@ -10,13 +10,13 @@ Cay, a community moderation tool (front-end)
 - set up your `/config.json` file with the locations of your hosted services. A sample file is at `public/config.sample.json` and currently must be placed at the root of the hosting directory for Cay.
 - `npm start`
 
-You'll need to be running `v5.0.0` of node, we recommend using `nvm` to manage node installations.
+You'll need to be running `> v5.0.0` of node, we recommend using `nvm` to manage node installations.
 
 The app is a series of React components compiled into modules with [webpack](http://webpack.github.io/).
 
 This repo is for the front-end of the Coral ecosystem [outlined here](https://github.com/coralproject/reef/blob/master/ECOSYSTEM.md).
 
-The basic idea is that the build process results in a `bundle.js` file containing all javascript and css. CSS cross-browser issues, ES6 transpilation, minification, etc, is all handled by webpack.
+The basic idea is that the build process results in a `bundle.js` file containing all javascript and css. CSS cross-browser issues, ES6 transpilation, minification, etc, is all handled by webpack. `bundle.js` lives in-memory until build time (`npm run build`).
 
 ##### Folder structure
 
@@ -32,7 +32,7 @@ The basic idea is that the build process results in a `bundle.js` file containin
    config.json           -> environment variables and such
    data_config.json      -> filters and dimension defs
 +-- src
-|  +-- app
+|  +-- app               -> top-level route views connected to Redux
 |    +-- layout
 |    AppActions.js
 |    AppReducer.js
@@ -54,6 +54,10 @@ store.js                 -> redux store
 +-- test                 -> mirrors the src folder
 ```
 
+The meat of the application lives in the `/src` folder. Components are grouped into domains. E.g. everything that has to do with creating, viewing and editing Searches lives in the `search` folder. This includes redux reducers and action files for that domain.
+
+Note: the reducers are combined in `/src/app/MainReducer.js`.
+
 #### Development
 
 We welcome community contribution. If you're thinking about making more than a minor change, check in with the Coral team via Github issues to avoid unnecessary work for both parties.
@@ -66,6 +70,8 @@ Sequester all work in pull requests
   4. on github.com, you should see a button to create a pull request from your new branch
   5. There will be public code reviews before we merge any PRs into master
 
+Please read our [contribution guide](https://github.com/coralproject/cay/blob/master/.github/CONTRIBUTING.md) for more details.
+
 We will not accept commits or pushes to the `master` branch, as the latest version of master is automatically deployed. Any direct push to master will be reverted.
 
 #### Deploying
@@ -73,5 +79,4 @@ We will not accept commits or pushes to the `master` branch, as the latest versi
 Packaging for production involves building the js and css files with `npm run build`. This will nuke and re-populate the `/dist` folder. After these files are copied to the server, a valid `config.json` file must live in the root of the directory from which the front-end assets are served. There is a `config.sample.json` in the `/public` directory for your reference.
 
 ## TODO:
-- how to internationalize (R2L languages)
-- how to continue to make things accessible
+[issues](https://github.com/coralproject/cay/issues)

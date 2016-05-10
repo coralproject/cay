@@ -31,4 +31,25 @@ module.exports = function(io) {
       console.error(error);
     }
   }
+
+  handleAskEdit(io);
 };
+
+function handleAskEdit(io) {
+  io.on('connection', socket => {
+    socket.on('action', action => {
+      const type = action.type, askId = action.askId;
+      if (type === 'ASK_REQUEST_EDIT_ACCESS') {
+        const roomUsers = io.nsps['/'].adapter.rooms['ask-' + askId];
+        if (roomUsers && Object.keys(roomUsers).length && !roomUsers[socket.id]) {
+          return socket.emit('action', { type: 'ASK_EDIT_DENIED', askId: askId });
+        } else {
+          socket.join('ask-' + askId);
+          return socket.emit('action', {type: 'ASK_EDIT_ACCEPTED', askId: askId});
+        }
+      } else if (type === 'ASK_EDIT_LEAVE') {
+        socket.leave('ask-' + askId);
+      }
+    });
+  });
+}

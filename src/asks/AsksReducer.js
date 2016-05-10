@@ -1,7 +1,10 @@
 import * as types from 'asks/AskActions';
 
 const initial = {
-  items: []
+  items: [],
+  editAccess: {
+
+  }
 };
 
 for (let i = 0; i < 100; i++) {
@@ -22,8 +25,17 @@ const asks = (state = initial, action) => {
     return state;
 
   case types.ASK_DELETED:
-    console.log(types.ASK_DELETED, action);
     return state;
+
+  case types.ASK_EDIT_ACCEPTED:
+    var newState = Object.assign({}, state);
+    newState.editAccess[action.askId] = true;
+    return newState;
+
+  case types.ASK_EDIT_DENIED:
+    var newState = Object.assign({}, state);
+    delete newState.editAccess[action.askId];
+    return newState;
 
   default:
     return state;

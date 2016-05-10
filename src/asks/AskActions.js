@@ -5,6 +5,11 @@ export const ASK_REQUEST_STARTED = 'ASK_REQUEST_STARTED';
 export const ASK_REQUEST_SUCCESS = 'ASK_REQUEST_SUCCESS';
 export const ASK_REQUEST_FAILURE = 'ASK_REQUEST_FAILURE';
 
+export const ASK_REQUEST_EDIT_ACCESS = 'ASK_REQUEST_EDIT_ACCESS';
+export const ASK_EDIT_ACCEPTED = 'ASK_EDIT_ACCEPTED';
+export const ASK_EDIT_DENIED = 'ASK_EDIT_ACCEPTED';
+export const ASK_EDIT_LEAVE = 'ASK_EDIT_LEAVE';
+
 export const ASK_DELETED = 'ASK_DELETED';
 
 const getInit = (body, method) => {
@@ -52,6 +57,22 @@ export const deleteSuccessful = (ask) => {
   };
 };
 
+export const askRequestEditAccess = askId => {
+  return {
+    type: ASK_REQUEST_EDIT_ACCESS,
+    askId,
+    publish: true
+  };
+};
+
+export const askLeaveEdit = askId => {
+  return {
+    type: ASK_EDIT_LEAVE,
+    askId,
+    publish: true
+  };
+};
+
 export const deleteAsk = (name, description, index) => {
   return (dispatch, getState) => {
     dispatch(askRequestStarted());
@@ -62,5 +83,17 @@ export const deleteAsk = (name, description, index) => {
         dispatch(askRequestSuccess(deletedAsk, index, 'delete'));
       })
       .catch(error => dispatch(askRequestFailure(error)));
+  };
+};
+
+export const requestEditAccess = askId => {
+  return dispatch => {
+    dispatch(askRequestEditAccess(askId));
+  };
+};
+
+export const leavingEdit = askId => {
+  return dispatch => {
+    dispatch(askLeaveEdit(askId));
   };
 };

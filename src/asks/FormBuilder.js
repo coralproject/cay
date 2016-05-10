@@ -113,20 +113,44 @@ class FieldSettings extends Component {
         <p>Click on a form field and access to its properties.</p>
       );
     }
+
+    return (
+      <div>
+        {this.renderCommonSettings(field)}
+        {this.renderTypeSettings(field)}
+      </div>
+    );
+  }
+
+  renderCommonSettings(field) {
+    return (
+      <div>
+        <p>
+          <label>Label </label>
+          <input value={field.label || field.type}/>
+        </p>
+        <p>
+          <label>Required <input type="checkbox"/></label>
+        </p>
+      </div>
+    );
+  }
+
+  renderTypeSettings(field) {
     switch(field.type) {
     case 'text':
       return (
         <div>
-          <input placeholder='maxLength' />
+          <input type="number" min="0" placeholder='maxLength' />
         </div>
       );
-    case 'email':
+    case 'textarea':
       return (
         <div>
-          <label>Required</label>
-          <input type="checkbox" />
+          <input type="number" min="1" placeholder='rows' />
         </div>
       );
+
     }
   }
 }

@@ -6,6 +6,7 @@ import Radium from 'radium';
 import {connect} from 'react-redux';
 import PercentClause from './PercentClause';
 import IntClause from './IntClause';
+import DateRangeClause from './DateRangeClause';
 
 import settings from 'settings';
 
@@ -81,11 +82,14 @@ class Clauses extends React.Component {
   getFilters() {
     return this.props.filterList.map((filterName) => {
       if (this.userChangedFilter(filterName).either) {
-        return (
-          this.props[filterName].type === 'percentRange' ?
-            <PercentClause {...this.props[filterName]}/> :
-            <IntClause {...this.props[filterName]}/>
-        );
+        switch (this.props[filterName].type) {
+        case 'dateRange':
+          return <DateRangeClause {...this.props[filterName]}/>
+        case 'percentRange':
+          return <PercentClause {...this.props[filterName]}/>;
+        default:
+          return <IntClause {...this.props[filterName]}/>;
+        }
       }
     });
   }

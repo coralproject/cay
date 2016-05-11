@@ -42,7 +42,11 @@ export const fetchSections = () => {
     dispatch(requestSections());
 
     /* xenia_package */
-
+    xenia().exec('dimension_section_list')
+      .then(json => dispatch(receiveSections(json)))
+      .catch(err => {
+        console.log('you failed to get the section list!', err);
+      });
   };
 };
 

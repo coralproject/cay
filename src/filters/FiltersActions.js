@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import {xenia} from 'app/AppActions';
+import {makeQueryFromState} from 'search/SearchActions';
 
 export const REQUEST_SECTIONS = 'REQUEST_SECTIONS';
 export const RECEIVE_SECTIONS = 'RECEIVE_SECTIONS';
@@ -21,6 +22,8 @@ export const SET_SPECIFIC_BREAKDOWN = 'SET_SPECIFIC_BREAKDOWN';
 
 export const RESET_FILTERS = 'RESET_FILTERS';
 export const RESET_FILTER = 'RESET_FILTER';
+
+export const SORT = 'SORT';
 
 // export const REQUEST_FILTER_RANGES = 'REQUEST_FILTER_RANGES';
 export const RECEIVE_FILTER_RANGES = 'RECEIVE_FILTER_RANGES';
@@ -321,6 +324,20 @@ export const resetFilters = () => {
   return {type: RESET_FILTERS};
 };
 
-export const resetFilter = name => {
+export const resetFilter = name => dispatch => {
+  dispatch(resetFilterAction(name));
+  dispatch(makeQueryFromState('user', 0, true));
+};
+
+export const sortBy = (field, direction) => dispatch => {
+  dispatch(sortByAction(field, direction));
+  dispatch(makeQueryFromState('user', 0, true));
+};
+
+const sortByAction = (field, direction) => {
+  return {type: SORT, field, direction};
+};
+
+const resetFilterAction = (field, direction) => {
   return {type: RESET_FILTER, name};
 };

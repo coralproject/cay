@@ -180,9 +180,11 @@ export const makeQueryFromState = (type, page = 0) => {
 
       return x;
     };
-
-    addMatches(x.addQuery()).skip(page * pageSize)
-      .limit(pageSize)
+    addMatches(x.addQuery()).skip(page * pageSize);
+    if(filterState.sortBy) {
+      x.sort(filterState.sortBy);
+    }
+    x.limit(pageSize)
       .include(['name', 'avatar', 'statistics.comments']);
 
     // get the counts

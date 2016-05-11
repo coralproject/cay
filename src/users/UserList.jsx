@@ -5,11 +5,12 @@ import Infinite from 'react-infinite';
 
 import UserRow from 'users/UserRow';
 import Heading from 'components/Heading';
+import {sortBy} from 'filters/FiltersActions';
 import Spinner from 'components/Spinner';
 
 import { Lang } from 'i18n/lang';
 
-@connect()
+@connect(({filters}) => ({filters}))
 @Lang
 @Radium
 export default class UserList extends React.Component {
@@ -69,18 +70,24 @@ export default class UserList extends React.Component {
   }
 
   render() {
-
     var noUsersMessage = (<p style={ styles.noUsers }>
       No users loaded yet,<br />
       create a filter on the left to load users.
     </p>);
 
+    const {filters} = this.props;
     var userListContent = this.props.users.length ? this.getUserList(this.props.users) : noUsersMessage;
     return (
       <div style={ [ styles.base, this.props.style ] }>
         <div style={ styles.columnHeader }>
           <Heading size="medium">
-            <span style={styles.groupHeader}>{ window.L.t('results') }</span> ({this.props.total || 'awaiting pillar #s'} { window.L.t('users')})
+            <select onChange={this.onSortChanged.bind(this)}>
+              <option value=''>Sort by</option>
+              {filters.filterList.map((filter, i) =>
+                <option key={i} value={filter}>{filters[filter].description}</option>
+              )}
+            </select>
+            <span style={styles.groupHeader}>{ window.L.t('results') }</span> ({this.props.total || '#'} { window.L.t('users')})
           </Heading>
       </div>
         {userListContent}
@@ -95,6 +102,10 @@ export default class UserList extends React.Component {
 
       </div>
     );
+  }
+
+  onSortChanged(event) {
+    this.props.dispatch(sortBy(event.target.value, 1));
   }
 }
 

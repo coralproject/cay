@@ -4,11 +4,8 @@ import {filterChanged} from 'filters/FiltersActions';
 import Radium from 'radium';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
-import _ from 'lodash';
 
-import Slider from 'components/Slider';
 import Card from 'components/cards/Card';
-import CardHeader from 'components/cards/CardHeader';
 
 @connect()
 @Radium
@@ -33,31 +30,11 @@ export default class FilterDate extends React.Component {
     this.props.dispatch(filterChanged(this.props.fieldName, newRange));
   }
 
-  // {values} is an array of unix timestamps
-  // [timestampStart, timestampEnd]
-  updateSlider(values) {
-    const newRange = {userMin: new Date(values[0]), userMax: new Date(values[1])};
-    this.props.dispatch(filterChanged(this.props.fieldName, newRange));
-  }
-
   render() {
 
     return (
       <Card style={[styles.base, this.props.style]}>
-        <CardHeader>{this.props.description}</CardHeader>
-
-        {
-          _.isDate(this.props.userMin) && _.isDate(this.props.userMax) ?
-          <Slider
-            min={this.props.min.getTime()}
-            max={this.props.max.getTime()}
-            defaultValue={[this.props.userMin.getTime(), this.props.userMax.getTime()]}
-            value={[this.props.userMin.getTime(), this.props.userMax.getTime()]}
-            onChange={this.updateSlider.bind(this)}
-            withBars /> : 'loading date ranges'
-        }
-
-
+        <p style={styles.description}>{this.props.description}</p>
 
         <div style={styles.row}>
           <div style={styles.cell}>
@@ -87,5 +64,10 @@ const styles = {
   },
   cell: {
     flex: 1
+  },
+  description: {
+    fontSize: '15px',
+    marginBottom: 10,
+    marginRight: 20
   }
 };

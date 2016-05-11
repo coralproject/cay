@@ -29,8 +29,10 @@ const style = {
     padding: '7px 10px',
     border: '1px solid lightgrey',
     borderRadius: 3
-
-
+  },
+  description: {
+    marginBottom: 10,
+    marginRight: 20
   }
 };
 
@@ -107,7 +109,7 @@ export default class FilterNumbers extends React.Component {
           alignItems: 'flex-start',
           justifyContent: 'space-between'
         }}>
-        <span style={{marginBottom: 10, marginRight: 20}}>{this.props.description}</span>
+        <span style={style.description}>{this.props.description}</span>
         {
           this.props.distributions ?
           <Sparkline

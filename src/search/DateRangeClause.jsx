@@ -1,22 +1,22 @@
-import React, {Component} from 'react';
+import React from 'react';
 import Radium from 'radium';
 import moment from 'moment';
 
 @Radium
-export default class DateRangeClaus extends Component {
+export default class DateRangeClause extends React.Component {
   createText() {
     const {description, userMin, userMax, min, max} = this.props;
     let text = '';
 
-    if (userMin > min && userMax >= max) {
-      text = `more than ${moment(userMin).format('l')} ${description}`;
+    if (+userMin > +min && +userMax >= +max) {
+      text = `${description} after ${moment(userMin).format('l')}`;
     }
 
-    if (userMin === min && userMax < max) {
-      text = `less than ${moment(userMax).format('l')} ${description}`;
+    if (+userMin === +min && +userMax < +max) {
+      text = `${description} before ${moment(userMax).format('l')}`;
     }
 
-    if (userMin > min && userMax < max) {
+    if (+userMin > +min && +userMax < +max) {
       text = `
         between ${moment(userMin).format('l')}
         and ${moment(userMax).format('l')}
@@ -24,7 +24,7 @@ export default class DateRangeClaus extends Component {
       `;
     }
     /* sliders on same number, equality, so "exactly n" */
-    if (userMin === userMax) {
+    if (+userMin === +userMax) {
       text = `exactly ${moment(userMin).format('l')} ${description}`;
     }
 

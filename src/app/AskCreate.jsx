@@ -29,8 +29,8 @@ export default class AskCreate extends Component {
           <TextField style={styles.textField} label={window.L.t('Thank you message')} />
           <TextField label={window.L.t('Description')} />
         </div>
-        <div>
-          <h2>Form Builder</h2>
+        <div style={styles.formBuilderContainer}>
+          <h2 style={styles.builderTitle}>Form Builder</h2>
           <FormBuilder />
         </div>
       </Page>
@@ -54,5 +54,13 @@ const styles = {
   icon: {
     float: 'right',
     marginLeft: 10
+  },
+  formBuilderContainer: {
+    marginTop: 50
+  },
+  builderTitle: {
+    marginBottom: 30,
+    fontSize: 25
+
   }
 };

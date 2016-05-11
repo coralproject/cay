@@ -4,6 +4,8 @@ import { DragDropContext, DropTarget } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import ReactDOM from 'react-dom';
 import AskComponent, {styles as askComponentStyles} from 'asks/AskComponent';
+import Checkbox from 'components/forms/Checkbox';
+import TextField from 'components/forms/TextField';
 
 const askTypes = [
   {type: 'text', label: 'short text'},
@@ -100,7 +102,7 @@ class FieldSettings extends Component {
   render() {
     return (
       <div style={styles.fieldSettings}>
-        <h3>Settings</h3>
+        <h3 style={styles.fieldSettingsTitle}>Settings</h3>
         {this.renderSettings()}
       </div>
     );
@@ -125,13 +127,8 @@ class FieldSettings extends Component {
   renderCommonSettings(field) {
     return (
       <div>
-        <p>
-          <label>Label </label>
-          <input value={field.label || field.type}/>
-        </p>
-        <p>
-          <label>Required <input type="checkbox"/></label>
-        </p>
+        <Checkbox label="required" />
+        <TextField label="label" value={field.label || field.type}/>
       </div>
     );
   }
@@ -141,13 +138,13 @@ class FieldSettings extends Component {
     case 'text':
       return (
         <div>
-          <input type="number" min="0" placeholder='maxLength' />
+          <TextField type="number" label="maxLength" />
         </div>
       );
     case 'textarea':
       return (
         <div>
-          <input type="number" min="1" placeholder='rows' />
+          <TextField type="number" label="rows" />
         </div>
       );
 
@@ -158,8 +155,7 @@ class FieldSettings extends Component {
 const styles = {
   builderContainer: {
     display: 'flex',
-    justifyContent: 'space-between',
-    marginTop: 20
+    justifyContent: 'space-between'
   },
   typesContainer: {
     flex: 1,
@@ -168,12 +164,17 @@ const styles = {
   formDiagram: {
     background: '#fff',
     flex: 1,
-    height: 500,
+    minHeight: 500,
     marginRight: 20,
     padding: 20
   },
   fieldSettings: {
     flex: 1,
-    transition: 'all 2s linear'
+    padding: 10,
+    paddingTop: 0
+  },
+  fieldSettingsTitle: {
+    fontSize: 20,
+    marginBottom: 10
   }
 };

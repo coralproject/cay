@@ -330,7 +330,7 @@ export const resetFilter = name => dispatch => {
 };
 
 export const sortBy = (field, direction) => dispatch => {
-  dispatch(sortByAction(field, direction));
+  dispatch(sortByAction(`user.statistics.comments.all.all.${field}`, direction));
   dispatch(makeQueryFromState('user', 0, true));
 };
 

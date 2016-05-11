@@ -105,7 +105,9 @@ export default class UserList extends React.Component {
   }
 
   onSortChanged(event) {
-    this.props.dispatch(sortBy(event.target.value, 1));
+    const val = event.target.value;
+    const field = val ? this.props.filters[val].field : null;
+    this.props.dispatch(sortBy(field, -1));
   }
 }
 

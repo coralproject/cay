@@ -34,6 +34,7 @@ const searches = (state = initialState, action) => {
 
   // query_set executed. receive a list of users.
   case types.QUERYSET_RECEIVED:
+    console.log(action.replace);
     const users =  action.replace ? [...action.data.results[0].Docs] : [...state.users, ...action.data.results[0].Docs];
     return {...state, loadingQueryset: false, users, userCount: action.userCount};
 

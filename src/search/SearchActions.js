@@ -133,7 +133,7 @@ export const createQuery = (query) => {
 };
 
 /* xenia_package */
-export const makeQueryFromState = (type, page = 0) => {
+export const makeQueryFromState = (type, page = 0, replace = false) => {
 
   const pageSize = 20;
 
@@ -180,17 +180,17 @@ export const makeQueryFromState = (type, page = 0) => {
 
       return x;
     };
-    addMatches(x.addQuery()).skip(page * pageSize);
+    addMatches(x.addQuery());
     if(filterState.sortBy) {
       x.sort(filterState.sortBy);
     }
-    x.limit(pageSize)
+    x.skip(page * pageSize).limit(pageSize)
       .include(['name', 'avatar', 'statistics.comments']);
 
     // get the counts
     addMatches(x.addQuery()).group({_id: null, count: {$sum: 1}});
 
-    doMakeQueryFromStateAsync(x, dispatch, app);
+    doMakeQueryFromStateAsync(x, dispatch, app, replace);
   };
 };
 

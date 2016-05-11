@@ -169,7 +169,6 @@ const styles = {
     padding: 20
   },
   fieldSettings: {
-    flex: 1,
     padding: 10,
     paddingTop: 0
   },

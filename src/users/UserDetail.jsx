@@ -90,17 +90,17 @@ export default class UserDetail extends React.Component {
   createDetailsMarkup() {
     return (
       <div>
-        <Heading size="medium">{this.props.user.name}</Heading>
         <div style={styles.topPart}>
           <Avatar style={styles.avatar} src="/img/user_portrait_placeholder.png" size={100} />
+          <Heading size="medium">{this.props.user.name}</Heading>
         </div>
-        <p><MdLocalOffer /> Add/remove Tags for this Commenter</p>
+        {/*<p><MdLocalOffer /> Add/remove Tags for this Commenter</p>
         <Select
           multi={true}
           value={this.state.selectedTags}
           onChange={this.updateTags.bind(this)}
           options={this.getTags()}
-        />
+        />*/}
         <Tabs initialSelectedIndex={0} style={styles.tabs}>
           <Tab title="About">
             <Stats>
@@ -151,10 +151,13 @@ const styles = {
   },
   topPart: {
     display: 'flex',
-    marginBottom: 10
+    marginBottom: 10,
+    alignItems: 'center'
   },
   avatar: {
-    marginRight: 10
+    marginRight: 10,
+    width: 75,
+    height: 75
   },
   stats: {
     flex: 1

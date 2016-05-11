@@ -143,28 +143,17 @@ export const getFilterRanges = () => {
         dimension = 'all';
       }
 
-      // if you change this naming convention
+      // if you change this naming convention "<somefilter>_max"
       // you must update the RECEIVE_FILTER_RANGES in reducers/filters.js
 
-      if (filterState[key].type !== 'dateRange') {
-        const field = '$' + _.template(filterState[key].template)({dimension});
-        accum[key + '_min'] = {
-          $min: field
-        };
+      const field = '$' + _.template(filterState[key].template)({dimension});
+      accum[key + '_min'] = {
+        $min: field
+      };
 
-        accum[key + '_max'] = {
-          $max: field
-        };
-      } else {
-        accum[key + '_min'] = {
-          $min: '$' + _.template(filterState[key].template)({dimension}) + '.first'
-        };
-
-        accum[key + '_max'] = {
-          $max: '$' + _.template(filterState[key].template)({dimension}) + '.last'
-        };
-
-      }
+      accum[key + '_max'] = {
+        $max: field
+      };
 
       return accum;
     }, {_id: null});

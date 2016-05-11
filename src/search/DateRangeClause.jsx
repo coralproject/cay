@@ -8,7 +8,6 @@ export default class DateRangeClaus extends Component {
     const {description, userMin, userMax, min, max} = this.props;
     let text = '';
 
-    console.log(min, max, userMin, userMax)
     if (userMin > min && userMax >= max) {
       text = `more than ${moment(userMin).format('l')} ${description}`;
     }
@@ -45,10 +44,5 @@ export default class DateRangeClaus extends Component {
 
 const styles = {
   base: {
-    backgroundColor: 'darkGrey',
-    color: 'white',
-    margin: '20px 20px 0px 0px',
-    padding: '10px 20px',
-    borderRadius: 4
   }
 };

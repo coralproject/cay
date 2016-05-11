@@ -7,6 +7,7 @@ import {connect} from 'react-redux';
 import PercentClause from './PercentClause';
 import IntClause from './IntClause';
 import DateRangeClause from './DateRangeClause';
+import {resetFilter} from 'filters/FiltersActions';
 
 import settings from 'settings';
 
@@ -80,18 +81,33 @@ class Clauses extends React.Component {
   }
 
   getFilters() {
-    return this.props.filterList.map((filterName) => {
+    return this.props.filterList.map((filterName, i) => {
       if (this.userChangedFilter(filterName).either) {
+        let clause;
         switch (this.props[filterName].type) {
         case 'dateRange':
-          return <DateRangeClause {...this.props[filterName]}/>
+          clause = <DateRangeClause {...this.props[filterName]}/>;
+          break;
         case 'percentRange':
-          return <PercentClause {...this.props[filterName]}/>;
+          clause = <PercentClause {...this.props[filterName]}/>;
+          break;
         default:
-          return <IntClause {...this.props[filterName]}/>;
+          clause = <IntClause {...this.props[filterName]}/>;
         }
+
+        return (
+          <span key={i} style={styles.clause}>
+            {clause}
+            <span onClick={this.resetFilter.bind(this, filterName)}
+              style={styles.close}>x</span>
+          </span>
+        );
       }
     });
+  }
+
+  resetFilter(filterName) {
+    this.props.dispatch(resetFilter(filterName));
   }
 
   render() {
@@ -109,3 +125,18 @@ class Clauses extends React.Component {
 }
 
 export default Clauses;
+
+
+const styles = {
+  close: {
+    cursor: 'pointer',
+    marginLeft: 10,
+    color: 'grey'
+  },
+  clause: {
+    backgroundColor: 'darkGrey',
+    color: 'white',
+    borderRadius: 4,
+    padding: 10
+  }
+};

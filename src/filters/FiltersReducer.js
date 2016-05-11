@@ -90,6 +90,12 @@ const filters = (state = initialState, action) => {
   case types.RESET_FILTERS:
     return {...state, dirtyFilters: []};
 
+  case types.RESET_FILTER:
+    const newState = Object.assign({}, state);
+    newState[action.name].userMin = newState[action.name].min;
+    newState[action.name].userMax = newState[action.name].max
+    return {...newState, dirtyFilters: []};
+
   default:
     return state;
 

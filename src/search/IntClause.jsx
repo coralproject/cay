@@ -25,7 +25,7 @@ class IntClaus extends React.Component {
     params: React.PropTypes.object,
     routes: React.PropTypes.array,
     /* component api */
-    style: React.PropTypes.object,
+    style: React.PropTypes.object
     // foo: React.PropTypes.string
   }
   static defaultProps = {
@@ -34,11 +34,6 @@ class IntClaus extends React.Component {
   getStyles() {
     return {
       base: {
-        backgroundColor: 'darkGrey',
-        color: 'white',
-        margin: "20px 20px 0px 0px",
-        padding: '10px 20px',
-        borderRadius: 4
       }
     };
   }

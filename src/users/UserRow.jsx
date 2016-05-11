@@ -29,7 +29,7 @@ export default class UserRow extends React.Component {
 
     const {user} = this.props;
     const leftAvatar = (
-      <CharacterIcon size="medium" color={colors[alpha.indexOf(user.name.charAt(0).toUpperCase())]}>
+      <CharacterIcon size="medium" color={colors[0]}>
         { user.name.charAt(0).toUpperCase() }
       </CharacterIcon>
     );

@@ -119,9 +119,6 @@ export default class UserDetail extends React.Component {
               )
             }
           </Tab>
-          <Tab title="Notes">
-            <p>Watch out for her comments on Climate stories, she often corrects mistakes.</p>
-          </Tab>
         </Tabs>
       </div>
     );

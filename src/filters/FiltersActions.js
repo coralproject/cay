@@ -338,6 +338,6 @@ const sortByAction = (field, direction) => {
   return {type: SORT, field, direction};
 };
 
-const resetFilterAction = (field, direction) => {
+const resetFilterAction = (name) => {
   return {type: RESET_FILTER, name};
 };

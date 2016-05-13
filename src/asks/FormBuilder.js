@@ -6,6 +6,9 @@ import ReactDOM from 'react-dom';
 import AskComponent, {styles as askComponentStyles} from 'asks/AskComponent';
 import Checkbox from 'components/forms/Checkbox';
 import TextField from 'components/forms/TextField';
+import Modal from 'components/modal/Modal';
+import {connect} from 'react-redux';
+
 
 const askTypes = [
   {type: 'text', label: 'short text'},
@@ -17,6 +20,7 @@ const askTypes = [
   {type: 'dropdown', label: 'drop down'}
 ];
 
+@connect(({ app }) => ({ app }))
 @DragDropContext(HTML5Backend)
 export default class FormBuilder extends Component {
   constructor(props, context) {
@@ -27,6 +31,7 @@ export default class FormBuilder extends Component {
   }
 
   render() {
+    const {preview, onClosePreview} = this.props;
     const {activeField} = this.state;
     return (
       <div style={styles.builderContainer}>
@@ -37,6 +42,49 @@ export default class FormBuilder extends Component {
         </div>
         <FormDiagram onFieldSelect={this.onFieldSelect.bind(this)} />
         <FieldSettings field={activeField} />
+        <Modal
+          title="Save Search"
+          isOpen={preview}
+          cancelAction={onClosePreview}>
+          {this.renderPreview.call(this)}
+        </Modal>
+      </div>
+    );
+  }
+
+  renderPreview() {
+    if(!this.props.preview) return null;
+
+    const props = {
+      settings: {
+
+      },
+      footer: {
+        permissions: "Code of conduct"
+      },
+      page: {
+        children: [{
+          type: "field",
+          component: "MultipleChoice",
+          title: "Select one or several themes for your story",
+          required: true,
+          pseudoLabel: true,
+          props: {
+            multipleChoice: true,
+            options: [{title: 'Pablo'}, {title: "Familiy life"}, {title: "School"}, {title: "Law Enforcement"}]
+          }
+        }]
+      }
+    };
+
+    const src = `${this.props.app.elkhornHost}/preview.js?props=${JSON.stringify(props)}`;
+    const script = document.createElement('script');
+    script.src = src;
+    document.getElementsByTagName('head')[0].appendChild(script);
+
+    return (
+      <div>
+        <div id="ask-form"></div>
       </div>
     );
   }

@@ -2,9 +2,7 @@ import * as types from 'asks/AskActions';
 
 const initial = {
   items: [],
-  editAccess: {
-
-  }
+  editAccess: {}
 };
 
 for (let i = 0; i < 100; i++) {

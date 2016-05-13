@@ -15,13 +15,19 @@ export default class AskCreate extends Component {
     router: PropTypes.object.isRequired
   };
 
+  constructor(props) {
+    super(props);
+    this.state = {preview: false};
+  }
+
   render() {
+    const {preview} = this.state;
     return (
       <Page>
         <ContentHeader title={window.L.t('Create a new ask')} style={styles.header}>
           <div>
             <Button style={styles.headerBtn} category='primary'>Save <FaFloopyO style={styles.icon} /></Button>
-            <Button style={styles.headerBtn}>Preview <FaEye style={styles.icon} /></Button>
+            <Button onClick={this.showPreview.bind(this)} style={styles.headerBtn}>Preview <FaEye style={styles.icon} /></Button>
           </div>
         </ContentHeader>
         <div>
@@ -31,10 +37,23 @@ export default class AskCreate extends Component {
         </div>
         <div style={styles.formBuilderContainer}>
           <h2 style={styles.builderTitle}>Form Builder</h2>
-          <FormBuilder />
+          <FormBuilder onClosePreview={this.onClosePreview.bind(this)}
+            preview={preview} />
         </div>
       </Page>
     );
+  }
+
+  onClosePreview() {
+    this.setState({
+      preview: false
+    });
+  }
+
+  showPreview() {
+    this.setState({
+      preview: true
+    });
   }
 
 }

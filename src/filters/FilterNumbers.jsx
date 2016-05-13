@@ -2,29 +2,11 @@ import React from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
 import {filterChanged} from 'filters/FiltersActions';
-import {clamp} from 'components/utils/math';
-// import Flex from '../layout/Flex';
 
 import Card from 'components/cards/Card';
-import CardHeader from 'components/cards/CardHeader';
 import Sparkline from 'filters/Sparkline';
 
-import Slider from 'components/Slider';
-
 const style = {
-  sliderInput: {
-    backgroundColor: 'rgb(245, 245, 245)',
-    border: 'none',
-    textAlign: 'center',
-    padding: '10px 0px',
-    width: 50,
-    fontSize: 14,
-    margin: '0px 5px',
-    borderRadius: 4
-    // 'focus': {
-    //   outline: 0
-    // }
-  },
   minMaxInputs: {
     padding: '7px 10px',
     border: '1px solid lightgrey',

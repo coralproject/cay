@@ -56,7 +56,7 @@ class Clauses extends React.Component {
   userChangedFilter(filterName) {
     const f = this.props[filterName];
     const maxDifferent = f.userMax !== f.max && f.userMax < f.max;
-    const minDifferent = f.userMin !== f.min;
+    const minDifferent = f.userMin !== f.min && f.userMin > f.min;
     return {
       either: maxDifferent || minDifferent,
       both: !(maxDifferent && minDifferent)
@@ -86,6 +86,7 @@ class Clauses extends React.Component {
         let clause;
         switch (this.props[filterName].type) {
         case 'dateRange':
+        case 'intDateProximity':
           clause = <DateRangeClause {...this.props[filterName]}/>;
           break;
         case 'percentRange':

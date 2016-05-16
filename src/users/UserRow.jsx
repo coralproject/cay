@@ -13,7 +13,9 @@ export default class UserRow extends React.Component {
     disabled: React.PropTypes.bool
   }
   static defaultProps = {
-    active: true
+    active: true,
+    breakdown: 'all',
+    specificBreakdown: 'all'
   }
 
   handleClick() {
@@ -24,6 +26,9 @@ export default class UserRow extends React.Component {
   }
 
   render() {
+    let {active, disabled, breakdown, specificBreakdown} = this.props;
+    specificBreakdown = specificBreakdown || 'all';
+    if (specificBreakdown === 'all') breakdown = 'all';
     const alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
     const colors = ['#1f77b4', '#aec7e8', '#ff7f0e', '#ffbb78', '#2ca02c', '#98df8a', '#d62728', '#ff9896', '#9467bd', '#c5b0d5', '#8c564b', '#c49c94', '#e377c2', '#f7b6d2', '#7f7f7f', '#c7c7c7', '#bcbd22', '#dbdb8d', '#17becf', '#9edae5', '#1f77b4', '#aec7e8', '#ff7f0e', '#ffbb78', '#2ca02c', '#98df8a'];
 
@@ -34,19 +39,28 @@ export default class UserRow extends React.Component {
       </CharacterIcon>
     );
 
-    const repliedPercent = Math.floor(user.statistics.comments.all.all.replied_ratio * 100) + '%';
-    const replyPercent = Math.floor(user.statistics.comments.all.all.reply_ratio * 100) + '%';
+    let dimension = user.statistics.comments[breakdown][specificBreakdown];
+
+    // Dont break the counts while loading
+    if (dimension && specificBreakdown !== 'all') {
+      dimension = dimension.all;
+    } else {
+      dimension = user.statistics.comments.all.all;
+    }
+
+    const repliedPercent = Math.floor(dimension.replied_ratio * 100) + '%';
+    const replyPercent = Math.floor(dimension.reply_ratio * 100) + '%';
 
     return (
       <ListItem
-        active={this.props.active}
-        style={[styles.base, this.props.disabled && styles.disabled, this.props.style]}
+        active={active}
+        style={[styles.base, disabled && styles.disabled, this.props.style]}
         onClick={this.handleClick.bind(this)}
         leftAvatar={leftAvatar}>
         {user.name}
         <img style={styles.avatar} src="/img/user_portrait_placeholder.png" />
         <p style={styles.sub}>
-          Comments: {user.statistics.comments.all.all.count}<br />
+          Comments: {dimension.count}<br />
           Replies received: {repliedPercent}<br />
           Replies written: {replyPercent}
         </p>

@@ -134,7 +134,6 @@ export const createQuery = (query) => {
 
 /* xenia_package */
 export const makeQueryFromState = (type, page = 0, replace = false) => {
-
   const pageSize = 20;
 
   return (dispatch, getState) => {

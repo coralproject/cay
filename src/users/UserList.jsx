@@ -59,6 +59,8 @@ export default class UserList extends React.Component {
         >
         {users.map((user, i) =>
           <UserRow {...this.props}
+            breakdown={this.props.filters.breakdown}
+            specificBreakdown={this.props.filters.specificBreakdown}
             active={this.state.activeUserIndex === i ? true : false}
             setAsActive={this.setAsActiveHandler.bind(this)}
             activeIndex={i}

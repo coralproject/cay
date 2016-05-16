@@ -27,7 +27,9 @@ export default class UserDetail extends React.Component {
   }
 
   static propTypes = {
-    commentsLoading: PropTypes.bool.isRequired
+    commentsLoading: PropTypes.bool.isRequired,
+    breakdown: PropTypes.string,
+    specificBreakdown: PropTypes.string
   }
 
   // componentWillMount() {
@@ -70,16 +72,31 @@ export default class UserDetail extends React.Component {
   }
 
   getStats() {
+    let {breakdown, specificBreakdown} = this.props;
+    const {user} = this.props;
+
     let statsList = [];
-    if (_.has(this.props, 'user.statistics.comments.all.all')) {
+    specificBreakdown = specificBreakdown || 'all';
+    if (specificBreakdown === 'all') breakdown = 'all';
+
+    let dimension = user.statistics.comments[breakdown][specificBreakdown];
+
+    // Dont break the counts while loading
+    if (dimension && specificBreakdown !== 'all') {
+      dimension = dimension.all;
+    } else {
+      dimension = user.statistics.comments.all.all;
+    }
+
+    if (dimension) {
       statsList = statsList.concat([
-        <Stat term="Total comment count" description={this.props.user.statistics.comments.all.all.count} />,
-        <Stat term="Total replies received" description={this.props.user.statistics.comments.all.all.replied_count} />,
-        <Stat term="Total replies written" description={this.props.user.statistics.comments.all.all.reply_count} />,
-        <Stat term="% comments that are replies" description={Math.floor(this.props.user.statistics.comments.all.all.reply_ratio * 100) + '%'} />
+        <Stat term="Total comment count" description={dimension.count} />,
+        <Stat term="Total replies received" description={dimension.replied_count} />,
+        <Stat term="Total replies written" description={dimension.reply_count} />,
+        <Stat term="% comments that are replies" description={Math.floor(dimension.reply_ratio * 100) + '%'} />
       ]);
 
-      if (_.has(this.props, 'user.statistics.comments.all.CommunityFlagged')) {
+      if (specificBreakdown === 'all' && _.has(this.props, 'user.statistics.comments.all.CommunityFlagged')) {
         statsList.push(<Stat term="Community flagged" description={this.props.user.statistics.comments.all.CommunityFlagged.count} />);
       }
       return statsList;

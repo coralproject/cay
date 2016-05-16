@@ -29,7 +29,8 @@ import Clauses from 'search/Clauses';
 @connect(state => ({
   searches: state.searches,
   comments: state.comments,
-  users: state.users
+  users: state.users,
+  filters: state.filters
 }))
 @Radium
 export default class SearchCreator extends React.Component {
@@ -134,6 +135,8 @@ export default class SearchCreator extends React.Component {
                 loadingQueryset={this.props.searches.loadingQueryset}
                 users={this.props.searches.users} userSelected={this.updateUser.bind(this)} />
               <UserDetail
+                breakdown={this.props.filters.breakdown}
+                specificBreakdown={this.props.filters.specificBreakdown}
                 commentsLoading={this.props.comments.loading}
                 user={this.props.users.selectedUser}
                 comments={this.props.comments.items}

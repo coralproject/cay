@@ -7,7 +7,7 @@ import {clamp} from 'components/utils/math';
 
 import Card from 'components/cards/Card';
 import CardHeader from 'components/cards/CardHeader';
-import Sparkline from 'filters/Sparkline';
+//import Sparkline from 'filters/Sparkline';
 
 import Slider from 'components/Slider';
 

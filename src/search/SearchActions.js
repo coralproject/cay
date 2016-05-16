@@ -148,14 +148,20 @@ export const makeQueryFromState = (type, page = 0, replace = false) => {
     });
 
     const addMatches = x => {
+      let { breakdown, specificBreakdown } = filterState;
+
+      // filter by bteakdown if needed
+      if (-1 === ['author', 'section'].indexOf(breakdown)) {
+        breakdown = 'all';
+      } else {
+        x.match({[`statistics.comments.${breakdown}.${specificBreakdown}`]: { $exists: true }});
+      }
+
       filters.forEach(filter => {
         let dbField;
-
         // get the name of the mongo db field we want to $match on.
-        if (filterState.breakdown === 'author' && filterState.specificBreakdown !== '') {
-          dbField = _.template(filter.template)({dimension: 'author.' + filterState.specificBreakdown});
-        } else if (filterState.breakdown === 'section' && filterState.specificBreakdown !== '') {
-          dbField = _.template(filter.template)({dimension: 'section.' + filterState.specificBreakdown});
+        if (breakdown !== 'all' && specificBreakdown !== '') {
+          dbField = _.template(filter.template)({dimension: `${breakdown}.${specificBreakdown}`});
         } else { // all
           dbField = _.template(filter.template)({dimension: 'all'});
         }
@@ -191,7 +197,6 @@ export const makeQueryFromState = (type, page = 0, replace = false) => {
 
     // get the counts
     addMatches(x.addQuery()).group({_id: null, count: {$sum: 1}});
-
     doMakeQueryFromStateAsync(x, dispatch, app, replace);
   };
 };

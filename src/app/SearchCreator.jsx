@@ -54,6 +54,10 @@ export default class SearchCreator extends React.Component {
 
     /* set up the initial default / unfiltered view, this was previously in UserFilters */
     // this.props.dispatch(resetFilters());
+    this.fetchOverallData();
+  }
+
+  fetchOverallData() {
     this.props.dispatch(fetchAllTags());
     this.props.dispatch(fetchSections());
     this.props.dispatch(fetchAuthors());

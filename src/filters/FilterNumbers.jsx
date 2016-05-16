@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {filterChanged} from 'filters/FiltersActions';
 
 import Card from 'components/cards/Card';
-import Sparkline from 'filters/Sparkline';
+//import Sparkline from 'filters/Sparkline';
 
 const style = {
   minMaxInputs: {
@@ -92,14 +92,14 @@ export default class FilterNumbers extends React.Component {
           justifyContent: 'space-between'
         }}>
         <span style={style.description}>{this.props.description}</span>
-        {
+        {/*
           this.props.distributions ?
           <Sparkline
             distribution={
               this.props.distributions[this.props[this.props.fieldName].field]
             }/> :
             ''
-        }
+        */}
         </div>
         <div>
           <input

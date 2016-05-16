@@ -117,15 +117,14 @@ export default class UserFilters extends React.Component {
       let filterComponent;
       const fmtDesc = f.description.charAt(0).toUpperCase() + f.description.slice(1, f.description.length);
       const inTitleCase = _.map(f.description.split(' '), _.capitalize).join(' ');
-
       if (f.type === 'percentRange') {
         filterComponent = (
           <FilterNumberPercent
             key={i}
             min={f.min}
             max={f.max}
-            userMin={f.userMin}
-            userMax={f.userMax}
+            userMin={Math.max(f.userMin, f.min)}
+            userMax={Math.min(f.userMax, f.max)}
             description={fmtDesc}
             fieldName={f.key}
             type={f.type}/>
@@ -137,8 +136,8 @@ export default class UserFilters extends React.Component {
             key={i}
             min={f.min}
             max={f.max}
-            userMin={f.userMin}
-            userMax={f.userMax}
+            userMin={Math.max(f.userMin, f.min)}
+            userMax={Math.min(f.userMax, f.max)}
             description={inTitleCase}
             fieldName={f.key}
             type={f.type}/>

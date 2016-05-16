@@ -12,6 +12,8 @@ export const ASK_EDIT_LEAVE = 'ASK_EDIT_LEAVE';
 
 export const ASK_DELETED = 'ASK_DELETED';
 
+export const ASK_CREATE_EMPTY= 'ASK_CREATE_EMPTY';
+
 const getInit = (body, method) => {
 
   var headers = new Headers({ 'Accept': 'application/json', 'Content-Type': 'application/json' });
@@ -97,3 +99,9 @@ export const leavingEdit = askId => {
     dispatch(askLeaveEdit(askId));
   };
 };
+
+export const createEmpty = () => {
+  return {
+    type: ASK_CREATE_EMPTY
+  };
+}

@@ -94,9 +94,9 @@ export default class AskComponent extends Component {
   }
 
   onClick() {
-    const {onList, field, onFieldSelect} = this.props;
-    if (onList) {
-      onFieldSelect(field);
+    const {onList, field, onClick } = this.props;
+    if (!onList) {
+      onClick(field);
     }
   }
 }

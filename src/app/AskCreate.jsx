@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import Radium from 'radium';
+import { connect } from 'react-redux';
 
+import { createEmpty } from 'asks/AskActions';
 import Page from 'app/layout/Page';
 import Button from 'components/Button';
 import FaFloopyO from 'react-icons/lib/fa/floppy-o';
@@ -10,6 +12,7 @@ import ContentHeader from 'components/ContentHeader';
 
 import FormBuilder from 'asks/FormBuilder.js';
 
+@connect(({ asks }) => ({asks}))
 @Radium
 export default class AskCreate extends Component {
   static contextTypes = {
@@ -19,6 +22,10 @@ export default class AskCreate extends Component {
   constructor(props) {
     super(props);
     this.state = {preview: false};
+  }
+
+  componentWillMount() {
+    this.props.dispatch(createEmpty());
   }
 
   render() {

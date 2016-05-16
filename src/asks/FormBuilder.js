@@ -34,7 +34,7 @@ export default class FormBuilder extends Component {
             <p style={styles.typesSubTitle}>Drag and drop items to create a form</p>
             <div style={styles.typeList}>
               {askTypes.map((type, i) => (
-                <AskComponent key={i} field={type} />
+                <AskComponent key={i} field={type} onClick={this.addToBottom.bind(this, type)} />
               ))}
             </div>
           </div>
@@ -48,6 +48,12 @@ export default class FormBuilder extends Component {
         </Modal>
       </div>
     );
+  }
+
+  addToBottom(type) {
+    this.setState({
+      fields: fields.concat(type)
+    });
   }
 
   renderPreview() {
@@ -93,7 +99,7 @@ const askTarget = {
   drop(props, monitor, component) {
     const clientOffset = monitor.getClientOffset();
     const hoverBoundingRect = ReactDOM.findDOMNode(component).getBoundingClientRect();
-    const hoverClientY = clientOffset.y - (hoverBoundingRect.top);
+    const hoverClientY = clientOffset.y - hoverBoundingRect.top;
     const style = askComponentStyles.askComponent();
 
     const hoverIndex = Math.floor(hoverClientY / (style.height + style.marginBottom / 2));

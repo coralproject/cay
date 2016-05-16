@@ -11,37 +11,35 @@ import {connect} from 'react-redux';
 
 
 const askTypes = [
-  {type: 'text', label: 'short text'},
-  {type: 'textarea', label: 'text area'},
-  {type: 'email', label: 'email address'},
-  {type: 'number', label: 'number'},
-  {type: 'radio', label: 'radio buttons'},
-  {type: 'multiple-choice', label: 'multiple choice'},
-  {type: 'dropdown', label: 'drop down'}
+  {type: 'text', label: 'Short text'},
+  {type: 'textarea', label: 'Text area'},
+  {type: 'email', label: 'Email address'},
+  {type: 'number', label: 'Number'},
+  {type: 'radio', label: 'Radio buttons'},
+  {type: 'multiple-choice', label: 'Multiple choice'},
+  {type: 'dropdown', label: 'Drop down'}
 ];
 
 @connect(({ app }) => ({ app }))
 @DragDropContext(HTML5Backend)
 export default class FormBuilder extends Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = {
-      activeField: null
-    };
-  }
 
   render() {
     const {preview, onClosePreview} = this.props;
-    const {activeField} = this.state;
     return (
       <div style={styles.builderContainer}>
-        <div style={styles.typesContainer}>
-          {askTypes.map((type, i) => (
-            <AskComponent key={i} field={type} />
-          ))}
+        <div style={styles.leftPan}>
+          <div style={styles.typesContainer}>
+            <h4 style={styles.typesTitle}>1. Build form</h4>
+            <p style={styles.typesSubTitle}>Drag and drop items to create a form</p>
+            <div style={styles.typeList}>
+              {askTypes.map((type, i) => (
+                <AskComponent key={i} field={type} />
+              ))}
+            </div>
+          </div>
         </div>
-        <FormDiagram onFieldSelect={this.onFieldSelect.bind(this)} />
-        <FieldSettings field={activeField} />
+        <FormDiagram />
         <Modal
           title="Save Search"
           isOpen={preview}
@@ -60,18 +58,18 @@ export default class FormBuilder extends Component {
 
       },
       footer: {
-        permissions: "Code of conduct"
+        permissions: 'Code of conduct'
       },
       page: {
         children: [{
-          type: "field",
-          component: "MultipleChoice",
-          title: "Select one or several themes for your story",
+          type: 'field',
+          component: 'MultipleChoice',
+          title: 'Select one or several themes for your story',
           required: true,
           pseudoLabel: true,
           props: {
             multipleChoice: true,
-            options: [{title: 'Pablo'}, {title: "Familiy life"}, {title: "School"}, {title: "Law Enforcement"}]
+            options: [{title: 'Pablo'}, {title: 'Familiy life'}, {title: 'School'}, {title: 'Law Enforcement'}]
           }
         }]
       }
@@ -88,15 +86,10 @@ export default class FormBuilder extends Component {
       </div>
     );
   }
-
-  onFieldSelect(field) {
-    this.setState({
-      activeField: field
-    });
-  }
 }
 
 const askTarget = {
+
   drop(props, monitor, component) {
     const clientOffset = monitor.getClientOffset();
     const hoverBoundingRect = ReactDOM.findDOMNode(component).getBoundingClientRect();
@@ -135,68 +128,33 @@ class FormDiagram extends Component {
   render() {
     const {connectDropTarget, onFieldSelect} = this.props;
     const {fields} = this.state;
-    return connectDropTarget(
-      <div style={styles.formDiagram}>
-        {fields.map((field, i) => (
-          <AskComponent onFieldSelect={onFieldSelect}
-            onList={true} field={field} id={i} key={i} />
-        ))}
-      </div>
-    );
-  }
-}
-
-class FieldSettings extends Component {
-  render() {
     return (
-      <div style={styles.fieldSettings}>
-        <h3 style={styles.fieldSettingsTitle}>Settings</h3>
-        {this.renderSettings()}
+      <div style={styles.formDiagramContainer}>
+        <h4 contentEditable="true">This is the form name for the public</h4>
+        <p contentEditable="true">This is the form description for the users</p>
+        {connectDropTarget(
+          <div style={styles.formDiagram}>
+            {fields.map((field, i) => (
+              <AskComponent onFieldSelect={onFieldSelect}
+                onList={true} field={field} isLast={i === fields.length - 1} id={i} key={i}
+                onMove={this.onMove.bind(this)} />
+            ))}
+          </div>
+        )}
+
       </div>
     );
   }
 
-  renderSettings() {
-    const {field} = this.props;
-    if(!field) {
-      return (
-        <p>Click on a form field and access to its properties.</p>
-      );
-    }
+  onMove(direction, id) {
+    const { fields } = this.state;
+    const changeWith = direction === 'up' ? id - 1 : id + 1;
 
-    return (
-      <div>
-        {this.renderCommonSettings(field)}
-        {this.renderTypeSettings(field)}
-      </div>
-    );
-  }
-
-  renderCommonSettings(field) {
-    return (
-      <div>
-        <Checkbox label="required" />
-        <TextField label="label" value={field.label || field.type}/>
-      </div>
-    );
-  }
-
-  renderTypeSettings(field) {
-    switch(field.type) {
-    case 'text':
-      return (
-        <div>
-          <TextField type="number" label="maxLength" />
-        </div>
-      );
-    case 'textarea':
-      return (
-        <div>
-          <TextField type="number" label="rows" />
-        </div>
-      );
-
-    }
+    const newFields = [...fields];
+    const aux = newFields[id];
+    newFields[id] = newFields[changeWith];
+    newFields[changeWith] = aux;
+    this.setState({ fields: newFields });
   }
 }
 
@@ -205,23 +163,40 @@ const styles = {
     display: 'flex',
     justifyContent: 'space-between'
   },
+  leftPan: {
+    flex: 1
+  },
   typesContainer: {
     flex: 1,
-    marginRight: 20
+    marginRight: 20,
+    backgroundColor: '#D8D8D8',
+    padding: 20,
+    color: '#5D5D5D',
+    borderRadius: 4
   },
   formDiagram: {
-    background: '#fff',
-    flex: 1,
-    minHeight: 500,
+    height: '70vh',
+    overflowY: 'scroll'
+  },
+  formDiagramContainer: {
+    flex: 2,
     marginRight: 20,
-    padding: 20
+    padding: 20,
+    color: '#5d5d5d'
   },
-  fieldSettings: {
-    padding: 10,
-    paddingTop: 0
+  typeList: {
+    display: 'flex',
+    flexWrap: 'wrap'
   },
-  fieldSettingsTitle: {
-    fontSize: 20,
-    marginBottom: 10
+  typesTitle: {
+    fontSize: 18.78,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    paddingLeft: 5
+  },
+  typesSubTitle: {
+    fontSize: 16,
+    marginBottom: 10,
+    paddingLeft: 5
   }
 };

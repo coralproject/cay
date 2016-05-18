@@ -97,7 +97,9 @@ export default class UserDetail extends React.Component {
       ]);
 
       if (specificBreakdown === 'all' && _.has(this.props, 'user.statistics.comments.all.CommunityFlagged')) {
-        statsList.push(<Stat term="Community flagged" description={this.props.user.statistics.comments.all.CommunityFlagged.count} />);
+        statsList.push(<Stat term="Community flagged"
+          description={this.props.user.statistics.comments.all.CommunityFlagged.count} 
+        />);
       }
       return statsList;
     } else {

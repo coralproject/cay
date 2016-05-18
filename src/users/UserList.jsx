@@ -117,8 +117,8 @@ export default class UserList extends React.Component {
 
 const styles = {
   base: {
-    paddingLeft: 20,
-    marginTop: -40
+    // paddingLeft: 20,
+    // marginTop: -40
   },
   columnHeader: {
     height: 90

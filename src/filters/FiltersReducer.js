@@ -14,7 +14,8 @@ let initialState = {
   breakdown: 'all',
   counter: 0, // this is a signal for ajax consumed by userFilters
   specificBreakdown: '',
-  distributions: null
+  distributions: null,
+  sortBy: null
 };
 
 const filters = (state = initialState, action) => {
@@ -90,6 +91,15 @@ const filters = (state = initialState, action) => {
   case types.RESET_FILTERS:
     return {...state, dirtyFilters: []};
 
+  case types.RESET_FILTER:
+    const newState = Object.assign({}, state);
+    newState[action.name].userMin = newState[action.name].min;
+    newState[action.name].userMax = newState[action.name].max;
+    return {...newState, dirtyFilters: []};
+
+  case types.SORT:
+    const sortBy = action.field ? [action.field, action.direction] : null;
+    return {...state, sortBy};
   default:
     return state;
 

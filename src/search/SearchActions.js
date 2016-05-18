@@ -133,7 +133,7 @@ export const createQuery = (query) => {
 };
 
 /* xenia_package */
-export const makeQueryFromState = (type, page = 0) => {
+export const makeQueryFromState = (type, page = 0, replace = false) => {
 
   const pageSize = 20;
 
@@ -167,28 +167,32 @@ export const makeQueryFromState = (type, page = 0) => {
         const clampedUserMin = clamp(filter.userMin, filter.min, filter.max);
         const clampedUserMax = clamp(filter.userMax, filter.min, filter.max);
 
-        // convert everything to numbers since Dates must be sent to xenia as epoch numbers
+        // convert everything to numbers since equivalent Dates are not equal
         // this will break if a string literal is ever a filter value since NaN !== NaN
         if (+filter.min !== +clampedUserMin) {
-          x.match({[dbField]: {$gte: +clampedUserMin}});
+          const searchMin = _.isDate(clampedUserMin) ? `#date:${clampedUserMin.toISOString()}` : clampedUserMin;
+          x.match({[dbField]: {$gte: searchMin}});
         }
 
         if (+filter.max !== +clampedUserMax) {
-          x.match({[dbField]: {$lte: +clampedUserMax}});
+          const searchMax = _.isDate(clampedUserMax) ? `#date:${clampedUserMax.toISOString()}` : clampedUserMax;
+          x.match({[dbField]: {$lte: searchMax}});
         }
       });
 
       return x;
     };
-
-    addMatches(x.addQuery()).skip(page * pageSize)
-      .limit(pageSize)
+    addMatches(x.addQuery());
+    if(filterState.sortBy) {
+      x.sort(filterState.sortBy);
+    }
+    x.skip(page * pageSize).limit(pageSize)
       .include(['name', 'avatar', 'statistics.comments']);
 
     // get the counts
     addMatches(x.addQuery()).group({_id: null, count: {$sum: 1}});
 
-    doMakeQueryFromStateAsync(x, dispatch, app);
+    doMakeQueryFromStateAsync(x, dispatch, app, replace);
   };
 };
 

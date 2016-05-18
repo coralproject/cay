@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import {xenia} from 'app/AppActions';
+import {makeQueryFromState} from 'search/SearchActions';
 
 export const REQUEST_SECTIONS = 'REQUEST_SECTIONS';
 export const RECEIVE_SECTIONS = 'RECEIVE_SECTIONS';
@@ -20,6 +21,9 @@ export const SET_BREAKDOWN = 'SET_BREAKDOWN';
 export const SET_SPECIFIC_BREAKDOWN = 'SET_SPECIFIC_BREAKDOWN';
 
 export const RESET_FILTERS = 'RESET_FILTERS';
+export const RESET_FILTER = 'RESET_FILTER';
+
+export const SORT = 'SORT';
 
 // export const REQUEST_FILTER_RANGES = 'REQUEST_FILTER_RANGES';
 export const RECEIVE_FILTER_RANGES = 'RECEIVE_FILTER_RANGES';
@@ -143,28 +147,17 @@ export const getFilterRanges = () => {
         dimension = 'all';
       }
 
-      // if you change this naming convention
+      // if you change this naming convention "<somefilter>_max"
       // you must update the RECEIVE_FILTER_RANGES in reducers/filters.js
 
-      if (filterState[key].type !== 'dateRange') {
-        const field = '$' + _.template(filterState[key].template)({dimension});
-        accum[key + '_min'] = {
-          $min: field
-        };
+      const field = '$' + _.template(filterState[key].template)({dimension});
+      accum[key + '_min'] = {
+        $min: field
+      };
 
-        accum[key + '_max'] = {
-          $max: field
-        };
-      } else {
-        accum[key + '_min'] = {
-          $min: '$' + _.template(filterState[key].template)({dimension}) + '.first'
-        };
-
-        accum[key + '_max'] = {
-          $max: '$' + _.template(filterState[key].template)({dimension}) + '.last'
-        };
-
-      }
+      accum[key + '_max'] = {
+        $max: field
+      };
 
       return accum;
     }, {_id: null});
@@ -329,4 +322,22 @@ export const populateDistributionStore = () => {
 
 export const resetFilters = () => {
   return {type: RESET_FILTERS};
+};
+
+export const resetFilter = name => dispatch => {
+  dispatch(resetFilterAction(name));
+  dispatch(makeQueryFromState('user', 0, true));
+};
+
+export const sortBy = (field, direction) => dispatch => {
+  dispatch(sortByAction(`user.statistics.comments.all.all.${field}`, direction));
+  dispatch(makeQueryFromState('user', 0, true));
+};
+
+const sortByAction = (field, direction) => {
+  return {type: SORT, field, direction};
+};
+
+const resetFilterAction = (name) => {
+  return {type: RESET_FILTER, name};
 };

@@ -14,6 +14,7 @@ import Select from 'react-select';
 import FilterNumbers from 'filters/FilterNumbers';
 import FilterNumberPercent from 'filters/FilterNumberPercent';
 import FilterDate from 'filters/FilterDate';
+import FilterDateProximity from 'filters/FilterDateProximity';
 
 import Heading from 'components/Heading';
 
@@ -153,6 +154,19 @@ export default class UserFilters extends React.Component {
             description={inTitleCase}
             type={f.type}
             fieldName={f.key} />
+        );
+      } else if (f.type === 'intDateProximity') {
+        filterComponent = (
+          <FilterDateProximity
+            key={i}
+            min={f.min}
+            max={f.max}
+            userMin={f.userMin}
+            userMax={f.userMax}
+            description={inTitleCase}
+            type={f.type}
+            fieldName={f.key}
+            />
         );
       }
 

@@ -191,9 +191,13 @@ export const makeQueryFromState = (type, page = 0, replace = false) => {
 
       return x;
     };
+
     addMatches(x.addQuery());
     if(filterState.sortBy) {
-      x.sort(filterState.sortBy);
+      const { breakdown, specificBreakdown, sortBy } = filterState;
+      const field = _.template(sortBy[0])
+        ({dimension: `${breakdown}${specificBreakdown ? `.${specificBreakdown}` : ''}`});;
+      x.sort([field, sortBy[1]]);
     }
     x.skip(page * pageSize).limit(pageSize)
       .include(['name', 'avatar', 'statistics.comments']);

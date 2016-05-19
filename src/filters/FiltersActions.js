@@ -329,13 +329,13 @@ export const resetFilter = name => dispatch => {
   dispatch(makeQueryFromState('user', 0, true));
 };
 
-export const sortBy = (field, direction) => dispatch => {
-  dispatch(sortByAction(`user.statistics.comments.all.all.${field}`, direction));
+export const sortBy = (template, direction) => dispatch => {
+  dispatch(sortByAction(template, direction));
   dispatch(makeQueryFromState('user', 0, true));
 };
 
-const sortByAction = (field, direction) => {
-  return {type: SORT, field, direction};
+const sortByAction = (template, direction) => {
+  return {type: SORT, template, direction};
 };
 
 const resetFilterAction = (name) => {

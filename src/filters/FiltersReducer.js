@@ -98,11 +98,10 @@ const filters = (state = initialState, action) => {
     return {...newState, dirtyFilters: []};
 
   case types.SORT:
-    const sortBy = action.field ? [action.field, action.direction] : null;
+    const sortBy = action.template ? [action.template, action.direction] : null;
     return {...state, sortBy};
   default:
     return state;
-
   }
 };
 

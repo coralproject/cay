@@ -9,25 +9,26 @@ import { Provider } from 'react-redux';
 // Redux Devtools
 
 import configureStore from 'store.js';
-import { configXenia, configError } from 'app/AppActions';
+import { configXenia } from 'app/AppActions';
 import {StyleRoot} from 'radium';
 
-// import Dashboard from './containers/Dashboard';
+// Routes
 import SearchCreator from 'app/SearchCreator';
 import TagManager from 'app/TagManager';
 import Login from 'app/Login';
-// import DataExplorer from 'app/DataExplorer';
 import SeeAllSearches from 'app/SeeAllSearches';
 import SearchDetail from 'app/SearchDetail';
 import NoMatch from 'app/NoMatch';
 import About from 'app/About';
 
+// Utils
 import registerServiceWorker from 'serviceworker!./sw.js';
 import ga from 'react-ga';
+import { Lang } from 'i18n/lang';
+
+// Configuration
 import config from '../public/config.json';
 import dataConfig from '../public/data_config.json';
-
-let store;
 
 import messages from 'i18n/messages'; // Lang does not know where did you get your messages from.
 
@@ -51,7 +52,6 @@ if ('serviceWorker' in navigator && process && process.env.NODE_ENV === 'product
   registerServiceWorker({ scope: '/' }).then(() => {}, () => {});
 }
 
-import { Lang } from 'i18n/lang';
 @Lang
 class Root extends React.Component {
 
@@ -96,12 +96,11 @@ const allKeysDefined = requiredKeys.every(key => 'undefined' !== typeof config[k
 
 if (!allKeysDefined) {
   const message = `missing required keys on config.json. Must define ${requiredKeys.join('|')}`;
-  store.dispatch(configError(message));
   throw new Error(message);
 }
 
 // load config into initialState so it's ALWAYS available
-store = configureStore({app: config});
+const store = configureStore({app: config});
 
 store.dispatch(configXenia());
 store.dispatch({type: 'DATA_CONFIG_LOADED', config: dataConfig});

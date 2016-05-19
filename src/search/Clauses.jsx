@@ -138,6 +138,7 @@ const styles = {
     backgroundColor: 'darkGrey',
     color: 'white',
     borderRadius: 4,
-    padding: 10
+    padding: 10,
+    marginRight: 10
   }
 };

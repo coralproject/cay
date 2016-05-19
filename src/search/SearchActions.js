@@ -1,6 +1,8 @@
 import _ from 'lodash';
 import {clamp} from 'components/utils/math';
 import {xenia} from 'app/AppActions';
+import { populateDistributionStore } from 'filters/FiltersActions';
+import { fetchSections, fetchAuthors } from 'filters/FiltersActions';
 
 export const QUERYSET_SELECTED = 'QUERYSET_SELECTED';
 export const QUERYSET_REQUEST = 'QUERYSET_REQUEST'; // request data for a single queryset
@@ -31,6 +33,7 @@ export const PILLAR_SEARCH_DELETED = 'PILLAR_SEARCH_DELETED';
 export const PILLAR_SEARCH_DELETE_FAILURE = 'PILLAR_SEARCH_DELETE_FAILURE';
 
 export const CLEAR_USER_LIST = 'CLEAR_USER_LIST';
+export const CLEAR_USER = 'CLEAR_USER';
 
 export const selectQueryset = (queryset) => {
   return {
@@ -320,6 +323,16 @@ export const deleteSearch = search => {
       dispatch({type: PILLAR_SEARCH_DELETE_FAILURE, error});
     });
   };
+};
+
+export const fetchInitialData = () => dispatch => {
+  // Get initial data for the filters
+  dispatch(fetchSections());
+  dispatch(fetchAuthors());
+  dispatch(populateDistributionStore());
+
+  // Get user list
+  dispatch(makeQueryFromState('user', 0, true));
 };
 
 export const clearUserList = () => {

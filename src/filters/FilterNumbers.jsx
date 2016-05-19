@@ -1,7 +1,6 @@
 import React from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
-import {filterChanged} from 'filters/FiltersActions';
 
 import Card from 'components/cards/Card';
 //import Sparkline from 'filters/Sparkline';
@@ -51,9 +50,7 @@ export default class FilterNumbers extends React.Component {
     const newSymbol = this.state.symbol === 'GTLT' ? 'EQUALS' : 'GTLT';
     this.setState({symbol: newSymbol});
   }
-  updateSlider(values) {
-    this.props.dispatch(filterChanged(this.props.fieldName, {userMin: values[0], userMax: values[1]}));
-  }
+
   renderHelpText() {
     let help = '';
 

@@ -1,8 +1,6 @@
 import React from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
-import {filterChanged} from 'filters/FiltersActions';
-import {clamp} from 'components/utils/math';
 // import Flex from '../layout/Flex';
 
 import Card from 'components/cards/Card';

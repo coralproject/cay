@@ -1,17 +1,20 @@
-import React, {PropTypes} from 'react';
+
+/**
+ * Module dependencies
+ */
+
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
-import {Link} from 'react-router';
+import { Link } from 'react-router';
 
-import settings from 'settings';
+import { mediumGrey } from 'settings';
 
-import {userSelected} from 'users/UsersActions';
-import {fetchCommentsByUser} from 'comments/CommentsActions';
-import {saveQueryFromState, makeQueryFromState} from 'search/SearchActions';
-import { fetchAllTags } from 'tags/TagActions';
-import { populateDistributionStore } from 'filters/FiltersActions';
-import { fetchSections, fetchAuthors, resetFilters } from 'filters/FiltersActions';
-import {filterChanged} from 'filters/FiltersActions';
+import { userSelected } from 'users/UsersActions';
+import { fetchCommentsByUser } from 'comments/CommentsActions';
+import { saveQueryFromState, makeQueryFromState } from 'search/SearchActions';
+import { fetchInitialData } from 'search/SearchActions';
+import { filterChanged } from 'filters/FiltersActions';
 
 
 import Page from 'app/layout/Page';
@@ -27,15 +30,20 @@ import TextField from 'components/forms/TextField';
 import StatusBar from 'components/StatusBar';
 import Clauses from 'search/Clauses';
 
+/**
+ * Search creator page
+ * Contains the UI for creating user searches
+ */
+
 @connect(state => ({
   searches: state.searches,
   comments: state.comments,
   users: state.users,
-  filters: state.filters
+  filters: state.filters,
+  app: state.app
 }))
 @Radium
-export default class SearchCreator extends React.Component {
-
+export default class SearchCreator extends Component {
   constructor(props) {
     super(props);
     this.state = {saveModalOpen: false};
@@ -49,23 +57,13 @@ export default class SearchCreator extends React.Component {
   componentWillMount() {
     // redirect user to /login if they're not logged in
     //   TODO: refactor: pass in a function that calculates auth state
-    if (window.requireLogin && !this.props.searches.authorized) {
-      let {router} = this.context;
-      return router.push('/login');
+    if (this.props.app.requireLogin && !this.props.searches.authorized) {
+      return this.context.router.push('/login');
     }
 
-    /* set up the initial default / unfiltered view, this was previously in UserFilters */
-    // this.props.dispatch(resetFilters());
-    this.fetchOverallData();
-  }
-
-  fetchOverallData() {
-    this.props.dispatch(fetchAllTags());
-    this.props.dispatch(fetchSections());
-    this.props.dispatch(fetchAuthors());
-    this.props.dispatch(populateDistributionStore());
-
-    this.props.dispatch(makeQueryFromState('user', 0, true));
+    // set up the initial default / unfiltered view
+    // this was previously in UserFilters
+    this.props.dispatch(fetchInitialData());
   }
 
   updateUser(user) {
@@ -95,13 +93,9 @@ export default class SearchCreator extends React.Component {
 
   confirmSave() {
     // show a saving icon or something?
-    const name = this.state.searchName;
-    const desc = this.state.searchDesc;
-    const tag = this.state.searchTag;
-
+    const { searchName, searchDesc, searchTag } = this.state;
     this.setState({saveModalOpen: false});
-
-    this.props.dispatch(saveQueryFromState(name, desc, tag));
+    this.props.dispatch(saveQueryFromState(searchName, searchDesc, searchTag));
   }
 
   onPagination(page = 0) {
@@ -109,6 +103,7 @@ export default class SearchCreator extends React.Component {
   }
 
   onFilterChange(fieldName, attr, val) {
+    this.props.dispatch(userSelected(null));
     this.props.dispatch(filterChanged(fieldName, {[attr]: val}));
     this.props.dispatch(makeQueryFromState('user', 0, true));
   }
@@ -204,8 +199,7 @@ const styles = {
   },
   userList: {
     minWidth: 350,
-    flex: 1,
-
+    flex: 1
   },
   modalLabel: {
     fontSize: 16,
@@ -216,7 +210,7 @@ const styles = {
     fontSize: 20,
     minHeight: 120,
     width: '100%',
-    border: '1px solid ' + settings.mediumGrey,
+    border: `1px solid ${mediumGrey}`,
     borderRadius: 3
   },
   saveIcon: {

@@ -119,9 +119,9 @@ const parseFilterRanges = (ranges, filterState) => {
     accum[key] = newFilter;
 
     // on the first pass, go ahead and force a change on userMin and userMax
-    if (field === 'min' && _.isNull(filterState[key].userMin)) {
+    if (field === 'min') {
       newFilter.userMin = value;
-    } else if (field === 'max' && _.isNull(filterState[key].userMax)) {
+    } else if (field === 'max') {
       newFilter.userMax = value;
     }
 

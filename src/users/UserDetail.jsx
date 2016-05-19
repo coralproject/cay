@@ -166,7 +166,7 @@ const styles = {
     paddingRight: 20,
     paddingBottom: 20,
     paddingLeft: 20,
-    marginTop: 50
+    marginTop: 90
   },
   topPart: {
     display: 'flex',

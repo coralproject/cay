@@ -186,7 +186,7 @@ const styles = {
     flex: 1
   },
   userListContainer: {
-    marginTop: 5,
+    margin: 20,
     height: 900,
     display: 'flex',
     clear: 'both'
@@ -198,7 +198,8 @@ const styles = {
   },
   userList: {
     minWidth: 350,
-    flex: 1
+    flex: 1,
+
   },
   modalLabel: {
     fontSize: 16,

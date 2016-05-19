@@ -95,10 +95,13 @@ export default class UserList extends React.Component {
           <Heading size="medium">
             <span style={styles.groupHeader}>{ window.L.t('results') }</span> ({this.props.total || '#'} { window.L.t('users')})
           </Heading>
+        <div style={styles.sort}>
           <Select
+
             value={this.state.selectedSort}
             onChange={this.onSortChanged.bind(this)}
             options={sortableFilters} />
+        </div>
       </div>
         {userListContent}
 
@@ -125,6 +128,9 @@ const styles = {
   },
   groupHeader: {
     textTransform: 'capitalize'
+  },
+  sort: {
+    marginRight: 20
   },
   card: {
     margin: 0,

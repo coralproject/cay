@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import _ from 'lodash';
 
 import { userSelected } from 'users/UsersActions';
+import { makeQueryFromState } from 'search/SearchActions';
 import {
   setBreakdown,
   setSpecificBreakdown,
@@ -63,6 +64,7 @@ export default class UserFilters extends React.Component {
     this.props.dispatch(userSelected(null));
     this.props.dispatch(setSpecificBreakdown(newValue));
     this.props.dispatch(getFilterRanges('user'));
+    this.props.dispatch(makeQueryFromState('user', 0, true));
   }
 
   getAuthors() {
@@ -91,6 +93,7 @@ export default class UserFilters extends React.Component {
 
     this.props.dispatch(setBreakdown(newValue));
     this.props.dispatch(setSpecificBreakdown(''));
+
     if (newValue === 'all') {
       this.props.dispatch(getFilterRanges('user'));
     }

@@ -105,16 +105,17 @@ export const receiveQueryset = (data, replace) => {
   };
 };
 
-/* xenia_package */
 // execute a saved query_set
 export const fetchQueryset = (querysetName, page = 0, replace = false) => {
+  /* xenia_package */
   return (dispatch) => {
+
     dispatch(requestQueryset(querysetName, page));
 
     xenia()
       .limit(20)
       .skip(20 * page)
-      .exec()
+      .exec(querysetName)
       .then(queryset => dispatch(receiveQueryset(queryset, replace)))
       .catch(err => dispatch(requestQuerysetFailure(err)));
   };
@@ -152,8 +153,8 @@ export const makeQueryFromState = (type, page = 0, replace = false) => {
     const addMatches = x => {
       let { breakdown, specificBreakdown } = filterState;
 
-      // filter by bteakdown if needed
-      if (-1 === ['author', 'section'].indexOf(breakdown)) {
+      // filter by breakdown if needed
+      if (-1 === ['author', 'section'].indexOf(breakdown) || specificBreakdown === '') {
         breakdown = 'all';
       } else {
         x.match({[`statistics.comments.${breakdown}.${specificBreakdown}`]: { $exists: true }});
@@ -233,10 +234,14 @@ const doPutQuery = (dispatch, state, name, desc, tag) => {
     return _.isUndefined(value.$skip) && _.isUndefined(value.$limit);
   });
 
+  query.name = name;
+  query.desc = desc;
+
   console.log('commands', query.queries[0].commands);
 
   console.log('about to xenia.saveQuery');
-  xenia(query).saveQuery()
+  xenia(query)
+    .saveQuery()
     .then(() => { // if response.status < 400
       dispatch({type: QUERYSET_SAVE_SUCCESS, name: query.name});
       // save it to pillar

@@ -42,6 +42,7 @@ export default class UserList extends React.Component {
   }
 
   handleInfiniteLoad () {
+    if (this.props.users.length >= this.props.total) return;
     this.props.onPagination(this.state.page);
     this.setState({
       page: this.state.page + 1
@@ -73,8 +74,9 @@ export default class UserList extends React.Component {
   }
 
   onSortChanged(option) {
+    const filter = this.props.filters[option.value];
     this.setState({selectedSort: option.value});
-    this.props.dispatch(sortBy(option.value, 1));
+    this.props.dispatch(sortBy(filter.field, -1));
   }
 
   render() {
@@ -97,7 +99,6 @@ export default class UserList extends React.Component {
           </Heading>
         <div style={styles.sort}>
           <Select
-
             value={this.state.selectedSort}
             onChange={this.onSortChanged.bind(this)}
             options={sortableFilters} />

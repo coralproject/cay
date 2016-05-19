@@ -165,7 +165,7 @@ export default class SearchCreator extends Component {
           visible={this.props.searches.savingSearch || !!this.props.searches.recentSavedSearch}>
           {
             this.props.searches.recentSavedSearch ?
-              (<Link style={styles.searchDetail} to={`/saved-search/${this.props.searches.recentSavedSearch.id}`}>
+              (<Link style={styles.searchDetail} to={`/saved-search/${this.props.searches.recentSavedSearch.name}`}>
                 View Your Saved Search [{this.props.searches.recentSavedSearch.name}] →
               </Link>) :
               'Saving Search...'

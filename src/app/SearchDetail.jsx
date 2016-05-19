@@ -10,6 +10,7 @@ import Page from 'app/layout/Page';
 import ContentHeader from 'components/ContentHeader';
 import UserList from 'users/UserList';
 import UserDetail from 'users/UserDetail';
+import { clearUserList } from 'search/SearchActions';
 
 const mapStateToProps = state => {
   return {
@@ -24,11 +25,8 @@ const mapStateToProps = state => {
 export default class SearchDetail extends React.Component {
 
   componentWillMount() {
+    this.props.dispatch(clearUserList());
     this.props.dispatch(fetchQueryset(this.props.params.id, 0, true));
-  }
-
-  componentWillUpdate() {
-    // console.log('SearchDetail will update');
   }
 
   updateUser(user) {
@@ -37,13 +35,11 @@ export default class SearchDetail extends React.Component {
   }
 
   onPagination(page = 0) {
-    this.props.dispatch(fetchQueryset(this.props.params.name, page));
+    this.props.dispatch(fetchQueryset(this.props.params.id, page));
   }
 
   render() {
-
-    const search = _.find(this.props.searches.searches, {id: this.props.params.id});
-
+    const search = _.find(this.props.searches.searches, {id: this.props.params.id}) || {};
     return (
       <Page>
         <ContentHeader title={search.name} />

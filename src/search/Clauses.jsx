@@ -47,7 +47,7 @@ class Clauses extends React.Component {
         backgroundColor: settings.darkGrey,
         color: 'white',
         padding: '10px 20px',
-        margin: '20px 20px 0px 0px',
+        margin: '0 10px 0px 0px',
         borderRadius: 4
       }
     };

@@ -77,15 +77,11 @@ export default class UserList extends React.Component {
     const filter = this.props.filters[option.value];
     this.setState({selectedSort: option.value});
 
-<<<<<<< Updated upstream
-    this.props.dispatch(sortBy(filter.template, -1));
-=======
     if (this.props.onSortChanged) {
       this.props.onSortChanged(filter);
     } else {
       this.props.dispatch(sortBy(filter.field, -1));
     }
->>>>>>> Stashed changes
   }
 
   render() {

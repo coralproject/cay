@@ -234,8 +234,16 @@ const doPutQuery = (dispatch, state, name, desc, tag) => {
   const query = _.cloneDeep(state.searches.activeQuery);
 
   // strip out $limt and $skip commands before saving
-  query.queries[0].commands = _.filter(query.queries[0].commands, (value) => {
-    return _.isUndefined(value.$skip) && _.isUndefined(value.$limit);
+  query.queries[0].commands.forEach((command) => {
+    if (typeof command.$skip !== 'undefined') {
+      command.$skip = '#number:skip'
+    } else if (typeof command.$limit !== 'undefined') {
+      command.$limit = '#number:limit'
+    }
+  });
+
+  query.queries[0].commands.unshift({
+    $sort: { "#string:sort": -1 }
   });
 
   query.name = name;

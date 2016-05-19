@@ -79,7 +79,7 @@ class Root extends React.Component {
             <Route path="search-creator" component={SearchCreator} />
             <Route path="tag-manager" component={TagManager} />
             <Route path="saved-searches" component={SeeAllSearches}/>
-            <Route path="saved-search/:id" component={SearchDetail} />
+            <Route path="saved-search/:name" component={SearchDetail} />
             <Route path="*" component={NoMatch} />
             {/*<Route path="explore" component={DataExplorer} />*/}
           </Router>

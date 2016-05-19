@@ -61,19 +61,6 @@ export default class FilterNumbers extends React.Component {
     this.setState({step: (props.type === 'floatRange' || props.type === 'percentRange') ? 0.01 : 1});
   }
 
-  onMinChanged() {
-    return (e) => {
-      this.props.dispatch(filterChanged(this.props.fieldName, {userMin: e.target.value/100}));
-    };
-  }
-  onMaxChanged() {
-    return (e) => {
-      this.props.dispatch(filterChanged(this.props.fieldName, {userMax: e.target.value/100}));
-    };
-  }
-  updateSlider(values) {
-    this.props.dispatch(filterChanged(this.props.fieldName, {userMin: values[0], userMax: values[1]}));
-  }
   renderHelpText() {
     let help = '';
 
@@ -100,13 +87,13 @@ export default class FilterNumbers extends React.Component {
         </CardHeader>
           <div>
             <input
-              onChange={this.onMinChanged().bind(this)}
+              onChange={event => this.props.onChange(this.props.fieldName, 'userMin', event.target.value/100)}
               style={style.minMaxInputs}
               type='number'
               value={Math.floor(this.props.userMin*100)}/>
             {` - `}
             <input
-              onChange={this.onMaxChanged().bind(this)}
+              onChange={event => this.props.onChange(this.props.fieldName, 'userMax', event.target.value/100)}
               style={style.minMaxInputs}
               type='number'
               value={Math.floor(this.props.userMax*100)}/>

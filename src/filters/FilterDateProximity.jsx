@@ -1,7 +1,6 @@
 import React from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
-import {filterChanged} from 'filters/FiltersActions';
 
 import Card from 'components/cards/Card';
 import CardHeader from 'components/cards/CardHeader';
@@ -20,15 +19,14 @@ export default class FilterDateProximity extends React.Component {
     const val = e.target.value;
     const date = new Date();
     date.setDate(date.getDate() - val);
-    this.props.dispatch(filterChanged(this.props.fieldName, {userMin: date, userMax: this.props.userMax}));
+    this.props.onChange(this.props.fieldName, 'userMin', date);
   }
 
   onMaxChanged(e) {
-    console.log('onMaxChanged', e.target.value);
     const val = e.target.value;
     const date = new Date();
     date.setDate(date.getDate() - val);
-    this.props.dispatch(filterChanged(this.props.fieldName, {userMin: this.props.userMin, userMax: date}));
+    this.props.onChange(this.props.fieldName, 'userMax', date);
   }
 
   render() {

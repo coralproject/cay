@@ -26,20 +26,11 @@ export default class UserFilters extends React.Component {
     super(props);
   }
 
-  componentWillUpdate(nextProps) {
-    /*
-      only a filter or breakdown change updates the counter in the reducer.
-      if a filter changed, we trigger ajax.
-    */
-    if (this.props.counter !== nextProps.counter) {
-      // a filter changed, fire ajax,
-      this.updateUserList();
-    }
-  }
   updateUserList() {
     this.props.dispatch(clearUserList());
     this.props.dispatch(makeQueryFromState('user', 0, true));
   }
+
   getTags() {
     return this.props.tags.map(tag => {
       return {label: tag.description, value: tag.name};
@@ -120,6 +111,7 @@ export default class UserFilters extends React.Component {
       if (f.type === 'percentRange') {
         filterComponent = (
           <FilterNumberPercent
+            onChange={this.props.onChange}
             key={i}
             min={f.min}
             max={f.max}
@@ -133,6 +125,7 @@ export default class UserFilters extends React.Component {
         // capitalize first letter of description
         filterComponent = (
           <FilterNumbers
+            onChange={this.props.onChange}
             key={i}
             min={f.min}
             max={f.max}
@@ -145,6 +138,7 @@ export default class UserFilters extends React.Component {
       } else if (f.type === 'dateRange') {
         filterComponent = (
           <FilterDate
+            onChange={this.props.onChange}
             key={i}
             min={f.min}
             max={f.max}
@@ -157,6 +151,7 @@ export default class UserFilters extends React.Component {
       } else if (f.type === 'intDateProximity') {
         filterComponent = (
           <FilterDateProximity
+            onChange={this.props.onChange}
             key={i}
             min={f.min}
             max={f.max}

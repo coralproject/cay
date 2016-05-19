@@ -11,6 +11,7 @@ import {saveQueryFromState, makeQueryFromState} from 'search/SearchActions';
 import { fetchAllTags } from 'tags/TagActions';
 import { populateDistributionStore } from 'filters/FiltersActions';
 import { fetchSections, fetchAuthors, resetFilters } from 'filters/FiltersActions';
+import {filterChanged} from 'filters/FiltersActions';
 
 
 import Page from 'app/layout/Page';
@@ -107,6 +108,11 @@ export default class SearchCreator extends React.Component {
     this.props.dispatch(makeQueryFromState('user', page));
   }
 
+  onFilterChange(fieldName, attr, val) {
+    this.props.dispatch(filterChanged(fieldName, {[attr]: val}));
+    this.props.dispatch(makeQueryFromState('user', 0, true));
+  }
+
   render() {
 
     return (
@@ -118,7 +124,7 @@ export default class SearchCreator extends React.Component {
 
         <div style={styles.base}>
           <div style={styles.filters}>
-            <SearchFilters userOnly={true}/>
+            <SearchFilters onChange={this.onFilterChange.bind(this)} userOnly={true}/>
           </div>
 
           <div style={styles.rightPanel}>

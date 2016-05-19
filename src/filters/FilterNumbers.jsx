@@ -51,16 +51,6 @@ export default class FilterNumbers extends React.Component {
     const newSymbol = this.state.symbol === 'GTLT' ? 'EQUALS' : 'GTLT';
     this.setState({symbol: newSymbol});
   }
-  onMinChanged() {
-    return (e) => {
-      this.props.dispatch(filterChanged(this.props.fieldName, {userMin: e.target.value}));
-    };
-  }
-  onMaxChanged() {
-    return (e) => {
-      this.props.dispatch(filterChanged(this.props.fieldName, {userMax: e.target.value}));
-    };
-  }
   updateSlider(values) {
     this.props.dispatch(filterChanged(this.props.fieldName, {userMin: values[0], userMax: values[1]}));
   }
@@ -103,13 +93,13 @@ export default class FilterNumbers extends React.Component {
         </div>
         <div>
           <input
-            onChange={this.onMinChanged().bind(this)}
+            onChange={event => this.props.onChange(this.props.fieldName, 'userMin', event.target.value)}
             style={style.minMaxInputs}
             type='number'
             value={this.props.userMin}/>
           {` - `}
           <input
-            onChange={this.onMaxChanged().bind(this)}
+            onChange={event => this.props.onChange(this.props.fieldName, 'userMax', event.target.value)}
             style={style.minMaxInputs}
             type='number'
             value={this.props.userMax}/>

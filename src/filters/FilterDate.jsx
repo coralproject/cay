@@ -1,6 +1,5 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
-import {filterChanged} from 'filters/FiltersActions';
 import Radium from 'radium';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
@@ -21,13 +20,11 @@ export default class FilterDate extends React.Component {
 
   // called after either <DatePicker /> changes
   updateDateRange(ref, m) {
-    let newRange;
     if (ref === 'date_start') {
-      newRange = {userMin: m.toDate(), userMax: this.props.userMax};
+      this.props.onChange(this.props.fieldName, 'userMin', m.toDate());
     } else {
-      newRange = {userMin: this.props.userMin, userMax: m.toDate()};
+      this.props.onChange(this.props.fieldName, 'userMax', m.toDate());
     }
-    this.props.dispatch(filterChanged(this.props.fieldName, newRange));
   }
 
   render() {
@@ -47,7 +44,8 @@ export default class FilterDate extends React.Component {
             <p style={styles.label}>and</p>
             <DatePicker
               selected={moment(this.props.userMax)}
-              onChange={this.updateDateRange.bind(this, 'date_end')} />
+              onChange={this.updateDateRange.bind(this, 'date_end')}
+               />
           </div>
         </div>
       </Card>

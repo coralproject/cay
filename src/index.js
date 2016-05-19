@@ -24,6 +24,8 @@ import About from 'app/About';
 
 import registerServiceWorker from 'serviceworker!./sw.js';
 import ga from 'react-ga';
+import config from '../public/config.json';
+import dataConfig from '../public/data_config.json';
 
 let store;
 
@@ -87,36 +89,24 @@ class Root extends React.Component {
   }
 }
 
-const loadConfig = (route) => {
-  return fetch(route).then(res => res.json());
-};
-
 // entry point for the app
-Promise.all([loadConfig('/config.json'), loadConfig('/data_config.json')])
-  .then(results => {
 
-    const [app, filters] = results;
+const requiredKeys = [ 'xeniaHost', 'pillarHost', 'basicAuthorization', 'environment', 'googleAnalyticsId', 'requireLogin' ];
+const allKeysDefined = requiredKeys.every(key => 'undefined' !== typeof config[key]);
 
-    const requiredKeys = [ 'xeniaHost', 'pillarHost', 'basicAuthorization', 'environment', 'googleAnalyticsId', 'requireLogin' ];
-    const allKeysDefined = requiredKeys.every(key => 'undefined' !== typeof app[key]);
+if (!allKeysDefined) {
+  const message = `missing required keys on config.json. Must define ${requiredKeys.join('|')}`;
+  store.dispatch(configError(message));
+  throw new Error(message);
+}
 
-    if (!allKeysDefined) {
-      const message = `missing required keys on config.json. Must define ${requiredKeys.join('|')}`;
-      store.dispatch(configError(message));
-      throw new Error(message);
-    }
+// load config into initialState so it's ALWAYS available
+store = configureStore({app: config});
 
-    // load config into initialState so it's ALWAYS available
-    store = configureStore({app});
+store.dispatch(configXenia());
+store.dispatch({type: 'DATA_CONFIG_LOADED', config: dataConfig});
 
-    store.dispatch(configXenia());
-    store.dispatch({type: 'DATA_CONFIG_LOADED', config: filters});
-
-    ReactDOM.render(<Root/>, document.getElementById('root'));
-  })
-  .catch(err => {
-    console.error(err.stack);
-  });
+ReactDOM.render(<Root/>, document.getElementById('root'));
 
 // prevent browser from navigating backwards if you hit the backspace key
 document.addEventListener('keydown', function (e) {

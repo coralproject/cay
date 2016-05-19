@@ -80,7 +80,7 @@ export default class UserList extends React.Component {
     if (this.props.onSortChanged) {
       this.props.onSortChanged(filter);
     } else {
-      this.props.dispatch(sortBy(filter.field, -1));
+      this.props.dispatch(sortBy(filter.template, -1));
     }
   }
 

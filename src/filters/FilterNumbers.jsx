@@ -74,19 +74,19 @@ export default class FilterNumbers extends React.Component {
         <div style={{
           marginTop: 0,
           marginBottom: 10,
-          display: 'flex',
-          alignItems: 'flex-start',
-          justifyContent: 'space-between'
         }}>
-        <span style={style.description}>{this.props.description}</span>
-        {/*
+      {/*  <p style={style.description}>
+          {this.props.description}
+        </p>*/}
+        {
           this.props.distributions ?
           <Sparkline
+            description={this.props.description}
             distribution={
               this.props.distributions[this.props[this.props.fieldName].field]
             }/> :
             ''
-        */}
+        }
         </div>
         <div>
           <input

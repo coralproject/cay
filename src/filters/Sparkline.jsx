@@ -51,7 +51,7 @@ class Sparkline extends React.Component {
     } else if (d.x < 1000) {
       if (d.x % 100 === 0) fill = 'rgb(255,0,0)';
     } else {
-      if (d.x % 1000 === 0) fill = 'rgb(255,0,0)';
+      if (d.x % 3000 === 0) fill = 'rgb(255,0,0)';
     }
 
     return fill;

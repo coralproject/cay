@@ -96,6 +96,15 @@
       "description": "the last time the user commented",
       "collection": "user_statistics",
       "type": "dateRange"
+    },
+    {
+      "name": "Recent first commenters",
+      "category": "Activity",
+      "field": "first",
+      "template": "statistics.comments.<%= dimension %>.all.first",
+      "description": "first comment in last n days",
+      "collection": "user_statistics",
+      "type": "intDateProximity"
     }
   ]
 }

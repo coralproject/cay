@@ -1,7 +1,7 @@
 import _ from 'lodash';
 // React isn't referenced, but the app crashes without it.
 // even without extending React.Component wat.
-import React from 'react';
+import React, {Component} from 'react';
 
 import UserFilters from 'filters/UserFilters';
 import CommentFilters from 'filters/CommentFilters';
@@ -27,20 +27,15 @@ var schema = {
   }
 };
 
-export default class FilterFactory extends React.Component {
-  static makeFilters = (type) => {
-
-    if (!_.includes(Object.keys(schema), type)) {
-      throw new Error(`FilterFactory type must be of type [${Object.keys(schema).join('|')}]`);
-    }
-
-    switch (type) {
+export default class FilterFactory extends Component {
+  render() {
+    switch (this.props.type) {
     case 'user':
-      return <UserFilters />;
+      return <UserFilters onChange={this.props.onChange} />;
     case 'asset':
-      return <AssetFilters />;
+      return <AssetFilters onChange={this.props.onChange} />;
     case 'comment':
-      return <CommentFilters />;
+      return <CommentFilters onChange={this.props.onChange} />;
     }
   }
 }

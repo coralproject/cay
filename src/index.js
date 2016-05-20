@@ -9,23 +9,26 @@ import { Provider } from 'react-redux';
 // Redux Devtools
 
 import configureStore from 'store.js';
-import { configXenia, configError } from 'app/AppActions';
+import { configXenia } from 'app/AppActions';
 import {StyleRoot} from 'radium';
 
-// import Dashboard from './containers/Dashboard';
+// Routes
 import SearchCreator from 'app/SearchCreator';
 import TagManager from 'app/TagManager';
 import Login from 'app/Login';
-// import DataExplorer from 'app/DataExplorer';
 import SeeAllSearches from 'app/SeeAllSearches';
 import SearchDetail from 'app/SearchDetail';
 import NoMatch from 'app/NoMatch';
 import About from 'app/About';
 
+// Utils
 import registerServiceWorker from 'serviceworker!./sw.js';
 import ga from 'react-ga';
+import { Lang } from 'i18n/lang';
 
-let store;
+// Configuration
+import config from '../public/config.json';
+import dataConfig from '../public/data_config.json';
 
 import messages from 'i18n/messages'; // Lang does not know where did you get your messages from.
 
@@ -49,7 +52,6 @@ if ('serviceWorker' in navigator && process && process.env.NODE_ENV === 'product
   registerServiceWorker({ scope: '/' }).then(() => {}, () => {});
 }
 
-import { Lang } from 'i18n/lang';
 @Lang
 class Root extends React.Component {
 
@@ -77,7 +79,7 @@ class Root extends React.Component {
             <Route path="search-creator" component={SearchCreator} />
             <Route path="tag-manager" component={TagManager} />
             <Route path="saved-searches" component={SeeAllSearches}/>
-            <Route path="saved-search/:id" component={SearchDetail} />
+            <Route path="saved-search/:name" component={SearchDetail} />
             <Route path="*" component={NoMatch} />
             {/*<Route path="explore" component={DataExplorer} />*/}
           </Router>
@@ -87,36 +89,23 @@ class Root extends React.Component {
   }
 }
 
-const loadConfig = (route) => {
-  return fetch(route).then(res => res.json());
-};
-
 // entry point for the app
-Promise.all([loadConfig('/config.json'), loadConfig('/data_config.json')])
-  .then(results => {
 
-    const [app, filters] = results;
+const requiredKeys = [ 'xeniaHost', 'pillarHost', 'basicAuthorization', 'environment', 'googleAnalyticsId', 'requireLogin' ];
+const allKeysDefined = requiredKeys.every(key => 'undefined' !== typeof config[key]);
 
-    const requiredKeys = [ 'xeniaHost', 'pillarHost', 'basicAuthorization', 'environment', 'googleAnalyticsId', 'requireLogin' ];
-    const allKeysDefined = requiredKeys.every(key => 'undefined' !== typeof app[key]);
+if (!allKeysDefined) {
+  const message = `missing required keys on config.json. Must define ${requiredKeys.join('|')}`;
+  throw new Error(message);
+}
 
-    if (!allKeysDefined) {
-      const message = `missing required keys on config.json. Must define ${requiredKeys.join('|')}`;
-      store.dispatch(configError(message));
-      throw new Error(message);
-    }
+// load config into initialState so it's ALWAYS available
+const store = configureStore({app: config});
 
-    // load config into initialState so it's ALWAYS available
-    store = configureStore({app});
+store.dispatch(configXenia());
+store.dispatch({type: 'DATA_CONFIG_LOADED', config: dataConfig});
 
-    store.dispatch(configXenia());
-    store.dispatch({type: 'DATA_CONFIG_LOADED', config: filters});
-
-    ReactDOM.render(<Root/>, document.getElementById('root'));
-  })
-  .catch(err => {
-    console.error(err.stack);
-  });
+ReactDOM.render(<Root/>, document.getElementById('root'));
 
 // prevent browser from navigating backwards if you hit the backspace key
 document.addEventListener('keydown', function (e) {

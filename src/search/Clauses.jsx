@@ -6,6 +6,8 @@ import Radium from 'radium';
 import {connect} from 'react-redux';
 import PercentClause from './PercentClause';
 import IntClause from './IntClause';
+import DateRangeClause from './DateRangeClause';
+import {resetFilter} from 'filters/FiltersActions';
 
 import settings from 'settings';
 
@@ -45,7 +47,7 @@ class Clauses extends React.Component {
         backgroundColor: settings.darkGrey,
         color: 'white',
         padding: '10px 20px',
-        margin: '20px 20px 0px 0px',
+        margin: '0 10px 0px 0px',
         borderRadius: 4
       }
     };
@@ -54,7 +56,7 @@ class Clauses extends React.Component {
   userChangedFilter(filterName) {
     const f = this.props[filterName];
     const maxDifferent = f.userMax !== f.max && f.userMax < f.max;
-    const minDifferent = f.userMin !== f.min;
+    const minDifferent = f.userMin !== f.min && f.userMin > f.min;
     return {
       either: maxDifferent || minDifferent,
       both: !(maxDifferent && minDifferent)
@@ -65,7 +67,9 @@ class Clauses extends React.Component {
     /* removes hyphen */
     name = name.replace('-', ' ');
     /* title case */
-    return name.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+    return name.replace(/\w\S*/g, function(txt){
+      return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
   }
 
   getSpecific() {
@@ -79,15 +83,34 @@ class Clauses extends React.Component {
   }
 
   getFilters() {
-    return this.props.filterList.map((filterName) => {
+    return this.props.filterList.map((filterName, i) => {
       if (this.userChangedFilter(filterName).either) {
+        let clause;
+        switch (this.props[filterName].type) {
+        case 'dateRange':
+        case 'intDateProximity':
+          clause = <DateRangeClause {...this.props[filterName]}/>;
+          break;
+        case 'percentRange':
+          clause = <PercentClause {...this.props[filterName]}/>;
+          break;
+        default:
+          clause = <IntClause {...this.props[filterName]}/>;
+        }
+
         return (
-          this.props[filterName].type === 'percentRange' ?
-            <PercentClause {...this.props[filterName]}/> :
-            <IntClause {...this.props[filterName]}/>
+          <span key={i} style={styles.clause}>
+            {clause}
+            <span onClick={this.resetFilter.bind(this, filterName)}
+              style={styles.close}>x</span>
+          </span>
         );
       }
     });
+  }
+
+  resetFilter(filterName) {
+    this.props.dispatch(resetFilter(filterName));
   }
 
   render() {
@@ -105,3 +128,19 @@ class Clauses extends React.Component {
 }
 
 export default Clauses;
+
+
+const styles = {
+  close: {
+    cursor: 'pointer',
+    marginLeft: 10,
+    color: 'grey'
+  },
+  clause: {
+    backgroundColor: 'darkGrey',
+    color: 'white',
+    borderRadius: 4,
+    padding: 10,
+    marginRight: 10
+  }
+};

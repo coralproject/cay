@@ -93,7 +93,7 @@ class SeeAllSearches extends React.Component {
           <div style={styles.actionsContainer}>
             <Link
               style={styles.viewSearchLink}
-              to={`/saved-search/${search.id}`}>{window.L.t('View Search Details')}</Link>
+              to={`/saved-search/${search.name}`}>{window.L.t('View Search Details')}</Link>
             <span>{window.L.t('Edit Search')} ({window.L.t('coming soon')})</span>
           </div>
         </Card>

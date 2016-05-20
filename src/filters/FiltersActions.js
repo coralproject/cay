@@ -274,7 +274,7 @@ const distributionForInput = (x, inputValue) => {
       $subtract: [
         '$statistics.comments.all.all.'+inputValue,
         {
-          $mod: ['$statistics.comments.all.all.'+inputValue, 15]
+          $mod: ['$statistics.comments.all.all.'+inputValue, 1]
         }
       ]
     },

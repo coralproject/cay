@@ -1,16 +1,20 @@
-import React, {PropTypes} from 'react';
+
+/**
+ * Module dependencies
+ */
+
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
-import {Link} from 'react-router';
+import { Link } from 'react-router';
 
-import settings from 'settings';
+import { mediumGrey } from 'settings';
 
-import {userSelected} from 'users/UsersActions';
-import {fetchCommentsByUser} from 'comments/CommentsActions';
-import {saveQueryFromState, makeQueryFromState} from 'search/SearchActions';
-import { fetchAllTags } from 'tags/TagActions';
-import { populateDistributionStore } from 'filters/FiltersActions';
-import { fetchSections, fetchAuthors, resetFilters } from 'filters/FiltersActions';
+import { userSelected } from 'users/UsersActions';
+import { fetchCommentsByUser } from 'comments/CommentsActions';
+import { saveQueryFromState, makeQueryFromState } from 'search/SearchActions';
+import { fetchInitialData } from 'search/SearchActions';
+import { filterChanged } from 'filters/FiltersActions';
 
 
 import Page from 'app/layout/Page';
@@ -26,14 +30,20 @@ import TextField from 'components/forms/TextField';
 import StatusBar from 'components/StatusBar';
 import Clauses from 'search/Clauses';
 
+/**
+ * Search creator page
+ * Contains the UI for creating user searches
+ */
+
 @connect(state => ({
   searches: state.searches,
   comments: state.comments,
-  users: state.users
+  users: state.users,
+  filters: state.filters,
+  app: state.app
 }))
 @Radium
-export default class SearchCreator extends React.Component {
-
+export default class SearchCreator extends Component {
   constructor(props) {
     super(props);
     this.state = {saveModalOpen: false};
@@ -47,19 +57,13 @@ export default class SearchCreator extends React.Component {
   componentWillMount() {
     // redirect user to /login if they're not logged in
     //   TODO: refactor: pass in a function that calculates auth state
-    if (window.requireLogin && !this.props.searches.authorized) {
-      let {router} = this.context;
-      return router.push('/login');
+    if (this.props.app.requireLogin && !this.props.searches.authorized) {
+      return this.context.router.push('/login');
     }
 
-    /* set up the initial default / unfiltered view, this was previously in UserFilters */
-    // this.props.dispatch(resetFilters());
-    this.props.dispatch(fetchAllTags());
-    this.props.dispatch(fetchSections());
-    this.props.dispatch(fetchAuthors());
-    this.props.dispatch(populateDistributionStore());
-
-    this.props.dispatch(makeQueryFromState('user', 0, true));
+    // set up the initial default / unfiltered view
+    // this was previously in UserFilters
+    this.props.dispatch(fetchInitialData());
   }
 
   updateUser(user) {
@@ -89,17 +93,19 @@ export default class SearchCreator extends React.Component {
 
   confirmSave() {
     // show a saving icon or something?
-    const name = this.state.searchName;
-    const desc = this.state.searchDesc;
-    const tag = this.state.searchTag;
-
+    const { searchName, searchDesc, searchTag } = this.state;
     this.setState({saveModalOpen: false});
-
-    this.props.dispatch(saveQueryFromState(name, desc, tag));
+    this.props.dispatch(saveQueryFromState(searchName, searchDesc, searchTag));
   }
 
   onPagination(page = 0) {
     this.props.dispatch(makeQueryFromState('user', page));
+  }
+
+  onFilterChange(fieldName, attr, val) {
+    this.props.dispatch(userSelected(null));
+    this.props.dispatch(filterChanged(fieldName, {[attr]: val}));
+    this.props.dispatch(makeQueryFromState('user', 0, true));
   }
 
   render() {
@@ -113,7 +119,7 @@ export default class SearchCreator extends React.Component {
 
         <div style={styles.base}>
           <div style={styles.filters}>
-            <SearchFilters userOnly={true}/>
+            <SearchFilters onChange={this.onFilterChange.bind(this)} userOnly={true}/>
           </div>
 
           <div style={styles.rightPanel}>
@@ -130,6 +136,8 @@ export default class SearchCreator extends React.Component {
                 loadingQueryset={this.props.searches.loadingQueryset}
                 users={this.props.searches.users} userSelected={this.updateUser.bind(this)} />
               <UserDetail
+                breakdown={this.props.filters.breakdown}
+                specificBreakdown={this.props.filters.specificBreakdown}
                 commentsLoading={this.props.comments.loading}
                 user={this.props.users.selectedUser}
                 comments={this.props.comments.items}
@@ -157,7 +165,7 @@ export default class SearchCreator extends React.Component {
           visible={this.props.searches.savingSearch || !!this.props.searches.recentSavedSearch}>
           {
             this.props.searches.recentSavedSearch ?
-              (<Link style={styles.searchDetail} to={`/saved-search/${this.props.searches.recentSavedSearch.id}`}>
+              (<Link style={styles.searchDetail} to={`/saved-search/${this.props.searches.recentSavedSearch.name}`}>
                 View Your Saved Search [{this.props.searches.recentSavedSearch.name}] →
               </Link>) :
               'Saving Search...'
@@ -179,7 +187,7 @@ const styles = {
     flex: 1
   },
   userListContainer: {
-    marginTop: 5,
+    margin: 20,
     height: 900,
     display: 'flex',
     clear: 'both'
@@ -202,7 +210,7 @@ const styles = {
     fontSize: 20,
     minHeight: 120,
     width: '100%',
-    border: '1px solid ' + settings.mediumGrey,
+    border: `1px solid ${mediumGrey}`,
     borderRadius: 3
   },
   saveIcon: {

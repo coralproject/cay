@@ -1,6 +1,8 @@
 import _ from 'lodash';
 import {clamp} from 'components/utils/math';
 import {xenia} from 'app/AppActions';
+import { populateDistributionStore } from 'filters/FiltersActions';
+import { fetchSections, fetchAuthors } from 'filters/FiltersActions';
 
 export const QUERYSET_SELECTED = 'QUERYSET_SELECTED';
 export const QUERYSET_REQUEST = 'QUERYSET_REQUEST'; // request data for a single queryset
@@ -31,6 +33,7 @@ export const PILLAR_SEARCH_DELETED = 'PILLAR_SEARCH_DELETED';
 export const PILLAR_SEARCH_DELETE_FAILURE = 'PILLAR_SEARCH_DELETE_FAILURE';
 
 export const CLEAR_USER_LIST = 'CLEAR_USER_LIST';
+export const CLEAR_USER = 'CLEAR_USER';
 
 export const selectQueryset = (queryset) => {
   return {
@@ -102,16 +105,17 @@ export const receiveQueryset = (data, replace) => {
   };
 };
 
-/* xenia_package */
 // execute a saved query_set
 export const fetchQueryset = (querysetName, page = 0, replace = false) => {
+  /* xenia_package */
   return (dispatch) => {
+
     dispatch(requestQueryset(querysetName, page));
 
     xenia()
       .limit(20)
       .skip(20 * page)
-      .exec()
+      .exec(querysetName)
       .then(queryset => dispatch(receiveQueryset(queryset, replace)))
       .catch(err => dispatch(requestQuerysetFailure(err)));
   };
@@ -133,8 +137,7 @@ export const createQuery = (query) => {
 };
 
 /* xenia_package */
-export const makeQueryFromState = (type, page = 0) => {
-
+export const makeQueryFromState = (type, page = 0, replace = false) => {
   const pageSize = 20;
 
   return (dispatch, getState) => {
@@ -148,14 +151,20 @@ export const makeQueryFromState = (type, page = 0) => {
     });
 
     const addMatches = x => {
+      let { breakdown, specificBreakdown } = filterState;
+
+      // filter by breakdown if needed
+      if (-1 === ['author', 'section'].indexOf(breakdown) || specificBreakdown === '') {
+        breakdown = 'all';
+      } else {
+        x.match({[`statistics.comments.${breakdown}.${specificBreakdown}`]: { $exists: true }});
+      }
+
       filters.forEach(filter => {
         let dbField;
-
         // get the name of the mongo db field we want to $match on.
-        if (filterState.breakdown === 'author' && filterState.specificBreakdown !== '') {
-          dbField = _.template(filter.template)({dimension: 'author.' + filterState.specificBreakdown});
-        } else if (filterState.breakdown === 'section' && filterState.specificBreakdown !== '') {
-          dbField = _.template(filter.template)({dimension: 'section.' + filterState.specificBreakdown});
+        if (breakdown !== 'all' && specificBreakdown !== '') {
+          dbField = _.template(filter.template)({dimension: `${breakdown}.${specificBreakdown}`});
         } else { // all
           dbField = _.template(filter.template)({dimension: 'all'});
         }
@@ -167,28 +176,35 @@ export const makeQueryFromState = (type, page = 0) => {
         const clampedUserMin = clamp(filter.userMin, filter.min, filter.max);
         const clampedUserMax = clamp(filter.userMax, filter.min, filter.max);
 
-        // convert everything to numbers since Dates must be sent to xenia as epoch numbers
+        // convert everything to numbers since equivalent Dates are not equal
         // this will break if a string literal is ever a filter value since NaN !== NaN
         if (+filter.min !== +clampedUserMin) {
-          x.match({[dbField]: {$gte: +clampedUserMin}});
+          const searchMin = _.isDate(clampedUserMin) ? `#date:${clampedUserMin.toISOString()}` : clampedUserMin;
+          x.match({[dbField]: {$gte: searchMin}});
         }
 
         if (+filter.max !== +clampedUserMax) {
-          x.match({[dbField]: {$lte: +clampedUserMax}});
+          const searchMax = _.isDate(clampedUserMax) ? `#date:${clampedUserMax.toISOString()}` : clampedUserMax;
+          x.match({[dbField]: {$lte: searchMax}});
         }
       });
 
       return x;
     };
 
-    addMatches(x.addQuery()).skip(page * pageSize)
-      .limit(pageSize)
+    addMatches(x.addQuery());
+    if(filterState.sortBy) {
+      const { breakdown, specificBreakdown, sortBy } = filterState;
+      const field = _.template(sortBy[0])
+        ({dimension: `${breakdown}${specificBreakdown ? `.${specificBreakdown}` : ''}`});;
+      x.sort([field, sortBy[1]]);
+    }
+    x.skip(page * pageSize).limit(pageSize)
       .include(['name', 'avatar', 'statistics.comments']);
 
     // get the counts
     addMatches(x.addQuery()).group({_id: null, count: {$sum: 1}});
-
-    doMakeQueryFromStateAsync(x, dispatch, app);
+    doMakeQueryFromStateAsync(x, dispatch, app, replace);
   };
 };
 
@@ -218,14 +234,26 @@ const doPutQuery = (dispatch, state, name, desc, tag) => {
   const query = _.cloneDeep(state.searches.activeQuery);
 
   // strip out $limt and $skip commands before saving
-  query.queries[0].commands = _.filter(query.queries[0].commands, (value) => {
-    return _.isUndefined(value.$skip) && _.isUndefined(value.$limit);
+  query.queries[0].commands.forEach((command) => {
+    if (typeof command.$skip !== 'undefined') {
+      command.$skip = '#number:skip'
+    } else if (typeof command.$limit !== 'undefined') {
+      command.$limit = '#number:limit'
+    }
   });
+
+  query.queries[0].commands.unshift({
+    $sort: { "#string:sort": -1 }
+  });
+
+  query.name = name;
+  query.desc = desc;
 
   console.log('commands', query.queries[0].commands);
 
   console.log('about to xenia.saveQuery');
-  xenia(query).saveQuery()
+  xenia(query)
+    .saveQuery()
     .then(() => { // if response.status < 400
       dispatch({type: QUERYSET_SAVE_SUCCESS, name: query.name});
       // save it to pillar
@@ -312,6 +340,16 @@ export const deleteSearch = search => {
       dispatch({type: PILLAR_SEARCH_DELETE_FAILURE, error});
     });
   };
+};
+
+export const fetchInitialData = () => dispatch => {
+  // Get initial data for the filters
+  dispatch(fetchSections());
+  dispatch(fetchAuthors());
+  dispatch(populateDistributionStore());
+
+  // Get user list
+  dispatch(makeQueryFromState('user', 0, true));
 };
 
 export const clearUserList = () => {

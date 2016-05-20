@@ -38,7 +38,7 @@ export default class SearchFilters extends React.Component {
   render() {
     return (
       <div>
-        {FilterFactory.makeFilters('user')}
+        <FilterFactory type='user' onChange={this.props.onChange} />
       </div>
     );
   }

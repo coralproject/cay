@@ -1,10 +1,10 @@
 import React from 'react';
 import Radium from 'radium';
-// import _ from 'lodash';
+import _ from 'lodash';
 // import Flex from './layout/Flex';
 import { connect } from 'react-redux';
 // import { FOO } from '../actions';
-import {VictoryLine} from 'victory';
+import {VictoryLine, VictoryScatter, VictoryAxis} from 'victory-chart';
 
 // const style = {
 // };
@@ -24,11 +24,11 @@ class Sparkline extends React.Component {
     params: React.PropTypes.object,
     routes: React.PropTypes.array,
     /* component api */
-    style: React.PropTypes.object,
+    style: React.PropTypes.object
     // foo: React.PropTypes.string
   }
   static defaultProps = {
-    // foo: "bar"
+    // foo: 'bar'
   }
   getStyles() {
     return {

@@ -3,7 +3,7 @@ import Radium from 'radium';
 import {connect} from 'react-redux';
 
 import Card from 'components/cards/Card';
-//import Sparkline from 'filters/Sparkline';
+import Sparkline from 'filters/Sparkline';
 
 const style = {
   minMaxInputs: {

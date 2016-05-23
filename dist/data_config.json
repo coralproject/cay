@@ -82,11 +82,29 @@
     {
       "name": "User Activity Times",
       "category": "Activity",
-      "field": "activity_range",
-      "template": "statistics.comments.<%= dimension %>.all",
-      "description": "the first and last time the user commented",
+      "field": "first",
+      "template": "statistics.comments.<%= dimension %>.all.first",
+      "description": "the first time the user commented",
       "collection": "user_statistics",
       "type": "dateRange"
+    },
+    {
+      "name": "User Last Comment",
+      "category": "Activity",
+      "field": "last",
+      "template": "statistics.comments.<%= dimension %>.all.last",
+      "description": "the last time the user commented",
+      "collection": "user_statistics",
+      "type": "dateRange"
+    },
+    {
+      "name": "Recent first commenters",
+      "category": "Activity",
+      "field": "first",
+      "template": "statistics.comments.<%= dimension %>.all.first",
+      "description": "first comment in last n days",
+      "collection": "user_statistics",
+      "type": "intDateProximity"
     }
   ]
 }

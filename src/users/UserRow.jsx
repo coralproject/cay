@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import ListItem from 'components/lists/ListItem';
 import CharacterIcon from 'components/CharacterIcon';
+import {connect} from 'react-redux';
 
 @Radium
 export default class UserRow extends React.Component {
@@ -13,7 +14,9 @@ export default class UserRow extends React.Component {
     disabled: React.PropTypes.bool
   }
   static defaultProps = {
-    active: true
+    active: true,
+    breakdown: 'all',
+    specificBreakdown: 'all'
   }
 
   handleClick() {
@@ -22,34 +25,90 @@ export default class UserRow extends React.Component {
       this.props.onClick(this.props.user);
     }
   }
+  userChangedFilter(filterName) {
+    const f = this.props.filters[filterName];
+    const maxDifferent = f.userMax !== f.max && f.userMax < f.max;
+    const minDifferent = f.userMin !== f.min && f.userMin > f.min;
+    return {
+      either: maxDifferent || minDifferent,
+      both: !(maxDifferent && minDifferent)
+    };
+  }
+
+  getNonDefaultFilters() {
+    return this.props.filters.filterList.map((filterName, i) => {
+      if (this.userChangedFilter(filterName).either) {
+        // console.log("user",this.props.user.statistics.comments.all.all)
+        // console.log("user",this.props.user.statistics.comments.all.all)
+        console.log(this.props.user.statistics.comments);
+        console.log(this.props.filters[filterName].field);
+
+        if (this.props.filters[filterName].field === "SystemFlagged") {
+          return (
+            <p key={i} style={styles.stat}>
+              {`${this.props.user.statistics.comments.all.SystemFlagged.count} flagged by system`}
+            </p>
+          );
+        }
+
+        let stat;
+        switch (this.props.filters[filterName].type) {
+        case 'dateRange':
+        case 'intDateProximity':
+          stat = `${this.props.user.statistics.comments.all.all[this.props.filters[filterName].field]} ${this.props.filters[filterName].name}`;
+          // <DateRangeClause {...this.props.filters[filterName]}/>;
+          break;
+        case 'percentRange':
+          stat = `${Math.floor(this.props.user.statistics.comments.all.all[this.props.filters[filterName].field] * 100)}% ${this.props.filters[filterName].name}`;
+          // <PercentClause {...this.props.filters[filterName]}/>;
+          break;
+        default:
+          // some long decimal places, so to truncate to two decimals we floor(x*100)/100
+          stat = `${Math.floor(this.props.user.statistics.comments.all.all[this.props.filters[filterName].field]*100)/100} ${this.props.filters[filterName].name}`;
+          // <IntClause {...this.props.filters[filterName]}/>;
+        }
+
+        return (
+          <p key={i} style={styles.stat}>
+            {stat}
+          </p>
+        );
+      }
+    });
+  }
 
   render() {
-    const alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-    const colors = ['#1f77b4', '#aec7e8', '#ff7f0e', '#ffbb78', '#2ca02c', '#98df8a', '#d62728', '#ff9896', '#9467bd', '#c5b0d5', '#8c564b', '#c49c94', '#e377c2', '#f7b6d2', '#7f7f7f', '#c7c7c7', '#bcbd22', '#dbdb8d', '#17becf', '#9edae5', '#1f77b4', '#aec7e8', '#ff7f0e', '#ffbb78', '#2ca02c', '#98df8a'];
+    let {active, disabled, breakdown, specificBreakdown} = this.props;
+    specificBreakdown = specificBreakdown || 'all';
+    if (specificBreakdown === 'all') breakdown = 'all';
 
     const {user} = this.props;
-    const leftAvatar = (
-      <CharacterIcon size="medium" color={colors[alpha.indexOf(user.name.charAt(0).toUpperCase())]}>
-        { user.name.charAt(0).toUpperCase() }
-      </CharacterIcon>
-    );
 
-    const repliedPercent = Math.floor(user.statistics.comments.all.all.replied_ratio * 100) + '%';
-    const replyPercent = Math.floor(user.statistics.comments.all.all.reply_ratio * 100) + '%';
+    let dimension = user.statistics.comments[breakdown][specificBreakdown];
+
+    // Dont break the counts while loading
+    if (dimension && specificBreakdown !== 'all') {
+      dimension = dimension.all;
+    } else {
+      dimension = user.statistics.comments.all.all;
+    }
+
+    const repliedPercent = Math.floor(dimension.replied_ratio * 100) + '%';
+    const replyPercent = Math.floor(dimension.reply_ratio * 100) + '%';
 
     return (
       <ListItem
-        active={this.props.active}
-        style={[styles.base, this.props.disabled && styles.disabled, this.props.style]}
+        active={active}
+        style={[styles.base, disabled && styles.disabled, this.props.style]}
         onClick={this.handleClick.bind(this)}
-        leftAvatar={leftAvatar}>
-        {user.name}
-        <img style={styles.avatar} src="/img/user_portrait_placeholder.png" />
-        <p style={styles.sub}>
-          Comments: {user.statistics.comments.all.all.count}<br />
-          Replies received: {repliedPercent}<br />
-          Replies written: {replyPercent}
-        </p>
+        >
+        <div style={styles.flex}>
+          <img style={styles.avatar} src="/img/user_portrait_placeholder.png" />
+          <div>
+            {user.name}
+            {this.getNonDefaultFilters()}
+          </div>
+        </div>
       </ListItem>
     );
   }
@@ -59,7 +118,13 @@ const styles = {
   base: {
     cursor: 'pointer',
     overflow: 'hidden',
-    height: 100
+    // height: 100
+  },
+  stat: {
+    fontSize: 12,
+  },
+  flex: {
+    display: "flex",
   },
   disabled: {
     cursor: 'auto'
@@ -69,7 +134,8 @@ const styles = {
     fontSize: '.7em'
   },
   avatar: {
-    float: 'right',
-    height: '100%'
+    height: 50,
+    marginRight: 10
+
   }
 };

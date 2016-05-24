@@ -11,6 +11,7 @@ let initialState = {
   loadingUserList: false,
   loadingAuthors: false,
   loadingSections: false,
+  filterRangesLoaded: false, // naive, this just cleans up the console.log statement in UserFilters
   breakdown: 'all',
   counter: 0, // this is a signal for ajax consumed by userFilters
   specificBreakdown: '',
@@ -86,7 +87,7 @@ const filters = (state = initialState, action) => {
       return accum;
     }, {});
 
-    return {...state, ...newFilters, counter: action.counter};
+    return {...state, ...newFilters, counter: action.counter, filterRangesLoaded: true};
 
   case types.RESET_FILTERS:
     return {...state, dirtyFilters: []};

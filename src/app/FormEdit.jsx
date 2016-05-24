@@ -3,7 +3,7 @@ import Radium from 'radium';
 import ContentHeader from 'components/ContentHeader';
 import {connect} from 'react-redux';
 
-import {requestEditAccess, leavingEdit} from 'asks/AskActions';
+import {requestEditAccess, leavingEdit} from 'forms/FormActions';
 import Page from 'app/layout/Page';
 
 @connect(state => ({ asks: state.asks }))

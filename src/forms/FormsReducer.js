@@ -1,4 +1,4 @@
-import * as types from 'asks/AskActions';
+import * as types from 'forms/FormActions';
 
 const initial = {
   items: [],

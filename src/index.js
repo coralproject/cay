@@ -18,9 +18,9 @@ import TagManager from 'app/TagManager';
 import Login from 'app/Login';
 import SeeAllSearches from 'app/SeeAllSearches';
 import SearchDetail from 'app/SearchDetail';
-import AskList from 'app/AskList';
-import AskEdit from 'app/AskEdit';
-import AskCreate from 'app/AskCreate';
+import FormList from 'app/FormList';
+import FormEdit from 'app/FormEdit';
+import FormCreate from 'app/FormCreate';
 import NoMatch from 'app/NoMatch';
 import About from 'app/About';
 
@@ -81,9 +81,9 @@ class Root extends React.Component {
             <Route path="tag-manager" component={TagManager} />
             <Route path="saved-searches" component={SeeAllSearches}/>
             <Route path="saved-search/:id" component={SearchDetail} />
-            <Route path="asks" component={AskList}/>
-            <Route path="asks/create" component={AskCreate}/>
-            <Route path="asks/:id" component={AskEdit}/>
+            <Route path="forms" component={FormList}/>
+            <Route path="forms/create" component={FormCreate}/>
+            <Route path="forms/:id" component={FormEdit}/>
             <Route path="*" component={NoMatch} />
             {/*<Route path="explore" component={DataExplorer} />*/}
           </Router>

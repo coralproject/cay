@@ -4,7 +4,9 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import MdDelete from 'react-icons/lib/md/delete';
 
+import { deleteAsk } from 'forms/FormActions';
 import settings from 'settings';
+
 import Page from 'app/layout/Page';
 import Button from 'components/Button';
 import ContentHeader from 'components/ContentHeader';
@@ -14,9 +16,12 @@ import TableHeader from 'components/tables/TableHeader';
 import TableBody from 'components/tables/TableBody';
 import TableRow from 'components/tables/TableRow';
 import TableCell from 'components/tables/TableCell';
-import { deleteAsk } from 'asks/AskActions';
+import Tab from 'components/tabs/Tab';
+import Tabs from 'components/tabs/Tabs';
 
-@connect(({ asks }) => ({ asks }))
+// Forms, Widgets, Submissions
+
+@connect(({ forms }) => ({ forms }))
 @Radium
 export default class AskList extends React.Component {
 
@@ -45,7 +50,7 @@ export default class AskList extends React.Component {
 
   onRowClick(_id) {
     const {router} = this.context;
-    return router.push(`/asks/${_id}`);
+    return router.push(`/forms/${_id}`);
   }
 
   renderRow(ask, i) {
@@ -62,8 +67,8 @@ export default class AskList extends React.Component {
   render() {
     return (
       <Page>
-        <ContentHeader title="Asks" style={styles.header}>
-          <Link to="asks/create"><Button>Create</Button></Link>
+        <ContentHeader title="View Forms" style={styles.header}>
+          <Link to="forms/create"><Button>Create</Button></Link>
         </ContentHeader>
 
         <Table style={styles.list} striped={ true } multiSelect={ false } hasActions={ true } isLoading={ this.props.loadingTags } loadingMessage="Loading...">
@@ -73,7 +78,7 @@ export default class AskList extends React.Component {
             <TableHeader>{ window.L.t('Answers') }</TableHeader>
           </TableHead>
           <TableBody>
-            {this.props.asks.items.map(this.renderRow.bind(this))}
+            {this.props.forms.items.map(this.renderRow.bind(this))}
           </TableBody>
         </Table>
         {

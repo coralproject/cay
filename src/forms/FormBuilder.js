@@ -3,7 +3,7 @@ import React, { Component, PropTypes } from 'react';
 import { DragDropContext, DropTarget } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import ReactDOM from 'react-dom';
-import AskComponent, {styles as askComponentStyles} from 'asks/AskComponent';
+import FormComponent, {styles as askComponentStyles} from 'forms/FormComponent';
 import Checkbox from 'components/forms/Checkbox';
 import TextField from 'components/forms/TextField';
 import Modal from 'components/modal/Modal';
@@ -34,7 +34,7 @@ export default class FormBuilder extends Component {
             <p style={styles.typesSubTitle}>Drag and drop items to create a form</p>
             <div style={styles.typeList}>
               {askTypes.map((type, i) => (
-                <AskComponent key={i} field={type} onClick={this.addToBottom.bind(this, type)} />
+                <FormComponent key={i} field={type} onClick={this.addToBottom.bind(this, type)} />
               ))}
             </div>
           </div>
@@ -141,7 +141,7 @@ class FormDiagram extends Component {
         {connectDropTarget(
           <div style={styles.formDiagram}>
             {fields.map((field, i) => (
-              <AskComponent onFieldSelect={onFieldSelect}
+              <FormComponent onFieldSelect={onFieldSelect}
                 onList={true} field={field} isLast={i === fields.length - 1} id={i} key={i}
                 onMove={this.onMove.bind(this)} />
             ))}

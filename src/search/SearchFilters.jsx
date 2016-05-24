@@ -11,10 +11,6 @@ import UserFilters from 'filters/UserFilters';
 @Radium
 export default class SearchFilters extends React.Component {
 
-  constructor(props) {
-    super(props);
-  }
-
   componentDidMount() {
     this.props.dispatch(getFilterRanges('user'));
   }
@@ -27,9 +23,3 @@ export default class SearchFilters extends React.Component {
     );
   }
 }
-
-const styles = {
-  previewButton: {
-    marginRight: 10
-  }
-};

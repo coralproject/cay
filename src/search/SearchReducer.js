@@ -74,6 +74,7 @@ const searches = (state = initialState, action) => {
     return {...state, editableSearchLoading: true};
 
   case types.PILLAR_EDIT_SEARCH_SUCCESS:
+    console.log(types.PILLAR_EDIT_SEARCH_SUCCESS, action);
     return {...state, editableSearch: action.search, editableSearchLoading: false};
 
   case types.PILLAR_EDIT_SEARCH_FAILED:

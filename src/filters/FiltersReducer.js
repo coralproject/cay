@@ -7,6 +7,7 @@ let initialState = {
   authors: [],
   sections: [],
   dirtyFilters: [], // non-default filters
+  editableSearchFilters: [],
   loadingFilters: false,
   loadingUserList: false,
   loadingAuthors: false,

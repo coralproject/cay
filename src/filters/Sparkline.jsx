@@ -41,23 +41,37 @@ class Sparkline extends React.Component {
     const last = _.last(this.props.distribution);
     return last._id;
   }
-  getLabelFill(d) {
+  getDotFill(d) {
     let fill = 'none';
-    if (d.x === 1 || d.x === 2 || d.x === 3 || d.x === 5 || d.x === 20) {
-      fill = 'rgb(255,0,0)';
-    }
-    if (d.x < 100) {
-      if (d.x % 50 === 0) fill = 'rgb(255,0,0)';
-    } else if (d.x < 1000) {
-      if (d.x % 500 === 0) fill = 'rgb(255,0,0)';
-    } else {
-      if (d.x % 3000 === 0) fill = 'rgb(255,0,0)';
+
+    if (d.x === 1 || d.y === this.props.distributionMax.total || d.x === this.props.distribution.length - 1) {
+      // fill = 'rgb(255,0,0)';
+      fill = "rgb(130,130,130)";
     }
 
     return fill;
   }
+  getLabelFill(d) {
+    let fill = 'none';
+    if (d.x === 1 || d.y === this.props.distributionMax.total || d.x === this.props.distribution.length - 1) {
+      fill = 'black';
+    }
+
+    // if (d.x === 1 || d.x === 2 || d.x === 3 || d.x === 5 || d.x === 20) {
+    //   fill = 'rgb(255,0,0)';
+    // }
+
+    // if (d.x < 100) {
+    //   if (d.x % 50 === 0) fill = 'rgb(255,0,0)';
+    // } else if (d.x < 1000) {
+    //   if (d.x % 500 === 0) fill = 'rgb(255,0,0)';
+    // } else {
+    //   if (d.x % 3000 === 0) fill = 'rgb(255,0,0)';
+    // }
+
+    return fill;
+  }
   render() {
-    console.log(this.props)
     const styles = this.getStyles();
 
     return (
@@ -108,21 +122,20 @@ class Sparkline extends React.Component {
           }}
           style={{
             data: {
-              fill: this.getLabelFill.bind(this),
+              fill: this.getDotFill.bind(this),
               stroke: 'none',
-              strokeWidth: 2
+              strokeWidth: 2,
             },
             labels: {
               fill: this.getLabelFill.bind(this),
               fontSize: 8,
-              padding: 2,
-              angle: (d) => d.y > 99 ? 320 : 1
+
             }
           }}
           size={2}
           labels={
             this.props.distribution.map((bucket, i) => {
-              return bucket.total
+              return bucket.total;
             })
           }
           data={

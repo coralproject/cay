@@ -6,9 +6,9 @@ import {connect} from 'react-redux';
 import {requestEditAccess, leavingEdit} from 'forms/FormActions';
 import Page from 'app/layout/Page';
 
-@connect(state => ({ asks: state.asks }))
+@connect(state => ({ forms: state.forms }))
 @Radium
-export default class AskEdit extends Component {
+export default class FormEdit extends Component {
 
   componentWillMount() {
     const {dispatch, params} = this.props;
@@ -24,7 +24,7 @@ export default class AskEdit extends Component {
   }
 
   render() {
-    const canEdit = this.props.asks.editAccess[this.props.params.id];
+    const canEdit = this.props.forms.editAccess[this.props.params.id];
     return (
       <Page>
         <ContentHeader title="Ask" />

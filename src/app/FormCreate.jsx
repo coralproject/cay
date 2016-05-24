@@ -12,9 +12,9 @@ import ContentHeader from 'components/ContentHeader';
 
 import FormBuilder from 'forms/FormBuilder.js';
 
-@connect(({ asks }) => ({asks}))
+@connect(({ forms }) => ({forms}))
 @Radium
-export default class AskCreate extends Component {
+export default class FormCreate extends Component {
   static contextTypes = {
     router: PropTypes.object.isRequired
   };

@@ -4,7 +4,7 @@ import _ from 'lodash';
 const initial = {
   items: [],
   editAccess: {},
-  ask: null
+  form: null
 };
 
 // for testing purposes only
@@ -14,7 +14,7 @@ for (let i = 0; i < 100; i++) {
   initial.items.push({...form, answers: Math.floor(Math.random() * 100), id: i, status: _.sample(['active', 'draft', 'past'])});
 }
 
-const emptyAsk = {
+const emptyForm = {
   settings: {
 
   },
@@ -36,38 +36,38 @@ const emptyAsk = {
   }
 };
 
-const asks = (state = initial, action) => {
+const forms = (state = initial, action) => {
 
   switch (action.type) {
 
-  case types.ASK_REQUEST_STARTED:
+  case types.FORM_REQUEST_STARTED:
     return state;
 
-  case types.ASK_REQUEST_SUCCESS:
+  case types.FORM_REQUEST_SUCCESS:
     return state;
 
-  case types.ASK_REQUEST_FAILURE:
+  case types.FORM_REQUEST_FAILURE:
     return state;
 
-  case types.ASK_DELETED:
+  case types.FORM_DELETED:
     return state;
 
-  case types.ASK_EDIT_ACCEPTED:
+  case types.FORM_EDIT_ACCEPTED:
     var newState = Object.assign({}, state);
-    newState.editAccess[action.askId] = true;
+    newState.editAccess[action.formId] = true;
     return newState;
 
-  case types.ASK_EDIT_DENIED:
+  case types.FORM_EDIT_DENIED:
     var newState = Object.assign({}, state);
-    delete newState.editAccess[action.askId];
+    delete newState.editAccess[action.formId];
     return newState;
 
-  case types.ASK_CREATE_EMPTY:
-    return Object.assign({}, state, {ask: emptyAsk });
+  case types.FORM_CREATE_EMPTY:
+    return Object.assign({}, state, {form: emptyForm });
 
   default:
     return state;
   }
 };
 
-export default asks;
+export default forms;

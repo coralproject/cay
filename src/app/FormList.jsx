@@ -5,7 +5,7 @@ import { Link } from 'react-router';
 import MdDelete from 'react-icons/lib/md/delete';
 import _ from 'lodash';
 
-import { deleteAsk } from 'forms/FormActions';
+import { deleteForm } from 'forms/FormActions';
 import settings from 'settings';
 
 import Page from 'app/layout/Page';
@@ -28,7 +28,7 @@ console.log('form!', form);
 
 @connect(({ forms }) => ({ forms }))
 @Radium
-export default class AskList extends React.Component {
+export default class FormList extends React.Component {
 
   static contextTypes = {
     router: PropTypes.object.isRequired
@@ -37,20 +37,20 @@ export default class AskList extends React.Component {
   confirmDeletion(name, description, index, event) {
     event.stopPropagation();
     this.setState({
-      confirmAskName: name,
+      confirmFormName: name,
       showConfirmDialog: true,
-      askToDelete: [ name, description, index ]
+      formToDelete: [ name, description, index ]
     });
   }
 
   onConfirmClick() {
-    var askToDelete = this.state.askToDelete;
-    this.setState({ confirmAskName: '', showConfirmDialog: false, tagToDelete: null });
-    this.props.dispatch(deleteAsk(...askToDelete));
+    var formToDelete = this.state.formToDelete;
+    this.setState({ confirmFormName: '', showConfirmDialog: false, tagToDelete: null });
+    this.props.dispatch(deleteForm(...formToDelete));
   }
 
   closeDialog() {
-    this.setState({ confirmAskName: '', showConfirmDialog: false, askToDelete: null });
+    this.setState({ confirmFormName: '', showConfirmDialog: false, formToDelete: null });
   }
 
   onRowClick(id) {
@@ -111,7 +111,7 @@ export default class AskList extends React.Component {
           <div style={ styles.confirmOverlay }>
             <div style={ styles.confirmDialog }>
               <h2>Warning: this action has no undo.</h2>
-              <p style={ styles.confirmMessage }>Are you sure you want to remove the ask <strong style={ styles.strong }>"{ this.state.confirmAskName }"</strong>?</p>
+              <p style={ styles.confirmMessage }>Are you sure you want to remove the form <strong style={ styles.strong }>"{ this.state.confirmFormName }"</strong>?</p>
               <button style={ [ styles.confirmButton, styles.yesButton ] } onClick={ this.onConfirmClick.bind(this) }>Yes</button>
               <button style={ [ styles.confirmButton, styles.noButton ] } onClick={ this.closeDialog.bind(this) }>No</button>
             </div>

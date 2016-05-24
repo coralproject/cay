@@ -1,18 +1,18 @@
 
 const API_PREFIX = '/api/';
 
-export const ASK_REQUEST_STARTED = 'ASK_REQUEST_STARTED';
-export const ASK_REQUEST_SUCCESS = 'ASK_REQUEST_SUCCESS';
-export const ASK_REQUEST_FAILURE = 'ASK_REQUEST_FAILURE';
+export const FORM_REQUEST_STARTED = 'FORM_REQUEST_STARTED';
+export const FORM_REQUEST_SUCCESS = 'FORM_REQUEST_SUCCESS';
+export const FORM_REQUEST_FAILURE = 'FORM_REQUEST_FAILURE';
 
-export const ASK_REQUEST_EDIT_ACCESS = 'ASK_REQUEST_EDIT_ACCESS';
-export const ASK_EDIT_ACCEPTED = 'ASK_EDIT_ACCEPTED';
-export const ASK_EDIT_DENIED = 'ASK_EDIT_ACCEPTED';
-export const ASK_EDIT_LEAVE = 'ASK_EDIT_LEAVE';
+export const FORM_REQUEST_EDIT_ACCESS = 'FORM_REQUEST_EDIT_ACCESS';
+export const FORM_EDIT_ACCEPTED = 'FORM_EDIT_ACCEPTED';
+export const FORM_EDIT_DENIED = 'FORM_EDIT_ACCEPTED';
+export const FORM_EDIT_LEAVE = 'FORM_EDIT_LEAVE';
 
-export const ASK_DELETED = 'ASK_DELETED';
+export const FORM_DELETED = 'FORM_DELETED';
 
-export const ASK_CREATE_EMPTY= 'ASK_CREATE_EMPTY';
+export const FORM_CREATE_EMPTY= 'FORM_CREATE_EMPTY';
 
 const getInit = (body, method) => {
 
@@ -30,78 +30,78 @@ const getInit = (body, method) => {
   return init;
 };
 
-export const askRequestStarted = () => {
+export const formRequestStarted = () => {
   return {
-    type: ASK_REQUEST_STARTED
+    type: FORM_REQUEST_STARTED
   };
 };
 
-export const askRequestSuccess = (payload, index, requestType) => {
+export const formRequestSuccess = (payload, index, requestType) => {
   return {
-    type: ASK_REQUEST_SUCCESS,
+    type: FORM_REQUEST_SUCCESS,
     payload,
     index,
     requestType
   };
 };
 
-export const askRequestFailure = (err) => {
+export const formRequestFailure = (err) => {
   return {
-    type: ASK_REQUEST_FAILURE,
+    type: FORM_REQUEST_FAILURE,
     err
   };
 };
 
-export const deleteSuccessful = (ask) => {
+export const deleteSuccessful = (form) => {
   return {
-    type: ASK_DELETED,
-    ask
+    type: FORM_DELETED,
+    form
   };
 };
 
-export const askRequestEditAccess = askId => {
+export const formRequestEditAccess = formId => {
   return {
-    type: ASK_REQUEST_EDIT_ACCESS,
-    askId,
+    type: FORM_REQUEST_EDIT_ACCESS,
+    formId,
     publish: true
   };
 };
 
-export const askLeaveEdit = askId => {
+export const formLeaveEdit = formId => {
   return {
-    type: ASK_EDIT_LEAVE,
-    askId,
+    type: FORM_EDIT_LEAVE,
+    formId,
     publish: true
   };
 };
 
-export const deleteAsk = (name, description, index) => {
+export const deleteForm = (name, description, index) => {
   return (dispatch, getState) => {
-    dispatch(askRequestStarted());
+    dispatch(formRequestStarted());
     fetch(`${getState().app.pillarHost}${API_PREFIX}tag`, getInit({ name, description }, 'DELETE'))
       .then(res => res.json())
-      .then(deletedAsk => {
-        dispatch(deleteSuccessful(deletedAsk));
-        dispatch(askRequestSuccess(deletedAsk, index, 'delete'));
+      .then(deletedForm => {
+        dispatch(deleteSuccessful(deletedForm));
+        dispatch(formRequestSuccess(deletedForm, index, 'delete'));
       })
-      .catch(error => dispatch(askRequestFailure(error)));
+      .catch(error => dispatch(formRequestFailure(error)));
   };
 };
 
-export const requestEditAccess = askId => {
+export const requestEditAccess = formId => {
   return dispatch => {
-    dispatch(askRequestEditAccess(askId));
+    dispatch(formRequestEditAccess(formId));
   };
 };
 
-export const leavingEdit = askId => {
+export const leavingEdit = formId => {
   return dispatch => {
-    dispatch(askLeaveEdit(askId));
+    dispatch(formLeaveEdit(formId));
   };
 };
 
 export const createEmpty = () => {
   return {
-    type: ASK_CREATE_EMPTY
+    type: FORM_CREATE_EMPTY
   };
-}
+};

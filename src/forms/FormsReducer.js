@@ -1,4 +1,5 @@
 import * as types from 'forms/FormActions';
+import _ from 'lodash';
 
 const initial = {
   items: [],
@@ -6,8 +7,11 @@ const initial = {
   ask: null
 };
 
+// for testing purposes only
+import form from 'form.json';
+
 for (let i = 0; i < 100; i++) {
-  initial.items.push({name: `My ask ${i}`, description: 'This is my first ask, I\'m pretty excited', answers: Math.floor(Math.random() * 100), _id: i});
+  initial.items.push({...form, answers: Math.floor(Math.random() * 100), id: i, status: _.sample(['active', 'draft', 'past'])});
 }
 
 const emptyAsk = {

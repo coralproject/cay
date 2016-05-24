@@ -3,6 +3,7 @@ import Radium from 'radium';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import MdDelete from 'react-icons/lib/md/delete';
+import _ from 'lodash';
 
 import { deleteAsk } from 'forms/FormActions';
 import settings from 'settings';
@@ -18,6 +19,10 @@ import TableRow from 'components/tables/TableRow';
 import TableCell from 'components/tables/TableCell';
 import Tab from 'components/tabs/Tab';
 import Tabs from 'components/tabs/Tabs';
+
+import form from 'form.json';
+
+console.log('form!', form);
 
 // Forms, Widgets, Submissions
 
@@ -48,39 +53,59 @@ export default class AskList extends React.Component {
     this.setState({ confirmAskName: '', showConfirmDialog: false, askToDelete: null });
   }
 
-  onRowClick(_id) {
+  onRowClick(id) {
     const {router} = this.context;
-    return router.push(`/forms/${_id}`);
+    return router.push(`/forms/${id}`);
   }
 
-  renderRow(ask, i) {
+  renderTable(group) {
     return (
-      <TableRow onClick={this.onRowClick.bind(this, ask._id)} style={styles.row} key={i}>
-        <TableCell>{ask.name}</TableCell>
-        <TableCell>{ask.description}</TableCell>
-        <TableCell>{ask.answers}</TableCell>
-        <TableCell><MdDelete key={i} onClick={ this.confirmDeletion.bind(this, ask.name, ask.description, i) } /></TableCell>
+      <Table style={styles.list} striped={ true } multiSelect={ false } hasActions={ true } isLoading={ this.props.loadingTags } loadingMessage="Loading...">
+        <TableHead>
+          <TableHeader>{ window.L.t('Name') }</TableHeader>
+          <TableHeader>{ window.L.t('Description') }</TableHeader>
+          <TableHeader>{ window.L.t('Answers') }</TableHeader>
+        </TableHead>
+        <TableBody>
+          {group.map(this.renderRow.bind(this))}
+        </TableBody>
+      </Table>
+    );
+  }
+
+  renderRow(form, i) {
+    return (
+      <TableRow onClick={this.onRowClick.bind(this, form.id)} style={styles.row} key={i}>
+        <TableCell>{form.header.title}</TableCell>
+        <TableCell style={{maxWidth: 400}}>{form.header.description}</TableCell>
+        <TableCell>{form.answers}</TableCell>
+        <TableCell><MdDelete key={i} onClick={ this.confirmDeletion.bind(this, form.header.title, form.header.description, i) } /></TableCell>
       </TableRow>
     );
   }
 
   render() {
+
+    const groups = _.groupBy(this.props.forms.items, 'status');
+
     return (
       <Page>
         <ContentHeader title="View Forms" style={styles.header}>
           <Link to="forms/create"><Button>Create</Button></Link>
         </ContentHeader>
 
-        <Table style={styles.list} striped={ true } multiSelect={ false } hasActions={ true } isLoading={ this.props.loadingTags } loadingMessage="Loading...">
-          <TableHead>
-            <TableHeader>{ window.L.t('Name') }</TableHeader>
-            <TableHeader>{ window.L.t('Description') }</TableHeader>
-            <TableHeader>{ window.L.t('Answers') }</TableHeader>
-          </TableHead>
-          <TableBody>
-            {this.props.forms.items.map(this.renderRow.bind(this))}
-          </TableBody>
-        </Table>
+        <Tabs initialSelectedIndex={0} style={styles.tabs}>
+          <Tab title="Active">
+            {this.renderTable(groups.active)}
+          </Tab>
+          <Tab title="Draft">
+            {this.renderTable(groups.draft)}
+          </Tab>
+          <Tab title="Past">
+            {this.renderTable(groups.past)}
+          </Tab>
+        </Tabs>
+
         {
           this.state.showConfirmDialog ?
           <div style={ styles.confirmOverlay }>
@@ -105,10 +130,16 @@ const styles = {
     flexWrap: 'wrap'
   },
   list: {
-    width: '100%'
+    width: '100%',
+    border: 'none'
   },
   row: {
-    cursor: 'pointer'
+    cursor: 'pointer',
+    borderBottom: '1px solid ' + settings.lightGrey,
+    backgroundColor: 'white',
+    ':hover': {
+      backgroundColor: settings.lightGrey
+    }
   },
   confirmOverlay: {
     background: 'rgba(0,0,0,.7)',
@@ -147,5 +178,10 @@ const styles = {
   noButton: {
     left: '30px',
     bottom: '30px'
+  },
+  tabs: {
+    backgroundColor: 'white',
+    marginTop: 20,
+    clear: 'both'
   }
 };

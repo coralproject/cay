@@ -27,7 +27,9 @@ export default class UserDetail extends React.Component {
   }
 
   static propTypes = {
-    commentsLoading: PropTypes.bool.isRequired
+    commentsLoading: PropTypes.bool.isRequired,
+    breakdown: PropTypes.string,
+    specificBreakdown: PropTypes.string
   }
 
   // componentWillMount() {
@@ -70,17 +72,34 @@ export default class UserDetail extends React.Component {
   }
 
   getStats() {
+    let {breakdown, specificBreakdown} = this.props;
+    const {user} = this.props;
+
     let statsList = [];
-    if (_.has(this.props, 'user.statistics.comments.all.all')) {
+    specificBreakdown = specificBreakdown || 'all';
+    if (specificBreakdown === 'all') breakdown = 'all';
+
+    let dimension = user.statistics.comments[breakdown][specificBreakdown];
+
+    // Dont break the counts while loading
+    if (dimension && specificBreakdown !== 'all') {
+      dimension = dimension.all;
+    } else {
+      dimension = user.statistics.comments.all.all;
+    }
+
+    if (dimension) {
       statsList = statsList.concat([
-        <Stat term="Total comment count" description={this.props.user.statistics.comments.all.all.count} />,
-        <Stat term="Total replies received" description={this.props.user.statistics.comments.all.all.replied_count} />,
-        <Stat term="Total replies written" description={this.props.user.statistics.comments.all.all.reply_count} />,
-        <Stat term="% comments that are replies" description={Math.floor(this.props.user.statistics.comments.all.all.reply_ratio * 100) + '%'} />
+        <Stat term="Total comment count" description={dimension.count} />,
+        <Stat term="Total replies received" description={dimension.replied_count} />,
+        <Stat term="Total replies written" description={dimension.reply_count} />,
+        <Stat term="% comments that are replies" description={Math.floor(dimension.reply_ratio * 100) + '%'} />
       ]);
 
-      if (_.has(this.props, 'user.statistics.comments.all.CommunityFlagged')) {
-        statsList.push(<Stat term="Community flagged" description={this.props.user.statistics.comments.all.CommunityFlagged.count} />);
+      if (specificBreakdown === 'all' && _.has(this.props, 'user.statistics.comments.all.CommunityFlagged')) {
+        statsList.push(<Stat term="Community flagged"
+          description={this.props.user.statistics.comments.all.CommunityFlagged.count}
+        />);
       }
       return statsList;
     } else {
@@ -90,17 +109,17 @@ export default class UserDetail extends React.Component {
   createDetailsMarkup() {
     return (
       <div>
-        <Heading size="medium">{this.props.user.name}</Heading>
         <div style={styles.topPart}>
           <Avatar style={styles.avatar} src="/img/user_portrait_placeholder.png" size={100} />
+          <Heading size="medium">{this.props.user.name}</Heading>
         </div>
-        <p><MdLocalOffer /> Add/remove Tags for this Commenter</p>
+        {/*<p><MdLocalOffer /> Add/remove Tags for this Commenter</p>
         <Select
           multi={true}
           value={this.state.selectedTags}
           onChange={this.updateTags.bind(this)}
           options={this.getTags()}
-        />
+        />*/}
         <Tabs initialSelectedIndex={0} style={styles.tabs}>
           <Tab title="About">
             <Stats>
@@ -118,9 +137,6 @@ export default class UserDetail extends React.Component {
                   comments={this.props.comments} />
               )
             }
-          </Tab>
-          <Tab title="Notes">
-            <p>Watch out for her comments on Climate stories, she often corrects mistakes.</p>
           </Tab>
         </Tabs>
       </div>
@@ -150,14 +166,17 @@ const styles = {
     paddingRight: 20,
     paddingBottom: 20,
     paddingLeft: 20,
-    marginTop: 50
+    marginTop: 90
   },
   topPart: {
     display: 'flex',
-    marginBottom: 10
+    marginBottom: 10,
+    alignItems: 'center'
   },
   avatar: {
-    marginRight: 10
+    marginRight: 10,
+    width: 75,
+    height: 75
   },
   stats: {
     flex: 1

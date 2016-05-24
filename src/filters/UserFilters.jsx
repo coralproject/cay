@@ -3,7 +3,8 @@ import Radium from 'radium';
 import {connect} from 'react-redux';
 import _ from 'lodash';
 
-import { makeQueryFromState, clearUserList } from 'search/SearchActions';
+import { userSelected } from 'users/UsersActions';
+import { makeQueryFromState } from 'search/SearchActions';
 import {
   setBreakdown,
   setSpecificBreakdown,
@@ -14,6 +15,7 @@ import Select from 'react-select';
 import FilterNumbers from 'filters/FilterNumbers';
 import FilterNumberPercent from 'filters/FilterNumberPercent';
 import FilterDate from 'filters/FilterDate';
+import FilterDateProximity from 'filters/FilterDateProximity';
 
 import Heading from 'components/Heading';
 
@@ -25,20 +27,6 @@ export default class UserFilters extends React.Component {
     super(props);
   }
 
-  componentWillUpdate(nextProps) {
-    /*
-      only a filter or breakdown change updates the counter in the reducer.
-      if a filter changed, we trigger ajax.
-    */
-    if (this.props.counter !== nextProps.counter) {
-      // a filter changed, fire ajax,
-      this.updateUserList();
-    }
-  }
-  updateUserList() {
-    this.props.dispatch(clearUserList());
-    this.props.dispatch(makeQueryFromState('user', 0, true));
-  }
   getTags() {
     return this.props.tags.map(tag => {
       return {label: tag.description, value: tag.name};
@@ -73,8 +61,10 @@ export default class UserFilters extends React.Component {
 
   setSpecificBreakdown(specificBreakdown) {
     let newValue = specificBreakdown !== null ? specificBreakdown.value : '';
+    this.props.dispatch(userSelected(null));
     this.props.dispatch(setSpecificBreakdown(newValue));
     this.props.dispatch(getFilterRanges('user'));
+    this.props.dispatch(makeQueryFromState('user', 0, true));
   }
 
   getAuthors() {
@@ -103,6 +93,7 @@ export default class UserFilters extends React.Component {
 
     this.props.dispatch(setBreakdown(newValue));
     this.props.dispatch(setSpecificBreakdown(''));
+
     if (newValue === 'all') {
       this.props.dispatch(getFilterRanges('user'));
     }
@@ -116,15 +107,15 @@ export default class UserFilters extends React.Component {
       let filterComponent;
       const fmtDesc = f.description.charAt(0).toUpperCase() + f.description.slice(1, f.description.length);
       const inTitleCase = _.map(f.description.split(' '), _.capitalize).join(' ');
-
       if (f.type === 'percentRange') {
         filterComponent = (
           <FilterNumberPercent
+            onChange={this.props.onChange}
             key={i}
             min={f.min}
             max={f.max}
-            userMin={f.userMin}
-            userMax={f.userMax}
+            userMin={Math.max(f.userMin, f.min)}
+            userMax={Math.min(f.userMax, f.max)}
             description={fmtDesc}
             fieldName={f.key}
             type={f.type}/>
@@ -133,11 +124,12 @@ export default class UserFilters extends React.Component {
         // capitalize first letter of description
         filterComponent = (
           <FilterNumbers
+            onChange={this.props.onChange}
             key={i}
             min={f.min}
             max={f.max}
-            userMin={f.userMin}
-            userMax={f.userMax}
+            userMin={Math.max(f.userMin, f.min)}
+            userMax={Math.min(f.userMax, f.max)}
             description={inTitleCase}
             fieldName={f.key}
             type={f.type}/>
@@ -145,6 +137,7 @@ export default class UserFilters extends React.Component {
       } else if (f.type === 'dateRange') {
         filterComponent = (
           <FilterDate
+            onChange={this.props.onChange}
             key={i}
             min={f.min}
             max={f.max}
@@ -153,6 +146,20 @@ export default class UserFilters extends React.Component {
             description={inTitleCase}
             type={f.type}
             fieldName={f.key} />
+        );
+      } else if (f.type === 'intDateProximity') {
+        filterComponent = (
+          <FilterDateProximity
+            onChange={this.props.onChange}
+            key={i}
+            min={f.min}
+            max={f.max}
+            userMin={f.userMin}
+            userMax={f.userMax}
+            description={inTitleCase}
+            type={f.type}
+            fieldName={f.key}
+            />
         );
       }
 

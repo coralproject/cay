@@ -52,7 +52,7 @@ export default class SearchEditor extends React.Component {
         <ContentHeader title={ window.L.t('Search Editor') } />
 
         {
-          this.props.searches.editableSearchLoading && this.props.search.editableSearch ?
+          this.props.searches.editableSearchLoading && this.props.searches.editableSearch ?
           <p>Loading Saved Search...</p> :
           <div style={styles.base}>
             <div style={styles.filters}>

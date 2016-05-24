@@ -5,6 +5,8 @@ const initialState = {
   loading: false,
   loadingQueryset: false,
   activeQuery: null,
+  editableSearch: null, // this search controls the SearchEditor component
+  editableSearchLoading: false,
   pendingSavedSearch: null, // when the search is being prepared to be saved in pillar
   users: [],
   searches: [],
@@ -67,6 +69,15 @@ const searches = (state = initialState, action) => {
 
   case types.PILLAR_SEARCH_DELETE_FAILURE:
     return {...state, pendingDeleteSearch: null};
+
+  case types.PILLAR_EDIT_SEARCH_REQUEST:
+    return {...state, editableSearchLoading: true};
+
+  case types.PILLAR_EDIT_SEARCH_SUCCESS:
+    return {...state, editableSearch: action.search, editableSearchLoading: false};
+
+  case types.PILLAR_EDIT_SEARCH_FAILED:
+    return {...state, editableSearch: null, editableSearchLoading: false};
 
   case types.CLEAR_USER_LIST:
     return {...state, users: []};

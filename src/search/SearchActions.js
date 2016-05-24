@@ -32,6 +32,14 @@ export const PILLAR_SEARCH_DELETE_INIT = 'PILLAR_SEARCH_DELETE_INIT';
 export const PILLAR_SEARCH_DELETED = 'PILLAR_SEARCH_DELETED';
 export const PILLAR_SEARCH_DELETE_FAILURE = 'PILLAR_SEARCH_DELETE_FAILURE';
 
+export const PILLAR_SEARCH_REQUEST = 'PILLAR_SEARCH_REQUEST';
+export const PILLAR_SEARCH_SUCCESS = 'PILLAR_SEARCH_SUCCESS';
+export const PILLAR_SEARCH_FAILED = 'PILLAR_SEARCH_FAILED';
+
+export const PILLAR_EDIT_SEARCH_REQUEST = 'PILLAR_EDIT_SEARCH_REQUEST';
+export const PILLAR_EDIT_SEARCH_SUCCESS = 'PILLAR_EDIT_SEARCH_SUCCESS';
+export const PILLAR_EDIT_SEARCH_FAILED = 'PILLAR_EDIT_SEARCH_FAILED';
+
 export const CLEAR_USER_LIST = 'CLEAR_USER_LIST';
 export const CLEAR_USER = 'CLEAR_USER';
 
@@ -60,7 +68,66 @@ const receivedSearches = (searches) => {
 const searchesFailed = (error) => {
   return {type: PILLAR_SEARCHLIST_FAILED, error};
 };
+const requestSearch = () => {
+  return {type: PILLAR_SEARCH_REQUEST};
+};
 
+const receivedSearch = search => {
+  return {type: PILLAR_SEARCH_SUCCESS, search};
+};
+
+const searchFailed = error => {
+  return {type: PILLAR_SEARCH_FAILED, error};
+};
+
+// get data about a single Saved Search
+export const fetchSearch = (id) => {
+  return (dispatch, getState) => {
+    dispatch(requestSearch());
+
+    const app = getState().app;
+
+    fetch(`${app.pillarHost}/api/search/${id}`)
+      .then(resp => resp.json())
+      .then(search => {
+        dispatch(receivedSearch(search));
+      })
+      .catch(error => {
+        dispatch(searchFailed(error));
+      });
+  };
+};
+
+const requestEditSearch = () => {
+  return {type: PILLAR_EDIT_SEARCH_REQUEST};
+};
+
+const receivedEditSearch = search => {
+  return {type: PILLAR_EDIT_SEARCH_SUCCESS, search};
+};
+
+const searchEditFetchFailed = error => {
+  return {type: PILLAR_EDIT_SEARCH_FAILED, error};
+};
+
+export const fetchSearchForEdit = id => {
+  return (dispatch, getState) => {
+    const app = getState().app;
+
+    dispatch(requestEditSearch(id));
+
+    fetch(`${app.pillarHost}/api/search/${id}`)
+      .then(resp => resp.json())
+      .then(search => {
+        dispatch(receivedEditSearch(search));
+      })
+      .catch(error => {
+        dispatch(searchEditFetchFailed(error));
+      });
+  };
+};
+
+// get a list of Saved Searches from Pillar
 export const fetchSearches = () => {
   return (dispatch, getState) => {
     dispatch(requestSearches());
@@ -196,7 +263,7 @@ export const makeQueryFromState = (type, page = 0, replace = false) => {
     if(filterState.sortBy) {
       const { breakdown, specificBreakdown, sortBy } = filterState;
       const field = _.template(sortBy[0])
-        ({dimension: `${breakdown}${specificBreakdown ? `.${specificBreakdown}` : ''}`});;
+        ({dimension: `${breakdown}${specificBreakdown ? `.${specificBreakdown}` : ''}`});
       x.sort([field, sortBy[1]]);
     }
     x.skip(page * pageSize).limit(pageSize)
@@ -236,14 +303,14 @@ const doPutQuery = (dispatch, state, name, desc, tag) => {
   // strip out $limt and $skip commands before saving
   query.queries[0].commands.forEach((command) => {
     if (typeof command.$skip !== 'undefined') {
-      command.$skip = '#number:skip'
+      command.$skip = '#number:skip';
     } else if (typeof command.$limit !== 'undefined') {
-      command.$limit = '#number:limit'
+      command.$limit = '#number:limit';
     }
   });
 
   query.queries[0].commands.unshift({
-    $sort: { "#string:sort": -1 }
+    $sort: { '#string:sort': -1 }
   });
 
   query.name = name;

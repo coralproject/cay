@@ -59,6 +59,10 @@ class SeeAllSearches extends React.Component {
     this.setState({pendingDeleteSearch: search, deleteModalOpen: true});
   }
 
+  editSearch(search) {
+
+  }
+
   getStyles() {
     return {
       base: {
@@ -73,6 +77,15 @@ class SeeAllSearches extends React.Component {
       return (
         <Card style={styles.searchCard} key={i}>
           <CardHeader>{search.name}</CardHeader>
+          <Button
+            size="small"
+            category="primary"
+            style={styles.editButton}
+            onClick={this.editSearch.bind(this, search)}>
+            <Link
+              style={styles.editSearchLink}
+              to={`/edit-search/${search.id}`}>{window.L.t('Edit')}</Link>
+          </Button>
           <Button
             size="small"
             category="danger"
@@ -157,6 +170,9 @@ const styles = {
   viewSearchLink: {
     marginRight: 20
   },
+  editSearchLink: {
+    color: 'white'
+  },
   searchCard: {
     marginBottom: 0,
     marginTop: 20,
@@ -172,6 +188,11 @@ const styles = {
     position: 'absolute',
     top: 8,
     right: 8
+  },
+  editButton: {
+    position: 'absolute',
+    top: 8,
+    right: 70
   },
   searchDescription: {
     marginBottom: 10,

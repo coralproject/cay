@@ -5,7 +5,7 @@ import Radium from 'radium';
 import {connect} from 'react-redux';
 import {getFilterRanges} from 'filters/FiltersActions';
 
-import FilterFactory from 'filters/FilterFactory';
+import UserFilters from 'filters/UserFilters';
 
 @connect(state => state.filters)
 @Radium
@@ -18,27 +18,11 @@ export default class SearchFilters extends React.Component {
   componentDidMount() {
     this.props.dispatch(getFilterRanges('user'));
   }
-  // we don't want to request 10000 hourly intervals,
-  // so compute resonable bin size
-  getSensibleInterval(start, end) {
-    const hour = 1000 * 60 * 60;
-    const day = hour * 24;
-    const week = day * 7;
-    const diff = end - start;
-
-    if (diff / day < 300) {
-      return 'day';
-    } else if (diff / week < 300) {
-      return 'week';
-    } else {
-      return 'month';
-    }
-  }
 
   render() {
     return (
       <div>
-        <FilterFactory type='user' onChange={this.props.onChange} />
+        <UserFilters onChange={this.props.onChange} />
       </div>
     );
   }

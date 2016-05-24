@@ -24,7 +24,6 @@ import UserDetail from 'users/UserDetail';
 import SearchFilters from 'search/SearchFilters';
 import Button from 'components/Button';
 import FaFloopyO from 'react-icons/lib/fa/floppy-o';
-import MdEdit from 'react-icons/lib/md/edit';
 import Modal from 'components/modal/Modal';
 import TextField from 'components/forms/TextField';
 import StatusBar from 'components/StatusBar';
@@ -123,9 +122,6 @@ export default class SearchCreator extends Component {
           </div>
 
           <div style={styles.rightPanel}>
-            <Button category="disabled" style={styles.editButton}>
-              Edit Search <MdEdit style={styles.saveIcon} />
-            </Button>
             <Button onClick={this.openModal.bind(this)} category="primary" style={styles.saveButton}>
               Save Search <FaFloopyO style={styles.saveIcon} />
             </Button>
@@ -228,9 +224,5 @@ const styles = {
   },
   saveButton: {
     float: 'right'
-  },
-  editButton: {
-    float: 'right',
-    marginLeft: 10
   }
 };

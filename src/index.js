@@ -18,6 +18,7 @@ import TagManager from 'app/TagManager';
 import Login from 'app/Login';
 import SeeAllSearches from 'app/SeeAllSearches';
 import SearchDetail from 'app/SearchDetail';
+import SearchEditor from 'app/SearchEditor';
 import NoMatch from 'app/NoMatch';
 import About from 'app/About';
 
@@ -78,6 +79,7 @@ class Root extends React.Component {
             <Route path="tag-manager" component={TagManager} />
             <Route path="saved-searches" component={SeeAllSearches}/>
             <Route path="saved-search/:name" component={SearchDetail} />
+            <Route path="edit-search/:id" component={SearchEditor} />
             <Route path="*" component={NoMatch} />
             {/*<Route path="explore" component={DataExplorer} />*/}
           </Router>

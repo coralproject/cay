@@ -45,7 +45,7 @@
     },
 
 
-    
+
     {
       "name": "Replied",
       "category": "Activity",
@@ -103,7 +103,7 @@
       "category": "Moderation",
       "field": "ModeratorDeleted",
       "template": "statistics.comments.<%= dimension %>.ratios.ModeratorDeleted",
-      "description": "Percent ModeratorDeleted",
+      "description": "Percent moderator deleted",
       "collection": "user_statistics",
       "type": "percentRange"
     },
@@ -112,7 +112,7 @@
       "category": "Activity",
       "field": "count",
       "template": "statistics.comments.<%= dimension %>.ModeratorDeleted.count",
-      "description": "Number ModeratorDeleted",
+      "description": "Number moderator deleted",
       "collection": "user_statistics",
       "type": "intRange"
     },
@@ -121,7 +121,7 @@
       "category": "Activity",
       "field": "last",
       "template": "statistics.comments.<%= dimension %>.ModeratorDeleted.last",
-      "description": "Last time ModeratorDeleted",
+      "description": "Last time moderator deleted",
       "collection": "user_statistics",
       "type": "intDateProximity"
     },
@@ -130,7 +130,7 @@
       "category": "Activity",
       "field": "replied_ratio",
       "template": "statistics.comments.<%= dimension %>.ModeratorDeleted.replied_ratio",
-      "description": "% of ModeratorDeleted that were replies",
+      "description": "% of moderator deleted that were replies",
       "collection": "user_statistics",
       "type": "percentRange"
     },
@@ -139,7 +139,7 @@
       "category": "Activity",
       "field": "replied_ratio",
       "template": "statistics.comments.<%= dimension %>.ModeratorDeleted.reply_ratio",
-      "description": "% of ModeratorDeleted that got replies",
+      "description": "% of moderator deleted that got replies",
       "collection": "user_statistics",
       "type": "percentRange"
     },
@@ -153,7 +153,7 @@
       "category": "Moderation",
       "field": "ModeratorApproved",
       "template": "statistics.comments.<%= dimension %>.ratios.ModeratorApproved",
-      "description": "Percent ModeratorApproved",
+      "description": "Percent moderator approved",
       "collection": "user_statistics",
       "type": "percentRange"
     },
@@ -162,7 +162,7 @@
       "category": "Moderation",
       "field": "SystemFlagged",
       "template": "statistics.comments.<%= dimension %>.ratios.SystemFlagged",
-      "description": "Percent SystemFlagged",
+      "description": "Percent system flagged",
       "collection": "user_statistics",
       "type": "percentRange"
     },
@@ -171,7 +171,7 @@
       "category": "Moderation",
       "field": "CommunityFlagged",
       "template": "statistics.comments.<%= dimension %>.ratios.CommunityFlagged",
-      "description": "Percent CommunityFlagged",
+      "description": "Percent community flagged",
       "collection": "user_statistics",
       "type": "percentRange"
     },
@@ -180,7 +180,7 @@
       "category": "Moderation",
       "field": "Untouched",
       "template": "statistics.comments.<%= dimension %>.ratios.Untouched",
-      "description": "Percent Untouched",
+      "description": "Percent untouched",
       "collection": "user_statistics",
       "type": "percentRange"
     },

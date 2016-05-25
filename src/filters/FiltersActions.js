@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import {clamp} from 'components/utils/math';
 import {xenia} from 'app/AppActions';
 import {makeQueryFromState} from 'search/SearchActions';
 
@@ -99,8 +100,7 @@ export const setSpecificBreakdown = (specificBreakdown) => {
   };
 };
 
-const parseFilterRanges = (ranges) => {
-
+const parseFilterRanges = (ranges, filterState) => {
   const newFilters = _.reduce(ranges, (accum, value, aggKey) => {
     let [key, field] = aggKey.split('_');
 
@@ -109,6 +109,9 @@ const parseFilterRanges = (ranges) => {
     // we might have already updated the old filter with the min value
     // retrieve it from the accumulator in progress instead of the state
     let newFilter = _.has(accum, key) ? accum[key] : {};
+    const oldFilter = filterState[key];
+    const clampedUserMin = clamp(oldFilter.userMin, oldFilter.min, oldFilter.max);
+    const clampedUserMax = clamp(oldFilter.userMax, oldFilter.min, oldFilter.max);
 
     const possibleDateValue = new Date(value);
     // if it's a Date, change the type
@@ -121,9 +124,10 @@ const parseFilterRanges = (ranges) => {
     accum[key] = newFilter;
 
     // on the first pass, go ahead and force a change on userMin and userMax
-    if (field === 'min') {
+    // but only if the userMin and userMax are defaults.
+    if (field === 'min' && +oldFilter.min === +clampedUserMin) {
       newFilter.userMin = value;
-    } else if (field === 'max') {
+    } else if (field === 'max' && +oldFilter.max === +clampedUserMax) {
       newFilter.userMax = value;
     }
 
@@ -182,18 +186,16 @@ export const getFilterRanges = () => {
       enabled: true
     };
 
-    // dispatch({type: REQUEST_FILTER_RANGES});
-
     xenia(query).exec()
       .then(data => {
         const doc = data.results[0].Docs[0];
-        // console.log('gs',getState());
         let counter = getState().filters.counter;
         counter++;
 
         dispatch({
           type: RECEIVE_FILTER_RANGES,
-          data: parseFilterRanges(doc, filterState),
+          // get filterState again, as it might have changed
+          data: parseFilterRanges(doc, getState().filters),
           counter
         });
       }).catch(err => {

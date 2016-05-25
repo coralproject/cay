@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import {fetchSearchForEdit, makeQueryFromState} from 'search/SearchActions';
 import {userSelected} from 'users/UsersActions';
-import {filterChanged} from 'filters/FiltersActions';
+import {filterChanged, getFilterRanges} from 'filters/FiltersActions';
 import {fetchCommentsByUser} from 'comments/CommentsActions';
 
 import Button from 'components/Button';
@@ -33,6 +33,7 @@ export default class SearchEditor extends React.Component {
   componentWillMount() {
     console.log('params!', this.props.params);
     this.props.dispatch(fetchSearchForEdit(this.props.params.id));
+    this.props.dispatch(getFilterRanges('user'));
   }
 
   confirmSave() {

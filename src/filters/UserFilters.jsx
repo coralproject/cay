@@ -10,7 +10,6 @@ import {
   setSpecificBreakdown,
   getFilterRanges} from 'filters/FiltersActions';
 
-
 import Select from 'react-select';
 import FilterNumbers from 'filters/FilterNumbers';
 import FilterNumberPercent from 'filters/FilterNumberPercent';
@@ -22,14 +21,6 @@ import Heading from 'components/Heading';
 @connect(state => state.filters)
 @Radium
 export default class UserFilters extends React.Component {
-
-  constructor(props) {
-    super(props);
-  }
-
-  componentDidMount() {
-    this.props.dispatch(getFilterRanges('user'));
-  }
 
   getTags() {
     return this.props.tags.map(tag => {

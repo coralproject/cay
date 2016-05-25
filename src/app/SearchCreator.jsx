@@ -12,10 +12,8 @@ import { mediumGrey } from 'settings';
 
 import { userSelected } from 'users/UsersActions';
 import { fetchCommentsByUser } from 'comments/CommentsActions';
-import { saveQueryFromState, makeQueryFromState } from 'search/SearchActions';
-import { fetchInitialData } from 'search/SearchActions';
-import { filterChanged } from 'filters/FiltersActions';
-
+import { saveQueryFromState, makeQueryFromState, fetchInitialData } from 'search/SearchActions';
+import { filterChanged, getFilterRanges } from 'filters/FiltersActions';
 
 import Page from 'app/layout/Page';
 import ContentHeader from 'components/ContentHeader';
@@ -63,6 +61,7 @@ export default class SearchCreator extends Component {
     // set up the initial default / unfiltered view
     // this was previously in UserFilters
     this.props.dispatch(fetchInitialData());
+    this.props.dispatch(getFilterRanges('user'));
   }
 
   updateUser(user) {

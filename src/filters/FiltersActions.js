@@ -101,6 +101,12 @@ const parseFilterRanges = (ranges, filterState) => {
 
   const newFilters = _.reduce(ranges, (accum, value, aggKey) => {
     let [key, field] = aggKey.split('_');
+    if (field !== 'id' && filterState[key].type === 'intDateProximity') {
+      const day = 1000 * 60 * 60 * 24;
+      const now = new Date();
+      const dateValue = new Date(value);
+      value = Math.ceil(Math.abs((now - dateValue) / day));
+    }
 
     if (field === 'id' || value === null) return accum;
 

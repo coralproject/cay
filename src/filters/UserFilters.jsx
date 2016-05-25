@@ -27,6 +27,10 @@ export default class UserFilters extends React.Component {
     super(props);
   }
 
+  componentDidMount() {
+    this.props.dispatch(getFilterRanges('user'));
+  }
+
   getTags() {
     return this.props.tags.map(tag => {
       return {label: tag.description, value: tag.name};

@@ -10,7 +10,8 @@ import {fetchCommentsByUser} from 'comments/CommentsActions';
 import Button from 'components/Button';
 import Page from 'app/layout/Page';
 import ContentHeader from 'components/ContentHeader';
-import SearchFilters from 'search/SearchFilters';
+// import SearchFilters from 'search/SearchFilters';
+import UserFilters from 'filters/UserFilters';
 import FaFloopyO from 'react-icons/lib/fa/floppy-o';
 import UserList from 'users/UserList';
 import UserDetail from 'users/UserDetail';
@@ -31,6 +32,13 @@ export default class SearchEditor extends React.Component {
   componentWillMount() {
     console.log('params!', this.props.params);
     this.props.dispatch(fetchSearchForEdit(this.props.params.id));
+  }
+
+  componentWillUpdate(props) {
+    // if the search has been loaded, update filter state?
+    if (props.searches.editableSearch && this.props.params.id === props.searches.editableSearch.id) {
+      console.log('editableSearch', props.searches.editableSearch);
+    }
   }
 
   confirmSave() {
@@ -62,7 +70,7 @@ export default class SearchEditor extends React.Component {
           <p>Loading Saved Search...</p> :
           <div style={styles.base}>
             <div style={styles.filters}>
-              <SearchFilters onChange={this.onFilterChange.bind(this)} userOnly={true} />
+              <UserFilters onChange={this.onFilterChange.bind(this)} />
             </div>
             <div style={styles.rightPanel}>
               <Button

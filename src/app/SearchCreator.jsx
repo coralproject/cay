@@ -21,7 +21,7 @@ import Page from 'app/layout/Page';
 import ContentHeader from 'components/ContentHeader';
 import UserList from 'users/UserList';
 import UserDetail from 'users/UserDetail';
-import SearchFilters from 'search/SearchFilters';
+import UserFilters from 'filters/UserFilters';
 import Button from 'components/Button';
 import FaFloopyO from 'react-icons/lib/fa/floppy-o';
 import Modal from 'components/modal/Modal';
@@ -118,7 +118,7 @@ export default class SearchCreator extends Component {
 
         <div style={styles.base}>
           <div style={styles.filters}>
-            <SearchFilters onChange={this.onFilterChange.bind(this)} userOnly={true}/>
+            <UserFilters onChange={this.onFilterChange.bind(this)} />
           </div>
 
           <div style={styles.rightPanel}>

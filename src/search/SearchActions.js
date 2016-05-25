@@ -184,12 +184,10 @@ export const makeQueryFromState = (type, page = 0, replace = false) => {
           if (_.isDate(clampedUserMin)) {
             searchMin = `#date:${clampedUserMin.toISOString()}`;
           } else if (filter.type === 'intDateProximity') {
-            searchMin = `#time:${clampedUserMin}`;
-            searchMin = `#time:${clampedUserMin*24}h`;
+            searchMin = `#time:${-clampedUserMin*24}h`;
           } else {
             searchMin = clampedUserMin;
           }
-
 
           x.match({[dbField]: {$gte: searchMin}});
         }

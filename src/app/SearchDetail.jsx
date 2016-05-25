@@ -55,7 +55,7 @@ export default class SearchDetail extends React.Component {
       })
       .then((res) => {
         this.setState({
-          queryset: res,
+          queryset: res.results[1],
           users: this.state.users.concat(res.results[0].Docs),
           count: res.results[1].Docs[0].count,
           loading: false,
@@ -113,7 +113,7 @@ export default class SearchDetail extends React.Component {
     return (
 
       <Page>
-        <ContentHeader title={search.name}/>
+        <ContentHeader title={search.Name}/>
         <p style={styles.description}>Description: {search.description}</p>
         <div style={styles.base}>
           <UserList

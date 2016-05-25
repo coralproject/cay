@@ -17,16 +17,12 @@ export default class FilterDateProximity extends React.Component {
 
   onMinChanged(e) {
     const val = e.target.value;
-    const date = new Date();
-    date.setDate(date.getDate() - val);
-    this.props.onChange(this.props.fieldName, 'userMin', date);
+    this.props.onChange(this.props.fieldName, 'userMin', val);
   }
 
   onMaxChanged(e) {
     const val = e.target.value;
-    const date = new Date();
-    date.setDate(date.getDate() - val);
-    this.props.onChange(this.props.fieldName, 'userMax', date);
+    this.props.onChange(this.props.fieldName, 'userMax', val);
   }
 
   render() {
@@ -43,13 +39,13 @@ export default class FilterDateProximity extends React.Component {
             onChange={this.onMinChanged.bind(this)}
             style={styles.minMaxInputs}
             type="number"
-            value={this.dayDiff(now, this.props.userMin)} />
+            value={this.props.userMin} />
           {' - '}
           <input
             onChange={this.onMaxChanged.bind(this)}
             style={styles.minMaxInputs}
             type="number"
-            value={this.dayDiff(now, this.props.userMax)} />
+            value={this.props.userMax} />
         </div>
       </Card>
     );

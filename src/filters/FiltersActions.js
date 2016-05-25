@@ -2,6 +2,8 @@ import _ from 'lodash';
 import {xenia} from 'app/AppActions';
 import {makeQueryFromState} from 'search/SearchActions';
 
+export const DATA_CONFIG_REQUEST = 'DATA_CONFIG_REQUEST';
+
 export const REQUEST_SECTIONS = 'REQUEST_SECTIONS';
 export const RECEIVE_SECTIONS = 'RECEIVE_SECTIONS';
 export const REQUEST_AUTHORS = 'REQUEST_AUTHORS';
@@ -97,7 +99,7 @@ export const setSpecificBreakdown = (specificBreakdown) => {
   };
 };
 
-const parseFilterRanges = (ranges, filterState) => {
+const parseFilterRanges = (ranges) => {
 
   const newFilters = _.reduce(ranges, (accum, value, aggKey) => {
     let [key, field] = aggKey.split('_');
@@ -251,10 +253,10 @@ const fetchDistributions = () => {
   };
 };
 
-const fetchDistributionsSuccess = (data) => {
+const fetchDistributionsSuccess = (distros) => {
   return {
     type: FETCH_DISTRIBUTIONS_SUCCESS,
-    data: data
+    distros
   };
 };
 
@@ -300,6 +302,7 @@ const inputValues = [
 
 export const populateDistributionStore = () => {
   return (dispatch) => {
+    dispatch(fetchDistributions());
     const x = xenia({name: 'distributions'});
 
     inputValues.map((inputValue) => {
@@ -312,10 +315,9 @@ export const populateDistributionStore = () => {
       data.results.map((result, i) => {
         merged[inputValues[i]] = result.Docs;
       });
-      dispatch({
-        type: FETCH_DISTRIBUTIONS_SUCCESS,
-        distros: merged
-      });
+      dispatch(fetchDistributionsSuccess(merged));
+    }).catch(error => {
+      dispatch(fetchDistributionsError(error));
     });
   };
 };

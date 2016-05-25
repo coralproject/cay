@@ -15,6 +15,7 @@ import UserFilters from 'filters/UserFilters';
 import FaFloopyO from 'react-icons/lib/fa/floppy-o';
 import UserList from 'users/UserList';
 import UserDetail from 'users/UserDetail';
+import Clauses from 'search/Clauses';
 
 const mapStateToProps = state => {
   return {
@@ -32,13 +33,6 @@ export default class SearchEditor extends React.Component {
   componentWillMount() {
     console.log('params!', this.props.params);
     this.props.dispatch(fetchSearchForEdit(this.props.params.id));
-  }
-
-  componentWillUpdate(props) {
-    // if the search has been loaded, update filter state?
-    if (props.searches.editableSearch && this.props.params.id === props.searches.editableSearch.id) {
-      console.log('editableSearch', props.searches.editableSearch);
-    }
   }
 
   confirmSave() {
@@ -64,9 +58,10 @@ export default class SearchEditor extends React.Component {
     return (
       <Page>
         <ContentHeader title={ window.L.t('Search Editor') } />
+        <Clauses />
 
         {
-          this.props.searches.editableSearchLoading && this.props.searches.editableSearch ?
+          this.props.searches.editableSearchLoading && !this.props.searches.editableSearch ?
           <p>Loading Saved Search...</p> :
           <div style={styles.base}>
             <div style={styles.filters}>
@@ -77,7 +72,7 @@ export default class SearchEditor extends React.Component {
                 onClick={this.confirmSave.bind(this)}
                 category="primary"
                 style={styles.saveButton}>
-                Save Search <FaFloopyO style={styles.saveIcon} />
+                Update Search <FaFloopyO style={styles.saveIcon} />
               </Button>
               <div style={styles.userListContainer}>
                 <UserList

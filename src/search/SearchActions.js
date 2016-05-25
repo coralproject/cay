@@ -12,8 +12,6 @@ export const QUERYSET_REQUEST_FAILURE = 'QUERYSET_REQUEST_FAILURE';
 export const QUERYSETS_RECEIVED = 'QUERYSETS_RECEIVED';
 export const QUERYSET_RECEIVED = 'QUERYSET_RECEIVED';
 
-export const RECEIVE_FILTER_RANGES = 'RECEIVE_FILTER_RANGES';
-
 export const QUERYSET_SAVE_SUCCESS = 'QUERYSET_SAVE_SUCCESS';
 export const QUERYSET_SAVE_FAILED = 'QUERYSET_SAVE_FAILED';
 export const CREATE_QUERY = 'CREATE_QUERY';
@@ -102,8 +100,8 @@ const requestEditSearch = () => {
   return {type: PILLAR_EDIT_SEARCH_REQUEST};
 };
 
-const receivedEditSearch = search => {
-  return {type: PILLAR_EDIT_SEARCH_SUCCESS, search};
+const receivedEditSearch = (search, filters) => {
+  return {type: PILLAR_EDIT_SEARCH_SUCCESS, search, filters};
 };
 
 const searchEditFetchFailed = error => {
@@ -112,14 +110,25 @@ const searchEditFetchFailed = error => {
 
 export const fetchSearchForEdit = id => {
   return (dispatch, getState) => {
-    const app = getState().app;
+    const {app, filters} = getState();
 
     dispatch(requestEditSearch(id));
 
     fetch(`${app.pillarHost}/api/search/${id}`)
       .then(resp => resp.json())
       .then(search => {
-        dispatch(receivedEditSearch(search));
+
+        const updatedFilters = _.reduce(filters.filterList, (accum, key) => {
+          const oldFilter = filters[key];
+          const savedFilter = _.find(search.filters.values, {name: oldFilter.name});
+          if (savedFilter) {
+            // this could probably be more succinct with destructuring, but I was in a hurry
+            accum[key] = _.assign({}, oldFilter, _.pick(savedFilter, ['userMin', 'userMax', 'min', 'max']));
+          }
+          return accum;
+        }, {});
+
+        dispatch(receivedEditSearch(search, updatedFilters));
       })
       .catch(error => {
         dispatch(searchEditFetchFailed(error));

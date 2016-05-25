@@ -73,6 +73,7 @@ const searches = (state = initialState, action) => {
   case types.PILLAR_EDIT_SEARCH_REQUEST:
     return {...state, editableSearchLoading: true};
 
+  // saved search loaded from pillar to be edited
   case types.PILLAR_EDIT_SEARCH_SUCCESS:
     console.log(types.PILLAR_EDIT_SEARCH_SUCCESS, action);
     return {...state, editableSearch: action.search, editableSearchLoading: false};

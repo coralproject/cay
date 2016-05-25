@@ -1,5 +1,8 @@
 import _ from 'lodash';
-import * as types from 'filters/FiltersActions';
+import * as filterTypes from 'filters/FiltersActions';
+import * as searchTypes from 'search/SearchActions';
+
+const types = {...filterTypes, ...searchTypes};
 
 let initialState = {
   configLoaded: false,
@@ -97,6 +100,10 @@ const filters = (state = initialState, action) => {
     newState[action.name].userMin = newState[action.name].min;
     newState[action.name].userMax = newState[action.name].max;
     return {...newState, dirtyFilters: []};
+
+  // a Saved Search was loaded from Pillar to be edited
+  case types.PILLAR_EDIT_SEARCH_SUCCESS:
+    return {...state, ...action.filters};
 
   case types.SORT:
     const sortBy = action.template ? [action.template, action.direction] : null;

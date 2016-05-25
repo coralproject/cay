@@ -1,8 +1,11 @@
 import React from 'react';
 import Radium from 'radium';
 import { connect } from 'react-redux';
-import {fetchSearchForEdit} from 'search/SearchActions';
+
+import {fetchSearchForEdit, makeQueryFromState} from 'search/SearchActions';
 import {userSelected} from 'users/UsersActions';
+import {filterChanged} from 'filters/FiltersActions';
+import {fetchCommentsByUser} from 'comments/CommentsActions';
 
 import Button from 'components/Button';
 import Page from 'app/layout/Page';
@@ -36,14 +39,17 @@ export default class SearchEditor extends React.Component {
 
   onFilterChange(fieldName, attr, val) {
     this.props.dispatch(userSelected(null));
+    this.props.dispatch(filterChanged(fieldName, {[attr]: val}));
+    this.props.dispatch(makeQueryFromState('user', 0, true));
   }
 
-  onPagination() {
-
+  onPagination(page = 0) {
+    this.props.dispatch(makeQueryFromState('user', page));
   }
 
-  updateUser() {
-
+  updateUser(user) {
+    this.props.dispatch(userSelected(user));
+    this.props.dispatch(fetchCommentsByUser(user._id));
   }
 
   render() {
@@ -67,7 +73,7 @@ export default class SearchEditor extends React.Component {
               </Button>
               <div style={styles.userListContainer}>
                 <UserList
-                  total={1337}
+                  total={this.props.searches.userCount}
                   onPagination={this.onPagination.bind(this)}
                   loadingQueryset={this.props.searches.loadingQueryset}
                   users={this.props.searches.users} userSelected={this.updateUser.bind(this)} />

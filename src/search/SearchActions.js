@@ -176,10 +176,20 @@ export const makeQueryFromState = (type, page = 0, replace = false) => {
         const clampedUserMin = clamp(filter.userMin, filter.min, filter.max);
         const clampedUserMax = clamp(filter.userMax, filter.min, filter.max);
 
+
         // convert everything to numbers since equivalent Dates are not equal
         // this will break if a string literal is ever a filter value since NaN !== NaN
         if (+filter.min !== +clampedUserMin) {
-          const searchMin = _.isDate(clampedUserMin) ? `#date:${clampedUserMin.toISOString()}` : clampedUserMin;
+          let searchMin;
+          if (_.isDate(clampedUserMin)) {
+            searchMin = `#date:${clampedUserMin.toISOString()}`;
+          } else if (filter.type === 'intDateProximity') {
+            searchMin = `#time:${clampedUserMin}`;
+          } else {
+            searchMin = clampedUserMin;
+          }
+
+
           x.match({[dbField]: {$gte: searchMin}});
         }
 
@@ -285,9 +295,7 @@ const doPutQuery = (dispatch, state, name, desc, tag) => {
       };
 
       /*
-
-      {"id":"56fc126479770e0006b8bc97","name":"my-first-search","description":"wow, this description is super interesting","query":"this-is-the-name-of-a-xenia-query","tag":"name-of-tag","date_created":"2016-03-30T17:52:36.279477937Z","date_updated":"0001-01-01T00:00:00Z"}
-
+        {"id":"56fc126479770e0006b8bc97","name":"my-first-search","description":"wow, this description is super interesting","query":"this-is-the-name-of-a-xenia-query","tag":"name-of-tag","date_created":"2016-03-30T17:52:36.279477937Z","date_updated":"0001-01-01T00:00:00Z"}
       */
 
       fetch(state.app.pillarHost + '/api/search', {method: 'POST', body: JSON.stringify(body)})

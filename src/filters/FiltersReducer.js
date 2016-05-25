@@ -9,7 +9,6 @@ let initialState = {
   tags: [],
   authors: [],
   sections: [],
-  dirtyFilters: [], // non-default filters
   editableSearchFilters: [],
   loadingFilters: false,
   loadingUserList: false,
@@ -86,24 +85,30 @@ const filters = (state = initialState, action) => {
   case types.RECEIVE_FILTER_RANGES:
 
     const newFilters = _.reduce(action.data, (accum, filter, key) => {
-      accum[key] = Object.assign({}, state[key], action.data[key]);
+      accum[key] = _.assign({}, state[key], action.data[key]);
       return accum;
     }, {});
 
     return {...state, ...newFilters, counter: action.counter};
 
+  // this is really more of a soft reset, since we're not resetting the dimensions
   case types.RESET_FILTERS:
-    return {...state, dirtyFilters: []};
+    return {...state, ...action.filters};
 
   case types.RESET_FILTER:
     const newState = Object.assign({}, state);
     newState[action.name].userMin = newState[action.name].min;
     newState[action.name].userMax = newState[action.name].max;
-    return {...newState, dirtyFilters: []};
+    return {...newState};
 
   // a Saved Search was loaded from Pillar to be edited
   case types.PILLAR_EDIT_SEARCH_SUCCESS:
-    return {...state, ...action.filters};
+    return {
+      ...state,
+      ...action.filters,
+      breakdown: action.breakdown,
+      specificBreakdown: action.specificBreakdown
+    };
 
   case types.SORT:
     const sortBy = action.template ? [action.template, action.direction] : null;

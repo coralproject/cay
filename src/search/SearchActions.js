@@ -100,8 +100,8 @@ const requestEditSearch = () => {
   return {type: PILLAR_EDIT_SEARCH_REQUEST};
 };
 
-const receivedEditSearch = (search, filters) => {
-  return {type: PILLAR_EDIT_SEARCH_SUCCESS, search, filters};
+const receivedEditSearch = (search, filters, breakdown, specificBreakdown) => {
+  return {type: PILLAR_EDIT_SEARCH_SUCCESS, search, filters, breakdown, specificBreakdown};
 };
 
 const searchEditFetchFailed = error => {
@@ -118,9 +118,11 @@ export const fetchSearchForEdit = id => {
       .then(resp => resp.json())
       .then(search => {
 
+        const {breakdown, specificBreakdown, values} = search.filters;
+
         const updatedFilters = _.reduce(filters.filterList, (accum, key) => {
           const oldFilter = filters[key];
-          const savedFilter = _.find(search.filters.values, {name: oldFilter.name});
+          const savedFilter = _.find(values, {name: oldFilter.name});
           if (savedFilter) {
             // this could probably be more succinct with destructuring, but I was in a hurry
             accum[key] = _.assign({}, oldFilter, _.pick(savedFilter, ['userMin', 'userMax', 'min', 'max']));
@@ -128,7 +130,7 @@ export const fetchSearchForEdit = id => {
           return accum;
         }, {});
 
-        dispatch(receivedEditSearch(search, updatedFilters));
+        dispatch(receivedEditSearch(search, updatedFilters, breakdown, specificBreakdown));
       })
       .catch(error => {
         dispatch(searchEditFetchFailed(error));

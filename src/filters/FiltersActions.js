@@ -325,7 +325,15 @@ export const populateDistributionStore = () => {
 };
 
 export const resetFilters = () => {
-  return {type: RESET_FILTERS};
+  return (dispatch, getState) => {
+    const filters = getState().filters;
+    const resetFilters = filters.filterList.reduce((accum, key) => {
+      accum[key] = {...filters[key], userMin: filters[key].min, userMax: filters[key].max};
+      return accum;
+    }, {});
+
+    dispatch({type: RESET_FILTERS, filters: resetFilters});
+  };
 };
 
 export const resetFilter = name => dispatch => {

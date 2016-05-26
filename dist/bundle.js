@@ -37,7 +37,7 @@
 /******/ 	__webpack_require__.p = "/dist/";
 /******/
 /******/ 	// __webpack_hash__
-/******/ 	__webpack_require__.h = "719591827c4ae1181d68";
+/******/ 	__webpack_require__.h = "332070e020299ce29866";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
@@ -31746,7 +31746,6 @@
 	        _react2['default'].createElement(
 	          'div',
 	          { style: styles.topPart },
-	          _react2['default'].createElement(_usersAvatar2['default'], { style: styles.avatar, src: '/img/user_portrait_placeholder.png', size: 100 }),
 	          _react2['default'].createElement(
 	            _componentsHeading2['default'],
 	            { size: 'medium' },
@@ -31754,25 +31753,13 @@
 	          )
 	        ),
 	        _react2['default'].createElement(
-	          _componentsTabsTabs2['default'],
-	          { initialSelectedIndex: 0, style: styles.tabs },
-	          _react2['default'].createElement(
-	            _componentsTabsTab2['default'],
-	            { title: 'About' },
-	            _react2['default'].createElement(
-	              _componentsStatsStats2['default'],
-	              null,
-	              this.getStats()
-	            )
-	          ),
-	          _react2['default'].createElement(
-	            _componentsTabsTab2['default'],
-	            { title: 'Activity' },
-	            this.props.commentsLoading || !this.props.comments.length ? 'Loading Comments...' : _react2['default'].createElement(_commentsCommentDetailList2['default'], {
-	              user: this.props,
-	              comments: this.props.comments })
-	          )
-	        )
+	          'div',
+	          { style: styles.statsContainer },
+	          this.getStats()
+	        ),
+	        this.props.commentsLoading || !this.props.comments.length ? 'Loading Comments...' : _react2['default'].createElement(_commentsCommentDetailList2['default'], {
+	          user: this.props,
+	          comments: this.props.comments })
 	      );
 	    }
 	  }, {
@@ -31834,6 +31821,9 @@
 	  stats: {
 	    flex: 1
 	  },
+	  statsContainer: {
+	    marginBottom: 20
+	  },
 	  tabs: {
 	    marginTop: 20,
 	    clear: 'both'
@@ -31847,12 +31837,13 @@
 	  }
 	};
 	module.exports = exports['default'];
+	/*<Avatar style={styles.avatar} src="/img/user_portrait_placeholder.png" size={100} />*/
 	/*<p><MdLocalOffer /> Add/remove Tags for this Commenter</p>
 	<Select
-	 multi={true}
-	 value={this.state.selectedTags}
-	 onChange={this.updateTags.bind(this)}
-	 options={this.getTags()}
+	  multi={true}
+	  value={this.state.selectedTags}
+	  onChange={this.updateTags.bind(this)}
+	  options={this.getTags()}
 	/>*/
 
 /***/ },
@@ -51935,7 +51926,7 @@
 	        sort: this.state.sortBy
 	      }).then(function (res) {
 	        _this.setState({
-	          queryset: res,
+	          queryset: res.results[1],
 	          users: _this.state.users.concat(res.results[0].Docs),
 	          count: res.results[1].Docs[0].count,
 	          loading: false,
@@ -52002,7 +51993,7 @@
 	      return _react2['default'].createElement(
 	        _appLayoutPage2['default'],
 	        null,
-	        _react2['default'].createElement(_componentsContentHeader2['default'], { title: search.name }),
+	        _react2['default'].createElement(_componentsContentHeader2['default'], { title: search.Name }),
 	        _react2['default'].createElement(
 	          'p',
 	          { style: styles.description },
@@ -52126,6 +52117,8 @@
 	
 	var _settings2 = _interopRequireDefault(_settings);
 	
+	var RadiumLink = (0, _radium2['default'])(_reactRouter.Link);
+	
 	var mapStateToProps = function mapStateToProps(state) {
 	  return { searches: state.searches, app: state.app, auth: state.auth };
 	};
@@ -52143,7 +52136,7 @@
 	  _createClass(SeeAllSearches, [{
 	    key: 'componentWillMount',
 	
-	    // foo: "bar"
+	    // foo: 'bar'
 	    value: function componentWillMount() {
 	      // redirect user to /login if they're not logged in
 	      //   TODO: refactor: pass in a function that calculates auth state
@@ -52175,7 +52168,48 @@
 	    key: 'getStyles',
 	    value: function getStyles() {
 	      return {
-	        base: {}
+	        searchCard: {
+	          padding: 20
+	        },
+	        cardHeader: {
+	          fontSize: 24,
+	          fontWeight: 700,
+	          marginBottom: 10
+	        },
+	        topSection: {
+	          display: 'flex',
+	          justifyContent: 'space-between'
+	        },
+	        searchDescription: {
+	          fontSize: 16,
+	          marginBottom: 15,
+	          fontFamily: "Georgia, serif",
+	          fontStyle: "italic"
+	        },
+	        button: {
+	          backgroundColor: '#fff',
+	          marginRight: 20,
+	          borderRadius: 4,
+	          borderStyle: 'solid',
+	          borderWidth: 1,
+	          borderColor: '#ccc',
+	          color: '#333',
+	          padding: '0.625rem 1.25rem',
+	          fontSize: '1rem',
+	          cursor: 'pointer',
+	          textDecoration: 'none',
+	          ':hover': {
+	            backgroundColor: '#e6e6e6',
+	            borderColor: '#adadad'
+	          }
+	        },
+	        filterList: {
+	          borderLeft: "3px solid rgb(130,130,130)",
+	          paddingLeft: 15
+	        },
+	        filterValue: {
+	          marginBottom: 10
+	        }
 	      };
 	    }
 	  }, {
@@ -52183,24 +52217,44 @@
 	    value: function renderSearches() {
 	      var _this = this;
 	
+	      var styles = this.getStyles();
 	      var searches = this.props.searches.searches.map(function (search, i) {
 	
 	        return _react2['default'].createElement(
 	          _componentsCardsCard2['default'],
 	          { style: styles.searchCard, key: i },
 	          _react2['default'].createElement(
-	            _componentsCardsCardHeader2['default'],
-	            null,
-	            search.name
-	          ),
-	          _react2['default'].createElement(
-	            _componentsButton2['default'],
-	            {
-	              size: 'small',
-	              category: 'danger',
-	              style: styles.deleteButton,
-	              onClick: _this.openDeleteModal.bind(_this, search) },
-	            window.L.t('Delete')
+	            'div',
+	            { style: styles.topSection },
+	            _react2['default'].createElement(
+	              'p',
+	              { style: styles.cardHeader },
+	              search.name
+	            ),
+	            _react2['default'].createElement(
+	              'div',
+	              { style: styles.actionsContainer },
+	              _react2['default'].createElement(
+	                RadiumLink,
+	                {
+	                  style: styles.button,
+	                  to: '/saved-search/' + search.name },
+	                window.L.t('View')
+	              ),
+	              _react2['default'].createElement(
+	                'span',
+	                { style: styles.button },
+	                window.L.t('Edit')
+	              ),
+	              _react2['default'].createElement(
+	                _componentsButton2['default'],
+	                {
+	                  category: 'danger',
+	                  style: styles.deleteButton,
+	                  onClick: _this.openDeleteModal.bind(_this, search) },
+	                window.L.t('Delete')
+	              )
+	            )
 	          ),
 	          _react2['default'].createElement(
 	            'p',
@@ -52209,7 +52263,7 @@
 	          ),
 	          _react2['default'].createElement(
 	            'ul',
-	            null,
+	            { style: styles.filterList },
 	            search.filters.values.map(function (value, i) {
 	              return _react2['default'].createElement(
 	                'li',
@@ -52222,25 +52276,6 @@
 	                value.description
 	              );
 	            })
-	          ),
-	          _react2['default'].createElement(
-	            'div',
-	            { style: styles.actionsContainer },
-	            _react2['default'].createElement(
-	              _reactRouter.Link,
-	              {
-	                style: styles.viewSearchLink,
-	                to: '/saved-search/' + search.name },
-	              window.L.t('View Search Details')
-	            ),
-	            _react2['default'].createElement(
-	              'span',
-	              null,
-	              window.L.t('Edit Search'),
-	              ' (',
-	              window.L.t('coming soon'),
-	              ')'
-	            )
 	          )
 	        );
 	      });
@@ -52250,6 +52285,7 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var styles = this.getStyles();
 	
 	      return _react2['default'].createElement(
 	        _appLayoutPage2['default'],
@@ -52260,7 +52296,7 @@
 	          _react2['default'].createElement(_componentsContentHeader2['default'], { title: window.L.t('Saved Searches') }),
 	          _react2['default'].createElement(
 	            'div',
-	            { style: styles.cardHolder },
+	            null,
 	            this.renderSearches()
 	          )
 	        ),
@@ -52313,52 +52349,6 @@
 	})(_react2['default'].Component);
 	
 	exports['default'] = SeeAllSearches;
-	
-	var styles = {
-	  cardHolder: {
-	    display: 'flex',
-	    justifyContent: 'flex-start',
-	    flexWrap: 'wrap'
-	  },
-	  sentenceHeading: {
-	    margin: '10px 0px',
-	    textTransform: 'uppercase',
-	    fontWeight: 500
-	  },
-	  actionsContainer: {
-	    marginTop: 20
-	  },
-	  viewSearchLink: {
-	    marginRight: 20
-	  },
-	  searchCard: {
-	    marginBottom: 0,
-	    marginTop: 20,
-	    marginRight: 20,
-	    marginLeft: 0,
-	    width: 370,
-	    position: 'relative',
-	    '@media (max-width: 1000px)': {
-	      'width': '90%'
-	    }
-	  },
-	  deleteButton: {
-	    position: 'absolute',
-	    top: 8,
-	    right: 8
-	  },
-	  searchDescription: {
-	    marginBottom: 10,
-	    fontSize: 18
-	  },
-	  filterValue: {
-	    backgroundColor: _settings2['default'].darkGrey,
-	    color: 'white',
-	    padding: 10,
-	    marginBottom: 5,
-	    borderRadius: 4
-	  }
-	};
 	module.exports = exports['default'];
 
 /***/ },
@@ -53516,24 +53506,22 @@
 	      var approvedDate = this.props.comment.date_approved ? _componentsUtilsDateTime2['default'].format(new Date(this.props.comment.date_approved)) : ' - Not Approved';
 	
 	      return _react2['default'].createElement(
-	        _componentsCardsCard2['default'],
+	        'div',
 	        { style: [styles.base, this.props.style] },
-	        _react2['default'].createElement(
-	          _componentsCardsCardHeader2['default'],
-	          null,
-	          this.props.user.name
-	        ),
+	        _react2['default'].createElement('p', {
+	          style: styles.commentContent,
+	          dangerouslySetInnerHTML: { __html: this.props.comment.body } }),
 	        _react2['default'].createElement(
 	          'p',
 	          null,
-	          'Created ',
+	          "Created ",
 	          _react2['default'].createElement(
-	            'strong',
-	            { style: styles.date },
+	            'span',
+	            {
+	              style: styles.innerDate },
 	            _componentsUtilsDateTime2['default'].format(new Date(this.props.comment.date_created))
 	          )
-	        ),
-	        _react2['default'].createElement('p', { dangerouslySetInnerHTML: { __html: this.props.comment.body } })
+	        )
 	      );
 	    }
 	  }]);
@@ -53546,18 +53534,19 @@
 	exports['default'] = CommentDetail;
 	
 	var styles = {
-	  base: {},
-	  date: {
-	    fontWeight: 'bold',
-	    marginBottom: '10px',
-	    paddingBottom: '10px'
+	  base: {
+	    borderLeft: "3px solid rgb(130,130,130)",
+	    marginBottom: 20,
+	    paddingLeft: 20,
+	    paddingRight: 20
 	  },
 	  commentContent: {
 	    color: 'black',
-	    fontSize: '11pt'
+	    fontSize: 16,
+	    marginBottom: 5
 	  },
-	  commentLegend: {
-	    color: _settings2['default'].grey
+	  date: {
+	    marginBottom: 10
 	  }
 	};
 	module.exports = exports['default'];
@@ -55649,14 +55638,14 @@
 	        'div',
 	        { style: [styles.base, this.props.style] },
 	        _react2['default'].createElement(
-	          'dt',
-	          { style: styles.dt },
-	          this.props.term
+	          'span',
+	          { style: styles.number },
+	          this.props.description
 	        ),
 	        _react2['default'].createElement(
-	          'dd',
-	          { style: styles.dd },
-	          this.props.description
+	          'span',
+	          { style: styles.title },
+	          this.props.term
 	        )
 	      );
 	    }
@@ -55671,20 +55660,13 @@
 	
 	var styles = {
 	  base: {
-	    fontSize: '.8em',
-	    paddingTop: 5,
-	    paddingBottom: 5,
-	    borderBottom: '1px solid ' + _settings2['default'].lighterGrey,
-	    display: 'flex'
+	    marginBottom: 15
 	  },
-	  dt: {
-	    flex: 1,
-	    fontWeight: 700
+	  number: {
+	    marginRight: 10,
+	    fontWeight: 500
 	  },
-	  dd: {
-	    flex: 1,
-	    textAlign: 'right'
-	  }
+	  title: {}
 	};
 	module.exports = exports['default'];
 
@@ -55729,7 +55711,7 @@
 	    key: 'render',
 	    value: function render() {
 	      return _react2['default'].createElement(
-	        'dl',
+	        'div',
 	        { style: [styles, this.props.style] },
 	        this.props.children
 	      );
@@ -57331,6 +57313,7 @@
 	  loadingUserList: false,
 	  loadingAuthors: false,
 	  loadingSections: false,
+	  filterRangesLoaded: false, // naive, this just cleans up the console.log statement in UserFilters
 	  breakdown: 'all',
 	  counter: 0, // this is a signal for ajax consumed by userFilters
 	  specificBreakdown: '',
@@ -57410,7 +57393,7 @@
 	        return accum;
 	      }, {});
 	
-	      return _extends({}, state, newFilters, { counter: action.counter });
+	      return _extends({}, state, newFilters, { counter: action.counter, filterRangesLoaded: true });
 	
 	    case types.RESET_FILTERS:
 	      return _extends({}, state, { dirtyFilters: [] });
@@ -57647,13 +57630,19 @@
 	          });
 	        }
 	
+	        if (f.min === null) {
+	          if (_this.props.filterRangesLoaded) {
+	            console.log("Filter:", i, f.description, "had null data, so we didn't show it. Check getActiveFiltersFromConfig() in UserFilters.");
+	          }
+	          filterComponent = null;
+	        }
+	
 	        return filterComponent;
 	      });
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	
 	      return _react2['default'].createElement(
 	        'div',
 	        { style: styles.base },

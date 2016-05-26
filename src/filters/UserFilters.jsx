@@ -33,8 +33,6 @@ export default class UserFilters extends React.Component {
     const breakdown = this.props.editMode ? this.props.breakdownEdit : this.props.breakdown;
     const specificBreakdown = this.props.editMode ? this.props.specificBreakdownEdit : this.props.specificBreakdown;
 
-    console.log('getSpecific', this.props.editMode, breakdown, specificBreakdown);
-
     switch (breakdown) {
     case 'section':
       return (

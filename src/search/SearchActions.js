@@ -307,19 +307,11 @@ export const saveQueryFromState = (queryName, desc, tag) => {
   };
 };
 
-/*
+// prepare the active query to be saved to xenia
+const createQueryForSave = (query, name, desc) => {
+  query = _.cloneDeep(query);
 
-this method saves the active query to xenia, then saves the resulting query_set
-to pillar with some other metadata to form a "Search"
-
-the filters object only stores non-default values and the dimension breakdowns
-
-*/
-const doPutQuery = (dispatch, state, name, desc, tag) => {
-
-  const query = _.cloneDeep(state.searches.activeQuery);
-
-  // strip out $limt and $skip commands before saving
+  // inject $limt and $skip commands before saving
   query.queries[0].commands.forEach((command) => {
     if (typeof command.$skip !== 'undefined') {
       command.$skip = '#number:skip';
@@ -335,45 +327,58 @@ const doPutQuery = (dispatch, state, name, desc, tag) => {
   query.name = name;
   query.desc = desc;
 
-  console.log('commands', query.queries[0].commands);
+  return name;
+};
+
+// create the body of request to save a Search to Pillar
+const prepSearch = (filters, query, name, desc, tag, breakdown, specificBreakdown) => {
+
+  let values = _.compact(_.map(filters, f => {
+    // this will return the ENTIRE filter if only the min OR max was changed.
+    // is this the behavior we want?
+    if (f.min !== f.userMin || f.max !== f.userMax) {
+      return f;
+    } else {
+      return null;
+    }
+  }));
+
+  return {
+    name, // the human-readable user-entered name
+    description: desc, // user-entered string
+    query: query.name, // the name of the xenia query
+    tag, // unique name of live-tag
+    filters: {
+      values,
+      breakdown,
+      specificBreakdown
+    }
+  };
+};
+
+/*
+
+this method saves the active query to xenia, then saves the resulting query_set
+to pillar with some other metadata to form a "Search"
+
+the filters object only stores non-default values and the dimension breakdowns
+
+*/
+const doPutQuery = (dispatch, state, name, desc, tag) => {
+
+  const {breakdown, specificBreakdown} = state;
+  const query = createQueryForSave(state.searches.activeQuery, name, desc);
 
   console.log('about to xenia.saveQuery');
   xenia(query)
     .saveQuery()
     .then(() => { // if response.status < 400
       dispatch({type: QUERYSET_SAVE_SUCCESS, name: query.name});
+
+      const filters = state.filterList.map(key => state.filters[key]);
+      const body = prepSearch(filters, query, name, desc, tag, breakdown, specificBreakdown);
+
       // save it to pillar
-      const filterList = state.filters.filterList;
-
-      let values = _.compact(_.map(filterList, stateKey => {
-        const f = state.filters[stateKey];
-        // this will return the ENTIRE filter if only the min OR max was changed.
-        // is this the behavior we want?
-        if (f.min !== f.userMin || f.max !== f.userMax) {
-          return f;
-        } else {
-          return null;
-        }
-      }));
-
-      const body = {
-        name, // the human-readable user-entered name
-        description: desc, // user-entered string
-        query: query.name, // the name of the xenia query
-        tag, // unique name of live-tag
-        filters: {
-          values,
-          breakdown: state.filters.breakdown,
-          specificBreakdown: state.filters.specificBreakdown
-        }
-      };
-
-      /*
-
-      {"id":"56fc126479770e0006b8bc97","name":"my-first-search","description":"wow, this description is super interesting","query":"this-is-the-name-of-a-xenia-query","tag":"name-of-tag","date_created":"2016-03-30T17:52:36.279477937Z","date_updated":"0001-01-01T00:00:00Z"}
-
-      */
-
       fetch(state.app.pillarHost + '/api/search', {method: 'POST', body: JSON.stringify(body)})
         .then(resp => resp.json())
         .then(search => {
@@ -399,15 +404,36 @@ const doMakeQueryFromStateAsync = _.debounce((query, dispatch, app, replace)=>{
     .catch(() => {});
 }, 1000);
 
-export const updateSearch = id => {
+export const updateSearch = staleSearch => {
   // build query from state
   // update search in xenia? or create a new one
   // update in pillar
 
   return (dispatch, getState) => {
-    const {app, searches} = getState();
+    const {app, searches, filters} = getState();
+    const {name, description, tag} = staleSearch;
+    const {breakdownEdit, specificBreakdownEdit} = filters;
 
-    dispatch({type: PILLAR_SAVED_SEARCH_UPDATE});
+    const query = createQueryForSave(searches.activeQuery, name, description);
+
+    dispatch({type: PILLAR_SAVED_SEARCH_UPDATE, query});
+
+    xenia(query).saveQuery().then(() => {
+      dispatch({type: QUERYSET_SAVE_SUCCESS, name: query.name});
+
+      const filters = filters.editFilterList.map(key => filters.filters[key]);
+      const body = prepSearch(filters, query, name, description, tag, breakdownEdit, specificBreakdownEdit);
+
+      fetch(`${app.pillarHost}/api/search/${staleSearch.id}`, {method: 'POST', body: JSON.stringify(body)})
+        .then(resp => resp.json())
+        .then(search => {
+          // do something with savedSearch?
+          dispatch({type: PILLAR_SEARCH_UPDATE_SUCCESS, search});
+        })
+        .catch(error => {
+          dispatch({type: PILLAR_SEARCH_UPDATE_FAILED, error});
+        });
+    });
 
     console.log('updateSearch', searches.activeQuery);
   };

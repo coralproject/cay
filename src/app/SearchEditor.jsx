@@ -47,7 +47,11 @@ export default class SearchEditor extends React.Component {
   }
 
   confirmSave() {
-    this.props.dispatch(updateSearch(this.props.params.id));
+    if (this.props.searches.editableSearch) {
+      this.props.dispatch(updateSearch(this.props.searches.editableSearch));
+    } else {
+      // show an error or something
+    }
   }
 
   onFilterChange(fieldName, attr, val) {

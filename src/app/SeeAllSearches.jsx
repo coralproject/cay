@@ -10,6 +10,8 @@ import ContentHeader from 'components/ContentHeader';
 import Button from 'components/Button';
 import Modal from 'components/modal/Modal';
 
+const RadiumLink = Radium(Link);
+
 import settings from 'settings';
 
 const mapStateToProps = (state) => {
@@ -33,7 +35,7 @@ class SeeAllSearches extends React.Component {
     // foo: React.PropTypes.string
   }
   static defaultProps = {
-    // foo: "bar"
+    // foo: 'bar'
   }
   componentWillMount() {
     // redirect user to /login if they're not logged in
@@ -61,27 +63,74 @@ class SeeAllSearches extends React.Component {
 
   getStyles() {
     return {
-      base: {
-
+      searchCard: {
+        padding: 20
+      },
+      cardHeader: {
+        fontSize: 24,
+        fontWeight: 700,
+        marginBottom: 10
+      },
+      topSection: {
+        display: 'flex',
+        justifyContent: 'space-between',
+      },
+      searchDescription: {
+        fontSize: 16,
+        marginBottom: 15,
+        fontFamily: "Georgia, serif",
+        fontStyle: "italic"
+      },
+      button: {
+        backgroundColor: '#fff',
+        marginRight: 20,
+        borderRadius: 4,
+        borderStyle: 'solid',
+        borderWidth: 1,
+        borderColor: '#ccc',
+        color: '#333',
+        padding: '0.625rem 1.25rem',
+        fontSize: '1rem',
+        cursor: 'pointer',
+        textDecoration: 'none',
+        ':hover': {
+          backgroundColor: '#e6e6e6',
+          borderColor: '#adadad'
+        }
+      },
+      filterList: {
+        borderLeft: "3px solid rgb(130,130,130)",
+        paddingLeft: 15
+      },
+      filterValue: {
+        marginBottom: 10
       }
     };
   }
   renderSearches() {
-
+    const styles = this.getStyles();
     const searches = this.props.searches.searches.map((search, i) => {
 
       return (
         <Card style={styles.searchCard} key={i}>
-          <CardHeader>{search.name}</CardHeader>
-          <Button
-            size="small"
-            category="danger"
-            style={styles.deleteButton}
-            onClick={this.openDeleteModal.bind(this, search)}>
-            {window.L.t('Delete')}
-          </Button>
+          <div style={styles.topSection}>
+            <p style={styles.cardHeader}>{search.name}</p>
+            <div style={styles.actionsContainer}>
+              <RadiumLink
+                style={styles.button}
+                to={`/saved-search/${search.name}`}>{window.L.t('View')}
+              </RadiumLink>
+              <span style={styles.button}>{window.L.t('Edit')}</span>
+              <Button
+                category='danger'
+                style={styles.deleteButton}
+                onClick={this.openDeleteModal.bind(this, search)}>
+                {window.L.t('Delete')}
+              </Button>
+            </div>
+          </div>
           <p style={styles.searchDescription}>{search.description}</p>
-          <ul>
+          <ul style={styles.filterList}>
             {search.filters.values.map((value, i) => {
               return (
                 <li style={styles.filterValue} key={i}>
@@ -90,12 +139,7 @@ class SeeAllSearches extends React.Component {
               );
             })}
           </ul>
-          <div style={styles.actionsContainer}>
-            <Link
-              style={styles.viewSearchLink}
-              to={`/saved-search/${search.name}`}>{window.L.t('View Search Details')}</Link>
-            <span>{window.L.t('Edit Search')} ({window.L.t('coming soon')})</span>
-          </div>
+
         </Card>
       );
     });
@@ -104,6 +148,7 @@ class SeeAllSearches extends React.Component {
 
   }
   render() {
+    const styles = this.getStyles();
 
     return (
       <Page>
@@ -112,7 +157,7 @@ class SeeAllSearches extends React.Component {
           this.props.style
         ]}>
           <ContentHeader title={ window.L.t('Saved Searches') } />
-          <div style={styles.cardHolder}>
+          <div>
             {this.renderSearches()}
           </div>
         </div>
@@ -139,49 +184,3 @@ class SeeAllSearches extends React.Component {
 }
 
 export default SeeAllSearches;
-
-const styles = {
-  cardHolder: {
-    display: 'flex',
-    justifyContent: 'flex-start',
-    flexWrap: 'wrap'
-  },
-  sentenceHeading: {
-    margin: '10px 0px',
-    textTransform: 'uppercase',
-    fontWeight: 500
-  },
-  actionsContainer: {
-    marginTop: 20
-  },
-  viewSearchLink: {
-    marginRight: 20
-  },
-  searchCard: {
-    marginBottom: 0,
-    marginTop: 20,
-    marginRight: 20,
-    marginLeft: 0,
-    width: 370,
-    position: 'relative',
-    '@media (max-width: 1000px)': {
-      'width': '90%'
-    }
-  },
-  deleteButton: {
-    position: 'absolute',
-    top: 8,
-    right: 8
-  },
-  searchDescription: {
-    marginBottom: 10,
-    fontSize: 18
-  },
-  filterValue: {
-    backgroundColor: settings.darkGrey,
-    color: 'white',
-    padding: 10,
-    marginBottom: 5,
-    borderRadius: 4
-  }
-};

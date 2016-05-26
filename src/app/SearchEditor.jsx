@@ -49,11 +49,11 @@ export default class SearchEditor extends React.Component {
   onFilterChange(fieldName, attr, val) {
     this.props.dispatch(userSelected(null));
     this.props.dispatch(filterChanged(fieldName, {[attr]: val}));
-    this.props.dispatch(makeQueryFromState('user', 0, true));
+    this.props.dispatch(makeQueryFromState('user', 0, true, true));
   }
 
   onPagination(page = 0) {
-    this.props.dispatch(makeQueryFromState('user', page));
+    this.props.dispatch(makeQueryFromState('user', page, false, true));
   }
 
   updateUser(user) {

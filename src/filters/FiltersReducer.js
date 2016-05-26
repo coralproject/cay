@@ -114,7 +114,6 @@ const filters = (state = initialState, action) => {
     return {...state, ...action.filters};
 
   case types.RESET_FILTER:
-    console.log(types.RESET_FILTER, action.filter);
     return {...state, ...action.filter};
 
   // a Saved Search was loaded from Pillar to be edited

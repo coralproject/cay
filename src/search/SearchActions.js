@@ -216,21 +216,23 @@ export const createQuery = (query) => {
 };
 
 /* xenia_package */
-export const makeQueryFromState = (type, page = 0, replace = false) => {
+export const makeQueryFromState = (type, page = 0, replace = false, editMode = false) => {
   const pageSize = 20;
 
   return (dispatch, getState) => {
     // make a query from the current state
-    const filterState = getState().filters;
+    const fs = getState().filters;
     const app = getState().app;
-    const filters = filterState.filterList.map(key => filterState[key]);
+    const filterList = editMode ? fs.editFilterList : fs.filterList;
+    const filters = filterList.map(key => fs[key]);
     const x = xenia({
       name: 'user_search_' + Math.random().toString().slice(-10),
       desc: 'user search currently. this is going to be more dynamic in the future'
     });
 
     const addMatches = x => {
-      let { breakdown, specificBreakdown } = filterState;
+      let breakdown = editMode ? fs.breakdownEdit : fs.breakdown;
+      let specificBreakdown = editMode ? fs.specificBreakdownEdit : fs.specificBreakdown;
 
       // filter by breakdown if needed
       if (-1 === ['author', 'section'].indexOf(breakdown) || specificBreakdown === '') {
@@ -272,8 +274,10 @@ export const makeQueryFromState = (type, page = 0, replace = false) => {
     };
 
     addMatches(x.addQuery());
-    if(filterState.sortBy) {
-      const { breakdown, specificBreakdown, sortBy } = filterState;
+    if(fs.sortBy) {
+      const breakdown = editMode ? fs.breakdownEdit : fs.breakdown;
+      const specificBreakdown = editMode ? fs.specificBreakdownEdit : fs.specificBreakdown;
+      const { sortBy } = fs;
       const field = _.template(sortBy[0])
         ({dimension: `${breakdown}${specificBreakdown ? `.${specificBreakdown}` : ''}`});
       x.sort([field, sortBy[1]]);

@@ -361,6 +361,6 @@ const resetFilterAction = (name) => {
     const {filters} = getState();
     const resetFilter = {...filters[name], userMin: filters[name].min, userMax: filters[name].max};
 
-    dispatch({type: RESET_FILTER, filter: {[name]: resetFilter}})
+    dispatch({type: RESET_FILTER, filter: {[name]: resetFilter}});
   };
 };

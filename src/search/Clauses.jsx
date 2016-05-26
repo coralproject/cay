@@ -41,11 +41,6 @@ class Clauses extends React.Component {
     const maxDifferent = f.userMax !== f.max && f.userMax < f.max;
     const minDifferent = f.userMin !== f.min && f.userMin > f.min;
 
-    if (filterName === 'filter0Editable') {
-      console.log(f.userMin, f.min);
-      console.log(minDifferent, maxDifferent);
-    }
-
     return {
       either: maxDifferent || minDifferent,
       both: !(maxDifferent && minDifferent)
@@ -80,8 +75,6 @@ class Clauses extends React.Component {
     return filterList.map((filterName, i) => {
 
       if (this.userChangedFilter(filterName).either) {
-
-        console.log('user changed', filterName, this.props[filterName]);
 
         let clause;
         switch (this.props[filterName].type) {

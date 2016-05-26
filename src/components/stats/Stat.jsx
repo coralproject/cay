@@ -5,11 +5,12 @@ import settings from '../../settings';
 
 @Radium
 export default class Stat extends React.Component {
+
   render() {
     return (
       <div style={[styles.base, this.props.style]}>
-        <dt style={styles.dt}>{this.props.term}</dt>
-        <dd style={styles.dd}>{this.props.description}</dd>
+        <span style={styles.number}>{this.props.description}</span>
+        <span style={styles.title}>{this.props.term}</span>
       </div>
     );
   }
@@ -17,18 +18,13 @@ export default class Stat extends React.Component {
 
 const styles = {
   base: {
-    fontSize: '.8em',
-    paddingTop: 5,
-    paddingBottom: 5,
-    borderBottom: '1px solid ' + settings.lighterGrey,
-    display: 'flex'
+    marginBottom: 15
   },
-  dt: {
-    flex: 1,
-    fontWeight: 700
+  number: {
+    marginRight: 10,
+    fontWeight: 500,
   },
-  dd: {
-    flex: 1,
-    textAlign: 'right'
-  }
+  title: {
+
+  },
 };

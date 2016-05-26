@@ -90,13 +90,13 @@ export default class FilterNumbers extends React.Component {
         </div>
         <div>
           <input
-            onChange={event => this.props.onChange(this.props.fieldName, 'userMin', event.target.value)}
+            onChange={event => this.props.onChange(this.props.fieldName, 'userMin', +event.target.value)}
             style={style.minMaxInputs}
             type='number'
             value={this.props.userMin}/>
           {` - `}
           <input
-            onChange={event => this.props.onChange(this.props.fieldName, 'userMax', event.target.value)}
+            onChange={event => this.props.onChange(this.props.fieldName, 'userMax', +event.target.value)}
             style={style.minMaxInputs}
             type='number'
             value={this.props.userMax}/>

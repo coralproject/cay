@@ -97,16 +97,10 @@ export const setSpecificBreakdown = (specificBreakdown) => {
   };
 };
 
-const parseFilterRanges = (ranges, filterState) => {
+const parseFilterRanges = (ranges) => {
 
   const newFilters = _.reduce(ranges, (accum, value, aggKey) => {
     let [key, field] = aggKey.split('_');
-    if (field !== 'id' && filterState[key].type === 'intDateProximity') {
-      const day = 1000 * 60 * 60 * 24;
-      const now = new Date();
-      const dateValue = new Date(value);
-      value = Math.ceil(Math.abs((now - dateValue) / day));
-    }
 
     if (field === 'id' || value === null) return accum;
 
@@ -144,6 +138,8 @@ export const getFilterRanges = () => {
     let filterState = getState().filters;
     let $group = filterState.filterList.reduce((accum, key) => {
 
+      var f = filterState[key];
+
       let dimension;
       if (filterState.breakdown === 'author' && filterState.specificBreakdown !== '') {
         dimension = 'author.' + filterState.specificBreakdown;
@@ -156,14 +152,18 @@ export const getFilterRanges = () => {
       // if you change this naming convention "<somefilter>_max"
       // you must update the RECEIVE_FILTER_RANGES in reducers/filters.js
 
-      const field = '$' + _.template(filterState[key].template)({dimension});
-      accum[key + '_min'] = {
-        $min: field
-      };
+      const field = '$' + _.template(f.template)({dimension});
+      if (f.type === 'intDateProximity') {
+        return accum; // do not get ranges for "ago" filter (for now).
+      } else {
+        accum[key + '_min'] = {
+          $min: field
+        };
 
-      accum[key + '_max'] = {
-        $max: field
-      };
+        accum[key + '_max'] = {
+          $max: field
+        };
+      }
 
       return accum;
     }, {_id: null});
@@ -197,7 +197,7 @@ export const getFilterRanges = () => {
 
         dispatch({
           type: RECEIVE_FILTER_RANGES,
-          data: parseFilterRanges(doc, filterState),
+          data: parseFilterRanges(doc, getState().filters),
           counter
         });
       }).catch(err => {

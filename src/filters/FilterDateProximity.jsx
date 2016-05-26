@@ -9,25 +9,11 @@ import CardHeader from 'components/cards/CardHeader';
 @Radium
 export default class FilterDateProximity extends React.Component {
 
-  dayDiff(a, b) {
-    // not all days are 24 hours, but I don't care.
-    const day = 1000 * 60 * 60 * 24;
-    return Math.ceil(Math.abs((a - b) / day));
-  }
-
-  onMinChanged(e) {
-    const val = e.target.value;
-    this.props.onChange(this.props.fieldName, 'userMin', val);
-  }
-
   onMaxChanged(e) {
-    const val = e.target.value;
-    this.props.onChange(this.props.fieldName, 'userMax', val);
+    this.props.onChange(this.props.fieldName, 'userMax', +e.target.value);
   }
 
   render() {
-
-    const now = new Date();
 
     return (
       <Card>
@@ -35,12 +21,6 @@ export default class FilterDateProximity extends React.Component {
           <span style={styles.description}>{this.props.description}</span>
         </CardHeader>
         <div>
-          <input
-            onChange={this.onMinChanged.bind(this)}
-            style={styles.minMaxInputs}
-            type="number"
-            value={this.props.userMin} />
-          {' - '}
           <input
             onChange={this.onMaxChanged.bind(this)}
             style={styles.minMaxInputs}

@@ -31,6 +31,11 @@ const filters = (state = initialState, action) => {
       const key = `filter${i}`;
       accum[key] = Object.assign({}, filter, {min: null, max: null, userMin: null, userMax: null, key});
 
+      if (filter.type === 'intDateProximity') {
+        // "ago" filter does not load ranges from xenia yet.
+        accum[key] = _.assign({}, filter, {min: 0, userMin: 0, max: 365, userMax: 365, key});
+      }
+
       filterList.push(key);
 
       return accum;

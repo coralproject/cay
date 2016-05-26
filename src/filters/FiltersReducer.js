@@ -9,14 +9,18 @@ let initialState = {
   tags: [],
   authors: [],
   sections: [],
+  filterList: [],
+  editFilterList: [],
   editableSearchFilters: [],
   loadingFilters: false,
   loadingUserList: false,
   loadingAuthors: false,
   loadingSections: false,
   breakdown: 'all',
+  breakdownEdit: 'all',
   counter: 0, // this is a signal for ajax consumed by userFilters
   specificBreakdown: '',
+  specificBreakdownEdit: '',
   distributions: null,
   sortBy: null
 };
@@ -28,19 +32,27 @@ const filters = (state = initialState, action) => {
   case types.DATA_CONFIG_LOADED:
 
     const filterList = [];
+    const editFilterList = [];
     const filters = action.config.filters.reduce((accum, filter, i) => {
 
       const key = `filter${i}`;
-      accum[key] = Object.assign({}, filter, {min: null, max: null, userMin: null, userMax: null, key});
+      const editableKey = `${key}Editable`;
+      accum[key] = _.assign({}, filter, {min: null, max: null, userMin: null, userMax: null, key});
+      accum[editableKey] = _.assign({}, accum[key], {key: editableKey});
 
       filterList.push(key);
+      editFilterList.push(editableKey);
 
       return accum;
     }, {});
 
-    return {...state, ...filters, filterList, configLoaded: true};
-
-    // return Object.assign({}, state, filters, {filterList}, {configLoaded: true});
+    return {
+      ...state,
+      ...filters,
+      filterList,
+      editFilterList,
+      configLoaded: true
+    };
 
   case types.FILTER_CHANGED:
 
@@ -76,10 +88,16 @@ const filters = (state = initialState, action) => {
   case types.SET_BREAKDOWN:
     return {...state, breakdown: action.breakdown};
 
+  case types.SET_BREAKDOWN_EDIT:
+    return {...state, breakdownEdit: action.breakdown};
+
   case types.FETCH_DISTRIBUTIONS_SUCCESS:
     return {...state, distributions: action.distros};
 
   case types.SET_SPECIFIC_BREAKDOWN:
+    return {...state, specificBreakdown: action.specificBreakdown};
+
+  case types.SET_SPECIFIC_BREAKDOWN_EDIT:
     return {...state, specificBreakdown: action.specificBreakdown};
 
   case types.RECEIVE_FILTER_RANGES:
@@ -96,10 +114,8 @@ const filters = (state = initialState, action) => {
     return {...state, ...action.filters};
 
   case types.RESET_FILTER:
-    const newState = Object.assign({}, state);
-    newState[action.name].userMin = newState[action.name].min;
-    newState[action.name].userMax = newState[action.name].max;
-    return {...newState};
+    console.log(types.RESET_FILTER, action.filter);
+    return {...state, ...action.filter};
 
   // a Saved Search was loaded from Pillar to be edited
   case types.PILLAR_EDIT_SEARCH_SUCCESS:

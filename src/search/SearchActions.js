@@ -34,12 +34,13 @@ export const PILLAR_SEARCH_REQUEST = 'PILLAR_SEARCH_REQUEST';
 export const PILLAR_SEARCH_SUCCESS = 'PILLAR_SEARCH_SUCCESS';
 export const PILLAR_SEARCH_FAILED = 'PILLAR_SEARCH_FAILED';
 
-export const PILLAR_EDIT_SEARCH_REQUEST = 'PILLAR_EDIT_SEARCH_REQUEST';
+export const PILLAR_SAVED_SEARCH_EDIT_REQUEST = 'PILLAR_SAVED_SEARCH_EDIT_REQUEST';
 export const PILLAR_EDIT_SEARCH_SUCCESS = 'PILLAR_EDIT_SEARCH_SUCCESS';
 export const PILLAR_EDIT_SEARCH_FAILED = 'PILLAR_EDIT_SEARCH_FAILED';
 
 export const CLEAR_USER_LIST = 'CLEAR_USER_LIST';
 export const CLEAR_USER = 'CLEAR_USER';
+export const CLEAR_RECENT_SAVED_SEARCH = 'CLEAR_RECENT_SAVED_SEARCH';
 
 export const selectQueryset = (queryset) => {
   return {
@@ -96,8 +97,8 @@ export const fetchSearch = (id) => {
   };
 };
 
-const requestEditSearch = () => {
-  return {type: PILLAR_EDIT_SEARCH_REQUEST};
+const requestSavedSearchForEdit = () => {
+  return {type: PILLAR_SAVED_SEARCH_EDIT_REQUEST};
 };
 
 const receivedEditSearch = (search, filters, breakdown, specificBreakdown) => {
@@ -108,11 +109,11 @@ const searchEditFetchFailed = error => {
   return {type: PILLAR_EDIT_SEARCH_FAILED, error};
 };
 
-export const fetchSearchForEdit = id => {
+export const fetchSavedSearchForEdit = id => {
   return (dispatch, getState) => {
     const {app, filters} = getState();
 
-    dispatch(requestEditSearch(id));
+    dispatch(requestSavedSearchForEdit(id));
 
     fetch(`${app.pillarHost}/api/search/${id}`)
       .then(resp => resp.json())
@@ -120,7 +121,7 @@ export const fetchSearchForEdit = id => {
 
         const {breakdown, specificBreakdown, values} = search.filters;
 
-        const updatedFilters = _.reduce(filters.filterList, (accum, key) => {
+        const updatedFilters = _.reduce(filters.editFilterList, (accum, key) => {
           const oldFilter = filters[key];
           const savedFilter = _.find(values, {name: oldFilter.name});
           if (savedFilter) {
@@ -348,8 +349,6 @@ const doPutQuery = (dispatch, state, name, desc, tag) => {
         }
       }));
 
-      console.log('description?', desc);
-
       const body = {
         name, // the human-readable user-entered name
         description: desc, // user-entered string
@@ -432,4 +431,8 @@ export const fetchInitialData = () => dispatch => {
 
 export const clearUserList = () => {
   return {type: CLEAR_USER_LIST};
+};
+
+export const clearRecentSavedSearch = () => {
+  return {type: CLEAR_RECENT_SAVED_SEARCH};
 };

@@ -16,13 +16,10 @@ import {
   saveQueryFromState,
   makeQueryFromState,
   fetchInitialData,
-  clearUserList
+  clearUserList,
+  clearRecentSavedSearch
 } from 'search/SearchActions';
-import {
-  filterChanged,
-  getFilterRanges,
-  resetFilters
-} from 'filters/FiltersActions';
+import { filterChanged, getFilterRanges } from 'filters/FiltersActions';
 
 import Page from 'app/layout/Page';
 import ContentHeader from 'components/ContentHeader';
@@ -69,10 +66,10 @@ export default class SearchCreator extends Component {
 
     // set up the initial default / unfiltered view
     // this was previously in UserFilters
+    this.props.dispatch(clearRecentSavedSearch());
     this.props.dispatch(clearUserList());
-    this.props.dispatch(resetFilters());
     this.props.dispatch(fetchInitialData());
-    this.props.dispatch(getFilterRanges('user'));
+    this.props.dispatch(getFilterRanges(false)); // editmode => false
   }
 
   updateUser(user) {
@@ -124,11 +121,13 @@ export default class SearchCreator extends Component {
       <Page>
 
         <ContentHeader title={ window.L.t('Search Creator') } />
-        <Clauses/>
+        <Clauses editMode={false} />
 
         <div style={styles.base}>
           <div style={styles.filters}>
-            <UserFilters onChange={this.onFilterChange.bind(this)} />
+            <UserFilters
+              editMode={false}
+              onChange={this.onFilterChange.bind(this)} />
           </div>
 
           <div style={styles.rightPanel}>
@@ -140,7 +139,8 @@ export default class SearchCreator extends Component {
                 total={this.props.searches.userCount}
                 onPagination={this.onPagination.bind(this)}
                 loadingQueryset={this.props.searches.loadingQueryset}
-                users={this.props.searches.users} userSelected={this.updateUser.bind(this)} />
+                users={this.props.searches.users}
+                userSelected={this.updateUser.bind(this)} />
               <UserDetail
                 breakdown={this.props.filters.breakdown}
                 specificBreakdown={this.props.filters.specificBreakdown}
@@ -162,7 +162,7 @@ export default class SearchCreator extends Component {
           <p style={styles.modalLabel}>Description</p>
           <textarea
             style={styles.descriptionInput}
-            onChange={this.updateSearcDesc.bind(this)}></textarea>
+            onBlur={this.updateSearcDesc.bind(this)}></textarea>
           <TextField label="Tag Name" onChange={this.updateSearchTag.bind(this)} />
         </Modal>
 

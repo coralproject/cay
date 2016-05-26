@@ -5,6 +5,7 @@ const initialState = {
   loading: false,
   loadingQueryset: false,
   activeQuery: null,
+  recentSavedSearch: null,
   editableSearch: null, // this search controls the SearchEditor component
   editableSearchLoading: false,
   pendingSavedSearch: null, // when the search is being prepared to be saved in pillar
@@ -70,7 +71,7 @@ const searches = (state = initialState, action) => {
   case types.PILLAR_SEARCH_DELETE_FAILURE:
     return {...state, pendingDeleteSearch: null};
 
-  case types.PILLAR_EDIT_SEARCH_REQUEST:
+  case types.PILLAR_SAVED_SEARCH_EDIT_REQUEST:
     return {...state, editableSearchLoading: true};
 
   // saved search loaded from pillar to be edited
@@ -83,6 +84,9 @@ const searches = (state = initialState, action) => {
 
   case types.CLEAR_USER_LIST:
     return {...state, users: []};
+
+  case types.CLEAR_RECENT_SAVED_SEARCH:
+    return {...state, recentSavedSearch: null};
 
   default:
     // console.log('no reducer matches:', action.type);

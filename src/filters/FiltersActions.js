@@ -21,7 +21,9 @@ export const FETCH_DISTRIBUTIONS_ERROR = 'FETCH_DISTRIBUTIONS_ERROR';
 export const FILTER_CHANGED = 'FILTER_CHANGED';
 
 export const SET_BREAKDOWN = 'SET_BREAKDOWN';
+export const SET_BREAKDOWN_EDIT = 'SET_BREAKDOWN_EDIT';
 export const SET_SPECIFIC_BREAKDOWN = 'SET_SPECIFIC_BREAKDOWN';
+export const SET_SPECIFIC_BREAKDOWN_EDIT = 'SET_SPECIFIC_BREAKDOWN_EDIT';
 
 export const RESET_FILTERS = 'RESET_FILTERS';
 export const RESET_FILTER = 'RESET_FILTER';
@@ -81,20 +83,20 @@ export const fetchAuthors = () => {
   };
 };
 
-export const setBreakdown = (breakdown) => {
+export const setBreakdown = (breakdown, editMode) => {
   return {
-    type: SET_BREAKDOWN,
+    type: editMode ? SET_BREAKDOWN_EDIT : SET_BREAKDOWN,
     breakdown
   };
 };
 
-export const setSpecificBreakdown = (specificBreakdown) => {
+export const setSpecificBreakdown = (specificBreakdown, editMode) => {
   return (dispatch) => {
     // let counter = getState().filters.counter;
     // counter++;
     dispatch({
-      type: SET_SPECIFIC_BREAKDOWN,
-      specificBreakdown: specificBreakdown
+      type: editMode ? SET_SPECIFIC_BREAKDOWN_EDIT : SET_SPECIFIC_BREAKDOWN,
+      specificBreakdown
       // counter
     });
   };
@@ -138,17 +140,20 @@ const parseFilterRanges = (ranges, filterState) => {
 };
 
 // HERE BE DRAGONS
-export const getFilterRanges = () => {
+export const getFilterRanges = (editMode) => {
 
   return (dispatch, getState) => {
-    let filterState = getState().filters;
-    let $group = filterState.filterList.reduce((accum, key) => {
+    let fs = getState().filters;
+    const filterList = editMode ? fs.editFilterList : fs.filterList;
+    const breakdown = editMode ? fs.breakdownEdit : fs.breakdown;
+    const specificBreakdown = editMode ? fs.specificBreakdownEdit : fs.specificBreakdown;
+    let $group = filterList.reduce((accum, key) => {
 
       let dimension;
-      if (filterState.breakdown === 'author' && filterState.specificBreakdown !== '') {
-        dimension = 'author.' + filterState.specificBreakdown;
-      } else if (filterState.breakdown === 'section' && filterState.specificBreakdown !== '') {
-        dimension = 'section.' + filterState.specificBreakdown;
+      if (breakdown === 'author' && specificBreakdown !== '') {
+        dimension = 'author.' + specificBreakdown;
+      } else if (breakdown === 'section' && specificBreakdown !== '') {
+        dimension = 'section.' + specificBreakdown;
       } else { // all
         dimension = 'all';
       }
@@ -156,7 +161,7 @@ export const getFilterRanges = () => {
       // if you change this naming convention "<somefilter>_max"
       // you must update the RECEIVE_FILTER_RANGES in reducers/filters.js
 
-      const field = '$' + _.template(filterState[key].template)({dimension});
+      const field = '$' + _.template(fs[key].template)({dimension});
       accum[key + '_min'] = {
         $min: field
       };
@@ -351,5 +356,11 @@ const sortByAction = (template, direction) => {
 };
 
 const resetFilterAction = (name) => {
-  return {type: RESET_FILTER, name};
+
+  return (dispatch, getState) => {
+    const {filters} = getState();
+    const resetFilter = {...filters[name], userMin: filters[name].min, userMax: filters[name].max};
+
+    dispatch({type: RESET_FILTER, filter: {[name]: resetFilter}})
+  };
 };

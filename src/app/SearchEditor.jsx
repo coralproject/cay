@@ -2,7 +2,11 @@ import React from 'react';
 import Radium from 'radium';
 import { connect } from 'react-redux';
 
-import {fetchSearchForEdit, makeQueryFromState} from 'search/SearchActions';
+import {
+  fetchSavedSearchForEdit,
+  makeQueryFromState,
+  clearUserList
+} from 'search/SearchActions';
 import {userSelected} from 'users/UsersActions';
 import {filterChanged, getFilterRanges} from 'filters/FiltersActions';
 import {fetchCommentsByUser} from 'comments/CommentsActions';
@@ -32,8 +36,10 @@ export default class SearchEditor extends React.Component {
 
   componentWillMount() {
     console.log('params!', this.props.params);
-    this.props.dispatch(fetchSearchForEdit(this.props.params.id));
-    this.props.dispatch(getFilterRanges('user'));
+    this.props.dispatch(clearUserList());
+    this.props.dispatch(userSelected(null));
+    this.props.dispatch(fetchSavedSearchForEdit(this.props.params.id));
+    this.props.dispatch(getFilterRanges(true)); // editMode => true
   }
 
   confirmSave() {
@@ -59,14 +65,16 @@ export default class SearchEditor extends React.Component {
     return (
       <Page>
         <ContentHeader title={ window.L.t('Search Editor') } />
-        <Clauses />
+        <Clauses editMode={true} />
 
         {
-          this.props.searches.editableSearchLoading && !this.props.searches.editableSearch ?
+          this.props.searches.editableSearchLoading || !this.props.searches.editableSearch ?
           <p>Loading Saved Search...</p> :
           <div style={styles.base}>
             <div style={styles.filters}>
-              <UserFilters onChange={this.onFilterChange.bind(this)} />
+              <UserFilters
+                editMode={true}
+                onChange={this.onFilterChange.bind(this)} />
             </div>
             <div style={styles.rightPanel}>
               <Button
@@ -80,7 +88,8 @@ export default class SearchEditor extends React.Component {
                   total={this.props.searches.userCount}
                   onPagination={this.onPagination.bind(this)}
                   loadingQueryset={this.props.searches.loadingQueryset}
-                  users={this.props.searches.users} userSelected={this.updateUser.bind(this)} />
+                  users={this.props.searches.users}
+                  userSelected={this.updateUser.bind(this)} />
                 <UserDetail
                   breakdown={this.props.filters.breakdown}
                   specificBreakdown={this.props.filters.specificBreakdown}

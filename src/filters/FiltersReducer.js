@@ -16,6 +16,7 @@ let initialState = {
   loadingUserList: false,
   loadingAuthors: false,
   loadingSections: false,
+  filterRangesLoaded: false, // naive, this just cleans up the console.log statement in UserFilters
   breakdown: 'all',
   breakdownEdit: 'all',
   counter: 0, // this is a signal for ajax consumed by userFilters
@@ -107,7 +108,7 @@ const filters = (state = initialState, action) => {
       return accum;
     }, {});
 
-    return {...state, ...newFilters, counter: action.counter};
+    return {...state, ...newFilters, counter: action.counter, filterRangesLoaded: true};
 
   // this is really more of a soft reset, since we're not resetting the dimensions
   case types.RESET_FILTERS:

@@ -17,11 +17,18 @@ export default class CommentDetail extends React.Component {
       ' - Not Approved';
 
     return (
-      <Card style={[styles.base, this.props.style]}>
-        <CardHeader>{this.props.user.name}</CardHeader>
-        <p>Created <strong style={styles.date}>{DateTime.format(new Date(this.props.comment.date_created))}</strong></p>
-        <p dangerouslySetInnerHTML={{__html: this.props.comment.body}} />
-      </Card>
+      <div style={[styles.base, this.props.style]}>
+        <p
+          style={styles.commentContent}
+          dangerouslySetInnerHTML={{__html: this.props.comment.body}} />
+        <p>
+          {"Created "}
+          <span
+            style={styles.innerDate}>
+            {DateTime.format(new Date(this.props.comment.date_created))}
+          </span>
+        </p>
+      </div>
 
     );
   }
@@ -29,18 +36,17 @@ export default class CommentDetail extends React.Component {
 
 const styles = {
   base: {
-
-  },
-  date: {
-    fontWeight: 'bold',
-    marginBottom: '10px',
-    paddingBottom: '10px'
+    borderLeft: "3px solid rgb(130,130,130)",
+    marginBottom: 20,
+    paddingLeft: 20,
+    paddingRight: 20
   },
   commentContent: {
     color: 'black',
-    fontSize: '11pt'
+    fontSize: 16,
+    marginBottom: 5
   },
-  commentLegend: {
-    color: settings.grey
-  }
+  date: {
+    marginBottom: 10,
+  },
 };

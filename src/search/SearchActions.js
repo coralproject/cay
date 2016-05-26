@@ -38,6 +38,9 @@ export const PILLAR_SAVED_SEARCH_EDIT_REQUEST = 'PILLAR_SAVED_SEARCH_EDIT_REQUES
 export const PILLAR_EDIT_SEARCH_SUCCESS = 'PILLAR_EDIT_SEARCH_SUCCESS';
 export const PILLAR_EDIT_SEARCH_FAILED = 'PILLAR_EDIT_SEARCH_FAILED';
 
+// when we're initializing a Saved Search update to Pillar
+export const PILLAR_SAVED_SEARCH_UPDATE = 'PILLAR_SAVED_SEARCH_UPDATE';
+
 export const CLEAR_USER_LIST = 'CLEAR_USER_LIST';
 export const CLEAR_USER = 'CLEAR_USER';
 export const CLEAR_RECENT_SAVED_SEARCH = 'CLEAR_RECENT_SAVED_SEARCH';
@@ -395,6 +398,20 @@ const doMakeQueryFromStateAsync = _.debounce((query, dispatch, app, replace)=>{
     .then(json => dispatch(receiveQueryset(json, replace)))
     .catch(() => {});
 }, 1000);
+
+export const updateSearch = id => {
+  // build query from state
+  // update search in xenia? or create a new one
+  // update in pillar
+
+  return (dispatch, getState) => {
+    const {app, searches} = getState();
+
+    dispatch({type: PILLAR_SAVED_SEARCH_UPDATE});
+
+    console.log('updateSearch', searches.activeQuery);
+  };
+};
 
 export const deleteSearch = search => {
   return (dispatch, getState) => {

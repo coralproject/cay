@@ -5,7 +5,9 @@ import { connect } from 'react-redux';
 import {
   fetchSavedSearchForEdit,
   makeQueryFromState,
-  clearUserList
+  fetchInitialData,
+  clearUserList,
+  updateSearch
 } from 'search/SearchActions';
 import {userSelected} from 'users/UsersActions';
 import {filterChanged, getFilterRanges} from 'filters/FiltersActions';
@@ -19,6 +21,7 @@ import UserFilters from 'filters/UserFilters';
 import FaFloopyO from 'react-icons/lib/fa/floppy-o';
 import UserList from 'users/UserList';
 import UserDetail from 'users/UserDetail';
+import TextField from 'components/forms/TextField';
 import Clauses from 'search/Clauses';
 
 const mapStateToProps = state => {
@@ -37,17 +40,19 @@ export default class SearchEditor extends React.Component {
   componentWillMount() {
     console.log('params!', this.props.params);
     this.props.dispatch(clearUserList());
+    this.props.dispatch(fetchInitialData());
     this.props.dispatch(userSelected(null));
     this.props.dispatch(fetchSavedSearchForEdit(this.props.params.id));
     this.props.dispatch(getFilterRanges(true)); // editMode => true
   }
 
   confirmSave() {
-
+    this.props.dispatch(updateSearch(this.props.params.id));
   }
 
   onFilterChange(fieldName, attr, val) {
     this.props.dispatch(userSelected(null));
+    this.props.dispatch(clearUserList());
     this.props.dispatch(filterChanged(fieldName, {[attr]: val}));
     this.props.dispatch(makeQueryFromState('user', 0, true, true));
   }
@@ -70,33 +75,42 @@ export default class SearchEditor extends React.Component {
         {
           this.props.searches.editableSearchLoading || !this.props.searches.editableSearch ?
           <p>Loading Saved Search...</p> :
-          <div style={styles.base}>
-            <div style={styles.filters}>
-              <UserFilters
-                editMode={true}
-                onChange={this.onFilterChange.bind(this)} />
-            </div>
-            <div style={styles.rightPanel}>
-              <Button
-                onClick={this.confirmSave.bind(this)}
-                category="primary"
-                style={styles.saveButton}>
-                Update Search <FaFloopyO style={styles.saveIcon} />
-              </Button>
-              <div style={styles.userListContainer}>
-                <UserList
-                  total={this.props.searches.userCount}
-                  onPagination={this.onPagination.bind(this)}
-                  loadingQueryset={this.props.searches.loadingQueryset}
-                  users={this.props.searches.users}
-                  userSelected={this.updateUser.bind(this)} />
-                <UserDetail
-                  breakdown={this.props.filters.breakdown}
-                  specificBreakdown={this.props.filters.specificBreakdown}
-                  commentsLoading={this.props.comments.loading}
-                  user={this.props.users.selectedUser}
-                  comments={this.props.comments.items}
-                  style={styles.userDetail} />
+          <div>
+            {/*
+              can't update name or description just yet
+
+            <TextField label="name" value={this.props.searches.editableSearch.name} />
+            <textarea disabled>{this.props.searches.editableSearch.description}</textarea>
+            <TextField label="tag" value={this.props.searches.editableSearch.tag} />
+            */}
+            <div style={styles.base}>
+              <div style={styles.filters}>
+                <UserFilters
+                  editMode={true}
+                  onChange={this.onFilterChange.bind(this)} />
+              </div>
+              <div style={styles.rightPanel}>
+                <Button
+                  onClick={this.confirmSave.bind(this)}
+                  category="primary"
+                  style={styles.saveButton}>
+                  Update Search <FaFloopyO style={styles.saveIcon} />
+                </Button>
+                <div style={styles.userListContainer}>
+                  <UserList
+                    total={this.props.searches.userCount}
+                    onPagination={this.onPagination.bind(this)}
+                    loadingQueryset={this.props.searches.loadingQueryset}
+                    users={this.props.searches.users}
+                    userSelected={this.updateUser.bind(this)} />
+                  <UserDetail
+                    breakdown={this.props.filters.breakdownEdit}
+                    specificBreakdown={this.props.filters.specificBreakdownEdit}
+                    commentsLoading={this.props.comments.loading}
+                    user={this.props.users.selectedUser}
+                    comments={this.props.comments.items}
+                    style={styles.userDetail} />
+                </div>
               </div>
             </div>
           </div>

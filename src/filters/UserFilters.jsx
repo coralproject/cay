@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import _ from 'lodash';
 
 import { userSelected } from 'users/UsersActions';
-import { makeQueryFromState } from 'search/SearchActions';
+import { makeQueryFromState, clearUserList } from 'search/SearchActions';
 import {
   setBreakdown,
   setSpecificBreakdown,
@@ -33,6 +33,8 @@ export default class UserFilters extends React.Component {
     const breakdown = this.props.editMode ? this.props.breakdownEdit : this.props.breakdown;
     const specificBreakdown = this.props.editMode ? this.props.specificBreakdownEdit : this.props.specificBreakdown;
 
+    console.log('getSpecific', this.props.editMode, breakdown, specificBreakdown);
+
     switch (breakdown) {
     case 'section':
       return (
@@ -60,8 +62,9 @@ export default class UserFilters extends React.Component {
   setSpecificBreakdown(specificBreakdown) {
     let newValue = specificBreakdown !== null ? specificBreakdown.value : '';
     this.props.dispatch(userSelected(null));
+    this.props.dispatch(clearUserList());
     this.props.dispatch(setSpecificBreakdown(newValue, this.props.editMode));
-    this.props.dispatch(getFilterRanges('user'));
+    this.props.dispatch(getFilterRanges(this.props.editMode));
     this.props.dispatch(makeQueryFromState('user', 0, true));
   }
 

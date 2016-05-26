@@ -140,7 +140,7 @@ const parseFilterRanges = (ranges, filterState) => {
 };
 
 // HERE BE DRAGONS
-export const getFilterRanges = (editMode) => {
+export const getFilterRanges = (editMode = false) => {
 
   return (dispatch, getState) => {
     let fs = getState().filters;

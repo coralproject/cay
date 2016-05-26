@@ -99,7 +99,7 @@ const filters = (state = initialState, action) => {
     return {...state, specificBreakdown: action.specificBreakdown};
 
   case types.SET_SPECIFIC_BREAKDOWN_EDIT:
-    return {...state, specificBreakdown: action.specificBreakdown};
+    return {...state, specificBreakdownEdit: action.specificBreakdown};
 
   case types.RECEIVE_FILTER_RANGES:
 

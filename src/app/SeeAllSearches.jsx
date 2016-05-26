@@ -22,18 +22,7 @@ class SeeAllSearches extends React.Component {
     super(props);
     this.state = { deleteModalOpen: false };
   }
-  static propTypes = {
-    /* react */
-    // dispatch: React.PropTypes.func,
-    params: React.PropTypes.object,
-    routes: React.PropTypes.array,
-    /* component api */
-    style: React.PropTypes.object
-    // foo: React.PropTypes.string
-  }
-  static defaultProps = {
-    // foo: 'bar'
-  }
+
   componentWillMount() {
     // redirect user to /login if they're not logged in
     //   TODO: refactor: pass in a function that calculates auth state

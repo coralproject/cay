@@ -24,7 +24,7 @@ export default class FilterDateProximity extends React.Component {
               onChange={this.onMaxChanged.bind(this)}
               style={styles.minMaxInputs}
               type="number"
-              value={this.props.userMax} />
+               />
             {this.props.description.split("_")[1]}
           </span>
         </CardHeader>

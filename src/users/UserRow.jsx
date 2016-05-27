@@ -50,10 +50,11 @@ export default class UserRow extends React.Component {
         let stat;
         switch (this.props.filters[filterName].type) {
         case 'dateRange':
-        // case 'intDateProximity':
-        //   stat = `${this.props.user.statistics.comments.all.all[this.props.filters[filterName].field]} ${this.props.filters[filterName].name}`;
-        //   // <DateRangeClause {...this.props.filters[filterName]}/>;
-        //   break;
+        case 'intDateProximity':
+          stat = ""
+          // stat = `${this.props.user.statistics.comments.all.all[this.props.filters[filterName].field]} ${this.props.filters[filterName].name}`;
+          // <DateRangeClause {...this.props.filters[filterName]}/>;
+          break;
         case 'percentRange':
           stat = `${Math.floor(this.props.user.statistics.comments.all.all[this.props.filters[filterName].field] * 100)}% ${this.props.filters[filterName].name}`;
           // <PercentClause {...this.props.filters[filterName]}/>;

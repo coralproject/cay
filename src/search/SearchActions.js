@@ -424,8 +424,12 @@ export const updateSearch = staleSearch => {
     xenia(query).saveQuery().then(() => {
       dispatch({type: QUERYSET_SAVE_SUCCESS, name: query.name});
 
-      const filters = filters.editFilterList.map(key => filters.filters[key]);
-      const body = prepSearch(filters, query, name, description, tag, breakdownEdit, specificBreakdownEdit);
+      const editFilters = filters.editFilterList.map(key => {
+        console.log('updateSearch key', key);
+        console.log('updateSearch filters', filters);
+        return filters[key];
+      });
+      const body = prepSearch(editFilters, query, name, description, tag, breakdownEdit, specificBreakdownEdit);
 
       fetch(`${app.pillarHost}/api/search`, {method: 'PUT', body: JSON.stringify(body)})
         .then(resp => resp.json())

@@ -24,9 +24,7 @@ export default class SubmissionList extends Component {
     const { params } = this.props;
     xenia()
       .collection('form_submissions')
-      // TODO: The match is not working...
-      //.match({ form_id: params.id })
-      .skip(0)
+      .match({ form_id: `#objid:${params.id}` })
     .exec().then(res => this.setState({
       loading: false,
       submissions: res.results[0].Docs,

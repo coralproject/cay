@@ -26,10 +26,6 @@ import registerServiceWorker from 'serviceworker!./sw.js';
 import ga from 'react-ga';
 import { Lang } from 'i18n/lang';
 
-// Configuration
-import config from '../public/config.json';
-import dataConfig from '../public/data_config.json';
-
 import messages from 'i18n/messages'; // Lang does not know where did you get your messages from.
 
 import LangSugar from 'i18n/lang';
@@ -51,6 +47,8 @@ require('../fonts/glyphicons-halflings-regular.woff');
 if ('serviceWorker' in navigator && process && process.env.NODE_ENV === 'production') {
   registerServiceWorker({ scope: '/' }).then(() => {}, () => {});
 }
+
+let store;
 
 @Lang
 class Root extends React.Component {
@@ -90,22 +88,29 @@ class Root extends React.Component {
 }
 
 // entry point for the app
+const loadConfig = route => fetch(route).then(res => res.json());
 
-const requiredKeys = [ 'xeniaHost', 'pillarHost', 'basicAuthorization', 'environment', 'googleAnalyticsId', 'requireLogin' ];
-const allKeysDefined = requiredKeys.every(key => 'undefined' !== typeof config[key]);
+Promise.all([loadConfig('/config.json'), loadConfig('/data_config.json')])
+.then(results => {
+  const [app, filters] = results;
 
-if (!allKeysDefined) {
-  const message = `missing required keys on config.json. Must define ${requiredKeys.join('|')}`;
-  throw new Error(message);
-}
+  const requiredKeys = [ 'xeniaHost', 'pillarHost', 'basicAuthorization', 'environment', 'googleAnalyticsId', 'requireLogin' ];
+  const allKeysDefined = requiredKeys.every(key => 'undefined' !== typeof app[key]);
 
-// load config into initialState so it's ALWAYS available
-const store = configureStore({app: config});
+  if (!allKeysDefined) {
+    const message = `missing required keys on config.json. Must define ${requiredKeys.join('|')}`;
+    throw new Error(message);
+  }
 
-store.dispatch(configXenia());
-store.dispatch({type: 'DATA_CONFIG_LOADED', config: dataConfig});
+  // load config into initialState so it's ALWAYS available
+  store = configureStore({app});
 
-ReactDOM.render(<Root/>, document.getElementById('root'));
+  store.dispatch(configXenia());
+  store.dispatch({type: 'DATA_CONFIG_LOADED', config: filters});
+
+  ReactDOM.render(<Root/>, document.getElementById('root'));
+})
+.catch(err => console.error(err.stack));
 
 // prevent browser from navigating backwards if you hit the backspace key
 document.addEventListener('keydown', function (e) {

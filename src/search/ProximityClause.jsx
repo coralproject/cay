@@ -39,7 +39,6 @@ class ProximityClause extends React.Component {
   }
 
   render() {
-    console.log(this.props)
     const styles = this.getStyles();
     return (
       <span style={[

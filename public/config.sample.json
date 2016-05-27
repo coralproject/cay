@@ -5,5 +5,8 @@
   "brand": "Tyrell Corporation",
   "googleAnalyticsId": "UA-XXXXXXXXXX",
   "requireLogin": false,
-  "basicAuthorization": "Basic 109340923j02i3jroi23jroi23ljf23f"
+  "basicAuthorization": "Basic 109340923j02i3jroi23jroi23ljf23f",
+  "features": {
+    "ask": false
+  }
 }

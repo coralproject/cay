@@ -70,7 +70,7 @@ class Root extends React.Component {
   }
 
   render() {
-
+    const { features } = this.props;
     return (
       <StyleRoot>
         <Provider store={store}>
@@ -82,10 +82,14 @@ class Root extends React.Component {
             <Route path="tag-manager" component={TagManager} />
             <Route path="saved-searches" component={SeeAllSearches}/>
             <Route path="saved-search/:id" component={SearchDetail} />
-            <Route path="forms" component={FormList}/>
-            <Route path="forms/create" component={FormCreate}/>
-            <Route path="forms/:id" component={FormEdit}/>
-            <Route path="forms/:id/submissions" component={SubmissionList}/>
+            {features.ask ? (
+              <div>
+                <Route path="forms" component={FormList}/>
+                <Route path="forms/create" component={FormCreate}/>
+                <Route path="forms/:id" component={FormEdit}/>
+                <Route path="forms/:id/submissions" component={SubmissionList}/>
+              </div>
+            ) : null}
             <Route path="*" component={NoMatch} />
             {/*<Route path="explore" component={DataExplorer} />*/}
           </Router>
@@ -116,7 +120,7 @@ Promise.all([loadConfig('/config.json'), loadConfig('/data_config.json')])
   store.dispatch(configXenia());
   store.dispatch({type: 'DATA_CONFIG_LOADED', config: filters});
 
-  ReactDOM.render(<Root/>, document.getElementById('root'));
+  ReactDOM.render(<Root features={app.features|| {}}/>, document.getElementById('root'));
 })
 .catch(err => console.error(err.stack));
 

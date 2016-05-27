@@ -1,19 +1,16 @@
 import React, {Component, PropTypes} from 'react';
-import { DragSource } from 'react-dnd';
+import { connect } from 'react-redux';
 import Checkbox from 'components/forms/Checkbox';
 import TextField from 'components/forms/TextField';
 import FaArrowUp from 'react-icons/lib/fa/arrow-up';
 import FaArrowDown from 'react-icons/lib/fa/arrow-down';
+import { updateWidget } from 'forms/FormActions';
 
 
 const renderSettings = {
   text(field) {
     return (
       <div style={{display: 'flex', justifyContent: 'space-between'}}>
-        <p style={{display: 'flex', justifyContent: 'flex-start'}}>
-          <Checkbox label='Max chars.' />
-          <input style={{width: 40, height: 20}} type='number' />
-        </p>
         <Checkbox label='required' />
       </div>
     );
@@ -31,53 +28,40 @@ const renderSettings = {
   }
 };
 
-const askSource = {
-  beginDrag(props) {
-    return {
-      field: props.field,
-      id: props.id,
-      onList: props.onList
-    };
-  }
-};
-
-@DragSource('ask_component', askSource, (connect, monitor) => ({
-  connectDragSource: connect.dragSource(),
-  isDragging: monitor.isDragging()
+@connect(({ forms }) => ({
+  widgets: forms.widgets
 }))
 export default class AskComponent extends Component {
   static propTypes = {
     field: PropTypes.object.isRequired,
-    connectDragSource: PropTypes.func.isRequired,
-    isDragging: PropTypes.bool.isRequired,
     id: PropTypes.number
   };
 
   render() {
-    const { connectDragSource, onList } = this.props;
-    return connectDragSource(onList ?
-      this.renderEdit()
-      : this.renderType()
-    );
+    const { onList } = this.props;
+    return onList ? this.renderEdit() : this.renderType();
   }
 
   renderType() {
-    const { isDragging, field } = this.props;
+    const { field } = this.props;
     return (
-      <div onClick={this.onClick.bind(this)} style={styles.askComponent(isDragging)}>
+      <div onClick={this.onClick.bind(this)} style={styles.askComponent}>
         {field.label}
       </div>
     );
   }
 
+  onTitleChange(title) {
+    this.props.dispatch(updateWidget(this.props.id, { title }));
+  }
+
   renderEdit() {
-    const { id, onMove, isLast } = this.props;
+    const { id, onMove, isLast, field } = this.props;
     return (
       <div style={styles.editContainer}>
         <div>{id+1}.</div>
         <div style={styles.editBody}>
-          <h4 contentEditable="true">Field title</h4>
-          <p contentEditable="true">Description text (optional)</p>
+          <TextField onChange={this.onTitleChange.bind(this)} value={field.title} />
           {this.editSettings()}
         </div>
         <div style={styles.arrowContainer}>
@@ -102,22 +86,20 @@ export default class AskComponent extends Component {
 }
 
 export const styles = {
-  askComponent: function(isDragging) {
-    return {
-      opacity: isDragging ? 0.5 : 1,
-      marginBottom: 20,
-      shadowOffset: { height: 1, width: 0},
-      boxShadow: '0 1px 3px #9B9B9B',
-      padding: 20,
-      cursor: 'pointer',
-      height: 50,
-      backgroundColor: '#fff',
-      borderRadius: 4,
-      fontSize: 14,
-      fontWeight: 'bold',
-      minWidth: 150,
-      margin: 5
-    };
+  askComponent: {
+    opacity: 1,
+    marginBottom: 20,
+    shadowOffset: { height: 1, width: 0},
+    boxShadow: '0 1px 3px #9B9B9B',
+    padding: 20,
+    cursor: 'pointer',
+    height: 50,
+    backgroundColor: '#fff',
+    borderRadius: 4,
+    fontSize: 14,
+    fontWeight: 'bold',
+    minWidth: 150,
+    margin: 5
   },
   editContainer: {
     display: 'flex',

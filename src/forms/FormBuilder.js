@@ -1,29 +1,26 @@
 
 import React, { Component, PropTypes } from 'react';
-import { DragDropContext, DropTarget } from 'react-dnd';
-import HTML5Backend from 'react-dnd-html5-backend';
 import ReactDOM from 'react-dom';
+import {connect} from 'react-redux';
+
 import FormComponent, {styles as askComponentStyles} from 'forms/FormComponent';
 import Checkbox from 'components/forms/Checkbox';
 import TextField from 'components/forms/TextField';
 import Modal from 'components/modal/Modal';
-import {connect} from 'react-redux';
-
+import { appendWidget, moveWidget } from 'forms/FormActions';
 
 const askTypes = [
-  {type: 'text', label: 'Short text'},
-  {type: 'textarea', label: 'Text area'},
-  {type: 'email', label: 'Email address'},
-  {type: 'number', label: 'Number'},
-  {type: 'radio', label: 'Radio buttons'},
-  {type: 'multiple-choice', label: 'Multiple choice'},
-  {type: 'dropdown', label: 'Drop down'}
+  {type: 'TextField', label: 'Short text'},
+  {type: 'TextArea', label: 'Text area'},
+  {type: 'TextField', label: 'Email address'},
+  {type: 'TextField', label: 'Number'},
+  {type: 'MultipleChoice', label: 'Radio buttons'},
+  {type: 'MultipleChoice', label: 'Multiple choice'},
+  {type: 'MultipleChoice', label: 'Drop down'}
 ];
 
-@connect(({ app }) => ({ app }))
-@DragDropContext(HTML5Backend)
+@connect(({ app, forms }) => ({ app, forms }))
 export default class FormBuilder extends Component {
-
   render() {
     const {preview, onClosePreview} = this.props;
     return (
@@ -43,6 +40,7 @@ export default class FormBuilder extends Component {
         <Modal
           title="Save Search"
           isOpen={preview}
+          confirmAction={() => console.log('worked')}
           cancelAction={onClosePreview}>
           {this.renderPreview.call(this)}
         </Modal>
@@ -50,38 +48,24 @@ export default class FormBuilder extends Component {
     );
   }
 
-  addToBottom(type) {
-    this.setState({
-      fields: fields.concat(type)
-    });
+  addToBottom(data) {
+    this.props.dispatch(appendWidget({
+      title: data.label,
+      type: 'field',
+      component: data.type,
+      wrapper: {},
+      props: {},
+      id: Math.floor(Math.random() * 99999)
+    }));
   }
 
   renderPreview() {
     if(!this.props.preview) return null;
 
-    const props = {
-      settings: {
+    const form = Object.assign({}, this.props.forms.form);
+    form.steps[0].widgets = this.props.forms.widgets;
 
-      },
-      footer: {
-        permissions: 'Code of conduct'
-      },
-      page: {
-        children: [{
-          type: 'field',
-          component: 'MultipleChoice',
-          title: 'Select one or several themes for your story',
-          required: true,
-          pseudoLabel: true,
-          props: {
-            multipleChoice: true,
-            options: [{title: 'Pablo'}, {title: 'Familiy life'}, {title: 'School'}, {title: 'Law Enforcement'}]
-          }
-        }]
-      }
-    };
-
-    const src = `${this.props.app.elkhornHost}/preview.js?props=${JSON.stringify(props)}`;
+    const src = `${this.props.app.elkhornHost}/preview.js?props=${encodeURIComponent(JSON.stringify(form))}`;
     const script = document.createElement('script');
     script.src = src;
     document.getElementsByTagName('head')[0].appendChild(script);
@@ -94,73 +78,29 @@ export default class FormBuilder extends Component {
   }
 }
 
-const askTarget = {
-
-  drop(props, monitor, component) {
-    const clientOffset = monitor.getClientOffset();
-    const hoverBoundingRect = ReactDOM.findDOMNode(component).getBoundingClientRect();
-    const hoverClientY = clientOffset.y - hoverBoundingRect.top;
-    const style = askComponentStyles.askComponent();
-
-    const hoverIndex = Math.floor(hoverClientY / (style.height + style.marginBottom / 2));
-    const fields = component.state.fields.slice();
-    if (monitor.getItem().onList) {
-      const index = Math.min(fields.length - 1, hoverIndex);
-      const id = monitor.getItem().id;
-      fields[id] = fields[index];
-      fields[index] = monitor.getItem().field;
-    } else {
-      const index = Math.min(fields.length, hoverIndex);
-      fields.splice(index, 0, monitor.getItem().field);
-    }
-    component.setState({ fields });
-  }
-};
-
-@DropTarget('ask_component', askTarget, connect => ({
-  connectDropTarget: connect.dropTarget()
-}))
+@connect(({ forms }) => ({ forms }))
 class FormDiagram extends Component {
-  static propTypes = {
-    connectDropTarget: PropTypes.func.isRequired,
-    onFieldSelect: PropTypes.func
-  };
-
-  constructor(props, context) {
-    super(props, context);
-    this.state = { fields: [] };
-  }
 
   render() {
-    const {connectDropTarget, onFieldSelect} = this.props;
-    const {fields} = this.state;
+    const { onFieldSelect, forms } = this.props;
+    const { widgets } = forms;
     return (
       <div style={styles.formDiagramContainer}>
-        <h4 contentEditable="true">This is the form name for the public</h4>
-        <p contentEditable="true">This is the form description for the users</p>
-        {connectDropTarget(
-          <div style={styles.formDiagram}>
-            {fields.map((field, i) => (
-              <FormComponent onFieldSelect={onFieldSelect}
-                onList={true} field={field} isLast={i === fields.length - 1} id={i} key={i}
-                onMove={this.onMove.bind(this)} />
-            ))}
-          </div>
-        )}
-
+        <h4>This is the form name for the public</h4>
+        <p>This is the form description for the users</p>
+        <div style={styles.formDiagram}>
+          {widgets.map((widget, i) => (
+            <FormComponent onFieldSelect={onFieldSelect}
+              onList={true} field={widget} isLast={i === widgets.length - 1} id={i} key={i}
+              onMove={this.onMove.bind(this)} />
+          ))}
+        </div>
       </div>
     );
   }
 
   onMove(direction, id) {
-    const { fields } = this.state;
-    const changeWith = direction === 'up' ? id - 1 : id + 1;
-
-    const newFields = [...fields];
-    const aux = newFields[id];
-    newFields[id] = newFields[changeWith];
-    newFields[changeWith] = aux;
-    this.setState({ fields: newFields });
+    this.props.dispatch(moveWidget(id, id + (direction === 'up' ? -1 : 1)));
   }
 }
 

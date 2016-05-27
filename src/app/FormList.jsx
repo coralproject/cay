@@ -62,7 +62,7 @@ export default class FormList extends React.Component {
     return router.push(`/forms/${id}/submissions`);
   }
 
-  renderTable(group) {
+  renderTable(group = []) {
     return (
       <Table style={styles.list} striped={ true } multiSelect={ false } hasActions={ true } isLoading={ this.props.loadingTags } loadingMessage="Loading...">
         <TableHead>
@@ -78,12 +78,13 @@ export default class FormList extends React.Component {
   }
 
   renderRow(form, i) {
+    const header = form.header || {};
     return (
       <TableRow onClick={this.onRowClick.bind(this, form._id)} style={styles.row} key={i}>
-        <TableCell>{form.header.title}</TableCell>
-        <TableCell style={{maxWidth: 400}}>{form.header.description}</TableCell>
+        <TableCell>{header.title}</TableCell>
+        <TableCell style={{maxWidth: 400}}>{header.description}</TableCell>
         <TableCell>{form.answers}</TableCell>
-        <TableCell><MdDelete key={i} onClick={ this.confirmDeletion.bind(this, form.header.title, form.header.description, i) } /></TableCell>
+        <TableCell><MdDelete key={i} onClick={ this.confirmDeletion.bind(this, header.title, header.description, i) } /></TableCell>
       </TableRow>
     );
   }

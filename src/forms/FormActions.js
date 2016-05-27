@@ -1,9 +1,13 @@
 
 import { xenia } from 'app/AppActions';
 
+export const WIDGET_UPDATE = 'WIDGET_UPDATE';
+export const WIDGET_MOVE = 'WIDGET_MOVE';
+
 export const FORM_REQUEST_STARTED = 'FORM_REQUEST_STARTED';
 export const FORM_REQUEST_SUCCESS = 'FORM_REQUEST_SUCCESS';
 export const FORM_REQUEST_FAILURE = 'FORM_REQUEST_FAILURE';
+export const FORM_APPEND_WIDGET = 'FORM_APPEND_WIDGET';
 
 export const FORMS_REQUEST_STARTED = 'FORMS_REQUEST_STARTED';
 export const FORMS_REQUEST_SUCCESS = 'FORMS_REQUEST_SUCCESS';
@@ -131,9 +135,48 @@ export const createEmpty = () => {
   };
 };
 
+export const appendWidget = type => {
+  return {
+    type: FORM_APPEND_WIDGET,
+    widget: type
+  };
+};
+
+export const updateWidget = (id, data) => {
+  return {
+    type: WIDGET_UPDATE,
+    data,
+    id
+  };
+};
+
+export const moveWidget = (from, to) => {
+  return {
+    type: WIDGET_MOVE,
+    from,
+    to
+  };
+};
+
 export const listForms = () => dispatch => {
-  xenia().collection('forms').skip(0)
+  xenia().collection('forms')
+  .sort(['date_updated', -1])
   .exec()
     .then(res => dispatch(formsRequestSuccess(res.results[0].Docs)))
     .catch(err => dispatch(formsRequestFailure(err)));
+};
+
+export const saveForm = (form, widgets, host) => dispatch => {
+  const data = Object.assign({}, form);
+  data.steps[0].widgets = widgets;
+  fetch(`${host}/create`, {
+    method: 'POST',
+    mode: 'cors',
+    headers: new Headers({
+      'Content-Type': 'application/json'
+    }),
+    body: JSON.stringify(data)
+  }).then(res => res.json())
+  .then(json => alert(json.id));
+
 };

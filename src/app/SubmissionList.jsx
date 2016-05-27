@@ -110,13 +110,27 @@ class SubmissionDetail extends Component {
     return (
       <div style={styles.detail.answersContainer}>
         {submission.replies.map((reply, key) => (
-          <div key={key}>
+          <div style={styles.detail.questionContainer} key={key}>
             <h2 style={styles.detail.question}>{reply.question}</h2>
-            <p>{reply.answer}</p>
+            <p>{this.renderAnswer(reply.answer)}</p>
           </div>
         ))}
       </div>
     );
+  }
+
+  renderAnswer(answer = {}) {
+    if (answer.options) {
+      return (
+        <ul>
+          {answer.options.map(option => (
+            <li>- {option.title}</li>
+          ))}
+        </ul>
+      )
+    }
+
+    return answer.text
   }
 
   renderAuthorDetail() {
@@ -151,6 +165,9 @@ class SubmissionDetail extends Component {
 
 const styles = {
   detail: {
+    questionContainer: {
+      marginBottom: 20
+    },
     answersContainer: {
       padding: 50,
       paddingTop: 0

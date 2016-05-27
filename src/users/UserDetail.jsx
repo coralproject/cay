@@ -110,35 +110,30 @@ export default class UserDetail extends React.Component {
     return (
       <div>
         <div style={styles.topPart}>
-          <Avatar style={styles.avatar} src="/img/user_portrait_placeholder.png" size={100} />
+          {/*<Avatar style={styles.avatar} src="/img/user_portrait_placeholder.png" size={100} />*/}
           <Heading size="medium">{this.props.user.name}</Heading>
         </div>
-        {/*<p><MdLocalOffer /> Add/remove Tags for this Commenter</p>
-        <Select
-          multi={true}
-          value={this.state.selectedTags}
-          onChange={this.updateTags.bind(this)}
-          options={this.getTags()}
-        />*/}
-        <Tabs initialSelectedIndex={0} style={styles.tabs}>
-          <Tab title="About">
-            <Stats>
-              { this.getStats() }
-            </Stats>
-          </Tab>
-          <Tab title="Activity">
-
-            {
-              this.props.commentsLoading || !this.props.comments.length ?
-              'Loading Comments...' :
-              (
-                <CommentDetailList
-                  user={this.props}
-                  comments={this.props.comments} />
-              )
-            }
-          </Tab>
-        </Tabs>
+        {
+          /*<p><MdLocalOffer /> Add/remove Tags for this Commenter</p>
+          <Select
+            multi={true}
+            value={this.state.selectedTags}
+            onChange={this.updateTags.bind(this)}
+            options={this.getTags()}
+          />*/
+        }
+        <div style={styles.statsContainer}>
+          { this.getStats() }
+        </div>
+        {
+          this.props.commentsLoading || !this.props.comments.length ?
+          'Loading Comments...' :
+          (
+            <CommentDetailList
+              user={this.props}
+              comments={this.props.comments} />
+          )
+        }
       </div>
     );
   }
@@ -180,6 +175,9 @@ const styles = {
   },
   stats: {
     flex: 1
+  },
+  statsContainer: {
+    marginBottom: 20
   },
   tabs: {
     marginTop: 20,

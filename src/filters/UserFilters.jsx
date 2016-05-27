@@ -163,12 +163,18 @@ export default class UserFilters extends React.Component {
         );
       }
 
+      if (f.min === null) {
+        if (this.props.filterRangesLoaded) {
+          console.log('Filter:', i, f.description, 'had null data, so we didn\'t show it. Check getActiveFiltersFromConfig() in UserFilters.');
+        }
+        filterComponent = null;
+      }
+
       return filterComponent;
     });
   }
 
   render() {
-
     return (
       <div style={ styles.base }>
         <div style={ styles.columnHeader }>

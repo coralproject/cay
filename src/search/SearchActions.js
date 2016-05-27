@@ -38,6 +38,9 @@ export const PILLAR_SAVED_SEARCH_EDIT_REQUEST = 'PILLAR_SAVED_SEARCH_EDIT_REQUES
 export const PILLAR_EDIT_SEARCH_SUCCESS = 'PILLAR_EDIT_SEARCH_SUCCESS';
 export const PILLAR_EDIT_SEARCH_FAILED = 'PILLAR_EDIT_SEARCH_FAILED';
 
+export const PILLAR_SEARCH_UPDATE_SUCCESS = 'PILLAR_SEARCH_UPDATE_SUCCESS';
+export const PILLAR_SEARCH_UPDATE_FAILED = 'PILLAR_SEARCH_UPDATE_FAILED';
+
 // when we're initializing a Saved Search update to Pillar
 export const PILLAR_SAVED_SEARCH_UPDATE = 'PILLAR_SAVED_SEARCH_UPDATE';
 
@@ -424,7 +427,7 @@ export const updateSearch = staleSearch => {
       const filters = filters.editFilterList.map(key => filters.filters[key]);
       const body = prepSearch(filters, query, name, description, tag, breakdownEdit, specificBreakdownEdit);
 
-      fetch(`${app.pillarHost}/api/search/${staleSearch.id}`, {method: 'POST', body: JSON.stringify(body)})
+      fetch(`${app.pillarHost}/api/search`, {method: 'PUT', body: JSON.stringify(body)})
         .then(resp => resp.json())
         .then(search => {
           // do something with savedSearch?

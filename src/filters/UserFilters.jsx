@@ -166,7 +166,7 @@ export default class UserFilters extends React.Component {
 
       if (f.min === null) {
         if (this.props.filterRangesLoaded) {
-          console.log("Filter:", i, f.description, "had null data, so we didn't show it. Check getActiveFiltersFromConfig() in UserFilters.");
+          console.log('Filter:', i, f.description, 'had null data, so we didn\'t show it. Check getActiveFiltersFromConfig() in UserFilters.');
         }
         filterComponent = null;
       }

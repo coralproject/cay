@@ -23,6 +23,7 @@ import FormEdit from 'app/FormEdit';
 import FormCreate from 'app/FormCreate';
 import NoMatch from 'app/NoMatch';
 import About from 'app/About';
+import SubmissionList from 'app/SubmissionList';
 
 // Utils
 import registerServiceWorker from 'serviceworker!./sw.js';
@@ -84,6 +85,7 @@ class Root extends React.Component {
             <Route path="forms" component={FormList}/>
             <Route path="forms/create" component={FormCreate}/>
             <Route path="forms/:id" component={FormEdit}/>
+            <Route path="forms/:id/submissions" component={SubmissionList}/>
             <Route path="*" component={NoMatch} />
             {/*<Route path="explore" component={DataExplorer} />*/}
           </Router>

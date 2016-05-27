@@ -5,7 +5,7 @@ import { Link } from 'react-router';
 import MdDelete from 'react-icons/lib/md/delete';
 import _ from 'lodash';
 
-import { deleteForm } from 'forms/FormActions';
+import { deleteForm, listForms } from 'forms/FormActions';
 import settings from 'settings';
 
 import Page from 'app/layout/Page';
@@ -34,6 +34,10 @@ export default class FormList extends React.Component {
     router: PropTypes.object.isRequired
   };
 
+  componentWillMount() {
+    this.props.dispatch(listForms());
+  }
+
   confirmDeletion(name, description, index, event) {
     event.stopPropagation();
     this.setState({
@@ -55,7 +59,7 @@ export default class FormList extends React.Component {
 
   onRowClick(id) {
     const {router} = this.context;
-    return router.push(`/forms/${id}`);
+    return router.push(`/forms/${id}/submissions`);
   }
 
   renderTable(group) {
@@ -75,7 +79,7 @@ export default class FormList extends React.Component {
 
   renderRow(form, i) {
     return (
-      <TableRow onClick={this.onRowClick.bind(this, form.id)} style={styles.row} key={i}>
+      <TableRow onClick={this.onRowClick.bind(this, form._id)} style={styles.row} key={i}>
         <TableCell>{form.header.title}</TableCell>
         <TableCell style={{maxWidth: 400}}>{form.header.description}</TableCell>
         <TableCell>{form.answers}</TableCell>
@@ -87,7 +91,7 @@ export default class FormList extends React.Component {
   render() {
 
     const groups = _.groupBy(this.props.forms.items, 'status');
-
+    console.log(groups)
     return (
       <Page>
         <ContentHeader title="View Forms" style={styles.header}>
@@ -96,13 +100,13 @@ export default class FormList extends React.Component {
 
         <Tabs initialSelectedIndex={0} style={styles.tabs}>
           <Tab title="Active">
-            {this.renderTable(groups.active)}
+            {this.renderTable(groups.active || groups[''])}
           </Tab>
           <Tab title="Draft">
-            {this.renderTable(groups.draft)}
+            {this.renderTable(groups.draft || [])}
           </Tab>
           <Tab title="Past">
-            {this.renderTable(groups.past)}
+            {this.renderTable(groups.past || [])}
           </Tab>
         </Tabs>
 

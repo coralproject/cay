@@ -1,9 +1,13 @@
 
-const API_PREFIX = '/api/';
+import { xenia } from 'app/AppActions';
 
 export const FORM_REQUEST_STARTED = 'FORM_REQUEST_STARTED';
 export const FORM_REQUEST_SUCCESS = 'FORM_REQUEST_SUCCESS';
 export const FORM_REQUEST_FAILURE = 'FORM_REQUEST_FAILURE';
+
+export const FORMS_REQUEST_STARTED = 'FORMS_REQUEST_STARTED';
+export const FORMS_REQUEST_SUCCESS = 'FORMS_REQUEST_SUCCESS';
+export const FORMS_REQUEST_FAILURE = 'FORMS_REQUEST_FAILURE';
 
 export const FORM_REQUEST_EDIT_ACCESS = 'FORM_REQUEST_EDIT_ACCESS';
 export const FORM_EDIT_ACCEPTED = 'FORM_EDIT_ACCEPTED';
@@ -51,6 +55,27 @@ export const formRequestFailure = (err) => {
     err
   };
 };
+
+export const formsRequestStarted = () => {
+  return {
+    type: FORMS_REQUEST_STARTED
+  };
+};
+
+export const formsRequestSuccess = forms => {
+  return {
+    type: FORMS_REQUEST_SUCCESS,
+    forms
+  };
+};
+
+export const formsRequestFailure = err => {
+  return {
+    type: FORMS_REQUEST_FAILURE,
+    err
+  };
+};
+
 
 export const deleteSuccessful = (form) => {
   return {
@@ -104,4 +129,11 @@ export const createEmpty = () => {
   return {
     type: FORM_CREATE_EMPTY
   };
+};
+
+export const listForms = () => dispatch => {
+  xenia().collection('forms').skip(0)
+  .exec()
+    .then(res => dispatch(formsRequestSuccess(res.results[0].Docs)))
+    .catch(err => dispatch(formsRequestFailure(err)));
 };

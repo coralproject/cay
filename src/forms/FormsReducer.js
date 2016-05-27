@@ -65,6 +65,9 @@ const forms = (state = initial, action) => {
   case types.FORM_CREATE_EMPTY:
     return Object.assign({}, state, {form: emptyForm });
 
+  case types.FORMS_REQUEST_SUCCESS:
+    return Object.assign({}, state, { items: action.forms })
+
   default:
     return state;
   }

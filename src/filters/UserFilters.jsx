@@ -114,8 +114,8 @@ export default class UserFilters extends React.Component {
             key={i}
             min={f.min}
             max={f.max}
-            userMin={Math.max(f.userMin, f.min)}
-            userMax={Math.min(f.userMax, f.max)}
+            userMin={f.userMin ? Math.max(f.userMin, f.min) : f.userMin}
+            userMax={f.userMax ? Math.min(f.userMax, f.max) : f.userMax}
             description={fmtDesc}
             fieldName={f.key}
             type={f.type}/>
@@ -128,8 +128,8 @@ export default class UserFilters extends React.Component {
             key={i}
             min={f.min}
             max={f.max}
-            userMin={Math.max(f.userMin, f.min)}
-            userMax={Math.min(f.userMax, f.max)}
+            userMin={f.userMin ? Math.max(f.userMin, f.min) : f.userMin}
+            userMax={f.userMax ? Math.min(f.userMax, f.max) : f.userMax}
             description={inTitleCase}
             fieldName={f.key}
             type={f.type}/>

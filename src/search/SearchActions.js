@@ -176,7 +176,6 @@ export const makeQueryFromState = (type, page = 0, replace = false) => {
         const clampedUserMin = clamp(filter.userMin, filter.min, filter.max);
         const clampedUserMax = clamp(filter.userMax, filter.min, filter.max);
 
-
         // convert everything to numbers since equivalent Dates are not equal
         // this will break if a string literal is ever a filter value since NaN !== NaN
         if (+filter.min !== +clampedUserMin) {
@@ -193,7 +192,14 @@ export const makeQueryFromState = (type, page = 0, replace = false) => {
         }
 
         if (+filter.max !== +clampedUserMax) {
-          const searchMax = _.isDate(clampedUserMax) ? `#date:${clampedUserMax.toISOString()}` : clampedUserMax;
+          let searchMax;
+          if (_.isDate(clampedUserMax)) {
+            searchMin = `#date:${clampedUserMax.toISOString()}`;
+          } else if (filter.type === 'intDateProximity') {
+            searchMax = `#time:${-clampedUserMax*24}h`;
+          } else {
+            searchMax = clampedUserMax;
+          }
           x.match({[dbField]: {$lte: searchMax}});
         }
       });

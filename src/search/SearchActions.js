@@ -312,10 +312,10 @@ export const saveQueryFromState = (queryName, desc, tag) => {
 
 // prepare the active query to be saved to xenia
 const createQueryForSave = (query, name, desc) => {
-  query = _.cloneDeep(query);
+  const q = _.cloneDeep(query);
 
   // inject $limt and $skip commands before saving
-  query.queries[0].commands.forEach((command) => {
+  q.queries[0].commands.forEach((command) => {
     if (typeof command.$skip !== 'undefined') {
       command.$skip = '#number:skip';
     } else if (typeof command.$limit !== 'undefined') {
@@ -323,14 +323,14 @@ const createQueryForSave = (query, name, desc) => {
     }
   });
 
-  query.queries[0].commands.unshift({
+  q.queries[0].commands.unshift({
     $sort: { '#string:sort': -1 }
   });
 
-  query.name = name;
-  query.desc = desc;
+  q.name = name;
+  q.desc = desc;
 
-  return name;
+  return q;
 };
 
 // create the body of request to save a Search to Pillar
@@ -369,20 +369,18 @@ the filters object only stores non-default values and the dimension breakdowns
 */
 const doPutQuery = (dispatch, state, name, desc, tag) => {
 
-  const {breakdown, specificBreakdown} = state;
+  const {breakdown, specificBreakdown} = state.filters;
   const query = createQueryForSave(state.searches.activeQuery, name, desc);
 
-  console.log('about to xenia.saveQuery');
   xenia(query)
     .saveQuery()
     .then(() => { // if response.status < 400
       dispatch({type: QUERYSET_SAVE_SUCCESS, name: query.name});
 
-      const filters = state.filterList.map(key => state.filters[key]);
+      const filters = state.filters.filterList.map(key => state.filters[key]);
       const body = prepSearch(filters, query, name, desc, tag, breakdown, specificBreakdown);
 
-      // save it to pillar
-      fetch(state.app.pillarHost + '/api/search', {method: 'POST', body: JSON.stringify(body)})
+      fetch(`${state.app.pillarHost}/api/search`, {method: 'POST', body: JSON.stringify(body)})
         .then(resp => resp.json())
         .then(search => {
           // do something with savedSearch?

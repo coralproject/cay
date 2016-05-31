@@ -24,7 +24,6 @@ export default class FilterNumbers extends React.Component {
     super(props);
     this.state = {
       symbol: 'GTLT',
-      step: (props.type === 'floatRange' || props.type === 'percentRange') ? 0.01 : 1,
       equals: null
     };
   }
@@ -40,10 +39,6 @@ export default class FilterNumbers extends React.Component {
   }
   static defaultProps = {
     fieldName: 'UNDEFINED___'
-  }
-
-  componentWillReceiveProps(props) {
-    this.setState({step: (props.type === 'floatRange' || props.type === 'percentRange') ? 0.01 : 1});
   }
 
   handleSymbolClick(){
@@ -90,13 +85,13 @@ export default class FilterNumbers extends React.Component {
         </div>
         <div>
           <input
-            onChange={event => this.props.onChange(this.props.fieldName, 'userMin', event.target.value)}
+            onChange={event => this.props.onChange(this.props.fieldName, 'userMin', +event.target.value)}
             style={style.minMaxInputs}
             type='number'
             value={this.props.userMin}/>
           {` - `}
           <input
-            onChange={event => this.props.onChange(this.props.fieldName, 'userMax', event.target.value)}
+            onChange={event => this.props.onChange(this.props.fieldName, 'userMax', +event.target.value)}
             style={style.minMaxInputs}
             type='number'
             value={this.props.userMax}/>

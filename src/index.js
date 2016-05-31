@@ -21,6 +21,7 @@ import SearchDetail from 'app/SearchDetail';
 import FormList from 'app/FormList';
 import FormEdit from 'app/FormEdit';
 import FormCreate from 'app/FormCreate';
+import SearchEditor from 'app/SearchEditor';
 import NoMatch from 'app/NoMatch';
 import About from 'app/About';
 import SubmissionList from 'app/SubmissionList';
@@ -90,6 +91,7 @@ class Root extends React.Component {
                 <Route path="forms/:id/submissions" component={SubmissionList}/>
               </div>
             ) : null}
+            <Route path="edit-search/:id" component={SearchEditor} />
             <Route path="*" component={NoMatch} />
             {/*<Route path="explore" component={DataExplorer} />*/}
           </Router>

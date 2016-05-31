@@ -12,19 +12,22 @@ import { mediumGrey } from 'settings';
 
 import { userSelected } from 'users/UsersActions';
 import { fetchCommentsByUser } from 'comments/CommentsActions';
-import { saveQueryFromState, makeQueryFromState } from 'search/SearchActions';
-import { fetchInitialData } from 'search/SearchActions';
-import { filterChanged } from 'filters/FiltersActions';
-
+import {
+  saveQueryFromState,
+  makeQueryFromState,
+  fetchInitialData,
+  clearUserList,
+  clearRecentSavedSearch
+} from 'search/SearchActions';
+import { filterChanged, getFilterRanges } from 'filters/FiltersActions';
 
 import Page from 'app/layout/Page';
 import ContentHeader from 'components/ContentHeader';
 import UserList from 'users/UserList';
 import UserDetail from 'users/UserDetail';
-import SearchFilters from 'search/SearchFilters';
+import UserFilters from 'filters/UserFilters';
 import Button from 'components/Button';
 import FaFloopyO from 'react-icons/lib/fa/floppy-o';
-import MdEdit from 'react-icons/lib/md/edit';
 import Modal from 'components/modal/Modal';
 import TextField from 'components/forms/TextField';
 import StatusBar from 'components/StatusBar';
@@ -55,6 +58,8 @@ export default class SearchCreator extends Component {
 
   // only the first time
   componentWillMount() {
+    const {dispatch} = this.props;
+
     // redirect user to /login if they're not logged in
     //   TODO: refactor: pass in a function that calculates auth state
     if (this.props.app.requireLogin && !this.props.searches.authorized) {
@@ -63,7 +68,10 @@ export default class SearchCreator extends Component {
 
     // set up the initial default / unfiltered view
     // this was previously in UserFilters
-    this.props.dispatch(fetchInitialData());
+    dispatch(clearRecentSavedSearch());
+    dispatch(clearUserList());
+    dispatch(fetchInitialData());
+    dispatch(getFilterRanges(false)); // editmode => false
   }
 
   updateUser(user) {
@@ -103,9 +111,11 @@ export default class SearchCreator extends Component {
   }
 
   onFilterChange(fieldName, attr, val) {
-    this.props.dispatch(userSelected(null));
-    this.props.dispatch(filterChanged(fieldName, {[attr]: val}));
-    this.props.dispatch(makeQueryFromState('user', 0, true));
+    const {dispatch} = this.props;
+
+    dispatch(userSelected(null));
+    dispatch(filterChanged(fieldName, {[attr]: val}));
+    dispatch(makeQueryFromState('user', 0, true));
   }
 
   render() {
@@ -115,17 +125,16 @@ export default class SearchCreator extends Component {
       <Page>
 
         <ContentHeader title={ window.L.t('Search Creator') } />
-        <Clauses/>
+        <Clauses editMode={false} />
 
         <div style={styles.base}>
           <div style={styles.filters}>
-            <SearchFilters onChange={this.onFilterChange.bind(this)} userOnly={true}/>
+            <UserFilters
+              editMode={false}
+              onChange={this.onFilterChange.bind(this)} />
           </div>
 
           <div style={styles.rightPanel}>
-            <Button category="disabled" style={styles.editButton}>
-              Edit Search <MdEdit style={styles.saveIcon} />
-            </Button>
             <Button onClick={this.openModal.bind(this)} category="primary" style={styles.saveButton}>
               Save Search <FaFloopyO style={styles.saveIcon} />
             </Button>
@@ -134,7 +143,8 @@ export default class SearchCreator extends Component {
                 total={this.props.searches.userCount}
                 onPagination={this.onPagination.bind(this)}
                 loadingQueryset={this.props.searches.loadingQueryset}
-                users={this.props.searches.users} userSelected={this.updateUser.bind(this)} />
+                users={this.props.searches.users}
+                userSelected={this.updateUser.bind(this)} />
               <UserDetail
                 breakdown={this.props.filters.breakdown}
                 specificBreakdown={this.props.filters.specificBreakdown}
@@ -156,7 +166,7 @@ export default class SearchCreator extends Component {
           <p style={styles.modalLabel}>Description</p>
           <textarea
             style={styles.descriptionInput}
-            onChange={this.updateSearcDesc.bind(this)}></textarea>
+            onBlur={this.updateSearcDesc.bind(this)}></textarea>
           <TextField label="Tag Name" onChange={this.updateSearchTag.bind(this)} />
         </Modal>
 
@@ -228,9 +238,5 @@ const styles = {
   },
   saveButton: {
     float: 'right'
-  },
-  editButton: {
-    float: 'right',
-    marginLeft: 10
   }
 };

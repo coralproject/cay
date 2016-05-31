@@ -1,6 +1,9 @@
 import _ from 'lodash';
+import {clamp} from 'components/utils/math';
 import {xenia} from 'app/AppActions';
 import {makeQueryFromState} from 'search/SearchActions';
+
+export const DATA_CONFIG_REQUEST = 'DATA_CONFIG_REQUEST';
 
 export const REQUEST_SECTIONS = 'REQUEST_SECTIONS';
 export const RECEIVE_SECTIONS = 'RECEIVE_SECTIONS';
@@ -18,7 +21,9 @@ export const FETCH_DISTRIBUTIONS_ERROR = 'FETCH_DISTRIBUTIONS_ERROR';
 export const FILTER_CHANGED = 'FILTER_CHANGED';
 
 export const SET_BREAKDOWN = 'SET_BREAKDOWN';
+export const SET_BREAKDOWN_EDIT = 'SET_BREAKDOWN_EDIT';
 export const SET_SPECIFIC_BREAKDOWN = 'SET_SPECIFIC_BREAKDOWN';
+export const SET_SPECIFIC_BREAKDOWN_EDIT = 'SET_SPECIFIC_BREAKDOWN_EDIT';
 
 export const RESET_FILTERS = 'RESET_FILTERS';
 export const RESET_FILTER = 'RESET_FILTER';
@@ -78,27 +83,26 @@ export const fetchAuthors = () => {
   };
 };
 
-export const setBreakdown = (breakdown) => {
+export const setBreakdown = (breakdown, editMode) => {
   return {
-    type: SET_BREAKDOWN,
+    type: editMode ? SET_BREAKDOWN_EDIT : SET_BREAKDOWN,
     breakdown
   };
 };
 
-export const setSpecificBreakdown = (specificBreakdown) => {
+export const setSpecificBreakdown = (specificBreakdown, editMode) => {
   return (dispatch) => {
     // let counter = getState().filters.counter;
     // counter++;
     dispatch({
-      type: SET_SPECIFIC_BREAKDOWN,
-      specificBreakdown: specificBreakdown
+      type: editMode ? SET_SPECIFIC_BREAKDOWN_EDIT : SET_SPECIFIC_BREAKDOWN,
+      specificBreakdown
       // counter
     });
   };
 };
 
 const parseFilterRanges = (ranges, filterState) => {
-
   const newFilters = _.reduce(ranges, (accum, value, aggKey) => {
     let [key, field] = aggKey.split('_');
 
@@ -107,6 +111,9 @@ const parseFilterRanges = (ranges, filterState) => {
     // we might have already updated the old filter with the min value
     // retrieve it from the accumulator in progress instead of the state
     let newFilter = _.has(accum, key) ? accum[key] : {};
+    const oldFilter = filterState[key];
+    const clampedUserMin = clamp(oldFilter.userMin, oldFilter.min, oldFilter.max);
+    const clampedUserMax = clamp(oldFilter.userMax, oldFilter.min, oldFilter.max);
 
     const possibleDateValue = new Date(value);
     // if it's a Date, change the type
@@ -119,9 +126,10 @@ const parseFilterRanges = (ranges, filterState) => {
     accum[key] = newFilter;
 
     // on the first pass, go ahead and force a change on userMin and userMax
-    if (field === 'min') {
+    // but only if the userMin and userMax are defaults.
+    if (field === 'min' && +oldFilter.min === +clampedUserMin) {
       newFilter.userMin = value;
-    } else if (field === 'max') {
+    } else if (field === 'max' && +oldFilter.max === +clampedUserMax) {
       newFilter.userMax = value;
     }
 
@@ -132,17 +140,20 @@ const parseFilterRanges = (ranges, filterState) => {
 };
 
 // HERE BE DRAGONS
-export const getFilterRanges = () => {
+export const getFilterRanges = (editMode = false) => {
 
   return (dispatch, getState) => {
-    let filterState = getState().filters;
-    let $group = filterState.filterList.reduce((accum, key) => {
+    let fs = getState().filters;
+    const filterList = editMode ? fs.editFilterList : fs.filterList;
+    const breakdown = editMode ? fs.breakdownEdit : fs.breakdown;
+    const specificBreakdown = editMode ? fs.specificBreakdownEdit : fs.specificBreakdown;
+    let $group = filterList.reduce((accum, key) => {
 
       let dimension;
-      if (filterState.breakdown === 'author' && filterState.specificBreakdown !== '') {
-        dimension = 'author.' + filterState.specificBreakdown;
-      } else if (filterState.breakdown === 'section' && filterState.specificBreakdown !== '') {
-        dimension = 'section.' + filterState.specificBreakdown;
+      if (breakdown === 'author' && specificBreakdown !== '') {
+        dimension = 'author.' + specificBreakdown;
+      } else if (breakdown === 'section' && specificBreakdown !== '') {
+        dimension = 'section.' + specificBreakdown;
       } else { // all
         dimension = 'all';
       }
@@ -150,7 +161,7 @@ export const getFilterRanges = () => {
       // if you change this naming convention "<somefilter>_max"
       // you must update the RECEIVE_FILTER_RANGES in reducers/filters.js
 
-      const field = '$' + _.template(filterState[key].template)({dimension});
+      const field = '$' + _.template(fs[key].template)({dimension});
       accum[key + '_min'] = {
         $min: field
       };
@@ -180,18 +191,16 @@ export const getFilterRanges = () => {
       enabled: true
     };
 
-    // dispatch({type: REQUEST_FILTER_RANGES});
-
     xenia(query).exec()
       .then(data => {
         const doc = data.results[0].Docs[0];
-        // console.log('gs',getState());
         let counter = getState().filters.counter;
         counter++;
 
         dispatch({
           type: RECEIVE_FILTER_RANGES,
-          data: parseFilterRanges(doc, filterState),
+          // get filterState again, as it might have changed
+          data: parseFilterRanges(doc, getState().filters),
           counter
         });
       }).catch(err => {
@@ -251,10 +260,10 @@ const fetchDistributions = () => {
   };
 };
 
-const fetchDistributionsSuccess = (data) => {
+const fetchDistributionsSuccess = (distros) => {
   return {
     type: FETCH_DISTRIBUTIONS_SUCCESS,
-    data: data
+    distros
   };
 };
 
@@ -300,6 +309,7 @@ const inputValues = [
 
 export const populateDistributionStore = () => {
   return (dispatch) => {
+    dispatch(fetchDistributions());
     const x = xenia({name: 'distributions'});
 
     inputValues.map((inputValue) => {
@@ -312,16 +322,23 @@ export const populateDistributionStore = () => {
       data.results.map((result, i) => {
         merged[inputValues[i]] = result.Docs;
       });
-      dispatch({
-        type: FETCH_DISTRIBUTIONS_SUCCESS,
-        distros: merged
-      });
+      dispatch(fetchDistributionsSuccess(merged));
+    }).catch(error => {
+      dispatch(fetchDistributionsError(error));
     });
   };
 };
 
 export const resetFilters = () => {
-  return {type: RESET_FILTERS};
+  return (dispatch, getState) => {
+    const filters = getState().filters;
+    const resetFilters = filters.filterList.reduce((accum, key) => {
+      accum[key] = {...filters[key], userMin: filters[key].min, userMax: filters[key].max};
+      return accum;
+    }, {});
+
+    dispatch({type: RESET_FILTERS, filters: resetFilters});
+  };
 };
 
 export const resetFilter = name => dispatch => {
@@ -339,5 +356,11 @@ const sortByAction = (template, direction) => {
 };
 
 const resetFilterAction = (name) => {
-  return {type: RESET_FILTER, name};
+
+  return (dispatch, getState) => {
+    const {filters} = getState();
+    const resetFilter = {...filters[name], userMin: filters[name].min, userMax: filters[name].max};
+
+    dispatch({type: RESET_FILTER, filter: {[name]: resetFilter}});
+  };
 };

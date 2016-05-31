@@ -1,8 +1,5 @@
 import React from 'react';
 import Radium from 'radium';
-// import _ from 'lodash';
-// import Flex from './layout/Flex';
-// import moment from 'moment';
 import {connect} from 'react-redux';
 import PercentClause from './PercentClause';
 import IntClause from './IntClause';
@@ -12,29 +9,15 @@ import {resetFilter} from 'filters/FiltersActions';
 
 import settings from 'settings';
 
-// const style = {
-// };
-
 @connect(state => state.filters)
 @Radium
 class Clauses extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-
-    };
-  }
   static propTypes = {
     /* react */
-    // dispatch: React.PropTypes.func,
     params: React.PropTypes.object,
     routes: React.PropTypes.array,
     /* component api */
     style: React.PropTypes.object
-    // foo: React.PropTypes.string
-  }
-  static defaultProps = {
-    // foo: 'bar'
   }
   getStyles() {
     return {
@@ -58,6 +41,7 @@ class Clauses extends React.Component {
     const f = this.props[filterName];
     const maxDifferent = f.userMax !== f.max && f.userMax < f.max;
     const minDifferent = f.userMin !== f.min && f.userMin > f.min;
+
     return {
       either: maxDifferent || minDifferent,
       both: !(maxDifferent && minDifferent)
@@ -74,18 +58,25 @@ class Clauses extends React.Component {
   }
 
   getSpecific() {
-    if (this.props.specificBreakdown) {
+    const breakdown = this.props.editMode ? this.props.breakdownEdit : this.props.breakdown;
+    const specificBreakdown = this.props.editMode ? this.props.specificBreakdownEdit : this.props.specificBreakdown;
+
+    if (specificBreakdown) {
       return (
         <span style={this.getStyles().clause}>
-          {`${this.props.breakdown} ${this.formatName(this.props.specificBreakdown)} `}
+          {`${breakdown} ${this.formatName(specificBreakdown)} `}
         </span>
       );
     }
   }
 
   getFilters() {
-    return this.props.filterList.map((filterName, i) => {
+    const filterList = this.props.editMode ? this.props.editFilterList : this.props.filterList;
+
+    return filterList.map((filterName, i) => {
+
       if (this.userChangedFilter(filterName).either) {
+
         let clause;
         switch (this.props[filterName].type) {
         case 'dateRange':
@@ -141,7 +132,7 @@ const styles = {
     color: 'grey'
   },
   clause: {
-    backgroundColor: 'darkGrey',
+    backgroundColor: settings.darkGrey,
     color: 'white',
     borderRadius: 4,
     padding: 10,

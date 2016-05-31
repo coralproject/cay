@@ -1,0 +1,102 @@
+{
+    "id": 1,
+    "settings": {
+        "saveDestination": "http://coralasks.theguardian.com/ask/44",
+        "showFieldNumbers": true
+    },
+    "header": {
+        "title": "Share Your Story.",
+        "description": "As part of our ​Op-Docs ​series​ Conversation​s​ ​on Race​,​​ we ​want to hear your​​ ​​experiences ​confronting issues of race in your life. We invite you to share your stories, some of which we are featuring on a page of readers’ contributions."
+    },
+    "footer": {
+        "conditions": "By submitting to us, you are promising that the content is original, doesn’t plagiarize from anyone or infringe a copyright or trademark, doesn’t violate anybody’s rights and isn’t libelous or otherwise unlawful or misleading. You are agreeing that we can use your submission in all manner and media of The New York Times and that we shall have the right to authorize third parties to do so. And you agree to the rules of our Member Agreement, found online at our website."
+    },
+    "finishedScreen": {
+        "title": "Thanks.",
+        "description": "This is a more verbose thank you message."
+    },
+    "steps": [
+        {
+            "id": 1,
+            "name": "first_page",
+            "widgets": [
+                {
+                    "id": 100,
+                    "type": "field",
+                    "component": "MultipleChoice",
+                    "title": "Select one or several themes for your story",
+
+                    "wrapper" : {
+                        "required": true,
+                        "pseudoLabel": true
+                    },
+
+                    "props": {
+                        "multipleChoice": true,
+                        "options": [
+                            {
+                                "title": "Family Life"
+                            },
+                            {
+                                "title": "Friendship/Love"
+                            },
+                            {
+                                "title": "School"
+                            },
+                            {
+                                "title": "Law Enforcement"
+                            },
+                            {
+                                "title": "Work"
+                            },
+                            {
+                                "title": "Other"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "id": 101,
+                    "type": "field",
+                    "component": "TextArea",
+                    "title": "Write your story",
+                    "required": true,
+                    "props": {
+                        "maxLength": 400
+                    }
+                },
+                {
+                    "id": 102,
+                    "type": "field",
+                    "component": "TextField",
+                    "title": "Name",
+                    "required": true,
+                    "props": {
+                        "maxLength": 100
+                    }
+                },
+                {
+                    "id": 103,
+                    "type": "field",
+                    "component": "TextField",
+                    "title": "Age",
+                    "validationMessage": "Please type a valid number.",
+                    "props": {
+                        "validateAs": "number"
+                    }
+                },
+                {
+                    "id": 104,
+                    "type": "field",
+                    "component": "TextField",
+                    "title": "E-mail",
+                    "validationMessage": "Please type a valid e-mail address.",
+                    "props": {
+                        "maxLength": 100,
+                        "validateAs": "email"
+                    }
+                }
+            ]
+        }
+    ]
+}

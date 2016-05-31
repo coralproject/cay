@@ -6,15 +6,17 @@ import Heading from 'components/Heading';
 import { Lang } from 'i18n/lang';
 
 @Lang
+@Radium
 class ContentHeader extends React.Component {
   render() {
     return (
-      <section style={styles.base}>
+      <section style={[styles.base, this.props.style]}>
         <Heading fontWeight="600"
           size="large"
           subhead={""/*"some optional subhead"*/}>
           { window.L.t(this.props.title) }
         </Heading>
+        { this.props.children }
       </section>
     );
   }
@@ -26,4 +28,4 @@ const styles = {
   }
 };
 
-export default Radium(ContentHeader);
+export default ContentHeader;

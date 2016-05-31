@@ -7,6 +7,7 @@ import dataExplorer from 'explorer/DataExplorerReducer';
 import tags from 'tags/TagReducer';
 import filters from 'filters/FiltersReducer';
 import users from 'users/UsersReducer';
+import forms from 'forms/FormsReducer';
 
 const rootReducer = combineReducers({
   app,
@@ -16,7 +17,8 @@ const rootReducer = combineReducers({
   dataExplorer,
   tags,
   filters,
-  users
+  users,
+  forms
 });
 
 export default rootReducer;

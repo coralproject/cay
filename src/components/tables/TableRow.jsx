@@ -8,7 +8,7 @@ export default class TableRow extends React.Component {
 
   render() {
     return (
-      <tr style={[ styles.base, this.props.style ]}>
+      <tr onClick={this.props.onClick} style={[ styles.base, this.props.style ]}>
         {
           this.props.multiSelect ?
             <TableCell style={ styles.checkBoxColumn }><input type="checkbox" /></TableCell>

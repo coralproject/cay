@@ -24,7 +24,6 @@ export default class FilterNumbers extends React.Component {
     super(props);
     this.state = {
       symbol: 'GTLT',
-      step: (props.type === 'floatRange' || props.type === 'percentRange') ? 0.01 : 1,
       equals: null
     };
   }
@@ -40,10 +39,6 @@ export default class FilterNumbers extends React.Component {
   }
   static defaultProps = {
     fieldName: 'UNDEFINED___'
-  }
-
-  componentWillReceiveProps(props) {
-    this.setState({step: (props.type === 'floatRange' || props.type === 'percentRange') ? 0.01 : 1});
   }
 
   handleSymbolClick(){

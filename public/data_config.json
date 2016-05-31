@@ -245,7 +245,5 @@
       "collection": "user_statistics",
       "type": "intRange"
     }
-
-
   ]
 }

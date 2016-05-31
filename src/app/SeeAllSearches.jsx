@@ -130,7 +130,6 @@ class SeeAllSearches extends React.Component {
               );
             })}
           </ul>
-
         </Card>
       );
     });

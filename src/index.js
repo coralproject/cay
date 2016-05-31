@@ -18,9 +18,13 @@ import TagManager from 'app/TagManager';
 import Login from 'app/Login';
 import SeeAllSearches from 'app/SeeAllSearches';
 import SearchDetail from 'app/SearchDetail';
+import FormList from 'app/FormList';
+import FormEdit from 'app/FormEdit';
+import FormCreate from 'app/FormCreate';
 import SearchEditor from 'app/SearchEditor';
 import NoMatch from 'app/NoMatch';
 import About from 'app/About';
+import SubmissionList from 'app/SubmissionList';
 
 // Utils
 import registerServiceWorker from 'serviceworker!./sw.js';
@@ -67,7 +71,7 @@ class Root extends React.Component {
   }
 
   render() {
-
+    const { features } = this.props;
     return (
       <StyleRoot>
         <Provider store={store}>
@@ -79,6 +83,14 @@ class Root extends React.Component {
             <Route path="tag-manager" component={TagManager} />
             <Route path="saved-searches" component={SeeAllSearches}/>
             <Route path="saved-search/:name" component={SearchDetail} />
+            {features.ask ? (
+              <div>
+                <Route path="forms" component={FormList}/>
+                <Route path="forms/create" component={FormCreate}/>
+                <Route path="forms/:id" component={FormEdit}/>
+                <Route path="forms/:id/submissions" component={SubmissionList}/>
+              </div>
+            ) : null}
             <Route path="edit-search/:id" component={SearchEditor} />
             <Route path="*" component={NoMatch} />
             {/*<Route path="explore" component={DataExplorer} />*/}
@@ -110,7 +122,7 @@ Promise.all([loadConfig('/config.json'), loadConfig('/data_config.json')])
   store.dispatch(configXenia());
   store.dispatch({type: 'DATA_CONFIG_LOADED', config: filters});
 
-  ReactDOM.render(<Root/>, document.getElementById('root'));
+  ReactDOM.render(<Root features={app.features|| {}}/>, document.getElementById('root'));
 })
 .catch(err => console.error(err.stack));
 

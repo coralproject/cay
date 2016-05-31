@@ -38,12 +38,13 @@ const mapStateToProps = state => {
 export default class SearchEditor extends React.Component {
 
   componentWillMount() {
-    console.log('params!', this.props.params);
-    this.props.dispatch(clearUserList());
-    this.props.dispatch(fetchInitialData());
-    this.props.dispatch(userSelected(null));
-    this.props.dispatch(fetchSavedSearchForEdit(this.props.params.id));
-    this.props.dispatch(getFilterRanges(true)); // editMode => true
+    const {dispatch, params} = this.props;
+
+    dispatch(clearUserList());
+    dispatch(fetchInitialData());
+    dispatch(userSelected(null));
+    dispatch(fetchSavedSearchForEdit(params.id));
+    dispatch(getFilterRanges(true)); // editMode => true
   }
 
   confirmSave() {
@@ -55,10 +56,12 @@ export default class SearchEditor extends React.Component {
   }
 
   onFilterChange(fieldName, attr, val) {
-    this.props.dispatch(userSelected(null));
-    this.props.dispatch(clearUserList());
-    this.props.dispatch(filterChanged(fieldName, {[attr]: val}));
-    this.props.dispatch(makeQueryFromState('user', 0, true, true));
+    const {dispatch} = this.props;
+
+    dispatch(userSelected(null));
+    dispatch(clearUserList());
+    dispatch(filterChanged(fieldName, {[attr]: val}));
+    dispatch(makeQueryFromState('user', 0, true, true));
   }
 
   onPagination(page = 0) {

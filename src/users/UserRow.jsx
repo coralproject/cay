@@ -40,10 +40,8 @@ export default class UserRow extends React.Component {
       if (this.userChangedFilter(filterName).either) {
         // console.log("user",this.props.user.statistics.comments.all.all)
         // console.log("user",this.props.user.statistics.comments.all.all)
-        console.log(this.props.user.statistics.comments);
-        console.log(this.props.filters[filterName].field);
 
-        if (this.props.filters[filterName].field === "SystemFlagged") {
+        if (this.props.filters[filterName].field === 'SystemFlagged') {
           return (
             <p key={i} style={styles.stat}>
               {`${this.props.user.statistics.comments.all.SystemFlagged.count} flagged by system`}

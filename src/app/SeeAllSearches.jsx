@@ -5,14 +5,11 @@ import {Link} from 'react-router';
 import Page from 'app/layout/Page';
 import {fetchSearchesIfNotFetched, deleteSearch} from 'search/SearchActions';
 import Card from 'components/cards/Card';
-import CardHeader from 'components/cards/CardHeader';
 import ContentHeader from 'components/ContentHeader';
 import Button from 'components/Button';
 import Modal from 'components/modal/Modal';
 
 const RadiumLink = Radium(Link);
-
-import settings from 'settings';
 
 const mapStateToProps = (state) => {
   return {searches: state.searches, app: state.app, auth: state.auth};
@@ -25,18 +22,7 @@ class SeeAllSearches extends React.Component {
     super(props);
     this.state = { deleteModalOpen: false };
   }
-  static propTypes = {
-    /* react */
-    // dispatch: React.PropTypes.func,
-    params: React.PropTypes.object,
-    routes: React.PropTypes.array,
-    /* component api */
-    style: React.PropTypes.object
-    // foo: React.PropTypes.string
-  }
-  static defaultProps = {
-    // foo: 'bar'
-  }
+
   componentWillMount() {
     // redirect user to /login if they're not logged in
     //   TODO: refactor: pass in a function that calculates auth state
@@ -73,13 +59,13 @@ class SeeAllSearches extends React.Component {
       },
       topSection: {
         display: 'flex',
-        justifyContent: 'space-between',
+        justifyContent: 'space-between'
       },
       searchDescription: {
         fontSize: 16,
         marginBottom: 15,
-        fontFamily: "Georgia, serif",
-        fontStyle: "italic"
+        fontFamily: 'Georgia, serif',
+        fontStyle: 'italic'
       },
       button: {
         backgroundColor: '#fff',
@@ -99,7 +85,7 @@ class SeeAllSearches extends React.Component {
         }
       },
       filterList: {
-        borderLeft: "3px solid rgb(130,130,130)",
+        borderLeft: '3px solid rgb(130,130,130)',
         paddingLeft: 15
       },
       filterValue: {
@@ -113,6 +99,7 @@ class SeeAllSearches extends React.Component {
 
       return (
         <Card style={styles.searchCard} key={i}>
+
           <div style={styles.topSection}>
             <p style={styles.cardHeader}>{search.name}</p>
             <div style={styles.actionsContainer}>
@@ -120,7 +107,10 @@ class SeeAllSearches extends React.Component {
                 style={styles.button}
                 to={`/saved-search/${search.name}`}>{window.L.t('View')}
               </RadiumLink>
-              <span style={styles.button}>{window.L.t('Edit')}</span>
+              <RadiumLink
+                style={styles.button}
+                to={`/edit-search/${search.id}`}>{window.L.t('Edit')}
+              </RadiumLink>
               <Button
                 category='danger'
                 style={styles.deleteButton}
@@ -129,6 +119,7 @@ class SeeAllSearches extends React.Component {
               </Button>
             </div>
           </div>
+
           <p style={styles.searchDescription}>{search.description}</p>
           <ul style={styles.filterList}>
             {search.filters.values.map((value, i) => {

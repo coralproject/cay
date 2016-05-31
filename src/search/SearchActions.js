@@ -266,12 +266,27 @@ export const makeQueryFromState = (type, page = 0, replace = false, editMode = f
         // convert everything to numbers since equivalent Dates are not equal
         // this will break if a string literal is ever a filter value since NaN !== NaN
         if (+filter.min !== +clampedUserMin) {
-          const searchMin = _.isDate(clampedUserMin) ? `#date:${clampedUserMin.toISOString()}` : clampedUserMin;
+          let searchMin;
+          if (_.isDate(clampedUserMin)) {
+            searchMin = `#date:${clampedUserMin.toISOString()}`;
+          } else if (filter.type === 'intDateProximity') {
+            searchMin = `#time:${-clampedUserMin*24}h`;
+          } else {
+            searchMin = clampedUserMin;
+          }
+
           x.match({[dbField]: {$gte: searchMin}});
         }
 
         if (+filter.max !== +clampedUserMax) {
-          const searchMax = _.isDate(clampedUserMax) ? `#date:${clampedUserMax.toISOString()}` : clampedUserMax;
+          let searchMax;
+          if (_.isDate(clampedUserMax)) {
+            searchMin = `#date:${clampedUserMax.toISOString()}`;
+          } else if (filter.type === 'intDateProximity') {
+            searchMax = `#time:${-clampedUserMax*24}h`;
+          } else {
+            searchMax = clampedUserMax;
+          }
           x.match({[dbField]: {$lte: searchMax}});
         }
       });

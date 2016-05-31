@@ -58,6 +58,8 @@ export default class SearchCreator extends Component {
 
   // only the first time
   componentWillMount() {
+    const {dispatch} = this.props;
+
     // redirect user to /login if they're not logged in
     //   TODO: refactor: pass in a function that calculates auth state
     if (this.props.app.requireLogin && !this.props.searches.authorized) {
@@ -66,10 +68,10 @@ export default class SearchCreator extends Component {
 
     // set up the initial default / unfiltered view
     // this was previously in UserFilters
-    this.props.dispatch(clearRecentSavedSearch());
-    this.props.dispatch(clearUserList());
-    this.props.dispatch(fetchInitialData());
-    this.props.dispatch(getFilterRanges(false)); // editmode => false
+    dispatch(clearRecentSavedSearch());
+    dispatch(clearUserList());
+    dispatch(fetchInitialData());
+    dispatch(getFilterRanges(false)); // editmode => false
   }
 
   updateUser(user) {
@@ -109,9 +111,11 @@ export default class SearchCreator extends Component {
   }
 
   onFilterChange(fieldName, attr, val) {
-    this.props.dispatch(userSelected(null));
-    this.props.dispatch(filterChanged(fieldName, {[attr]: val}));
-    this.props.dispatch(makeQueryFromState('user', 0, true));
+    const {dispatch} = this.props;
+
+    dispatch(userSelected(null));
+    dispatch(filterChanged(fieldName, {[attr]: val}));
+    dispatch(makeQueryFromState('user', 0, true));
   }
 
   render() {

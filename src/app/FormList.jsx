@@ -84,7 +84,7 @@ export default class FormList extends React.Component {
         <TableCell>{header.title}</TableCell>
         <TableCell style={{maxWidth: 400}}>{header.description}</TableCell>
         <TableCell>{form.answers}</TableCell>
-        <TableCell><MdDelete key={i} onClick={ this.confirmDeletion.bind(this, header.title, header.description, i) } /></TableCell>
+        <TableCell><MdDelete key={i} onClick={ this.confirmDeletion.bind(this, header.title, header.description, form._id) } /></TableCell>
       </TableRow>
     );
   }
@@ -92,7 +92,6 @@ export default class FormList extends React.Component {
   render() {
 
     const groups = _.groupBy(this.props.forms.items, 'status');
-    console.log(groups)
     return (
       <Page>
         <ContentHeader title="View Forms" style={styles.header}>

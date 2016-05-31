@@ -104,10 +104,10 @@ export const formLeaveEdit = formId => {
   };
 };
 
-export const deleteForm = (name, description, index) => {
+export const deleteForm = (name, description, id) => {
   return (dispatch, getState) => {
     dispatch(formRequestStarted());
-    fetch(`${getState().app.pillarHost}${API_PREFIX}tag`, getInit({ name, description }, 'DELETE'))
+    fetch(`${getState().app.pillarHost}/api/form/${id}`, getInit({ name, description }, 'DELETE'))
       .then(res => res.json())
       .then(deletedForm => {
         dispatch(deleteSuccessful(deletedForm));
@@ -166,7 +166,7 @@ export const listForms = () => dispatch => {
     .catch(err => dispatch(formsRequestFailure(err)));
 };
 
-export const saveForm = (form, widgets, host) => dispatch => {
+export const saveForm = (form, widgets, host) => () => {
   const data = Object.assign({}, form);
   data.steps[0].widgets = widgets;
   fetch(`${host}/create`, {

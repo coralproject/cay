@@ -87,9 +87,6 @@ export default class UserRow extends React.Component {
       dimension = user.statistics.comments.all.all;
     }
 
-    const repliedPercent = Math.floor(dimension.replied_ratio * 100) + '%';
-    const replyPercent = Math.floor(dimension.reply_ratio * 100) + '%';
-
     return (
       <ListItem
         active={active}

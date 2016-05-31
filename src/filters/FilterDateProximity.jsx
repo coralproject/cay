@@ -19,13 +19,13 @@ export default class FilterDateProximity extends React.Component {
       <Card>
         <CardHeader>
           <span style={styles.description}>
-            {this.props.description.split("_")[0]}
+            {this.props.description.split('_')[0]}
             <input
               onChange={this.onMaxChanged.bind(this)}
               style={styles.minMaxInputs}
               type="number"
                />
-            {this.props.description.split("_")[1]}
+             {this.props.description.split('_')[1]}
           </span>
         </CardHeader>
 

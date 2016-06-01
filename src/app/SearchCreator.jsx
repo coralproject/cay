@@ -198,7 +198,6 @@ const styles = {
   },
   userListContainer: {
     margin: 20,
-    height: 900,
     display: 'flex',
     clear: 'both'
   },

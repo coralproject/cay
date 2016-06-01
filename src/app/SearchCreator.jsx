@@ -123,71 +123,72 @@ export default class SearchCreator extends Component {
     return (
 
       <Page>
-
-        <ContentHeader title={ window.L.t('Search Creator') } />
-        <Clauses editMode={false} />
-
         <div style={styles.base}>
-          <div style={styles.filters}>
-            <UserFilters
-              editMode={false}
-              onChange={this.onFilterChange.bind(this)} />
-          </div>
-
-          <div style={styles.rightPanel}>
-            <Button onClick={this.openModal.bind(this)} category="primary" style={styles.saveButton}>
-              Save Search <FaFloopyO style={styles.saveIcon} />
-            </Button>
-            <div style={styles.userListContainer}>
-              <UserList
-                total={this.props.searches.userCount}
-                onPagination={this.onPagination.bind(this)}
-                loadingQueryset={this.props.searches.loadingQueryset}
-                users={this.props.searches.users}
-                userSelected={this.updateUser.bind(this)} />
-              <UserDetail
-                breakdown={this.props.filters.breakdown}
-                specificBreakdown={this.props.filters.specificBreakdown}
-                commentsLoading={this.props.comments.loading}
-                user={this.props.users.selectedUser}
-                comments={this.props.comments.items}
-                style={styles.userDetail} />
-            </div>
-          </div>
-
-        </div>
-
-        <Modal
-          title="Save Search"
-          isOpen={this.state.saveModalOpen}
-          confirmAction={this.confirmSave.bind(this)}
-          cancelAction={this.cancelSave.bind(this)}>
-          <TextField label="Name" onChange={this.updateSearchName.bind(this)}/>
-          <p style={styles.modalLabel}>Description</p>
-          <textarea
-            style={styles.descriptionInput}
-            onBlur={this.updateSearcDesc.bind(this)}></textarea>
-          <TextField label="Tag Name" onChange={this.updateSearchTag.bind(this)} />
-        </Modal>
-
-        <StatusBar
-          loading={this.props.searches.savingSearch}
-          visible={this.props.searches.savingSearch || !!this.props.searches.recentSavedSearch}>
-          {
-            this.props.searches.recentSavedSearch ?
+          <StatusBar
+            loading={this.props.searches.savingSearch}
+            visible={this.props.searches.savingSearch || !!this.props.searches.recentSavedSearch}>
+            {
+              this.props.searches.recentSavedSearch ?
               (<Link style={styles.searchDetail} to={`/saved-search/${this.props.searches.recentSavedSearch.name}`}>
                 View Your Saved Search [{this.props.searches.recentSavedSearch.name}] →
               </Link>) :
               'Saving Search...'
-          }
-        </StatusBar>
+            }
+          </StatusBar>
+          <Clauses editMode={false} />
 
+          <div style={styles.filtersAndResults}>
+            <div>
+              <ContentHeader title={ window.L.t('Create & save a search') } />
+              <Button onClick={this.openModal.bind(this)} category="primary" style={styles.saveButton}>
+                <FaFloopyO style={styles.saveIcon} />{` Save Search `}
+                </Button>
+              <UserFilters
+                editMode={false}
+                onChange={this.onFilterChange.bind(this)} />
+            </div>
+            <UserList
+              total={this.props.searches.userCount}
+              onPagination={this.onPagination.bind(this)}
+              loadingQueryset={this.props.searches.loadingQueryset}
+              users={this.props.searches.users}
+              userSelected={this.updateUser.bind(this)} />
+          </div>
+
+          <Modal
+            title="Save Search"
+            isOpen={this.state.saveModalOpen}
+            confirmAction={this.confirmSave.bind(this)}
+            cancelAction={this.cancelSave.bind(this)}>
+            <TextField label="Name" onChange={this.updateSearchName.bind(this)}/>
+            <p style={styles.modalLabel}>Description</p>
+            <textarea
+              style={styles.descriptionInput}
+              onBlur={this.updateSearcDesc.bind(this)}></textarea>
+            <TextField label="Tag Name" onChange={this.updateSearchTag.bind(this)} />
+          </Modal>
+        </div>
       </Page>
     );
   }
 }
+
+
+// <UserDetail
+//   breakdown={this.props.filters.breakdown}
+//   specificBreakdown={this.props.filters.specificBreakdown}
+//   commentsLoading={this.props.comments.loading}
+//   user={this.props.users.selectedUser}
+//   comments={this.props.comments.items}
+//   style={styles.userDetail} />
+
+
+
 const styles = {
   base: {
+    display: "flex"
+  },
+  filtersAndResults: {
     display: 'flex',
     minHeight: 250,
     justifyContent: 'flex-start',

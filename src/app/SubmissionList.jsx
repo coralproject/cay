@@ -1,54 +1,50 @@
 
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import Radium from 'radium';
 import moment from 'moment';
+import WFlag from 'react-icons/lib/fa/flag-o';
+import WBookmark from 'react-icons/lib/fa/bookmark-o';
+import BFlag from 'react-icons/lib/fa/flag';
+import BBookmark from 'react-icons/lib/fa/bookmark';
 
-import { xenia } from 'app/AppActions';
+import { fetchSubmissions, setActiveSubmission, updateSubmission } from 'forms/FormActions';
 import Page from 'app/layout/Page';
 
+@connect(({ forms }) => ({ forms }))
 @Radium
 export default class SubmissionList extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      loading: true,
-      submissions: [],
-      activeSubmission: null,
-      page: 1
-    };
-
-    this.fetchSubmissions();
+    props.dispatch(fetchSubmissions(props.params.id));
   }
 
-  fetchSubmissions() {
-    const { params } = this.props;
-    xenia()
-      .collection('form_submissions')
-      .match({ form_id: `#objid:${params.id}` })
-    .exec().then(res => this.setState({
-      loading: false,
-      submissions: res.results[0].Docs,
-      activeSubmission: res.results[0].Docs[0]
-    }));
+  onFlag(flagged) {
+    this.props.dispatch(updateSubmission({ flagged }));
+  }
+
+  onBookmark(bookmarked) {
+    this.props.dispatch(updateSubmission({ bookmarked }));
   }
 
   render() {
-    const { submissions, activeSubmission } = this.state;
+    const { submissions, activeSubmission } = this.props.forms;
     return (
       <Page>
         <div style={styles.container}>
           <Sidebar submissions={submissions}
-            activeSubmission={activeSubmission}
+            activeSubmission={submissions[activeSubmission]}
             onSelect={this.onSubmissionSelect.bind(this)} />
-          <SubmissionDetail submission={activeSubmission}/>
+          <SubmissionDetail submission={submissions[activeSubmission]}
+            onFlag={this.onFlag.bind(this)}
+            onBookmark={this.onBookmark.bind(this)}/>
         </div>
       </Page>
     );
   }
 
-  onSubmissionSelect(activeSubmission) {
-    console.log(activeSubmission);
-    this.setState({ activeSubmission });
+  onSubmissionSelect(submission) {
+    this.props.dispatch(setActiveSubmission(submission));
   }
 }
 
@@ -74,10 +70,14 @@ class Sidebar extends Component {
         </div>
         <div>
           {submissions.map((submission, key) => (
-            <div onClick={() => onSelect(submission)}
+            <div onClick={() => onSelect(key)}
               style={[styles.sidebar.submissionContainer, submission._id === activeSubmission._id ? styles.sidebar.activeSubmission : {}]} key={key}>
               <span>{submissions.length - key}</span>
               <span>{moment(submission.date_updated).format('L LT')}</span>
+              <div>
+                {submission.flagged ? <span style={styles.sidebar.icon}><BFlag/></span> : null}
+                {submission.bookmarked ? <span style={styles.sidebar.icon}><BBookmark/></span> : null}
+              </div>
               <span></span>
             </div>
           ))}
@@ -125,19 +125,32 @@ class SubmissionDetail extends Component {
             <li>- {option.title}</li>
           ))}
         </ul>
-      )
+      );
     }
 
-    return answer.text
+    return answer.text;
   }
 
   renderAuthorDetail() {
-    const { submission } = this.props;
+    const { submission, onFlag, onBookmark } = this.props;
     const author = submission.author || {};
     return (
       <div>
         <div style={styles.detail.headerContainer}>
           <span>{moment(submission.date_updated).format('L LT')}</span>
+          <div>
+            <span style={styles.sidebar.icon}>
+              {submission.flagged ?
+                <BFlag style={styles.detail.action} onClick={() => onFlag(false)}/> :
+                <WFlag style={styles.detail.action} onClick={() => onFlag(true)}/> }
+            </span>
+            <span style={styles.sidebar.icon}>
+              {submission.bookmarked ?
+                <BBookmark style={styles.detail.action} onClick={() => onBookmark(false)}/> :
+                <WBookmark style={styles.detail.action} onClick={() => onBookmark(true)}/>
+              }
+            </span>
+          </div>
         </div>
         <div style={styles.detail.submissionContainer}>
           <div style={styles.detail.authorContainer}>
@@ -166,9 +179,11 @@ const styles = {
     questionContainer: {
       marginBottom: 20
     },
+    action: {
+      cursor: 'pointer'
+    },
     answersContainer: {
-      padding: 50,
-      paddingTop: 0
+      padding: '0 50px 50px 50px'
     },
     question: {
       fontWeight: 'bold',
@@ -186,15 +201,16 @@ const styles = {
       flex: 3,
       display: 'flex',
       flexDirection: 'column',
-      margin: 30,
-      marginTop: 0
+      margin: '0 30px 30px 30px'
     },
     submissionContainer: {
       padding: 50
     },
     headerContainer: {
       paddingBottom: 8,
-      borderBottom: '3px solid #aaa'
+      borderBottom: '3px solid #aaa',
+      display: 'flex',
+      justifyContent: 'space-between'
     },
     authorContainer: {
       padding: 15,
@@ -212,6 +228,9 @@ const styles = {
       flex: 1,
       display: 'flex',
       flexDirection: 'column'
+    },
+    icon: {
+      marginLeft: 3
     },
     count: {
       textAlign: 'center',

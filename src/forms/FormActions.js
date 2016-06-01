@@ -1,6 +1,13 @@
 
 import { xenia } from 'app/AppActions';
 
+export const SUBMISSIONS_REQUEST_STARTED = 'SUBMISSIONS_REQUEST_STARTED';
+export const SUBMISSIONS_REQUEST_SUCCESS = 'SUBMISSIONS_REQUEST_SUCCESS';
+export const SUBMISSIONS_REQUEST_FAILED = 'SUBMISSIONS_REQUEST_FAILED';
+
+export const SET_ACTIVE_SUBMISSION = 'SET_ACTIVE_SUBMISSION';
+export const UPDATE_ACTIVE_SUBMISSION = 'UPDATE_ACTIVE_SUBMISSION';
+
 export const WIDGET_UPDATE = 'WIDGET_UPDATE';
 export const WIDGET_MOVE = 'WIDGET_MOVE';
 
@@ -158,6 +165,21 @@ export const moveWidget = (from, to) => {
   };
 };
 
+export const submissionsFetched = submissions => ({
+  type: SUBMISSIONS_REQUEST_SUCCESS,
+  submissions
+});
+
+export const setActiveSubmission = submission => ({
+  type: SET_ACTIVE_SUBMISSION,
+  submission
+});
+
+export const updateActiveSubmission = props => ({
+  type: UPDATE_ACTIVE_SUBMISSION,
+  props
+});
+
 export const listForms = () => dispatch => {
   xenia().collection('forms')
   .sort(['date_updated', -1])
@@ -178,5 +200,16 @@ export const saveForm = (form, widgets, host) => () => {
     body: JSON.stringify(data)
   }).then(res => res.json())
   .then(json => alert(json.id));
+};
 
+export const fetchSubmissions = formId => dispatch => {
+  xenia()
+    .collection('form_submissions')
+    .match({ form_id: `#objid:${formId}` })
+  .exec().then(res => dispatch(submissionsFetched(res.results[0].Docs)));
+};
+
+export const updateSubmission = props => dispatch => {
+  dispatch(updateActiveSubmission(props));
+  // TODO: go to server when API is done
 };

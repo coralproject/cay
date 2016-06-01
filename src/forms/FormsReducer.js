@@ -4,7 +4,9 @@ const initial = {
   items: [],
   editAccess: {},
   form: null,
-  widgets: []
+  widgets: [],
+  submissions: [],
+  activeSubmission: null
 };
 
 const emptyForm = {
@@ -74,6 +76,17 @@ const forms = (state = initial, action) => {
     newWidgets[action.to] = Object.assign({}, state.widgets[action.from]);
     newWidgets[action.from] = Object.assign({}, state.widgets[action.to]);
     return Object.assign({}, state, { widgets: newWidgets });
+
+  case types.SUBMISSIONS_REQUEST_SUCCESS:
+    return Object.assign({}, state, { submissions: action.submissions, activeSubmission: 0 });
+
+  case types.SET_ACTIVE_SUBMISSION:
+    return Object.assign({}, state, { activeSubmission: action.submission });
+
+  case types.UPDATE_ACTIVE_SUBMISSION:
+    const newSubmissions = [...state.submissions];
+    newSubmissions[state.activeSubmission] = Object.assign({}, newSubmissions[state.activeSubmission], action.props);
+    return Object.assign({}, state, { submissions: newSubmissions });
 
   default:
     return state;

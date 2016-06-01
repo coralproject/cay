@@ -16,20 +16,17 @@ export default class FilterDateProximity extends React.Component {
   render() {
 
     return (
-      <Card>
-        <CardHeader>
-          <span style={styles.description}>
-            {this.props.description.split('_')[0]}
-            <input
-              onChange={this.onMaxChanged.bind(this)}
-              style={styles.minMaxInputs}
-              type="number"
-               />
-             {this.props.description.split('_')[1]}
-          </span>
-        </CardHeader>
-
-      </Card>
+      <div>
+      <span style={styles.description}>
+        {this.props.description.split('_')[0]}
+        <input
+          onChange={this.onMaxChanged.bind(this)}
+          style={styles.minMaxInputs}
+          type="number"
+           />
+         {this.props.description.split('_')[1]}
+      </span>
+      </div>
     );
   }
 }
@@ -44,5 +41,6 @@ const styles = {
   description: {
     marginBottom: 10,
     marginRight: 20
-  }
+  },
+  
 };

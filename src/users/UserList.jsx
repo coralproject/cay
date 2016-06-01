@@ -53,9 +53,9 @@ export default class UserList extends React.Component {
     return (
       <Infinite
         elementHeight={100}
-        containerHeight={900}
+        containerHeight={500}
         infiniteLoadBeginEdgeOffset={200}
-        styles={{scrollableStyle: {'width': 350}}}
+        styles={{scrollableStyle: {'width': 700}}}
         onInfiniteLoad={this.handleInfiniteLoad.bind(this)}
         >
         {users.map((user, i) =>
@@ -110,7 +110,6 @@ export default class UserList extends React.Component {
         </div>
       </div>
         {userListContent}
-
         {
           this.props.loadingQueryset ?
             <div style={ styles.loading }>
@@ -118,7 +117,6 @@ export default class UserList extends React.Component {
             </div> :
             ''
         }
-
       </div>
     );
   }

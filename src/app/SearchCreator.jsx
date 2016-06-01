@@ -237,6 +237,5 @@ const styles = {
     textDecoration: 'none'
   },
   saveButton: {
-    float: 'right'
   }
 };

@@ -30,7 +30,7 @@ export default class FilterDate extends React.Component {
   render() {
 
     return (
-      <Card style={[styles.base, this.props.style]}>
+      <div style={[styles.base, this.props.style]}>
         <p style={styles.description}>{this.props.description}</p>
 
         <div style={styles.row}>
@@ -48,7 +48,7 @@ export default class FilterDate extends React.Component {
                />
           </div>
         </div>
-      </Card>
+      </div>
     );
   }
 }

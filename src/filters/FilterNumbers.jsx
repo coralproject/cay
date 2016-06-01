@@ -65,7 +65,7 @@ export default class FilterNumbers extends React.Component {
   }
   render() {
     return (
-      <Card>
+      <div>
         <div style={{
           marginTop: 0,
           marginBottom: 10,
@@ -97,7 +97,7 @@ export default class FilterNumbers extends React.Component {
             value={this.props.userMax}/>
         </div>
         <p style={{marginTop: 10, color: 'red'}}>{this.renderHelpText()}</p>
-      </Card>
+        </div>
     );
   }
 }

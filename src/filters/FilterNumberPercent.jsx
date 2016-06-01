@@ -79,25 +79,23 @@ export default class FilterNumbers extends React.Component {
   render() {
 
     return (
-      <Card>
-        <CardHeader>
-          <span style={{marginBottom: 10, marginRight: 20}}>{this.props.description}</span>
-        </CardHeader>
-          <div>
-            <input
-              onChange={event => this.props.onChange(this.props.fieldName, 'userMin', event.target.value/100)}
-              style={style.minMaxInputs}
-              type='number'
-              value={Math.floor(this.props.userMin*100)}/>
-            {` - `}
-            <input
-              onChange={event => this.props.onChange(this.props.fieldName, 'userMax', event.target.value/100)}
-              style={style.minMaxInputs}
-              type='number'
-              value={Math.floor(this.props.userMax*100)}/>
-            <p style={{marginTop: 10, color: 'red'}}>{this.renderHelpText()}</p>
-          </div>
-      </Card>
+      <div>
+        <span style={{marginBottom: 10, marginRight: 20}}>{this.props.description}</span>
+        <div>
+          <input
+            onChange={event => this.props.onChange(this.props.fieldName, 'userMin', event.target.value/100)}
+            style={style.minMaxInputs}
+            type='number'
+            value={Math.floor(this.props.userMin*100)}/>
+          {` - `}
+          <input
+            onChange={event => this.props.onChange(this.props.fieldName, 'userMax', event.target.value/100)}
+            style={style.minMaxInputs}
+            type='number'
+            value={Math.floor(this.props.userMax*100)}/>
+          <p style={{marginTop: 10, color: 'red'}}>{this.renderHelpText()}</p>
+        </div>
+      </div>
     );
   }
 }

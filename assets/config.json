@@ -5,6 +5,9 @@
  "brand": "${PROJECT}",
  "googleAnalyticsId": "${GAID}",
  "requireLogin": ${DO_AUTH},
- "basicAuthorization": " ${AUTH_TOKEN}"
+ "basicAuthorization": " ${AUTH_TOKEN}",
+  "features": {
+    "ask": false
+  }
 }
 

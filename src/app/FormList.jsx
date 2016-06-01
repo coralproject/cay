@@ -20,8 +20,6 @@ import TableCell from 'components/tables/TableCell';
 import Tab from 'components/tabs/Tab';
 import Tabs from 'components/tabs/Tabs';
 
-import form from 'form.json';
-
 // Forms, Widgets, Submissions
 
 @connect(({ forms }) => ({ forms }))
@@ -78,7 +76,7 @@ export default class FormList extends React.Component {
   renderRow(form, i) {
     const header = form.header || {};
     return (
-      <TableRow onClick={this.onRowClick.bind(this, form._id)} style={styles.row} key={i}>
+      <TableRow onClick={this.onRowClick.bind(this, form.id)} style={styles.row} key={i}>
         <TableCell>{header.title}</TableCell>
         <TableCell style={{maxWidth: 400}}>{header.description}</TableCell>
         <TableCell>{form.answers}</TableCell>

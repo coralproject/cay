@@ -223,8 +223,10 @@ const styles = {
     borderRadius: 3
   },
   saveIcon: {
-    width: 25,
-    height: 25
+    marginRight: 7,
+    position: "relative",
+    top: -2,
+    fontSize: 18,
   },
   filters: {
     '@media (max-width: 1000px)': {

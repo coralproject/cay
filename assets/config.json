@@ -4,7 +4,7 @@
  "environment": "${ENV}",
  "brand": "${PROJECT}",
  "googleAnalyticsId": "${GAID}",
- "requireLogin": ${DO_AUTH},
+ "requireLogin": false,
  "basicAuthorization": " ${AUTH_TOKEN}",
   "features": {
     "ask": false

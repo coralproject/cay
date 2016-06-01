@@ -9,6 +9,8 @@ import BFlag from 'react-icons/lib/fa/flag';
 import BBookmark from 'react-icons/lib/fa/bookmark';
 
 import { fetchSubmissions, setActiveSubmission, updateSubmission } from 'forms/FormActions';
+
+import FormChrome from 'app/layout/FormChrome';
 import Page from 'app/layout/Page';
 
 @connect(({ forms }) => ({ forms }))
@@ -32,6 +34,7 @@ export default class SubmissionList extends Component {
     return (
       <Page>
         <div style={styles.container}>
+          <FormChrome activeTab="submissions" />
           <Sidebar submissions={submissions}
             activeSubmission={submissions[activeSubmission]}
             onSelect={this.onSubmissionSelect.bind(this)} />
@@ -50,6 +53,22 @@ export default class SubmissionList extends Component {
 
 @Radium
 class Sidebar extends Component {
+
+  listSubmissions(submissions, activeSubmission, onSelect) {
+    return submissions.map((submission, key) => (
+      <div onClick={() => onSelect(key)}
+        style={[styles.sidebar.submissionContainer, submission._id === activeSubmission._id ? styles.sidebar.activeSubmission : {}]} key={key}>
+        <span>{submissions.length - key}</span>
+        <span>{moment(submission.date_updated).format('L LT')}</span>
+        <div>
+          {submission.flagged ? <span style={styles.sidebar.icon}><BFlag/></span> : null}
+          {submission.bookmarked ? <span style={styles.sidebar.icon}><BBookmark/></span> : null}
+        </div>
+        <span></span>
+      </div>
+    ));
+  }
+
   render() {
     const { submissions, activeSubmission, onSelect} = this.props;
     return (
@@ -68,20 +87,7 @@ class Sidebar extends Component {
             <option>Newest First</option>
           </select>
         </div>
-        <div>
-          {submissions.map((submission, key) => (
-            <div onClick={() => onSelect(key)}
-              style={[styles.sidebar.submissionContainer, submission._id === activeSubmission._id ? styles.sidebar.activeSubmission : {}]} key={key}>
-              <span>{submissions.length - key}</span>
-              <span>{moment(submission.date_updated).format('L LT')}</span>
-              <div>
-                {submission.flagged ? <span style={styles.sidebar.icon}><BFlag/></span> : null}
-                {submission.bookmarked ? <span style={styles.sidebar.icon}><BBookmark/></span> : null}
-              </div>
-              <span></span>
-            </div>
-          ))}
-        </div>
+        <div>{this.listSubmissions(submissions, activeSubmission, onSelect)}</div>
       </div>
     );
   }
@@ -221,7 +227,8 @@ const styles = {
     }
   },
   container: {
-    display: 'flex'
+    display: 'flex',
+    marginTop: 40
   },
   sidebar: {
     container: {

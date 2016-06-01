@@ -30,7 +30,7 @@ export default class FormBuilder extends Component {
       <div style={styles.builderContainer}>
         <div style={styles.leftPan}>
           <div style={styles.typesContainer}>
-            <h4 style={styles.typesTitle}>1. Build form</h4>
+            <h4 style={styles.typesTitle}>Question Fields</h4>
             <p style={styles.typesSubTitle}>Drag and drop items to create a form</p>
             <div style={styles.typeList}>
               {askTypes.map((type, i) => (
@@ -61,10 +61,17 @@ export default class FormBuilder extends Component {
 
     const props = {
       settings: {
-
+    		showFieldNumbers: true
+      },
+      header: {
+        title: 'Some Ask'
       },
       footer: {
         permissions: 'Code of conduct'
+      },
+      finishedScreen: {
+		    title: 'Thanks.',
+		    description: 'This is a more verbose thank you message.'
       },
       page: {
         children: [{
@@ -96,30 +103,64 @@ export default class FormBuilder extends Component {
 
 const askTarget = {
 
-  drop(props, monitor, component) {
-    const clientOffset = monitor.getClientOffset();
-    const hoverBoundingRect = ReactDOM.findDOMNode(component).getBoundingClientRect();
-    const hoverClientY = clientOffset.y - hoverBoundingRect.top;
-    const style = askComponentStyles.askComponent();
+  hover(props, monitor, component) {
 
-    const hoverIndex = Math.floor(hoverClientY / (style.height + style.marginBottom / 2));
-    const fields = component.state.fields.slice();
-    if (monitor.getItem().onList) {
+    let formDiagram = component.props.formDiagram;
+    let targetPosition = component.props.position;
+
+    if (targetPosition != formDiagram.previousHover) {
+      formDiagram.previousHover = targetPosition;
+    } else {
+      return; // hovering the same as before? early return, do nothing.
+    }
+
+    let fields = formDiagram.previousState.slice();
+    var draggedItem = monitor.getItem();
+
+    if (draggedItem.onList) {
+
+    } else {
+      // If hovering over the default empty placeholder (the bottom one)
+      if (component.props.empty) {
+        console.log(targetPosition);
+        fields[targetPosition] = draggedItem.field;
+        //fields = fieldsBefore.concat(draggedItem.field).concat(fieldsAfter);
+      } else {
+        // if hovering over an existing field
+        let fieldsBefore = fields.slice(0, targetPosition);
+        let fieldsAfter = fields.slice(targetPosition);
+        fields = fieldsBefore.concat(draggedItem.field).concat(fieldsAfter);
+      }
+    }
+
+    formDiagram.setState({ fields: fields, isHovering: true });
+
+  },
+
+  drop(props, monitor, component) {
+
+    let formDiagram = component.props.formDiagram;
+    let fields = formDiagram.previousState.slice();
+    let targetPosition = component.props.position;
+
+    var draggedItem = monitor.getItem();
+
+    if (draggedItem.onList) {
       const index = Math.min(fields.length - 1, hoverIndex);
       const id = monitor.getItem().id;
       fields[id] = fields[index];
       fields[index] = monitor.getItem().field;
     } else {
-      const index = Math.min(fields.length, hoverIndex);
-      fields.splice(index, 0, monitor.getItem().field);
+      let fieldsBefore = fields.slice(0, targetPosition);
+      let fieldsAfter = fields.slice(targetPosition);
+      fields = fieldsBefore.concat(draggedItem.field).concat(fieldsAfter);
+      formDiagram.previousState = fields.slice();
     }
-    component.setState({ fields });
+    formDiagram.setState({ fields: fields, isHovering: false });
+
   }
 };
 
-@DropTarget('ask_component', askTarget, connect => ({
-  connectDropTarget: connect.dropTarget()
-}))
 class FormDiagram extends Component {
   static propTypes = {
     connectDropTarget: PropTypes.func.isRequired,
@@ -128,7 +169,9 @@ class FormDiagram extends Component {
 
   constructor(props, context) {
     super(props, context);
-    this.state = { fields: [] };
+    this.state = { fields: [], isHovering: false };
+    this.previousState = []; // a copy of state.fields
+    this.previousHover = null; // cache the element previously hovered
   }
 
   render() {
@@ -136,17 +179,25 @@ class FormDiagram extends Component {
     const {fields} = this.state;
     return (
       <div style={styles.formDiagramContainer}>
-        <h4 contentEditable="true">This is the form name for the public</h4>
-        <p contentEditable="true">This is the form description for the users</p>
-        {connectDropTarget(
+        <h4>This is the form name for the public</h4>
+        <p>This is the form description for the users</p>
+
           <div style={styles.formDiagram}>
             {fields.map((field, i) => (
-              <AskComponent onFieldSelect={onFieldSelect}
-                onList={true} field={field} isLast={i === fields.length - 1} id={i} key={i}
-                onMove={this.onMove.bind(this)} />
+              <DropPlaceHolder formDiagram={ this } position={ i }>
+                <AskComponent onFieldSelect={onFieldSelect}
+                  onList={true} field={field} isLast={i === fields.length - 1} id={i} key={i}
+                  onMove={this.onMove.bind(this)} />
+              </DropPlaceHolder>
             ))}
+            {
+              this.state.isHovering ?
+                null
+              :
+                <DropPlaceHolder empty={ true } formDiagram={ this } position={ fields.length } />
+            }
+
           </div>
-        )}
 
       </div>
     );
@@ -161,6 +212,33 @@ class FormDiagram extends Component {
     newFields[id] = newFields[changeWith];
     newFields[changeWith] = aux;
     this.setState({ fields: newFields });
+  }
+}
+
+@DropTarget('ask_component', askTarget, (connect, monitor) => ({
+  connectDropTarget: connect.dropTarget(),
+  isOver: monitor.isOver()
+}))
+class DropPlaceHolder extends Component {
+
+  render() {
+    return (
+      this.props.connectDropTarget(
+        this.props.isOver ?
+          <div style={ styles.dropPlaceHolderActive }>
+          </div>
+        :
+          <div style={ this.props.isOver ? styles.dropPlaceHolderActive : styles.dropPlaceHolder }>
+            {
+              this.props.children ?
+                this.props.children
+              :
+                <p>Drop your question here</p>
+            }
+          </div>
+
+      )
+    );
   }
 }
 
@@ -181,8 +259,9 @@ const styles = {
     borderRadius: 4
   },
   formDiagram: {
-    height: '70vh',
-    overflowY: 'scroll'
+    height: 'auto',
+    minHeight: '300px',
+    border: '2px solid blue'
   },
   formDiagramContainer: {
     flex: 2,
@@ -204,5 +283,17 @@ const styles = {
     fontSize: 16,
     marginBottom: 10,
     paddingLeft: 5
+  },
+  dropPlaceHolder: {
+    padding: '10px',
+    height: '70px',
+    border: '1px dashed red',
+    background: 'rgba(128,128,128,.1)'
+  },
+  dropPlaceHolderActive: {
+    border: '1px dashed green',
+    height: '40px',
+    background: 'rgba(0,0,0,.1)',
+    padding: '30px'
   }
 };

@@ -76,9 +76,16 @@ export default class AskComponent extends Component {
       <div style={styles.editContainer}>
         <div>{id+1}.</div>
         <div style={styles.editBody}>
-          <h4 contentEditable="true">Field title</h4>
-          <p contentEditable="true">Description text (optional)</p>
-          {this.editSettings()}
+          <h4>{this.props.field.label}</h4>
+          {
+            false ?
+              <div>
+                <p>Description text (optional)</p>
+                {this.editSettings()}
+              </div>
+            :
+              null
+          }
         </div>
         <div style={styles.arrowContainer}>
           { id !== 0 ? <FaArrowUp onClick={() => onMove('up', id)} style={styles.arrow} /> : null  }
@@ -125,7 +132,6 @@ export const styles = {
     backgroundColor: '#fff',
     padding: 20,
     boxShadow: '0 1px 3px #9B9B9B',
-    margin: 10,
     borderRadius: 4
   },
   editBody: {

@@ -180,26 +180,28 @@ export default class UserFilters extends React.Component {
 
     return (
       <div style={ styles.base }>
-        <div style={ styles.columnHeader }>
-          <Heading size="medium">
-            Filters
-          </Heading>
-        </div>
-        <p style={ styles.legend }>Limit user activity to:</p>
+        {
+          /*
+          <div style={ styles.columnHeader }>
+            <Heading size="medium">
+              Filters
+            </Heading>
+          </div>
+          */
+        }
         <Select
           ref="breakdown"
           value={breakdown}
           onChange={this.updateBreakdown.bind(this)}
           style={ styles.filterDropdown }
           options={[
-            {label: 'All', value: 'all'},
+            {label: 'All Sections & Authors', value: 'all'},
             {label: 'Author', value: 'author'},
             {label: 'Section', value: 'section'}
           ]} />
 
         {this.getSpecific()}
 
-        <p style={styles.legend}>Show me Users that have:</p>
         {this.getActiveFiltersFromConfig()}
 
       </div>
@@ -209,7 +211,9 @@ export default class UserFilters extends React.Component {
 
 const styles = {
   base: {
-    minWidth: 300
+    minWidth: 300,
+    height: 500,
+    overflow: "scroll"
   },
   columnHeader: {
     height: 50

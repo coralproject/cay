@@ -5,7 +5,7 @@ import { Link } from 'react-router';
 import MdDelete from 'react-icons/lib/md/delete';
 import _ from 'lodash';
 
-import { deleteForm, listForms } from 'forms/FormActions';
+import { deleteForm, fetchForms } from 'forms/FormActions';
 import settings from 'settings';
 
 import Page from 'app/layout/Page';
@@ -22,8 +22,6 @@ import Tabs from 'components/tabs/Tabs';
 
 import form from 'form.json';
 
-console.log('form!', form);
-
 // Forms, Widgets, Submissions
 
 @connect(({ forms }) => ({ forms }))
@@ -35,7 +33,7 @@ export default class FormList extends React.Component {
   };
 
   componentWillMount() {
-    this.props.dispatch(listForms());
+    this.props.dispatch(fetchForms());
   }
 
   confirmDeletion(name, description, index, event) {

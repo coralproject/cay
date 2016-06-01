@@ -45,18 +45,17 @@ const getInit = (body, method) => {
   return init;
 };
 
-export const formRequestStarted = () => {
+export const formRequestStarted = id => {
   return {
-    type: FORM_REQUEST_STARTED
+    type: FORM_REQUEST_STARTED,
+    id
   };
 };
 
-export const formRequestSuccess = (payload, index, requestType) => {
+export const formRequestSuccess = form => {
   return {
     type: FORM_REQUEST_SUCCESS,
-    payload,
-    index,
-    requestType
+    form
   };
 };
 
@@ -111,14 +110,36 @@ export const formLeaveEdit = formId => {
   };
 };
 
+export const fetchForms = () => {
+  return (dispatch, getState) => {
+    dispatch(formsRequestStarted());
+
+    fetch(`${getState().app.pillarHost}/api/forms`)
+      .then(res => res.json())
+      .then(forms => dispatch(formsRequestSuccess(forms)))
+      .catch(error => dispatch(formsRequestFailure(error)));
+  };
+};
+
+export const fetchForm = id => {
+  return (dispatch, getState) => {
+    dispatch(formRequestStarted(id));
+
+    fetch(`${getState().app.pillarHost}/api/form/${id}`)
+      .then(res => res.json())
+      .then(form => dispatch(formRequestSuccess(form)))
+      .catch(error => dispatch(formRequestFailure(error)));
+  };
+};
+
 export const deleteForm = (name, description, id) => {
   return (dispatch, getState) => {
-    dispatch(formRequestStarted());
+    dispatch(formRequestStarted(id));
     fetch(`${getState().app.pillarHost}/api/form/${id}`, getInit({ name, description }, 'DELETE'))
       .then(res => res.json())
       .then(deletedForm => {
         dispatch(deleteSuccessful(deletedForm));
-        dispatch(formRequestSuccess(deletedForm, index, 'delete'));
+        dispatch(formRequestSuccess(deletedForm, 'delete'));
       })
       .catch(error => dispatch(formRequestFailure(error)));
   };
@@ -179,14 +200,6 @@ export const updateActiveSubmission = props => ({
   type: UPDATE_ACTIVE_SUBMISSION,
   props
 });
-
-export const listForms = () => dispatch => {
-  xenia().collection('forms')
-  .sort(['date_updated', -1])
-  .exec()
-    .then(res => dispatch(formsRequestSuccess(res.results[0].Docs)))
-    .catch(err => dispatch(formsRequestFailure(err)));
-};
 
 export const saveForm = (form, widgets, host) => () => {
   const data = Object.assign({}, form);

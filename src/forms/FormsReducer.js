@@ -37,13 +37,13 @@ const forms = (state = initial, action) => {
   switch (action.type) {
 
   case types.FORM_REQUEST_STARTED:
-    return state;
+    return {...state, activeForm: null, formLoading: true};
 
   case types.FORM_REQUEST_SUCCESS:
-    return state;
+    return {...state, activeForm: action.form, formLoading: false};
 
   case types.FORM_REQUEST_FAILURE:
-    return state;
+    return {...state, activeForm: null, formLoading: false};
 
   case types.FORM_DELETED:
     return state;
@@ -65,7 +65,7 @@ const forms = (state = initial, action) => {
     return Object.assign({}, state, { widgets: [...state.widgets, action.widget ] });
 
   case types.FORMS_REQUEST_SUCCESS:
-    return Object.assign({}, state, { items: action.forms });
+    return {...state, items: action.forms };
 
   case types.WIDGET_UPDATE:
     return Object.assign({}, state, { widgets: state.widgets.map((widget, id) =>

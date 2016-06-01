@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 
 import {requestEditAccess, leavingEdit} from 'forms/FormActions';
 import Page from 'app/layout/Page';
+import FormChrome from 'app/layout/FormChrome';
 
 @connect(state => ({ forms: state.forms }))
 @Radium

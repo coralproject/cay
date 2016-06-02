@@ -81,7 +81,7 @@ export default class AskComponent extends Component {
     return (
       <div style={styles.editContainer}>
         <div>{id+1}.</div>
-          <div style={styles.editBody}>
+        <div style={styles.editBody}>
           <h4>{this.props.field.label}</h4>
           {
             false ?
@@ -123,9 +123,9 @@ export const styles = {
       boxShadow: '0 1px 3px #9B9B9B',
       padding: 20,
       cursor: 'pointer',
-      height: 50,
+      height: 70,
       backgroundColor: '#fff',
-      borderRadius: 4,
+      borderRadius: 3,
       fontSize: 14,
       fontWeight: 'bold',
       minWidth: 150,
@@ -138,7 +138,8 @@ export const styles = {
     backgroundColor: '#fff',
     padding: 20,
     boxShadow: '0 1px 3px #9B9B9B',
-    borderRadius: 4
+    borderRadius: 4,
+    height: 70
   },
   editBody: {
     flex: 1,

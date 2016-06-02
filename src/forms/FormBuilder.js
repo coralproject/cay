@@ -92,10 +92,6 @@ class FormDiagram extends Component {
     this.previousHover = null; // cache the element previously hovered
   }
 
-  onMouseLeave(e) {
-    console.log("Mouse out");
-  }
-
   render() {
     const { onFieldSelect, forms } = this.props;
     const { widgets } = forms;
@@ -103,7 +99,7 @@ class FormDiagram extends Component {
       <div style={styles.formDiagramContainer}>
         <h4>This is the form name for the public</h4>
         <p>This is the form description for the users</p>
-        <div style={styles.formDiagram} onMouseLeave={ this.onMouseLeave.bind(this) }>
+        <div style={styles.formDiagram}>
 
           { this.state.tempWidgets.map((field, i) => (
             <DropPlaceHolder key={i} formDiagram={ this } position={ i }>
@@ -158,17 +154,23 @@ const askTarget = {
 
     if (draggedItem.onList) {
       console.log(draggedItem.position);
+      console.log(targetPosition);
+      // First we make a copy removing the dragged element
+      let fieldsCopy = tempWidgets.slice();
+      fieldsCopy.splice(draggedItem.position, 1);
+
+      let fieldsBefore = fieldsCopy.slice(0, targetPosition);
+      let fieldsAfter = fieldsCopy.slice(targetPosition);
+      tempWidgets = fieldsBefore.concat(draggedItem.field).concat(fieldsAfter);
+
     } else {
       // If hovering over the default empty placeholder (the bottom one)
       if (component.props.empty) {
         tempWidgets[targetPosition] = draggedItem.field;
       } else {
         // if hovering over an existing field
-        console.log("Target" , targetPosition);
         let fieldsBefore = tempWidgets.slice(0, targetPosition);
         let fieldsAfter = tempWidgets.slice(targetPosition);
-        console.log(fieldsBefore);
-        console.log(fieldsAfter);
         tempWidgets = fieldsBefore.concat(draggedItem.field).concat(fieldsAfter);
       }
     }
@@ -189,10 +191,16 @@ const askTarget = {
     // If we are dragging an item already on the form
     if (draggedItem.onList) {
 
+      // First we make a copy removing the dragged element
       let fieldsCopy = fields.slice();
-      console.log(draggedItem.position);
       fieldsCopy.splice(draggedItem.position, 1);
-      console.log(fieldsCopy);
+
+      // Then we insert the dragged element into the desired position
+      let fieldsBefore = fieldsCopy.slice(0, targetPosition);
+      let fieldsAfter = fieldsCopy.slice(targetPosition);
+      fields = fieldsBefore.concat(draggedItem.field).concat(fieldsAfter);
+      formDiagram.previousState = fields.slice();
+
       /*
       const index = Math.min(fields.length - 1, hoverIndex);
       const id = monitor.getItem().id;
@@ -229,7 +237,7 @@ class DropPlaceHolder extends Component {
               this.props.children ?
                 this.props.children
               :
-                <p>Drop your question here</p>
+                <p style={ styles.emptyPlaceholderText }>Drop your question here</p>
             }
           </div>
 
@@ -280,15 +288,23 @@ const styles = {
     paddingLeft: 5
   },
   dropPlaceHolder: {
-    padding: '10px',
     height: '70px',
-    border: '1px dashed red',
-    background: 'rgba(128,128,128,.1)'
+    border: '1px dashed #111',
+    background: 'rgba(128,128,128,.1)',
+    marginBottom: '10px',
+    borderRadius: '3px'
   },
   dropPlaceHolderActive: {
-    border: '1px dashed green',
-    height: '40px',
+    border: '1px dashed #111',
+    height: '70px',
     background: 'rgba(0,0,0,.1)',
-    padding: '30px'
+    padding: '30px',
+    borderRadius: '3px',
+    marginBottom: '10px'
+  },
+  emptyPlaceholderText: {
+    textAlign: 'center',
+    fontSize: '15pt',
+    lineHeight: '60px'
   }
 };

@@ -55,7 +55,7 @@ export default class FormBuilder extends Component {
       component: data.type,
       wrapper: {},
       props: {},
-      id: Math.floor(Math.random() * 99999)
+      id: Math.floor(Math.random() * 99999) + '' // cast to string for pillar
     }));
   }
 

@@ -149,6 +149,8 @@ export const getFilterRanges = (editMode = false) => {
     const specificBreakdown = editMode ? fs.specificBreakdownEdit : fs.specificBreakdown;
     let $group = filterList.reduce((accum, key) => {
 
+      var f = fs[key];
+
       let dimension;
       if (breakdown === 'author' && specificBreakdown !== '') {
         dimension = 'author.' + specificBreakdown;
@@ -161,14 +163,18 @@ export const getFilterRanges = (editMode = false) => {
       // if you change this naming convention "<somefilter>_max"
       // you must update the RECEIVE_FILTER_RANGES in reducers/filters.js
 
-      const field = '$' + _.template(fs[key].template)({dimension});
-      accum[key + '_min'] = {
-        $min: field
-      };
+      const field = '$' + _.template(f.template)({dimension});
+      if (f.type === 'intDateProximity') {
+        return accum; // do not get ranges for "ago" filter (for now).
+      } else {
+        accum[key + '_min'] = {
+          $min: field
+        };
 
-      accum[key + '_max'] = {
-        $max: field
-      };
+        accum[key + '_max'] = {
+          $max: field
+        };
+      }
 
       return accum;
     }, {_id: null});

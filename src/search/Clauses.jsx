@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import PercentClause from './PercentClause';
 import IntClause from './IntClause';
 import DateRangeClause from './DateRangeClause';
+import ProximityClause from './ProximityClause';
 import {resetFilter} from 'filters/FiltersActions';
 
 import settings from 'settings';
@@ -79,11 +80,14 @@ class Clauses extends React.Component {
         let clause;
         switch (this.props[filterName].type) {
         case 'dateRange':
-        case 'intDateProximity':
           clause = <DateRangeClause {...this.props[filterName]}/>;
           break;
         case 'percentRange':
           clause = <PercentClause {...this.props[filterName]}/>;
+          break;
+        case 'intDateProximity':
+  
+          clause = <ProximityClause {...this.props[filterName]}/>
           break;
         default:
           clause = <IntClause {...this.props[filterName]}/>;

@@ -215,8 +215,6 @@ const styles = {
     borderRadius: 3,
     height: 500,
     overflow: "scroll",
-    WebkitBoxShadow: '3px 3px 6px -1px ' + settings.mediumGrey,
-    BoxShadow: '3px 3px 6px -1px ' + settings.mediumGrey,
   },
   legend: {
     padding: '10px 0',

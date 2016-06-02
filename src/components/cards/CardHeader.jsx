@@ -7,7 +7,12 @@ import Radium from 'radium';
 
 import settings from '../../settings';
 
-class CardHeader extends React.Component {
+@Radium
+export default class CardHeader extends React.Component {
+
+  static propTypes = {
+    subtitle: PropTypes.string
+  }
 
   getVisible() {
     return {
@@ -24,12 +29,6 @@ class CardHeader extends React.Component {
     );
   }
 }
-
-CardHeader.propTypes = {
-  subtitle: PropTypes.string
-};
-
-export default Radium(CardHeader);
 
 const styles = {
   base: {

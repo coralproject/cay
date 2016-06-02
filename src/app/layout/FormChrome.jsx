@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
+import _ from 'lodash';
 
 import settings from 'settings';
 
@@ -19,6 +20,10 @@ export default class FormChrome extends React.Component {
   buildForm() {
     if (this.props.activeTab === 'builder') return;
 
+    if (this.props.form) {
+      return this.context.router.push(`/forms/${this.props.form.id}`);
+    }
+
     this.context.router.push('/forms/create');
   }
 
@@ -35,15 +40,18 @@ export default class FormChrome extends React.Component {
   }
 
   render() {
+
+    const name = _.has(this.props, 'form.header.title') ? this.props.form.header.title : 'Untitled Form';
+
     return (
       <div style={styles.base}>
         <ul style={styles.menu}>
-          <li style={[styles.option, styles.formName]}>{this.props.name || 'Untitled Form'}</li>
+          <li style={[styles.option, styles.formName]}>{name}</li>
           <li key="huey" style={[
             styles.option,
             this.props.activeTab === 'builder' && styles.active]}
             onClick={this.buildForm.bind(this)}>
-            Build Form
+            {this.props.form ? 'Edit Form' : 'Build Form'}
           </li>
           <li key="dewey" style={[
             styles.option,

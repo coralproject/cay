@@ -23,11 +23,15 @@ export default class FormChrome extends React.Component {
   }
 
   reviewSubmissions() {
-    if (this.props.activeTab === 'submissions') return;
+    if (this.props.activeTab === 'submissions' || !this.props.form) return;
+
+    this.context.router.push(`/forms/${this.props.form.id}/submissions`);
   }
 
   manageGallery() {
-    if (this.props.activeTab === 'gallery') return;
+    if (this.props.activeTab === 'gallery' || !this.props.form) return;
+
+    this.context.router.push(`/forms/${this.props.form.id}/gallery`);
   }
 
   render() {

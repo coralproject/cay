@@ -4,6 +4,7 @@ const initial = {
   items: [],
   editAccess: {},
   form: null,
+  activeForm: null, // might be able to combine this with {form} above in the future
   widgets: [],
   submissions: [],
   activeSubmission: null

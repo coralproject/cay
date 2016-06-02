@@ -25,6 +25,7 @@ import SearchEditor from 'app/SearchEditor';
 import NoMatch from 'app/NoMatch';
 import About from 'app/About';
 import SubmissionList from 'app/SubmissionList';
+import SubmissionGallery from 'app/SubmissionGallery';
 
 // Utils
 import registerServiceWorker from 'serviceworker!./sw.js';
@@ -89,6 +90,7 @@ class Root extends React.Component {
                 <Route path="forms/create" component={FormCreate}/>
                 <Route path="forms/:id" component={FormEdit}/>
                 <Route path="forms/:id/submissions" component={SubmissionList}/>
+                <Route path="forms/:id/gallery" component={SubmissionGallery}/>
               </div>
             ) : null}
             <Route path="edit-search/:id" component={SearchEditor} />

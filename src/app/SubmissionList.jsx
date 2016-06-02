@@ -8,7 +8,11 @@ import WBookmark from 'react-icons/lib/fa/bookmark-o';
 import BFlag from 'react-icons/lib/fa/flag';
 import BBookmark from 'react-icons/lib/fa/bookmark';
 
-import { fetchSubmissions, setActiveSubmission, updateSubmission } from 'forms/FormActions';
+import {
+  fetchSubmissions,
+  setActiveSubmission,
+  updateSubmission,
+  fetchForm } from 'forms/FormActions';
 
 import FormChrome from 'app/layout/FormChrome';
 import Page from 'app/layout/Page';
@@ -18,6 +22,7 @@ import Page from 'app/layout/Page';
 export default class SubmissionList extends Component {
   constructor(props) {
     super(props);
+    props.dispatch(fetchForm(props.params.id));
     props.dispatch(fetchSubmissions(props.params.id));
   }
 
@@ -30,11 +35,12 @@ export default class SubmissionList extends Component {
   }
 
   render() {
-    const { submissions, activeSubmission } = this.props.forms;
+    const { submissions, activeSubmission, activeForm } = this.props.forms;
+
     return (
       <Page>
         <div style={styles.container}>
-          <FormChrome activeTab="submissions" />
+          <FormChrome activeTab="submissions" form={activeForm}/>
           <Sidebar submissions={submissions}
             activeSubmission={submissions[activeSubmission]}
             onSelect={this.onSubmissionSelect.bind(this)} />

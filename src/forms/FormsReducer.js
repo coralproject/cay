@@ -25,7 +25,7 @@ const emptyForm = {
     description: 'This is a more verbose thank you message'
   },
   steps: [{
-    id: 1,
+    id: '1',
     name: 'first_page'
   }]
 };

@@ -2,6 +2,7 @@ import React from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
 import _ from 'lodash';
+import settings from 'settings';
 
 import { userSelected } from 'users/UsersActions';
 import { makeQueryFromState, clearUserList } from 'search/SearchActions';
@@ -180,30 +181,25 @@ export default class UserFilters extends React.Component {
 
     return (
       <div style={ styles.base }>
-        {
-          /*
-          <div style={ styles.columnHeader }>
-            <Heading size="medium">
-              Filters
-            </Heading>
-          </div>
-          */
-        }
-        <Select
-          ref="breakdown"
-          value={breakdown}
-          onChange={this.updateBreakdown.bind(this)}
-          style={ styles.filterDropdown }
-          options={[
-            {label: 'All Sections & Authors', value: 'all'},
-            {label: 'Author', value: 'author'},
-            {label: 'Section', value: 'section'}
-          ]} />
+        <Heading size="medium">
+          Filters
+        </Heading>
+        <div style={styles.filters}>
+          <Select
+            ref="breakdown"
+            value={breakdown}
+            onChange={this.updateBreakdown.bind(this)}
+            style={ styles.filterDropdown }
+            options={[
+              {label: 'All Sections & Authors', value: 'all'},
+              {label: 'Author', value: 'author'},
+              {label: 'Section', value: 'section'}
+            ]} />
 
-        {this.getSpecific()}
+          {this.getSpecific()}
 
-        {this.getActiveFiltersFromConfig()}
-
+          {this.getActiveFiltersFromConfig()}
+        </div>
       </div>
     );
   }
@@ -212,11 +208,15 @@ export default class UserFilters extends React.Component {
 const styles = {
   base: {
     minWidth: 300,
-    height: 500,
-    overflow: "scroll"
   },
-  columnHeader: {
-    height: 50
+  filters: {
+    padding: 20,
+    backgroundColor: "white",
+    borderRadius: 3,
+    height: 500,
+    overflow: "scroll",
+    WebkitBoxShadow: '3px 3px 6px -1px ' + settings.mediumGrey,
+    BoxShadow: '3px 3px 6px -1px ' + settings.mediumGrey,
   },
   legend: {
     padding: '10px 0',

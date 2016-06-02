@@ -39,7 +39,6 @@ class Header extends React.Component {
           size="small"
           category="default"
           onClick={this.logout.bind(this)}>Logout</Button>
-        <LanguageSwitcher />
       </nav>
     );
   }
@@ -47,10 +46,11 @@ class Header extends React.Component {
 
 const styles = {
   sidebarToggle: {
-    float: 'left',
-    width: 36,
-    height: 36,
-    fill: 'white',
+    width: 40,
+    height: 40,
+    fill: 'rgb(130,130,130)',
+    position: "relative",
+    top: 5,
     paddingLeft: 10,
     paddingTop: 10,
     cursor: 'pointer'
@@ -61,9 +61,9 @@ const styles = {
   nav: {
     marginBottom: 0,
     border: 'none',
-    minHeight: '50px',
+    minHeight: '60px',
     borderRadius: 0,
-    backgroundColor: settings.brandColor
+    backgroundColor: "rgb(221,221,221)"
   },
   logoutButton: {
     float: 'right',

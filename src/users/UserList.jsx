@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import Infinite from 'react-infinite';
 import Select from 'react-select';
+import settings from 'settings';
 
 import UserRow from 'users/UserRow';
 import Heading from 'components/Heading';
@@ -99,24 +100,28 @@ export default class UserList extends React.Component {
     return (
       <div style={ [ styles.base, this.props.style ] }>
         <div style={ styles.columnHeader }>
-          <Heading size="medium">
-            <span style={styles.groupHeader}>{ window.L.t('results') }</span> ({this.props.total || '#'} { window.L.t('users')})
-          </Heading>
-        <div style={styles.sort}>
-          <Select
-            value={this.state.selectedSort}
-            onChange={this.onSortChanged.bind(this)}
-            options={sortableFilters} />
-        </div>
-      </div>
-        {userListContent}
-        {
-          this.props.loadingQueryset ?
+          {
+            this.props.loadingQueryset ?
             <div style={ styles.loading }>
-              <Spinner /> Loading...
+              <Spinner />
             </div> :
-            ''
-        }
+            <Heading size='medium'>
+              <span style={styles.groupHeader}>{ window.L.t('results') }</span> ({this.props.total || '#'} { window.L.t('users')})
+            </Heading>
+          }
+          <div style={styles.sort}>
+            <Select
+              style={{
+                width: 300
+              }}
+              value={this.state.selectedSort}
+              onChange={this.onSortChanged.bind(this)}
+              options={sortableFilters} />
+          </div>
+        </div>
+        <div style="infinite">
+          {userListContent}
+        </div>
       </div>
     );
   }
@@ -124,17 +129,14 @@ export default class UserList extends React.Component {
 
 const styles = {
   base: {
-    // paddingLeft: 20,
-    // marginTop: -40
+
   },
   columnHeader: {
-    height: 90
+    display: 'flex',
+    justifyContent: 'space-between'
   },
   groupHeader: {
     textTransform: 'capitalize'
-  },
-  sort: {
-    marginRight: 20
   },
   card: {
     margin: 0,

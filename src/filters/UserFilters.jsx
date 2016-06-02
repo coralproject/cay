@@ -3,17 +3,18 @@ import Radium from 'radium';
 import {connect} from 'react-redux';
 import _ from 'lodash';
 
+import { userSelected } from 'users/UsersActions';
 import { makeQueryFromState, clearUserList } from 'search/SearchActions';
 import {
   setBreakdown,
   setSpecificBreakdown,
   getFilterRanges} from 'filters/FiltersActions';
 
-
 import Select from 'react-select';
 import FilterNumbers from 'filters/FilterNumbers';
 import FilterNumberPercent from 'filters/FilterNumberPercent';
 import FilterDate from 'filters/FilterDate';
+import FilterDateProximity from 'filters/FilterDateProximity';
 
 import Heading from 'components/Heading';
 
@@ -21,24 +22,6 @@ import Heading from 'components/Heading';
 @Radium
 export default class UserFilters extends React.Component {
 
-  constructor(props) {
-    super(props);
-  }
-
-  componentWillUpdate(nextProps) {
-    /*
-      only a filter or breakdown change updates the counter in the reducer.
-      if a filter changed, we trigger ajax.
-    */
-    if (this.props.counter !== nextProps.counter) {
-      // a filter changed, fire ajax,
-      this.updateUserList();
-    }
-  }
-  updateUserList() {
-    this.props.dispatch(clearUserList());
-    this.props.dispatch(makeQueryFromState('user', 0, true));
-  }
   getTags() {
     return this.props.tags.map(tag => {
       return {label: tag.description, value: tag.name};
@@ -47,13 +30,16 @@ export default class UserFilters extends React.Component {
 
   getSpecific() {
 
-    switch (this.props.breakdown) {
+    const breakdown = this.props.editMode ? this.props.breakdownEdit : this.props.breakdown;
+    const specificBreakdown = this.props.editMode ? this.props.specificBreakdownEdit : this.props.specificBreakdown;
+
+    switch (breakdown) {
     case 'section':
       return (
         <div>
           <Select
             options={this.getSections()}
-            value={this.props.specificBreakdown}
+            value={specificBreakdown}
             onChange={this.setSpecificBreakdown.bind(this)}
           />
         </div>
@@ -63,7 +49,7 @@ export default class UserFilters extends React.Component {
         <div>
           <Select
             options={this.getAuthors()}
-            value={this.props.specificBreakdown}
+            value={specificBreakdown}
             onChange={this.setSpecificBreakdown.bind(this)}
           />
         </div>
@@ -73,8 +59,11 @@ export default class UserFilters extends React.Component {
 
   setSpecificBreakdown(specificBreakdown) {
     let newValue = specificBreakdown !== null ? specificBreakdown.value : '';
-    this.props.dispatch(setSpecificBreakdown(newValue));
-    this.props.dispatch(getFilterRanges('user'));
+    this.props.dispatch(userSelected(null));
+    this.props.dispatch(clearUserList());
+    this.props.dispatch(setSpecificBreakdown(newValue, this.props.editMode));
+    this.props.dispatch(getFilterRanges(this.props.editMode));
+    this.props.dispatch(makeQueryFromState('user', 0, true));
   }
 
   getAuthors() {
@@ -92,8 +81,9 @@ export default class UserFilters extends React.Component {
 
   updateBreakdown(breakdown) {
     // console.log('updateBreakdown', breakdown);
+    const localBreakdown = this.props.editMode ? this.props.breakdownEdit : this.props.breakdown;
     let newValue;
-    if (breakdown === null && this.props.breakdown !== 'all') {
+    if (breakdown === null && localBreakdown !== 'all') {
       newValue = 'all';
     } else if (breakdown === null) { // if we're already on all, just do nothing
       return;
@@ -101,30 +91,32 @@ export default class UserFilters extends React.Component {
       newValue = breakdown.value;
     }
 
-    this.props.dispatch(setBreakdown(newValue));
-    this.props.dispatch(setSpecificBreakdown(''));
+    this.props.dispatch(setBreakdown(newValue, this.props.editMode));
+    this.props.dispatch(setSpecificBreakdown('', this.props.editMode));
+
     if (newValue === 'all') {
-      this.props.dispatch(getFilterRanges('user'));
+      this.props.dispatch(getFilterRanges(this.props.editMode));
     }
   }
 
   getActiveFiltersFromConfig() {
 
-    const filters = this.props.filterList.map(key => this.props[key]);
+    const filterList = this.props.editMode ? this.props.editFilterList : this.props.filterList;
+    const filters = filterList.map(key => this.props[key]);
     const userFilters = filters.filter(f => f.collection === 'user_statistics');
     return userFilters.map((f,i) => {
       let filterComponent;
       const fmtDesc = f.description.charAt(0).toUpperCase() + f.description.slice(1, f.description.length);
       const inTitleCase = _.map(f.description.split(' '), _.capitalize).join(' ');
-
       if (f.type === 'percentRange') {
         filterComponent = (
           <FilterNumberPercent
+            onChange={this.props.onChange}
             key={i}
             min={f.min}
             max={f.max}
-            userMin={f.userMin}
-            userMax={f.userMax}
+            userMin={f.userMin ? Math.max(f.userMin, f.min) : f.userMin}
+            userMax={f.userMax ? Math.min(f.userMax, f.max) : f.userMax}
             description={fmtDesc}
             fieldName={f.key}
             type={f.type}/>
@@ -133,11 +125,12 @@ export default class UserFilters extends React.Component {
         // capitalize first letter of description
         filterComponent = (
           <FilterNumbers
+            onChange={this.props.onChange}
             key={i}
             min={f.min}
             max={f.max}
-            userMin={f.userMin}
-            userMax={f.userMax}
+            userMin={f.userMin ? Math.max(f.userMin, f.min) : f.userMin}
+            userMax={f.userMax ? Math.min(f.userMax, f.max) : f.userMax}
             description={inTitleCase}
             fieldName={f.key}
             type={f.type}/>
@@ -145,6 +138,7 @@ export default class UserFilters extends React.Component {
       } else if (f.type === 'dateRange') {
         filterComponent = (
           <FilterDate
+            onChange={this.props.onChange}
             key={i}
             min={f.min}
             max={f.max}
@@ -154,6 +148,27 @@ export default class UserFilters extends React.Component {
             type={f.type}
             fieldName={f.key} />
         );
+      } else if (f.type === 'intDateProximity') {
+        filterComponent = (
+          <FilterDateProximity
+            onChange={this.props.onChange}
+            key={i}
+            min={f.min}
+            max={f.max}
+            userMin={f.userMin}
+            userMax={f.userMax}
+            description={inTitleCase}
+            type={f.type}
+            fieldName={f.key}
+            />
+        );
+      }
+
+      if (f.min === null) {
+        if (this.props.filterRangesLoaded) {
+          console.log('Filter:', i, f.description, 'had null data, so we didn\'t show it. Check getActiveFiltersFromConfig() in UserFilters.');
+        }
+        filterComponent = null;
       }
 
       return filterComponent;
@@ -161,6 +176,7 @@ export default class UserFilters extends React.Component {
   }
 
   render() {
+    const breakdown = this.props.editMode ? this.props.breakdownEdit : this.props.breakdown;
 
     return (
       <div style={ styles.base }>
@@ -172,7 +188,7 @@ export default class UserFilters extends React.Component {
         <p style={ styles.legend }>Limit user activity to:</p>
         <Select
           ref="breakdown"
-          value={this.props.breakdown}
+          value={breakdown}
           onChange={this.updateBreakdown.bind(this)}
           style={ styles.filterDropdown }
           options={[

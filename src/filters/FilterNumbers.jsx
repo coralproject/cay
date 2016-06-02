@@ -1,36 +1,19 @@
 import React from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
-import {filterChanged} from 'filters/FiltersActions';
-import {clamp} from 'components/utils/math';
-// import Flex from '../layout/Flex';
 
 import Card from 'components/cards/Card';
-import CardHeader from 'components/cards/CardHeader';
-import Sparkline from 'filters/Sparkline';
-
-import Slider from 'components/Slider';
+//import Sparkline from 'filters/Sparkline';
 
 const style = {
-  sliderInput: {
-    backgroundColor: 'rgb(245, 245, 245)',
-    border: 'none',
-    textAlign: 'center',
-    padding: '10px 0px',
-    width: 50,
-    fontSize: 14,
-    margin: '0px 5px',
-    borderRadius: 4
-    // 'focus': {
-    //   outline: 0
-    // }
-  },
   minMaxInputs: {
     padding: '7px 10px',
     border: '1px solid lightgrey',
     borderRadius: 3
-
-
+  },
+  description: {
+    marginBottom: 10,
+    marginRight: 20
   }
 };
 
@@ -41,7 +24,6 @@ export default class FilterNumbers extends React.Component {
     super(props);
     this.state = {
       symbol: 'GTLT',
-      step: (props.type === 'floatRange' || props.type === 'percentRange') ? 0.01 : 1,
       equals: null
     };
   }
@@ -59,27 +41,11 @@ export default class FilterNumbers extends React.Component {
     fieldName: 'UNDEFINED___'
   }
 
-  componentWillReceiveProps(props) {
-    this.setState({step: (props.type === 'floatRange' || props.type === 'percentRange') ? 0.01 : 1});
-  }
-
   handleSymbolClick(){
     const newSymbol = this.state.symbol === 'GTLT' ? 'EQUALS' : 'GTLT';
     this.setState({symbol: newSymbol});
   }
-  onMinChanged() {
-    return (e) => {
-      this.props.dispatch(filterChanged(this.props.fieldName, {userMin: e.target.value}));
-    };
-  }
-  onMaxChanged() {
-    return (e) => {
-      this.props.dispatch(filterChanged(this.props.fieldName, {userMax: e.target.value}));
-    };
-  }
-  updateSlider(values) {
-    this.props.dispatch(filterChanged(this.props.fieldName, {userMin: values[0], userMax: values[1]}));
-  }
+
   renderHelpText() {
     let help = '';
 
@@ -107,25 +73,25 @@ export default class FilterNumbers extends React.Component {
           alignItems: 'flex-start',
           justifyContent: 'space-between'
         }}>
-        <span style={{marginBottom: 10, marginRight: 20}}>{this.props.description}</span>
-        {
+        <span style={style.description}>{this.props.description}</span>
+        {/*
           this.props.distributions ?
           <Sparkline
             distribution={
               this.props.distributions[this.props[this.props.fieldName].field]
             }/> :
             ''
-        }
+        */}
         </div>
         <div>
           <input
-            onChange={this.onMinChanged().bind(this)}
+            onChange={event => this.props.onChange(this.props.fieldName, 'userMin', +event.target.value)}
             style={style.minMaxInputs}
             type='number'
             value={this.props.userMin}/>
           {` - `}
           <input
-            onChange={this.onMaxChanged().bind(this)}
+            onChange={event => this.props.onChange(this.props.fieldName, 'userMax', +event.target.value)}
             style={style.minMaxInputs}
             type='number'
             value={this.props.userMax}/>

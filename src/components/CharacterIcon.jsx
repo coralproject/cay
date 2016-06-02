@@ -35,26 +35,26 @@ class Icon extends React.Component {
 const styles = {
   base: {
     display: 'inline-block',
-    font: 'normal normal normal 14px/1 FontAwesome',
+    fontSize: '14px',
     width: '1.28571429em',
     textAlign: 'center'
   },
   small: {
-    font: 'normal normal normal 14px/1 FontAwesome',
+    fontSize: '14px',
     height: 28,
     width: 28,
     borderRadius: 14,
     paddingTop: 7
   },
   medium: {
-    font: 'normal normal normal 20px/1 FontAwesome',
+    fontSize: '21px',
     height: 32,
     width: 32,
     borderRadius: 16,
-    paddingTop: 7
+    paddingTop: 5
   },
   large: {
-    font: 'normal normal normal 36px/1 FontAwesome',
+    fontSize: '36px',
     height: 50,
     width: 50,
     borderRadius: 25,

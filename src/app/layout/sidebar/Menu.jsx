@@ -1,6 +1,7 @@
 import React from 'react';
 import Radium from 'radium';
-import {Link} from 'react-router';
+import { connect } from 'react-redux';
+import { Link } from 'react-router';
 
 import MenuItem from 'app/layout/sidebar/MenuItem';
 
@@ -13,11 +14,14 @@ import MdArtTrack from 'react-icons/lib/md/art-track';
 import { Lang } from 'i18n/lang';
 import settings from 'settings';
 
+@connect(({ app }) => ({ app }))
 @Lang
 @Radium
 class Menu extends React.Component {
 
   render() {
+    const { app } = this.props;
+    const features = app.features || {};
     return (
       <div>
         <Link to="/" style={styles.logo}>The Coral Project</Link>
@@ -26,8 +30,8 @@ class Menu extends React.Component {
           {/*<MenuItem name="Explore" target="/explore" icon={<MdTimeline />} />*/}
           <MenuItem name={ window.L.t('Saved Searches') } target="/saved-searches" icon={<MdGroup />} />
           <MenuItem name={ window.L.t('Search Creator') } target="/search-creator" icon={<MdBuild />} />
-          <MenuItem name={ window.L.t('Tag Manager') } target="/tag-manager" icon={<MdSettings />}/>
-          <MenuItem name="Ask" target="/asks" icon={<MdArtTrack />}/>
+          {/*<MenuItem name={ window.L.t('Tag Manager') } target="/tag-manager" icon={<MdSettings />}/>*/}
+          {features.ask ? <MenuItem name="View Forms" target="/forms" icon={<MdArtTrack />}/> : null}
           <MenuItem name={ window.L.t('About') } target="/about" icon={<MdInfoOutline />}/>
           {/*<MenuItem name="Settings" target="/settings" icon={<MdSettings />} />*/}
         </ul>

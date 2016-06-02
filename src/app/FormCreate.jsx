@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import Radium from 'radium';
 import { connect } from 'react-redux';
 
-import { createEmpty } from 'asks/AskActions';
+import { createEmpty, saveForm } from 'forms/FormActions';
 import Page from 'app/layout/Page';
 import Button from 'components/Button';
 import FaFloopyO from 'react-icons/lib/fa/floppy-o';
@@ -10,11 +10,11 @@ import FaExt from 'react-icons/lib/fa/external-link';
 import FaShare from 'react-icons/lib/fa/user-plus';
 import ContentHeader from 'components/ContentHeader';
 
-import FormBuilder from 'asks/FormBuilder.js';
+import FormBuilder from 'forms/FormBuilder.js';
 
-@connect(({ asks }) => ({asks}))
+@connect(({ forms, app }) => ({ forms, app }))
 @Radium
-export default class AskCreate extends Component {
+export default class FormCreate extends Component {
   static contextTypes = {
     router: PropTypes.object.isRequired
   };
@@ -34,12 +34,12 @@ export default class AskCreate extends Component {
       <Page style={styles.page}>
         <ContentHeader style={styles.header}>
           <div style={styles.headerTitle}>
-            <h1 style={styles.title} contentEditable="true">Name form</h1>
+            <h1 style={styles.title}>Name form</h1>
             <br />
-            <h3 style={styles.description} contentEditable="true">This is the description</h3>
+            <h3 style={styles.description}>This is the description</h3>
           </div>
           <div>
-            <Button style={[styles.headerBtn, styles.saveBtn]}>Save and exit <FaFloopyO style={styles.icon} /></Button>
+            <Button onClick={this.saveAndExit.bind(this)} style={[styles.headerBtn, styles.saveBtn]}>Save and exit <FaFloopyO style={styles.icon} /></Button>
             <Button style={[styles.headerBtn, styles.shareBtn]}>Share form <FaShare style={styles.icon} /></Button>
             <Button onClick={this.showPreview.bind(this)} style={[styles.headerBtn, styles.previewBtn]}>Preview form <FaExt style={styles.icon} /></Button>
           </div>
@@ -50,6 +50,12 @@ export default class AskCreate extends Component {
         </div>
       </Page>
     );
+  }
+
+  saveAndExit() {
+    const { forms, app, dispatch } = this.props;
+    const { form, widgets } = forms;
+    dispatch(saveForm(form, widgets, app.elkhornHost));
   }
 
   onClosePreview() {

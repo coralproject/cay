@@ -5,9 +5,9 @@ import Radium from 'radium';
 export default class Stats extends React.Component {
   render() {
     return (
-      <dl style={[styles, this.props.style]}>
+      <div style={[styles, this.props.style]}>
         {this.props.children}
-      </dl>
+      </div>
     );
   }
 }

@@ -7,7 +7,7 @@ The front-end admin panel for [coralproject.net](Coral Project) apps.
 - make sure you have your other services set up and running [xenia](https://github.com/coralproject/xenia) [pillar](https://github.com/coralproject/pillar)
 - `git clone git@github.com:CoralProject/cay.git && cd cay`
 - `npm install`
-- set up your `/config.json` file with the locations of your hosted services. A sample file is at `public/config.sample.json` and currently must be placed at the root of the hosting directory for Cay.
+- set up `config.json`. A sample file is at `public/config.sample.json` and currently must be placed at the root of the hosted directory for Cay.
 - `npm start`
 
 You'll need to be running `> v5.0.0` of node, we recommend using `nvm` to manage node installations.

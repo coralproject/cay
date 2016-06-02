@@ -21,25 +21,37 @@
       "category": "Activity",
       "field": "count",
       "template": "statistics.comments.<%= dimension %>.all.count",
-      "description": "total comments",
+      "description": "Total comments",
       "collection": "user_statistics",
       "type": "intRange"
     },
+    {
+      "name": "First comment _ days ago",
+      "category": "Activity",
+      "field": "first",
+      "template": "statistics.comments.<%= dimension %>.all.first",
+      "description": "First comment _ days ago",
+      "collection": "user_statistics",
+      "type": "intDateProximity"
+    },
+    {
+      "name": "Last comment _ days ago",
+      "category": "Activity",
+      "field": "last",
+      "template": "statistics.comments.<%= dimension %>.all.last",
+      "description": "Last comment _ days ago",
+      "collection": "user_statistics",
+      "type": "intDateProximity"
+    },
+
+
+
     {
       "name": "Replied",
       "category": "Activity",
       "field": "replied_count",
       "template": "statistics.comments.<%= dimension %>.all.replied_count",
-      "description": "total replies written",
-      "collection": "user_statistics",
-      "type": "intRange"
-    },
-    {
-      "name": "Replies",
-      "category": "Response",
-      "field": "reply_count",
-      "template": "statistics.comments.<%= dimension %>.all.reply_count",
-      "description": "total replies received",
+      "description": "Replies written",
       "collection": "user_statistics",
       "type": "intRange"
     },
@@ -52,6 +64,17 @@
       "collection": "user_statistics",
       "type": "percentRange"
     },
+
+
+    {
+      "name": "Replies",
+      "category": "Response",
+      "field": "reply_count",
+      "template": "statistics.comments.<%= dimension %>.all.reply_count",
+      "description": "Replies received",
+      "collection": "user_statistics",
+      "type": "intRange"
+    },
     {
       "name": "Replied per Comment",
       "category": "Response",
@@ -61,6 +84,8 @@
       "collection": "user_statistics",
       "type": "floatRange"
     },
+
+
     {
       "name": "Average Wordcount",
       "category": "Content",
@@ -70,23 +95,155 @@
       "collection": "user_statistics",
       "type": "intRange"
     },
+
+
+
+    {
+      "name": "Percent ModeratorDeleted",
+      "category": "Moderation",
+      "field": "ModeratorDeleted",
+      "template": "statistics.comments.<%= dimension %>.ratios.ModeratorDeleted",
+      "description": "Percent moderator deleted",
+      "collection": "user_statistics",
+      "type": "percentRange"
+    },
+    {
+      "name": "Comments ModeratorDeleted",
+      "category": "Activity",
+      "field": "count",
+      "template": "statistics.comments.<%= dimension %>.ModeratorDeleted.count",
+      "description": "Number moderator deleted",
+      "collection": "user_statistics",
+      "type": "intRange"
+    },
+    {
+      "name": "Last time ModeratorDeleted",
+      "category": "Activity",
+      "field": "last",
+      "template": "statistics.comments.<%= dimension %>.ModeratorDeleted.last",
+      "description": "Last time moderator deleted",
+      "collection": "user_statistics",
+      "type": "intDateProximity"
+    },
+    {
+      "name": "Percent of ModeratorDeleted that were replies",
+      "category": "Activity",
+      "field": "replied_ratio",
+      "template": "statistics.comments.<%= dimension %>.ModeratorDeleted.replied_ratio",
+      "description": "% of moderator deleted that were replies",
+      "collection": "user_statistics",
+      "type": "percentRange"
+    },
+    {
+      "name": "Percent of ModeratorDeleted that got replies",
+      "category": "Activity",
+      "field": "replied_ratio",
+      "template": "statistics.comments.<%= dimension %>.ModeratorDeleted.reply_ratio",
+      "description": "% of moderator deleted that got replies",
+      "collection": "user_statistics",
+      "type": "percentRange"
+    },
+
+
+
+
+
+    {
+      "name": "Percent ModeratorApproved",
+      "category": "Moderation",
+      "field": "ModeratorApproved",
+      "template": "statistics.comments.<%= dimension %>.ratios.ModeratorApproved",
+      "description": "Percent moderator approved",
+      "collection": "user_statistics",
+      "type": "percentRange"
+    },
     {
       "name": "Percent SystemFlagged",
       "category": "Moderation",
       "field": "SystemFlagged",
       "template": "statistics.comments.<%= dimension %>.ratios.SystemFlagged",
-      "description": "% comments flagged by the system",
+      "description": "Percent system flagged",
       "collection": "user_statistics",
       "type": "percentRange"
     },
     {
-      "name": "User Activity Times",
+      "name": "Percent CommunityFlagged",
+      "category": "Moderation",
+      "field": "CommunityFlagged",
+      "template": "statistics.comments.<%= dimension %>.ratios.CommunityFlagged",
+      "description": "Percent community flagged",
+      "collection": "user_statistics",
+      "type": "percentRange"
+    },
+    {
+      "name": "Percent Untouched",
+      "category": "Moderation",
+      "field": "Untouched",
+      "template": "statistics.comments.<%= dimension %>.ratios.Untouched",
+      "description": "Percent untouched",
+      "collection": "user_statistics",
+      "type": "percentRange"
+    },
+
+
+
+
+
+    {
+      "name": "First comment between",
       "category": "Activity",
-      "field": "activity_range",
-      "template": "statistics.comments.<%= dimension %>.all",
-      "description": "the first and last time the user commented",
+      "field": "first",
+      "template": "statistics.comments.<%= dimension %>.all.first",
+      "description": "First comment between",
       "collection": "user_statistics",
       "type": "dateRange"
+    },
+    {
+      "name": "Last comment between",
+      "category": "Activity",
+      "field": "last",
+      "template": "statistics.comments.<%= dimension %>.all.last",
+      "description": "Last comment between",
+      "collection": "user_statistics",
+      "type": "dateRange"
+    },
+
+
+    {
+      "name": "Likes performed",
+      "category": "Activity",
+      "field": "count",
+      "template": "statistics.actions.performed.likes.count",
+      "description": "The number of likes performed by the user",
+      "collection": "user_statistics",
+      "type": "intRange"
+    },
+    {
+      "name": "Likes received",
+      "category": "Activity",
+      "field": "count",
+      "template": "statistics.actions.received.likes.count",
+      "description": "The number of likes received by the user",
+      "collection": "user_statistics",
+      "type": "intRange"
+    },
+    {
+      "name": "Flags performed",
+      "category": "Activity",
+      "field": "count",
+      "template": "statistics.actions.performed.flags.count",
+      "description": "The number of flags performed by the user",
+      "collection": "user_statistics",
+      "type": "intRange"
+    },
+    {
+      "name": "Flags received",
+      "category": "Activity",
+      "field": "count",
+      "template": "statistics.actions.received.flags.count",
+      "description": "The number of flags received by the user",
+      "collection": "user_statistics",
+      "type": "intRange"
     }
   ]
 }

@@ -1,19 +1,17 @@
 import React, {Component, PropTypes} from 'react';
+import { connect } from 'react-redux';
 import { DragSource } from 'react-dnd';
 import Checkbox from 'components/forms/Checkbox';
 import TextField from 'components/forms/TextField';
 import FaArrowUp from 'react-icons/lib/fa/arrow-up';
 import FaArrowDown from 'react-icons/lib/fa/arrow-down';
+import { updateWidget } from 'forms/FormActions';
 
 
 const renderSettings = {
   text(field) {
     return (
       <div style={{display: 'flex', justifyContent: 'space-between'}}>
-        <p style={{display: 'flex', justifyContent: 'flex-start'}}>
-          <Checkbox label='Max chars.' />
-          <input style={{width: 40, height: 20}} type='number' />
-        </p>
         <Checkbox label='required' />
       </div>
     );
@@ -36,14 +34,18 @@ const askSource = {
     return {
       field: props.field,
       id: props.id,
-      onList: props.onList
+      onList: props.onList,
+      position: props.position
     };
   }
 };
 
-@DragSource('ask_component', askSource, (connect, monitor) => ({
+@DragSource('form_component', askSource, (connect, monitor) => ({
   connectDragSource: connect.dragSource(),
   isDragging: monitor.isDragging()
+}))
+@connect(({ forms }) => ({
+  widgets: forms.widgets
 }))
 export default class AskComponent extends Component {
   static propTypes = {
@@ -70,12 +72,16 @@ export default class AskComponent extends Component {
     );
   }
 
+  onTitleChange(title) {
+    this.props.dispatch(updateWidget(this.props.id, { title }));
+  }
+
   renderEdit() {
-    const { id, onMove, isLast } = this.props;
+    const { id, onMove, isLast, field } = this.props;
     return (
       <div style={styles.editContainer}>
         <div>{id+1}.</div>
-        <div style={styles.editBody}>
+          <div style={styles.editBody}>
           <h4>{this.props.field.label}</h4>
           {
             false ?

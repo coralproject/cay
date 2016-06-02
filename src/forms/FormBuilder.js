@@ -1,40 +1,41 @@
 
 import React, { Component, PropTypes } from 'react';
+import ReactDOM from 'react-dom';
+import {connect} from 'react-redux';
+
 import { DragDropContext, DropTarget } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
-import ReactDOM from 'react-dom';
-import AskComponent, {styles as askComponentStyles} from 'asks/AskComponent';
+
+import FormComponent, {styles as askComponentStyles} from 'forms/FormComponent';
 import Checkbox from 'components/forms/Checkbox';
 import TextField from 'components/forms/TextField';
 import Modal from 'components/modal/Modal';
-import {connect} from 'react-redux';
-
+import { appendWidget, moveWidget } from 'forms/FormActions';
 
 const askTypes = [
-  {type: 'text', label: 'Short text'},
-  {type: 'textarea', label: 'Text area'},
-  {type: 'email', label: 'Email address'},
-  {type: 'number', label: 'Number'},
-  {type: 'radio', label: 'Radio buttons'},
-  {type: 'multiple-choice', label: 'Multiple choice'},
-  {type: 'dropdown', label: 'Drop down'}
+  {type: 'TextField', label: 'Short text'},
+  {type: 'TextArea', label: 'Text area'},
+  {type: 'TextField', label: 'Email address'},
+  {type: 'TextField', label: 'Number'},
+  {type: 'MultipleChoice', label: 'Radio buttons'},
+  {type: 'MultipleChoice', label: 'Multiple choice'},
+  {type: 'MultipleChoice', label: 'Drop down'}
 ];
 
-@connect(({ app }) => ({ app }))
+@connect(({ app, forms }) => ({ app, forms }))
 @DragDropContext(HTML5Backend)
 export default class FormBuilder extends Component {
-
   render() {
     const {preview, onClosePreview} = this.props;
     return (
       <div style={styles.builderContainer}>
         <div style={styles.leftPan}>
           <div style={styles.typesContainer}>
-            <h4 style={styles.typesTitle}>Question Fields</h4>
+            <h4 style={styles.typesTitle}>1. Build form</h4>
             <p style={styles.typesSubTitle}>Drag and drop items to create a form</p>
             <div style={styles.typeList}>
               {askTypes.map((type, i) => (
-                <AskComponent key={i} field={type} onClick={this.addToBottom.bind(this, type)} />
+                <FormComponent key={i} field={type} onClick={this.addToBottom.bind(this, type)} />
               ))}
             </div>
           </div>
@@ -43,6 +44,7 @@ export default class FormBuilder extends Component {
         <Modal
           title="Save Search"
           isOpen={preview}
+          confirmAction={() => console.log('worked')}
           cancelAction={onClosePreview}>
           {this.renderPreview.call(this)}
         </Modal>
@@ -50,45 +52,24 @@ export default class FormBuilder extends Component {
     );
   }
 
-  addToBottom(type) {
-    this.setState({
-      fields: fields.concat(type)
-    });
+  addToBottom(data) {
+    this.props.dispatch(appendWidget({
+      title: data.label,
+      type: 'field',
+      component: data.type,
+      wrapper: {},
+      props: {},
+      id: Math.floor(Math.random() * 99999)
+    }));
   }
 
   renderPreview() {
     if(!this.props.preview) return null;
 
-    const props = {
-      settings: {
-    		showFieldNumbers: true
-      },
-      header: {
-        title: 'Some Ask'
-      },
-      footer: {
-        permissions: 'Code of conduct'
-      },
-      finishedScreen: {
-		    title: 'Thanks.',
-		    description: 'This is a more verbose thank you message.'
-      },
-      page: {
-        children: [{
-          type: 'field',
-          component: 'MultipleChoice',
-          title: 'Select one or several themes for your story',
-          required: true,
-          pseudoLabel: true,
-          props: {
-            multipleChoice: true,
-            options: [{title: 'Pablo'}, {title: 'Familiy life'}, {title: 'School'}, {title: 'Law Enforcement'}]
-          }
-        }]
-      }
-    };
+    const form = Object.assign({}, this.props.forms.form);
+    form.steps[0].widgets = this.props.forms.widgets;
 
-    const src = `${this.props.app.elkhornHost}/preview.js?props=${JSON.stringify(props)}`;
+    const src = `${this.props.app.elkhornHost}/preview.js?props=${encodeURIComponent(JSON.stringify(form))}`;
     const script = document.createElement('script');
     script.src = src;
     document.getElementsByTagName('head')[0].appendChild(script);
@@ -101,8 +82,66 @@ export default class FormBuilder extends Component {
   }
 }
 
+@connect(({ forms }) => ({ forms }))
+class FormDiagram extends Component {
+
+  constructor(props, context) {
+    super(props, context);
+    this.state = { widgets: [], isHovering: false, tempWidgets: [] };
+    this.previousState = []; // a copy of state.fields
+    this.previousHover = null; // cache the element previously hovered
+  }
+
+  onMouseLeave(e) {
+    console.log("Mouse out");
+  }
+
+  render() {
+    const { onFieldSelect, forms } = this.props;
+    const { widgets } = forms;
+    return (
+      <div style={styles.formDiagramContainer}>
+        <h4>This is the form name for the public</h4>
+        <p>This is the form description for the users</p>
+        <div style={styles.formDiagram} onMouseLeave={ this.onMouseLeave.bind(this) }>
+
+          { this.state.tempWidgets.map((field, i) => (
+            <DropPlaceHolder key={i} formDiagram={ this } position={ i }>
+              <FormComponent onFieldSelect={onFieldSelect}
+                onList={true} field={field} position={ i } isLast={i === this.state.tempWidgets.length - 1} id={i} key={i}
+                onMove={this.onMove.bind(this)} />
+            </DropPlaceHolder>
+          ))}
+          {
+            this.state.isHovering ?
+              null
+            :
+              <DropPlaceHolder empty={ true } formDiagram={ this } position={ this.state.tempWidgets.length } key={ this.state.tempWidgets.length } />
+          }
+        </div>
+      </div>
+    );
+  }
+
+  onMove(direction, id) {
+    this.props.dispatch(moveWidget(id, id + (direction === 'up' ? -1 : 1)));
+  }
+
+  appendWidget(field) {
+    this.props.dispatch(appendWidget({
+      title: field.label,
+      type: 'field',
+      component: field.type,
+      wrapper: {},
+      props: {},
+      id: Math.floor(Math.random() * 99999)
+    }));
+  }
+}
+
 const askTarget = {
 
+  // Hover changes the component's internal state
   hover(props, monitor, component) {
 
     let formDiagram = component.props.formDiagram;
@@ -114,29 +153,31 @@ const askTarget = {
       return; // hovering the same as before? early return, do nothing.
     }
 
-    let fields = formDiagram.previousState.slice();
+    let tempWidgets = formDiagram.previousState.slice();
     var draggedItem = monitor.getItem();
 
     if (draggedItem.onList) {
-
+      console.log(draggedItem.position);
     } else {
       // If hovering over the default empty placeholder (the bottom one)
       if (component.props.empty) {
-        console.log(targetPosition);
-        fields[targetPosition] = draggedItem.field;
-        //fields = fieldsBefore.concat(draggedItem.field).concat(fieldsAfter);
+        tempWidgets[targetPosition] = draggedItem.field;
       } else {
         // if hovering over an existing field
-        let fieldsBefore = fields.slice(0, targetPosition);
-        let fieldsAfter = fields.slice(targetPosition);
-        fields = fieldsBefore.concat(draggedItem.field).concat(fieldsAfter);
+        console.log("Target" , targetPosition);
+        let fieldsBefore = tempWidgets.slice(0, targetPosition);
+        let fieldsAfter = tempWidgets.slice(targetPosition);
+        console.log(fieldsBefore);
+        console.log(fieldsAfter);
+        tempWidgets = fieldsBefore.concat(draggedItem.field).concat(fieldsAfter);
       }
     }
 
-    formDiagram.setState({ fields: fields, isHovering: true });
+    formDiagram.setState({ tempWidgets: tempWidgets, isHovering: true });
 
   },
 
+  // persist state only on drop
   drop(props, monitor, component) {
 
     let formDiagram = component.props.formDiagram;
@@ -145,11 +186,18 @@ const askTarget = {
 
     var draggedItem = monitor.getItem();
 
+    // If we are dragging an item already on the form
     if (draggedItem.onList) {
+
+      let fieldsCopy = fields.slice();
+      console.log(draggedItem.position);
+      fieldsCopy.splice(draggedItem.position, 1);
+      console.log(fieldsCopy);
+      /*
       const index = Math.min(fields.length - 1, hoverIndex);
       const id = monitor.getItem().id;
       fields[id] = fields[index];
-      fields[index] = monitor.getItem().field;
+      fields[index] = monitor.getItem().field;*/
     } else {
       let fieldsBefore = fields.slice(0, targetPosition);
       let fieldsAfter = fields.slice(targetPosition);
@@ -161,64 +209,12 @@ const askTarget = {
   }
 };
 
-class FormDiagram extends Component {
-  static propTypes = {
-    connectDropTarget: PropTypes.func.isRequired,
-    onFieldSelect: PropTypes.func
-  };
 
-  constructor(props, context) {
-    super(props, context);
-    this.state = { fields: [], isHovering: false };
-    this.previousState = []; // a copy of state.fields
-    this.previousHover = null; // cache the element previously hovered
-  }
-
-  render() {
-    const {connectDropTarget, onFieldSelect} = this.props;
-    const {fields} = this.state;
-    return (
-      <div style={styles.formDiagramContainer}>
-        <h4>This is the form name for the public</h4>
-        <p>This is the form description for the users</p>
-
-          <div style={styles.formDiagram}>
-            {fields.map((field, i) => (
-              <DropPlaceHolder formDiagram={ this } position={ i }>
-                <AskComponent onFieldSelect={onFieldSelect}
-                  onList={true} field={field} isLast={i === fields.length - 1} id={i} key={i}
-                  onMove={this.onMove.bind(this)} />
-              </DropPlaceHolder>
-            ))}
-            {
-              this.state.isHovering ?
-                null
-              :
-                <DropPlaceHolder empty={ true } formDiagram={ this } position={ fields.length } />
-            }
-
-          </div>
-
-      </div>
-    );
-  }
-
-  onMove(direction, id) {
-    const { fields } = this.state;
-    const changeWith = direction === 'up' ? id - 1 : id + 1;
-
-    const newFields = [...fields];
-    const aux = newFields[id];
-    newFields[id] = newFields[changeWith];
-    newFields[changeWith] = aux;
-    this.setState({ fields: newFields });
-  }
-}
-
-@DropTarget('ask_component', askTarget, (connect, monitor) => ({
+@DropTarget('form_component', askTarget, (connect, monitor) => ({
   connectDropTarget: connect.dropTarget(),
   isOver: monitor.isOver()
 }))
+@connect(({ app, forms }) => ({ app, forms }))
 class DropPlaceHolder extends Component {
 
   render() {
@@ -260,8 +256,7 @@ const styles = {
   },
   formDiagram: {
     height: 'auto',
-    minHeight: '300px',
-    border: '2px solid blue'
+    minHeight: '300px'
   },
   formDiagramContainer: {
     flex: 2,

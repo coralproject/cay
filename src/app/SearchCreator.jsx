@@ -1,39 +1,52 @@
-import React, {PropTypes} from 'react';
+
+/**
+ * Module dependencies
+ */
+
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
-import {Link} from 'react-router';
+import { Link } from 'react-router';
 
-import settings from 'settings';
+import { mediumGrey } from 'settings';
 
-import {userSelected} from 'users/UsersActions';
-import {fetchCommentsByUser} from 'comments/CommentsActions';
-import {saveQueryFromState, makeQueryFromState} from 'search/SearchActions';
-import { fetchAllTags } from 'tags/TagActions';
-import { populateDistributionStore } from 'filters/FiltersActions';
-import { fetchSections, fetchAuthors, resetFilters } from 'filters/FiltersActions';
-
+import { userSelected } from 'users/UsersActions';
+import { fetchCommentsByUser } from 'comments/CommentsActions';
+import {
+  saveQueryFromState,
+  makeQueryFromState,
+  fetchInitialData,
+  clearUserList,
+  clearRecentSavedSearch
+} from 'search/SearchActions';
+import { filterChanged, getFilterRanges } from 'filters/FiltersActions';
 
 import Page from 'app/layout/Page';
 import ContentHeader from 'components/ContentHeader';
 import UserList from 'users/UserList';
 import UserDetail from 'users/UserDetail';
-import SearchFilters from 'search/SearchFilters';
+import UserFilters from 'filters/UserFilters';
 import Button from 'components/Button';
 import FaFloopyO from 'react-icons/lib/fa/floppy-o';
-import MdEdit from 'react-icons/lib/md/edit';
 import Modal from 'components/modal/Modal';
 import TextField from 'components/forms/TextField';
 import StatusBar from 'components/StatusBar';
 import Clauses from 'search/Clauses';
 
+/**
+ * Search creator page
+ * Contains the UI for creating user searches
+ */
+
 @connect(state => ({
   searches: state.searches,
   comments: state.comments,
-  users: state.users
+  users: state.users,
+  filters: state.filters,
+  app: state.app
 }))
 @Radium
-export default class SearchCreator extends React.Component {
-
+export default class SearchCreator extends Component {
   constructor(props) {
     super(props);
     this.state = {saveModalOpen: false};
@@ -45,21 +58,20 @@ export default class SearchCreator extends React.Component {
 
   // only the first time
   componentWillMount() {
+    const {dispatch} = this.props;
+
     // redirect user to /login if they're not logged in
     //   TODO: refactor: pass in a function that calculates auth state
-    if (window.requireLogin && !this.props.searches.authorized) {
-      let {router} = this.context;
-      return router.push('/login');
+    if (this.props.app.requireLogin && !this.props.searches.authorized) {
+      return this.context.router.push('/login');
     }
 
-    /* set up the initial default / unfiltered view, this was previously in UserFilters */
-    // this.props.dispatch(resetFilters());
-    this.props.dispatch(fetchAllTags());
-    this.props.dispatch(fetchSections());
-    this.props.dispatch(fetchAuthors());
-    this.props.dispatch(populateDistributionStore());
-
-    this.props.dispatch(makeQueryFromState('user', 0, true));
+    // set up the initial default / unfiltered view
+    // this was previously in UserFilters
+    dispatch(clearRecentSavedSearch());
+    dispatch(clearUserList());
+    dispatch(fetchInitialData());
+    dispatch(getFilterRanges(false)); // editmode => false
   }
 
   updateUser(user) {
@@ -89,17 +101,21 @@ export default class SearchCreator extends React.Component {
 
   confirmSave() {
     // show a saving icon or something?
-    const name = this.state.searchName;
-    const desc = this.state.searchDesc;
-    const tag = this.state.searchTag;
-
+    const { searchName, searchDesc, searchTag } = this.state;
     this.setState({saveModalOpen: false});
-
-    this.props.dispatch(saveQueryFromState(name, desc, tag));
+    this.props.dispatch(saveQueryFromState(searchName, searchDesc, searchTag));
   }
 
   onPagination(page = 0) {
     this.props.dispatch(makeQueryFromState('user', page));
+  }
+
+  onFilterChange(fieldName, attr, val) {
+    const {dispatch} = this.props;
+
+    dispatch(userSelected(null));
+    dispatch(filterChanged(fieldName, {[attr]: val}));
+    dispatch(makeQueryFromState('user', 0, true));
   }
 
   render() {
@@ -109,17 +125,16 @@ export default class SearchCreator extends React.Component {
       <Page>
 
         <ContentHeader title={ window.L.t('Search Creator') } />
-        <Clauses/>
+        <Clauses editMode={false} />
 
         <div style={styles.base}>
           <div style={styles.filters}>
-            <SearchFilters userOnly={true}/>
+            <UserFilters
+              editMode={false}
+              onChange={this.onFilterChange.bind(this)} />
           </div>
 
           <div style={styles.rightPanel}>
-            <Button category="disabled" style={styles.editButton}>
-              Edit Search <MdEdit style={styles.saveIcon} />
-            </Button>
             <Button onClick={this.openModal.bind(this)} category="primary" style={styles.saveButton}>
               Save Search <FaFloopyO style={styles.saveIcon} />
             </Button>
@@ -128,8 +143,11 @@ export default class SearchCreator extends React.Component {
                 total={this.props.searches.userCount}
                 onPagination={this.onPagination.bind(this)}
                 loadingQueryset={this.props.searches.loadingQueryset}
-                users={this.props.searches.users} userSelected={this.updateUser.bind(this)} />
+                users={this.props.searches.users}
+                userSelected={this.updateUser.bind(this)} />
               <UserDetail
+                breakdown={this.props.filters.breakdown}
+                specificBreakdown={this.props.filters.specificBreakdown}
                 commentsLoading={this.props.comments.loading}
                 user={this.props.users.selectedUser}
                 comments={this.props.comments.items}
@@ -148,7 +166,7 @@ export default class SearchCreator extends React.Component {
           <p style={styles.modalLabel}>Description</p>
           <textarea
             style={styles.descriptionInput}
-            onChange={this.updateSearcDesc.bind(this)}></textarea>
+            onBlur={this.updateSearcDesc.bind(this)}></textarea>
           <TextField label="Tag Name" onChange={this.updateSearchTag.bind(this)} />
         </Modal>
 
@@ -157,7 +175,7 @@ export default class SearchCreator extends React.Component {
           visible={this.props.searches.savingSearch || !!this.props.searches.recentSavedSearch}>
           {
             this.props.searches.recentSavedSearch ?
-              (<Link style={styles.searchDetail} to={`/saved-search/${this.props.searches.recentSavedSearch.id}`}>
+              (<Link style={styles.searchDetail} to={`/saved-search/${this.props.searches.recentSavedSearch.name}`}>
                 View Your Saved Search [{this.props.searches.recentSavedSearch.name}] →
               </Link>) :
               'Saving Search...'
@@ -179,7 +197,7 @@ const styles = {
     flex: 1
   },
   userListContainer: {
-    marginTop: 5,
+    margin: 20,
     height: 900,
     display: 'flex',
     clear: 'both'
@@ -202,7 +220,7 @@ const styles = {
     fontSize: 20,
     minHeight: 120,
     width: '100%',
-    border: '1px solid ' + settings.mediumGrey,
+    border: `1px solid ${mediumGrey}`,
     borderRadius: 3
   },
   saveIcon: {
@@ -220,9 +238,5 @@ const styles = {
   },
   saveButton: {
     float: 'right'
-  },
-  editButton: {
-    float: 'right',
-    marginLeft: 10
   }
 };

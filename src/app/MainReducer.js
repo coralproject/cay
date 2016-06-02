@@ -7,7 +7,7 @@ import dataExplorer from 'explorer/DataExplorerReducer';
 import tags from 'tags/TagReducer';
 import filters from 'filters/FiltersReducer';
 import users from 'users/UsersReducer';
-import asks from 'asks/AsksReducer';
+import forms from 'forms/FormsReducer';
 
 const rootReducer = combineReducers({
   app,
@@ -18,7 +18,7 @@ const rootReducer = combineReducers({
   tags,
   filters,
   users,
-  asks
+  forms
 });
 
 export default rootReducer;

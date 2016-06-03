@@ -1,4 +1,5 @@
 import * as types from 'forms/FormActions';
+import uuid from 'node-uuid';
 
 const initial = {
   items: [],
@@ -57,7 +58,8 @@ const forms = (state = initial, action) => {
     return newState;
 
   case types.FORM_CREATE_EMPTY:
-    return Object.assign({}, state, {form: emptyForm, widgets: [] });
+    const form = Object.assign({}, emptyForm, { steps: [{ id: uuid.v4(), name: 'first_step'}] })
+    return Object.assign({}, state, {form: form, widgets: [] });
 
   case types.FORM_APPEND_WIDGET:
     return Object.assign({}, state, { widgets: [...state.widgets, action.widget ] });

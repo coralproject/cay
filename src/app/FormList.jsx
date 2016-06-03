@@ -79,7 +79,7 @@ export default class FormList extends React.Component {
       <TableRow onClick={this.onRowClick.bind(this, form.id)} style={styles.row} key={i}>
         <TableCell>{header.title}</TableCell>
         <TableCell style={{maxWidth: 400}}>{header.description}</TableCell>
-        <TableCell>{form.answers}</TableCell>
+        <TableCell>{form.stats.responses}</TableCell>
         <TableCell><MdDelete key={i} onClick={ this.confirmDeletion.bind(this, header.title, header.description, form._id) } /></TableCell>
       </TableRow>
     );

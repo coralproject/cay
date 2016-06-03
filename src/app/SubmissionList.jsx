@@ -7,11 +7,13 @@ import WFlag from 'react-icons/lib/fa/flag-o';
 import WBookmark from 'react-icons/lib/fa/bookmark-o';
 import BFlag from 'react-icons/lib/fa/flag';
 import BBookmark from 'react-icons/lib/fa/bookmark';
+import Button from 'components/Button';
 
 import {
   fetchSubmissions,
   setActiveSubmission,
   updateSubmission,
+  sendToGallery,
   fetchForm } from 'forms/FormActions';
 
 import FormChrome from 'app/layout/FormChrome';
@@ -24,6 +26,10 @@ export default class SubmissionList extends Component {
     super(props);
     props.dispatch(fetchForm(props.params.id));
     props.dispatch(fetchSubmissions(props.params.id));
+  }
+
+  sendToGallery(formId, subId, key) {
+    this.props.dispatch(sendToGallery(formId, subId, key));
   }
 
   onFlag(flagged) {
@@ -45,6 +51,7 @@ export default class SubmissionList extends Component {
             activeSubmission={submissions[activeSubmission]}
             onSelect={this.onSubmissionSelect.bind(this)} />
           <SubmissionDetail submission={submissions[activeSubmission]}
+            sendToGallery={this.sendToGallery.bind(this)}
             onFlag={this.onFlag.bind(this)}
             onBookmark={this.onBookmark.bind(this)}/>
         </div>
@@ -61,18 +68,22 @@ export default class SubmissionList extends Component {
 class Sidebar extends Component {
 
   listSubmissions(submissions, activeSubmission, onSelect) {
-    return submissions.map((submission, key) => (
-      <div onClick={() => onSelect(key)}
-        style={[styles.sidebar.submissionContainer, submission._id === activeSubmission._id ? styles.sidebar.activeSubmission : {}]} key={key}>
-        <span>{submissions.length - key}</span>
-        <span>{moment(submission.date_updated).format('L LT')}</span>
-        <div>
-          {submission.flagged ? <span style={styles.sidebar.icon}><BFlag/></span> : null}
-          {submission.bookmarked ? <span style={styles.sidebar.icon}><BBookmark/></span> : null}
+    return submissions.map((submission, key) => {
+      return (
+        <div onClick={() => onSelect(key)}
+          style={[
+            styles.sidebar.submissionContainer,
+            submission.id === activeSubmission.id && styles.sidebar.activeSubmission
+          ]} key={key}>
+          <span>{submissions.length - key}</span>
+          <span>{moment(submission.date_updated).format('L LT')}</span>
+          <div>
+            {submission.flagged ? <span style={styles.sidebar.icon}><BFlag/></span> : null}
+            {submission.bookmarked ? <span style={styles.sidebar.icon}><BBookmark/></span> : null}
+          </div>
         </div>
-        <span></span>
-      </div>
-    ));
+      );
+    });
   }
 
   render() {
@@ -119,17 +130,31 @@ class SubmissionDetail extends Component {
     const { submission } = this.props;
     return (
       <div style={styles.detail.answersContainer}>
-        {submission.replies.map((reply, key) => (
-          <div style={styles.detail.questionContainer} key={key}>
-            <h2 style={styles.detail.question}>{reply.question}</h2>
-            <p>{this.renderAnswer(reply.answer)}</p>
-          </div>
-        ))}
+        {submission.replies.map((reply, key) => {
+          console.log(submission);
+          return (
+            <div style={styles.detail.questionContainer} key={key}>
+              <h2 style={styles.detail.question}>{reply.question}</h2>
+              <p>{this.renderAnswer(reply.answer)}</p>
+              <Button
+                style={styles.detail.galleryButton}
+                category="primary"
+                size="small"
+                onClick={() => this.props.sendToGallery(submission.form_id, submission.id, key)}>
+                Send to gallery
+              </Button>
+            </div>
+          );
+        })}
       </div>
     );
   }
 
   renderAnswer(answer = {}) {
+    if (answer === null) {
+      return (<span>No response</span>);
+    }
+
     if (answer.options) {
       return (
         <ul>
@@ -140,7 +165,7 @@ class SubmissionDetail extends Component {
       );
     }
 
-    return answer.text;
+    return answer;
   }
 
   renderAuthorDetail() {
@@ -188,6 +213,9 @@ class SubmissionDetail extends Component {
 
 const styles = {
   detail: {
+    galleryButton: {
+      float: 'right'
+    },
     questionContainer: {
       marginBottom: 20
     },

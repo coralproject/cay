@@ -1,5 +1,4 @@
-
-import { xenia } from 'app/AppActions';
+'use strict';
 
 export const SUBMISSIONS_REQUEST_STARTED = 'SUBMISSIONS_REQUEST_STARTED';
 export const SUBMISSIONS_REQUEST_SUCCESS = 'SUBMISSIONS_REQUEST_SUCCESS';
@@ -191,6 +190,13 @@ export const submissionsFetched = submissions => ({
   submissions
 });
 
+export const submissionsFetchError = error => {
+  return {
+    type: SUBMISSIONS_REQUEST_FAILED,
+    error
+  };
+};
+
 export const setActiveSubmission = submission => ({
   type: SET_ACTIVE_SUBMISSION,
   submission
@@ -215,14 +221,38 @@ export const saveForm = (form, widgets, host) => () => {
   .then(json => alert(json.id));
 };
 
-export const fetchSubmissions = formId => dispatch => {
-  xenia()
-    .collection('form_submissions')
-    .match({ form_id: `#objid:${formId}` })
-  .exec().then(res => dispatch(submissionsFetched(res.results[0].Docs)));
+export const fetchSubmissions = formId => {
+  return (dispatch, getState) => {
+    const {app} = getState();
+    fetch(`${app.pillarHost}/api/form_submissions/${formId}`)
+      .then(res => res.json())
+      .then(submissions => dispatch(submissionsFetched(submissions)))
+      .catch(error => dispatch(submissionsFetchError(error)));
+  };
 };
 
 export const updateSubmission = props => dispatch => {
   dispatch(updateActiveSubmission(props));
   // TODO: go to server when API is done
+};
+
+export const sendToGallery = (formId, subId, key) => {
+  return (dispatch, getState) => {
+    const {app} = getState();
+
+    fetch(`${app.pillarHost}/api/form_gallery/${formId}/add/${subId}/${key}`, {
+      method: 'PUT',
+      model: 'cors'
+    })
+      .then(res => {
+        console.log(res);
+        return res.json();
+      })
+      .then(sub => {
+        console.log(sub);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
 };

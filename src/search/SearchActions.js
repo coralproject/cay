@@ -367,7 +367,7 @@ const prepSearch = (filters, query, name, desc, tag, breakdown, specificBreakdow
   return {
     name, // the human-readable user-entered name
     description: desc, // user-entered string
-    query: query.name, // the name of the xenia query
+    querySet: _.cloneDeep(query), // the name of the xenia query
     tag, // unique name of live-tag
     filters: {
       values,

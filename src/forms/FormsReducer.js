@@ -83,9 +83,17 @@ const forms = (state = initial, action) => {
   case types.FORMS_REQUEST_SUCCESS:
     return Object.assign({}, state, { items: action.forms });
 
+  case types.FORM_REPLACE_WIDGETS:
+    var updatedWidgets = action.widgets.map((field) =>
+      console.log("Field", field)
+    );
+    return Object.assign({}, state);
+
   case types.WIDGET_UPDATE:
-    return Object.assign({}, state, { widgets: state.widgets.map((widget, id) =>
-      id === action.id ? Object.assign({}, widget, action.data) : widget) });
+    var updatedWidgets = state.widgets.map((widget, id) =>
+      id === action.id ? Object.assign({}, widget, action.data) : widget
+    );
+    return Object.assign({}, state, { widgets: updatedWidgets });
 
   case types.WIDGET_MOVE:
     const newWidgets = [...state.widgets];

@@ -14,14 +14,14 @@ import Modal from 'components/modal/Modal';
 import { appendWidget, moveWidget } from 'forms/FormActions';
 
 const askTypes = [
-  {type: 'TextField', label: 'Short Text'},
-  {type: 'TextArea', label: 'Long Text'},
-  {type: 'TextField', label: 'Numbers'},
-  {type: 'MultipleChoice', label: 'Multiple choice'},
-  {type: 'TextField', label: 'Email'},
-  {type: 'TextField', label: 'Date'},
-  {type: 'LocationDropdown', label: 'Location'},
-  {type: 'TextField', label: 'Phone number'}
+  {type: 'TextField', title: 'Short Text'},
+  {type: 'TextArea', title: 'Long Text'},
+  {type: 'TextField', title: 'Numbers'},
+  {type: 'MultipleChoice', title: 'Multiple choice'},
+  {type: 'TextField', title: 'Email'},
+  {type: 'TextField', title: 'Date'},
+  {type: 'LocationDropdown', title: 'Location'},
+  {type: 'TextField', title: 'Phone number'}
 ];
 
 @connect(({ app, forms }) => ({ app, forms }))

@@ -22,6 +22,8 @@ export const FORM_DELETED = 'FORM_DELETED';
 
 export const FORM_CREATE_EMPTY= 'FORM_CREATE_EMPTY';
 
+export const FORM_REPLACE_WIDGETS = 'FORM_REPLACE_WIDGETS';
+
 const getInit = (body, method) => {
 
   var headers = new Headers({ 'Accept': 'application/json', 'Content-Type': 'application/json' });
@@ -132,6 +134,13 @@ export const leavingEdit = formId => {
 export const createEmpty = () => {
   return {
     type: FORM_CREATE_EMPTY
+  };
+};
+
+export const replaceWidgets = fields => {
+  return {
+    type: FORM_REPLACE_WIDGETS,
+    widgets: fields
   };
 };
 

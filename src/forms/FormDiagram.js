@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import { DropTarget } from 'react-dnd';
 
 import DropPlaceHolder from 'forms/DropPlaceHolder';
-import { appendWidget, moveWidget } from 'forms/FormActions';
+import { appendWidget, moveWidget, replaceWidgets } from 'forms/FormActions';
 import FormComponent, {styles as askComponentStyles} from 'forms/FormComponent';
 
 import FaArrowCircleUp from 'react-icons/lib/fa/arrow-circle-up';
@@ -20,6 +20,11 @@ export default class FormDiagram extends Component {
     this.state = { widgets: [], isHovering: false, tempWidgets: [] };
     this.previousState = []; // a copy of state.fields
     this.previousHover = null; // cache the element previously hovered
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({ widgets: nextProps.forms.widgets, tempWidgets: nextProps.forms.widgets });
+    this.previousState = nextProps.forms.widgets;
   }
 
   render() {
@@ -73,21 +78,27 @@ export default class FormDiagram extends Component {
 
   appendWidget(field) {
     this.props.dispatch(appendWidget({
-      title: field.label,
+      title: field.title,
       type: 'field',
       component: field.type,
       wrapper: {},
       props: {},
-      id: Math.floor(Math.random() * 99999)
+      id: Math.floor(Math.random() * 99999) + ''
     }));
   }
+
+  persist(fields) {
+    this.props.dispatch(replaceWidgets(fields));
+  }
+
 }
 
 
 const styles = {
   formDiagram: {
     height: 'auto',
-    minHeight: '300px'
+    minHeight: '300px',
+    position: 'relative'
   },
   formDiagramContainer: {
     flex: 2,

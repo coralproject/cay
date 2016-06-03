@@ -23,8 +23,6 @@ const askTarget = {
     var draggedItem = monitor.getItem();
 
     if (draggedItem.onList) {
-      console.log(draggedItem.position);
-      console.log(targetPosition);
       // First we make a copy removing the dragged element
       let fieldsCopy = tempWidgets.slice();
       fieldsCopy.splice(draggedItem.position, 1);
@@ -71,18 +69,18 @@ const askTarget = {
       fields = fieldsBefore.concat(draggedItem.field).concat(fieldsAfter);
       formDiagram.previousState = fields.slice();
 
-      /*
-      const index = Math.min(fields.length - 1, hoverIndex);
-      const id = monitor.getItem().id;
-      fields[id] = fields[index];
-      fields[index] = monitor.getItem().field;*/
     } else {
+
+      formDiagram.appendWidget(draggedItem.field, targetPosition);
+
       let fieldsBefore = fields.slice(0, targetPosition);
       let fieldsAfter = fields.slice(targetPosition);
       fields = fieldsBefore.concat(draggedItem.field).concat(fieldsAfter);
       formDiagram.previousState = fields.slice();
     }
-    formDiagram.setState({ fields: fields, isHovering: false });
+
+    formDiagram.persist(fields);
+    formDiagram.setState({ tempWidgets: fields, isHovering: false });
 
   }
 };

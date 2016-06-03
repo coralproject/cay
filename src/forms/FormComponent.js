@@ -4,6 +4,7 @@ import { DragSource } from 'react-dnd';
 import Checkbox from 'components/forms/Checkbox';
 import TextField from 'components/forms/TextField';
 import FaTrash from 'react-icons/lib/fa/trash';
+import FaClose from 'react-icons/lib/fa/close';
 import FaArrowCircleUp from 'react-icons/lib/fa/arrow-circle-up';
 import FaArrowCircleDown from 'react-icons/lib/fa/arrow-circle-down';
 import { updateWidget } from 'forms/FormActions';
@@ -38,6 +39,9 @@ const askSource = {
       onList: props.onList,
       position: props.position
     };
+  },
+  endDrag(props, monitor, component) {
+    //console.log(component);
   }
 };
 
@@ -56,49 +60,76 @@ export default class AskComponent extends Component {
     id: PropTypes.number
   };
 
+  constructor(props, context) {
+    super(props, context);
+    this.state = { 'expanded': false };
+  }
+
   render() {
     const { connectDragSource, onList } = this.props;
-    return connectDragSource(onList ?
+    return onList ?
       this.renderEdit()
-      : this.renderType()
-    );
+      : this.renderType();
+  }
+
+  toggleExpanded() {
+    if (this.props.onList) {
+      this.setState({ expanded: !this.state.expanded })
+    }
   }
 
   renderType() {
     const { isDragging, field } = this.props;
     return (
-      <div onClick={this.onClick.bind(this)} style={styles.askComponent(isDragging)}>
-        {field.label}
-      </div>
+      this.props.connectDragSource(
+        <div onClick={this.onClick.bind(this)} style={styles.askComponent(isDragging)}>
+          {field.title}
+        </div>
+      )
     );
   }
 
-  onTitleChange(title) {
-    this.props.dispatch(updateWidget(this.props.id, { title }));
+  onTitleChange(e) {
+    this.props.dispatch(updateWidget(this.props.id, { title: e.target.value }));
   }
 
   renderEdit() {
     const { id, onMove, isLast, field } = this.props;
     return (
-      <div style={styles.editContainer}>
-        <div>{id+1}.</div>
-        <div style={styles.editBody}>
-          <h4>{this.props.field.label}</h4>
-          {
-            false ?
-              <div>
-                <p>Description text (optional)</p>
-                {this.editSettings()}
+      <div>
+        { this.props.connectDragSource(
+            <div style={styles.editContainer}>
+              <div>{id+1}.</div>
+              <div style={styles.editBody} onClick={ this.toggleExpanded.bind(this) }>
+                <h4>{this.props.field.title}</h4>
               </div>
-            :
-              null
-          }
-        </div>
-        <div style={styles.arrowContainer}>
-          <button style={styles.delete}><FaTrash /></button>
-          { id !== 0 ? <button onClick={() => onMove('up', id)} style={styles.arrow}><FaArrowCircleUp /></button> : null  }
-          { !isLast ? <button onClick={() => onMove('down', id)} style={styles.arrow}><FaArrowCircleDown /></button> : null  }
-        </div>
+              <div style={styles.arrowContainer}>
+                <button style={styles.delete}><FaTrash /></button>
+                { id !== 0 ? <button onClick={() => onMove('up', id)} style={styles.arrow}><FaArrowCircleUp /></button> : null  }
+                { !isLast ? <button onClick={() => onMove('down', id)} style={styles.arrow}><FaArrowCircleDown /></button> : null  }
+              </div>
+            </div>
+          )
+        }
+        {
+          this.state.expanded ?
+            <div style={ styles.editSettingsPanel }>
+              <label style={ styles.label }>
+                <strong>Question</strong> (or field label):
+                <input onChange={ this.onTitleChange.bind(this) } style={ styles.bigInput } defaultValue={ this.props.field.title } type="text" placeholder="Ex: What is art?" />
+              </label>
+              <label style={ styles.label }>
+                <strong>Description</strong>/helper text:
+                <input style={ styles.bigInput } type="text" placeholder="Ex: Explain ART in a short sentence." />
+              </label>
+
+              {this.editSettings()}
+
+              <button style={ styles.editSettingsPanelClose } onClick={ this.toggleExpanded.bind(this) }><FaClose /></button>
+            </div>
+          :
+            null
+        }
       </div>
     );
   }
@@ -114,6 +145,7 @@ export default class AskComponent extends Component {
       onClick(field);
     }
   }
+
 }
 
 export const styles = {
@@ -180,5 +212,41 @@ export const styles = {
     fontSize: '14pt',
     display: 'inline-block',
     cursor: 'pointer'
+  },
+  editSettingsPanel: {
+    position: 'absolute',
+    top: '0px',
+    left: '0px',
+    width: '100%',
+    height: '100%',
+    padding: '40px',
+    backgroundColor: '#fafafa',
+    boxShadow: '0px 2px 15px #444'
+  },
+  editSettingsPanelClose: {
+    position: 'absolute',
+    top: '20px',
+    right: '20px',
+    fontSize: '16pt',
+    border: 'none',
+    background: '#ddd',
+    borderRadius: '40px',
+    height: '40px',
+    width: '40px',
+    lineHeight: '20px',
+    textAlign: 'center',
+    cursor: 'pointer'
+  },
+  label: {
+    display: 'block',
+    width: '100%',
+    marginBottom: '10px'
+  },
+  bigInput: {
+    fontSize: '12pt',
+    padding: '10px',
+    width: '50%',
+    border: '1px solid #ccc',
+    display: 'block'
   }
 };

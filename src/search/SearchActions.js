@@ -469,10 +469,7 @@ export const deleteSearch = search => {
 
     dispatch({type: PILLAR_SEARCH_DELETE_INIT, search});
 
-    xenia().deleteQuery(search.query).then(data => {
-      console.info('query_set deleted from xenia', data);
-      return fetch(`${app.pillarHost}/api/search/${search.id}`, {method: 'DELETE'});
-    })
+    fetch(`${app.pillarHost}/api/search/${search.id}`, {method: 'DELETE'})
     .then(resp => {
       console.info('search deleted from pillar', resp);
       const newSearches = searches.searches.concat();

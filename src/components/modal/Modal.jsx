@@ -39,7 +39,7 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    position: 'absolute',
+    position: 'fixed',
     zIndex: 100,
     top: 0,
     right: 0,

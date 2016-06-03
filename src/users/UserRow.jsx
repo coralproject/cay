@@ -86,6 +86,7 @@ export default class UserRow extends React.Component {
     } else {
       dimension = user.statistics.comments.all.all;
     }
+    // <img style={styles.avatar} src="/img/user_portrait_placeholder.png" />
 
     return (
       <ListItem
@@ -94,7 +95,6 @@ export default class UserRow extends React.Component {
         onClick={this.handleClick.bind(this)}
         >
         <div style={styles.flex}>
-          <img style={styles.avatar} src="/img/user_portrait_placeholder.png" />
           <div>
             {user.name}
             {this.getNonDefaultFilters()}

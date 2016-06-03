@@ -17,13 +17,14 @@ export default class FormChrome extends React.Component {
     router: PropTypes.object.isRequired
   }
 
-  buildForm() {
+  buildForm() { // navigate to the form builder or editor
     if (this.props.activeTab === 'builder') return;
 
-    if (this.props.form) {
+    if (this.props.form) { // edit the current form
       return this.context.router.push(`/forms/${this.props.form.id}`);
     }
 
+    // build a new form
     this.context.router.push('/forms/create');
   }
 
@@ -55,13 +56,15 @@ export default class FormChrome extends React.Component {
           </li>
           <li key="dewey" style={[
             styles.option,
-            this.props.activeTab === 'submissions' && styles.active]}
+            this.props.activeTab === 'submissions' && styles.active,
+            !this.props.form && styles.disabled]}
             onClick={this.reviewSubmissions.bind(this)}>
             Review Submissions
           </li>
           <li key="louie" style={[
             styles.option,
-            this.props.activeTab === 'gallery' && styles.active]}
+            this.props.activeTab === 'gallery' && styles.active,
+            !this.props.form && styles.disabled]}
             onClick={this.manageGallery.bind(this)}>
             Manage Gallery
           </li>
@@ -99,5 +102,8 @@ const styles = {
   active: {
     backgroundColor: settings.grey,
     color: 'white'
+  },
+  disabled: {
+    display: 'none'
   }
 };

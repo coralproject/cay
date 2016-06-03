@@ -14,6 +14,7 @@ import {StyleRoot} from 'radium';
 
 // Routes
 import SearchCreator from 'app/SearchCreator';
+import User from 'app/User';
 import TagManager from 'app/TagManager';
 import Login from 'app/Login';
 import SeeAllSearches from 'app/SeeAllSearches';
@@ -80,6 +81,7 @@ class Root extends React.Component {
             <Route path="login" component={Login} />
             <Route path="about" component={About} />
             <Route path="search-creator" component={SearchCreator} />
+            <Route path="user/:_id" component={User} />
             <Route path="tag-manager" component={TagManager} />
             <Route path="saved-searches" component={SeeAllSearches}/>
             <Route path="saved-search/:name" component={SearchDetail} />

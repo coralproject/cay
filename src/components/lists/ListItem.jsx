@@ -52,9 +52,7 @@ const styles = {
     borderBottom: '1px solid ' + settings.lighterGrey,
     borderRight: '1px solid #ddd',
     ':hover': {
-      backgroundColor: 'white',
-      borderRight: '1px solid #fff',
-      borderBottom: '1px solid #ddd'
+      backgroundColor: 'rgb(240,240,240)'
     }
   },
   active: {

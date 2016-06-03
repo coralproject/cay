@@ -49,14 +49,12 @@ export default class UserList extends React.Component {
       page: this.state.page + 1
     });
   }
-
   getUserList(users) {
     return (
       <Infinite
         elementHeight={100}
         containerHeight={500}
         infiniteLoadBeginEdgeOffset={200}
-        styles={{scrollableStyle: {'width': 700}}}
         onInfiniteLoad={this.handleInfiniteLoad.bind(this)}
         >
         {users.map((user, i) =>
@@ -129,7 +127,8 @@ export default class UserList extends React.Component {
 
 const styles = {
   base: {
-
+    flexGrow: 2,
+    marginLeft: 20
   },
   columnHeader: {
     display: 'flex',

@@ -1,6 +1,9 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
+import { Link } from 'react-router';
 import ListItem from 'components/lists/ListItem';
+
+const RadiumLink = Radium(Link);
 
 @Radium
 export default class UserRow extends React.Component {
@@ -96,7 +99,7 @@ export default class UserRow extends React.Component {
         >
         <div style={styles.flex}>
           <div>
-            {user.name}
+            <RadiumLink to={`user/${this.props.user._id}`}>{user.name}</RadiumLink>
             {this.getNonDefaultFilters()}
           </div>
         </div>

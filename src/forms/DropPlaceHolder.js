@@ -118,23 +118,23 @@ export default class DropPlaceHolder extends Component {
 
 const styles = {
   dropPlaceHolder: {
-    height: '70px',
-    border: '1px dashed #111',
+    height: '60px',
     background: 'rgba(128,128,128,.1)',
     marginBottom: '10px',
-    borderRadius: '3px'
+    borderRadius: '4px'
   },
   dropPlaceHolderActive: {
     border: '1px dashed #111',
-    height: '70px',
+    height: '60px',
     background: 'rgba(0,0,0,.1)',
     padding: '30px',
-    borderRadius: '3px',
+    borderRadius: '4px',
     marginBottom: '10px'
   },
   emptyPlaceholderText: {
     textAlign: 'center',
     fontSize: '15pt',
-    lineHeight: '60px'
+    lineHeight: '60px',
+    border: '1px dashed #111'
   }
 };

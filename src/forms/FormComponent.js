@@ -3,8 +3,9 @@ import { connect } from 'react-redux';
 import { DragSource } from 'react-dnd';
 import Checkbox from 'components/forms/Checkbox';
 import TextField from 'components/forms/TextField';
-import FaArrowUp from 'react-icons/lib/fa/arrow-up';
-import FaArrowDown from 'react-icons/lib/fa/arrow-down';
+import FaTrash from 'react-icons/lib/fa/trash';
+import FaArrowCircleUp from 'react-icons/lib/fa/arrow-circle-up';
+import FaArrowCircleDown from 'react-icons/lib/fa/arrow-circle-down';
 import { updateWidget } from 'forms/FormActions';
 
 
@@ -94,8 +95,9 @@ export default class AskComponent extends Component {
           }
         </div>
         <div style={styles.arrowContainer}>
-          { id !== 0 ? <FaArrowUp onClick={() => onMove('up', id)} style={styles.arrow} /> : null  }
-          { !isLast ? <FaArrowDown onClick={() => onMove('down', id)} style={styles.arrow} /> : null  }
+          <button style={styles.delete}><FaTrash /></button>
+          { id !== 0 ? <button onClick={() => onMove('up', id)} style={styles.arrow}><FaArrowCircleUp /></button> : null  }
+          { !isLast ? <button onClick={() => onMove('down', id)} style={styles.arrow}><FaArrowCircleDown /></button> : null  }
         </div>
       </div>
     );
@@ -117,29 +119,32 @@ export default class AskComponent extends Component {
 export const styles = {
   askComponent: function(isDragging) {
     return {
-      opacity: isDragging ? 0.5 : 1,
-      marginBottom: 20,
+      opacity: isDragging ? 0.75 : 1,
+      marginBottom: 10,
       shadowOffset: { height: 1, width: 0},
       boxShadow: '0 1px 3px #9B9B9B',
-      padding: 20,
+      lineHeight: '40px',
       cursor: 'pointer',
-      height: 70,
+      padding: '0 10px',
+      height: 40,
       backgroundColor: '#fff',
       borderRadius: 3,
       fontSize: 14,
       fontWeight: 'bold',
-      minWidth: 150,
-      margin: 5
+      width: '48%',
+      textAlign: 'left',
+      margin: '1%'
     };
   },
   editContainer: {
     display: 'flex',
     justifyContent: 'flex-start',
     backgroundColor: '#fff',
-    padding: 20,
+    padding: '10px 10px 10px 20px',
     boxShadow: '0 1px 3px #9B9B9B',
     borderRadius: 4,
-    height: 70
+    height: 60,
+    lineHeight: '40px'
   },
   editBody: {
     flex: 1,
@@ -147,10 +152,33 @@ export const styles = {
   },
   arrowContainer: {
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: 'row',
     justifyContent: 'space-between'
   },
   arrow: {
+    width: '40px',
+    height: '40px',
+    padding: '0',
+    lineHeight: '20px',
+    marginLeft: '5px',
+    border: '1px solid #CCC',
+    background: 'none',
+    borderRadius: '4px',
+    fontSize: '14pt',
+    display: 'inline-block',
+    cursor: 'pointer'
+  },
+  delete: {
+    width: '40px',
+    height: '40px',
+    padding: '0',
+    lineHeight: '20px',
+    marginLeft: '5px',
+    border: '1px solid #CCC',
+    background: '#DDD',
+    borderRadius: '4px',
+    fontSize: '14pt',
+    display: 'inline-block',
     cursor: 'pointer'
   }
 };

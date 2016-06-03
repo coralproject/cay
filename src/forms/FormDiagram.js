@@ -8,6 +8,10 @@ import DropPlaceHolder from 'forms/DropPlaceHolder';
 import { appendWidget, moveWidget } from 'forms/FormActions';
 import FormComponent, {styles as askComponentStyles} from 'forms/FormComponent';
 
+import FaArrowCircleUp from 'react-icons/lib/fa/arrow-circle-up';
+import FaUserPlus from 'react-icons/lib/fa/user-plus';
+import FaFloppyO from 'react-icons/lib/fa/floppy-o';
+
 @connect(({ forms }) => ({ forms }))
 export default class FormDiagram extends Component {
 
@@ -23,8 +27,26 @@ export default class FormDiagram extends Component {
     const { widgets } = forms;
     return (
       <div style={styles.formDiagramContainer}>
-        <h4>This is the form name for the public</h4>
-        <p>This is the form description for the users</p>
+        <div style={ styles.formHeader }>
+          <div style={ styles.titleAndMeta }>
+            <h4 style={ styles.formTitle }>Untitled</h4>
+            <div>
+              <span style={ styles.created }>
+                <strong style={ styles.strong }>Created by</strong> First Name, Last Name
+              </span>
+              <span style={ styles.created }>
+                <strong style={ styles.strong }>Created on</strong> MM/DD/YYYY
+              </span>
+            </div>
+          </div>
+          <div style={ styles.formActions }>
+            <button style={ styles.formAction }><FaUserPlus /></button>
+            <button style={ styles.formAction }><FaArrowCircleUp /></button>
+            <button style={ styles.formAction }><FaFloppyO /></button>
+          </div>
+        </div>
+        <h4 style={ styles.headLine }>Write a Headline</h4>
+        <p style={ styles.description }>Add instructions or a description</p>
         <div style={styles.formDiagram}>
 
           { this.state.tempWidgets.map((field, i) => (
@@ -63,21 +85,6 @@ export default class FormDiagram extends Component {
 
 
 const styles = {
-  builderContainer: {
-    display: 'flex',
-    justifyContent: 'space-between'
-  },
-  leftPan: {
-    flex: 1
-  },
-  typesContainer: {
-    flex: 1,
-    marginRight: 20,
-    backgroundColor: '#D8D8D8',
-    padding: 20,
-    color: '#5D5D5D',
-    borderRadius: 4
-  },
   formDiagram: {
     height: 'auto',
     minHeight: '300px'
@@ -103,4 +110,47 @@ const styles = {
     marginBottom: 10,
     paddingLeft: 5
   },
+  formHeader: {
+    display: 'flex',
+    paddingBottom: 10,
+    marginBottom: 10,
+    borderBottom: '1px solid #ccc'
+  },
+  titleAndMeta: {
+    width: '70%'
+  },
+  formActions: {
+    width: '30%',
+    textAlign: 'right'
+  },
+  formAction: {
+    width: '40px',
+    height: '40px',
+    padding: '0',
+    lineHeight: '20px',
+    marginLeft: '10px',
+    border: '1px solid #AAA',
+    background: 'none',
+    borderRadius: '4px',
+    fontSize: '14pt',
+    display: 'inline-block',
+    cursor: 'pointer'
+  },
+  strong: {
+    fontWeight: 'bold'
+  },
+  formTitle: {
+    fontSize: '15pt',
+    marginBottom: '7px'
+  },
+  created: {
+    marginRight: '15px'
+  },
+  headLine: {
+    fontSize: '20pt'
+  },
+  description: {
+    fontSize: '14pt',
+    marginBottom: '20px'
+  }
 };

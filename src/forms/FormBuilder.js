@@ -14,13 +14,14 @@ import Modal from 'components/modal/Modal';
 import { appendWidget, moveWidget } from 'forms/FormActions';
 
 const askTypes = [
-  {type: 'TextField', label: 'Short text'},
-  {type: 'TextArea', label: 'Text area'},
-  {type: 'TextField', label: 'Email address'},
-  {type: 'TextField', label: 'Number'},
-  {type: 'MultipleChoice', label: 'Radio buttons'},
+  {type: 'TextField', label: 'Short Text'},
+  {type: 'TextArea', label: 'Long Text'},
+  {type: 'TextField', label: 'Numbers'},
   {type: 'MultipleChoice', label: 'Multiple choice'},
-  {type: 'MultipleChoice', label: 'Drop down'}
+  {type: 'TextField', label: 'Email'},
+  {type: 'TextField', label: 'Date'},
+  {type: 'LocationDropdown', label: 'Location'},
+  {type: 'TextField', label: 'Phone number'}
 ];
 
 @connect(({ app, forms }) => ({ app, forms }))
@@ -31,8 +32,9 @@ export default class FormBuilder extends Component {
     return (
       <div style={styles.builderContainer}>
         <div style={styles.leftPan}>
-          <div style={styles.typesContainer}>
-            <h4 style={styles.typesTitle}>1. Build form</h4>
+
+          <div style={styles.leftContainer}>
+            <h4 style={styles.leftContainerTitle}>Question Fields</h4>
             <p style={styles.typesSubTitle}>Drag and drop items to create a form</p>
             <div style={styles.typeList}>
               {askTypes.map((type, i) => (
@@ -40,6 +42,22 @@ export default class FormBuilder extends Component {
               ))}
             </div>
           </div>
+
+          <div style={styles.leftContainer}>
+            <h4 style={styles.leftContainerTitle}>Form Settings</h4>
+            <h5 style={ styles.leftContainerSubTitle }>Set Form Status</h5>
+            <label>
+              <input type="checkbox" /> Active
+            </label>
+            <p>You are not currently accepting submissions.</p>
+            <h5 style={ styles.leftContainerSubTitle }>Custom Inactive Message</h5>
+            <textarea style={ styles.inactiveMessage }>We are not currently accepting submissions. Thank you.</textarea>
+            <div style={ styles.formSettingsBottomActions }>
+              <button style={ styles.formSettingsAction }>Embed Form</button>
+              <button style={ styles.formSettingsAction }>Live Form</button>
+            </div>
+          </div>
+
         </div>
         <FormDiagram />
         <Modal
@@ -91,13 +109,14 @@ const styles = {
   leftPan: {
     flex: 1
   },
-  typesContainer: {
+  leftContainer: {
     flex: 1,
     marginRight: 20,
     backgroundColor: '#D8D8D8',
     padding: 20,
     color: '#5D5D5D',
-    borderRadius: 4
+    borderRadius: 4,
+    marginBottom: 20
   },
   formDiagram: {
     height: 'auto',
@@ -113,35 +132,37 @@ const styles = {
     display: 'flex',
     flexWrap: 'wrap'
   },
-  typesTitle: {
+  leftContainerTitle: {
     fontSize: 18.78,
     fontWeight: 'bold',
     marginBottom: 10,
-    paddingLeft: 5
+  },
+  leftContainerSubTitle: {
+    margin: '20px 0',
+    fontSize: '14pt'
+  },
+  inactiveMessage: {
+    width: '100%',
+    padding: '10px',
+    resize: 'none',
+    height: '100px',
+    color: '#AAA',
+    border: '1px solid #BBB',
+    borderRadius: '4px',
+    fontSize: '12pt'
   },
   typesSubTitle: {
     fontSize: 16,
     marginBottom: 10,
-    paddingLeft: 5
   },
-  dropPlaceHolder: {
-    height: '70px',
-    border: '1px dashed #111',
-    background: 'rgba(128,128,128,.1)',
-    marginBottom: '10px',
-    borderRadius: '3px'
-  },
-  dropPlaceHolderActive: {
-    border: '1px dashed #111',
-    height: '70px',
-    background: 'rgba(0,0,0,.1)',
-    padding: '30px',
+  formSettingsAction: {
+    marginTop: 10,
+    marginRight: 10,
+    padding: 10,
+    border: '1px solid #BBB',
     borderRadius: '3px',
-    marginBottom: '10px'
-  },
-  emptyPlaceholderText: {
-    textAlign: 'center',
-    fontSize: '15pt',
-    lineHeight: '60px'
+    background: 'white',
+    fontSize: '12pt',
+    cursor: 'pointer'
   }
 };

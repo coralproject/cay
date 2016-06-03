@@ -120,9 +120,7 @@ export default class SearchCreator extends Component {
   }
 
   render() {
-
     return (
-
       <Page>
           <StatusBar
             loading={this.props.searches.savingSearch}
@@ -139,26 +137,23 @@ export default class SearchCreator extends Component {
             <ContentHeader title={ window.L.t('Create & save a search') } />
             <Button onClick={this.openModal.bind(this)} category="default" style={styles.saveButton}>
               <FaFloopyO style={styles.saveIcon} />{` Save Search `}
-              </Button>
+            </Button>
           </div>
           <Clauses editMode={false} />
-
           <div style={styles.base}>
-          <div style={styles.filtersAndResults}>
-            <div style={styles.filters}>
-
-              <UserFilters
-                editMode={false}
-                onChange={this.onFilterChange.bind(this)} />
+            <div style={styles.filtersAndResults}>
+              <div style={styles.filters}>
+                <UserFilters
+                  editMode={false}
+                  onChange={this.onFilterChange.bind(this)} />
+              </div>
+              <UserList
+                total={this.props.searches.userCount}
+                onPagination={this.onPagination.bind(this)}
+                loadingQueryset={this.props.searches.loadingQueryset}
+                users={this.props.searches.users}
+                userSelected={this.updateUser.bind(this)} />
             </div>
-            <UserList
-              total={this.props.searches.userCount}
-              onPagination={this.onPagination.bind(this)}
-              loadingQueryset={this.props.searches.loadingQueryset}
-              users={this.props.searches.users}
-              userSelected={this.updateUser.bind(this)} />
-          </div>
-
           <Modal
             title="Save Search"
             isOpen={this.state.saveModalOpen}

@@ -144,10 +144,11 @@ export const replaceWidgets = fields => {
   };
 };
 
-export const appendWidget = type => {
+export const appendWidget = (type, targetPosition) => {
   return {
     type: FORM_APPEND_WIDGET,
-    widget: type
+    widget: type,
+    targetPosition: targetPosition
   };
 };
 
@@ -176,7 +177,6 @@ export const listForms = () => dispatch => {
 };
 
 export const saveForm = (form, widgets, host) => () => {
-  console.log(form);
   const data = Object.assign({}, form);
   data.steps[0].widgets = widgets;
   fetch(`${host}/create`, {

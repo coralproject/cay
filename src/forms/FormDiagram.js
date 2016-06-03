@@ -23,7 +23,7 @@ export default class FormDiagram extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({ widgets: nextProps.forms.widgets, tempWidgets: nextProps.forms.widgets });
+    this.setState({ widgets: nextProps.forms.widgets, tempWidgets: nextProps.forms.widgets, isHovering: false });
     this.previousState = nextProps.forms.widgets;
   }
 
@@ -73,10 +73,16 @@ export default class FormDiagram extends Component {
   }
 
   onMove(direction, id) {
-    this.props.dispatch(moveWidget(id, id + (direction === 'up' ? -1 : 1)));
+    //this.props.dispatch(moveWidget(id, id + (direction === 'up' ? -1 : 1)));
   }
 
-  appendWidget(field) {
+  moveWidget(origin, target) {
+    this.props.dispatch(moveWidget(origin, target));
+  }
+
+  appendWidget(field, targetPosition) {
+    console.log("Appending: ", field);
+    console.log("At: ", targetPosition);
     this.props.dispatch(appendWidget({
       title: field.title,
       type: 'field',
@@ -84,7 +90,7 @@ export default class FormDiagram extends Component {
       wrapper: {},
       props: {},
       id: Math.floor(Math.random() * 99999) + ''
-    }));
+    }, targetPosition));
   }
 
   persist(fields) {

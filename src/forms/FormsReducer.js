@@ -78,7 +78,16 @@ const forms = (state = initial, action) => {
     return Object.assign({}, state, {form: emptyForm, widgets: [] });
 
   case types.FORM_APPEND_WIDGET:
-    return Object.assign({}, state, { widgets: [...state.widgets, action.widget ], tempWidgets: [...state.widgets, action.widget ] });
+
+    var widget = action.widget;
+    var targetPosition = action.targetPosition;
+    var widgetsCopy = state.widgets.slice();
+
+    var fieldsBefore = widgetsCopy.slice(0, targetPosition);
+    var fieldsAfter = widgetsCopy.slice(targetPosition);
+    widgetsCopy = fieldsBefore.concat(widget).concat(fieldsAfter);
+
+    return Object.assign({}, state, { widgets: widgetsCopy, tempWidgets: widgetsCopy });
 
   case types.FORMS_REQUEST_SUCCESS:
     return Object.assign({}, state, { items: action.forms });
@@ -96,10 +105,17 @@ const forms = (state = initial, action) => {
     return Object.assign({}, state, { widgets: updatedWidgets });
 
   case types.WIDGET_MOVE:
-    const newWidgets = [...state.widgets];
-    newWidgets[action.to] = Object.assign({}, state.widgets[action.from]);
-    newWidgets[action.from] = Object.assign({}, state.widgets[action.to]);
-    return Object.assign({}, state, { widgets: newWidgets });
+
+    // First we make a copy removing the dragged element
+    var widgetsCopy = state.widgets.slice();
+    var removed = widgetsCopy.splice(action.from, 1);
+
+    // Then we insert the dragged element into the desired position
+    var fieldsBefore = widgetsCopy.slice(0, action.to);
+    var fieldsAfter = widgetsCopy.slice(action.to);
+    var newWidgets = fieldsBefore.concat(removed).concat(fieldsAfter);
+
+    return Object.assign({}, state, { tempWidgets: newWidgets, widgets: newWidgets });
 
   default:
     return state;

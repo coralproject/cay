@@ -59,6 +59,10 @@ const askTarget = {
     // If we are dragging an item already on the form
     if (draggedItem.onList) {
 
+      // field, origin, target
+      formDiagram.moveWidget(draggedItem.position, targetPosition);
+
+      /*
       // First we make a copy removing the dragged element
       let fieldsCopy = fields.slice();
       fieldsCopy.splice(draggedItem.position, 1);
@@ -68,19 +72,23 @@ const askTarget = {
       let fieldsAfter = fieldsCopy.slice(targetPosition);
       fields = fieldsBefore.concat(draggedItem.field).concat(fieldsAfter);
       formDiagram.previousState = fields.slice();
+      formDiagram.setState({ tempWidgets: fields, isHovering: false });
+      */
 
     } else {
 
       formDiagram.appendWidget(draggedItem.field, targetPosition);
+      formDiagram.setState({ isHovering: false });
 
+      /*
       let fieldsBefore = fields.slice(0, targetPosition);
       let fieldsAfter = fields.slice(targetPosition);
       fields = fieldsBefore.concat(draggedItem.field).concat(fieldsAfter);
-      formDiagram.previousState = fields.slice();
+      formDiagram.previousState = fields.slice();*/
     }
 
-    formDiagram.persist(fields);
-    formDiagram.setState({ tempWidgets: fields, isHovering: false });
+    //formDiagram.persist(fields);
+
 
   }
 };

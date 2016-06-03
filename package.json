@@ -55,6 +55,7 @@
     "lodash": "^3.10.1",
     "moment": "^2.11.0",
     "node-polyglot": "^1.0.0",
+    "node-uuid": "^1.4.7",
     "radium": "^0.17.1",
     "react": "^15.0.2",
     "react-datepicker": "^0.27.0",

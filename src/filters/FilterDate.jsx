@@ -55,7 +55,13 @@ export default class FilterDate extends React.Component {
 
 const styles = {
   base: {
-
+    marginBottom: 20
+  },
+  description: {
+    fontWeight: 500,
+    marginBottom: 10,
+    color: 'rgb(130,130,130)',
+    fontSize: 16
   },
   row: {
     display: 'flex'
@@ -63,9 +69,4 @@ const styles = {
   cell: {
     flex: 1
   },
-  description: {
-    fontSize: '15px',
-    marginBottom: 10,
-    marginRight: 20
-  }
 };

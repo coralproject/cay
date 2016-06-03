@@ -126,6 +126,8 @@ export default Clauses;
 
 
 const styles = {
+  container: {
+  },
   closeIcon: {
     cursor: 'pointer',
     marginLeft: 10,
@@ -141,6 +143,7 @@ const styles = {
     BoxShadow: '3px 3px 6px -1px ' + settings.mediumGrey,
     borderRadius: 4,
     padding: 10,
-    marginRight: 10
+    marginRight: 10,
+    marginBottom: 20
   }
 };

@@ -139,7 +139,7 @@ export default class UserDetail extends React.Component {
   }
   renderSpinner() {
     return (
-      <span>Select a user to see details</span>
+      <span>No user selected</span>
     );
   }
   render() {
@@ -161,7 +161,6 @@ const styles = {
     paddingRight: 20,
     paddingBottom: 20,
     paddingLeft: 20,
-    marginTop: 90
   },
   topPart: {
     display: 'flex',

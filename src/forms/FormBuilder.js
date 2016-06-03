@@ -1,7 +1,8 @@
 
 import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
+import uuid from 'node-uuid';
 
 import FormComponent, {styles as askComponentStyles} from 'forms/FormComponent';
 import Checkbox from 'components/forms/Checkbox';
@@ -55,7 +56,7 @@ export default class FormBuilder extends Component {
       component: data.type,
       wrapper: {},
       props: {},
-      id: Math.floor(Math.random() * 99999) + '' // cast to string for pillar
+      id: uuid.v4()
     }));
   }
 

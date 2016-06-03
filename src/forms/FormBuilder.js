@@ -51,7 +51,7 @@ export default class FormBuilder extends Component {
             </label>
             <p>You are not currently accepting submissions.</p>
             <h5 style={ styles.leftContainerSubTitle }>Custom Inactive Message</h5>
-            <textarea style={ styles.inactiveMessage }>We are not currently accepting submissions. Thank you.</textarea>
+            <textarea style={ styles.inactiveMessage } defaultValue="We are not currently accepting submissions. Thank you."></textarea>
             <div style={ styles.formSettingsBottomActions }>
               <button style={ styles.formSettingsAction }>Embed Form</button>
               <button style={ styles.formSettingsAction }>Live Form</button>
@@ -61,7 +61,7 @@ export default class FormBuilder extends Component {
         </div>
         <FormDiagram />
         <Modal
-          title="Save Search"
+          title="Form Preview"
           isOpen={preview}
           confirmAction={() => console.log('worked')}
           cancelAction={onClosePreview}>
@@ -78,7 +78,7 @@ export default class FormBuilder extends Component {
       component: data.type,
       wrapper: {},
       props: {},
-      id: Math.floor(Math.random() * 99999)
+      id: Math.floor(Math.random() * 99999) + ''
     }));
   }
 

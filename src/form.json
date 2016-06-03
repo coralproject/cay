@@ -4,6 +4,24 @@
         "saveDestination": "http://coralasks.theguardian.com/ask/44",
         "showFieldNumbers": true
     },
+    "theme": {
+      "headerBackground": "#448899",
+      "headerText": "#FFFFFF",
+      "headerIntroText": "#EEEEEE",
+      "formBackground": "#EEEEEE",
+      "footerBackground": "#DDDDDD",
+      "requiredAsterisk": "#FF44FF",
+      "inputBackground": "#F0F0F0",
+      "inputText": "#222222",
+      "footerText": "#222222",
+      "fieldTitleText": "#222222",
+      "progressBar": "#44AA44",
+      "progressBarBackground": "#CCCCCC",
+      "submitButtonBackground": "#444499",
+      "submitButtonText": "#FFFFFF",
+      "selectedItemBackground": "#111111",
+      "selectedItemText": "#FAFAFA"
+    },
     "header": {
         "title": "Share Your Story.",
         "description": "As part of our ​Op-Docs ​series​ Conversation​s​ ​on Race​,​​ we ​want to hear your​​ ​​experiences ​confronting issues of race in your life. We invite you to share your stories, some of which we are featuring on a page of readers’ contributions."

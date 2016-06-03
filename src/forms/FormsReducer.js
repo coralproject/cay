@@ -9,6 +9,24 @@ const initial = {
 
 const emptyForm = {
   target: '#ask-form',
+  theme: {
+    headerBackground: '#448899',
+    headerText: '#FFFFFF',
+    headerIntroText: '#EEEEEE',
+    formBackground: '#EEEEEE',
+    footerBackground: '#DDDDDD',
+    requiredAsterisk: '#FF44FF',
+    inputBackground: '#F0F0F0',
+    inputText: '#222222',
+    footerText: '#222222',
+    fieldTitleText: '#222222',
+    progressBar: '#44AA44',
+    progressBarBackground: '#CCCCCC',
+    submitButtonBackground: '#444499',
+    submitButtonText: '#FFFFFF',
+    selectedItemBackground: '#111111',
+    selectedItemText: '#FAFAFA'
+  },
   settings: {
     saveDestination: 'http://10.0.1.195:8080/api/form_submission/',
     showFieldNumbers: true
@@ -25,7 +43,7 @@ const emptyForm = {
     description: 'This is a more verbose thank you message'
   },
   steps: [{
-    id: 1,
+    id: '1',
     name: 'first_page'
   }]
 };

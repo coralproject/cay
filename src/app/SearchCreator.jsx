@@ -202,7 +202,8 @@ const styles = {
   topSection: {
     display: "flex",
     justifyContent: "space-between",
-    width: "100%"
+    width: "100%",
+    marginBottom: 20
   },
   userListContainer: {
     margin: 20,

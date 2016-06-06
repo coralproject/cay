@@ -94,7 +94,7 @@ export default class AskComponent extends Component {
   }
 
   renderEdit() {
-    const { id, onMove, isLast, field, position } = this.props;
+    const { id, onMove, isLast, field, position, onDelete } = this.props;
     return (
       <div>
         { this.props.connectDragSource(
@@ -104,7 +104,7 @@ export default class AskComponent extends Component {
                 <h4>{this.props.field.title}</h4>
               </div>
               <div style={styles.arrowContainer}>
-                <button style={styles.delete}><FaTrash /></button>
+                <button style={styles.delete} onClick={ () => onDelete(position) }><FaTrash /></button>
                 { id !== 0 ? <button onClick={() => onMove('up', position)} style={styles.arrow}><FaArrowCircleUp /></button> : null  }
                 { !isLast ? <button onClick={() => onMove('down', position)} style={styles.arrow}><FaArrowCircleDown /></button> : null  }
               </div>

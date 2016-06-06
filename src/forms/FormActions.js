@@ -8,6 +8,7 @@ export const FORM_REQUEST_STARTED = 'FORM_REQUEST_STARTED';
 export const FORM_REQUEST_SUCCESS = 'FORM_REQUEST_SUCCESS';
 export const FORM_REQUEST_FAILURE = 'FORM_REQUEST_FAILURE';
 export const FORM_APPEND_WIDGET = 'FORM_APPEND_WIDGET';
+export const FORM_DELETE_WIDGET = 'FORM_DELETE_WIDGET';
 
 export const FORMS_REQUEST_STARTED = 'FORMS_REQUEST_STARTED';
 export const FORMS_REQUEST_SUCCESS = 'FORMS_REQUEST_SUCCESS';
@@ -149,6 +150,13 @@ export const appendWidget = (type, targetPosition) => {
     type: FORM_APPEND_WIDGET,
     widget: type,
     targetPosition: targetPosition
+  };
+};
+
+export const deleteWidget = (widgetPosition) => {
+  return {
+    type: FORM_DELETE_WIDGET,
+    widgetPosition
   };
 };
 

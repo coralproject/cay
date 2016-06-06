@@ -119,6 +119,11 @@ const forms = (state = initial, action) => {
 
     return Object.assign({}, state, { tempWidgets: newWidgets, widgets: newWidgets });
 
+  case types.FORM_DELETE_WIDGET:
+    var widgetsCopy = state.widgets.slice();
+    widgetsCopy.splice(action.widgetPosition, 1);
+    return Object.assign({}, state, { widgets: widgetsCopy, tempWidgets: widgetsCopy });
+
   default:
     return state;
   }

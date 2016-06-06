@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import { DropTarget } from 'react-dnd';
 
 import DropPlaceHolder from 'forms/DropPlaceHolder';
-import { appendWidget, moveWidget, replaceWidgets } from 'forms/FormActions';
+import { appendWidget, moveWidget, replaceWidgets, deleteWidget } from 'forms/FormActions';
 import FormComponent, {styles as askComponentStyles} from 'forms/FormComponent';
 
 import FaArrowCircleUp from 'react-icons/lib/fa/arrow-circle-up';
@@ -58,7 +58,7 @@ export default class FormDiagram extends Component {
             <DropPlaceHolder key={i} formDiagram={ this } position={ i }>
               <FormComponent onFieldSelect={onFieldSelect}
                 onList={true} field={field} position={ i } isLast={i === this.state.tempWidgets.length - 1} id={i} key={i}
-                onMove={this.onMove.bind(this)} />
+                onMove={this.onMove.bind(this)} onDelete={this.onDelete.bind(this)} />
             </DropPlaceHolder>
           ))}
           {
@@ -72,6 +72,10 @@ export default class FormDiagram extends Component {
     );
   }
 
+  onDelete(position) {
+    this.props.dispatch(deleteWidget(position));
+  }
+
   onMove(direction, position) {
     this.props.dispatch(moveWidget(position, position + (direction === 'up' ? -1 : 1)));
   }
@@ -81,8 +85,6 @@ export default class FormDiagram extends Component {
   }
 
   appendWidget(field, targetPosition) {
-    console.log("Appending: ", field);
-    console.log("At: ", targetPosition);
     this.props.dispatch(appendWidget({
       title: field.title,
       type: 'field',

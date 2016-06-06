@@ -75,6 +75,7 @@ const forms = (state = initial, action) => {
     return newState;
 
   case types.FORM_CREATE_EMPTY:
+    emptyForm.createdAt = Date.now();
     return Object.assign({}, state, {form: emptyForm, widgets: [] });
 
   case types.FORM_APPEND_WIDGET:

@@ -29,12 +29,12 @@ export default class FormDiagram extends Component {
 
   render() {
     const { onFieldSelect, forms } = this.props;
-    const { widgets } = forms;
+    const { form, widgets } = forms;
     return (
       <div style={styles.formDiagramContainer}>
         <div style={ styles.formHeader }>
           <div style={ styles.titleAndMeta }>
-            <h4 style={ styles.formTitle }>Untitled</h4>
+            <h4 style={ styles.formTitle }>{ form.header.title }</h4>
             <div>
               <span style={ styles.created }>
                 <strong style={ styles.strong }>Created by</strong> First Name, Last Name
@@ -50,8 +50,8 @@ export default class FormDiagram extends Component {
             <button style={ styles.formAction }><FaFloppyO /></button>
           </div>
         </div>
-        <h4 style={ styles.headLine }>Write a Headline</h4>
-        <p style={ styles.description }>Add instructions or a description</p>
+        <input style={ styles.headLine } type="text" defaultValue={ form.header.title } />
+        <input style={ styles.description } defaultValue={ form.header.description } />
         <div style={styles.formDiagram}>
 
           { this.state.tempWidgets.map((field, i) => (
@@ -72,8 +72,8 @@ export default class FormDiagram extends Component {
     );
   }
 
-  onMove(direction, id) {
-    //this.props.dispatch(moveWidget(id, id + (direction === 'up' ? -1 : 1)));
+  onMove(direction, position) {
+    this.props.dispatch(moveWidget(position, position + (direction === 'up' ? -1 : 1)));
   }
 
   moveWidget(origin, target) {
@@ -164,10 +164,14 @@ const styles = {
     marginRight: '15px'
   },
   headLine: {
-    fontSize: '20pt'
+    fontSize: '20pt',
+    width: '100%',
+    display: 'block'
   },
   description: {
     fontSize: '14pt',
-    marginBottom: '20px'
+    marginBottom: '20px',
+    width: '100%',
+    display: 'block'
   }
 };

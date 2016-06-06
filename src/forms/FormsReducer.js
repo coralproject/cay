@@ -81,7 +81,8 @@ const forms = (state = initial, action) => {
   case types.FORM_APPEND_WIDGET:
 
     var widget = action.widget;
-    var targetPosition = action.targetPosition;
+
+    var targetPosition = action.targetPosition || state.widgets.length;
     var widgetsCopy = state.widgets.slice();
 
     var fieldsBefore = widgetsCopy.slice(0, targetPosition);

@@ -73,7 +73,7 @@ export default class FormBuilder extends Component {
 
   addToBottom(data) {
     this.props.dispatch(appendWidget({
-      title: data.label,
+      title: data.title,
       type: 'field',
       component: data.type,
       wrapper: {},

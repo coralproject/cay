@@ -11,6 +11,7 @@ import Button from 'components/Button';
 
 import {
   fetchSubmissions,
+  fetchGallery,
   setActiveSubmission,
   updateSubmission,
   sendToGallery,
@@ -25,11 +26,13 @@ export default class SubmissionList extends Component {
   constructor(props) {
     super(props);
     props.dispatch(fetchForm(props.params.id));
+    props.dispatch(fetchGallery(props.params.id));
     props.dispatch(fetchSubmissions(props.params.id));
   }
 
-  sendToGallery(formId, subId, key) {
-    this.props.dispatch(sendToGallery(formId, subId, key));
+  sendToGallery(galleryId, subId, key) {
+    console.log('sendToGallery', ...arguments);
+    this.props.dispatch(sendToGallery(galleryId, subId, key));
   }
 
   onFlag(flagged) {
@@ -41,7 +44,7 @@ export default class SubmissionList extends Component {
   }
 
   render() {
-    const { submissions, activeSubmission, activeForm } = this.props.forms;
+    const { submissions, activeSubmission, activeForm, activeGallery } = this.props.forms;
 
     return (
       <Page>
@@ -50,8 +53,10 @@ export default class SubmissionList extends Component {
           <Sidebar submissions={submissions}
             activeSubmission={submissions[activeSubmission]}
             onSelect={this.onSubmissionSelect.bind(this)} />
-          <SubmissionDetail submission={submissions[activeSubmission]}
+          <SubmissionDetail
+            submission={submissions[activeSubmission]}
             sendToGallery={this.sendToGallery.bind(this)}
+            gallery={activeGallery}
             onFlag={this.onFlag.bind(this)}
             onBookmark={this.onBookmark.bind(this)}/>
         </div>
@@ -127,7 +132,7 @@ class SubmissionDetail extends Component {
   }
 
   renderAnswers() {
-    const { submission } = this.props;
+    const { submission, gallery } = this.props;
     return (
       <div style={styles.detail.answersContainer}>
         {submission.replies.map((reply, key) => {
@@ -136,11 +141,14 @@ class SubmissionDetail extends Component {
             <div style={styles.detail.questionContainer} key={key}>
               <h2 style={styles.detail.question}>{reply.question}</h2>
               <p>{this.renderAnswer(reply.answer)}</p>
+              <p>galleryId: {gallery.id}</p>
+              <p>submissionId: {submission.id}</p>
+              <p>widget id: {reply.widget_id}</p>
               <Button
                 style={styles.detail.galleryButton}
                 category="primary"
                 size="small"
-                onClick={() => this.props.sendToGallery(submission.form_id, submission.id, key)}>
+                onClick={() => this.props.sendToGallery(gallery.id, submission.id, reply.widget_id)}>
                 Send to gallery
               </Button>
             </div>

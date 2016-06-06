@@ -47,7 +47,7 @@ export default class Checkbox extends React.Component {
       fontWeight: 400,
       lineHeight: '20px',
       paddingLeft: 22,
-      '-webkit-user-select': 'none'
+      WebkitUserSelect: 'none'
     };
   }
 

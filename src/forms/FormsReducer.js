@@ -6,6 +6,7 @@ const initial = {
   editAccess: {},
   form: null,
   activeForm: null, // might be able to combine this with {form} above in the future
+  activeGallery: null,
   widgets: [],
   submissions: [],
   activeSubmission: null
@@ -90,6 +91,16 @@ const forms = (state = initial, action) => {
     const newSubmissions = [...state.submissions];
     newSubmissions[state.activeSubmission] = Object.assign({}, newSubmissions[state.activeSubmission], action.props);
     return Object.assign({}, state, { submissions: newSubmissions });
+
+  case types.FORM_GALLERY_REQUEST:
+    return {...state, loadingGallery: true, activeGallery: null};
+
+  case types.FORM_GALLERY_SUCCESS:
+    // action gallery might be more than one gallery in the future
+    return {...state, loadingGallery: false, activeGallery: action.gallery};
+
+  case types.FORM_GALLERY_ERROR:
+    return {...state, loadingGallery: false, activeGallery: null, galleryError: action.error};
 
   default:
     return state;

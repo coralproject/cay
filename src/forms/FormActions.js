@@ -24,6 +24,10 @@ export const FORM_EDIT_ACCEPTED = 'FORM_EDIT_ACCEPTED';
 export const FORM_EDIT_DENIED = 'FORM_EDIT_ACCEPTED';
 export const FORM_EDIT_LEAVE = 'FORM_EDIT_LEAVE';
 
+export const FORM_GALLERY_REQUEST = 'FORM_GALLERY_REQUEST';
+export const FORM_GALLERY_SUCCESS = 'FORM_GALLERY_SUCCESS';
+export const FORM_GALLERY_ERROR = 'FORM_GALLERY_ERROR';
+
 export const FORM_DELETED = 'FORM_DELETED';
 
 export const FORM_CREATE_EMPTY= 'FORM_CREATE_EMPTY';
@@ -236,11 +240,36 @@ export const updateSubmission = props => dispatch => {
   // TODO: go to server when API is done
 };
 
-export const sendToGallery = (formId, subId, key) => {
+const requestGallery = () => {
+  return {type: FORM_GALLERY_REQUEST};
+};
+
+const receivedGallery = gallery => {
+  return {type: FORM_GALLERY_SUCCESS, gallery};
+};
+
+const galleryRequestError = error => {
+  return {type: FORM_GALLERY_ERROR, error};
+};
+
+export const fetchGallery = formId => {
+  return (dispatch, getState) => {
+    dispatch(requestGallery(formId));
+
+    const {app} = getState();
+
+    fetch(`${app.pillarHost}/api/form_galleries/${formId}`)
+      .then(res => res.json())
+      .then(galleries => dispatch(receivedGallery(galleries[0])))
+      .catch(error => dispatch(galleryRequestError(error)));
+  };
+};
+
+export const sendToGallery = (galleryId, subId, key) => {
   return (dispatch, getState) => {
     const {app} = getState();
 
-    fetch(`${app.pillarHost}/api/form_gallery/${formId}/add/${subId}/${key}`, {
+    fetch(`${app.pillarHost}/api/form_gallery/${galleryId}/add/${subId}/${key}`, {
       method: 'PUT',
       model: 'cors'
     })

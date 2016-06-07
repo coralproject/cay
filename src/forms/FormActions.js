@@ -28,6 +28,9 @@ export const FORM_GALLERY_REQUEST = 'FORM_GALLERY_REQUEST';
 export const FORM_GALLERY_SUCCESS = 'FORM_GALLERY_SUCCESS';
 export const FORM_GALLERY_ERROR = 'FORM_GALLERY_ERROR';
 
+export const FORM_SUB_SENT_TO_GALLERY = 'FORM_SUBMISSION_SENT_TO_GALLERY';
+export const FORM_SUB_REMOVED_FROM_GALLERY = 'FORM_SUB_REMOVED_FROM_GALLERY';
+
 export const FORM_DELETED = 'FORM_DELETED';
 
 export const FORM_CREATE_EMPTY= 'FORM_CREATE_EMPTY';
@@ -265,23 +268,35 @@ export const fetchGallery = formId => {
   };
 };
 
-export const sendToGallery = (galleryId, subId, key) => {
+export const sendToGallery = (galleryId, subId, answerId) => {
   return (dispatch, getState) => {
     const {app} = getState();
 
-    fetch(`${app.pillarHost}/api/form_gallery/${galleryId}/add/${subId}/${key}`, {
+    fetch(`${app.pillarHost}/api/form_gallery/${galleryId}/add/${subId}/${answerId}`, {
       method: 'PUT',
       model: 'cors'
     })
-      .then(res => {
-        console.log(res);
-        return res.json();
-      })
-      .then(sub => {
-        console.log(sub);
+      .then(res => res.json())
+      .then(submission => {
+        dispatch({type: FORM_SUB_SENT_TO_GALLERY, submission});
       })
       .catch(error => {
         console.log(error);
+      });
+  };
+};
+
+export const removeFromGallery = (galleryId, subId, answerId) => {
+  return (dispatch, getState) => {
+    const {app} = getState();
+    const options = {method: 'DELETE', model: 'cors'};
+
+    fetch(`${app.pillarHost}/api/form_gallery/${galleryId}/remove/${subId}/${answerId}`, options)
+      .then(res => {
+        console.log(res);
+      })
+      .catch(error => {
+        console.log('failed to remove from gallery', error);
       });
   };
 };

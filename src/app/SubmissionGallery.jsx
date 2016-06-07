@@ -1,7 +1,7 @@
 import React from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
-import {fetchForm, fetchGallery} from 'forms/FormActions';
+import {fetchForm, fetchGallery, removeFromGallery} from 'forms/FormActions';
 import {Link} from 'react-router';
 import moment from 'moment';
 
@@ -30,6 +30,11 @@ export default class SubmissionGallery extends React.Component {
 
   }
 
+  removeSubmission(galleryId, submissionId, answerId) {
+    console.log('removeSubmission', galleryId, submissionId, answerId);
+    this.props.dispatch(removeFromGallery(galleryId, submissionId, answerId));
+  }
+
   renderGallery(gallery) {
     return gallery.answers.map((answer, i) => {
       console.log('answer', answer);
@@ -37,12 +42,18 @@ export default class SubmissionGallery extends React.Component {
         <Card key={i}>
           <p>Added to Gallery 5/25 {answer.submission_id}</p>
           {answer.answer.answer}
+          <p>Gallery id: {this.props.activeGallery.id}</p>
+          <p>Answer id: {answer.answer_id}</p>
+          <p>widget id: {answer.answer.widget_id}</p>
+          <p>submission id: {answer.submission_id}</p>
           <div>
             <Button size="small">
               Edit <Edit />
             </Button>
-            <Button size="small">
-              Delete <Delete />
+            <Button
+              onClick={this.removeSubmission.bind(this, this.props.activeGallery.id, answer.submission_id, answer.answer_id)}
+              size="small">
+              Remove <Delete />
             </Button>
           </div>
         </Card>
@@ -55,7 +66,7 @@ export default class SubmissionGallery extends React.Component {
       return (<p>Loading submissions...</p>);
     }
 
-    if (this.props.formLoading) {
+    if (this.props.formLoading && !this.props.activeForm) {
       return (<p>Loading form...</p>);
     }
 

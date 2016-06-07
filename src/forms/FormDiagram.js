@@ -5,19 +5,19 @@ import {connect} from 'react-redux';
 import { DropTarget } from 'react-dnd';
 
 import DropPlaceHolder from 'forms/DropPlaceHolder';
-import { appendWidget, moveWidget, replaceWidgets, deleteWidget } from 'forms/FormActions';
+import { appendWidget, moveWidget, replaceWidgets, deleteWidget, updateForm, saveForm } from 'forms/FormActions';
 import FormComponent, {styles as askComponentStyles} from 'forms/FormComponent';
 
 import FaArrowCircleUp from 'react-icons/lib/fa/arrow-circle-up';
 import FaUserPlus from 'react-icons/lib/fa/user-plus';
 import FaFloppyO from 'react-icons/lib/fa/floppy-o';
 
-@connect(({ forms }) => ({ forms }))
+@connect(({ forms, app }) => ({ forms, app }))
 export default class FormDiagram extends Component {
 
   constructor(props, context) {
     super(props, context);
-    this.state = { widgets: [], isHovering: false, tempWidgets: [] };
+    this.state = { widgets: [], isHovering: false, tempWidgets: [], showTitleIsRequired: false };
     this.previousState = []; // a copy of state.fields
     this.previousHover = null; // cache the element previously hovered
   }
@@ -25,6 +25,32 @@ export default class FormDiagram extends Component {
   componentWillReceiveProps(nextProps) {
     this.setState({ widgets: nextProps.forms.widgets, tempWidgets: nextProps.forms.widgets, isHovering: false });
     this.previousState = nextProps.forms.widgets;
+  }
+
+  onFormTitleChange(e) {
+    let { form } = this.props.forms;
+    this.props.dispatch(updateForm({
+      header: {
+        title: e.target.value,
+        description: form.header.description
+      }
+    }));
+  }
+
+  onFormDescriptionChange(e) {
+    let { form } = this.props.forms;
+    this.props.dispatch(updateForm({
+      header: {
+        title: form.header.title,
+        description: e.target.value
+      }
+    }));
+  }
+
+  onSaveClick() {
+    const { forms, app, dispatch } = this.props;
+    const { form, widgets } = forms;
+    dispatch(saveForm(form, widgets, app.elkhornHost));
   }
 
   render() {
@@ -47,15 +73,21 @@ export default class FormDiagram extends Component {
           <div style={ styles.formActions }>
             <button style={ styles.formAction }><FaUserPlus /></button>
             <button style={ styles.formAction }><FaArrowCircleUp /></button>
-            <button style={ styles.formAction }><FaFloppyO /></button>
+            <button onClick={ this.onSaveClick.bind(this) } style={ styles.formAction }><FaFloppyO /></button>
           </div>
         </div>
-        <input style={ styles.headLine } type="text" defaultValue={ form.header.title } />
-        <input style={ styles.description } defaultValue={ form.header.description } />
+        <input onChange={ this.onFormTitleChange.bind(this) } style={ styles.headLine } type="text" placeholder={ "Title of your form" } defaultValue={ form.header.title } />
+        {
+          this.state.showTitleIsRequired ?
+            <p style={ styles.titleIsRequired }>Title is required</p>
+          :
+            null
+        }
+        <textarea onChange={ this.onFormDescriptionChange.bind(this) } style={ styles.description } placeholder={ "A longer description" } defaultValue={ form.header.description } />
         <div style={styles.formDiagram}>
 
           { this.state.tempWidgets.map((field, i) => (
-            <DropPlaceHolder key={i} formDiagram={ this } position={ i }>
+            <DropPlaceHolder key={i} formDiagram={ this } position={ i } dropped={ field.dropped }>
               <FormComponent onFieldSelect={onFieldSelect}
                 onList={true} field={field} position={ i } isLast={i === this.state.tempWidgets.length - 1} id={i} key={i}
                 onMove={this.onMove.bind(this)} onDelete={this.onDelete.bind(this)} />
@@ -168,12 +200,16 @@ const styles = {
   headLine: {
     fontSize: '20pt',
     width: '100%',
-    display: 'block'
+    display: 'block',
+    border: 'none',
+    background: 'none'
   },
   description: {
     fontSize: '14pt',
     marginBottom: '20px',
     width: '100%',
-    display: 'block'
+    display: 'block',
+    border: 'none',
+    background: 'none'
   }
 };

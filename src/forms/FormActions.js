@@ -10,6 +10,8 @@ export const FORM_REQUEST_FAILURE = 'FORM_REQUEST_FAILURE';
 export const FORM_APPEND_WIDGET = 'FORM_APPEND_WIDGET';
 export const FORM_DELETE_WIDGET = 'FORM_DELETE_WIDGET';
 
+export const FORM_UPDATE = 'FORM_UPDATE';
+
 export const FORMS_REQUEST_STARTED = 'FORMS_REQUEST_STARTED';
 export const FORMS_REQUEST_SUCCESS = 'FORMS_REQUEST_SUCCESS';
 export const FORMS_REQUEST_FAILURE = 'FORMS_REQUEST_FAILURE';
@@ -175,6 +177,14 @@ export const moveWidget = (from, to) => {
     to
   };
 };
+
+export const updateForm = (data) => {
+  return {
+    type: FORM_UPDATE,
+    data
+  };
+};
+
 
 export const listForms = () => dispatch => {
   xenia().collection('forms')

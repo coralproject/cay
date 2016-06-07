@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 import { DragDropContext, DropTarget } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 
+import { updateForm } from 'forms/FormActions';
 import FormDiagram from 'forms/FormDiagram';
 
 import FormComponent, {styles as askComponentStyles} from 'forms/FormComponent';
@@ -28,7 +29,8 @@ const askTypes = [
 @DragDropContext(HTML5Backend)
 export default class FormBuilder extends Component {
   render() {
-    const {preview, onClosePreview} = this.props;
+    const {preview, onClosePreview, forms} = this.props;
+    const {form} = forms;
     return (
       <div style={styles.builderContainer}>
         <div style={styles.leftPan}>
@@ -46,12 +48,23 @@ export default class FormBuilder extends Component {
           <div style={styles.leftContainer}>
             <h4 style={styles.leftContainerTitle}>Form Settings</h4>
             <h5 style={ styles.leftContainerSubTitle }>Set Form Status</h5>
-            <label>
-              <input type="checkbox" /> Active
+            <label style={ styles.switch }>
+              <input
+                style={ styles.switchInput }
+                checked={ form.settings.isActive }
+                onChange={ this.onFormStatusChange.bind(this) } type="checkbox" />
+              <div style={ styles.switchSlider(form.settings.isActive) }>
+                <span style={ styles.switchInactiveText }>Inactive</span>
+                <span style={ styles.switchHandle }></span>
+                <span style={ styles.switchActiveText }>Active</span>
+              </div>
             </label>
             <p>You are not currently accepting submissions.</p>
             <h5 style={ styles.leftContainerSubTitle }>Custom Inactive Message</h5>
-            <textarea style={ styles.inactiveMessage } defaultValue="We are not currently accepting submissions. Thank you."></textarea>
+            <textarea style={ styles.inactiveMessage }
+              defaultValue="We are not currently accepting submissions. Thank you."
+              placeholder="Ex: We are not currently accepting submissions. Thank you."
+              ></textarea>
             <div style={ styles.formSettingsBottomActions }>
               <button style={ styles.formSettingsAction }>Embed Form</button>
               <button style={ styles.formSettingsAction }>Live Form</button>
@@ -79,6 +92,14 @@ export default class FormBuilder extends Component {
       wrapper: {},
       props: {},
       id: Math.floor(Math.random() * 99999) + ''
+    }));
+  }
+
+  onFormStatusChange(e) {
+    let { form } = this.props.forms;
+    var newSettings = Object.assign({}, form.settings, { isActive: e.target.checked });
+    this.props.dispatch(updateForm({
+      settings: newSettings
     }));
   }
 
@@ -164,5 +185,63 @@ const styles = {
     background: 'white',
     fontSize: '12pt',
     cursor: 'pointer'
+  },
+  switchSlider: function(isActive) {
+    return {
+      position: 'absolute',
+      width: '280px',
+      left: isActive ? '0' : '-80px',
+      background: isActive ? '#ccc' : '#292',
+      transition: 'all .5s',
+      cursor: 'pointer',
+      height: '45px'
+    }
+  },
+  switch: {
+    position: 'relative',
+    height: '42px',
+    display: 'inline-block',
+    padding: '0',
+    margin: '0',
+    width: '120px',
+    overflow: 'hidden',
+    border: '1px solid rgba(0,0,0,.2)',
+    borderRadius: '4px'
+  },
+  switchHandle: {
+    display: 'block',
+    'float': 'left',
+    position: 'relative',
+    width: '30px',
+    height: '30px',
+    margin: '5px',
+    background: 'white',
+    borderRadius: '4px',
+    boxShadow: '0 1px 4px #aaa',
+  },
+  switchInput: {
+    position: 'absolute',
+    top: '-9000px',
+    left: '-9000px'
+  },
+  switchActiveText: {
+    display: 'block',
+    'float': 'left',
+    textAlign: 'center',
+    width: '80px',
+    height: '40px',
+    lineHeight: '40px',
+    color: 'white',
+    textShadow: '0px 1px 2px #444'
+  },
+  switchInactiveText: {
+    display: 'block',
+    'float': 'left',
+    textAlign: 'center',
+    width: '80px',
+    height: '40px',
+    lineHeight: '40px',
+    color: 'white',
+    textShadow: '0px 1px 2px #444'
   }
 };

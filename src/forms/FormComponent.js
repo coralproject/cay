@@ -1,32 +1,25 @@
 import React, {Component, PropTypes} from 'react';
 import { connect } from 'react-redux';
 import { DragSource } from 'react-dnd';
-import Checkbox from 'components/forms/Checkbox';
-import TextField from 'components/forms/TextField';
 import FaTrash from 'react-icons/lib/fa/trash';
 import FaClose from 'react-icons/lib/fa/close';
 import FaArrowCircleUp from 'react-icons/lib/fa/arrow-circle-up';
 import FaArrowCircleDown from 'react-icons/lib/fa/arrow-circle-down';
 import { updateWidget } from 'forms/FormActions';
 
+import TextFieldEditor from 'forms/editors/TextFieldEditor';
+import MultipleChoiceEditor from 'forms/editors/MultipleChoiceEditor';
 
 const renderSettings = {
-  text(field) {
+  TextField(field) {
     return (
-      <div style={{display: 'flex', justifyContent: 'space-between'}}>
-        <Checkbox label='required' />
-      </div>
+      <TextFieldEditor />
     );
   },
 
-  ['multiple-choice'](field) {
+  MultipleChoice(field) {
     return (
-      <div>
-        <p><TextField label='option 1' /></p>
-        <p><TextField label='option 2' /></p>
-        <p><TextField label='option 3' /></p>
-        <Checkbox label='required' />
-      </div>
+      <MultipleChoiceEditor />
     )
   }
 };
@@ -52,7 +45,7 @@ const askSource = {
 @connect(({ forms }) => ({
   widgets: forms.widgets
 }))
-export default class AskComponent extends Component {
+export default class FormComponent extends Component {
   static propTypes = {
     field: PropTypes.object.isRequired,
     connectDragSource: PropTypes.func.isRequired,
@@ -136,7 +129,7 @@ export default class AskComponent extends Component {
 
   editSettings() {
     const { field } = this.props;
-    return renderSettings[field.type] ? renderSettings[field.type](field) : renderSettings['text'](field);
+    return renderSettings[field.component] ? renderSettings[field.component](field) : renderSettings['TextField'](field);
   }
 
   onClick() {
@@ -218,7 +211,7 @@ export const styles = {
     top: '0px',
     left: '0px',
     width: '100%',
-    height: '100%',
+    height: 'auto',
     padding: '40px',
     backgroundColor: '#fafafa',
     boxShadow: '0px 2px 15px #444'

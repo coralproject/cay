@@ -55,7 +55,6 @@ export default class FormCreate extends Component {
   saveAndExit() {
     const { forms, app, dispatch } = this.props;
     const { form, widgets } = forms;
-    console.log(forms);
     dispatch(saveForm(form, widgets, app.elkhornHost));
   }
 

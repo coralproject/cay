@@ -29,7 +29,9 @@ const emptyForm = {
   },
   settings: {
     saveDestination: 'http://10.0.1.195:8080/api/form_submission/',
-    showFieldNumbers: true
+    showFieldNumbers: true,
+    isActive: false,
+    inactiveMessage: "We are not currently accepting submissions. Thank you."
   },
   header: {
     title: 'Share your story',
@@ -105,6 +107,10 @@ const forms = (state = initial, action) => {
       id === action.id ? Object.assign({}, widget, action.data) : widget
     );
     return Object.assign({}, state, { widgets: updatedWidgets });
+
+  case types.FORM_UPDATE:
+    var updatedForm = Object.assign({}, state.form, action.data);
+    return Object.assign({}, state, { form: updatedForm });
 
   case types.WIDGET_MOVE:
 

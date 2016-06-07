@@ -22,6 +22,8 @@ const askTarget = {
     let tempWidgets = formDiagram.previousState.slice();
     var draggedItem = monitor.getItem();
 
+    draggedItem.field.dropped = false;
+
     if (draggedItem.onList) {
       // First we make a copy removing the dragged element
       let fieldsCopy = tempWidgets.slice();
@@ -56,39 +58,15 @@ const askTarget = {
 
     var draggedItem = monitor.getItem();
 
+    draggedItem.field.dropped = true;
+
     // If we are dragging an item already on the form
     if (draggedItem.onList) {
-
-      // field, origin, target
       formDiagram.moveWidget(draggedItem.position, targetPosition);
-
-      /*
-      // First we make a copy removing the dragged element
-      let fieldsCopy = fields.slice();
-      fieldsCopy.splice(draggedItem.position, 1);
-
-      // Then we insert the dragged element into the desired position
-      let fieldsBefore = fieldsCopy.slice(0, targetPosition);
-      let fieldsAfter = fieldsCopy.slice(targetPosition);
-      fields = fieldsBefore.concat(draggedItem.field).concat(fieldsAfter);
-      formDiagram.previousState = fields.slice();
-      formDiagram.setState({ tempWidgets: fields, isHovering: false });
-      */
-
     } else {
-
       formDiagram.appendWidget(draggedItem.field, targetPosition);
       formDiagram.setState({ isHovering: false });
-
-      /*
-      let fieldsBefore = fields.slice(0, targetPosition);
-      let fieldsAfter = fields.slice(targetPosition);
-      fields = fieldsBefore.concat(draggedItem.field).concat(fieldsAfter);
-      formDiagram.previousState = fields.slice();*/
     }
-
-    //formDiagram.persist(fields);
-
 
   }
 };
@@ -108,7 +86,7 @@ export default class DropPlaceHolder extends Component {
           <div style={ styles.dropPlaceHolderActive }>
           </div>
         :
-          <div style={ this.props.isOver ? styles.dropPlaceHolderActive : styles.dropPlaceHolder }>
+          <div style={ styles.dropPlaceHolder }>
             {
               this.props.children ?
                 this.props.children
@@ -116,7 +94,6 @@ export default class DropPlaceHolder extends Component {
                 <p style={ styles.emptyPlaceholderText }>Drop your question here</p>
             }
           </div>
-
       )
     );
   }

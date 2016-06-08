@@ -101,7 +101,7 @@ export default class FormComponent extends Component {
                 <h4>
                   { field.title }
                   {
-                    field.wrapper.required ?
+                    field.wrapper && field.wrapper.required ?
                       <span style={ styles.requiredAsterisk }>*</span>
                     :
                       null

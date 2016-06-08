@@ -88,9 +88,16 @@ export default class FormDiagram extends Component {
 
           { this.state.tempWidgets.map((field, i) => (
             <DropPlaceHolder key={i} formDiagram={ this } position={ i } dropped={ field.dropped }>
-              <FormComponent onFieldSelect={onFieldSelect}
-                onList={true} field={field} position={ i } isLast={i === this.state.tempWidgets.length - 1} id={i} key={i}
-                onMove={this.onMove.bind(this)} onDelete={this.onDelete.bind(this)} />
+              <FormComponent
+                id={ field.id } key={i}
+                field={field}
+                position={ i }
+                onFieldSelect={onFieldSelect}
+                onList={true}
+                isLast={i === this.state.tempWidgets.length - 1}
+                onMove={this.onMove.bind(this)}
+                onDelete={this.onDelete.bind(this)}
+                 />
             </DropPlaceHolder>
           ))}
           {

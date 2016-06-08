@@ -11,15 +11,15 @@ import TextFieldEditor from 'forms/editors/TextFieldEditor';
 import MultipleChoiceEditor from 'forms/editors/MultipleChoiceEditor';
 
 const renderSettings = {
-  TextField(field) {
+  TextField(field, props) {
     return (
-      <TextFieldEditor />
+      <TextFieldEditor field={ field } { ...props } />
     );
   },
 
-  MultipleChoice(field) {
+  MultipleChoice(field, props) {
     return (
-      <MultipleChoiceEditor />
+      <MultipleChoiceEditor field={ field } { ...props } />
     )
   }
 };
@@ -82,6 +82,10 @@ export default class FormComponent extends Component {
     );
   }
 
+  onDescriptionChange(e) {
+    this.props.dispatch(updateWidget(this.props.id, { description: e.target.value }));
+  }
+
   onTitleChange(e) {
     this.props.dispatch(updateWidget(this.props.id, { title: e.target.value }));
   }
@@ -92,9 +96,17 @@ export default class FormComponent extends Component {
       <div>
         { this.props.connectDragSource(
             <div style={styles.editContainer}>
-              <div>{id+1}.</div>
+              <div>{ position + 1 }.</div>
               <div style={styles.editBody} onClick={ this.toggleExpanded.bind(this) }>
-                <h4>{this.props.field.title}</h4>
+                <h4>
+                  { field.title }
+                  {
+                    field.wrapper.required ?
+                      <span style={ styles.requiredAsterisk }>*</span>
+                    :
+                      null
+                  }
+                </h4>
               </div>
               <div style={styles.arrowContainer}>
                 <button style={styles.delete} onClick={ () => onDelete(position) }><FaTrash /></button>
@@ -109,15 +121,26 @@ export default class FormComponent extends Component {
             <div style={ styles.editSettingsPanel }>
               <label style={ styles.label }>
                 <strong>Question</strong> (or field label):
-                <input onChange={ this.onTitleChange.bind(this) } style={ styles.bigInput } defaultValue={ this.props.field.title } type="text" placeholder="Ex: What is art?" />
+                <input
+                  onChange={ this.onTitleChange.bind(this) }
+                  style={ styles.bigInput }
+                  defaultValue={ this.props.field.title }
+                  type="text"
+                  placeholder="Ex: What is art?" />
               </label>
               <label style={ styles.label }>
                 <strong>Description</strong>/helper text:
-                <input style={ styles.bigInput } type="text" placeholder="Ex: Explain ART in a short sentence." />
+                <input
+                  onChange={ this.onDescriptionChange.bind(this) }
+                  defaultValue={ this.props.field.description }
+                  style={ styles.bigInput }
+                  type="text"
+                  placeholder="Ex: Explain ART in a short sentence." />
               </label>
 
               {this.editSettings()}
 
+              <button style={ styles.editSettingsPanelSave } onClick={ this.toggleExpanded.bind(this) }>Save</button>
               <button style={ styles.editSettingsPanelClose } onClick={ this.toggleExpanded.bind(this) }><FaClose /></button>
             </div>
           :
@@ -127,9 +150,15 @@ export default class FormComponent extends Component {
     );
   }
 
+  onEditorChange(field) {
+    this.props.dispatch(updateWidget(field.id, field));
+  }
+
   editSettings() {
     const { field } = this.props;
-    return renderSettings[field.component] ? renderSettings[field.component](field) : renderSettings['TextField'](field);
+    // Passing listeners down from this class to the editors
+    var localProps = { onEditorChange: this.onEditorChange.bind(this) };
+    return renderSettings[field.component] ? renderSettings[field.component](field, localProps) : renderSettings['TextField'](field, localProps);
   }
 
   onClick() {
@@ -216,6 +245,17 @@ export const styles = {
     backgroundColor: '#fafafa',
     boxShadow: '0px 2px 15px #444'
   },
+  editSettingsPanelSave: {
+    fontSize: '11pt',
+    height: '40px',
+    background: 'white',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    marginTop: '10px',
+    lineHeight: '40px',
+    textAlign: 'center',
+    cursor: 'pointer'
+  },
   editSettingsPanelClose: {
     position: 'absolute',
     top: '20px',
@@ -241,5 +281,8 @@ export const styles = {
     width: '50%',
     border: '1px solid #ccc',
     display: 'block'
+  },
+  requiredAsterisk: {
+    color: '#B22'
   }
 };

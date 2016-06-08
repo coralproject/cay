@@ -59,10 +59,16 @@ export default class FormBuilder extends Component {
                 <span style={ styles.switchActiveText }>Active</span>
               </div>
             </label>
-            <p>You are not currently accepting submissions.</p>
+            {
+              form.settings.isActive ?
+                <p>You are accepting submissions.</p>
+              :
+                <p>You are not currently accepting submissions.</p>
+            }
+
             <h5 style={ styles.leftContainerSubTitle }>Custom Inactive Message</h5>
-            <textarea style={ styles.inactiveMessage }
-              defaultValue="We are not currently accepting submissions. Thank you."
+            <textarea onChange={ this.onInactiveMessageChange.bind(this) } style={ styles.inactiveMessage }
+              defaultValue={ form.settings.inactiveMessage }
               placeholder="Ex: We are not currently accepting submissions. Thank you."
               ></textarea>
             <div style={ styles.formSettingsBottomActions }>
@@ -98,6 +104,14 @@ export default class FormBuilder extends Component {
   onFormStatusChange(e) {
     let { form } = this.props.forms;
     var newSettings = Object.assign({}, form.settings, { isActive: e.target.checked });
+    this.props.dispatch(updateForm({
+      settings: newSettings
+    }));
+  }
+
+  onInactiveMessageChange(e) {
+    let { form } = this.props.forms;
+    var newSettings = Object.assign({}, form.settings, { inactiveMessage: e.target.value });
     this.props.dispatch(updateForm({
       settings: newSettings
     }));
@@ -190,8 +204,8 @@ const styles = {
     return {
       position: 'absolute',
       width: '280px',
-      left: isActive ? '0' : '-80px',
-      background: isActive ? '#ccc' : '#292',
+      left: isActive ? '-80px' : '0px',
+      background: isActive ? '#292' : '#ccc',
       transition: 'all .5s',
       cursor: 'pointer',
       height: '45px'

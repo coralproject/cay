@@ -103,9 +103,9 @@ const forms = (state = initial, action) => {
     return Object.assign({}, state);
 
   case types.WIDGET_UPDATE:
-    var updatedWidgets = state.widgets.map((widget, id) =>
-      id === action.id ? Object.assign({}, widget, action.data) : widget
-    );
+    var updatedWidgets = state.widgets.map((widget, id) => {
+      return widget.id === action.id ? Object.assign({}, widget, action.data) : widget;
+    });
     return Object.assign({}, state, { widgets: updatedWidgets });
 
   case types.FORM_UPDATE:

@@ -29,7 +29,7 @@ const askTypes = [
 @DragDropContext(HTML5Backend)
 export default class FormBuilder extends Component {
   render() {
-    const {preview, onClosePreview, forms} = this.props;
+    const {preview, onClosePreview, onOpenPreview, forms} = this.props;
     const {form} = forms;
     return (
       <div style={styles.builderContainer}>
@@ -84,14 +84,19 @@ export default class FormBuilder extends Component {
           </div>
 
         </div>
-        <FormDiagram />
-        <Modal
-          title="Form Preview"
-          isOpen={preview}
-          confirmAction={() => console.log('worked')}
-          cancelAction={onClosePreview}>
-          {this.renderPreview.call(this)}
-        </Modal>
+        <FormDiagram onOpenPreview={ onOpenPreview } />
+        {
+          preview ?
+            <div style={ styles.previewPane }>
+              <div style={ styles.previewActions }>
+                <button style={ styles.previewClose } onClick={ onClosePreview.bind(this) }>Close</button>
+              </div>
+              <div style={ styles.previewContent }>
+                {this.renderPreview.call(this)}
+              </div>
+            </div>
+          : null
+        }
       </div>
     );
   }
@@ -264,5 +269,34 @@ const styles = {
     lineHeight: '40px',
     color: 'white',
     textShadow: '0px 1px 2px #444'
+  },
+  previewPane: {
+    position: 'fixed',
+    right: '0px',
+    top: '0px',
+    height: '100%',
+    width: '600px',
+    background: 'white',
+    borderLeft: '1px solid #eee',
+    boxShadow: '-5px -5px 20px #999',
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  previewActions: {
+    background: 'white',
+    padding: '10px',
+    flex: 'none',
+    height: '60px'
+  },
+  previewClose: {
+    padding: '0 10px',
+    height: '40px',
+    lineHeight: '40px',
+    fontSize: '12pt',
+    cursor: 'pointer'
+  },
+  previewContent: {
+    overflow: 'scroll',
+    flexGrow: '2'
   }
 };

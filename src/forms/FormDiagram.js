@@ -11,6 +11,7 @@ import FormComponent, {styles as askComponentStyles} from 'forms/FormComponent';
 import FaArrowCircleUp from 'react-icons/lib/fa/arrow-circle-up';
 import FaUserPlus from 'react-icons/lib/fa/user-plus';
 import FaFloppyO from 'react-icons/lib/fa/floppy-o';
+import FaEye from 'react-icons/lib/fa/eye';
 
 @connect(({ forms, app }) => ({ forms, app }))
 export default class FormDiagram extends Component {
@@ -65,8 +66,12 @@ export default class FormDiagram extends Component {
     dispatch(saveForm(form, widgets, app.elkhornHost));
   }
 
+  onPreviewClick() {
+
+  }
+
   render() {
-    const { onFieldSelect, forms } = this.props;
+    const { onFieldSelect, forms, onOpenPreview } = this.props;
     const { form, widgets } = forms;
     return (
       <div style={styles.formDiagramContainer}>
@@ -86,6 +91,7 @@ export default class FormDiagram extends Component {
             <button style={ styles.formAction }><FaUserPlus /></button>
             <button style={ styles.formAction }><FaArrowCircleUp /></button>
             <button onClick={ this.onSaveClick.bind(this) } style={ styles.formAction }><FaFloppyO /></button>
+            <button onClick={ onOpenPreview } style={ styles.formAction }><FaEye /></button>
           </div>
         </div>
         <input onChange={ this.onFormTitleChange.bind(this) } style={ styles.headLine } type="text" placeholder={ "Title of your form" } defaultValue={ form.header.title } />

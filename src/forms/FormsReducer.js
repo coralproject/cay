@@ -7,7 +7,7 @@ const initial = {
   editAccess: {},
   form: null,
   activeForm: null, // might be able to combine this with {form} above in the future
-  activeGallery: null,
+  activeGallery: null, // this is an ObjectId string
   widgets: [],
   submissions: [],
   activeSubmission: null

@@ -151,7 +151,7 @@ class SubmissionDetail extends Component {
             <div style={styles.detail.questionContainer} key={key}>
               <h2 style={styles.detail.question}>{reply.question}</h2>
               <p>{this.renderAnswer(reply.answer)}</p>
-              <p>galleryId: {gallery ? gallery.id : 'loading gallery'}</p>
+              <p>galleryId: {gallery ? gallery : 'loading gallery'}</p>
               <p>submissionId: {submission.id}</p>
               <p>widget id: {reply.widget_id}</p>
               <Button

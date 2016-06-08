@@ -44,7 +44,7 @@ export default class SubmissionGallery extends React.Component {
         <Card key={i}>
           <p>Added to Gallery 5/25 {answer.submission_id}</p>
           {answer.answer.answer}
-          <p>Gallery id: {this.props.activeGallery ? this.props.activeGallery.id : 'loading gallery'}</p>
+          <p>Gallery id: {galleryId ? galleryId : 'loading gallery'}</p>
           <p>Answer id: {answer.answer_id}</p>
           <p>widget id: {answer.answer.widget_id}</p>
           <p>submission id: {answer.submission_id}</p>
@@ -53,7 +53,7 @@ export default class SubmissionGallery extends React.Component {
               Edit <Edit />
             </Button>
             <Button
-              onClick={this.removeSubmission.bind(this, this.props.activeGallery.id, answer.submission_id, answer.answer_id)}
+              onClick={this.removeSubmission.bind(this, galleryId, answer.submission_id, answer.answer_id)}
               size="small">
               Remove <Delete />
             </Button>

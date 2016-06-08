@@ -82,6 +82,10 @@ export default class FormComponent extends Component {
     );
   }
 
+  onIdentityClick(e) {
+    this.props.dispatch(updateWidget(this.props.id, { identity: e.target.checked }));
+  }
+
   onDescriptionChange(e) {
     this.props.dispatch(updateWidget(this.props.id, { description: e.target.value }));
   }
@@ -103,6 +107,12 @@ export default class FormComponent extends Component {
                   {
                     field.wrapper && field.wrapper.required ?
                       <span style={ styles.requiredAsterisk }>*</span>
+                    :
+                      null
+                  }
+                  {
+                    field.identity ?
+                      <span style={ styles.identityLabel }>PII</span>
                     :
                       null
                   }
@@ -132,11 +142,22 @@ export default class FormComponent extends Component {
                 <strong>Description</strong>/helper text:
                 <input
                   onChange={ this.onDescriptionChange.bind(this) }
-                  defaultValue={ this.props.field.description }
+                  defaultValue={ field.description }
                   style={ styles.bigInput }
                   type="text"
                   placeholder="Ex: Explain ART in a short sentence." />
               </label>
+              <div style={ styles.identity }>
+                <label>
+                  <input
+                    onClick={ this.onIdentityClick.bind(this) }
+                    checked={ field.identity }
+                    type="checkbox"
+                     />
+                   Has identity data
+                </label>
+                <p>Check if this field contains <a href="#" style={ { color: '#999' } }>Personally Identifiable Information</a> (e-mails, last names, etc)</p>
+              </div>
 
               {this.editSettings()}
 
@@ -284,5 +305,19 @@ export const styles = {
   },
   requiredAsterisk: {
     color: '#B22'
+  },
+  identity: {
+    padding: '20px 0'
+  },
+  identityLabel: {
+    fontSize: '10pt',
+    color: 'white',
+    padding: '0 5px',
+    borderRadius: '3px',
+    marginLeft: '15px',
+    display: 'inline-block',
+    background: '#999',
+    height: '30px',
+    lineHeight: '30px'
   }
 };

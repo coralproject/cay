@@ -101,6 +101,7 @@ export default class FormBuilder extends Component {
       title: data.title,
       type: 'field',
       component: data.type,
+      identity: false,
       wrapper: {},
       props: {},
       id: Math.floor(Math.random() * 99999) + ''

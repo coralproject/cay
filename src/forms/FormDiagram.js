@@ -27,6 +27,7 @@ export default class FormDiagram extends Component {
     this.previousState = nextProps.forms.widgets;
   }
 
+  // TODO: Refactor: All this methods look very similar, maybe generalize into one?
   onFormTitleChange(e) {
     let { form } = this.props.forms;
     this.props.dispatch(updateForm({
@@ -47,9 +48,20 @@ export default class FormDiagram extends Component {
     }));
   }
 
+  onThankYouDescriptionChange(e) {
+    let { form } = this.props.forms;
+    this.props.dispatch(updateForm({
+      finishedScreen: {
+        title: form.finishedScreen.title,
+        description: e.target.value
+      }
+    }));
+  }
+
   onSaveClick() {
     const { forms, app, dispatch } = this.props;
     const { form, widgets } = forms;
+    console.log("Saving Form:", form);
     dispatch(saveForm(form, widgets, app.elkhornHost));
   }
 
@@ -66,7 +78,7 @@ export default class FormDiagram extends Component {
                 <strong style={ styles.strong }>Created by</strong> First Name, Last Name
               </span>
               <span style={ styles.created }>
-                <strong style={ styles.strong }>Created on</strong> MM/DD/YYYY
+                <strong style={ styles.strong }>Created on</strong> { form.createdAt }
               </span>
             </div>
           </div>
@@ -107,6 +119,13 @@ export default class FormDiagram extends Component {
               <DropPlaceHolder empty={ true } formDiagram={ this } position={ this.state.tempWidgets.length } key={ this.state.tempWidgets.length } />
           }
         </div>
+        <div style={ styles.extraFields }>
+          <h3 style={ styles.thankYouMessageTitle }>Custom thank you message (optional)</h3>
+          <textarea
+            defaultValue={ form.finishedScreen.description }
+            style={ styles.customThankYouMessage }
+            onChange={ this.onThankYouDescriptionChange.bind(this) }></textarea>
+        </div>
       </div>
     );
   }
@@ -128,6 +147,7 @@ export default class FormDiagram extends Component {
       title: field.title,
       type: 'field',
       component: field.type,
+      identity: false,
       wrapper: {},
       props: {},
       id: Math.floor(Math.random() * 99999) + ''
@@ -218,5 +238,16 @@ const styles = {
     display: 'block',
     border: 'none',
     background: 'none'
+  },
+  customThankYouMessage: {
+    display: 'block',
+    width: '100%',
+    padding: '10px',
+    fontSize: '12pt'
+  },
+  thankYouMessageTitle: {
+    fontSize: '14pt',
+    fontWeight: 'bold',
+    margin: '30px 0 20px 0'
   }
 };

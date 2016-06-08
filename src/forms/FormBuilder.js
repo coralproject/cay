@@ -66,11 +66,17 @@ export default class FormBuilder extends Component {
                 <p>You are not currently accepting submissions.</p>
             }
 
-            <h5 style={ styles.leftContainerSubTitle }>Custom Inactive Message</h5>
-            <textarea onChange={ this.onInactiveMessageChange.bind(this) } style={ styles.inactiveMessage }
-              defaultValue={ form.settings.inactiveMessage }
-              placeholder="Ex: We are not currently accepting submissions. Thank you."
-              ></textarea>
+            {
+              !form.settings.isActive ?
+                <div>
+                  <h5 style={ styles.leftContainerSubTitle }>Custom Inactive Message</h5>
+                  <textarea onChange={ this.onInactiveMessageChange.bind(this) } style={ styles.inactiveMessage }
+                    defaultValue={ form.settings.inactiveMessage }
+                    placeholder="Ex: We are not currently accepting submissions. Thank you."
+                    ></textarea>
+                </div>
+              : null
+            }
             <div style={ styles.formSettingsBottomActions }>
               <button style={ styles.formSettingsAction }>Embed Form</button>
               <button style={ styles.formSettingsAction }>Live Form</button>

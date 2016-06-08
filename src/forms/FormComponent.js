@@ -110,7 +110,7 @@ export default class FormComponent extends Component {
               </div>
               <div style={styles.arrowContainer}>
                 <button style={styles.delete} onClick={ () => onDelete(position) }><FaTrash /></button>
-                { id !== 0 ? <button onClick={() => onMove('up', position)} style={styles.arrow}><FaArrowCircleUp /></button> : null  }
+                { position !== 0 ? <button onClick={() => onMove('up', position)} style={styles.arrow}><FaArrowCircleUp /></button> : null  }
                 { !isLast ? <button onClick={() => onMove('down', position)} style={styles.arrow}><FaArrowCircleDown /></button> : null  }
               </div>
             </div>

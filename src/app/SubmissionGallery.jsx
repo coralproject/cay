@@ -8,6 +8,7 @@ import {
   updateFormStatus
 } from 'forms/FormActions';
 import {Link} from 'react-router';
+import {Motion, spring} from 'react-motion';
 
 import Page from 'app/layout/Page';
 import FormChrome from 'app/layout/FormChrome';
@@ -89,13 +90,16 @@ export default class SubmissionGallery extends React.Component {
   render() {
 
     const form = this.props[this.props.activeForm];
+    const gallery = this.props[this.props.activeGallery];
+    const galleryCount = gallery ? gallery.answers.length : null;
 
     return (
       <Page>
         <FormChrome
           activeTab="gallery"
           updateStatus={this.updateFormStatus.bind(this)}
-          form={form} />
+          form={form}
+          galleryCount={galleryCount} />
         <div style={styles.base}>
           <ContentHeader title={'Submission Gallery ' + this.props.params.id} />
           <div style={styles.container}>

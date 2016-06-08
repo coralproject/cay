@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import _ from 'lodash';
 import Select from 'react-select';
+import Badge from 'components/Badge';
 
 import settings from 'settings';
 
@@ -11,8 +12,10 @@ export default class FormChrome extends React.Component {
   static propTypes = {
     name: PropTypes.string,
     activeTab: PropTypes.oneOf(['builder', 'submissions', 'gallery']).isRequired,
-    formId: PropTypes.string,
-    updateStatus: PropTypes.func
+    form: PropTypes.object,
+    updateStatus: PropTypes.func,
+    submissionCount: PropTypes.number,
+    galleryCount: PropTypes.number
   }
 
   static contextTypes = {
@@ -42,6 +45,10 @@ export default class FormChrome extends React.Component {
     this.context.router.push(`/forms/${this.props.form.id}/gallery`);
   }
 
+  galleryBadge() {
+    return typeof this.props.galleryCount === 'number' ? <Badge style={styles.badge} count={this.props.galleryCount} /> : '';
+  }
+
   render() {
 
     const name = _.has(this.props, 'form.header.title') ? this.props.form.header.title : 'Untitled Form';
@@ -67,14 +74,14 @@ export default class FormChrome extends React.Component {
             this.props.activeTab === 'submissions' && styles.active,
             !this.props.form && styles.disabled]}
             onClick={this.reviewSubmissions.bind(this)}>
-            Review Submissions
+            Review Submissions <Badge style={styles.badge} count={5} />
           </li>
           <li key="louie" style={[
             styles.option,
             this.props.activeTab === 'gallery' && styles.active,
             !this.props.form && styles.disabled]}
             onClick={this.manageGallery.bind(this)}>
-            Manage Gallery
+            Manage Gallery {this.galleryBadge()}
           </li>
         </ul>
         <div style={styles.statusSelect}>
@@ -104,6 +111,7 @@ const styles = {
     display: 'flex'
   },
   option: {
+    transition: 'all 300ms',
     cursor: 'pointer',
     padding: '8px 12px',
     borderRadius: 50,
@@ -125,5 +133,10 @@ const styles = {
     position: 'absolute',
     top: 2,
     right: 2
+  },
+  badge: {
+    backgroundColor: 'white',
+    fontSize: '12px',
+    color: settings.darkGrey
   }
 };

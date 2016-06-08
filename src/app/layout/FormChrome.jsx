@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import _ from 'lodash';
+import Select from 'react-select';
 
 import settings from 'settings';
 
@@ -10,7 +11,8 @@ export default class FormChrome extends React.Component {
   static propTypes = {
     name: PropTypes.string,
     activeTab: PropTypes.oneOf(['builder', 'submissions', 'gallery']).isRequired,
-    formId: PropTypes.string
+    formId: PropTypes.string,
+    updateStatus: PropTypes.func
   }
 
   static contextTypes = {
@@ -44,6 +46,12 @@ export default class FormChrome extends React.Component {
 
     const name = _.has(this.props, 'form.header.title') ? this.props.form.header.title : 'Untitled Form';
 
+    const statusOptions = [
+      {label: 'Active', value: 'active'},
+      {label: 'Draft', value: 'draft'},
+      {label: 'Past', value: 'past'}
+    ];
+
     return (
       <div style={styles.base}>
         <ul style={styles.menu}>
@@ -69,6 +77,12 @@ export default class FormChrome extends React.Component {
             Manage Gallery
           </li>
         </ul>
+        <div style={styles.statusSelect}>
+          <Select
+            options={statusOptions}
+            value={this.props.form && this.props.form.status}
+            onChange={this.props.updateStatus} />
+        </div>
       </div>
     );
   }
@@ -105,5 +119,11 @@ const styles = {
   },
   disabled: {
     display: 'none'
+  },
+  statusSelect: {
+    width: 300,
+    position: 'absolute',
+    top: 2,
+    right: 2
   }
 };

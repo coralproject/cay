@@ -1,9 +1,13 @@
 import React from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
-import {fetchForm, fetchGallery, removeFromGallery} from 'forms/FormActions';
+import {
+  fetchForm,
+  fetchGallery,
+  removeFromGallery,
+  updateFormStatus
+} from 'forms/FormActions';
 import {Link} from 'react-router';
-import moment from 'moment';
 
 import Page from 'app/layout/Page';
 import FormChrome from 'app/layout/FormChrome';
@@ -26,23 +30,21 @@ export default class SubmissionGallery extends React.Component {
     this.props.dispatch(fetchGallery(this.props.params.id));
   }
 
-  componentWillUpdate(props) {
-
-  }
-
   removeSubmission(galleryId, submissionId, answerId) {
     console.log('removeSubmission', galleryId, submissionId, answerId);
     this.props.dispatch(removeFromGallery(galleryId, submissionId, answerId));
   }
 
-  renderGallery(gallery) {
+  renderGallery(galleryId) {
+    const gallery = this.props[galleryId];
+
     return gallery.answers.map((answer, i) => {
       console.log('answer', answer);
       return (
         <Card key={i}>
           <p>Added to Gallery 5/25 {answer.submission_id}</p>
           {answer.answer.answer}
-          <p>Gallery id: {this.props.activeGallery.id}</p>
+          <p>Gallery id: {this.props.activeGallery ? this.props.activeGallery.id : 'loading gallery'}</p>
           <p>Answer id: {answer.answer_id}</p>
           <p>widget id: {answer.answer.widget_id}</p>
           <p>submission id: {answer.submission_id}</p>
@@ -73,18 +75,27 @@ export default class SubmissionGallery extends React.Component {
     return (
       <p>
         There are currently no items in your gallery.
-        You may add items by visiting <Link to={`/forms/${this.props.activeForm.id}/submissions`}>
+        You may add items by visiting <Link to={`/forms/${this.props.activeForm}/submissions`}>
         Review Submissions
         </Link>
       </p>
     );
   }
 
+  updateFormStatus(option) {
+    this.props.dispatch(updateFormStatus(this.props.activeForm, option.value));
+  }
+
   render() {
+
+    const form = this.props[this.props.activeForm];
 
     return (
       <Page>
-        <FormChrome activeTab="gallery" form={this.props.activeForm} />
+        <FormChrome
+          activeTab="gallery"
+          updateStatus={this.updateFormStatus.bind(this)}
+          form={form} />
         <div style={styles.base}>
           <ContentHeader title={'Submission Gallery ' + this.props.params.id} />
           <div style={styles.container}>

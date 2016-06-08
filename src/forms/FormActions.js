@@ -28,6 +28,9 @@ export const FORM_GALLERY_REQUEST = 'FORM_GALLERY_REQUEST';
 export const FORM_GALLERY_SUCCESS = 'FORM_GALLERY_SUCCESS';
 export const FORM_GALLERY_ERROR = 'FORM_GALLERY_ERROR';
 
+export const FORM_STATUS_UPDATED = 'FORM_STATUS_UPDATED';
+export const FORM_STATUS_UPDATE_ERROR = 'FORM_STATUS_UPDATE_ERROR';
+
 export const FORM_SUB_SENT_TO_GALLERY = 'FORM_SUBMISSION_SENT_TO_GALLERY';
 export const FORM_SUB_REMOVED_FROM_GALLERY = 'FORM_SUB_REMOVED_FROM_GALLERY';
 
@@ -286,6 +289,15 @@ export const sendToGallery = (galleryId, subId, answerId) => {
   };
 };
 
+const answerRemovedFromGallery = (galleryId, subId, answerId) => {
+  return {
+    type: FORM_SUB_REMOVED_FROM_GALLERY,
+    galleryId,
+    subId,
+    answerId
+  };
+};
+
 export const removeFromGallery = (galleryId, subId, answerId) => {
   return (dispatch, getState) => {
     const {app} = getState();
@@ -294,9 +306,26 @@ export const removeFromGallery = (galleryId, subId, answerId) => {
     fetch(`${app.pillarHost}/api/form_gallery/${galleryId}/remove/${subId}/${answerId}`, options)
       .then(res => {
         console.log(res);
+        dispatch(answerRemovedFromGallery(galleryId, subId, answerId));
       })
       .catch(error => {
         console.log('failed to remove from gallery', error);
+      });
+  };
+};
+
+export const updateFormStatus = (formId, status) => {
+  return (dispatch, getState) => {
+    const {app} = getState();
+    const options = {method: 'PUT', model: 'cors'};
+
+    fetch(`${app.pillarHost}/api/form/${formId}/status/${status}`, options)
+      .then(res => res.json())
+      .then(form => {
+        return {type: FORM_STATUS_UPDATED, form};
+      })
+      .catch(error => {
+        return {type: FORM_STATUS_UPDATE_ERROR, error};
       });
   };
 };

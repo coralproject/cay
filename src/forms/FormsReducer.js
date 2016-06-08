@@ -2,7 +2,8 @@ import * as types from 'forms/FormActions';
 import uuid from 'node-uuid';
 
 const initial = {
-  items: [],
+  formList: [],
+  galleryList: [],
   editAccess: {},
   form: null,
   activeForm: null, // might be able to combine this with {form} above in the future
@@ -43,7 +44,7 @@ const forms = (state = initial, action) => {
     return {...state, activeForm: null, formLoading: true};
 
   case types.FORM_REQUEST_SUCCESS:
-    return {...state, activeForm: action.form, formLoading: false};
+    return {...state, activeForm: action.form.id, [action.form.id]: action.form, formLoading: false};
 
   case types.FORM_REQUEST_FAILURE:
     return {...state, activeForm: null, formLoading: false};
@@ -62,14 +63,21 @@ const forms = (state = initial, action) => {
     return newState;
 
   case types.FORM_CREATE_EMPTY:
-    const form = Object.assign({}, emptyForm, { steps: [{ id: uuid.v4(), name: 'first_step'}] })
+    const form = Object.assign({}, emptyForm, { steps: [{ id: uuid.v4(), name: 'first_step'}] });
     return Object.assign({}, state, {form: form, widgets: [] });
 
   case types.FORM_APPEND_WIDGET:
     return Object.assign({}, state, { widgets: [...state.widgets, action.widget ] });
 
   case types.FORMS_REQUEST_SUCCESS:
-    return {...state, items: action.forms };
+
+    const formList = action.forms.map(form => form.id);
+    const forms = action.forms.reduce((accum, form) => {
+      accum[form.id] = form;
+      return accum;
+    }, {});
+
+    return {...state, formList, ...forms };
 
   case types.WIDGET_UPDATE:
     return Object.assign({}, state, { widgets: state.widgets.map((widget, id) =>
@@ -97,10 +105,13 @@ const forms = (state = initial, action) => {
 
   case types.FORM_GALLERY_SUCCESS:
     // action gallery might be more than one gallery in the future
-    return {...state, loadingGallery: false, activeGallery: action.gallery};
+    return {...state, loadingGallery: false, activeGallery: action.gallery.id, [action.gallery.id]: action.gallery};
 
   case types.FORM_GALLERY_ERROR:
     return {...state, loadingGallery: false, activeGallery: null, galleryError: action.error};
+
+  case types.FORM_STATUS_UPDATED:
+    return {...state, activeForm: action.form.id, [action.form.id]: action.form};
 
   default:
     return state;

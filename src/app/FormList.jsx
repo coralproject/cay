@@ -87,7 +87,9 @@ export default class FormList extends React.Component {
 
   render() {
 
-    const groups = _.groupBy(this.props.forms.items, 'status');
+    const forms = this.props.forms.formList.map(id => this.props.forms[id]);
+    const groups = _.groupBy(forms, 'status');
+
     return (
       <Page>
         <ContentHeader title="View Forms" style={styles.header}>

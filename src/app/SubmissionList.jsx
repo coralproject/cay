@@ -15,6 +15,7 @@ import {
   setActiveSubmission,
   updateSubmission,
   sendToGallery,
+  updateFormStatus,
   fetchForm } from 'forms/FormActions';
 
 import FormChrome from 'app/layout/FormChrome';
@@ -43,13 +44,22 @@ export default class SubmissionList extends Component {
     this.props.dispatch(updateSubmission({ bookmarked }));
   }
 
+  updateFormStatus(option) {
+    console.log(this.props);
+    this.props.dispatch(updateFormStatus(this.props.forms.activeForm, option.value));
+  }
+
   render() {
     const { submissions, activeSubmission, activeForm, activeGallery } = this.props.forms;
+    const form = this.props.forms[activeForm];
 
     return (
       <Page>
         <div style={styles.container}>
-          <FormChrome activeTab="submissions" form={activeForm}/>
+          <FormChrome
+            activeTab="submissions"
+            updateStatus={this.updateFormStatus.bind(this)}
+            form={form}/>
           <Sidebar submissions={submissions}
             activeSubmission={submissions[activeSubmission]}
             onSelect={this.onSubmissionSelect.bind(this)} />
@@ -141,7 +151,7 @@ class SubmissionDetail extends Component {
             <div style={styles.detail.questionContainer} key={key}>
               <h2 style={styles.detail.question}>{reply.question}</h2>
               <p>{this.renderAnswer(reply.answer)}</p>
-              <p>galleryId: {gallery.id}</p>
+              <p>galleryId: {gallery ? gallery.id : 'loading gallery'}</p>
               <p>submissionId: {submission.id}</p>
               <p>widget id: {reply.widget_id}</p>
               <Button

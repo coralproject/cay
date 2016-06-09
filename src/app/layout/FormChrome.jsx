@@ -13,9 +13,7 @@ export default class FormChrome extends React.Component {
     name: PropTypes.string,
     activeTab: PropTypes.oneOf(['builder', 'submissions', 'gallery']).isRequired,
     form: PropTypes.object,
-    updateStatus: PropTypes.func,
-    submissionCount: PropTypes.number,
-    galleryCount: PropTypes.number
+    updateStatus: PropTypes.func
   }
 
   static contextTypes = {
@@ -46,7 +44,11 @@ export default class FormChrome extends React.Component {
   }
 
   galleryBadge() {
-    return typeof this.props.galleryCount === 'number' ? <Badge style={styles.badge} count={this.props.galleryCount} /> : '';
+    return this.props.gallery ? <Badge style={styles.badge} count={this.props.gallery.answers.length} /> : '';
+  }
+
+  submissionBadge() {
+    return this.props.submissions ? <Badge style={styles.badge} count={this.props.submissions.length} /> : '';
   }
 
   render() {
@@ -55,8 +57,7 @@ export default class FormChrome extends React.Component {
 
     const statusOptions = [
       {label: 'Active', value: 'active'},
-      {label: 'Draft', value: 'draft'},
-      {label: 'Past', value: 'past'}
+      {label: 'Inactive', value: 'inactive'}
     ];
 
     return (
@@ -74,7 +75,7 @@ export default class FormChrome extends React.Component {
             this.props.activeTab === 'submissions' && styles.active,
             !this.props.form && styles.disabled]}
             onClick={this.reviewSubmissions.bind(this)}>
-            Review Submissions <Badge style={styles.badge} count={5} />
+            Review Submissions {this.submissionBadge()}
           </li>
           <li key="louie" style={[
             styles.option,

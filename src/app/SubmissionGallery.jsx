@@ -91,7 +91,6 @@ export default class SubmissionGallery extends React.Component {
 
     const form = this.props[this.props.activeForm];
     const gallery = this.props[this.props.activeGallery];
-    const galleryCount = gallery ? gallery.answers.length : null;
 
     return (
       <Page>
@@ -99,9 +98,10 @@ export default class SubmissionGallery extends React.Component {
           activeTab="gallery"
           updateStatus={this.updateFormStatus.bind(this)}
           form={form}
-          galleryCount={galleryCount} />
+          submissions={this.props.submissions}
+          gallery={gallery} />
         <div style={styles.base}>
-          <ContentHeader title={'Submission Gallery ' + this.props.params.id} />
+          <ContentHeader title={'Submission Gallery ' + this.props.activeGallery} />
           <div style={styles.container}>
             <div style={styles.sidebar}>
               <Card>

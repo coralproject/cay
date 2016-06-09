@@ -1,7 +1,8 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
 import Radium from 'radium';
 
-class Badge extends React.Component {
+@Radium
+export default class Badge extends React.Component {
   render() {
     return (
       <i style={[
@@ -25,5 +26,3 @@ const styles = {
     fontSize: '8px'
   }
 };
-
-export default Radium(Badge);

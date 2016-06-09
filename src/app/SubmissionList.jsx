@@ -54,7 +54,6 @@ export default class SubmissionList extends Component {
     const submission = submissions[activeSubmission];
     const form = this.props.forms[activeForm];
     const gallery = this.props.forms[activeGallery];
-    const galleryCount = gallery ? gallery.answers.length : null;
 
     return (
       <Page>
@@ -62,7 +61,8 @@ export default class SubmissionList extends Component {
           <FormChrome
             activeTab="submissions"
             updateStatus={this.updateFormStatus.bind(this)}
-            galleryCount={galleryCount}
+            gallery={gallery}
+            submissions={submissions}
             form={form}/>
           <Sidebar submissions={submissions}
             activeSubmission={submission}

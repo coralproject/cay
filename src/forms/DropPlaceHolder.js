@@ -91,7 +91,7 @@ export default class DropPlaceHolder extends Component {
               this.props.children ?
                 this.props.children
               :
-                <p style={ styles.emptyPlaceholderText }>Drop your question here</p>
+                <p style={ styles.emptyPlaceholderText }>Drag and drop fields here to add a question</p>
             }
           </div>
       )

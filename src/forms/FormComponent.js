@@ -34,7 +34,7 @@ const askSource = {
     };
   },
   endDrag(props, monitor, component) {
-    //console.log(component);
+    // console.log("enddrag");
   }
 };
 

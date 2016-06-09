@@ -94,14 +94,14 @@ export default class FormDiagram extends Component {
             <button onClick={ onOpenPreview } style={ styles.formAction }><FaEye /></button>
           </div>
         </div>
-        <input onChange={ this.onFormTitleChange.bind(this) } style={ styles.headLine } type="text" placeholder={ "Title of your form" } defaultValue={ form.header.title } />
+        <input onChange={ this.onFormTitleChange.bind(this) } style={ styles.headLine } type="text" placeholder={ "Write a headline" } defaultValue={ form.header.title } />
         {
           this.state.showTitleIsRequired ?
             <p style={ styles.titleIsRequired }>Title is required</p>
           :
             null
         }
-        <textarea onChange={ this.onFormDescriptionChange.bind(this) } style={ styles.description } placeholder={ "A longer description" } defaultValue={ form.header.description } />
+        <textarea onChange={ this.onFormDescriptionChange.bind(this) } style={ styles.description } placeholder={ "Add instructions or a description" } defaultValue={ form.header.description } />
         <div style={styles.formDiagram}>
 
           { this.state.tempWidgets.map((field, i) => (

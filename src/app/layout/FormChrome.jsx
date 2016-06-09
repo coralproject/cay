@@ -13,6 +13,7 @@ export default class FormChrome extends React.Component {
     name: PropTypes.string,
     activeTab: PropTypes.oneOf(['builder', 'submissions', 'gallery']).isRequired,
     form: PropTypes.object,
+    gallery: PropTypes.object,
     updateStatus: PropTypes.func
   }
 

@@ -4,12 +4,12 @@ import uuid from 'node-uuid';
 const initial = {
   formList: [],
   galleryList: [],
+  submissionList: [],
   editAccess: {},
   form: null,
   activeForm: null, // might be able to combine this with {form} above in the future
   activeGallery: null, // this is an ObjectId string
   widgets: [],
-  submissions: [],
   activeSubmission: null
 };
 
@@ -90,15 +90,24 @@ const forms = (state = initial, action) => {
     return Object.assign({}, state, { widgets: newWidgets });
 
   case types.SUBMISSIONS_REQUEST_SUCCESS:
-    return Object.assign({}, state, { submissions: action.submissions, activeSubmission: 0 });
+
+    const submissionList = action.submissions.map(sub => sub.id);
+    const submissions = action.submissions.reduce((accum, sub) => {
+      accum[sub.id] = sub;
+      return accum;
+    }, {});
+    const activeSubmission = submissionList.length ? submissionList[0] : null;
+
+    return {...state, submissionList, ...submissions, activeSubmission};
 
   case types.SET_ACTIVE_SUBMISSION:
     return Object.assign({}, state, { activeSubmission: action.submission });
 
   case types.UPDATE_ACTIVE_SUBMISSION:
-    const newSubmissions = [...state.submissions];
-    newSubmissions[state.activeSubmission] = Object.assign({}, newSubmissions[state.activeSubmission], action.props);
-    return Object.assign({}, state, { submissions: newSubmissions });
+    // const newSubmissions = [...state.submissions];
+    // newSubmissions[state.activeSubmission] = Object.assign({}, newSubmissions[state.activeSubmission], action.props);
+    // return Object.assign({}, state, { submissions: newSubmissions });
+    return state;
 
   case types.FORM_GALLERY_REQUEST:
     return {...state, loadingGallery: true, activeGallery: null};

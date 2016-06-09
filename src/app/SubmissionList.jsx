@@ -50,8 +50,9 @@ export default class SubmissionList extends Component {
   }
 
   render() {
-    const { submissions, activeSubmission, activeForm, activeGallery } = this.props.forms;
-    const submission = submissions[activeSubmission];
+    const { submissionList, activeSubmission, activeForm, activeGallery } = this.props.forms;
+    const submissions = submissionList.map(id => this.props.forms[id]);
+    const submission = this.props.forms[activeSubmission];
     const form = this.props.forms[activeForm];
     const gallery = this.props.forms[activeGallery];
 
@@ -64,7 +65,8 @@ export default class SubmissionList extends Component {
             gallery={gallery}
             submissions={submissions}
             form={form}/>
-          <Sidebar submissions={submissions}
+          <Sidebar
+            submissions={submissions}
             activeSubmission={submission}
             onSelect={this.onSubmissionSelect.bind(this)} />
           <SubmissionDetail
@@ -78,8 +80,8 @@ export default class SubmissionList extends Component {
     );
   }
 
-  onSubmissionSelect(submission) {
-    this.props.dispatch(setActiveSubmission(submission));
+  onSubmissionSelect(submissionId) {
+    this.props.dispatch(setActiveSubmission(submissionId));
   }
 }
 
@@ -89,7 +91,7 @@ class Sidebar extends Component {
   listSubmissions(submissions, activeSubmission, onSelect) {
     return submissions.map((submission, key) => {
       return (
-        <div onClick={() => onSelect(key)}
+        <div onClick={() => onSelect(submission.id)}
           style={[
             styles.sidebar.submissionContainer,
             submission.id === activeSubmission.id && styles.sidebar.activeSubmission
@@ -147,6 +149,11 @@ class SubmissionDetail extends Component {
 
   renderAnswers() {
     const { submission, gallery } = this.props;
+
+    if (!submission) {
+      return (<p>loading submission...</p>);
+    }
+
     return (
       <div style={styles.detail.answersContainer}>
         {submission.replies.map((reply, key) => {

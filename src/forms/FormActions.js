@@ -31,8 +31,8 @@ export const FORM_GALLERY_ERROR = 'FORM_GALLERY_ERROR';
 export const FORM_STATUS_UPDATED = 'FORM_STATUS_UPDATED';
 export const FORM_STATUS_UPDATE_ERROR = 'FORM_STATUS_UPDATE_ERROR';
 
-export const FORM_SUB_SENT_TO_GALLERY = 'FORM_SUBMISSION_SENT_TO_GALLERY';
-export const FORM_SUB_REMOVED_FROM_GALLERY = 'FORM_SUB_REMOVED_FROM_GALLERY';
+export const FORM_ANSWER_SENT_TO_GALLERY = 'FORM_ANSWER_SENT_TO_GALLERY';
+export const FORM_ANSWER_REMOVED_FROM_GALLERY = 'FORM_ANSWER_REMOVED_FROM_GALLERY';
 
 export const FORM_DELETED = 'FORM_DELETED';
 
@@ -207,9 +207,9 @@ export const submissionsFetchError = error => {
   };
 };
 
-export const setActiveSubmission = submission => ({
+export const setActiveSubmission = submissionId => ({
   type: SET_ACTIVE_SUBMISSION,
-  submission
+  submissionId
 });
 
 export const updateActiveSubmission = props => ({
@@ -280,8 +280,8 @@ export const sendToGallery = (galleryId, subId, answerId) => {
       model: 'cors'
     })
       .then(res => res.json())
-      .then(submission => {
-        dispatch({type: FORM_SUB_SENT_TO_GALLERY, submission});
+      .then(gallery => {
+        dispatch({type: FORM_ANSWER_SENT_TO_GALLERY, gallery});
       })
       .catch(error => {
         console.log(error);
@@ -291,7 +291,7 @@ export const sendToGallery = (galleryId, subId, answerId) => {
 
 const answerRemovedFromGallery = (galleryId, subId, answerId) => {
   return {
-    type: FORM_SUB_REMOVED_FROM_GALLERY,
+    type: FORM_ANSWER_REMOVED_FROM_GALLERY,
     galleryId,
     subId,
     answerId

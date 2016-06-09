@@ -10,7 +10,7 @@ const initial = {
   activeForm: null, // might be able to combine this with {form} above in the future
   activeGallery: null, // this is an ObjectId string
   widgets: [],
-  activeSubmission: null
+  activeSubmission: null // ObjectId string
 };
 
 const emptyForm = {
@@ -98,10 +98,13 @@ const forms = (state = initial, action) => {
     }, {});
     const activeSubmission = submissionList.length ? submissionList[0] : null;
 
+    // this will add more submission ids and overwrite existing ones.
+    // it will not erase old submission ids.
+    // current viewable ids are managed in {submissionList}
     return {...state, submissionList, ...submissions, activeSubmission};
 
   case types.SET_ACTIVE_SUBMISSION:
-    return Object.assign({}, state, { activeSubmission: action.submission });
+    return {...state, activeSubmission: action.submissionId };
 
   case types.UPDATE_ACTIVE_SUBMISSION:
     // const newSubmissions = [...state.submissions];
@@ -121,6 +124,12 @@ const forms = (state = initial, action) => {
 
   case types.FORM_STATUS_UPDATED:
     return {...state, activeForm: action.form.id, [action.form.id]: action.form};
+
+  case types.FORM_ANSWER_SENT_TO_GALLERY:
+    return {...state, [action.gallery.id]: action.gallery};
+
+  case types.FORM_ANSWER_REMOVED_FROM_GALLERY:
+    return state;
 
   default:
     return state;

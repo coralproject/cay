@@ -32,7 +32,6 @@ export default class SubmissionList extends Component {
   }
 
   sendToGallery(galleryId, subId, key) {
-    console.log('sendToGallery', ...arguments);
     this.props.dispatch(sendToGallery(galleryId, subId, key));
   }
 
@@ -72,7 +71,7 @@ export default class SubmissionList extends Component {
           <SubmissionDetail
             submission={submission}
             sendToGallery={this.sendToGallery.bind(this)}
-            gallery={activeGallery}
+            gallery={gallery}
             onFlag={this.onFlag.bind(this)}
             onBookmark={this.onBookmark.bind(this)}/>
         </div>
@@ -154,23 +153,31 @@ class SubmissionDetail extends Component {
       return (<p>loading submission...</p>);
     }
 
+    if (!gallery) {
+      return (<p>Loading gallery...</p>);
+    }
+
+    const answers = gallery.answers.map(ans => ans.answer_id);
+
     return (
       <div style={styles.detail.answersContainer}>
         {submission.replies.map((reply, key) => {
-          console.log(submission);
+
+          const inGallery = answers.indexOf(reply.widget_id) !== -1;
+
           return (
             <div style={styles.detail.questionContainer} key={key}>
               <h2 style={styles.detail.question}>{reply.question}</h2>
               <p>{this.renderAnswer(reply.answer)}</p>
-              <p>galleryId: {gallery ? gallery : 'loading gallery'}</p>
+              <p>galleryId: {gallery ? gallery.id : 'loading gallery'}</p>
               <p>submissionId: {submission.id}</p>
               <p>widget id: {reply.widget_id}</p>
               <Button
                 style={styles.detail.galleryButton}
-                category="primary"
+                category={inGallery ? 'success' : 'primary'}
                 size="small"
                 onClick={() => this.props.sendToGallery(gallery.id, submission.id, reply.widget_id)}>
-                Send to gallery
+                {inGallery ? 'In Gallery' : 'Send to gallery'}
               </Button>
             </div>
           );

@@ -223,7 +223,7 @@ export const updateForm = (data) => {
 };
 
 export const listForms = () => dispatch => {
-  xenia().collection('forms')
+  return xenia().collection('forms')
   .sort(['date_updated', -1])
   .exec()
     .then(res => dispatch(formsRequestSuccess(res.results[0].Docs)))

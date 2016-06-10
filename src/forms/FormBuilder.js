@@ -109,7 +109,6 @@ export default class FormBuilder extends Component {
       identity: false,
       wrapper: {},
       props: {},
-<<<<<<< HEAD
       id: Math.floor(Math.random() * 99999) + ''
     }));
   }

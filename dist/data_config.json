@@ -26,20 +26,20 @@
       "type": "intRange"
     },
     {
-      "name": "First comment in last n days",
+      "name": "First comment _ days ago",
       "category": "Activity",
       "field": "first",
       "template": "statistics.comments.<%= dimension %>.all.first",
-      "description": "First comment in last n days",
+      "description": "First comment _ days ago",
       "collection": "user_statistics",
       "type": "intDateProximity"
     },
     {
-      "name": "Last comment in last n days",
+      "name": "Last comment _ days ago",
       "category": "Activity",
       "field": "last",
       "template": "statistics.comments.<%= dimension %>.all.last",
-      "description": "Last comment in last n days",
+      "description": "Last comment _ days ago",
       "collection": "user_statistics",
       "type": "intDateProximity"
     },

@@ -1,5 +1,11 @@
+'use strict';
 
-import { xenia } from 'app/AppActions';
+export const SUBMISSIONS_REQUEST_STARTED = 'SUBMISSIONS_REQUEST_STARTED';
+export const SUBMISSIONS_REQUEST_SUCCESS = 'SUBMISSIONS_REQUEST_SUCCESS';
+export const SUBMISSIONS_REQUEST_FAILED = 'SUBMISSIONS_REQUEST_FAILED';
+
+export const SET_ACTIVE_SUBMISSION = 'SET_ACTIVE_SUBMISSION';
+export const UPDATE_ACTIVE_SUBMISSION = 'UPDATE_ACTIVE_SUBMISSION';
 
 export const WIDGET_UPDATE = 'WIDGET_UPDATE';
 export const WIDGET_MOVE = 'WIDGET_MOVE';
@@ -17,6 +23,16 @@ export const FORM_REQUEST_EDIT_ACCESS = 'FORM_REQUEST_EDIT_ACCESS';
 export const FORM_EDIT_ACCEPTED = 'FORM_EDIT_ACCEPTED';
 export const FORM_EDIT_DENIED = 'FORM_EDIT_ACCEPTED';
 export const FORM_EDIT_LEAVE = 'FORM_EDIT_LEAVE';
+
+export const FORM_GALLERY_REQUEST = 'FORM_GALLERY_REQUEST';
+export const FORM_GALLERY_SUCCESS = 'FORM_GALLERY_SUCCESS';
+export const FORM_GALLERY_ERROR = 'FORM_GALLERY_ERROR';
+
+export const FORM_STATUS_UPDATED = 'FORM_STATUS_UPDATED';
+export const FORM_STATUS_UPDATE_ERROR = 'FORM_STATUS_UPDATE_ERROR';
+
+export const FORM_ANSWER_SENT_TO_GALLERY = 'FORM_ANSWER_SENT_TO_GALLERY';
+export const FORM_ANSWER_REMOVED_FROM_GALLERY = 'FORM_ANSWER_REMOVED_FROM_GALLERY';
 
 export const FORM_DELETED = 'FORM_DELETED';
 
@@ -38,18 +54,17 @@ const getInit = (body, method) => {
   return init;
 };
 
-export const formRequestStarted = () => {
+export const formRequestStarted = id => {
   return {
-    type: FORM_REQUEST_STARTED
+    type: FORM_REQUEST_STARTED,
+    id
   };
 };
 
-export const formRequestSuccess = (payload, index, requestType) => {
+export const formRequestSuccess = form => {
   return {
     type: FORM_REQUEST_SUCCESS,
-    payload,
-    index,
-    requestType
+    form
   };
 };
 
@@ -104,14 +119,36 @@ export const formLeaveEdit = formId => {
   };
 };
 
+export const fetchForms = () => {
+  return (dispatch, getState) => {
+    dispatch(formsRequestStarted());
+
+    fetch(`${getState().app.pillarHost}/api/forms`)
+      .then(res => res.json())
+      .then(forms => dispatch(formsRequestSuccess(forms)))
+      .catch(error => dispatch(formsRequestFailure(error)));
+  };
+};
+
+export const fetchForm = id => {
+  return (dispatch, getState) => {
+    dispatch(formRequestStarted(id));
+
+    fetch(`${getState().app.pillarHost}/api/form/${id}`)
+      .then(res => res.json())
+      .then(form => dispatch(formRequestSuccess(form)))
+      .catch(error => dispatch(formRequestFailure(error)));
+  };
+};
+
 export const deleteForm = (name, description, id) => {
   return (dispatch, getState) => {
-    dispatch(formRequestStarted());
+    dispatch(formRequestStarted(id));
     fetch(`${getState().app.pillarHost}/api/form/${id}`, getInit({ name, description }, 'DELETE'))
       .then(res => res.json())
       .then(deletedForm => {
         dispatch(deleteSuccessful(deletedForm));
-        dispatch(formRequestSuccess(deletedForm, index, 'delete'));
+        dispatch(formRequestSuccess(deletedForm, 'delete'));
       })
       .catch(error => dispatch(formRequestFailure(error)));
   };
@@ -158,13 +195,27 @@ export const moveWidget = (from, to) => {
   };
 };
 
-export const listForms = () => dispatch => {
-  xenia().collection('forms')
-  .sort(['date_updated', -1])
-  .exec()
-    .then(res => dispatch(formsRequestSuccess(res.results[0].Docs)))
-    .catch(err => dispatch(formsRequestFailure(err)));
+export const submissionsFetched = submissions => ({
+  type: SUBMISSIONS_REQUEST_SUCCESS,
+  submissions
+});
+
+export const submissionsFetchError = error => {
+  return {
+    type: SUBMISSIONS_REQUEST_FAILED,
+    error
+  };
 };
+
+export const setActiveSubmission = submissionId => ({
+  type: SET_ACTIVE_SUBMISSION,
+  submissionId
+});
+
+export const updateActiveSubmission = props => ({
+  type: UPDATE_ACTIVE_SUBMISSION,
+  props
+});
 
 export const saveForm = (form, widgets, host) => () => {
   const data = Object.assign({}, form);
@@ -178,5 +229,99 @@ export const saveForm = (form, widgets, host) => () => {
     body: JSON.stringify(data)
   }).then(res => res.json())
   .then(json => alert(json.id));
+};
 
+export const fetchSubmissions = formId => {
+  return (dispatch, getState) => {
+    const {app} = getState();
+    fetch(`${app.pillarHost}/api/form_submissions/${formId}`)
+      .then(res => res.json())
+      .then(submissions => dispatch(submissionsFetched(submissions)))
+      .catch(error => dispatch(submissionsFetchError(error)));
+  };
+};
+
+export const updateSubmission = props => dispatch => {
+  dispatch(updateActiveSubmission(props));
+  // TODO: go to server when API is done
+};
+
+const requestGallery = () => {
+  return {type: FORM_GALLERY_REQUEST};
+};
+
+const receivedGallery = gallery => {
+  return {type: FORM_GALLERY_SUCCESS, gallery};
+};
+
+const galleryRequestError = error => {
+  return {type: FORM_GALLERY_ERROR, error};
+};
+
+export const fetchGallery = formId => {
+  return (dispatch, getState) => {
+    dispatch(requestGallery(formId));
+
+    const {app} = getState();
+
+    fetch(`${app.pillarHost}/api/form_galleries/${formId}`)
+      .then(res => res.json())
+      .then(galleries => dispatch(receivedGallery(galleries[0])))
+      .catch(error => dispatch(galleryRequestError(error)));
+  };
+};
+
+export const sendToGallery = (galleryId, subId, answerId) => {
+  return (dispatch, getState) => {
+    const {app} = getState();
+
+    fetch(`${app.pillarHost}/api/form_gallery/${galleryId}/add/${subId}/${answerId}`, {
+      method: 'PUT',
+      model: 'cors'
+    })
+      .then(res => res.json())
+      .then(gallery => {
+        dispatch({type: FORM_ANSWER_SENT_TO_GALLERY, gallery});
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+};
+
+const answerRemovedFromGallery = gallery => {
+  return {
+    type: FORM_ANSWER_REMOVED_FROM_GALLERY,
+    gallery
+  };
+};
+
+export const removeFromGallery = (galleryId, subId, answerId) => {
+  return (dispatch, getState) => {
+    const {app} = getState();
+    const options = {method: 'DELETE', model: 'cors'};
+
+    fetch(`${app.pillarHost}/api/form_gallery/${galleryId}/remove/${subId}/${answerId}`, options)
+      .then(res => res.json())
+      .then(gallery => dispatch(answerRemovedFromGallery(gallery)))
+      .catch(error => {
+        console.log('failed to remove from gallery', error);
+      });
+  };
+};
+
+export const updateFormStatus = (formId, status) => {
+  return (dispatch, getState) => {
+    const {app} = getState();
+    const options = {method: 'PUT', model: 'cors'};
+
+    fetch(`${app.pillarHost}/api/form/${formId}/status/${status}`, options)
+      .then(res => res.json())
+      .then(form => {
+        return {type: FORM_STATUS_UPDATED, form};
+      })
+      .catch(error => {
+        return {type: FORM_STATUS_UPDATE_ERROR, error};
+      });
+  };
 };

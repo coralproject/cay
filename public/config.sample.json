@@ -1,13 +1,19 @@
 {
   "xeniaHost": "",
   "pillarHost": "",
+  "elkhornHost": "",
   "environment": "development",
   "brand": "",
   "googleAnalyticsId": "UA-12345678-9",
   "requireLogin": false,
   "basicAuthorization": "",
   "features": {
+<<<<<<< HEAD
     "ask": false,
     "trust": true,
+=======
+    "trust": true,
+    "ask": false
+>>>>>>> master
   }
 }

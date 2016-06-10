@@ -9,6 +9,7 @@ import MdBuild from 'react-icons/lib/md/build';
 import MdSettings from 'react-icons/lib/md/settings';
 import MdInfoOutline from 'react-icons/lib/md/info-outline';
 import MdGroup from 'react-icons/lib/md/group';
+import MdForum from 'react-icons/lib/md/forum';
 import MdArtTrack from 'react-icons/lib/md/art-track';
 
 import { Lang } from 'i18n/lang';
@@ -38,6 +39,11 @@ class Menu extends React.Component {
                 target="/forms"
                 icon={<MdArtTrack/>}/> :
                 null
+          }
+          {
+            features.ask ?
+              <MenuItem name={ window.L.t('Create Form') } target="/forms/create" icon={<MdForum />} /> :
+              null
           }
           {/*<MenuItem name={ window.L.t('About') } target="/about" icon={<MdInfoOutline />}/>*/}
           {/*<MenuItem name="Settings" target="/settings" icon={<MdSettings />} />*/}

@@ -34,18 +34,6 @@ export default class FormCreate extends Component {
     return (
       <Page style={styles.page}>
         <FormChrome activeTab="builder" />
-        <ContentHeader style={styles.header}>
-          <div style={styles.headerTitle}>
-            <h1 style={styles.title}>Name form</h1>
-            <br />
-            <h3 style={styles.description}>This is the description</h3>
-          </div>
-          <div>
-            <Button onClick={this.saveAndExit.bind(this)} style={[styles.headerBtn, styles.saveBtn]}>Save and exit <FaFloopyO style={styles.icon} /></Button>
-            <Button style={[styles.headerBtn, styles.shareBtn]}>Share form <FaShare style={styles.icon} /></Button>
-            <Button onClick={this.showPreview.bind(this)} style={[styles.headerBtn, styles.previewBtn]}>Preview form <FaExt style={styles.icon} /></Button>
-          </div>
-        </ContentHeader>
         <div style={styles.formBuilderContainer}>
           <FormBuilder
             onClosePreview={this.onClosePreview.bind(this)}

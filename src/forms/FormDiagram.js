@@ -89,9 +89,8 @@ export default class FormDiagram extends Component {
           </div>
           <div style={ styles.formActions }>
             <button style={ styles.formAction }><FaUserPlus /></button>
-            <button style={ styles.formAction }><FaArrowCircleUp /></button>
-            <button onClick={ this.onSaveClick.bind(this) } style={ styles.formAction }><FaFloppyO /></button>
             <button onClick={ onOpenPreview } style={ styles.formAction }><FaEye /></button>
+            <button onClick={ this.onSaveClick.bind(this) } style={ styles.formAction }><FaFloppyO /></button>
           </div>
         </div>
         <input onChange={ this.onFormTitleChange.bind(this) } style={ styles.headLine } type="text" placeholder={ "Write a headline" } defaultValue={ form.header.title } />

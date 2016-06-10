@@ -48,6 +48,7 @@ Button.propTypes = {
 
 const styles = {
   base: {
+    transition: 'background-color all 300ms',
     backgroundColor: '#fff',
     borderRadius: 4,
     borderStyle: 'solid',

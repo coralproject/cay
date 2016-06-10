@@ -100,11 +100,8 @@ export default class FormList extends React.Component {
           <Tab title="Active">
             {this.renderTable(groups.active || groups[''])}
           </Tab>
-          <Tab title="Draft">
-            {this.renderTable(groups.draft || [])}
-          </Tab>
-          <Tab title="Past">
-            {this.renderTable(groups.past || [])}
+          <Tab title="Inactive">
+            {this.renderTable(groups.inactive || [])}
           </Tab>
         </Tabs>
 

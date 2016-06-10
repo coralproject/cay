@@ -4,13 +4,13 @@ import uuid from 'node-uuid';
 const initial = {
   formList: [],
   galleryList: [],
+  submissionList: [],
   editAccess: {},
   form: null,
   activeForm: null, // might be able to combine this with {form} above in the future
-  activeGallery: null,
+  activeGallery: null, // this is an ObjectId string
   widgets: [],
-  submissions: [],
-  activeSubmission: null
+  activeSubmission: null // ObjectId string
 };
 
 const emptyForm = {
@@ -90,15 +90,27 @@ const forms = (state = initial, action) => {
     return Object.assign({}, state, { widgets: newWidgets });
 
   case types.SUBMISSIONS_REQUEST_SUCCESS:
-    return Object.assign({}, state, { submissions: action.submissions, activeSubmission: 0 });
+
+    const submissionList = action.submissions.map(sub => sub.id);
+    const submissions = action.submissions.reduce((accum, sub) => {
+      accum[sub.id] = sub;
+      return accum;
+    }, {});
+    const activeSubmission = submissionList.length ? submissionList[0] : null;
+
+    // this will add more submission ids and overwrite existing ones.
+    // it will not erase old submission ids.
+    // current viewable ids are managed in {submissionList}
+    return {...state, submissionList, ...submissions, activeSubmission};
 
   case types.SET_ACTIVE_SUBMISSION:
-    return Object.assign({}, state, { activeSubmission: action.submission });
+    return {...state, activeSubmission: action.submissionId };
 
   case types.UPDATE_ACTIVE_SUBMISSION:
-    const newSubmissions = [...state.submissions];
-    newSubmissions[state.activeSubmission] = Object.assign({}, newSubmissions[state.activeSubmission], action.props);
-    return Object.assign({}, state, { submissions: newSubmissions });
+    // const newSubmissions = [...state.submissions];
+    // newSubmissions[state.activeSubmission] = Object.assign({}, newSubmissions[state.activeSubmission], action.props);
+    // return Object.assign({}, state, { submissions: newSubmissions });
+    return state;
 
   case types.FORM_GALLERY_REQUEST:
     return {...state, loadingGallery: true, activeGallery: null};
@@ -112,6 +124,12 @@ const forms = (state = initial, action) => {
 
   case types.FORM_STATUS_UPDATED:
     return {...state, activeForm: action.form.id, [action.form.id]: action.form};
+
+  case types.FORM_ANSWER_SENT_TO_GALLERY:
+    return {...state, [action.gallery.id]: action.gallery};
+
+  case types.FORM_ANSWER_REMOVED_FROM_GALLERY:
+    return {...state, [action.gallery.id]: action.gallery};
 
   default:
     return state;

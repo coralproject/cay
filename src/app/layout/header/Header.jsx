@@ -2,14 +2,14 @@ import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
 import {logout} from 'auth/AuthActions';
-import {Link} from 'react-router';
+// import {Link} from 'react-router';
 
 import MdMenu from 'react-icons/lib/md/menu';
 import Button from 'components/Button';
-import LanguageSwitcher from 'app/layout/LanguageSwitcher';
+// import LanguageSwitcher from 'app/layout/LanguageSwitcher';
 import settings from 'settings';
 
-var RadiumLink = Radium(Link);
+// var RadiumLink = Radium(Link);
 
 
 @connect()
@@ -34,7 +34,7 @@ class Header extends React.Component {
     return (
       <nav style={styles.nav}>
         <MdMenu style={styles.sidebarToggle} onClick={this.handleClick.bind(this)} />
-          <RadiumLink
+          {/*<RadiumLink
             style={[
               styles.link,
               this.context.router.isActive("/search-creator") && styles.activeLink
@@ -49,7 +49,7 @@ class Header extends React.Component {
             ]}
             to={"/saved-searches"}>
             <span>Saved Searches</span>
-          </RadiumLink>
+          </RadiumLink>*/}
 
         {/*<Searchbar style={styles.searchbar}/>*/}
         <Button
@@ -69,8 +69,8 @@ const styles = {
   sidebarToggle: {
     width: 40,
     height: 40,
-    fill: 'rgb(130,130,130)',
-    position: "relative",
+    fill: settings.darkGrey,
+    position: 'relative',
     top: 5,
     paddingLeft: 10,
     paddingTop: 10,
@@ -81,16 +81,16 @@ const styles = {
   },
   link: {
     marginLeft: 30,
-    textDecoration: "none",
-    color: "rgb(130,130,130)",
-    position: "relative",
+    textDecoration: 'none',
+    color: 'rgb(130,130,130)',
+    position: 'relative',
     top: 12,
     fontSize: 18,
   },
   activeLink: {
-    color: "white",
-    backgroundColor: "rgb(130,130,130)",
-    padding: "4px 20px",
+    color: 'white',
+    backgroundColor: settings.darkGrey,
+    padding: '4px 20px',
     borderRadius: 100,
 
   },
@@ -99,7 +99,7 @@ const styles = {
     border: 'none',
     minHeight: '60px',
     borderRadius: 0,
-    backgroundColor: "rgb(221,221,221)"
+    backgroundColor: settings.mediumGrey
   },
   logoutButton: {
     float: 'right',

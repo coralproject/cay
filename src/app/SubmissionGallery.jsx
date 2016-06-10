@@ -8,7 +8,6 @@ import {
   updateFormStatus
 } from 'forms/FormActions';
 import {Link} from 'react-router';
-import {Motion, spring} from 'react-motion';
 
 import Page from 'app/layout/Page';
 import FormChrome from 'app/layout/FormChrome';

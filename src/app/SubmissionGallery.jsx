@@ -50,10 +50,11 @@ export default class SubmissionGallery extends React.Component {
           <p>widget id: {answer.answer.widget_id}</p>
           <p>submission id: {answer.submission_id}</p>
           <div>
-            <Button size="small">
+            <Button style={styles.editButton} category="info" size="small">
               Edit <Edit />
             </Button>
             <Button
+              category="warning"
               onClick={this.removeSubmission.bind(this, galleryId, answer.submission_id, answer.answer_id)}
               size="small">
               Remove <Delete />
@@ -91,6 +92,7 @@ export default class SubmissionGallery extends React.Component {
 
     const form = this.props[this.props.activeForm];
     const gallery = this.props[this.props.activeGallery];
+    const submissions = this.props.submissionList.map(id => this.props[id]);
 
     return (
       <Page>
@@ -98,7 +100,7 @@ export default class SubmissionGallery extends React.Component {
           activeTab="gallery"
           updateStatus={this.updateFormStatus.bind(this)}
           form={form}
-          submissions={this.props.submissions}
+          submissions={submissions}
           gallery={gallery} />
         <div style={styles.base}>
           <ContentHeader title={'Submission Gallery ' + this.props.activeGallery} />
@@ -149,5 +151,8 @@ const styles = {
   },
   gallery: {
     flex: 3
+  },
+  editButton: {
+    marginRight: 10
   }
 };

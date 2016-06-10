@@ -129,7 +129,7 @@ const forms = (state = initial, action) => {
     return {...state, [action.gallery.id]: action.gallery};
 
   case types.FORM_ANSWER_REMOVED_FROM_GALLERY:
-    return state;
+    return {...state, [action.gallery.id]: action.gallery};
 
   default:
     return state;

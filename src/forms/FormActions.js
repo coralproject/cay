@@ -289,12 +289,10 @@ export const sendToGallery = (galleryId, subId, answerId) => {
   };
 };
 
-const answerRemovedFromGallery = (galleryId, subId, answerId) => {
+const answerRemovedFromGallery = gallery => {
   return {
     type: FORM_ANSWER_REMOVED_FROM_GALLERY,
-    galleryId,
-    subId,
-    answerId
+    gallery
   };
 };
 
@@ -304,10 +302,8 @@ export const removeFromGallery = (galleryId, subId, answerId) => {
     const options = {method: 'DELETE', model: 'cors'};
 
     fetch(`${app.pillarHost}/api/form_gallery/${galleryId}/remove/${subId}/${answerId}`, options)
-      .then(res => {
-        console.log(res);
-        dispatch(answerRemovedFromGallery(galleryId, subId, answerId));
-      })
+      .then(res => res.json())
+      .then(gallery => dispatch(answerRemovedFromGallery(gallery)))
       .catch(error => {
         console.log('failed to remove from gallery', error);
       });

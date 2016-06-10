@@ -1,59 +1,106 @@
 
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import Radium from 'radium';
 import moment from 'moment';
+import WFlag from 'react-icons/lib/fa/flag-o';
+import WBookmark from 'react-icons/lib/fa/bookmark-o';
+import BFlag from 'react-icons/lib/fa/flag';
+import BBookmark from 'react-icons/lib/fa/bookmark';
+import Button from 'components/Button';
 
-import { xenia } from 'app/AppActions';
+import {
+  fetchSubmissions,
+  fetchGallery,
+  setActiveSubmission,
+  updateSubmission,
+  sendToGallery,
+  updateFormStatus,
+  fetchForm } from 'forms/FormActions';
+
+import FormChrome from 'app/layout/FormChrome';
 import Page from 'app/layout/Page';
 
+@connect(({ forms }) => ({ forms }))
 @Radium
 export default class SubmissionList extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      loading: true,
-      submissions: [],
-      activeSubmission: null,
-      page: 1
-    };
-
-    this.fetchSubmissions();
+    props.dispatch(fetchForm(props.params.id));
+    props.dispatch(fetchGallery(props.params.id));
+    props.dispatch(fetchSubmissions(props.params.id));
   }
 
-  fetchSubmissions() {
-    const { params } = this.props;
-    xenia()
-      .collection('form_submissions')
-      .match({ form_id: `#objid:${params.id}` })
-    .exec().then(res => this.setState({
-      loading: false,
-      submissions: res.results[0].Docs,
-      activeSubmission: res.results[0].Docs[0]
-    }));
+  sendToGallery(galleryId, subId, key) {
+    console.log('sendToGallery', ...arguments);
+    this.props.dispatch(sendToGallery(galleryId, subId, key));
+  }
+
+  onFlag(flagged) {
+    this.props.dispatch(updateSubmission({ flagged }));
+  }
+
+  onBookmark(bookmarked) {
+    this.props.dispatch(updateSubmission({ bookmarked }));
+  }
+
+  updateFormStatus(option) {
+    console.log(this.props);
+    this.props.dispatch(updateFormStatus(this.props.forms.activeForm, option.value));
   }
 
   render() {
-    const { submissions, activeSubmission } = this.state;
+    const { submissions, activeSubmission, activeForm, activeGallery } = this.props.forms;
+    const form = this.props.forms[activeForm];
+
     return (
       <Page>
         <div style={styles.container}>
+          <FormChrome
+            activeTab="submissions"
+            updateStatus={this.updateFormStatus.bind(this)}
+            form={form}/>
           <Sidebar submissions={submissions}
-            activeSubmission={activeSubmission}
+            activeSubmission={submissions[activeSubmission]}
             onSelect={this.onSubmissionSelect.bind(this)} />
-          <SubmissionDetail submission={activeSubmission}/>
+          <SubmissionDetail
+            submission={submissions[activeSubmission]}
+            sendToGallery={this.sendToGallery.bind(this)}
+            gallery={activeGallery}
+            onFlag={this.onFlag.bind(this)}
+            onBookmark={this.onBookmark.bind(this)}/>
         </div>
       </Page>
     );
   }
 
-  onSubmissionSelect(activeSubmission) {
-    console.log(activeSubmission);
-    this.setState({ activeSubmission });
+  onSubmissionSelect(submission) {
+    this.props.dispatch(setActiveSubmission(submission));
   }
 }
 
 @Radium
 class Sidebar extends Component {
+
+  listSubmissions(submissions, activeSubmission, onSelect) {
+    return submissions.map((submission, key) => {
+      return (
+        <div onClick={() => onSelect(key)}
+          style={[
+            styles.sidebar.submissionContainer,
+            submission.id === activeSubmission.id && styles.sidebar.activeSubmission
+          ]} key={key}>
+          <span>{submissions.length - key}</span>
+          <span>{moment(submission.date_updated).format('L LT')}</span>
+          <div>
+            {submission.flagged ? <span style={styles.sidebar.icon}><BFlag/></span> : null}
+            {submission.bookmarked ? <span style={styles.sidebar.icon}><BBookmark/></span> : null}
+          </div>
+        </div>
+      );
+    });
+  }
+
   render() {
     const { submissions, activeSubmission, onSelect} = this.props;
     return (
@@ -72,16 +119,7 @@ class Sidebar extends Component {
             <option>Newest First</option>
           </select>
         </div>
-        <div>
-          {submissions.map((submission, key) => (
-            <div onClick={() => onSelect(submission)}
-              style={[styles.sidebar.submissionContainer, submission._id === activeSubmission._id ? styles.sidebar.activeSubmission : {}]} key={key}>
-              <span>{submissions.length - key}</span>
-              <span>{moment(submission.date_updated).format('L LT')}</span>
-              <span></span>
-            </div>
-          ))}
-        </div>
+        <div>{this.listSubmissions(submissions, activeSubmission, onSelect)}</div>
       </div>
     );
   }
@@ -104,20 +142,37 @@ class SubmissionDetail extends Component {
   }
 
   renderAnswers() {
-    const { submission } = this.props;
+    const { submission, gallery } = this.props;
     return (
       <div style={styles.detail.answersContainer}>
-        {submission.replies.map((reply, key) => (
-          <div style={styles.detail.questionContainer} key={key}>
-            <h2 style={styles.detail.question}>{reply.question}</h2>
-            <p>{this.renderAnswer(reply.answer)}</p>
-          </div>
-        ))}
+        {submission.replies.map((reply, key) => {
+          console.log(submission);
+          return (
+            <div style={styles.detail.questionContainer} key={key}>
+              <h2 style={styles.detail.question}>{reply.question}</h2>
+              <p>{this.renderAnswer(reply.answer)}</p>
+              <p>galleryId: {gallery ? gallery.id : 'loading gallery'}</p>
+              <p>submissionId: {submission.id}</p>
+              <p>widget id: {reply.widget_id}</p>
+              <Button
+                style={styles.detail.galleryButton}
+                category="primary"
+                size="small"
+                onClick={() => this.props.sendToGallery(gallery.id, submission.id, reply.widget_id)}>
+                Send to gallery
+              </Button>
+            </div>
+          );
+        })}
       </div>
     );
   }
 
   renderAnswer(answer = {}) {
+    if (answer === null) {
+      return (<span>No response</span>);
+    }
+
     if (answer.options) {
       return (
         <ul>
@@ -125,19 +180,32 @@ class SubmissionDetail extends Component {
             <li>- {option.title}</li>
           ))}
         </ul>
-      )
+      );
     }
 
-    return answer.text
+    return answer;
   }
 
   renderAuthorDetail() {
-    const { submission } = this.props;
+    const { submission, onFlag, onBookmark } = this.props;
     const author = submission.author || {};
     return (
       <div>
         <div style={styles.detail.headerContainer}>
           <span>{moment(submission.date_updated).format('L LT')}</span>
+          <div>
+            <span style={styles.sidebar.icon}>
+              {submission.flagged ?
+                <BFlag style={styles.detail.action} onClick={() => onFlag(false)}/> :
+                <WFlag style={styles.detail.action} onClick={() => onFlag(true)}/> }
+            </span>
+            <span style={styles.sidebar.icon}>
+              {submission.bookmarked ?
+                <BBookmark style={styles.detail.action} onClick={() => onBookmark(false)}/> :
+                <WBookmark style={styles.detail.action} onClick={() => onBookmark(true)}/>
+              }
+            </span>
+          </div>
         </div>
         <div style={styles.detail.submissionContainer}>
           <div style={styles.detail.authorContainer}>
@@ -163,12 +231,17 @@ class SubmissionDetail extends Component {
 
 const styles = {
   detail: {
+    galleryButton: {
+      float: 'right'
+    },
     questionContainer: {
       marginBottom: 20
     },
+    action: {
+      cursor: 'pointer'
+    },
     answersContainer: {
-      padding: 50,
-      paddingTop: 0
+      padding: '0 50px 50px 50px'
     },
     question: {
       fontWeight: 'bold',
@@ -186,15 +259,16 @@ const styles = {
       flex: 3,
       display: 'flex',
       flexDirection: 'column',
-      margin: 30,
-      marginTop: 0
+      margin: '0 30px 30px 30px'
     },
     submissionContainer: {
       padding: 50
     },
     headerContainer: {
       paddingBottom: 8,
-      borderBottom: '3px solid #aaa'
+      borderBottom: '3px solid #aaa',
+      display: 'flex',
+      justifyContent: 'space-between'
     },
     authorContainer: {
       padding: 15,
@@ -205,13 +279,17 @@ const styles = {
     }
   },
   container: {
-    display: 'flex'
+    display: 'flex',
+    marginTop: 40
   },
   sidebar: {
     container: {
       flex: 1,
       display: 'flex',
       flexDirection: 'column'
+    },
+    icon: {
+      marginLeft: 3
     },
     count: {
       textAlign: 'center',

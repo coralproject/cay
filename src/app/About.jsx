@@ -63,5 +63,4 @@ const styles = {
     maxWidth: 500,
     width: '80%'
   }
-
-}
+};

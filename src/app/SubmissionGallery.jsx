@@ -8,6 +8,7 @@ import {
   updateFormStatus
 } from 'forms/FormActions';
 import {Link} from 'react-router';
+import {Motion, spring} from 'react-motion';
 
 import Page from 'app/layout/Page';
 import FormChrome from 'app/layout/FormChrome';
@@ -44,16 +45,17 @@ export default class SubmissionGallery extends React.Component {
         <Card key={i}>
           <p>Added to Gallery 5/25 {answer.submission_id}</p>
           {answer.answer.answer}
-          <p>Gallery id: {this.props.activeGallery ? this.props.activeGallery.id : 'loading gallery'}</p>
+          <p>Gallery id: {galleryId ? galleryId : 'loading gallery'}</p>
           <p>Answer id: {answer.answer_id}</p>
           <p>widget id: {answer.answer.widget_id}</p>
           <p>submission id: {answer.submission_id}</p>
           <div>
-            <Button size="small">
+            <Button style={styles.editButton} category="info" size="small">
               Edit <Edit />
             </Button>
             <Button
-              onClick={this.removeSubmission.bind(this, this.props.activeGallery.id, answer.submission_id, answer.answer_id)}
+              category="warning"
+              onClick={this.removeSubmission.bind(this, galleryId, answer.submission_id, answer.answer_id)}
               size="small">
               Remove <Delete />
             </Button>
@@ -89,15 +91,19 @@ export default class SubmissionGallery extends React.Component {
   render() {
 
     const form = this.props[this.props.activeForm];
+    const gallery = this.props[this.props.activeGallery];
+    const submissions = this.props.submissionList.map(id => this.props[id]);
 
     return (
       <Page>
         <FormChrome
           activeTab="gallery"
           updateStatus={this.updateFormStatus.bind(this)}
-          form={form} />
+          form={form}
+          submissions={submissions}
+          gallery={gallery} />
         <div style={styles.base}>
-          <ContentHeader title={'Submission Gallery ' + this.props.params.id} />
+          <ContentHeader title={'Submission Gallery ' + this.props.activeGallery} />
           <div style={styles.container}>
             <div style={styles.sidebar}>
               <Card>
@@ -145,5 +151,8 @@ const styles = {
   },
   gallery: {
     flex: 3
+  },
+  editButton: {
+    marginRight: 10
   }
 };

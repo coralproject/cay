@@ -32,7 +32,6 @@ export default class SubmissionList extends Component {
   }
 
   sendToGallery(galleryId, subId, key) {
-    console.log('sendToGallery', ...arguments);
     this.props.dispatch(sendToGallery(galleryId, subId, key));
   }
 
@@ -50,8 +49,11 @@ export default class SubmissionList extends Component {
   }
 
   render() {
-    const { submissions, activeSubmission, activeForm, activeGallery } = this.props.forms;
+    const { submissionList, activeSubmission, activeForm, activeGallery } = this.props.forms;
+    const submissions = submissionList.map(id => this.props.forms[id]);
+    const submission = this.props.forms[activeSubmission];
     const form = this.props.forms[activeForm];
+    const gallery = this.props.forms[activeGallery];
 
     return (
       <Page>
@@ -59,14 +61,17 @@ export default class SubmissionList extends Component {
           <FormChrome
             activeTab="submissions"
             updateStatus={this.updateFormStatus.bind(this)}
+            gallery={gallery}
+            submissions={submissions}
             form={form}/>
-          <Sidebar submissions={submissions}
-            activeSubmission={submissions[activeSubmission]}
+          <Sidebar
+            submissions={submissions}
+            activeSubmission={submission}
             onSelect={this.onSubmissionSelect.bind(this)} />
           <SubmissionDetail
-            submission={submissions[activeSubmission]}
+            submission={submission}
             sendToGallery={this.sendToGallery.bind(this)}
-            gallery={activeGallery}
+            gallery={gallery}
             onFlag={this.onFlag.bind(this)}
             onBookmark={this.onBookmark.bind(this)}/>
         </div>
@@ -74,8 +79,8 @@ export default class SubmissionList extends Component {
     );
   }
 
-  onSubmissionSelect(submission) {
-    this.props.dispatch(setActiveSubmission(submission));
+  onSubmissionSelect(submissionId) {
+    this.props.dispatch(setActiveSubmission(submissionId));
   }
 }
 
@@ -85,7 +90,7 @@ class Sidebar extends Component {
   listSubmissions(submissions, activeSubmission, onSelect) {
     return submissions.map((submission, key) => {
       return (
-        <div onClick={() => onSelect(key)}
+        <div onClick={() => onSelect(submission.id)}
           style={[
             styles.sidebar.submissionContainer,
             submission.id === activeSubmission.id && styles.sidebar.activeSubmission
@@ -143,10 +148,23 @@ class SubmissionDetail extends Component {
 
   renderAnswers() {
     const { submission, gallery } = this.props;
+
+    if (!submission) {
+      return (<p>loading submission...</p>);
+    }
+
+    if (!gallery) {
+      return (<p>Loading gallery...</p>);
+    }
+
+    const answers = gallery.answers.map(ans => ans.answer_id);
+
     return (
       <div style={styles.detail.answersContainer}>
         {submission.replies.map((reply, key) => {
-          console.log(submission);
+
+          const inGallery = answers.indexOf(reply.widget_id) !== -1;
+
           return (
             <div style={styles.detail.questionContainer} key={key}>
               <h2 style={styles.detail.question}>{reply.question}</h2>
@@ -156,10 +174,10 @@ class SubmissionDetail extends Component {
               <p>widget id: {reply.widget_id}</p>
               <Button
                 style={styles.detail.galleryButton}
-                category="primary"
+                category={inGallery ? 'success' : 'primary'}
                 size="small"
                 onClick={() => this.props.sendToGallery(gallery.id, submission.id, reply.widget_id)}>
-                Send to gallery
+                {inGallery ? 'In Gallery' : 'Send to gallery'}
               </Button>
             </div>
           );

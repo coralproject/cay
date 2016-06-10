@@ -6,7 +6,7 @@ import {logout} from 'auth/AuthActions';
 
 import MdMenu from 'react-icons/lib/md/menu';
 import Button from 'components/Button';
-// import LanguageSwitcher from 'app/layout/LanguageSwitcher';
+import LanguageSwitcher from 'app/layout/LanguageSwitcher';
 import settings from 'settings';
 
 // var RadiumLink = Radium(Link);
@@ -60,6 +60,7 @@ class Header extends React.Component {
           size="small"
           category="default"
           onClick={this.logout.bind(this)}>Logout</Button>
+        <LanguageSwitcher />
       </nav>
     );
   }
@@ -69,7 +70,7 @@ const styles = {
   sidebarToggle: {
     width: 40,
     height: 40,
-    fill: settings.darkGrey,
+    fill: 'white',
     position: 'relative',
     top: 5,
     paddingLeft: 10,
@@ -99,7 +100,7 @@ const styles = {
     border: 'none',
     minHeight: '60px',
     borderRadius: 0,
-    backgroundColor: settings.mediumGrey
+    backgroundColor: settings.brandColor
   },
   logoutButton: {
     float: 'right',

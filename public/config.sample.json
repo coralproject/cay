@@ -8,7 +8,12 @@
   "requireLogin": false,
   "basicAuthorization": "",
   "features": {
+<<<<<<< HEAD
+    "ask": false,
+    "trust": true,
+=======
     "trust": true,
     "ask": false
+>>>>>>> master
   }
 }

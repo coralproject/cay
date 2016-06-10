@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
+import uuid from 'node-uuid';
 
 import { DragDropContext, DropTarget } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
@@ -108,6 +109,7 @@ export default class FormBuilder extends Component {
       identity: false,
       wrapper: {},
       props: {},
+<<<<<<< HEAD
       id: Math.floor(Math.random() * 99999) + ''
     }));
   }
@@ -125,6 +127,7 @@ export default class FormBuilder extends Component {
     var newSettings = Object.assign({}, form.settings, { inactiveMessage: e.target.value });
     this.props.dispatch(updateForm({
       settings: newSettings
+      id: uuid.v4()
     }));
   }
 

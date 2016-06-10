@@ -14,6 +14,7 @@ import {StyleRoot} from 'radium';
 
 // Routes
 import SearchCreator from 'app/SearchCreator';
+import User from 'app/User';
 import TagManager from 'app/TagManager';
 import Login from 'app/Login';
 import SeeAllSearches from 'app/SeeAllSearches';
@@ -25,6 +26,7 @@ import SearchEditor from 'app/SearchEditor';
 import NoMatch from 'app/NoMatch';
 import About from 'app/About';
 import SubmissionList from 'app/SubmissionList';
+import SubmissionGallery from 'app/SubmissionGallery';
 
 // Utils
 import registerServiceWorker from 'serviceworker!./sw.js';
@@ -80,6 +82,7 @@ class Root extends React.Component {
             <Route path="login" component={Login} />
             <Route path="about" component={About} />
             <Route path="search-creator" component={SearchCreator} />
+            <Route path="user/:_id" component={User} />
             <Route path="tag-manager" component={TagManager} />
             <Route path="saved-searches" component={SeeAllSearches}/>
             <Route path="saved-search/:name" component={SearchDetail} />
@@ -89,6 +92,7 @@ class Root extends React.Component {
                 <Route path="forms/create" component={FormCreate}/>
                 <Route path="forms/:id" component={FormEdit}/>
                 <Route path="forms/:id/submissions" component={SubmissionList}/>
+                <Route path="forms/:id/gallery" component={SubmissionGallery}/>
               </div>
             ) : null}
             <Route path="edit-search/:id" component={SearchEditor} />

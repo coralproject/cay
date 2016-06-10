@@ -67,7 +67,7 @@ class Page extends React.Component {
         docked={this.state.sidebarDocked}
         transitions={this.state.shouldTransition}
         onSetOpen={this.onSetSidebarOpen.bind(this)}
-        styles={ { sidebar: { backgroundColor: "#444" } } }>
+        styles={ { sidebar: { backgroundColor: "rgb(248,160,149)" } } }>
         <Header onHamburgerClick={this.toggleSidebar.bind(this)}/>
         <div style={[styles.wrapper, this.props.style]}>
           {this.props.children}
@@ -83,11 +83,6 @@ export default Page;
 const styles = {
   wrapper:  {
     backgroundColor: settings.bgColorBase,
-    top: 50,
-    right: 0,
-    left: 0,
-    bottom: 0,
-    padding: 20,
-    position: 'absolute'
+    padding: 20
   }
 };

@@ -1,10 +1,16 @@
 import * as types from 'forms/FormActions';
+import uuid from 'node-uuid';
 
 const initial = {
-  items: [],
+  formList: [],
+  galleryList: [],
+  submissionList: [],
   editAccess: {},
   form: null,
-  widgets: []
+  activeForm: null, // might be able to combine this with {form} above in the future
+  activeGallery: null, // this is an ObjectId string
+  widgets: [],
+  activeSubmission: null // ObjectId string
 };
 
 const emptyForm = {
@@ -55,13 +61,13 @@ const forms = (state = initial, action) => {
   switch (action.type) {
 
   case types.FORM_REQUEST_STARTED:
-    return state;
+    return {...state, activeForm: null, formLoading: true};
 
   case types.FORM_REQUEST_SUCCESS:
-    return state;
+    return {...state, activeForm: action.form.id, [action.form.id]: action.form, formLoading: false};
 
   case types.FORM_REQUEST_FAILURE:
-    return state;
+    return {...state, activeForm: null, formLoading: false};
 
   case types.FORM_DELETED:
     return state;
@@ -77,8 +83,8 @@ const forms = (state = initial, action) => {
     return newState;
 
   case types.FORM_CREATE_EMPTY:
-    emptyForm.createdAt = Date.now();
-    return Object.assign({}, state, {form: emptyForm, widgets: [] });
+    const form = Object.assign({}, emptyForm, { steps: [{ id: uuid.v4(), name: 'first_step', createdAt: Date.now() }] });
+    return Object.assign({}, state, {form: form, widgets: [] });
 
   case types.FORM_APPEND_WIDGET:
 
@@ -94,7 +100,14 @@ const forms = (state = initial, action) => {
     return Object.assign({}, state, { widgets: widgetsCopy, tempWidgets: widgetsCopy });
 
   case types.FORMS_REQUEST_SUCCESS:
-    return Object.assign({}, state, { items: action.forms });
+
+    const formList = action.forms.map(form => form.id);
+    const forms = action.forms.reduce((accum, form) => {
+      accum[form.id] = form;
+      return accum;
+    }, {});
+
+    return {...state, formList, ...forms };
 
   case types.FORM_REPLACE_WIDGETS:
     var updatedWidgets = action.widgets.map((field) =>
@@ -129,6 +142,48 @@ const forms = (state = initial, action) => {
     var widgetsCopy = state.widgets.slice();
     widgetsCopy.splice(action.widgetPosition, 1);
     return Object.assign({}, state, { widgets: widgetsCopy, tempWidgets: widgetsCopy });
+
+  case types.SUBMISSIONS_REQUEST_SUCCESS:
+
+    const submissionList = action.submissions.map(sub => sub.id);
+    const submissions = action.submissions.reduce((accum, sub) => {
+      accum[sub.id] = sub;
+      return accum;
+    }, {});
+    const activeSubmission = submissionList.length ? submissionList[0] : null;
+
+    // this will add more submission ids and overwrite existing ones.
+    // it will not erase old submission ids.
+    // current viewable ids are managed in {submissionList}
+    return {...state, submissionList, ...submissions, activeSubmission};
+
+  case types.SET_ACTIVE_SUBMISSION:
+    return {...state, activeSubmission: action.submissionId };
+
+  case types.UPDATE_ACTIVE_SUBMISSION:
+    // const newSubmissions = [...state.submissions];
+    // newSubmissions[state.activeSubmission] = Object.assign({}, newSubmissions[state.activeSubmission], action.props);
+    // return Object.assign({}, state, { submissions: newSubmissions });
+    return state;
+
+  case types.FORM_GALLERY_REQUEST:
+    return {...state, loadingGallery: true, activeGallery: null};
+
+  case types.FORM_GALLERY_SUCCESS:
+    // action gallery might be more than one gallery in the future
+    return {...state, loadingGallery: false, activeGallery: action.gallery.id, [action.gallery.id]: action.gallery};
+
+  case types.FORM_GALLERY_ERROR:
+    return {...state, loadingGallery: false, activeGallery: null, galleryError: action.error};
+
+  case types.FORM_STATUS_UPDATED:
+    return {...state, activeForm: action.form.id, [action.form.id]: action.form};
+
+  case types.FORM_ANSWER_SENT_TO_GALLERY:
+    return {...state, [action.gallery.id]: action.gallery};
+
+  case types.FORM_ANSWER_REMOVED_FROM_GALLERY:
+    return {...state, [action.gallery.id]: action.gallery};
 
   default:
     return state;

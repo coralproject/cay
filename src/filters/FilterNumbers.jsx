@@ -5,18 +5,6 @@ import {connect} from 'react-redux';
 import Card from 'components/cards/Card';
 //import Sparkline from 'filters/Sparkline';
 
-const style = {
-  minMaxInputs: {
-    padding: '7px 10px',
-    border: '1px solid lightgrey',
-    borderRadius: 3
-  },
-  description: {
-    marginBottom: 10,
-    marginRight: 20
-  }
-};
-
 @connect(state => state.filters)
 @Radium
 export default class FilterNumbers extends React.Component {
@@ -65,15 +53,13 @@ export default class FilterNumbers extends React.Component {
   }
   render() {
     return (
-      <Card>
+      <div style={styles.base}>
         <div style={{
-          marginTop: 0,
-          marginBottom: 10,
           display: 'flex',
           alignItems: 'flex-start',
           justifyContent: 'space-between'
         }}>
-        <span style={style.description}>{this.props.description}</span>
+        <span style={styles.description}>{this.props.description}</span>
         {/*
           this.props.distributions ?
           <Sparkline
@@ -86,18 +72,36 @@ export default class FilterNumbers extends React.Component {
         <div>
           <input
             onChange={event => this.props.onChange(this.props.fieldName, 'userMin', +event.target.value)}
-            style={style.minMaxInputs}
+            style={styles.minMaxInputs}
             type='number'
             value={this.props.userMin}/>
           {` - `}
           <input
             onChange={event => this.props.onChange(this.props.fieldName, 'userMax', +event.target.value)}
-            style={style.minMaxInputs}
+            style={styles.minMaxInputs}
             type='number'
             value={this.props.userMax}/>
         </div>
         <p style={{marginTop: 10, color: 'red'}}>{this.renderHelpText()}</p>
-      </Card>
+        </div>
     );
   }
 }
+
+const styles = {
+  base: {
+    marginBottom: 20
+  },
+  description: {
+    fontWeight: 500,
+    marginBottom: 10,
+    color: 'rgb(130,130,130)',
+    fontSize: 16
+  },
+  minMaxInputs: {
+    padding: '7px 10px',
+    border: '1px solid lightgrey',
+    borderRadius: 3
+  },
+
+};

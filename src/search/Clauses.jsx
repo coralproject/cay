@@ -6,7 +6,7 @@ import IntClause from './IntClause';
 import DateRangeClause from './DateRangeClause';
 import ProximityClause from './ProximityClause';
 import {resetFilter} from 'filters/FiltersActions';
-
+import Close from 'react-icons/lib/fa/close';
 import settings from 'settings';
 
 @connect(state => state.filters)
@@ -86,7 +86,7 @@ class Clauses extends React.Component {
           clause = <PercentClause {...this.props[filterName]}/>;
           break;
         case 'intDateProximity':
-  
+
           clause = <ProximityClause {...this.props[filterName]}/>
           break;
         default:
@@ -97,7 +97,7 @@ class Clauses extends React.Component {
           <span key={i} style={styles.clause}>
             {clause}
             <span onClick={this.resetFilter.bind(this, filterName)}
-              style={styles.close}>x</span>
+              style={styles.close}><Close style={styles.closeIcon} /></span>
           </span>
         );
       }
@@ -126,16 +126,24 @@ export default Clauses;
 
 
 const styles = {
-  close: {
+  container: {
+  },
+  closeIcon: {
     cursor: 'pointer',
     marginLeft: 10,
-    color: 'grey'
+    fontSize: 18,
+    color: 'rgb(100,100,100)',
+    position: 'relative',
+    top: -1
   },
   clause: {
-    backgroundColor: settings.darkGrey,
-    color: 'white',
+    backgroundColor: "white",
+    color: 'rgb(100,100,100)',
+    WebkitBoxShadow: '3px 3px 6px -1px ' + settings.mediumGrey,
+    BoxShadow: '3px 3px 6px -1px ' + settings.mediumGrey,
     borderRadius: 4,
     padding: 10,
-    marginRight: 10
+    marginRight: 10,
+    marginBottom: 20
   }
 };

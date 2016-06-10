@@ -2,6 +2,7 @@
 /**
  * Module dependencies
  */
+ import settings from 'settings';
 
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
@@ -119,94 +120,101 @@ export default class SearchCreator extends Component {
   }
 
   render() {
-
     return (
-
       <Page>
-
-        <ContentHeader title={ window.L.t('Search Creator') } />
-        <Clauses editMode={false} />
-
-        <div style={styles.base}>
-          <div style={styles.filters}>
-            <UserFilters
-              editMode={false}
-              onChange={this.onFilterChange.bind(this)} />
-          </div>
-
-          <div style={styles.rightPanel}>
-            <Button onClick={this.openModal.bind(this)} category="primary" style={styles.saveButton}>
-              Save Search <FaFloopyO style={styles.saveIcon} />
+          <StatusBar
+            loading={this.props.searches.savingSearch}
+            visible={this.props.searches.savingSearch || !!this.props.searches.recentSavedSearch}>
+            {
+              this.props.searches.recentSavedSearch ?
+              (<Link style={styles.searchDetail} to={`/saved-search/${this.props.searches.recentSavedSearch.name}`}>
+                View Your Saved Search [{this.props.searches.recentSavedSearch.name}] →
+              </Link>) :
+              'Saving Search...'
+            }
+          </StatusBar>
+          <div style={styles.topSection}>
+            <ContentHeader title={ window.L.t('Create & save a search') } />
+            <Button onClick={this.openModal.bind(this)} category="default" style={styles.saveButton}>
+              <FaFloopyO style={styles.saveIcon} />{` Save Search `}
             </Button>
-            <div style={styles.userListContainer}>
+          </div>
+          <Clauses editMode={false} />
+          <div style={styles.base}>
+            <div style={styles.filtersAndResults}>
+              <div style={styles.filters}>
+                <UserFilters
+                  editMode={false}
+                  onChange={this.onFilterChange.bind(this)} />
+              </div>
               <UserList
                 total={this.props.searches.userCount}
                 onPagination={this.onPagination.bind(this)}
                 loadingQueryset={this.props.searches.loadingQueryset}
                 users={this.props.searches.users}
                 userSelected={this.updateUser.bind(this)} />
-              <UserDetail
-                breakdown={this.props.filters.breakdown}
-                specificBreakdown={this.props.filters.specificBreakdown}
-                commentsLoading={this.props.comments.loading}
-                user={this.props.users.selectedUser}
-                comments={this.props.comments.items}
-                style={styles.userDetail} />
             </div>
-          </div>
-
+          <Modal
+            title="Save Search"
+            isOpen={this.state.saveModalOpen}
+            confirmAction={this.confirmSave.bind(this)}
+            cancelAction={this.cancelSave.bind(this)}>
+            <TextField label="Name" onChange={this.updateSearchName.bind(this)}/>
+            <p style={styles.modalLabel}>Description</p>
+            <textarea
+              style={styles.descriptionInput}
+              onBlur={this.updateSearcDesc.bind(this)}></textarea>
+            <TextField label="Tag Name" onChange={this.updateSearchTag.bind(this)} />
+          </Modal>
         </div>
-
-        <Modal
-          title="Save Search"
-          isOpen={this.state.saveModalOpen}
-          confirmAction={this.confirmSave.bind(this)}
-          cancelAction={this.cancelSave.bind(this)}>
-          <TextField label="Name" onChange={this.updateSearchName.bind(this)}/>
-          <p style={styles.modalLabel}>Description</p>
-          <textarea
-            style={styles.descriptionInput}
-            onBlur={this.updateSearcDesc.bind(this)}></textarea>
-          <TextField label="Tag Name" onChange={this.updateSearchTag.bind(this)} />
-        </Modal>
-
-        <StatusBar
-          loading={this.props.searches.savingSearch}
-          visible={this.props.searches.savingSearch || !!this.props.searches.recentSavedSearch}>
-          {
-            this.props.searches.recentSavedSearch ?
-              (<Link style={styles.searchDetail} to={`/saved-search/${this.props.searches.recentSavedSearch.name}`}>
-                View Your Saved Search [{this.props.searches.recentSavedSearch.name}] →
-              </Link>) :
-              'Saving Search...'
-          }
-        </StatusBar>
-
       </Page>
     );
   }
 }
+
+
+// <UserDetail
+//   breakdown={this.props.filters.breakdown}
+//   specificBreakdown={this.props.filters.specificBreakdown}
+//   commentsLoading={this.props.comments.loading}
+//   user={this.props.users.selectedUser}
+//   comments={this.props.comments.items}
+//   style={styles.userDetail} />
+
+
+
 const styles = {
   base: {
+    display: "flex",
+    width: "100%"
+  },
+  filtersAndResults: {
     display: 'flex',
     minHeight: 250,
-    justifyContent: 'flex-start',
-    flexWrap: 'no-wrap'
+    justifyContent: 'space-between',
+    flexWrap: 'no-wrap',
+    width: "100%"
+
   },
   rightPanel: {
     flex: 1
   },
+  topSection: {
+    display: "flex",
+    justifyContent: "space-between",
+    width: "100%",
+    marginBottom: 20
+  },
   userListContainer: {
     margin: 20,
-    height: 900,
     display: 'flex',
     clear: 'both'
   },
-  userDetail: {
-    flex: 2,
-    paddingLeft: 40,
-    height: 900
-  },
+  // userDetail: {
+  //   flex: 2,
+  //   paddingLeft: 40,
+  //   height: 900
+  // },
   userList: {
     minWidth: 350,
     flex: 1
@@ -224,8 +232,10 @@ const styles = {
     borderRadius: 3
   },
   saveIcon: {
-    width: 25,
-    height: 25
+    marginRight: 7,
+    position: "relative",
+    top: -2,
+    fontSize: 18,
   },
   filters: {
     '@media (max-width: 1000px)': {
@@ -237,6 +247,5 @@ const styles = {
     textDecoration: 'none'
   },
   saveButton: {
-    float: 'right'
   }
 };

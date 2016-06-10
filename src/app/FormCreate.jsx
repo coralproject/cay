@@ -11,6 +11,7 @@ import FaShare from 'react-icons/lib/fa/user-plus';
 import ContentHeader from 'components/ContentHeader';
 
 import FormBuilder from 'forms/FormBuilder.js';
+import FormChrome from 'app/layout/FormChrome';
 
 @connect(({ forms, app }) => ({ forms, app }))
 @Radium
@@ -32,6 +33,7 @@ export default class FormCreate extends Component {
     const {preview} = this.state;
     return (
       <Page style={styles.page}>
+        <FormChrome activeTab="builder" />
         <ContentHeader style={styles.header}>
           <div style={styles.headerTitle}>
             <h1 style={styles.title}>Name form</h1>
@@ -97,7 +99,8 @@ const styles = {
     justifyContent: 'space-between',
     flexWrap: 'wrap',
     paddingBottom: 20,
-    borderBottom: '1px solid #E9E9E9'
+    borderBottom: '1px solid #E9E9E9',
+    marginTop: 40
   },
   textField: {
     marginRight: 20

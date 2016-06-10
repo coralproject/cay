@@ -2,6 +2,7 @@ import React from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
 import _ from 'lodash';
+import settings from 'settings';
 
 import { userSelected } from 'users/UsersActions';
 import { makeQueryFromState, clearUserList } from 'search/SearchActions';
@@ -180,28 +181,25 @@ export default class UserFilters extends React.Component {
 
     return (
       <div style={ styles.base }>
-        <div style={ styles.columnHeader }>
-          <Heading size="medium">
-            Filters
-          </Heading>
+        <Heading size="medium">
+          Filters
+        </Heading>
+        <div style={styles.filters}>
+          <Select
+            ref="breakdown"
+            value={breakdown}
+            onChange={this.updateBreakdown.bind(this)}
+            style={ styles.filterDropdown }
+            options={[
+              {label: 'All Sections & Authors', value: 'all'},
+              {label: 'Author', value: 'author'},
+              {label: 'Section', value: 'section'}
+            ]} />
+
+          {this.getSpecific()}
+
+          {this.getActiveFiltersFromConfig()}
         </div>
-        <p style={ styles.legend }>Limit user activity to:</p>
-        <Select
-          ref="breakdown"
-          value={breakdown}
-          onChange={this.updateBreakdown.bind(this)}
-          style={ styles.filterDropdown }
-          options={[
-            {label: 'All', value: 'all'},
-            {label: 'Author', value: 'author'},
-            {label: 'Section', value: 'section'}
-          ]} />
-
-        {this.getSpecific()}
-
-        <p style={styles.legend}>Show me Users that have:</p>
-        {this.getActiveFiltersFromConfig()}
-
       </div>
     );
   }
@@ -209,10 +207,14 @@ export default class UserFilters extends React.Component {
 
 const styles = {
   base: {
-    minWidth: 300
+    minWidth: 300,
   },
-  columnHeader: {
-    height: 50
+  filters: {
+    padding: 20,
+    backgroundColor: "white",
+    borderRadius: 3,
+    height: 500,
+    overflow: "scroll",
   },
   legend: {
     padding: '10px 0',

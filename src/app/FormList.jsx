@@ -5,7 +5,7 @@ import { Link } from 'react-router';
 import MdDelete from 'react-icons/lib/md/delete';
 import _ from 'lodash';
 
-import { deleteForm, listForms } from 'forms/FormActions';
+import { deleteForm, fetchForms } from 'forms/FormActions';
 import settings from 'settings';
 
 import Page from 'app/layout/Page';
@@ -20,10 +20,6 @@ import TableCell from 'components/tables/TableCell';
 import Tab from 'components/tabs/Tab';
 import Tabs from 'components/tabs/Tabs';
 
-import form from 'form.json';
-
-console.log('form!', form);
-
 // Forms, Widgets, Submissions
 
 @connect(({ forms }) => ({ forms }))
@@ -35,7 +31,7 @@ export default class FormList extends React.Component {
   };
 
   componentWillMount() {
-    this.props.dispatch(listForms());
+    this.props.dispatch(fetchForms());
   }
 
   confirmDeletion(name, description, index, event) {
@@ -80,10 +76,10 @@ export default class FormList extends React.Component {
   renderRow(form, i) {
     const header = form.header || {};
     return (
-      <TableRow onClick={this.onRowClick.bind(this, form._id)} style={styles.row} key={i}>
+      <TableRow onClick={this.onRowClick.bind(this, form.id)} style={styles.row} key={i}>
         <TableCell>{header.title}</TableCell>
         <TableCell style={{maxWidth: 400}}>{header.description}</TableCell>
-        <TableCell>{form.answers}</TableCell>
+        <TableCell>{form.stats.responses}</TableCell>
         <TableCell><MdDelete key={i} onClick={ this.confirmDeletion.bind(this, header.title, header.description, form._id) } /></TableCell>
       </TableRow>
     );
@@ -91,7 +87,9 @@ export default class FormList extends React.Component {
 
   render() {
 
-    const groups = _.groupBy(this.props.forms.items, 'status');
+    const forms = this.props.forms.formList.map(id => this.props.forms[id]);
+    const groups = _.groupBy(forms, 'status');
+
     return (
       <Page>
         <ContentHeader title="View Forms" style={styles.header}>
@@ -102,11 +100,8 @@ export default class FormList extends React.Component {
           <Tab title="Active">
             {this.renderTable(groups.active || groups[''])}
           </Tab>
-          <Tab title="Draft">
-            {this.renderTable(groups.draft || [])}
-          </Tab>
-          <Tab title="Past">
-            {this.renderTable(groups.past || [])}
+          <Tab title="Inactive">
+            {this.renderTable(groups.inactive || [])}
           </Tab>
         </Tabs>
 

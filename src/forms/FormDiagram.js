@@ -13,6 +13,8 @@ import FaUserPlus from 'react-icons/lib/fa/user-plus';
 import FaFloppyO from 'react-icons/lib/fa/floppy-o';
 import FaEye from 'react-icons/lib/fa/eye';
 
+import settings from 'settings';
+
 @connect(({ forms, app }) => ({ forms, app }))
 export default class FormDiagram extends Component {
 
@@ -60,10 +62,10 @@ export default class FormDiagram extends Component {
   }
 
   onSaveClick() {
-    const { forms, app, dispatch } = this.props;
+    const { forms, dispatch } = this.props;
     const { form, widgets } = forms;
-    console.log("Saving Form:", form);
-    dispatch(saveForm(form, widgets, app.elkhornHost));
+    console.log('onSaveClick', form, widgets);
+    dispatch(saveForm(form, widgets));
   }
 
   onPreviewClick() {
@@ -209,11 +211,11 @@ const styles = {
   formAction: {
     width: '40px',
     height: '40px',
-    padding: '0',
+    padding: 0,
     lineHeight: '20px',
     marginLeft: '10px',
     border: '1px solid #AAA',
-    background: 'none',
+    backgroundColor: 'transparent',
     borderRadius: '4px',
     fontSize: '14pt',
     display: 'inline-block',

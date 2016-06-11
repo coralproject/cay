@@ -16,6 +16,9 @@ export const FORM_REQUEST_FAILURE = 'FORM_REQUEST_FAILURE';
 export const FORM_APPEND_WIDGET = 'FORM_APPEND_WIDGET';
 export const FORM_DELETE_WIDGET = 'FORM_DELETE_WIDGET';
 
+export const FORM_CREATE_INIT = 'FORM_CREATE_INIT';
+export const FORM_CREATED = 'FORM_CREATED';
+export const FORM_CREATION_FAILURE = 'FORM_CREATION_FAILURE';
 export const FORM_UPDATE = 'FORM_UPDATE';
 
 export const FORMS_REQUEST_STARTED = 'FORMS_REQUEST_STARTED';
@@ -222,14 +225,6 @@ export const updateForm = (data) => {
   };
 };
 
-export const listForms = () => dispatch => {
-  return xenia().collection('forms')
-  .sort(['date_updated', -1])
-  .exec()
-    .then(res => dispatch(formsRequestSuccess(res.results[0].Docs)))
-    .catch(err => dispatch(formsRequestFailure(err)));
-}
-
 export const submissionsFetched = submissions => ({
   type: SUBMISSIONS_REQUEST_SUCCESS,
   submissions
@@ -252,18 +247,45 @@ export const updateActiveSubmission = props => ({
   props
 });
 
-export const saveForm = (form, widgets, host) => () => {
+const formCreated = form => {
+  return {type: FORM_CREATED, form};
+};
+
+const formCreationFailure = error => {
+  return {type: FORM_CREATION_FAILURE, error};
+};
+
+export const saveForm = (form, widgets) => () => {
   const data = Object.assign({}, form);
   data.steps[0].widgets = widgets;
-  fetch(`${host}/create`, {
-    method: 'POST',
-    mode: 'cors',
-    headers: new Headers({
-      'Content-Type': 'application/json'
-    }),
-    body: JSON.stringify(data)
-  }).then(res => res.json())
-  .then(json => alert(json.id));
+
+  console.log(FORM_CREATE_INIT, form);
+
+  return (dispatch, getState) => {
+
+    const {app} = getState();
+
+    dispatch({type: FORM_CREATE_INIT, data});
+    fetch(`${app.elkhornHost}/create`, {
+      method: 'POST',
+      mode: 'cors',
+      headers: new Headers({
+        'Content-Type': 'application/json'
+      }),
+      body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(json => {
+      dispatch(formCreated(json));
+      // immediately set to inactive since this isn't a default for some reason
+      dispatch(updateFormStatus(json.id, 'inactive'));
+    })
+    .catch(error => {
+      console.log('failed to save form', error);
+      dispatch(formCreationFailure(error));
+    });
+  };
+
 };
 
 export const fetchSubmissions = formId => {

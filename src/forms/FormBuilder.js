@@ -61,8 +61,7 @@ export default class FormBuilder extends Component {
             </label>
             {
               form.settings.isActive ?
-                <p>You are accepting submissions.</p>
-              :
+                <p>You are accepting submissions.</p> :
                 <p>You are not currently accepting submissions.</p>
             }
 
@@ -78,8 +77,19 @@ export default class FormBuilder extends Component {
               : null
             }
             <div style={ styles.formSettingsBottomActions }>
-              <button style={ styles.formSettingsAction }>Embed Form</button>
-              <button style={ styles.formSettingsAction }>Live Form</button>
+              <hr />
+              {
+                this.props.forms.savedForm ?
+                (
+                  <div>
+                  <p>Copy this code to embed your form.</p>
+                  <textarea style={styles.embedCode} value={`<div id=“ask-form”></div><script src=“${this.props.app.elkhornHost}/${this.props.forms.savedForm}.js”></script>`}>
+                  </textarea>
+                    <button style={ styles.formSettingsAction }>Live Form</button>
+                  </div>
+                ) :
+                <p>This form is not saved. Once you save it you will see embed code here.</p>
+              }
             </div>
           </div>
 
@@ -228,8 +238,8 @@ const styles = {
     position: 'relative',
     height: '42px',
     display: 'inline-block',
-    padding: '0',
-    margin: '0',
+    padding: 0,
+    margin: 0,
     width: '120px',
     overflow: 'hidden',
     border: '1px solid rgba(0,0,0,.2)',
@@ -299,5 +309,9 @@ const styles = {
   previewContent: {
     overflow: 'scroll',
     flexGrow: '2'
+  },
+  embedCode: {
+    width: '100%',
+    height: 50
   }
 };

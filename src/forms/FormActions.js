@@ -255,11 +255,9 @@ const formCreationFailure = error => {
   return {type: FORM_CREATION_FAILURE, error};
 };
 
-export const saveForm = (form, widgets) => () => {
+export const saveForm = (form, widgets) => {
   const data = Object.assign({}, form);
   data.steps[0].widgets = widgets;
-
-  console.log(FORM_CREATE_INIT, form);
 
   return (dispatch, getState) => {
 
@@ -276,6 +274,7 @@ export const saveForm = (form, widgets) => () => {
     })
     .then(res => res.json())
     .then(json => {
+      console.log('form created', json.id);
       dispatch(formCreated(json));
       // immediately set to inactive since this isn't a default for some reason
       dispatch(updateFormStatus(json.id, 'inactive'));

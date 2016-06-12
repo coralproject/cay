@@ -64,7 +64,6 @@ export default class FormDiagram extends Component {
   onSaveClick() {
     const { forms, dispatch } = this.props;
     const { form, widgets } = forms;
-    console.log('onSaveClick', form, widgets);
     dispatch(saveForm(form, widgets));
   }
 

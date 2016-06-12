@@ -255,6 +255,8 @@ export const updateActiveSubmission = props => ({
 export const saveForm = (form, widgets, host) => () => {
   const data = Object.assign({}, form);
   data.steps[0].widgets = widgets;
+  // FIXME: remove this hotfix
+  data.status = form.settings.isActive ? 'active' : 'inactive';
   fetch(`${host}/create`, {
     method: 'POST',
     mode: 'cors',

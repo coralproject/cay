@@ -37,7 +37,7 @@
 /******/ 	__webpack_require__.p = "/dist/";
 /******/
 /******/ 	// __webpack_hash__
-/******/ 	__webpack_require__.h = "70454b8ce7ddeb2aa13a";
+/******/ 	__webpack_require__.h = "b151f52b80cf1b7eaece";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
@@ -68577,7 +68577,7 @@
 	    selectedItemText: '#FAFAFA'
 	  },
 	  settings: {
-	    saveDestination: 'http://10.0.1.195:8080/api/form_submission/',
+	    saveDestination: 'https://10.0.1.195:8080/api/form_submission/',
 	    showFieldNumbers: true,
 	    isActive: false,
 	    inactiveMessage: "We are not currently accepting submissions. Thank you."

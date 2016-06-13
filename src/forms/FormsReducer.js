@@ -7,6 +7,9 @@ const initial = {
   submissionList: [],
   editAccess: {},
   form: null,
+  savingForm: false,
+  savedForm: null, // this is the Objectid of the created form returned from Elkhorn.
+  formCreationError: null,
   activeForm: null, // might be able to combine this with {form} above in the future
   activeGallery: null, // this is an ObjectId string
   widgets: [],
@@ -70,7 +73,12 @@ const forms = (state = initial, action) => {
     return {...state, activeForm: null, formLoading: false};
 
   case types.FORM_DELETED:
-    return state;
+    // FIXME: Pillar is returning 'null' for deleted forms. See: FormActions/deleteForm.
+    var newState = Object.assign({}, state);
+    delete newState[action.id];
+    var formListIndex = newState.formList.indexOf(action.id);
+    delete newState.formList[formListIndex];
+    return newState;
 
   case types.FORM_EDIT_ACCEPTED:
     var newState = Object.assign({}, state);
@@ -142,6 +150,21 @@ const forms = (state = initial, action) => {
     var widgetsCopy = state.widgets.slice();
     widgetsCopy.splice(action.widgetPosition, 1);
     return Object.assign({}, state, { widgets: widgetsCopy, tempWidgets: widgetsCopy });
+
+  case types.FORM_CREATE_INIT:
+    return {...state, savingForm: true, formCreationError: null, savedForm: null};
+
+  case types.FORM_CREATED:
+    return {
+      ...state,
+      savingForm: false,
+      savedForm: action.form.id,
+      formList: [...state.formList, action.form.id],
+      [action.form.id]: action.form
+    };
+
+  case types.FORM_CREATION_FAILURE:
+    return {...state, savingForm: false, formCreationError: action.error, savedForm: null};
 
   case types.SUBMISSIONS_REQUEST_SUCCESS:
 

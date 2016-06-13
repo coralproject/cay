@@ -4,16 +4,11 @@ import { connect } from 'react-redux';
 
 import { createEmpty, saveForm } from 'forms/FormActions';
 import Page from 'app/layout/Page';
-import Button from 'components/Button';
-import FaFloopyO from 'react-icons/lib/fa/floppy-o';
-import FaExt from 'react-icons/lib/fa/external-link';
-import FaShare from 'react-icons/lib/fa/user-plus';
-import ContentHeader from 'components/ContentHeader';
 
 import FormBuilder from 'forms/FormBuilder.js';
 import FormChrome from 'app/layout/FormChrome';
 
-@connect(({ forms, app }) => ({ forms, app }))
+@connect(({ forms }) => ({ forms }))
 @Radium
 export default class FormCreate extends Component {
   static contextTypes = {
@@ -45,9 +40,9 @@ export default class FormCreate extends Component {
   }
 
   saveAndExit() {
-    const { forms, app, dispatch } = this.props;
+    const { forms, dispatch } = this.props;
     const { form, widgets } = forms;
-    dispatch(saveForm(form, widgets, app.elkhornHost));
+    dispatch(saveForm(form, widgets));
   }
 
   onClosePreview() {

@@ -46,6 +46,7 @@ export default class FormList extends React.Component {
 
   onConfirmClick() {
     var formToDelete = this.state.formToDelete;
+    console.log("Form to delete", formToDelete);
     this.setState({ confirmFormName: '', showConfirmDialog: false, tagToDelete: null });
     this.props.dispatch(deleteForm(...formToDelete));
   }
@@ -81,7 +82,7 @@ export default class FormList extends React.Component {
         <TableCell>{header.title}</TableCell>
         <TableCell style={{maxWidth: 400}}>{header.description}</TableCell>
         <TableCell>{form.stats.responses}</TableCell>
-        <TableCell><MdDelete key={i} onClick={ this.confirmDeletion.bind(this, header.title, header.description, form._id) } /></TableCell>
+        <TableCell><MdDelete key={i} onClick={ this.confirmDeletion.bind(this, header.title, header.description, form.id) } /></TableCell>
       </TableRow>
     );
   }

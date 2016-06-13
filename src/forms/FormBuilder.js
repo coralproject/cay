@@ -18,9 +18,9 @@ import { appendWidget, moveWidget } from 'forms/FormActions';
 const askTypes = [
   {type: 'TextField', title: 'Short Text'},
   {type: 'TextArea', title: 'Long Text'},
-  {type: 'TextField', title: 'Numbers'},
+  {type: 'TextField', title: 'Numbers', props: { validateAs: 'number', validationMessage: "Only numbers are allowed in this field."} },
   {type: 'MultipleChoice', title: 'Multiple choice'},
-  {type: 'TextField', title: 'Email'},
+  {type: 'TextField', title: 'Email', props: { validateAs: 'email', validationMessage: "Please type a valid e-mail." } },
   {type: 'TextField', title: 'Date'},
   {type: 'LocationDropdown', title: 'Location'},
   {type: 'TextField', title: 'Phone number'}
@@ -61,8 +61,7 @@ export default class FormBuilder extends Component {
             </label>
             {
               form.settings.isActive ?
-                <p>You are accepting submissions.</p>
-              :
+                <p>You are accepting submissions.</p> :
                 <p>You are not currently accepting submissions.</p>
             }
 
@@ -78,8 +77,19 @@ export default class FormBuilder extends Component {
               : null
             }
             <div style={ styles.formSettingsBottomActions }>
-              <button style={ styles.formSettingsAction }>Embed Form</button>
-              <button style={ styles.formSettingsAction }>Live Form</button>
+              <hr />
+              {
+                this.props.forms.savedForm ?
+                (
+                  <div>
+                  <p>Copy this code to embed your form.</p>
+                  <textarea style={styles.embedCode} value={`<div id=“ask-form”></div><script src=“${this.props.app.elkhornHost}/${this.props.forms.savedForm}.js”></script>`}>
+                  </textarea>
+                    <a href={ `${this.props.app.elkhornHost}/iframe/${this.props.forms.savedForm}` } target="_blank" style={ styles.formSettingsAction }>Live Form</a>
+                  </div>
+                ) :
+                <p>This form is not saved. Once you save it you will see embed code here.</p>
+              }
             </div>
           </div>
 
@@ -108,7 +118,7 @@ export default class FormBuilder extends Component {
       component: data.type,
       identity: false,
       wrapper: {},
-      props: {},
+      props: { ...data.props },
       id: Math.floor(Math.random() * 99999) + ''
     }));
   }
@@ -204,6 +214,9 @@ const styles = {
     marginBottom: 10,
   },
   formSettingsAction: {
+    display: 'inline-block',
+    textDecoration: 'none',
+    color: 'black',
     marginTop: 10,
     marginRight: 10,
     padding: 10,
@@ -228,8 +241,8 @@ const styles = {
     position: 'relative',
     height: '42px',
     display: 'inline-block',
-    padding: '0',
-    margin: '0',
+    padding: 0,
+    margin: 0,
     width: '120px',
     overflow: 'hidden',
     border: '1px solid rgba(0,0,0,.2)',
@@ -299,5 +312,9 @@ const styles = {
   previewContent: {
     overflow: 'scroll',
     flexGrow: '2'
+  },
+  embedCode: {
+    width: '100%',
+    height: 50
   }
 };

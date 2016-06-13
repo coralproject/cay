@@ -278,13 +278,9 @@ export const saveForm = (form, widgets) => {
     })
     .then(res => res.json())
     .then(json => {
-      console.log('form created', json.id);
       dispatch(formCreated(json));
-      // immediately set to inactive since this isn't a default for some reason
-      dispatch(updateFormStatus(json.id, 'inactive'));
     })
     .catch(error => {
-      console.log('failed to save form', error);
       dispatch(formCreationFailure(error));
     });
   };

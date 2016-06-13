@@ -164,8 +164,6 @@ class SubmissionDetail extends Component {
       return (<p>Loading gallery...</p>);
     }
 
-    const answers = gallery.answers.map(ans => ans.answer_id);
-
     return (
       <div style={styles.detail.answersContainer}>
         {submission.replies.map((reply, key) => {
@@ -176,7 +174,20 @@ class SubmissionDetail extends Component {
             return (<span></span>);
           }
 
-          const inGallery = answers.indexOf(reply.widget_id) !== -1;
+
+          // determine whether or not the answers is already
+          //  in the gallery
+          //  we need to find if BOTH
+          //   this submission id matches
+          //   and the answer has come form the widget
+          var inGallery = false;
+          for (var i in gallery.answers) {
+            if (gallery.answers[i].answer_id === reply.widget_id && 
+                gallery.answers[i].submission_id === submission.id) {
+              inGallery = true;
+              break;
+            }
+          }
 
           return (
             <div style={styles.detail.questionContainer} key={key}>

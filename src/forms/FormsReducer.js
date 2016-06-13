@@ -37,7 +37,7 @@ const emptyForm = {
     selectedItemText: '#FAFAFA'
   },
   settings: {
-    saveDestination: 'http://10.0.1.195:8080/api/form_submission/',
+    saveDestination: 'https://10.0.1.195:8080/api/form_submission/',
     showFieldNumbers: true,
     isActive: false,
     inactiveMessage: "We are not currently accepting submissions. Thank you."

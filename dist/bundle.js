@@ -37,7 +37,7 @@
 /******/ 	__webpack_require__.p = "/dist/";
 /******/
 /******/ 	// __webpack_hash__
-/******/ 	__webpack_require__.h = "b151f52b80cf1b7eaece";
+/******/ 	__webpack_require__.h = "34168656a668ca8032cf";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
@@ -18303,7 +18303,7 @@
 	
 	    fetch(app.pillarHost + '/api/form_gallery/' + galleryId + '/add/' + subId + '/' + answerId, {
 	      method: 'PUT',
-	      model: 'cors'
+	      mode: 'cors'
 	    }).then(function (res) {
 	      return res.json();
 	    }).then(function (gallery) {
@@ -18328,7 +18328,7 @@
 	
 	    var app = _getState5.app;
 	
-	    var options = { method: 'DELETE', model: 'cors' };
+	    var options = { method: 'DELETE', mode: 'cors' };
 	
 	    fetch(app.pillarHost + '/api/form_gallery/' + galleryId + '/remove/' + subId + '/' + answerId, options).then(function (res) {
 	      return res.json();
@@ -18347,7 +18347,7 @@
 	
 	    var app = _getState6.app;
 	
-	    var options = { method: 'PUT', model: 'cors' };
+	    var options = { method: 'PUT', mode: 'cors' };
 	
 	    fetch(app.pillarHost + '/api/form/' + formId + '/status/' + status, options).then(function (res) {
 	      return res.json();

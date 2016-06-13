@@ -337,7 +337,7 @@ export const sendToGallery = (galleryId, subId, answerId) => {
 
     fetch(`${app.pillarHost}/api/form_gallery/${galleryId}/add/${subId}/${answerId}`, {
       method: 'PUT',
-      model: 'cors'
+      mode: 'cors'
     })
       .then(res => res.json())
       .then(gallery => {
@@ -359,7 +359,7 @@ const answerRemovedFromGallery = gallery => {
 export const removeFromGallery = (galleryId, subId, answerId) => {
   return (dispatch, getState) => {
     const {app} = getState();
-    const options = {method: 'DELETE', model: 'cors'};
+    const options = {method: 'DELETE', mode: 'cors'};
 
     fetch(`${app.pillarHost}/api/form_gallery/${galleryId}/remove/${subId}/${answerId}`, options)
       .then(res => res.json())
@@ -373,7 +373,7 @@ export const removeFromGallery = (galleryId, subId, answerId) => {
 export const updateFormStatus = (formId, status) => {
   return (dispatch, getState) => {
     const {app} = getState();
-    const options = {method: 'PUT', model: 'cors'};
+    const options = {method: 'PUT', mode: 'cors'};
 
     fetch(`${app.pillarHost}/api/form/${formId}/status/${status}`, options)
       .then(res => res.json())

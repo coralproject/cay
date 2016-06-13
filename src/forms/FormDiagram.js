@@ -73,7 +73,8 @@ export default class FormDiagram extends Component {
 
   render() {
     const { onFieldSelect, forms, onOpenPreview } = this.props;
-    const { form, widgets } = forms;
+    const { widgets } = forms;
+    const form = this.props.activeForm ? forms[this.props.activeForm] : forms.form;
     return (
       <div style={styles.formDiagramContainer}>
         <div style={ styles.formHeader }>

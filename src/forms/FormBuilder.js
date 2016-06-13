@@ -31,7 +31,7 @@ const askTypes = [
 export default class FormBuilder extends Component {
   render() {
     const {preview, onClosePreview, onOpenPreview, forms} = this.props;
-    const {form} = forms;
+    const form = this.props.activeForm ? forms[this.props.activeForm] : forms.form;
     return (
       <div style={styles.builderContainer}>
         <div style={styles.leftPan}>
@@ -94,7 +94,7 @@ export default class FormBuilder extends Component {
           </div>
 
         </div>
-        <FormDiagram onOpenPreview={ onOpenPreview } />
+        <FormDiagram onOpenPreview={ onOpenPreview } activeForm={ this.props.activeForm } />
         {
           preview ?
             <div style={ styles.previewPane }>

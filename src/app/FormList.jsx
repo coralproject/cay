@@ -66,7 +66,7 @@ export default class FormList extends React.Component {
         <TableHead>
           <TableHeader>{ window.L.t('Name') }</TableHeader>
           <TableHeader>{ window.L.t('Description') }</TableHeader>
-          <TableHeader>{ window.L.t('Answers') }</TableHeader>
+          <TableHeader>{ window.L.t('Submissions') }</TableHeader>
         </TableHead>
         <TableBody>
           {group.map(this.renderRow.bind(this))}

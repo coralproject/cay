@@ -67,7 +67,13 @@ const forms = (state = initial, action) => {
     return {...state, activeForm: null, formLoading: true};
 
   case types.FORM_REQUEST_SUCCESS:
-    return {...state, activeForm: action.form.id, [action.form.id]: action.form, formLoading: false};
+    return {  ...state,
+              activeForm: action.form.id,
+              [action.form.id]: action.form,
+              formLoading: false,
+              widgets: action.form.steps[0].widgets,
+              tempWidgets: action.form.steps[0].widgets
+          };
 
   case types.FORM_REQUEST_FAILURE:
     return {...state, activeForm: null, formLoading: false};

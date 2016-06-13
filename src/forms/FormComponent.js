@@ -130,7 +130,7 @@ export default class FormComponent extends Component {
           this.state.expanded ?
             <div style={ styles.editSettingsPanel }>
               <label style={ styles.label }>
-                <strong>Question</strong> (or field label):
+                <strong>Question</strong>:
                 <input
                   onChange={ this.onTitleChange.bind(this) }
                   style={ styles.bigInput }

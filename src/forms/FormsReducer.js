@@ -92,7 +92,7 @@ const forms = (state = initial, action) => {
 
   case types.FORM_CREATE_EMPTY:
     const form = Object.assign({}, emptyForm, { steps: [{ id: uuid.v4(), name: 'first_step', createdAt: Date.now() }] });
-    return Object.assign({}, state, {form: form, widgets: [] });
+    return Object.assign({}, state, {form: form, widgets: [], savingForm: false, savedForm: null });
 
   case types.FORM_APPEND_WIDGET:
 

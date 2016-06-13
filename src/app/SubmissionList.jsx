@@ -45,15 +45,23 @@ export default class SubmissionList extends Component {
 
   updateFormStatus(option) {
     console.log(this.props);
+    console.log("this props forms", this.props.forms);
     this.props.dispatch(updateFormStatus(this.props.forms.activeForm, option.value));
   }
 
   render() {
+
+    console.log("this.props.forms", this.props.forms);
+
+
     const { submissionList, activeSubmission, activeForm, activeGallery } = this.props.forms;
     const submissions = submissionList.map(id => this.props.forms[id]);
     const submission = this.props.forms[activeSubmission];
     const form = this.props.forms[activeForm];
     const gallery = this.props.forms[activeGallery];
+
+
+    console.log("submission", submission);
 
     return (
       <Page>
@@ -207,6 +215,20 @@ class SubmissionDetail extends Component {
   renderAuthorDetail() {
     const { submission, onFlag, onBookmark } = this.props;
     const author = submission.author || {};
+
+    // author details come from form responses flagged as identity: true
+    //   Note, this should be abstracted probably to a reducer
+    var authorDetails = [];
+    for (var i in submission.replies) {
+      var thisReply = submission.replies[i];
+      if (thisReply.identity === true) {
+        authorDetails.push({
+          label: thisReply.question,
+          value: thisReply.answer.text
+        });
+      }
+    }
+
     return (
       <div>
         <div style={styles.detail.headerContainer}>
@@ -230,14 +252,11 @@ class SubmissionDetail extends Component {
             <h2 style={styles.detail.authorTitle}>Submission Author Information</h2>
             <div style={styles.detail.authorDetailsContainer}>
               <div style={styles.detail.authorDetailsColumn}>
-                <p>Name: {author.name}</p>
-                <p>Location: {author.location}</p>
-                <p>Email: {author.email}</p>
-              </div>
-              <div style={styles.detail.authorDetailsColumn}>
-                <p>Age: {author.age}</p>
-                <p>Phone: {author.phone}</p>
-                <p>Occupation: {author.occupation}</p>
+                {
+                  authorDetails.map(function(detail) {
+                    return (<p>{detail.label}: {detail.value}</p>)
+                  })
+                }
               </div>
             </div>
           </div>

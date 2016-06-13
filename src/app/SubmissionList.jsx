@@ -15,6 +15,7 @@ import {
   setActiveSubmission,
   updateSubmission,
   sendToGallery,
+  removeFromGallery,
   updateFormStatus,
   fetchForm } from 'forms/FormActions';
 
@@ -35,6 +36,10 @@ export default class SubmissionList extends Component {
     this.props.dispatch(sendToGallery(galleryId, subId, key));
   }
 
+  removeFromGallery(galleryId, subId, key) {
+    this.props.dispatch(removeFromGallery(galleryId, subId, key));
+  }
+
   onFlag(flagged) {
     this.props.dispatch(updateSubmission({ flagged }));
   }
@@ -44,11 +49,11 @@ export default class SubmissionList extends Component {
   }
 
   updateFormStatus(option) {
-    console.log(this.props);
     this.props.dispatch(updateFormStatus(this.props.forms.activeForm, option.value));
   }
 
   render() {
+
     const { submissionList, activeSubmission, activeForm, activeGallery } = this.props.forms;
     const submissions = submissionList.map(id => this.props.forms[id]);
     const submission = this.props.forms[activeSubmission];
@@ -70,6 +75,7 @@ export default class SubmissionList extends Component {
             onSelect={this.onSubmissionSelect.bind(this)} />
           <SubmissionDetail
             submission={submission}
+            removeFromGallery={this.removeFromGallery.bind(this)}
             sendToGallery={this.sendToGallery.bind(this)}
             gallery={gallery}
             onFlag={this.onFlag.bind(this)}
@@ -134,6 +140,7 @@ class Sidebar extends Component {
 class SubmissionDetail extends Component {
   render() {
     const { submission } = this.props;
+
     if(!submission) {
       return (<h1 style={styles.detail.container}>No submissions</h1>);
     }
@@ -157,26 +164,48 @@ class SubmissionDetail extends Component {
       return (<p>Loading gallery...</p>);
     }
 
-    const answers = gallery.answers.map(ans => ans.answer_id);
-
     return (
       <div style={styles.detail.answersContainer}>
         {submission.replies.map((reply, key) => {
 
-          const inGallery = answers.indexOf(reply.widget_id) !== -1;
+          // identity fields are shown above, not as part of 
+          //   the reply list
+          if (reply.identity === true) {
+            return (<span></span>);
+          }
+
+
+          // determine whether or not the answers is already
+          //  in the gallery
+          //  we need to find if BOTH
+          //   this submission id matches
+          //   and the answer has come form the widget
+          var inGallery = false;
+          for (var i in gallery.answers) {
+            if (gallery.answers[i].answer_id === reply.widget_id && 
+                gallery.answers[i].submission_id === submission.id) {
+              inGallery = true;
+              break;
+            }
+          }
 
           return (
             <div style={styles.detail.questionContainer} key={key}>
               <h2 style={styles.detail.question}>{reply.question}</h2>
               <p>{this.renderAnswer(reply.answer)}</p>
-              <p>galleryId: {gallery ? gallery.id : 'loading gallery'}</p>
+              {/*<p>galleryId: {gallery ? gallery.id : 'loading gallery'}</p>
               <p>submissionId: {submission.id}</p>
-              <p>widget id: {reply.widget_id}</p>
+              <p>widget id: {reply.widget_id}</p>*/}
               <Button
                 style={styles.detail.galleryButton}
                 category={inGallery ? 'success' : 'primary'}
                 size="small"
-                onClick={() => this.props.sendToGallery(gallery.id, submission.id, reply.widget_id)}>
+                onClick={
+                  inGallery ? 
+                    () => this.props.removeFromGallery(gallery.id, submission.id, reply.widget_id) : 
+                    () => this.props.sendToGallery(gallery.id, submission.id, reply.widget_id) 
+                }>
+
                 {inGallery ? 'In Gallery' : 'Send to gallery'}
               </Button>
             </div>
@@ -201,12 +230,30 @@ class SubmissionDetail extends Component {
       );
     }
 
+    if (answer.text) {
+      return answer.text;
+    }
+
     return answer;
   }
 
   renderAuthorDetail() {
     const { submission, onFlag, onBookmark } = this.props;
     const author = submission.author || {};
+
+    // author details come from form responses flagged as identity: true
+    //   Note, this should be abstracted probably to a reducer
+    var authorDetails = [];
+    for (var i in submission.replies) {
+      var thisReply = submission.replies[i];
+      if (thisReply.identity === true) {
+        authorDetails.push({
+          label: thisReply.question,
+          answer: this.renderAnswer(thisReply.answer)
+        });
+      }
+    }
+
     return (
       <div>
         <div style={styles.detail.headerContainer}>
@@ -230,14 +277,11 @@ class SubmissionDetail extends Component {
             <h2 style={styles.detail.authorTitle}>Submission Author Information</h2>
             <div style={styles.detail.authorDetailsContainer}>
               <div style={styles.detail.authorDetailsColumn}>
-                <p>Name: {author.name}</p>
-                <p>Location: {author.location}</p>
-                <p>Email: {author.email}</p>
-              </div>
-              <div style={styles.detail.authorDetailsColumn}>
-                <p>Age: {author.age}</p>
-                <p>Phone: {author.phone}</p>
-                <p>Occupation: {author.occupation}</p>
+                {
+                  authorDetails.map(function(detail) {
+                    return (<p>{detail.label}: {detail.answer}</p>)
+                  })
+                }
               </div>
             </div>
           </div>

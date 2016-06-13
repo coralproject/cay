@@ -144,7 +144,7 @@ export default class SubmissionGallery extends React.Component {
               <Card>
                 <CardHeader>Gallery Settings</CardHeader>
                 <Button category="primary" size="small">Publish Gallery/Updates</Button>
-                <p>Embded Code</p>
+                <p>Embed Code</p>
                 <textarea style={styles.embedCode}></textarea>
               </Card>
             </div>

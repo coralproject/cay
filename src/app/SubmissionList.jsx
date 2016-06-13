@@ -15,6 +15,7 @@ import {
   setActiveSubmission,
   updateSubmission,
   sendToGallery,
+  removeFromGallery,
   updateFormStatus,
   fetchForm } from 'forms/FormActions';
 
@@ -33,6 +34,10 @@ export default class SubmissionList extends Component {
 
   sendToGallery(galleryId, subId, key) {
     this.props.dispatch(sendToGallery(galleryId, subId, key));
+  }
+
+  removeFromGallery(galleryId, subId, key) {
+    this.props.dispatch(removeFromGallery(galleryId, subId, key));
   }
 
   onFlag(flagged) {
@@ -70,6 +75,7 @@ export default class SubmissionList extends Component {
             onSelect={this.onSubmissionSelect.bind(this)} />
           <SubmissionDetail
             submission={submission}
+            removeFromGallery={this.removeFromGallery.bind(this)}
             sendToGallery={this.sendToGallery.bind(this)}
             gallery={gallery}
             onFlag={this.onFlag.bind(this)}
@@ -135,10 +141,7 @@ class SubmissionDetail extends Component {
   render() {
     const { submission } = this.props;
 
-    console.log("Sub detail:", submission);
-
     if(!submission) {
-      console.log("====> No submissions!");
       return (<h1 style={styles.detail.container}>No submissions</h1>);
     }
 
@@ -153,8 +156,6 @@ class SubmissionDetail extends Component {
   renderAnswers() {
     const { submission, gallery } = this.props;
 
-    console.log("render submission", submission, gallery);
-
     if (!submission) {
       return (<p>loading submission...</p>);
     }
@@ -162,8 +163,6 @@ class SubmissionDetail extends Component {
     if (!gallery) {
       return (<p>Loading gallery...</p>);
     }
-
-    console.log("got past gallery");
 
     const answers = gallery.answers.map(ans => ans.answer_id);
 
@@ -179,20 +178,23 @@ class SubmissionDetail extends Component {
 
           const inGallery = answers.indexOf(reply.widget_id) !== -1;
 
-          console.log("Rendering reply:",  reply);
-
           return (
             <div style={styles.detail.questionContainer} key={key}>
               <h2 style={styles.detail.question}>{reply.question}</h2>
               <p>{this.renderAnswer(reply.answer)}</p>
-              <p>galleryId: {gallery ? gallery.id : 'loading gallery'}</p>
+              {/*<p>galleryId: {gallery ? gallery.id : 'loading gallery'}</p>
               <p>submissionId: {submission.id}</p>
-              <p>widget id: {reply.widget_id}</p>
+              <p>widget id: {reply.widget_id}</p>*/}
               <Button
                 style={styles.detail.galleryButton}
                 category={inGallery ? 'success' : 'primary'}
                 size="small"
-                onClick={() => this.props.sendToGallery(gallery.id, submission.id, reply.widget_id)}>
+                onClick={
+                  inGallery ? 
+                    () => this.props.removeFromGallery(gallery.id, submission.id, reply.widget_id) : 
+                    () => this.props.sendToGallery(gallery.id, submission.id, reply.widget_id) 
+                }>
+
                 {inGallery ? 'In Gallery' : 'Send to gallery'}
               </Button>
             </div>

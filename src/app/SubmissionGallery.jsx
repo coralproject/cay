@@ -31,7 +31,6 @@ export default class SubmissionGallery extends React.Component {
   }
 
   removeSubmission(galleryId, submissionId, answerId) {
-    console.log('removeSubmission', galleryId, submissionId, answerId);
     this.props.dispatch(removeFromGallery(galleryId, submissionId, answerId));
   }
 
@@ -42,12 +41,14 @@ export default class SubmissionGallery extends React.Component {
       console.log('answer', answer);
       return (
         <Card key={i}>
-          <p>Added to Gallery 5/25 {answer.submission_id}</p>
-          {answer.answer.answer}
-          <p>Gallery id: {galleryId ? galleryId : 'loading gallery'}</p>
-          <p>Answer id: {answer.answer_id}</p>
-          <p>widget id: {answer.answer.widget_id}</p>
-          <p>submission id: {answer.submission_id}</p>
+          {/*<p>Added to Gallery 5/25 {answer.submission_id}</p>*/}
+          {answer.answer.answer.text}
+          {/*
+            <p>Gallery id: {galleryId ? galleryId : 'loading gallery'}</p>
+            <p>Answer id: {answer.answer_id}</p>
+            <p>widget id: {answer.answer.widget_id}</p>
+            <p>submission id: {answer.submission_id}</p>
+          */}
           <div>
             <Button style={styles.editButton} category="info" size="small">
               Edit <Edit />
@@ -87,11 +88,35 @@ export default class SubmissionGallery extends React.Component {
     this.props.dispatch(updateFormStatus(this.props.activeForm, option.value));
   }
 
+  getAttributionFields(form) {
+
+    var fields = [];
+
+
+    if (! form || ! form.steps) {
+      return fields;
+    }
+
+    for (var s in form.steps) {
+      for (var w in form.steps[s].widgets) {
+        if (form.steps[s].widgets[w].identity === true) {
+          fields.push(form.steps[s].widgets[w]);
+        }
+      }
+    }
+
+    return fields;
+  }
+
   render() {
 
     const form = this.props[this.props.activeForm];
     const gallery = this.props[this.props.activeGallery];
     const submissions = this.props.submissionList.map(id => this.props[id]);
+
+    const attributionFields = this.getAttributionFields(form);
+
+    console.log(attributionFields);
 
     return (
       <Page>
@@ -102,15 +127,19 @@ export default class SubmissionGallery extends React.Component {
           submissions={submissions}
           gallery={gallery} />
         <div style={styles.base}>
-          <ContentHeader title={'Submission Gallery ' + this.props.activeGallery} />
+          <ContentHeader title={'Submission Gallery '} />
           <div style={styles.container}>
             <div style={styles.sidebar}>
               <Card>
-                <CardHeader>Submission Author Attribution</CardHeader>
-                <Checkbox label="Name" />
-                <Checkbox label="Email" />
-                <Checkbox label="Location" />
-                <Checkbox label="Phone" />
+                <CardHeader>Author Attribution</CardHeader>
+
+                {attributionFields.map(function (field) {
+
+                  return <Checkbox label={field.title} />;
+
+                })}
+
+
               </Card>
               <Card>
                 <CardHeader>Gallery Settings</CardHeader>

@@ -44,24 +44,16 @@ export default class SubmissionList extends Component {
   }
 
   updateFormStatus(option) {
-    console.log(this.props);
-    console.log("this props forms", this.props.forms);
     this.props.dispatch(updateFormStatus(this.props.forms.activeForm, option.value));
   }
 
   render() {
-
-    console.log("this.props.forms", this.props.forms);
-
 
     const { submissionList, activeSubmission, activeForm, activeGallery } = this.props.forms;
     const submissions = submissionList.map(id => this.props.forms[id]);
     const submission = this.props.forms[activeSubmission];
     const form = this.props.forms[activeForm];
     const gallery = this.props.forms[activeGallery];
-
-
-    console.log("submission", submission);
 
     return (
       <Page>
@@ -142,7 +134,11 @@ class Sidebar extends Component {
 class SubmissionDetail extends Component {
   render() {
     const { submission } = this.props;
+
+    console.log("Sub detail:", submission);
+
     if(!submission) {
+      console.log("====> No submissions!");
       return (<h1 style={styles.detail.container}>No submissions</h1>);
     }
 
@@ -157,6 +153,8 @@ class SubmissionDetail extends Component {
   renderAnswers() {
     const { submission, gallery } = this.props;
 
+    console.log("render submission", submission, gallery);
+
     if (!submission) {
       return (<p>loading submission...</p>);
     }
@@ -165,13 +163,23 @@ class SubmissionDetail extends Component {
       return (<p>Loading gallery...</p>);
     }
 
+    console.log("got past gallery");
+
     const answers = gallery.answers.map(ans => ans.answer_id);
 
     return (
       <div style={styles.detail.answersContainer}>
         {submission.replies.map((reply, key) => {
 
+          // identity fields are shown above, not as part of 
+          //   the reply list
+          if (reply.identity === true) {
+            return (<span></span>);
+          }
+
           const inGallery = answers.indexOf(reply.widget_id) !== -1;
+
+          console.log("Rendering reply:",  reply);
 
           return (
             <div style={styles.detail.questionContainer} key={key}>
@@ -209,6 +217,10 @@ class SubmissionDetail extends Component {
       );
     }
 
+    if (answer.text) {
+      return answer.text;
+    }
+
     return answer;
   }
 
@@ -224,7 +236,7 @@ class SubmissionDetail extends Component {
       if (thisReply.identity === true) {
         authorDetails.push({
           label: thisReply.question,
-          value: thisReply.answer.text
+          answer: this.renderAnswer(thisReply.answer)
         });
       }
     }
@@ -254,7 +266,7 @@ class SubmissionDetail extends Component {
               <div style={styles.detail.authorDetailsColumn}>
                 {
                   authorDetails.map(function(detail) {
-                    return (<p>{detail.label}: {detail.value}</p>)
+                    return (<p>{detail.label}: {detail.answer}</p>)
                   })
                 }
               </div>

@@ -1,12 +1,8 @@
 import * as types from 'app/AppActions';
 
-const initialState = {
-  configLoaded: false,
-  loadingConfig: false,
-  xeniaHost: null,
-  pillarHost: null,
-  environment: null
-};
+/* initialState is defined in index.js
+   and loaded from public/config.json and public/data_config.json */
+const initialState = {};
 
 const app = (state = initialState, action) => {
   switch (action.type) {

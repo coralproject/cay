@@ -2,7 +2,7 @@ import * as types from 'auth/AuthActions';
 
 const initialState = {
   loading: false,
-  authorized: window.localStorage.authorized || null
+  authorized: window.localStorage.getItem('authorized') === 'true'
 };
 
 const auth = (state = initialState, action) => {

@@ -25,7 +25,6 @@ class SeeAllSearches extends React.Component {
 
   componentWillMount() {
     // redirect user to /login if they're not logged in
-    //   TODO: refactor: pass in a function that calculates auth state
     if (this.props.app.requireLogin && !this.props.auth.authorized) {
       let {router} = this.context;
       return router.push('/login');

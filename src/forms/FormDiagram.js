@@ -127,7 +127,7 @@ export default class FormDiagram extends Component {
           }
         </div>
         <div style={ styles.extraFields }>
-          <h3 style={ styles.thankYouMessageTitle }>Custom thank you message (optional)</h3>
+          <h3 style={ styles.thankYouMessageTitle }>Thank you message</h3>
           <textarea
             defaultValue={ form.finishedScreen.description }
             style={ styles.customThankYouMessage }

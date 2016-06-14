@@ -40,7 +40,7 @@ const emptyForm = {
     saveDestination: 'https://pillar_stg.coralproject.net/api/form_submission/',
     showFieldNumbers: true,
     isActive: false,
-    inactiveMessage: "We are not currently accepting submissions. Thank you."
+    inactiveMessage: 'We are not currently accepting submissions. Thank you.'
   },
   header: {
     title: 'Share your story',
@@ -51,7 +51,7 @@ const emptyForm = {
   },
   finishedScreen: {
     title: 'Thanks.',
-    description: 'This is a more verbose thank you message'
+    description: 'Thank you for helping us with our journalism. We read all submissions, and will be in touch if we have any more questions.'
   },
   steps: [{
     id: '1',

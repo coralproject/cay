@@ -19,7 +19,7 @@ const initial = {
 const emptyForm = {
   target: '#ask-form',
   theme: {
-    headerBackground: '#448899',
+    headerBackground: 'rgb(246, 125, 111)',
     headerText: '#FFFFFF',
     headerIntroText: '#EEEEEE',
     formBackground: '#EEEEEE',
@@ -31,7 +31,7 @@ const emptyForm = {
     fieldTitleText: '#222222',
     progressBar: '#44AA44',
     progressBarBackground: '#CCCCCC',
-    submitButtonBackground: '#444499',
+    submitButtonBackground: '#B71C1C',
     submitButtonText: '#FFFFFF',
     selectedItemBackground: '#111111',
     selectedItemText: '#FAFAFA'

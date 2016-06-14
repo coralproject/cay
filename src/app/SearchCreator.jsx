@@ -134,7 +134,7 @@ export default class SearchCreator extends Component {
             }
           </StatusBar>
           <div style={styles.topSection}>
-            <ContentHeader title={ window.L.t('Create & save a search') } />
+            <ContentHeader title={ window.L.t('Create a Search') } />
             <Button onClick={this.openModal.bind(this)} category="default" style={styles.saveButton}>
               <FaFloopyO style={styles.saveIcon} />{` Save Search `}
             </Button>

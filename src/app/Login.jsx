@@ -10,7 +10,14 @@ import {login} from 'auth/AuthActions';
 import Button from 'components/Button';
 import TextField from 'components/forms/TextField';
 
-@connect(state => state.auth)
+const mapStateToProps = state => {
+  return {
+    auth: state.auth,
+    app: state.app
+  };
+};
+
+@connect(mapStateToProps)
 @Radium
 class Login extends React.Component {
 
@@ -20,14 +27,14 @@ class Login extends React.Component {
 
   componentWillMount() {
     // use react-router to push state?
-    if (!window.requireLogin || this.props.authorized) {
+    if (!this.props.app.requireLogin || this.props.auth.authorized) {
       let {router} = this.context;
       router.push('/');
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (!window.requireLogin || this.props.authorized) {
+  componentWillUpdate() {
+    if (!this.props.app.requireLogin || this.props.auth.authorized) {
       let {router} = this.context;
       router.push('/');
     }
@@ -69,7 +76,7 @@ class Login extends React.Component {
               label="password" />
 
             {
-              this.props.authorized === false ?
+              this.props.auth.authorized === false ?
                 <p style={ styles.unauthorizedMessage }>Invalid username or password.</p>
               :
                 null

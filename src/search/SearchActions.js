@@ -424,11 +424,10 @@ const doMakeQueryFromStateAsync = _.debounce((query, dispatch, app, replace)=>{
 }, 1000);
 
 export const updateSearch = staleSearch => {
-  // build query from state
-  // update search in xenia? or create a new one
-  // update in pillar
 
   return (dispatch, getState) => {
+
+    // build query from state
     const {app, searches, filters} = getState();
     const {name, description, tag} = staleSearch;
     const {breakdownEdit, specificBreakdownEdit} = filters;
@@ -437,6 +436,7 @@ export const updateSearch = staleSearch => {
 
     dispatch({type: PILLAR_SAVED_SEARCH_UPDATE, query});
 
+    // update search in xenia
     xenia(query).saveQuery().then(() => {
       dispatch({type: QUERYSET_SAVE_SUCCESS, name: query.name});
 
@@ -445,7 +445,12 @@ export const updateSearch = staleSearch => {
         console.log('updateSearch filters', filters);
         return filters[key];
       });
+
+      // update search in pillar
       const body = prepSearch(editFilters, query, name, description, tag, breakdownEdit, specificBreakdownEdit);
+
+      // append the id for update mode
+      body.id = staleSearch.id;
 
       fetch(`${app.pillarHost}/api/search`, {method: 'PUT', body: JSON.stringify(body)})
         .then(resp => resp.json())

@@ -6,6 +6,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 import { Link } from 'react-router';
+import { userSelected } from 'users/UsersActions';
 
 import { mediumGrey } from 'settings';
 

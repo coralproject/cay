@@ -6,6 +6,8 @@ import Stat from 'components/stats/Stat';
 import Heading from 'components/Heading';
 import CommentDetailList from 'comments/CommentDetailList';
 import FAClose from 'react-icons/lib/fa/close';
+import FAArrowRight from 'react-icons/lib/fa/arrow-right';
+import FAArrowLeft from 'react-icons/lib/fa/arrow-left';
 
 import { Lang } from 'i18n/lang';
 
@@ -16,7 +18,11 @@ export default class UserDetail extends Component {
     commentsLoading: PropTypes.bool.isRequired,
     breakdown: PropTypes.string,
     specificBreakdown: PropTypes.string,
-    onClose: PropTypes.func.isRequired
+    onClose: PropTypes.func.isRequired,
+    isFirst: PropTypes.bool.isRequired,
+    isLast: PropTypes.bool.isRequired,
+    onPrevUser: PropTypes.func.isRequired,
+    onNextUser: PropTypes.func.isRequired
   }
 
   getStats() {
@@ -80,10 +86,14 @@ export default class UserDetail extends Component {
     );
   }
   render() {
-
+    const { isFirst, isLast } = this.props;
     return (
       <div style={[styles.base, this.props.style]}>
         <span style={styles.close} onClick={this.props.onClose}><FAClose /></span>
+          <div style={styles.controls}>
+            {isFirst ? null : <span style={styles.control} onClick={this.props.onPrevUser}><FAArrowLeft /></span>}
+            {isLast ? null : <span style={styles.control} onClick={this.props.onNextUser}><FAArrowRight /></span>}
+          </div>
         {
           !this.props.user ? this.renderSpinner() : this.createDetailsMarkup()
         }
@@ -131,6 +141,13 @@ const styles = {
     position: 'absolute',
     top: 10,
     right: 10,
+    cursor: 'pointer'
+  },
+  controls: {
+    marginBottom: 10
+  },
+  control: {
+    marginRight: 25,
     cursor: 'pointer'
   }
 };

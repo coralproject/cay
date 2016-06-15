@@ -86,13 +86,29 @@ export default class UserList extends React.Component {
     }
   }
 
+  onPrevUser() {
+    const { user, users } = this.props;
+    const actualIndex = users.map(u => u._id).indexOf(user._id);
+    if (actualIndex !== -1) {
+      this.props.dispatch(userSelected(users[actualIndex - 1]));
+    }
+  }
+
+  onNextUser() {
+    const { user, users } = this.props;
+    const actualIndex = users.map(u => u._id).indexOf(user._id);
+    if (actualIndex !== -1) {
+      this.props.dispatch(userSelected(users[actualIndex + 1]));
+    }
+  }
+
   onCloseDetail() {
     // Remove the selected user
     this.props.dispatch(userSelected(null));
   }
 
   render() {
-    const { user, comments } = this.props;
+    const { user, users, comments } = this.props;
 
     var noUsersMessage = (<p style={ styles.noUsers }>
       No users loaded yet,<br />
@@ -136,6 +152,10 @@ export default class UserList extends React.Component {
               {user ? <UserDetail onClose={this.onCloseDetail.bind(this)}
                 comments={comments.items}
                 commentsLoading={comments.loading}
+                onPrevUser={this.onPrevUser.bind(this)}
+                onNextUser={this.onNextUser.bind(this)}
+                isLast={user._id === users[users.length - 1]._id}
+                isFirst={user._id === users[0]._id}
                 user={user} /> : null}
             </div>
           </div>

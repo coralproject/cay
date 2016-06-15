@@ -99,7 +99,8 @@ export default class UserRow extends React.Component {
         >
         <div style={styles.flex}>
           <div>
-            <RadiumLink to={`user/${this.props.user._id}`}>{user.name}</RadiumLink>
+            <RadiumLink style={styles.link}
+              to={`user/${this.props.user._id}`}>{user.name}</RadiumLink>
             {this.getNonDefaultFilters()}
           </div>
         </div>
@@ -130,6 +131,9 @@ const styles = {
   avatar: {
     height: 50,
     marginRight: 10
-
+  },
+  link: {
+    textDecoration: 'none',
+    color: '#000'
   }
 };

@@ -107,7 +107,11 @@ const styles = {
     padding: 5
   },
   formName: {
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    cursor: 'auto',
+    ':hover': {
+      backgroundColor: settings.mediumGrey
+    }
   },
   menu: {
     display: 'flex'

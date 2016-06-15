@@ -23,7 +23,7 @@ const initial = {
 const emptyForm = {
   target: '#ask-form',
   theme: {
-    headerBackground: '#448899',
+    headerBackground: 'rgb(246, 125, 111)',
     headerText: '#FFFFFF',
     headerIntroText: '#EEEEEE',
     formBackground: '#EEEEEE',
@@ -35,7 +35,7 @@ const emptyForm = {
     fieldTitleText: '#222222',
     progressBar: '#44AA44',
     progressBarBackground: '#CCCCCC',
-    submitButtonBackground: '#444499',
+    submitButtonBackground: '#B71C1C',
     submitButtonText: '#FFFFFF',
     selectedItemBackground: '#111111',
     selectedItemText: '#FAFAFA'
@@ -44,7 +44,7 @@ const emptyForm = {
     saveDestination: 'https://pillar_stg.coralproject.net/api/form_submission/',
     showFieldNumbers: true,
     isActive: false,
-    inactiveMessage: "We are not currently accepting submissions. Thank you."
+    inactiveMessage: 'We are not currently accepting submissions. Thank you.'
   },
   header: {
     title: 'Share your story',
@@ -55,7 +55,7 @@ const emptyForm = {
   },
   finishedScreen: {
     title: 'Thanks.',
-    description: 'This is a more verbose thank you message'
+    description: 'Thank you for helping us with our journalism. We read all submissions, and will be in touch if we have any more questions.'
   },
   steps: [{
     id: '1',

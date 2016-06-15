@@ -231,11 +231,11 @@ const styles = {
       position: 'absolute',
       width: '280px',
       left: isActive ? '-80px' : '0px',
-      background: isActive ? '#292' : '#ccc',
+      background: isActive ? '#292' : '#333',
       transition: 'all .5s',
       cursor: 'pointer',
       height: '45px'
-    }
+    };
   },
   switch: {
     position: 'relative',
@@ -257,7 +257,7 @@ const styles = {
     margin: '5px',
     background: 'white',
     borderRadius: '4px',
-    boxShadow: '0 1px 4px #aaa',
+    boxShadow: '0 1px 4px #aaa'
   },
   switchInput: {
     position: 'absolute',

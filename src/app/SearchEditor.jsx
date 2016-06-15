@@ -29,7 +29,8 @@ const mapStateToProps = state => {
     searches: state.searches,
     filters: state.filters,
     comments: state.comments,
-    users: state.users
+    users: state.users,
+    auth: state.auth
   };
 };
 
@@ -39,6 +40,12 @@ export default class SearchEditor extends React.Component {
 
   componentWillMount() {
     const {dispatch, params} = this.props;
+
+    // redirect user to /login if they're not logged in
+    if (this.props.app.requireLogin && !this.props.auth.authorized) {
+      let {router} = this.context;
+      return router.push('/login');
+    }
 
     dispatch(clearUserList());
     dispatch(fetchInitialData());

@@ -2,8 +2,6 @@
 /**
  * Module dependencies
  */
- import settings from 'settings';
-
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
@@ -25,7 +23,6 @@ import { filterChanged, getFilterRanges } from 'filters/FiltersActions';
 import Page from 'app/layout/Page';
 import ContentHeader from 'components/ContentHeader';
 import UserList from 'users/UserList';
-import UserDetail from 'users/UserDetail';
 import UserFilters from 'filters/UserFilters';
 import Button from 'components/Button';
 import FaFloopyO from 'react-icons/lib/fa/floppy-o';
@@ -44,7 +41,8 @@ import Clauses from 'search/Clauses';
   comments: state.comments,
   users: state.users,
   filters: state.filters,
-  app: state.app
+  app: state.app,
+  auth: state.auth
 }))
 @Radium
 export default class SearchCreator extends Component {
@@ -63,7 +61,7 @@ export default class SearchCreator extends Component {
 
     // redirect user to /login if they're not logged in
     //   TODO: refactor: pass in a function that calculates auth state
-    if (this.props.app.requireLogin && !this.props.searches.authorized) {
+    if (this.props.app.requireLogin && !this.props.auth.authorized) {
       return this.context.router.push('/login');
     }
 

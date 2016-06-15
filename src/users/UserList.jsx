@@ -43,6 +43,7 @@ export default class UserList extends React.Component {
   }
 
   handleInfiniteLoad () {
+    console.log('pepe', this.props.users.length)
     if (this.props.users.length >= this.props.total) return;
     this.props.onPagination(this.state.page);
     this.setState({
@@ -52,11 +53,10 @@ export default class UserList extends React.Component {
   getUserList(users) {
     return (
       <Infinite
-        elementHeight={100}
+        elementHeight={57}
         containerHeight={500}
         infiniteLoadBeginEdgeOffset={200}
-        onInfiniteLoad={this.handleInfiniteLoad.bind(this)}
-        >
+        onInfiniteLoad={this.handleInfiniteLoad.bind(this)}>
         {users.map((user, i) =>
           <UserRow {...this.props}
             breakdown={this.props.filters.breakdown}

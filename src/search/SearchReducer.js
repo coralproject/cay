@@ -1,7 +1,6 @@
 import * as types from 'search/SearchActions';
 
 const initialState = {
-  authorized: localStorage.authorized || false,
   loading: false,
   loadingQueryset: false,
   activeQuery: null,

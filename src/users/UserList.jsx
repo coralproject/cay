@@ -90,7 +90,7 @@ export default class UserList extends React.Component {
     const { user, users } = this.props;
     const actualIndex = users.map(u => u._id).indexOf(user._id);
     if (actualIndex !== -1) {
-      this.props.dispatch(userSelected(users[actualIndex - 1]));
+      this.userSelected(users[actualIndex - 1]);
     }
   }
 
@@ -98,7 +98,7 @@ export default class UserList extends React.Component {
     const { user, users } = this.props;
     const actualIndex = users.map(u => u._id).indexOf(user._id);
     if (actualIndex !== -1) {
-      this.props.dispatch(userSelected(users[actualIndex + 1]));
+      this.userSelected(users[actualIndex + 1]);
     }
   }
 

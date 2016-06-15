@@ -36,6 +36,24 @@ export default class UserList extends React.Component {
       page: 0,
       selectedSort: props.filters.filterList[0]
     };
+
+    var keypress = function (evt) {
+      switch (evt.keyCode) {
+      case 39:
+        return this.onNextUser();
+      case 37:
+        return this.onPrevUser();
+      case 27:
+        return this.onCloseDetail();
+      }
+    };
+
+    this.onKeyPress = keypress.bind(this);
+    document.addEventListener('keydown', this.onKeyPress, true);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.onKeyPress, true);
   }
 
   userSelected(user) {

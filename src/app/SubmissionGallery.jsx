@@ -5,7 +5,8 @@ import {
   fetchForm,
   fetchGallery,
   removeFromGallery,
-  updateFormStatus
+  updateFormStatus,
+  editAnswer
 } from 'forms/FormActions';
 import {Link} from 'react-router';
 
@@ -20,10 +21,16 @@ import Edit from 'react-icons/lib/md/edit';
 
 import Checkbox from 'components/forms/Checkbox';
 import Button from 'components/Button';
+import Modal from 'components/modal/Modal';
 
 @connect(state => state.forms)
 @Radium
 export default class SubmissionGallery extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {editModalOpen: false};
+  }
 
   componentWillMount() {
     this.props.dispatch(fetchForm(this.props.params.id));
@@ -32,6 +39,12 @@ export default class SubmissionGallery extends React.Component {
 
   removeSubmission(galleryId, submissionId, answerId) {
     this.props.dispatch(removeFromGallery(galleryId, submissionId, answerId));
+  }
+
+  editSubmission(galleryId, submissionId, answerId) {
+    this.setState({editModalOpen: true});
+    console.log('editSubmission', ...arguments);
+    // this.props.dispatch(editAnswer(galleryId, submissionId, answerId));
   }
 
   renderGallery(galleryId) {
@@ -50,7 +63,11 @@ export default class SubmissionGallery extends React.Component {
             <p>submission id: {answer.submission_id}</p>
           */}
           <div>
-            <Button style={styles.editButton} category="info" size="small">
+            <Button
+              style={styles.editButton}
+              category="info"
+              size="small"
+              onClick={this.editSubmission.bind(this, galleryId, answer.submission_id, answer.answer_id)}>
               Edit <Edit />
             </Button>
             <Button
@@ -90,22 +107,24 @@ export default class SubmissionGallery extends React.Component {
 
   getAttributionFields(form) {
 
-    var fields = [];
-
-
     if (! form || ! form.steps) {
-      return fields;
+      return [];
     }
 
-    for (var s in form.steps) {
-      for (var w in form.steps[s].widgets) {
-        if (form.steps[s].widgets[w].identity === true) {
-          fields.push(form.steps[s].widgets[w]);
-        }
-      }
-    }
+    const fields = form.steps.map(step => {
+      return step.widgets.filter(widget => widget.identity);
+    });
 
-    return fields;
+    // flatten the array we just created
+    return [].concat(...fields);
+  }
+
+  confirmEdit() {
+    this.setState({editModalOpen: false});
+  }
+
+  cancelEdit() {
+    this.setState({editModalOpen: false});
   }
 
   render() {
@@ -115,8 +134,6 @@ export default class SubmissionGallery extends React.Component {
     const submissions = this.props.submissionList.map(id => this.props[id]);
 
     const attributionFields = this.getAttributionFields(form);
-
-    console.log(attributionFields);
 
     return (
       <Page>
@@ -155,8 +172,24 @@ export default class SubmissionGallery extends React.Component {
                 this.renderBlank()
               }
             </div>
+
           </div>
+
         </div>
+        <Modal
+          title="Edit Submission for Gallery"
+          isOpen={this.state.editModalOpen}
+          confirmAction={this.confirmEdit.bind(this)}
+          cancelAction={this.cancelEdit.bind(this)}>
+          <div style={styles.modalBody}>
+            <div style={styles.original}>
+              original
+            </div>
+            <div style={styles.modified}>
+              modified
+            </div>
+          </div>
+        </Modal>
       </Page>
     );
   }
@@ -182,5 +215,15 @@ const styles = {
   },
   editButton: {
     marginRight: 10
+  },
+
+  modalBody: {
+    display: 'flex'
+  },
+  original: {
+    flex: 1
+  },
+  modified: {
+    flex: 1
   }
 };

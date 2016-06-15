@@ -5,6 +5,7 @@ const initial = {
   formList: [],
   galleryList: [],
   submissionList: [],
+  answerList: [],
   editAccess: {},
   form: null,
   savingForm: false,
@@ -13,6 +14,7 @@ const initial = {
   activeForm: null, // might be able to combine this with {form} above in the future
   activeGallery: null, // this is an ObjectId string
   widgets: [],
+  activeAnswer: null, // ObjectId string
   activeSubmission: null // ObjectId string
 };
 

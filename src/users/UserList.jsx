@@ -135,9 +135,19 @@ export default class UserList extends React.Component {
 
     const {filters} = this.props;
     var userListContent = this.props.users.length ? this.getUserList(this.props.users) : noUsersMessage;
-    var sortableFilters = filters.filterList.map(filter => {
-      return {label: filters[filter].description, value: filter};
-    });
+
+    // get a list of only the sortable filters
+    var sortableFilters = [];
+    for (var i in filters.filterList) {
+      var filter = filters[filters.filterList[i]]; // we're working with a list of keys to the root of the props
+      if (filter.sortable) {
+        sortableFilters.push({
+          label: filter.description,
+          value: filters.filterList[i] // passing the key of the filter here
+        })
+      }
+    }
+
 
     return (
       <div style={ [ styles.base, this.props.style ] }>

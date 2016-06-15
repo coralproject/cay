@@ -62,7 +62,8 @@ class Root extends React.Component {
 
   constructor(props){
     super(props);
-    ga.initialize(window.googleAnalyticsId, { debug: (process && process.env.NODE_ENV !== 'production') });
+
+    ga.initialize(props.app.googleAnalyticsId, { debug: (process && process.env.NODE_ENV !== 'production') });
     window.addEventListener('error', e => ga.exception({
       description: e.error.stack
     }), false);
@@ -73,7 +74,7 @@ class Root extends React.Component {
   }
 
   render() {
-    const { features } = this.props;
+    const { features } = this.props.app;
     return (
       <StyleRoot>
         <Provider store={store}>
@@ -141,7 +142,7 @@ Promise.all([loadConfig('/config.json'), loadConfig('/data_config.json')])
   store.dispatch(configXenia());
   store.dispatch({type: 'DATA_CONFIG_LOADED', config: filters});
 
-  ReactDOM.render(<Root features={app.features|| {}}/>, document.getElementById('root'));
+  ReactDOM.render(<Root app={app || {}}/>, document.getElementById('root'));
 })
 .catch(err => console.error(err.stack));
 

@@ -48,7 +48,8 @@ const styles = {
     backgroundColor: 'rgba(0, 0, 0, 0.2)'
   },
   modalContainer: {
-    width: '50%',
+    width: '0%',
+    minWidth: 800,
     marginTop: 30,
     marginBottom: 50,
     maxWidth: 500

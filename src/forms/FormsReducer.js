@@ -14,7 +14,9 @@ const initial = {
   activeForm: null, // might be able to combine this with {form} above in the future
   activeGallery: null, // this is an ObjectId string
   widgets: [],
+  loadingAnswerEdit: false,
   activeAnswer: null, // ObjectId string
+  editableAnswer: '',
   activeSubmission: null // ObjectId string
 };
 
@@ -202,7 +204,20 @@ const forms = (state = initial, action) => {
 
   case types.FORM_GALLERY_SUCCESS:
     // action gallery might be more than one gallery in the future
-    return {...state, loadingGallery: false, activeGallery: action.gallery.id, [action.gallery.id]: action.gallery};
+
+    const answers = action.gallery.answers.reduce((accum, ans) => {
+      accum[ans.answer_id] = ans;
+      return accum;
+    }, {});
+
+    return {
+      ...state,
+      loadingGallery: false,
+      activeGallery: action.gallery.id,
+      [action.gallery.id]: action.gallery,
+      ...answers,
+      answerList: Object.keys(answers)
+    };
 
   case types.FORM_GALLERY_ERROR:
     return {...state, loadingGallery: false, activeGallery: null, galleryError: action.error};
@@ -215,6 +230,26 @@ const forms = (state = initial, action) => {
 
   case types.FORM_ANSWER_REMOVED_FROM_GALLERY:
     return {...state, [action.gallery.id]: action.gallery};
+
+  // editing Gallery submissions
+  case types.ANSWER_EDIT_BEGIN: // user clicked on button to start editing an answer
+    return {
+      ...state,
+      activeAnswer: action.answerId,
+      editableAnswer: state[action.answerId].answer.answer.text
+    };
+
+  case types.ANSWER_EDIT_UPDATE:
+    return {...state, editableAnswer: action.text};
+
+  case types.ANSWER_EDIT_REQUEST: // submit Answer edit to server
+    return {...state, loadingAnswerEdit: true};
+
+  case types.ANSWER_EDIT_SUCCESS:
+    return {...state, loadingAnswerEdit: false, [action.gallery.id]: action.gallery};
+
+  case types.ANSWER_EDIT_FAILED:
+    return {...state, loadingAnswerEdit: false};
 
   default:
     return state;

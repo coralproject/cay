@@ -27,7 +27,8 @@ const styles = {
     paddingBottom: 16,
     paddingTop: 8,
     paddingLeft: 8,
-    paddingRight: 8
+    paddingRight: 8,
+    marginBottom: 8
   },
   ex: {
     fontSize: 40,

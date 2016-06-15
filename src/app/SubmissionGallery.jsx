@@ -4,12 +4,16 @@ import {connect} from 'react-redux';
 import {
   fetchForm,
   fetchGallery,
+  fetchSubmissions,
   removeFromGallery,
   updateFormStatus,
-  editAnswer
+  updateEditableAnswer,
+  editAnswer,
+  beginEdit
 } from 'forms/FormActions';
 import {Link} from 'react-router';
 
+import settings from 'settings';
 import Page from 'app/layout/Page';
 import FormChrome from 'app/layout/FormChrome';
 import ContentHeader from 'components/ContentHeader';
@@ -19,6 +23,7 @@ import CardHeader from 'components/cards/CardHeader';
 import Delete from 'react-icons/lib/md/delete';
 import Edit from 'react-icons/lib/md/edit';
 
+import TextField from 'components/forms/TextField';
 import Checkbox from 'components/forms/Checkbox';
 import Button from 'components/Button';
 import Modal from 'components/modal/Modal';
@@ -34,6 +39,8 @@ export default class SubmissionGallery extends React.Component {
 
   componentWillMount() {
     this.props.dispatch(fetchForm(this.props.params.id));
+    // for the nav to have the correct count of submissions for this form/gallery
+    this.props.dispatch(fetchSubmissions(this.props.params.id));
     this.props.dispatch(fetchGallery(this.props.params.id));
   }
 
@@ -44,7 +51,7 @@ export default class SubmissionGallery extends React.Component {
   editSubmission(galleryId, submissionId, answerId) {
     this.setState({editModalOpen: true});
     console.log('editSubmission', ...arguments);
-    // this.props.dispatch(editAnswer(galleryId, submissionId, answerId));
+    this.props.dispatch(beginEdit(galleryId, submissionId, answerId));
   }
 
   renderGallery(galleryId) {
@@ -55,7 +62,7 @@ export default class SubmissionGallery extends React.Component {
       return (
         <Card key={i}>
           {/*<p>Added to Gallery 5/25 {answer.submission_id}</p>*/}
-          {answer.answer.answer.text}
+          <p style={styles.answerText}>{answer.answer.answer.text}</p>
           {/*
             <p>Gallery id: {galleryId ? galleryId : 'loading gallery'}</p>
             <p>Answer id: {answer.answer_id}</p>
@@ -74,7 +81,7 @@ export default class SubmissionGallery extends React.Component {
               category="warning"
               onClick={this.removeSubmission.bind(this, galleryId, answer.submission_id, answer.answer_id)}
               size="small">
-              Remove <Delete />
+              Remove From Gallery <Delete />
             </Button>
           </div>
         </Card>
@@ -119,12 +126,19 @@ export default class SubmissionGallery extends React.Component {
     return [].concat(...fields);
   }
 
-  confirmEdit() {
-    this.setState({editModalOpen: false});
+  confirmEdit(answer) {
+    // this.setState({editModalOpen: false});
+    console.log('confirmEdit');
+    this.props.dispatch(editAnswer(this.props.editableAnswer, answer));
   }
 
   cancelEdit() {
     this.setState({editModalOpen: false});
+  }
+
+  updateEditableAnswer(e) {
+    console.log('updateEditableAnswer', e.currentTarget.value);
+    this.props.dispatch(updateEditableAnswer(e.currentTarget.value));
   }
 
   render() {
@@ -132,6 +146,7 @@ export default class SubmissionGallery extends React.Component {
     const form = this.props[this.props.activeForm];
     const gallery = this.props[this.props.activeGallery];
     const submissions = this.props.submissionList.map(id => this.props[id]);
+    const ans = this.props[this.props.activeAnswer];
 
     const attributionFields = this.getAttributionFields(form);
 
@@ -144,7 +159,7 @@ export default class SubmissionGallery extends React.Component {
           submissions={submissions}
           gallery={gallery} />
         <div style={styles.base}>
-          <ContentHeader title={'Submission Gallery '} />
+          <ContentHeader title={'Submission Gallery'} />
           <div style={styles.container}>
             <div style={styles.sidebar}>
               <Card>
@@ -176,20 +191,37 @@ export default class SubmissionGallery extends React.Component {
           </div>
 
         </div>
-        <Modal
-          title="Edit Submission for Gallery"
-          isOpen={this.state.editModalOpen}
-          confirmAction={this.confirmEdit.bind(this)}
-          cancelAction={this.cancelEdit.bind(this)}>
-          <div style={styles.modalBody}>
-            <div style={styles.original}>
-              original
-            </div>
-            <div style={styles.modified}>
-              modified
-            </div>
-          </div>
-        </Modal>
+        {
+          ans ?
+            <Modal
+              title="Edit Submission for Gallery"
+              isOpen={this.state.editModalOpen}
+              confirmAction={this.confirmEdit.bind(this, ans)}
+              cancelAction={this.cancelEdit.bind(this)}>
+              <div style={styles.modalBody}>
+                <div style={styles.original}>
+                  <h3 style={styles.modalHeading}>Original Text</h3>
+                    <div>
+                      <p style={styles.editQuestion}>{ans.answer.question}</p>
+                      <p>{ans.answer.answer.text}</p>
+                    </div>
+                </div>
+                <div style={styles.modified}>
+                  <h3 style={styles.modalHeading}>Edit</h3>
+                  <p>Submission</p>
+                    <div>
+                      <textarea
+                        style={styles.editText}
+                        onChange={this.updateEditableAnswer.bind(this)}
+                        value={this.props.editableAnswer}></textarea>
+                      <TextField label="Name" value="Napoleon Dynamite" />
+                      <TextField label="Location" value="Idaho" />
+                    </div>
+                </div>
+              </div>
+            </Modal>
+          : null
+        }
       </Page>
     );
   }
@@ -220,10 +252,30 @@ const styles = {
   modalBody: {
     display: 'flex'
   },
+  modalHeading: {
+    fontWeight: 'bold',
+    fontSize: 20,
+    marginBottom: 10
+  },
   original: {
     flex: 1
   },
   modified: {
-    flex: 1
+    flex: 1,
+    marginLeft: 20
+  },
+  editQuestion: {
+    backgroundColor: settings.grey,
+    padding: '5px 10px',
+    borderRadius: 4,
+    marginBottom: 8,
+    color: 'white'
+  },
+  editText: {
+    width: '100%',
+    height: 100
+  },
+  answerText: {
+    marginBottom: 10
   }
 };

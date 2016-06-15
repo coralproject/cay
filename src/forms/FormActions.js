@@ -46,6 +46,12 @@ export const FORM_CREATE_EMPTY= 'FORM_CREATE_EMPTY';
 
 export const FORM_REPLACE_WIDGETS = 'FORM_REPLACE_WIDGETS';
 
+export const ANSWER_EDIT_BEGIN = 'ANSWER_EDIT_BEGIN';
+export const ANSWER_EDIT_UPDATE = 'ANSWER_EDIT_UPDATE';
+export const ANSWER_EDIT_REQUEST = 'ANSWER_EDIT_REQUEST';
+export const ANSWER_EDIT_SUCCESS = 'ANSWER_EDIT_SUCCESS';
+export const ANSWER_EDIT_FAILED = 'ANSWER_EDIT_FAILED';
+
 const getInit = (body, method) => {
 
   var headers = new Headers({ 'Accept': 'application/json', 'Content-Type': 'application/json' });
@@ -378,6 +384,37 @@ export const updateFormStatus = (formId, status) => {
   };
 };
 
-export const editAnswer = (galleryId, submissionId, answerId) => {
+// user opens the Edit Answer modal
+export const beginEdit = (galleryId, submissionId, answerId) => {
+  console.log('beginEdit. why is this being called');
+  return {type: ANSWER_EDIT_BEGIN, answerId};
+};
 
+// user starts typing and changing the Answer
+export const updateEditableAnswer = text => {
+  return {type: ANSWER_EDIT_UPDATE, text};
+};
+
+// post updates to the server
+export const editAnswer = (edited, answer) => {
+  console.log('editAnswer action');
+  return (dispatch, getState) => {
+    console.log(ANSWER_EDIT_REQUEST);
+    dispatch({type: ANSWER_EDIT_REQUEST});
+
+    const {app} = getState();
+
+    fetch(`${app.pillarHost}/api/form_submission/${answer.submission_id}/${answer.answer_id}`, {
+      method: 'PUT',
+      mode: 'cors',
+      body: JSON.stringify({edited})
+    })
+      .then(res => res.json())
+      .then(gallery => {
+        console.log(ANSWER_EDIT_SUCCESS);
+        dispatch({type: ANSWER_EDIT_SUCCESS, gallery});
+        console.log(gallery);
+      })
+      .catch(error => dispatch({type: ANSWER_EDIT_FAILED, error}));
+  };
 };

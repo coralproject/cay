@@ -3,21 +3,25 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import Infinite from 'react-infinite';
 import Select from 'react-select';
-import settings from 'settings';
 
 import UserRow from 'users/UserRow';
 import Heading from 'components/Heading';
 import {sortBy} from 'filters/FiltersActions';
 import Spinner from 'components/Spinner';
+import { userSelected } from 'users/UsersActions';
+import { fetchCommentsByUser } from 'comments/CommentsActions';
+import UserDetail from 'users/UserDetail';
 
 import { Lang } from 'i18n/lang';
 
-@connect(({filters}) => ({filters}))
+@connect(({filters, users, comments}) =>
+  ({filters, user: users.selectedUser, comments}))
 @Lang
 @Radium
 export default class UserList extends React.Component {
 
   static propTypes = {
+    user: PropTypes.object,
     users: PropTypes.arrayOf(PropTypes.shape({
       name: PropTypes.string.isRequired,
       _id: PropTypes.string.idRequired
@@ -28,28 +32,27 @@ export default class UserList extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { page: 0, selectedSort: props.filters.filterList[0] };
+    this.state = {
+      page: 0,
+      selectedSort: props.filters.filterList[0]
+    };
   }
 
   userSelected(user) {
     if(!this.props.disabled) {
-      // console.log('user!', user);
-      this.props.userSelected(user);
+      this.props.dispatch(userSelected(user));
+      this.props.dispatch(fetchCommentsByUser(user._id));
     }
-  }
-  setAsActiveHandler(index) {
-    // console.log('setAsActiveHandler', index);
-    // this.setState({activeUserIndex: index});
   }
 
   handleInfiniteLoad () {
-    console.log('pepe', this.props.users.length)
     if (this.props.users.length >= this.props.total) return;
     this.props.onPagination(this.state.page);
     this.setState({
       page: this.state.page + 1
     });
   }
+
   getUserList(users) {
     return (
       <Infinite
@@ -62,8 +65,8 @@ export default class UserList extends React.Component {
             breakdown={this.props.filters.breakdown}
             specificBreakdown={this.props.filters.specificBreakdown}
             active={this.state.activeUserIndex === i ? true : false}
-            setAsActive={this.setAsActiveHandler.bind(this)}
             activeIndex={i}
+            setAsActive={() => {}}
             user={user}
             onClick={this.userSelected.bind(this)}
             key={i} />
@@ -83,7 +86,14 @@ export default class UserList extends React.Component {
     }
   }
 
+  onCloseDetail() {
+    // Remove the selected user
+    this.props.dispatch(userSelected(null));
+  }
+
   render() {
+    const { user, comments } = this.props;
+
     var noUsersMessage = (<p style={ styles.noUsers }>
       No users loaded yet,<br />
       create a filter on the left to load users.
@@ -117,8 +127,18 @@ export default class UserList extends React.Component {
               options={sortableFilters} />
           </div>
         </div>
-        <div style="infinite">
-          {userListContent}
+        <div style={styles.cardContainer}>
+          <div style={styles.cardFlipper(!!user)}>
+            <div style={[styles.cardFace, styles.cardFront]}>
+              {!user ? userListContent : ''}
+            </div>
+            <div style={[styles.cardFace, styles.cardBack]}>
+              {user ? <UserDetail onClose={this.onCloseDetail.bind(this)}
+                comments={comments.items}
+                commentsLoading={comments.loading}
+                user={user} /> : null}
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -151,5 +171,34 @@ const styles = {
     fontSize: '14pt',
     color: '#888',
     padding: '10px 0'
+  },
+  cardBack: {
+    transform: 'rotateY(180deg)'
+  },
+  cardFront: {
+    zIndex: 2,
+    transform: 'rotateY(0deg)'
+  },
+  cardFace: {
+    backfaceVisibility: 'hidden',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: 500
+  },
+  cardFlipper(detail) {
+    return {
+      transition: '0.6s',
+      transformStyle: 'preserve-3d',
+      position: 'relative',
+      transform: detail ? 'rotateY(180deg)' : 'rotateY(0deg)',
+      background: '#fff'
+    };
+  },
+  cardContainer: {
+    perspective: 1000,
+    width: '100%',
+    height: 500
   }
 };

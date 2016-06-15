@@ -9,8 +9,6 @@ import { Link } from 'react-router';
 
 import { mediumGrey } from 'settings';
 
-import { userSelected } from 'users/UsersActions';
-import { fetchCommentsByUser } from 'comments/CommentsActions';
 import {
   saveQueryFromState,
   makeQueryFromState,
@@ -74,8 +72,6 @@ export default class SearchCreator extends Component {
   }
 
   updateUser(user) {
-    this.props.dispatch(userSelected(user));
-    this.props.dispatch(fetchCommentsByUser(user._id));
   }
 
   openModal() {
@@ -149,8 +145,7 @@ export default class SearchCreator extends Component {
                 total={this.props.searches.userCount}
                 onPagination={this.onPagination.bind(this)}
                 loadingQueryset={this.props.searches.loadingQueryset}
-                users={this.props.searches.users}
-                userSelected={this.updateUser.bind(this)} />
+                users={this.props.searches.users} />
             </div>
           <Modal
             title="Save Search"

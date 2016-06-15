@@ -69,6 +69,16 @@ export default class SubmissionGallery extends React.Component {
             <p>widget id: {answer.answer.widget_id}</p>
             <p>submission id: {answer.submission_id}</p>
           */}
+          {
+            answer.answer.edited ?
+              (
+                <div>
+                  <p style={styles.editHighlight}>Edit:</p>
+                  <p style={styles.answerText}>{answer.answer.edited}</p>
+                </div>
+              ) :
+              null
+          }
           <div>
             <Button
               style={styles.editButton}
@@ -202,7 +212,7 @@ export default class SubmissionGallery extends React.Component {
                 <div style={styles.original}>
                   <h3 style={styles.modalHeading}>Original Text</h3>
                     <div>
-                      <p style={styles.editQuestion}>{ans.answer.question}</p>
+                      <p style={styles.editHighlight}>{ans.answer.question}</p>
                       <p>{ans.answer.answer.text}</p>
                     </div>
                 </div>
@@ -264,18 +274,20 @@ const styles = {
     flex: 1,
     marginLeft: 20
   },
-  editQuestion: {
+  editHighlight: {
     backgroundColor: settings.grey,
     padding: '5px 10px',
     borderRadius: 4,
     marginBottom: 8,
-    color: 'white'
+    color: 'white',
+    display: 'inline-block'
   },
   editText: {
     width: '100%',
     height: 100
   },
   answerText: {
-    marginBottom: 10
+    marginBottom: 10,
+    fontSize: '16px'
   }
 };

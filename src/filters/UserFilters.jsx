@@ -19,6 +19,8 @@ import FilterDateProximity from 'filters/FilterDateProximity';
 
 import Heading from 'components/Heading';
 
+import {logOnce} from 'components/utils/logHelpers';
+
 @connect(state => state.filters)
 @Radium
 export default class UserFilters extends React.Component {
@@ -167,7 +169,7 @@ export default class UserFilters extends React.Component {
 
       if (f.min === null) {
         if (this.props.filterRangesLoaded) {
-          console.log('Filter:', i, f.description, 'had null data, so we didn\'t show it. Check getActiveFiltersFromConfig() in UserFilters.');
+          logOnce("filterNullData-" + i, 'Filter:', i, f.description, 'had null data, so we didn\'t show it. Check getActiveFiltersFromConfig() in UserFilters.');
         }
         filterComponent = null;
       }

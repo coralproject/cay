@@ -41,12 +41,13 @@ export default class SearchEditor extends React.Component {
   componentWillMount() {
     const {dispatch, params} = this.props;
 
+/*
     // redirect user to /login if they're not logged in
     if (this.props.app.requireLogin && !this.props.auth.authorized) {
       let {router} = this.context;
       return router.push('/login');
     }
-
+*/
     dispatch(clearUserList());
     dispatch(fetchInitialData());
     dispatch(userSelected(null));

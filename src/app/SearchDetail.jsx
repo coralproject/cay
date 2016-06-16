@@ -62,6 +62,7 @@ export default class SearchDetail extends React.Component {
             <p style={styles.description}>Description: {search.description}</p>
             <div style={styles.base}>
               <UserList
+                total={this.props.searches.userCount}
                 onPagination={this.onPagination.bind(this)}
                 loadingQueryset={this.state.loading}
                 style={styles.userList}

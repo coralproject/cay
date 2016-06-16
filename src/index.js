@@ -14,12 +14,19 @@ import {StyleRoot} from 'radium';
 
 // Routes
 import SearchCreator from 'app/SearchCreator';
+import User from 'app/User';
 import TagManager from 'app/TagManager';
 import Login from 'app/Login';
 import SeeAllSearches from 'app/SeeAllSearches';
 import SearchDetail from 'app/SearchDetail';
+import FormList from 'app/FormList';
+import FormEdit from 'app/FormEdit';
+import FormCreate from 'app/FormCreate';
+import SearchEditor from 'app/SearchEditor';
 import NoMatch from 'app/NoMatch';
 import About from 'app/About';
+import SubmissionList from 'app/SubmissionList';
+import SubmissionGallery from 'app/SubmissionGallery';
 
 // Utils
 import registerServiceWorker from 'serviceworker!./sw.js';
@@ -55,7 +62,8 @@ class Root extends React.Component {
 
   constructor(props){
     super(props);
-    ga.initialize(window.googleAnalyticsId, { debug: (process && process.env.NODE_ENV !== 'production') });
+
+    ga.initialize(props.app.googleAnalyticsId, { debug: (process && process.env.NODE_ENV !== 'production') });
     window.addEventListener('error', e => ga.exception({
       description: e.error.stack
     }), false);
@@ -66,20 +74,46 @@ class Root extends React.Component {
   }
 
   render() {
-
+    const { features } = this.props.app;
     return (
       <StyleRoot>
         <Provider store={store}>
           <Router history={browserHistory} onUpdate={ this.logPageView }>
+
             <Redirect from="/" to="search-creator" />
+
             <Route path="login" component={Login} />
             <Route path="about" component={About} />
+            <Route path="user/:_id" component={User} />
+
+
+            {/***** Trust Search Routes *****/}
             <Route path="search-creator" component={SearchCreator} />
-            <Route path="tag-manager" component={TagManager} />
             <Route path="saved-searches" component={SeeAllSearches}/>
             <Route path="saved-search/:name" component={SearchDetail} />
+            <Route path="edit-search/:id" component={SearchEditor} />
+
+
+            {/***** Ask Search Routes *****/}
+            {features.ask ? (
+              <div>
+                <Route path="forms" component={FormList}/>
+                <Route path="forms/create" component={FormCreate}/>
+                <Route path="forms/:id" component={FormEdit}/>
+                <Route path="forms/:id/submissions" component={SubmissionList}/>
+                <Route path="forms/:id/gallery" component={SubmissionGallery}/>
+              </div>
+            ) : null}
             <Route path="*" component={NoMatch} />
-            {/*<Route path="explore" component={DataExplorer} />*/}
+
+            {/***** Disabled routes ******
+
+              <Route path="explore" component={DataExplorer} />
+              <Route path="tag-manager" component={TagManager} />
+
+            */}
+
+
           </Router>
         </Provider>
       </StyleRoot>
@@ -108,7 +142,7 @@ Promise.all([loadConfig('/config.json'), loadConfig('/data_config.json')])
   store.dispatch(configXenia());
   store.dispatch({type: 'DATA_CONFIG_LOADED', config: filters});
 
-  ReactDOM.render(<Root/>, document.getElementById('root'));
+  ReactDOM.render(<Root app={app || {}}/>, document.getElementById('root'));
 })
 .catch(err => console.error(err.stack));
 

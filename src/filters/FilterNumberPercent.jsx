@@ -9,27 +9,6 @@ import CardHeader from 'components/cards/CardHeader';
 
 import Slider from 'components/Slider';
 
-const style = {
-  sliderInput: {
-    backgroundColor: 'rgb(245, 245, 245)',
-    border: 'none',
-    textAlign: 'center',
-    padding: '10px 0px',
-    width: 50,
-    fontSize: 14,
-    margin: '0px 5px',
-    borderRadius: 4
-    // 'focus': {
-    //   outline: 0
-    // }
-  },
-  minMaxInputs: {
-    padding: '7px 10px',
-    border: '1px solid lightgrey',
-    borderRadius: 3
-  }
-};
-
 @connect(state => state.filters)
 @Radium
 export default class FilterNumbers extends React.Component {
@@ -79,25 +58,40 @@ export default class FilterNumbers extends React.Component {
   render() {
 
     return (
-      <Card>
-        <CardHeader>
-          <span style={{marginBottom: 10, marginRight: 20}}>{this.props.description}</span>
-        </CardHeader>
-          <div>
-            <input
-              onChange={event => this.props.onChange(this.props.fieldName, 'userMin', event.target.value/100)}
-              style={style.minMaxInputs}
-              type='number'
-              value={Math.floor(this.props.userMin*100)}/>
-            {` - `}
-            <input
-              onChange={event => this.props.onChange(this.props.fieldName, 'userMax', event.target.value/100)}
-              style={style.minMaxInputs}
-              type='number'
-              value={Math.floor(this.props.userMax*100)}/>
-            <p style={{marginTop: 10, color: 'red'}}>{this.renderHelpText()}</p>
-          </div>
-      </Card>
+      <div style={styles.base}>
+        <p style={styles.description}>{this.props.description}</p>
+        <div>
+          <input
+            onChange={event => this.props.onChange(this.props.fieldName, 'userMin', event.target.value/100)}
+            style={styles.minMaxInputs}
+            type='number'
+            value={Math.floor(this.props.userMin*100)}/>
+          {` - `}
+          <input
+            onChange={event => this.props.onChange(this.props.fieldName, 'userMax', event.target.value/100)}
+            style={styles.minMaxInputs}
+            type='number'
+            value={Math.floor(this.props.userMax*100)}/>
+          <p style={{marginTop: 10, color: 'red'}}>{this.renderHelpText()}</p>
+        </div>
+      </div>
     );
   }
 }
+
+const styles = {
+  base: {
+    marginBottom: 20
+  },
+  description: {
+    fontWeight: 500,
+    marginBottom: 10,
+    color: 'rgb(130,130,130)',
+    fontSize: 16
+  },
+  minMaxInputs: {
+    padding: '7px 10px',
+    border: '1px solid lightgrey',
+    borderRadius: 3
+  }
+};

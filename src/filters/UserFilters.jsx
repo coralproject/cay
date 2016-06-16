@@ -2,14 +2,14 @@ import React from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
 import _ from 'lodash';
+import settings from 'settings';
 
 import { userSelected } from 'users/UsersActions';
-import { makeQueryFromState } from 'search/SearchActions';
+import { makeQueryFromState, clearUserList } from 'search/SearchActions';
 import {
   setBreakdown,
   setSpecificBreakdown,
   getFilterRanges} from 'filters/FiltersActions';
-
 
 import Select from 'react-select';
 import FilterNumbers from 'filters/FilterNumbers';
@@ -19,13 +19,11 @@ import FilterDateProximity from 'filters/FilterDateProximity';
 
 import Heading from 'components/Heading';
 
+import {logOnce} from 'components/utils/logHelpers';
+
 @connect(state => state.filters)
 @Radium
 export default class UserFilters extends React.Component {
-
-  constructor(props) {
-    super(props);
-  }
 
   getTags() {
     return this.props.tags.map(tag => {
@@ -35,13 +33,16 @@ export default class UserFilters extends React.Component {
 
   getSpecific() {
 
-    switch (this.props.breakdown) {
+    const breakdown = this.props.editMode ? this.props.breakdownEdit : this.props.breakdown;
+    const specificBreakdown = this.props.editMode ? this.props.specificBreakdownEdit : this.props.specificBreakdown;
+
+    switch (breakdown) {
     case 'section':
       return (
         <div>
           <Select
             options={this.getSections()}
-            value={this.props.specificBreakdown}
+            value={specificBreakdown}
             onChange={this.setSpecificBreakdown.bind(this)}
           />
         </div>
@@ -51,7 +52,7 @@ export default class UserFilters extends React.Component {
         <div>
           <Select
             options={this.getAuthors()}
-            value={this.props.specificBreakdown}
+            value={specificBreakdown}
             onChange={this.setSpecificBreakdown.bind(this)}
           />
         </div>
@@ -62,8 +63,9 @@ export default class UserFilters extends React.Component {
   setSpecificBreakdown(specificBreakdown) {
     let newValue = specificBreakdown !== null ? specificBreakdown.value : '';
     this.props.dispatch(userSelected(null));
-    this.props.dispatch(setSpecificBreakdown(newValue));
-    this.props.dispatch(getFilterRanges('user'));
+    this.props.dispatch(clearUserList());
+    this.props.dispatch(setSpecificBreakdown(newValue, this.props.editMode));
+    this.props.dispatch(getFilterRanges(this.props.editMode));
     this.props.dispatch(makeQueryFromState('user', 0, true));
   }
 
@@ -82,8 +84,9 @@ export default class UserFilters extends React.Component {
 
   updateBreakdown(breakdown) {
     // console.log('updateBreakdown', breakdown);
+    const localBreakdown = this.props.editMode ? this.props.breakdownEdit : this.props.breakdown;
     let newValue;
-    if (breakdown === null && this.props.breakdown !== 'all') {
+    if (breakdown === null && localBreakdown !== 'all') {
       newValue = 'all';
     } else if (breakdown === null) { // if we're already on all, just do nothing
       return;
@@ -91,17 +94,18 @@ export default class UserFilters extends React.Component {
       newValue = breakdown.value;
     }
 
-    this.props.dispatch(setBreakdown(newValue));
-    this.props.dispatch(setSpecificBreakdown(''));
+    this.props.dispatch(setBreakdown(newValue, this.props.editMode));
+    this.props.dispatch(setSpecificBreakdown('', this.props.editMode));
 
     if (newValue === 'all') {
-      this.props.dispatch(getFilterRanges('user'));
+      this.props.dispatch(getFilterRanges(this.props.editMode));
     }
   }
 
   getActiveFiltersFromConfig() {
 
-    const filters = this.props.filterList.map(key => this.props[key]);
+    const filterList = this.props.editMode ? this.props.editFilterList : this.props.filterList;
+    const filters = filterList.map(key => this.props[key]);
     const userFilters = filters.filter(f => f.collection === 'user_statistics');
     return userFilters.map((f,i) => {
       let filterComponent;
@@ -114,8 +118,8 @@ export default class UserFilters extends React.Component {
             key={i}
             min={f.min}
             max={f.max}
-            userMin={Math.max(f.userMin, f.min)}
-            userMax={Math.min(f.userMax, f.max)}
+            userMin={f.userMin ? Math.max(f.userMin, f.min) : f.userMin}
+            userMax={f.userMax ? Math.min(f.userMax, f.max) : f.userMax}
             description={fmtDesc}
             fieldName={f.key}
             type={f.type}/>
@@ -128,8 +132,8 @@ export default class UserFilters extends React.Component {
             key={i}
             min={f.min}
             max={f.max}
-            userMin={Math.max(f.userMin, f.min)}
-            userMax={Math.min(f.userMax, f.max)}
+            userMin={f.userMin ? Math.max(f.userMin, f.min) : f.userMin}
+            userMax={f.userMax ? Math.min(f.userMax, f.max) : f.userMax}
             description={inTitleCase}
             fieldName={f.key}
             type={f.type}/>
@@ -163,36 +167,41 @@ export default class UserFilters extends React.Component {
         );
       }
 
+      if (f.min === null) {
+        if (this.props.filterRangesLoaded) {
+          logOnce("filterNullData-" + i, 'Filter:', i, f.description, 'had null data, so we didn\'t show it. Check getActiveFiltersFromConfig() in UserFilters.');
+        }
+        filterComponent = null;
+      }
+
       return filterComponent;
     });
   }
 
   render() {
+    const breakdown = this.props.editMode ? this.props.breakdownEdit : this.props.breakdown;
 
     return (
       <div style={ styles.base }>
-        <div style={ styles.columnHeader }>
-          <Heading size="medium">
-            Filters
-          </Heading>
+        <Heading size="medium">
+          Filters
+        </Heading>
+        <div style={styles.filters}>
+          <Select
+            ref="breakdown"
+            value={breakdown}
+            onChange={this.updateBreakdown.bind(this)}
+            style={ styles.filterDropdown }
+            options={[
+              {label: 'All Sections & Authors', value: 'all'},
+              {label: 'Author', value: 'author'},
+              {label: 'Section', value: 'section'}
+            ]} />
+
+          {this.getSpecific()}
+
+          {this.getActiveFiltersFromConfig()}
         </div>
-        <p style={ styles.legend }>Limit user activity to:</p>
-        <Select
-          ref="breakdown"
-          value={this.props.breakdown}
-          onChange={this.updateBreakdown.bind(this)}
-          style={ styles.filterDropdown }
-          options={[
-            {label: 'All', value: 'all'},
-            {label: 'Author', value: 'author'},
-            {label: 'Section', value: 'section'}
-          ]} />
-
-        {this.getSpecific()}
-
-        <p style={styles.legend}>Show me Users that have:</p>
-        {this.getActiveFiltersFromConfig()}
-
       </div>
     );
   }
@@ -200,10 +209,14 @@ export default class UserFilters extends React.Component {
 
 const styles = {
   base: {
-    minWidth: 300
+    minWidth: 300,
   },
-  columnHeader: {
-    height: 50
+  filters: {
+    padding: 20,
+    backgroundColor: "white",
+    borderRadius: 3,
+    height: 500,
+    overflow: "scroll",
   },
   legend: {
     padding: '10px 0',

@@ -5,12 +5,11 @@ import {Link} from 'react-router';
 import Page from 'app/layout/Page';
 import {fetchSearchesIfNotFetched, deleteSearch} from 'search/SearchActions';
 import Card from 'components/cards/Card';
-import CardHeader from 'components/cards/CardHeader';
 import ContentHeader from 'components/ContentHeader';
 import Button from 'components/Button';
 import Modal from 'components/modal/Modal';
 
-import settings from 'settings';
+const RadiumLink = Radium(Link);
 
 const mapStateToProps = (state) => {
   return {searches: state.searches, app: state.app, auth: state.auth};
@@ -23,21 +22,9 @@ class SeeAllSearches extends React.Component {
     super(props);
     this.state = { deleteModalOpen: false };
   }
-  static propTypes = {
-    /* react */
-    // dispatch: React.PropTypes.func,
-    params: React.PropTypes.object,
-    routes: React.PropTypes.array,
-    /* component api */
-    style: React.PropTypes.object
-    // foo: React.PropTypes.string
-  }
-  static defaultProps = {
-    // foo: "bar"
-  }
+
   componentWillMount() {
     // redirect user to /login if they're not logged in
-    //   TODO: refactor: pass in a function that calculates auth state
     if (this.props.app.requireLogin && !this.props.auth.authorized) {
       let {router} = this.context;
       return router.push('/login');
@@ -61,27 +48,81 @@ class SeeAllSearches extends React.Component {
 
   getStyles() {
     return {
-      base: {
-
+      searchCard: {
+        padding: 20
+      },
+      cardHeader: {
+        fontSize: 24,
+        fontWeight: 700,
+        marginBottom: 10
+      },
+      topSection: {
+        display: 'flex',
+        justifyContent: 'space-between'
+      },
+      searchDescription: {
+        fontSize: 16,
+        marginBottom: 15,
+        fontFamily: 'Georgia, serif',
+        fontStyle: 'italic'
+      },
+      button: {
+        backgroundColor: '#fff',
+        marginRight: 20,
+        borderRadius: 4,
+        borderStyle: 'solid',
+        borderWidth: 1,
+        borderColor: '#ccc',
+        color: '#333',
+        padding: '0.625rem 1.25rem',
+        fontSize: '1rem',
+        cursor: 'pointer',
+        textDecoration: 'none',
+        ':hover': {
+          backgroundColor: '#e6e6e6',
+          borderColor: '#adadad'
+        }
+      },
+      filterList: {
+        borderLeft: '3px solid rgb(130,130,130)',
+        paddingLeft: 15
+      },
+      filterValue: {
+        marginBottom: 10
       }
     };
   }
   renderSearches() {
-
+    const styles = this.getStyles();
     const searches = this.props.searches.searches.map((search, i) => {
 
       return (
         <Card style={styles.searchCard} key={i}>
-          <CardHeader>{search.name}</CardHeader>
-          <Button
-            size="small"
-            category="danger"
-            style={styles.deleteButton}
-            onClick={this.openDeleteModal.bind(this, search)}>
-            {window.L.t('Delete')}
-          </Button>
+
+          <div style={styles.topSection}>
+            <p style={styles.cardHeader}>{search.name}</p>
+            <div style={styles.actionsContainer}>
+              {/* Temporarily disabling View link until view page is debugged
+              <RadiumLink
+                style={styles.button}
+                to={`/saved-search/${search.name}`}>{window.L.t('View')}
+              </RadiumLink>
+              */}
+              <RadiumLink
+                style={styles.button}
+                to={`/edit-search/${search.id}`}>{window.L.t('Edit')}
+              </RadiumLink>
+              <Button
+                category='danger'
+                style={styles.deleteButton}
+                onClick={this.openDeleteModal.bind(this, search)}>
+                {window.L.t('Delete')}
+              </Button>
+            </div>
+          </div>
+
           <p style={styles.searchDescription}>{search.description}</p>
-          <ul>
+          <ul style={styles.filterList}>
             {search.filters.values.map((value, i) => {
               return (
                 <li style={styles.filterValue} key={i}>
@@ -90,12 +131,6 @@ class SeeAllSearches extends React.Component {
               );
             })}
           </ul>
-          <div style={styles.actionsContainer}>
-            <Link
-              style={styles.viewSearchLink}
-              to={`/saved-search/${search.name}`}>{window.L.t('View Search Details')}</Link>
-            <span>{window.L.t('Edit Search')} ({window.L.t('coming soon')})</span>
-          </div>
         </Card>
       );
     });
@@ -104,6 +139,7 @@ class SeeAllSearches extends React.Component {
 
   }
   render() {
+    const styles = this.getStyles();
 
     return (
       <Page>
@@ -112,7 +148,7 @@ class SeeAllSearches extends React.Component {
           this.props.style
         ]}>
           <ContentHeader title={ window.L.t('Saved Searches') } />
-          <div style={styles.cardHolder}>
+          <div>
             {this.renderSearches()}
           </div>
         </div>
@@ -139,49 +175,3 @@ class SeeAllSearches extends React.Component {
 }
 
 export default SeeAllSearches;
-
-const styles = {
-  cardHolder: {
-    display: 'flex',
-    justifyContent: 'flex-start',
-    flexWrap: 'wrap'
-  },
-  sentenceHeading: {
-    margin: '10px 0px',
-    textTransform: 'uppercase',
-    fontWeight: 500
-  },
-  actionsContainer: {
-    marginTop: 20
-  },
-  viewSearchLink: {
-    marginRight: 20
-  },
-  searchCard: {
-    marginBottom: 0,
-    marginTop: 20,
-    marginRight: 20,
-    marginLeft: 0,
-    width: 370,
-    position: 'relative',
-    '@media (max-width: 1000px)': {
-      'width': '90%'
-    }
-  },
-  deleteButton: {
-    position: 'absolute',
-    top: 8,
-    right: 8
-  },
-  searchDescription: {
-    marginBottom: 10,
-    fontSize: 18
-  },
-  filterValue: {
-    backgroundColor: settings.darkGrey,
-    color: 'white',
-    padding: 10,
-    marginBottom: 5,
-    borderRadius: 4
-  }
-};

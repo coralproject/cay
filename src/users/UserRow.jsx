@@ -1,8 +1,6 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import ListItem from 'components/lists/ListItem';
-import CharacterIcon from 'components/CharacterIcon';
-import {connect} from 'react-redux';
 
 @Radium
 export default class UserRow extends React.Component {
@@ -38,12 +36,7 @@ export default class UserRow extends React.Component {
   getNonDefaultFilters() {
     return this.props.filters.filterList.map((filterName, i) => {
       if (this.userChangedFilter(filterName).either) {
-        // console.log("user",this.props.user.statistics.comments.all.all)
-        // console.log("user",this.props.user.statistics.comments.all.all)
-        console.log(this.props.user.statistics.comments);
-        console.log(this.props.filters[filterName].field);
-
-        if (this.props.filters[filterName].field === "SystemFlagged") {
+        if (this.props.filters[filterName].field === 'SystemFlagged') {
           return (
             <p key={i} style={styles.stat}>
               {`${this.props.user.statistics.comments.all.SystemFlagged.count} flagged by system`}
@@ -55,7 +48,8 @@ export default class UserRow extends React.Component {
         switch (this.props.filters[filterName].type) {
         case 'dateRange':
         case 'intDateProximity':
-          stat = `${this.props.user.statistics.comments.all.all[this.props.filters[filterName].field]} ${this.props.filters[filterName].name}`;
+          stat = '';
+          // stat = `${this.props.user.statistics.comments.all.all[this.props.filters[filterName].field]} ${this.props.filters[filterName].name}`;
           // <DateRangeClause {...this.props.filters[filterName]}/>;
           break;
         case 'percentRange':
@@ -92,9 +86,7 @@ export default class UserRow extends React.Component {
     } else {
       dimension = user.statistics.comments.all.all;
     }
-
-    const repliedPercent = Math.floor(dimension.replied_ratio * 100) + '%';
-    const replyPercent = Math.floor(dimension.reply_ratio * 100) + '%';
+    // <img style={styles.avatar} src="/img/user_portrait_placeholder.png" />
 
     return (
       <ListItem
@@ -103,9 +95,8 @@ export default class UserRow extends React.Component {
         onClick={this.handleClick.bind(this)}
         >
         <div style={styles.flex}>
-          <img style={styles.avatar} src="/img/user_portrait_placeholder.png" />
           <div>
-            {user.name}
+            <span style={styles.link} onClick={this.props.onClick}>{user.name}</span>
             {this.getNonDefaultFilters()}
           </div>
         </div>
@@ -117,14 +108,14 @@ export default class UserRow extends React.Component {
 const styles = {
   base: {
     cursor: 'pointer',
-    overflow: 'hidden',
+    overflow: 'hidden'
     // height: 100
   },
   stat: {
-    fontSize: 12,
+    fontSize: 12
   },
   flex: {
-    display: "flex",
+    display: 'flex'
   },
   disabled: {
     cursor: 'auto'
@@ -136,6 +127,9 @@ const styles = {
   avatar: {
     height: 50,
     marginRight: 10
-
+  },
+  link: {
+    textDecoration: 'none',
+    color: '#000'
   }
 };

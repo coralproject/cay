@@ -2,29 +2,29 @@
 /**
  * Module dependencies
  */
-
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 import { Link } from 'react-router';
+import { userSelected } from 'users/UsersActions';
 
 import { mediumGrey } from 'settings';
 
-import { userSelected } from 'users/UsersActions';
-import { fetchCommentsByUser } from 'comments/CommentsActions';
-import { saveQueryFromState, makeQueryFromState } from 'search/SearchActions';
-import { fetchInitialData } from 'search/SearchActions';
-import { filterChanged } from 'filters/FiltersActions';
-
+import {
+  saveQueryFromState,
+  makeQueryFromState,
+  fetchInitialData,
+  clearUserList,
+  clearRecentSavedSearch
+} from 'search/SearchActions';
+import { filterChanged, getFilterRanges } from 'filters/FiltersActions';
 
 import Page from 'app/layout/Page';
 import ContentHeader from 'components/ContentHeader';
 import UserList from 'users/UserList';
-import UserDetail from 'users/UserDetail';
-import SearchFilters from 'search/SearchFilters';
+import UserFilters from 'filters/UserFilters';
 import Button from 'components/Button';
 import FaFloopyO from 'react-icons/lib/fa/floppy-o';
-import MdEdit from 'react-icons/lib/md/edit';
 import Modal from 'components/modal/Modal';
 import TextField from 'components/forms/TextField';
 import StatusBar from 'components/StatusBar';
@@ -40,7 +40,8 @@ import Clauses from 'search/Clauses';
   comments: state.comments,
   users: state.users,
   filters: state.filters,
-  app: state.app
+  app: state.app,
+  auth: state.auth
 }))
 @Radium
 export default class SearchCreator extends Component {
@@ -55,20 +56,23 @@ export default class SearchCreator extends Component {
 
   // only the first time
   componentWillMount() {
+    const {dispatch} = this.props;
+
     // redirect user to /login if they're not logged in
     //   TODO: refactor: pass in a function that calculates auth state
-    if (this.props.app.requireLogin && !this.props.searches.authorized) {
+    if (this.props.app.requireLogin && !this.props.auth.authorized) {
       return this.context.router.push('/login');
     }
 
     // set up the initial default / unfiltered view
     // this was previously in UserFilters
-    this.props.dispatch(fetchInitialData());
+    dispatch(clearRecentSavedSearch());
+    dispatch(clearUserList());
+    dispatch(fetchInitialData());
+    dispatch(getFilterRanges(false)); // editmode => false
   }
 
   updateUser(user) {
-    this.props.dispatch(userSelected(user));
-    this.props.dispatch(fetchCommentsByUser(user._id));
   }
 
   openModal() {
@@ -103,100 +107,108 @@ export default class SearchCreator extends Component {
   }
 
   onFilterChange(fieldName, attr, val) {
-    this.props.dispatch(userSelected(null));
-    this.props.dispatch(filterChanged(fieldName, {[attr]: val}));
-    this.props.dispatch(makeQueryFromState('user', 0, true));
+    const {dispatch} = this.props;
+
+    dispatch(userSelected(null));
+    dispatch(filterChanged(fieldName, {[attr]: val}));
+    dispatch(makeQueryFromState('user', 0, true));
   }
 
   render() {
-
     return (
-
       <Page>
-
-        <ContentHeader title={ window.L.t('Search Creator') } />
-        <Clauses/>
-
-        <div style={styles.base}>
-          <div style={styles.filters}>
-            <SearchFilters onChange={this.onFilterChange.bind(this)} userOnly={true}/>
-          </div>
-
-          <div style={styles.rightPanel}>
-            <Button category="disabled" style={styles.editButton}>
-              Edit Search <MdEdit style={styles.saveIcon} />
-            </Button>
-            <Button onClick={this.openModal.bind(this)} category="primary" style={styles.saveButton}>
-              Save Search <FaFloopyO style={styles.saveIcon} />
-            </Button>
-            <div style={styles.userListContainer}>
-              <UserList
-                total={this.props.searches.userCount}
-                onPagination={this.onPagination.bind(this)}
-                loadingQueryset={this.props.searches.loadingQueryset}
-                users={this.props.searches.users} userSelected={this.updateUser.bind(this)} />
-              <UserDetail
-                breakdown={this.props.filters.breakdown}
-                specificBreakdown={this.props.filters.specificBreakdown}
-                commentsLoading={this.props.comments.loading}
-                user={this.props.users.selectedUser}
-                comments={this.props.comments.items}
-                style={styles.userDetail} />
-            </div>
-          </div>
-
-        </div>
-
-        <Modal
-          title="Save Search"
-          isOpen={this.state.saveModalOpen}
-          confirmAction={this.confirmSave.bind(this)}
-          cancelAction={this.cancelSave.bind(this)}>
-          <TextField label="Name" onChange={this.updateSearchName.bind(this)}/>
-          <p style={styles.modalLabel}>Description</p>
-          <textarea
-            style={styles.descriptionInput}
-            onChange={this.updateSearcDesc.bind(this)}></textarea>
-          <TextField label="Tag Name" onChange={this.updateSearchTag.bind(this)} />
-        </Modal>
-
-        <StatusBar
-          loading={this.props.searches.savingSearch}
-          visible={this.props.searches.savingSearch || !!this.props.searches.recentSavedSearch}>
-          {
-            this.props.searches.recentSavedSearch ?
+          <StatusBar
+            loading={this.props.searches.savingSearch}
+            visible={this.props.searches.savingSearch || !!this.props.searches.recentSavedSearch}>
+            {
+              this.props.searches.recentSavedSearch ?
               (<Link style={styles.searchDetail} to={`/saved-search/${this.props.searches.recentSavedSearch.name}`}>
                 View Your Saved Search [{this.props.searches.recentSavedSearch.name}] →
               </Link>) :
               'Saving Search...'
-          }
-        </StatusBar>
-
+            }
+          </StatusBar>
+          <div style={styles.topSection}>
+            <ContentHeader title={ window.L.t('Create a Search') } />
+            <Button onClick={this.openModal.bind(this)} category="default" style={styles.saveButton}>
+              <FaFloopyO style={styles.saveIcon} />{` Save Search `}
+            </Button>
+          </div>
+          <Clauses editMode={false} />
+          <div style={styles.base}>
+            <div style={styles.filtersAndResults}>
+              <div style={styles.filters}>
+                <UserFilters
+                  editMode={false}
+                  onChange={this.onFilterChange.bind(this)} />
+              </div>
+              <UserList
+                total={this.props.searches.userCount}
+                onPagination={this.onPagination.bind(this)}
+                loadingQueryset={this.props.searches.loadingQueryset}
+                users={this.props.searches.users} />
+            </div>
+          <Modal
+            title="Save Search"
+            isOpen={this.state.saveModalOpen}
+            confirmAction={this.confirmSave.bind(this)}
+            cancelAction={this.cancelSave.bind(this)}>
+            <TextField label="Name" onChange={this.updateSearchName.bind(this)}/>
+            <p style={styles.modalLabel}>Description</p>
+            <textarea
+              style={styles.descriptionInput}
+              onBlur={this.updateSearcDesc.bind(this)}></textarea>
+            <TextField label="Tag Name" onChange={this.updateSearchTag.bind(this)} />
+          </Modal>
+        </div>
       </Page>
     );
   }
 }
+
+
+// <UserDetail
+//   breakdown={this.props.filters.breakdown}
+//   specificBreakdown={this.props.filters.specificBreakdown}
+//   commentsLoading={this.props.comments.loading}
+//   user={this.props.users.selectedUser}
+//   comments={this.props.comments.items}
+//   style={styles.userDetail} />
+
+
+
 const styles = {
   base: {
+    display: "flex",
+    width: "100%"
+  },
+  filtersAndResults: {
     display: 'flex',
     minHeight: 250,
-    justifyContent: 'flex-start',
-    flexWrap: 'no-wrap'
+    justifyContent: 'space-between',
+    flexWrap: 'no-wrap',
+    width: "100%"
+
   },
   rightPanel: {
     flex: 1
   },
+  topSection: {
+    display: "flex",
+    justifyContent: "space-between",
+    width: "100%",
+    marginBottom: 20
+  },
   userListContainer: {
     margin: 20,
-    height: 900,
     display: 'flex',
     clear: 'both'
   },
-  userDetail: {
-    flex: 2,
-    paddingLeft: 40,
-    height: 900
-  },
+  // userDetail: {
+  //   flex: 2,
+  //   paddingLeft: 40,
+  //   height: 900
+  // },
   userList: {
     minWidth: 350,
     flex: 1
@@ -214,8 +226,10 @@ const styles = {
     borderRadius: 3
   },
   saveIcon: {
-    width: 25,
-    height: 25
+    marginRight: 7,
+    position: "relative",
+    top: -2,
+    fontSize: 18,
   },
   filters: {
     '@media (max-width: 1000px)': {
@@ -227,10 +241,5 @@ const styles = {
     textDecoration: 'none'
   },
   saveButton: {
-    float: 'right'
-  },
-  editButton: {
-    float: 'right',
-    marginLeft: 10
   }
 };

@@ -30,7 +30,7 @@ export default class FilterDate extends React.Component {
   render() {
 
     return (
-      <Card style={[styles.base, this.props.style]}>
+      <div style={[styles.base, this.props.style]}>
         <p style={styles.description}>{this.props.description}</p>
 
         <div style={styles.row}>
@@ -48,14 +48,20 @@ export default class FilterDate extends React.Component {
                />
           </div>
         </div>
-      </Card>
+      </div>
     );
   }
 }
 
 const styles = {
   base: {
-
+    marginBottom: 20
+  },
+  description: {
+    fontWeight: 500,
+    marginBottom: 10,
+    color: 'rgb(130,130,130)',
+    fontSize: 16
   },
   row: {
     display: 'flex'
@@ -63,9 +69,4 @@ const styles = {
   cell: {
     flex: 1
   },
-  description: {
-    fontSize: '15px',
-    marginBottom: 10,
-    marginRight: 20
-  }
 };

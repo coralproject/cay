@@ -1,39 +1,23 @@
 import React from 'react';
 import Radium from 'radium';
-// import _ from 'lodash';
-// import Flex from './layout/Flex';
-// import moment from 'moment';
 import {connect} from 'react-redux';
 import PercentClause from './PercentClause';
 import IntClause from './IntClause';
 import DateRangeClause from './DateRangeClause';
+import ProximityClause from './ProximityClause';
 import {resetFilter} from 'filters/FiltersActions';
-
+import Close from 'react-icons/lib/fa/close';
 import settings from 'settings';
-
-// const style = {
-// };
 
 @connect(state => state.filters)
 @Radium
 class Clauses extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-
-    };
-  }
   static propTypes = {
     /* react */
-    // dispatch: React.PropTypes.func,
     params: React.PropTypes.object,
     routes: React.PropTypes.array,
     /* component api */
     style: React.PropTypes.object
-    // foo: React.PropTypes.string
-  }
-  static defaultProps = {
-    // foo: 'bar'
   }
   getStyles() {
     return {
@@ -57,6 +41,7 @@ class Clauses extends React.Component {
     const f = this.props[filterName];
     const maxDifferent = f.userMax !== f.max && f.userMax < f.max;
     const minDifferent = f.userMin !== f.min && f.userMin > f.min;
+
     return {
       either: maxDifferent || minDifferent,
       both: !(maxDifferent && minDifferent)
@@ -73,26 +58,36 @@ class Clauses extends React.Component {
   }
 
   getSpecific() {
-    if (this.props.specificBreakdown) {
+    const breakdown = this.props.editMode ? this.props.breakdownEdit : this.props.breakdown;
+    const specificBreakdown = this.props.editMode ? this.props.specificBreakdownEdit : this.props.specificBreakdown;
+
+    if (specificBreakdown) {
       return (
         <span style={this.getStyles().clause}>
-          {`${this.props.breakdown} ${this.formatName(this.props.specificBreakdown)} `}
+          {`${breakdown} ${this.formatName(specificBreakdown)} `}
         </span>
       );
     }
   }
 
   getFilters() {
-    return this.props.filterList.map((filterName, i) => {
+    const filterList = this.props.editMode ? this.props.editFilterList : this.props.filterList;
+
+    return filterList.map((filterName, i) => {
+
       if (this.userChangedFilter(filterName).either) {
+
         let clause;
         switch (this.props[filterName].type) {
         case 'dateRange':
-        case 'intDateProximity':
           clause = <DateRangeClause {...this.props[filterName]}/>;
           break;
         case 'percentRange':
           clause = <PercentClause {...this.props[filterName]}/>;
+          break;
+        case 'intDateProximity':
+
+          clause = <ProximityClause {...this.props[filterName]}/>
           break;
         default:
           clause = <IntClause {...this.props[filterName]}/>;
@@ -102,7 +97,7 @@ class Clauses extends React.Component {
           <span key={i} style={styles.clause}>
             {clause}
             <span onClick={this.resetFilter.bind(this, filterName)}
-              style={styles.close}>x</span>
+              style={styles.close}><Close style={styles.closeIcon} /></span>
           </span>
         );
       }
@@ -131,16 +126,24 @@ export default Clauses;
 
 
 const styles = {
-  close: {
+  container: {
+  },
+  closeIcon: {
     cursor: 'pointer',
     marginLeft: 10,
-    color: 'grey'
+    fontSize: 18,
+    color: 'rgb(100,100,100)',
+    position: 'relative',
+    top: -1
   },
   clause: {
-    backgroundColor: 'darkGrey',
-    color: 'white',
+    backgroundColor: "white",
+    color: 'rgb(100,100,100)',
+    WebkitBoxShadow: '3px 3px 6px -1px ' + settings.mediumGrey,
+    BoxShadow: '3px 3px 6px -1px ' + settings.mediumGrey,
     borderRadius: 4,
     padding: 10,
-    marginRight: 10
+    marginRight: 10,
+    marginBottom: 20
   }
 };

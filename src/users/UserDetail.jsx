@@ -1,79 +1,32 @@
-import React, {PropTypes} from 'react';
+import React, {PropTypes, Component} from 'react';
 import Radium from 'radium';
 import _ from 'lodash';
 
-import Avatar from 'users/Avatar';
-import Tab from 'components/tabs/Tab';
-import Tabs from 'components/tabs/Tabs';
-import Stats from 'components/stats/Stats';
 import Stat from 'components/stats/Stat';
 import Heading from 'components/Heading';
-import MdLocalOffer from 'react-icons/lib/md/local-offer';
-
-// import Tagger from './forms/Tagger';
-import Select from 'react-select';
-
 import CommentDetailList from 'comments/CommentDetailList';
+import FAClose from 'react-icons/lib/fa/close';
+import FAArrowRight from 'react-icons/lib/fa/arrow-right';
+import FAArrowLeft from 'react-icons/lib/fa/arrow-left';
 
 import { Lang } from 'i18n/lang';
 
 @Lang
 @Radium
-export default class UserDetail extends React.Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {selectedTags: []};
-  }
-
+export default class UserDetail extends Component {
   static propTypes = {
     commentsLoading: PropTypes.bool.isRequired,
     breakdown: PropTypes.string,
-    specificBreakdown: PropTypes.string
-  }
-
-  // componentWillMount() {
-  //   // comments might have been loaded for another user.
-  //   this.props.dispatch(fetchAllTags());
-  // }
-  //
-  // componentWillUpdate(nextProps) {
-  //   if (nextProps.comments.items === null) {
-  //     nextProps.dispatch(fetchCommentsByUser(nextProps._id));
-  //   }
-  // }
-
-  // componentWillReceiveProps(nextProps) {
-  //   if (nextProps._id) {
-  //     this.setState({selectedTags: nextProps.tags});
-  //   }
-  // }
-
-  getTags() {
-    return [];
-    return this.props.tags.map(tag => {
-      return {label: tag.name, value: tag.name};
-    });
-  }
-
-  updateTags(tags) {
-    this.setState({selectedTags: tags.map(tag => tag.value)});
-    if (_.has(this.props, '_id')) {
-      var s = this.props;
-      var preparedUser = {
-        id: s._id,
-        name: s.user_name,
-        avatar: s.avatar,
-        status: s.status,
-        tags: this.state.selectedTags.slice()
-      };
-      // this.props.dispatch(upsertUser(preparedUser));
-    }
+    specificBreakdown: PropTypes.string,
+    onClose: PropTypes.func.isRequired,
+    isFirst: PropTypes.bool.isRequired,
+    isLast: PropTypes.bool.isRequired,
+    onPrevUser: PropTypes.func.isRequired,
+    onNextUser: PropTypes.func.isRequired
   }
 
   getStats() {
-    let {breakdown, specificBreakdown} = this.props;
-    const {user} = this.props;
+    let {breakdown, specificBreakdown, user} = this.props;
 
     let statsList = [];
     specificBreakdown = specificBreakdown || 'all';
@@ -110,47 +63,37 @@ export default class UserDetail extends React.Component {
     return (
       <div>
         <div style={styles.topPart}>
-          <Avatar style={styles.avatar} src="/img/user_portrait_placeholder.png" size={100} />
           <Heading size="medium">{this.props.user.name}</Heading>
         </div>
-        {/*<p><MdLocalOffer /> Add/remove Tags for this Commenter</p>
-        <Select
-          multi={true}
-          value={this.state.selectedTags}
-          onChange={this.updateTags.bind(this)}
-          options={this.getTags()}
-        />*/}
-        <Tabs initialSelectedIndex={0} style={styles.tabs}>
-          <Tab title="About">
-            <Stats>
-              { this.getStats() }
-            </Stats>
-          </Tab>
-          <Tab title="Activity">
-
-            {
-              this.props.commentsLoading || !this.props.comments.length ?
-              'Loading Comments...' :
-              (
-                <CommentDetailList
-                  user={this.props}
-                  comments={this.props.comments} />
-              )
-            }
-          </Tab>
-        </Tabs>
+        <div style={styles.statsContainer}>
+          { this.getStats() }
+        </div>
+        {
+          this.props.commentsLoading || !this.props.comments.length ?
+          'Loading Comments...' :
+          (
+            <CommentDetailList
+              user={this.props}
+              comments={this.props.comments} />
+          )
+        }
       </div>
     );
   }
   renderSpinner() {
     return (
-      <span>Select a user to see details</span>
+      <span>No user selected</span>
     );
   }
   render() {
-
+    const { isFirst, isLast } = this.props;
     return (
       <div style={[styles.base, this.props.style]}>
+        <span style={styles.close} onClick={this.props.onClose}><FAClose /></span>
+          <div style={styles.controls}>
+            {isFirst ? null : <span style={styles.control} onClick={this.props.onPrevUser}><FAArrowLeft /></span>}
+            {isLast ? null : <span style={styles.control} onClick={this.props.onNextUser}><FAArrowRight /></span>}
+          </div>
         {
           !this.props.user ? this.renderSpinner() : this.createDetailsMarkup()
         }
@@ -165,8 +108,7 @@ const styles = {
     paddingTop: 20,
     paddingRight: 20,
     paddingBottom: 20,
-    paddingLeft: 20,
-    marginTop: 90
+    paddingLeft: 20
   },
   topPart: {
     display: 'flex',
@@ -181,6 +123,9 @@ const styles = {
   stats: {
     flex: 1
   },
+  statsContainer: {
+    marginBottom: 20
+  },
   tabs: {
     marginTop: 20,
     clear: 'both'
@@ -191,5 +136,18 @@ const styles = {
   },
   loadingComments: {
     padding: '10px'
+  },
+  close: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    cursor: 'pointer'
+  },
+  controls: {
+    marginBottom: 10
+  },
+  control: {
+    marginRight: 25,
+    cursor: 'pointer'
   }
 };

@@ -16,7 +16,7 @@ export default class Checkbox extends React.Component {
 
   static defaultProps = {
     checked: true,
-    clickHandler: (x) => { return x },
+    clickHandler: x => x,
     color: settings.darkGray
   }
 
@@ -31,44 +31,44 @@ export default class Checkbox extends React.Component {
 
   getWrapperStyles () {
     return {
-      display: "block",
+      display: 'block',
       marginBottom: 10,
-      position: "relative"
+      position: 'relative'
     };
   }
 
   getLabelWrapperStyles () {
     return {
       color: this.props.labelWrapperColor,
-      cursor: "pointer",
-      display: "inline-block",
+      cursor: 'pointer',
+      display: 'inline-block',
       fontFamily: settings.fontFamilySansSerif,
       fontSize: 14,
       fontWeight: 400,
-      lineHeight: "20px",
+      lineHeight: '20px',
       paddingLeft: 22,
-      "-webkit-user-select": "none"
+      WebkitUserSelect: 'none'
     };
   }
 
   getLabelStyles () {
     return {
-      display: "inline",
+      display: 'inline',
       left: -12,
       marginRight: 4,
-      position: "relative"
+      position: 'relative'
     };
   }
 
   getHelpTextStyles () {
     return {
-      color: "#ccc",
-      cursor: "pointer",
-      display: "inline",
+      color: '#ccc',
+      cursor: 'pointer',
+      display: 'inline',
       fontFamily: settings.fontFamilySansSerif,
       fontSize: 12,
       fontWeight: 200,
-      lineHeight: "20px",
+      lineHeight: '20px',
       marginLeft: 5
     };
   }
@@ -95,7 +95,7 @@ export default class Checkbox extends React.Component {
       active: {
         backgroundColor: activeColor
       }
-    }
+    };
   }
 
   render() {

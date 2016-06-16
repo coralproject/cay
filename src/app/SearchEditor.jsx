@@ -163,11 +163,6 @@ const styles = {
     display: 'flex',
     clear: 'both'
   },
-  userDetail: {
-    flex: 2,
-    paddingLeft: 40,
-    height: 900
-  },
   rightPanel: {
     flex: 1
   },

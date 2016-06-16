@@ -114,7 +114,6 @@ export default class SearchCreator extends Component {
   render() {
     return (
       <Page style={styles.pageBase}>
-
         <div style={styles.base}>
           <div style={styles.topSection}>
             <ContentHeader title={ window.L.t('Create a Search') } />

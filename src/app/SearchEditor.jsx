@@ -85,6 +85,13 @@ export default class SearchEditor extends React.Component {
     return (
       <Page>
         <ContentHeader title={ window.L.t('Search Editor') } />
+        <Button
+          onClick={this.confirmSave.bind(this)}
+          category="primary"
+          style={styles.saveButton}>
+          Update Search <FaFloopyO style={styles.saveIcon} />
+        </Button>
+
         <Clauses editMode={true} />
 
         {
@@ -104,26 +111,12 @@ export default class SearchEditor extends React.Component {
                 editMode={true}
                 onChange={this.onFilterChange.bind(this)} />
               <div style={styles.rightPanel}>
-                <Button
-                  onClick={this.confirmSave.bind(this)}
-                  category="primary"
-                  style={styles.saveButton}>
-                  Update Search <FaFloopyO style={styles.saveIcon} />
-                </Button>
                 <div style={styles.userListContainer}>
                   <UserList
                     total={this.props.searches.userCount}
                     onPagination={this.onPagination.bind(this)}
                     loadingQueryset={this.props.searches.loadingQueryset}
-                    users={this.props.searches.users}
-                    userSelected={this.updateUser.bind(this)} />
-                  <UserDetail
-                    breakdown={this.props.filters.breakdownEdit}
-                    specificBreakdown={this.props.filters.specificBreakdownEdit}
-                    commentsLoading={this.props.comments.loading}
-                    user={this.props.users.selectedUser}
-                    comments={this.props.comments.items}
-                    style={styles.userDetail} />
+                    users={this.props.searches.users} />
                 </div>
               </div>
             </div>

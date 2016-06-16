@@ -22,6 +22,7 @@ class MenuItem extends React.Component {
 
 const styles = {
   base: {
+    transition: 'all .4s',
     backgroundColor: 'transparent',
     ':hover': {
       backgroundColor: 'white',

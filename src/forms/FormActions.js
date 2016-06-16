@@ -46,6 +46,13 @@ export const FORM_CREATE_EMPTY= 'FORM_CREATE_EMPTY';
 
 export const FORM_REPLACE_WIDGETS = 'FORM_REPLACE_WIDGETS';
 
+export const ANSWER_EDIT_BEGIN = 'ANSWER_EDIT_BEGIN';
+export const ANSWER_EDIT_UPDATE = 'ANSWER_EDIT_UPDATE';
+export const ANSWER_EDIT_CANCEL = 'ANSWER_EDIT_CANCEL';
+export const ANSWER_EDIT_REQUEST = 'ANSWER_EDIT_REQUEST';
+export const ANSWER_EDIT_SUCCESS = 'ANSWER_EDIT_SUCCESS';
+export const ANSWER_EDIT_FAILED = 'ANSWER_EDIT_FAILED';
+
 const getInit = (body, method) => {
 
   var headers = new Headers({ 'Accept': 'application/json', 'Content-Type': 'application/json' });
@@ -303,6 +310,7 @@ export const updateSubmission = props => dispatch => {
 };
 
 const requestGallery = () => {
+  console.log(FORM_GALLERY_REQUEST);
   return {type: FORM_GALLERY_REQUEST};
 };
 
@@ -375,5 +383,41 @@ export const updateFormStatus = (formId, status) => {
       .then(res => res.json())
       .then(form => dispatch({type: FORM_STATUS_UPDATED, form}))
       .catch(error => dispatch({type: FORM_STATUS_UPDATE_ERROR, error}));
+  };
+};
+
+// user opens the Edit Answer modal
+export const beginEdit = (galleryId, submissionId, answerId) => {
+  return {type: ANSWER_EDIT_BEGIN, answerId, submissionId};
+};
+
+// user starts typing and changing the Answer
+export const updateEditableAnswer = text => {
+  return {type: ANSWER_EDIT_UPDATE, text};
+};
+
+export const cancelEdit = () => {
+  return {type: ANSWER_EDIT_CANCEL};
+};
+
+// post updates to the server
+export const editAnswer = (edited, answer, formId) => {
+  return (dispatch, getState) => {
+    dispatch({type: ANSWER_EDIT_REQUEST});
+
+    const {app} = getState();
+
+    fetch(`${app.pillarHost}/api/form_submission/${answer.submission_id}/${answer.answer_id}`, {
+      method: 'PUT',
+      mode: 'cors',
+      body: JSON.stringify({edited})
+    })
+      .then(res => res.json())
+      .then(submission => {
+        dispatch({type: ANSWER_EDIT_SUCCESS, submission});
+        // just re-fetch the gallery instead of trying to munge the state
+        dispatch(fetchGallery(formId));
+      })
+      .catch(error => dispatch({type: ANSWER_EDIT_FAILED, error}));
   };
 };

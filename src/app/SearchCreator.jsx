@@ -6,11 +6,10 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 import { Link } from 'react-router';
+import { userSelected } from 'users/UsersActions';
 
 import { mediumGrey } from 'settings';
 
-import { userSelected } from 'users/UsersActions';
-import { fetchCommentsByUser } from 'comments/CommentsActions';
 import {
   saveQueryFromState,
   makeQueryFromState,
@@ -74,8 +73,6 @@ export default class SearchCreator extends Component {
   }
 
   updateUser(user) {
-    this.props.dispatch(userSelected(user));
-    this.props.dispatch(fetchCommentsByUser(user._id));
   }
 
   openModal() {
@@ -132,7 +129,7 @@ export default class SearchCreator extends Component {
             }
           </StatusBar>
           <div style={styles.topSection}>
-            <ContentHeader title={ window.L.t('Create & save a search') } />
+            <ContentHeader title={ window.L.t('Create a Search') } />
             <Button onClick={this.openModal.bind(this)} category="default" style={styles.saveButton}>
               <FaFloopyO style={styles.saveIcon} />{` Save Search `}
             </Button>
@@ -149,8 +146,7 @@ export default class SearchCreator extends Component {
                 total={this.props.searches.userCount}
                 onPagination={this.onPagination.bind(this)}
                 loadingQueryset={this.props.searches.loadingQueryset}
-                users={this.props.searches.users}
-                userSelected={this.updateUser.bind(this)} />
+                users={this.props.searches.users} />
             </div>
           <Modal
             title="Save Search"

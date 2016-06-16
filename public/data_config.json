@@ -23,7 +23,9 @@
       "template": "statistics.comments.<%= dimension %>.all.count",
       "description": "Total comments",
       "collection": "user_statistics",
-      "type": "intRange"
+      "type": "intRange",
+      "sortable": true,
+      "sortDesc": true
     },
     {
       "name": "First comment _ days ago",
@@ -32,7 +34,9 @@
       "template": "statistics.comments.<%= dimension %>.all.first",
       "description": "First comment _ days ago",
       "collection": "user_statistics",
-      "type": "intDateProximity"
+      "type": "intDateProximity",
+      "sortable": false,
+      "sortDesc": false
     },
     {
       "name": "Last comment _ days ago",
@@ -41,7 +45,9 @@
       "template": "statistics.comments.<%= dimension %>.all.last",
       "description": "Last comment _ days ago",
       "collection": "user_statistics",
-      "type": "intDateProximity"
+      "type": "intDateProximity",
+      "sortable": false,
+      "sortDesc": false
     },
 
 
@@ -53,7 +59,9 @@
       "template": "statistics.comments.<%= dimension %>.all.replied_count",
       "description": "Replies written",
       "collection": "user_statistics",
-      "type": "intRange"
+      "type": "intRange",
+      "sortable": false,
+      "sortDesc": false
     },
     {
       "name": "Replies per Comment",
@@ -62,7 +70,9 @@
       "template": "statistics.comments.<%= dimension %>.all.replied_ratio",
       "description": "% comments that are replies",
       "collection": "user_statistics",
-      "type": "percentRange"
+      "type": "percentRange",
+      "sortable": true,
+      "sortDesc": true
     },
 
 
@@ -73,7 +83,9 @@
       "template": "statistics.comments.<%= dimension %>.all.reply_count",
       "description": "Replies received",
       "collection": "user_statistics",
-      "type": "intRange"
+      "type": "intRange",
+      "sortable": true,
+      "sortDesc": true
     },
     {
       "name": "Replied per Comment",
@@ -82,7 +94,9 @@
       "template": "statistics.comments.<%= dimension %>.all.reply_ratio",
       "description": "Replies received per comment",
       "collection": "user_statistics",
-      "type": "floatRange"
+      "type": "floatRange",
+      "sortable": true,
+      "sortDesc": true
     },
 
 
@@ -93,7 +107,9 @@
       "template": "statistics.comments.<%= dimension %>.all.word_count_average",
       "description": "Average words per post",
       "collection": "user_statistics",
-      "type": "intRange"
+      "type": "intRange",
+      "sortable": true,
+      "sortDesc": true
     },
 
 
@@ -105,7 +121,9 @@
       "template": "statistics.comments.<%= dimension %>.ratios.ModeratorDeleted",
       "description": "Percent moderator deleted",
       "collection": "user_statistics",
-      "type": "percentRange"
+      "type": "percentRange",
+      "sortable": true,
+      "sortDesc": true
     },
     {
       "name": "Comments ModeratorDeleted",
@@ -114,7 +132,9 @@
       "template": "statistics.comments.<%= dimension %>.ModeratorDeleted.count",
       "description": "Number moderator deleted",
       "collection": "user_statistics",
-      "type": "intRange"
+      "type": "intRange",
+      "sortable": true,
+      "sortDesc": true
     },
     {
       "name": "Last time ModeratorDeleted",
@@ -123,7 +143,9 @@
       "template": "statistics.comments.<%= dimension %>.ModeratorDeleted.last",
       "description": "Last time moderator deleted",
       "collection": "user_statistics",
-      "type": "intDateProximity"
+      "type": "intDateProximity",
+      "sortable": false,
+      "sortDesc": true
     },
     {
       "name": "Percent of ModeratorDeleted that were replies",
@@ -132,7 +154,9 @@
       "template": "statistics.comments.<%= dimension %>.ModeratorDeleted.replied_ratio",
       "description": "% of moderator deleted that were replies",
       "collection": "user_statistics",
-      "type": "percentRange"
+      "type": "percentRange",
+      "sortable": false,
+      "sortDesc": true
     },
     {
       "name": "Percent of ModeratorDeleted that got replies",
@@ -141,7 +165,9 @@
       "template": "statistics.comments.<%= dimension %>.ModeratorDeleted.reply_ratio",
       "description": "% of moderator deleted that got replies",
       "collection": "user_statistics",
-      "type": "percentRange"
+      "type": "percentRange",
+      "sortable": true,
+      "sortDesc": true
     },
 
 
@@ -155,7 +181,9 @@
       "template": "statistics.comments.<%= dimension %>.ratios.ModeratorApproved",
       "description": "Percent moderator approved",
       "collection": "user_statistics",
-      "type": "percentRange"
+      "type": "percentRange",
+      "sortable": true,
+      "sortDesc": true
     },
     {
       "name": "Percent SystemFlagged",
@@ -164,7 +192,9 @@
       "template": "statistics.comments.<%= dimension %>.ratios.SystemFlagged",
       "description": "Percent system flagged",
       "collection": "user_statistics",
-      "type": "percentRange"
+      "type": "percentRange",
+      "sortable": true,
+      "sortDesc": true
     },
     {
       "name": "Percent CommunityFlagged",
@@ -173,7 +203,9 @@
       "template": "statistics.comments.<%= dimension %>.ratios.CommunityFlagged",
       "description": "Percent community flagged",
       "collection": "user_statistics",
-      "type": "percentRange"
+      "type": "percentRange",
+      "sortable": true,
+      "sortDesc": true
     },
     {
       "name": "Percent Untouched",
@@ -182,7 +214,9 @@
       "template": "statistics.comments.<%= dimension %>.ratios.Untouched",
       "description": "Percent untouched",
       "collection": "user_statistics",
-      "type": "percentRange"
+      "type": "percentRange",
+      "sortable": false,
+      "sortDesc": true
     },
 
 
@@ -196,7 +230,9 @@
       "template": "statistics.comments.<%= dimension %>.all.first",
       "description": "First comment between",
       "collection": "user_statistics",
-      "type": "dateRange"
+      "type": "dateRange",
+      "sortable": false,
+      "sortDesc": true
     },
     {
       "name": "Last comment between",
@@ -205,7 +241,9 @@
       "template": "statistics.comments.<%= dimension %>.all.last",
       "description": "Last comment between",
       "collection": "user_statistics",
-      "type": "dateRange"
+      "type": "dateRange",
+      "sortable": false,
+      "sortDesc": true
     },
 
 
@@ -216,7 +254,9 @@
       "template": "statistics.actions.performed.likes.count",
       "description": "The number of likes performed by the user",
       "collection": "user_statistics",
-      "type": "intRange"
+      "type": "intRange",
+      "sortable": true,
+      "sortDesc": true
     },
     {
       "name": "Likes received",
@@ -225,7 +265,9 @@
       "template": "statistics.actions.received.likes.count",
       "description": "The number of likes received by the user",
       "collection": "user_statistics",
-      "type": "intRange"
+      "type": "intRange",
+      "sortable": true,
+      "sortDesc": true
     },
     {
       "name": "Flags performed",
@@ -234,7 +276,9 @@
       "template": "statistics.actions.performed.flags.count",
       "description": "The number of flags performed by the user",
       "collection": "user_statistics",
-      "type": "intRange"
+      "type": "intRange",
+      "sortable": true,
+      "sortDesc": true
     },
     {
       "name": "Flags received",
@@ -243,7 +287,9 @@
       "template": "statistics.actions.received.flags.count",
       "description": "The number of flags received by the user",
       "collection": "user_statistics",
-      "type": "intRange"
+      "type": "intRange",
+      "sortable": true,
+      "sortDesc": true
     }
   ]
 }

@@ -169,7 +169,7 @@ export default class UserFilters extends React.Component {
 
       if (f.min === null) {
         if (this.props.filterRangesLoaded) {
-          logOnce("filterNullData-" + i, 'Filter:', i, f.description, 'had null data, so we didn\'t show it. Check getActiveFiltersFromConfig() in UserFilters.');
+          logOnce(`filterNullData-${i}`, 'Filter:', i, f.description, 'had null data, so we didn\'t show it. Check getActiveFiltersFromConfig() in UserFilters.');
         }
         filterComponent = null;
       }
@@ -182,7 +182,7 @@ export default class UserFilters extends React.Component {
     const breakdown = this.props.editMode ? this.props.breakdownEdit : this.props.breakdown;
 
     return (
-      <div style={ styles.base }>
+      <div style={[styles.base, this.props.styles]}>
         <Heading size="medium">
           Filters
         </Heading>
@@ -209,14 +209,20 @@ export default class UserFilters extends React.Component {
 
 const styles = {
   base: {
-    minWidth: 300,
+    flex: '0 0 380px',
+    marginRight: 10,
+    height: '100%',
+    overflow: 'hidden',
+    position: 'relative'
   },
   filters: {
     padding: 20,
-    backgroundColor: "white",
+    backgroundColor: 'white',
     borderRadius: 3,
-    height: 500,
-    overflow: "scroll",
+    overflowY: 'scroll',
+    // does not update on window.resize, but this is the best I could do
+    // before running out of patience
+    height: window.innerHeight - 208
   },
   legend: {
     padding: '10px 0',

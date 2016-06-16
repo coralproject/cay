@@ -72,9 +72,6 @@ export default class SearchCreator extends Component {
     dispatch(getFilterRanges(false)); // editmode => false
   }
 
-  updateUser(user) {
-  }
-
   openModal() {
     this.setState({saveModalOpen: true});
   }
@@ -116,7 +113,7 @@ export default class SearchCreator extends Component {
 
   render() {
     return (
-      <Page>
+      <Page style={styles.pageBase}>
           <StatusBar
             loading={this.props.searches.savingSearch}
             visible={this.props.searches.savingSearch || !!this.props.searches.recentSavedSearch}>
@@ -130,18 +127,20 @@ export default class SearchCreator extends Component {
           </StatusBar>
           <div style={styles.topSection}>
             <ContentHeader title={ window.L.t('Create a Search') } />
-            <Button onClick={this.openModal.bind(this)} category="default" style={styles.saveButton}>
+            <Button
+              onClick={this.openModal.bind(this)}
+              category="info"
+              style={styles.saveButton}>
               <FaFloopyO style={styles.saveIcon} />{` Save Search `}
             </Button>
           </div>
           <Clauses editMode={false} />
           <div style={styles.base}>
             <div style={styles.filtersAndResults}>
-              <div style={styles.filters}>
-                <UserFilters
-                  editMode={false}
-                  onChange={this.onFilterChange.bind(this)} />
-              </div>
+              <UserFilters
+                style={styles.filters}
+                editMode={false}
+                onChange={this.onFilterChange.bind(this)} />
               <UserList
                 total={this.props.searches.userCount}
                 onPagination={this.onPagination.bind(this)}
@@ -178,25 +177,33 @@ export default class SearchCreator extends Component {
 
 
 const styles = {
+  pageBase: {
+    position: 'absolute',
+    overflow: 'hidden',
+    top: 60,
+    left: 0,
+    right: 0,
+    bottom: 0
+  },
   base: {
-    display: "flex",
-    width: "100%"
+    display: 'flex',
+    width: '100%'
   },
   filtersAndResults: {
     display: 'flex',
     minHeight: 250,
     justifyContent: 'space-between',
     flexWrap: 'no-wrap',
-    width: "100%"
+    width: '100%'
 
   },
   rightPanel: {
     flex: 1
   },
   topSection: {
-    display: "flex",
-    justifyContent: "space-between",
-    width: "100%",
+    display: 'flex',
+    justifyContent: 'space-between',
+    width: '100%',
     marginBottom: 20
   },
   userListContainer: {
@@ -227,11 +234,12 @@ const styles = {
   },
   saveIcon: {
     marginRight: 7,
-    position: "relative",
+    position: 'relative',
     top: -2,
-    fontSize: 18,
+    fontSize: 18
   },
   filters: {
+    width: 300,
     '@media (max-width: 1000px)': {
       'width': '100%'
     }

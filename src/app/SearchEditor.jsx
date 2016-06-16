@@ -99,11 +99,10 @@ export default class SearchEditor extends React.Component {
             <TextField label="tag" value={this.props.searches.editableSearch.tag} />
             */}
             <div style={styles.base}>
-              <div style={styles.filters}>
-                <UserFilters
-                  editMode={true}
-                  onChange={this.onFilterChange.bind(this)} />
-              </div>
+              <UserFilters
+                style={styles.filters}
+                editMode={true}
+                onChange={this.onFilterChange.bind(this)} />
               <div style={styles.rightPanel}>
                 <Button
                   onClick={this.confirmSave.bind(this)}

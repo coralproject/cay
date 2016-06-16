@@ -41,6 +41,7 @@ export default class UserFilters extends React.Component {
       return (
         <div>
           <Select
+            style={styles.filterDropdown}
             options={this.getSections()}
             value={specificBreakdown}
             onChange={this.setSpecificBreakdown.bind(this)}
@@ -51,6 +52,7 @@ export default class UserFilters extends React.Component {
       return (
         <div>
           <Select
+            style={styles.filterDropdown}
             options={this.getAuthors()}
             value={specificBreakdown}
             onChange={this.setSpecificBreakdown.bind(this)}
@@ -111,7 +113,7 @@ export default class UserFilters extends React.Component {
       let filterComponent;
       const fmtDesc = f.description.charAt(0).toUpperCase() + f.description.slice(1, f.description.length);
       const inTitleCase = _.map(f.description.split(' '), _.capitalize).join(' ');
-      const bkd = {backgroundColor: i % 2 ? 'transparent' : '#eeeeee'};
+      const bkd = {backgroundColor: i % 2 ? 'transparent' : '#f0f0f0'};
       if (f.type === 'percentRange') {
         filterComponent = (
           <FilterNumberPercent
@@ -188,23 +190,23 @@ export default class UserFilters extends React.Component {
 
     return (
       <div style={[styles.base, this.props.styles]}>
-        <Select
-          ref="breakdown"
-          value={breakdown}
-          onChange={this.updateBreakdown.bind(this)}
-          style={ styles.filterDropdown }
-          options={[
-            {label: 'All Sections & Authors', value: 'all'},
-            {label: 'Author', value: 'author'},
-            {label: 'Section', value: 'section'}
-          ]} />
         <Heading size="medium">
           Filters
         </Heading>
         <div style={styles.filters}>
 
-          {this.getSpecific()}
+          <Select
+            ref="breakdown"
+            value={breakdown}
+            onChange={this.updateBreakdown.bind(this)}
+            style={ styles.filterDropdown }
+            options={[
+              {label: 'All Sections & Authors', value: 'all'},
+              {label: 'Author', value: 'author'},
+              {label: 'Section', value: 'section'}
+            ]} />
 
+          {this.getSpecific()}
           {this.getActiveFiltersFromConfig()}
         </div>
       </div>
@@ -231,9 +233,7 @@ const styles = {
     fontSize: '12pt'
   },
   filterDropdown: {
-    marginBottom: 20,
-    float: 'right',
-    width: '75%'
+    marginBottom: 10
   },
   comingSoon: {
     fontStyle: 'italic',

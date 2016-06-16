@@ -48,6 +48,7 @@ export const FORM_REPLACE_WIDGETS = 'FORM_REPLACE_WIDGETS';
 
 export const ANSWER_EDIT_BEGIN = 'ANSWER_EDIT_BEGIN';
 export const ANSWER_EDIT_UPDATE = 'ANSWER_EDIT_UPDATE';
+export const ANSWER_EDIT_CANCEL = 'ANSWER_EDIT_CANCEL';
 export const ANSWER_EDIT_REQUEST = 'ANSWER_EDIT_REQUEST';
 export const ANSWER_EDIT_SUCCESS = 'ANSWER_EDIT_SUCCESS';
 export const ANSWER_EDIT_FAILED = 'ANSWER_EDIT_FAILED';
@@ -309,6 +310,7 @@ export const updateSubmission = props => dispatch => {
 };
 
 const requestGallery = () => {
+  console.log(FORM_GALLERY_REQUEST);
   return {type: FORM_GALLERY_REQUEST};
 };
 
@@ -386,8 +388,7 @@ export const updateFormStatus = (formId, status) => {
 
 // user opens the Edit Answer modal
 export const beginEdit = (galleryId, submissionId, answerId) => {
-  console.log('beginEdit. why is this being called');
-  return {type: ANSWER_EDIT_BEGIN, answerId};
+  return {type: ANSWER_EDIT_BEGIN, answerId, submissionId};
 };
 
 // user starts typing and changing the Answer
@@ -395,11 +396,13 @@ export const updateEditableAnswer = text => {
   return {type: ANSWER_EDIT_UPDATE, text};
 };
 
+export const cancelEdit = () => {
+  return {type: ANSWER_EDIT_CANCEL};
+};
+
 // post updates to the server
-export const editAnswer = (edited, answer) => {
-  console.log('editAnswer action');
+export const editAnswer = (edited, answer, formId) => {
   return (dispatch, getState) => {
-    console.log(ANSWER_EDIT_REQUEST);
     dispatch({type: ANSWER_EDIT_REQUEST});
 
     const {app} = getState();
@@ -410,10 +413,10 @@ export const editAnswer = (edited, answer) => {
       body: JSON.stringify({edited})
     })
       .then(res => res.json())
-      .then(gallery => {
-        console.log(ANSWER_EDIT_SUCCESS);
-        dispatch({type: ANSWER_EDIT_SUCCESS, gallery});
-        console.log(gallery);
+      .then(submission => {
+        dispatch({type: ANSWER_EDIT_SUCCESS, submission});
+        // just re-fetch the gallery instead of trying to munge the state
+        dispatch(fetchGallery(formId));
       })
       .catch(error => dispatch({type: ANSWER_EDIT_FAILED, error}));
   };

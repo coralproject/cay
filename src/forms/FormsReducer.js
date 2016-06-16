@@ -15,7 +15,7 @@ const initial = {
   activeGallery: null, // this is an ObjectId string
   widgets: [],
   loadingAnswerEdit: false,
-  activeAnswer: null, // ObjectId string
+  answerBeingEdited: null, // ObjectId string
   editableAnswer: '',
   activeSubmission: null // ObjectId string
 };
@@ -206,7 +206,11 @@ const forms = (state = initial, action) => {
     // action gallery might be more than one gallery in the future
 
     const answers = action.gallery.answers.reduce((accum, ans) => {
-      accum[ans.answer_id] = ans;
+      // so basically, an item in the gallery is unique by 2 keys:
+      // the submission_id AND the widet_id
+      // so I'm keying the answers off a combination of the two
+      const answerKey = `${ans.submission_id}|${ans.answer_id}`;
+      accum[answerKey] = ans;
       return accum;
     }, {});
 
@@ -233,23 +237,36 @@ const forms = (state = initial, action) => {
 
   // editing Gallery submissions
   case types.ANSWER_EDIT_BEGIN: // user clicked on button to start editing an answer
+    const answerKey = `${action.submissionId}|${action.answerId}`;
     return {
       ...state,
-      activeAnswer: action.answerId,
-      editableAnswer: state[action.answerId].answer.answer.text
+      // if you can think of a better way to store this, I'm all ears
+      answerBeingEdited: answerKey,
+      editableAnswer: state[answerKey].answer.answer.text
     };
 
-  case types.ANSWER_EDIT_UPDATE:
+  case types.ANSWER_EDIT_UPDATE: // user is typing into the field
     return {...state, editableAnswer: action.text};
+
+  case types.ANSWER_EDIT_CANCEL: // user closed the edit Answer modal or something
+    return {...state, answerBeingEdited: null};
 
   case types.ANSWER_EDIT_REQUEST: // submit Answer edit to server
     return {...state, loadingAnswerEdit: true};
 
-  case types.ANSWER_EDIT_SUCCESS:
-    return {...state, loadingAnswerEdit: false, [action.gallery.id]: action.gallery};
+  case types.ANSWER_EDIT_SUCCESS: // server successfully updated submission
+    // don't update the answers in state here.
+    // the Answer and Reply objects are different, so instead of doing some horrible
+    // update in place, I'm just going to reload the entire gallery from the server
+    return {
+      ...state,
+      loadingAnswerEdit: false,
+      [action.submission.id]: action.submission,
+      answerBeingEdited: null
+    };
 
-  case types.ANSWER_EDIT_FAILED:
-    return {...state, loadingAnswerEdit: false};
+  case types.ANSWER_EDIT_FAILED: // server was unable to update the answer
+    return {...state, loadingAnswerEdit: false, answerBeingEdited: null};
 
   default:
     return state;

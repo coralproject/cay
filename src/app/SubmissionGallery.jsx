@@ -9,9 +9,11 @@ import {
   updateFormStatus,
   updateEditableAnswer,
   editAnswer,
+  cancelEdit,
   beginEdit
 } from 'forms/FormActions';
 import {Link} from 'react-router';
+import moment from 'moment';
 
 import settings from 'settings';
 import Page from 'app/layout/Page';
@@ -32,11 +34,6 @@ import Modal from 'components/modal/Modal';
 @Radium
 export default class SubmissionGallery extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {editModalOpen: false};
-  }
-
   componentWillMount() {
     this.props.dispatch(fetchForm(this.props.params.id));
     // for the nav to have the correct count of submissions for this form/gallery
@@ -48,27 +45,22 @@ export default class SubmissionGallery extends React.Component {
     this.props.dispatch(removeFromGallery(galleryId, submissionId, answerId));
   }
 
-  editSubmission(galleryId, submissionId, answerId) {
-    this.setState({editModalOpen: true});
-    console.log('editSubmission', ...arguments);
+  beginEditAnswer(galleryId, submissionId, answerId) {
     this.props.dispatch(beginEdit(galleryId, submissionId, answerId));
   }
 
-  renderGallery(galleryId) {
-    const gallery = this.props[galleryId];
-
+  renderGallery(gallery) {
     return gallery.answers.map((answer, i) => {
-      console.log('answer', answer);
       return (
         <Card key={i}>
-          {/*<p>Added to Gallery 5/25 {answer.submission_id}</p>*/}
+          <p>Added to Gallery > {moment(gallery.date_updated).format('D MMM YYYY')}</p>
           <p style={styles.answerText}>{answer.answer.answer.text}</p>
-          {/*
-            <p>Gallery id: {galleryId ? galleryId : 'loading gallery'}</p>
+            <p>Gallery id: {gallery ? gallery.id : 'loading gallery'}</p>
+            {/*
             <p>Answer id: {answer.answer_id}</p>
             <p>widget id: {answer.answer.widget_id}</p>
             <p>submission id: {answer.submission_id}</p>
-          */}
+            */}
           {
             answer.answer.edited ?
               (
@@ -84,12 +76,12 @@ export default class SubmissionGallery extends React.Component {
               style={styles.editButton}
               category="info"
               size="small"
-              onClick={this.editSubmission.bind(this, galleryId, answer.submission_id, answer.answer_id)}>
+              onClick={this.beginEditAnswer.bind(this, gallery.id, answer.submission_id, answer.answer_id)}>
               Edit <Edit />
             </Button>
             <Button
               category="warning"
-              onClick={this.removeSubmission.bind(this, galleryId, answer.submission_id, answer.answer_id)}
+              onClick={this.removeSubmission.bind(this, gallery.id, answer.submission_id, answer.answer_id)}
               size="small">
               Remove From Gallery <Delete />
             </Button>
@@ -137,18 +129,21 @@ export default class SubmissionGallery extends React.Component {
   }
 
   confirmEdit(answer) {
-    // this.setState({editModalOpen: false});
-    console.log('confirmEdit');
-    this.props.dispatch(editAnswer(this.props.editableAnswer, answer));
+    this.props.dispatch(editAnswer(this.props.editableAnswer, answer, this.props.activeForm));
   }
 
   cancelEdit() {
-    this.setState({editModalOpen: false});
+    this.props.dispatch(cancelEdit());
   }
 
   updateEditableAnswer(e) {
-    console.log('updateEditableAnswer', e.currentTarget.value);
     this.props.dispatch(updateEditableAnswer(e.currentTarget.value));
+  }
+
+  showIdentityAnswers(answer) {
+    return answer.identity_answers.map(a => {
+      return <TextField label={a.question} value={a.answer.text} />;
+    });
   }
 
   render() {
@@ -156,7 +151,7 @@ export default class SubmissionGallery extends React.Component {
     const form = this.props[this.props.activeForm];
     const gallery = this.props[this.props.activeGallery];
     const submissions = this.props.submissionList.map(id => this.props[id]);
-    const ans = this.props[this.props.activeAnswer];
+    const ans = this.props[this.props.answerBeingEdited];
 
     const attributionFields = this.getAttributionFields(form);
 
@@ -175,10 +170,8 @@ export default class SubmissionGallery extends React.Component {
               <Card>
                 <CardHeader>Author Attribution</CardHeader>
 
-                {attributionFields.map(function (field) {
-
-                  return <Checkbox label={field.title} />;
-
+                {attributionFields.map(function (field, i) {
+                  return <Checkbox key={i} label={field.title} />;
                 })}
 
 
@@ -193,7 +186,7 @@ export default class SubmissionGallery extends React.Component {
             <div style={styles.gallery}>
               {
                 this.props.activeGallery ?
-                this.renderGallery(this.props.activeGallery) :
+                this.renderGallery(gallery) :
                 this.renderBlank()
               }
             </div>
@@ -205,7 +198,7 @@ export default class SubmissionGallery extends React.Component {
           ans ?
             <Modal
               title="Edit Submission for Gallery"
-              isOpen={this.state.editModalOpen}
+              isOpen={!!ans}
               confirmAction={this.confirmEdit.bind(this, ans)}
               cancelAction={this.cancelEdit.bind(this)}>
               <div style={styles.modalBody}>
@@ -224,8 +217,7 @@ export default class SubmissionGallery extends React.Component {
                         style={styles.editText}
                         onChange={this.updateEditableAnswer.bind(this)}
                         value={this.props.editableAnswer}></textarea>
-                      <TextField label="Name" value="Napoleon Dynamite" />
-                      <TextField label="Location" value="Idaho" />
+                      {this.showIdentityAnswers(ans)}
                     </div>
                 </div>
               </div>
@@ -284,7 +276,8 @@ const styles = {
   },
   editText: {
     width: '100%',
-    height: 100
+    height: 100,
+    fontSize: '16px'
   },
   answerText: {
     marginBottom: 10,

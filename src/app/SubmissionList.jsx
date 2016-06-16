@@ -239,20 +239,12 @@ class SubmissionDetail extends Component {
 
   renderAuthorDetail() {
     const { submission, onFlag, onBookmark } = this.props;
-    const author = submission.author || {};
 
-    // author details come from form responses flagged as identity: true
-    //   Note, this should be abstracted probably to a reducer
-    var authorDetails = [];
-    for (var i in submission.replies) {
-      var thisReply = submission.replies[i];
-      if (thisReply.identity === true) {
-        authorDetails.push({
-          label: thisReply.question,
-          answer: this.renderAnswer(thisReply.answer)
-        });
-      }
-    }
+    var authorDetails = submission.replies.filter(reply => {
+      return reply.identity === true;
+    }).map(reply => {
+      return {label: reply.question, answer: this.renderAnswer(reply.answer)};
+    });
 
     return (
       <div>
@@ -277,11 +269,7 @@ class SubmissionDetail extends Component {
             <h2 style={styles.detail.authorTitle}>Submission Author Information</h2>
             <div style={styles.detail.authorDetailsContainer}>
               <div style={styles.detail.authorDetailsColumn}>
-                {
-                  authorDetails.map(function(detail) {
-                    return (<p>{detail.label}: {detail.answer}</p>)
-                  })
-                }
+                { authorDetails.map(detail => <p>{detail.label}: {detail.answer}</p>) }
               </div>
             </div>
           </div>

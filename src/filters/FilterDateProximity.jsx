@@ -2,9 +2,6 @@ import React from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
 
-import Card from 'components/cards/Card';
-import CardHeader from 'components/cards/CardHeader';
-
 @connect(state => state.filters)
 @Radium
 export default class FilterDateProximity extends React.Component {
@@ -16,7 +13,7 @@ export default class FilterDateProximity extends React.Component {
   render() {
 
     return (
-      <div style={styles.base}>
+      <div style={[styles.base, this.props.style]}>
         <span style={styles.description}>
           {this.props.description.split('_')[0]}
           <input
@@ -33,7 +30,7 @@ export default class FilterDateProximity extends React.Component {
 
 const styles = {
   base: {
-    marginBottom: 20,
+    padding: '8px'
   },
   description: {
     fontWeight: 500,

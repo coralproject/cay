@@ -114,17 +114,19 @@ export default class SearchCreator extends Component {
   render() {
     return (
       <Page style={styles.pageBase}>
-          <StatusBar
-            loading={this.props.searches.savingSearch}
-            visible={this.props.searches.savingSearch || !!this.props.searches.recentSavedSearch}>
-            {
-              this.props.searches.recentSavedSearch ?
-              (<Link style={styles.searchDetail} to={`/saved-search/${this.props.searches.recentSavedSearch.name}`}>
-                View Your Saved Search [{this.props.searches.recentSavedSearch.name}] →
-              </Link>) :
-              'Saving Search...'
-            }
-          </StatusBar>
+        <StatusBar
+          loading={this.props.searches.savingSearch}
+          visible={this.props.searches.savingSearch || !!this.props.searches.recentSavedSearch}>
+          {
+            this.props.searches.recentSavedSearch ?
+            (<Link style={styles.searchDetail} to={`/saved-search/${this.props.searches.recentSavedSearch.name}`}>
+              View Your Saved Search [{this.props.searches.recentSavedSearch.name}] →
+            </Link>) :
+            'Saving Search...'
+          }
+        </StatusBar>
+
+        <div style={styles.base}>
           <div style={styles.topSection}>
             <ContentHeader title={ window.L.t('Create a Search') } />
             <Button
@@ -133,9 +135,10 @@ export default class SearchCreator extends Component {
               style={styles.saveButton}>
               <FaFloopyO style={styles.saveIcon} />{` Save Search `}
             </Button>
+            <Clauses editMode={false} />
           </div>
-          <Clauses editMode={false} />
-          <div style={styles.base}>
+
+          <div style={styles.bottomSection}>
             <div style={styles.filtersAndResults}>
               <UserFilters
                 style={styles.filters}
@@ -147,19 +150,21 @@ export default class SearchCreator extends Component {
                 loadingQueryset={this.props.searches.loadingQueryset}
                 users={this.props.searches.users} />
             </div>
-          <Modal
-            title="Save Search"
-            isOpen={this.state.saveModalOpen}
-            confirmAction={this.confirmSave.bind(this)}
-            cancelAction={this.cancelSave.bind(this)}>
-            <TextField label="Name" onChange={this.updateSearchName.bind(this)}/>
-            <p style={styles.modalLabel}>Description</p>
-            <textarea
-              style={styles.descriptionInput}
-              onBlur={this.updateSearcDesc.bind(this)}></textarea>
-            <TextField label="Tag Name" onChange={this.updateSearchTag.bind(this)} />
-          </Modal>
+          </div>
         </div>
+
+        <Modal
+          title="Save Search"
+          isOpen={this.state.saveModalOpen}
+          confirmAction={this.confirmSave.bind(this)}
+          cancelAction={this.cancelSave.bind(this)}>
+          <TextField label="Name" onChange={this.updateSearchName.bind(this)}/>
+          <p style={styles.modalLabel}>Description</p>
+          <textarea
+            style={styles.descriptionInput}
+            onBlur={this.updateSearcDesc.bind(this)}></textarea>
+          <TextField label="Tag Name" onChange={this.updateSearchTag.bind(this)} />
+        </Modal>
       </Page>
     );
   }
@@ -177,6 +182,11 @@ export default class SearchCreator extends Component {
 
 
 const styles = {
+  base: {
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%'
+  },
   pageBase: {
     position: 'absolute',
     overflow: 'hidden',
@@ -185,26 +195,23 @@ const styles = {
     right: 0,
     bottom: 0
   },
-  base: {
+  bottomSection: {
+    flex: 1,
     display: 'flex',
-    width: '100%'
+    position: 'relative',
+    boxSizing: 'border-box'
   },
   filtersAndResults: {
     display: 'flex',
-    minHeight: 250,
     justifyContent: 'space-between',
     flexWrap: 'no-wrap',
-    width: '100%'
-
+    width: '100%',
+    height: '100%'
   },
   rightPanel: {
     flex: 1
   },
   topSection: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    width: '100%',
-    marginBottom: 20
   },
   userListContainer: {
     margin: 20,
@@ -249,5 +256,8 @@ const styles = {
     textDecoration: 'none'
   },
   saveButton: {
+    position: 'absolute',
+    top: 10,
+    right: 10
   }
 };

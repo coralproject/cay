@@ -185,7 +185,8 @@ export default class UserList extends React.Component {
 
 const styles = {
   base: {
-    flex: 1
+    flexGrow: 2,
+    marginLeft: 20
   },
   columnHeader: {
     display: 'flex',

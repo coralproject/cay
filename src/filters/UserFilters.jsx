@@ -111,9 +111,11 @@ export default class UserFilters extends React.Component {
       let filterComponent;
       const fmtDesc = f.description.charAt(0).toUpperCase() + f.description.slice(1, f.description.length);
       const inTitleCase = _.map(f.description.split(' '), _.capitalize).join(' ');
+      const bkd = {backgroundColor: i % 2 ? 'transparent' : '#eeeeee'};
       if (f.type === 'percentRange') {
         filterComponent = (
           <FilterNumberPercent
+            style={bkd}
             onChange={this.props.onChange}
             key={i}
             min={f.min}
@@ -128,6 +130,7 @@ export default class UserFilters extends React.Component {
         // capitalize first letter of description
         filterComponent = (
           <FilterNumbers
+            style={bkd}
             onChange={this.props.onChange}
             key={i}
             min={f.min}
@@ -141,6 +144,7 @@ export default class UserFilters extends React.Component {
       } else if (f.type === 'dateRange') {
         filterComponent = (
           <FilterDate
+            style={bkd}
             onChange={this.props.onChange}
             key={i}
             min={f.min}
@@ -154,6 +158,7 @@ export default class UserFilters extends React.Component {
       } else if (f.type === 'intDateProximity') {
         filterComponent = (
           <FilterDateProximity
+            style={bkd}
             onChange={this.props.onChange}
             key={i}
             min={f.min}
@@ -183,20 +188,20 @@ export default class UserFilters extends React.Component {
 
     return (
       <div style={[styles.base, this.props.styles]}>
+        <Select
+          ref="breakdown"
+          value={breakdown}
+          onChange={this.updateBreakdown.bind(this)}
+          style={ styles.filterDropdown }
+          options={[
+            {label: 'All Sections & Authors', value: 'all'},
+            {label: 'Author', value: 'author'},
+            {label: 'Section', value: 'section'}
+          ]} />
         <Heading size="medium">
           Filters
         </Heading>
         <div style={styles.filters}>
-          <Select
-            ref="breakdown"
-            value={breakdown}
-            onChange={this.updateBreakdown.bind(this)}
-            style={ styles.filterDropdown }
-            options={[
-              {label: 'All Sections & Authors', value: 'all'},
-              {label: 'Author', value: 'author'},
-              {label: 'Section', value: 'section'}
-            ]} />
 
           {this.getSpecific()}
 
@@ -209,27 +214,26 @@ export default class UserFilters extends React.Component {
 
 const styles = {
   base: {
-    flex: '0 0 380px',
-    marginRight: 10,
-    height: '100%',
-    overflow: 'hidden',
-    position: 'relative'
+    flex: '0 0 360px',
+    marginRight: 10
   },
   filters: {
-    padding: 20,
+    clear: 'both',
     backgroundColor: 'white',
     borderRadius: 3,
     overflowY: 'scroll',
+    height: 'calc(100% - 56px)'
     // does not update on window.resize, but this is the best I could do
     // before running out of patience
-    height: window.innerHeight - 208
   },
   legend: {
     padding: '10px 0',
     fontSize: '12pt'
   },
   filterDropdown: {
-    marginBottom: 20
+    marginBottom: 20,
+    float: 'right',
+    width: '75%'
   },
   comingSoon: {
     fontStyle: 'italic',

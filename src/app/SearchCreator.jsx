@@ -114,17 +114,6 @@ export default class SearchCreator extends Component {
   render() {
     return (
       <Page style={styles.pageBase}>
-        <StatusBar
-          loading={this.props.searches.savingSearch}
-          visible={this.props.searches.savingSearch || !!this.props.searches.recentSavedSearch}>
-          {
-            this.props.searches.recentSavedSearch ?
-            (<Link style={styles.searchDetail} to={`/saved-search/${this.props.searches.recentSavedSearch.name}`}>
-              View Your Saved Search [{this.props.searches.recentSavedSearch.name}] →
-            </Link>) :
-            'Saving Search...'
-          }
-        </StatusBar>
 
         <div style={styles.base}>
           <div style={styles.topSection}>
@@ -152,6 +141,18 @@ export default class SearchCreator extends Component {
             </div>
           </div>
         </div>
+
+        <StatusBar
+          loading={this.props.searches.savingSearch}
+          visible={this.props.searches.savingSearch || !!this.props.searches.recentSavedSearch}>
+          {
+            this.props.searches.recentSavedSearch ?
+            (<Link style={styles.searchDetail} to={`/saved-search/${this.props.searches.recentSavedSearch.name}`}>
+              View Your Saved Search [{this.props.searches.recentSavedSearch.name}] →
+            </Link>) :
+            'Saving Search...'
+          }
+        </StatusBar>
 
         <Modal
           title="Save Search"
@@ -246,7 +247,6 @@ const styles = {
     fontSize: 18
   },
   filters: {
-    width: 300,
     '@media (max-width: 1000px)': {
       'width': '100%'
     }

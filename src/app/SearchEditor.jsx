@@ -20,7 +20,6 @@ import ContentHeader from 'components/ContentHeader';
 import UserFilters from 'filters/UserFilters';
 import FaFloopyO from 'react-icons/lib/fa/floppy-o';
 import UserList from 'users/UserList';
-import UserDetail from 'users/UserDetail';
 import TextField from 'components/forms/TextField';
 import Clauses from 'search/Clauses';
 
@@ -83,17 +82,7 @@ export default class SearchEditor extends React.Component {
 
   render() {
     return (
-      <Page>
-        <ContentHeader title={ window.L.t('Search Editor') } />
-        <Button
-          onClick={this.confirmSave.bind(this)}
-          category="primary"
-          style={styles.saveButton}>
-          Update Search <FaFloopyO style={styles.saveIcon} />
-        </Button>
-
-        <Clauses editMode={true} />
-
+      <Page style={styles.pageBase}>
         {
           this.props.searches.editableSearchLoading || !this.props.searches.editableSearch ?
           <p>Loading Saved Search...</p> :
@@ -105,13 +94,25 @@ export default class SearchEditor extends React.Component {
             <textarea disabled>{this.props.searches.editableSearch.description}</textarea>
             <TextField label="tag" value={this.props.searches.editableSearch.tag} />
             */}
+
             <div style={styles.base}>
-              <UserFilters
-                style={styles.filters}
-                editMode={true}
-                onChange={this.onFilterChange.bind(this)} />
-              <div style={styles.rightPanel}>
-                <div style={styles.userListContainer}>
+              <div style={styles.topSection}>
+                <ContentHeader title={ window.L.t('Search Editor') } />
+                <Button
+                  onClick={this.confirmSave.bind(this)}
+                  category="primary"
+                  style={styles.saveButton}>
+                  Update Search <FaFloopyO style={styles.saveIcon} />
+                </Button>
+                <Clauses editMode={true} />
+              </div>
+
+              <div style={styles.bottomSection}>
+                <div style={styles.filtersAndResults}>
+                  <UserFilters
+                    style={styles.filters}
+                    editMode={true}
+                    onChange={this.onFilterChange.bind(this)} />
                   <UserList
                     total={this.props.searches.userCount}
                     onPagination={this.onPagination.bind(this)}
@@ -128,11 +129,33 @@ export default class SearchEditor extends React.Component {
 }
 
 const styles = {
+  pageBase: {
+    position: 'absolute',
+    overflow: 'hidden',
+    top: 60,
+    left: 0,
+    right: 0,
+    bottom: 0
+  },
   base: {
     display: 'flex',
-    minHeight: 250,
-    justifyContent: 'flex-start',
-    flexWrap: 'no-wrap'
+    flexDirection: 'column',
+    height: '100%'
+  },
+  topSection: {
+  },
+  bottomSection: {
+    flex: 1,
+    display: 'flex',
+    position: 'relative',
+    boxSizing: 'border-box'
+  },
+  filtersAndResults: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    flexWrap: 'no-wrap',
+    width: '100%',
+    height: '100%'
   },
   userListContainer: {
     margin: 20,
@@ -158,6 +181,8 @@ const styles = {
     height: 25
   },
   saveButton: {
-    float: 'right'
+    position: 'absolute',
+    top: 10,
+    right: 10
   }
 };

@@ -29,8 +29,8 @@ class Menu extends React.Component {
         <ul>
           {/*<MenuItem name="Dashboard" target="/" icon={<MdInsertChart />} />*/}
           {/*<MenuItem name="Explore" target="/explore" icon={<MdTimeline />} />*/}
-          <MenuItem name={ window.L.t('Saved Searches') } target="/saved-searches" icon={<MdBuild />} />
-          <MenuItem name={ window.L.t('Search Creator') } target="/search-creator" icon={<MdGroup />} />
+          <MenuItem name={ window.L.t('Search Creator') } target="/search-creator" icon={<MdBuild />} />
+          <MenuItem name={ window.L.t('Saved Searches') } target="/saved-searches" icon={<MdGroup />} />
           {/*<MenuItem name={ window.L.t('Tag Manager') } target="/tag-manager" icon={<MdSettings />}/>*/}
           {
             features.ask ?

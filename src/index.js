@@ -90,7 +90,7 @@ class Root extends React.Component {
             {/***** Trust Search Routes *****/}
             <Route path="search-creator" component={SearchCreator} />
             <Route path="saved-searches" component={SeeAllSearches}/>
-            <Route path="saved-search/:name" component={SearchDetail} />
+            <Route path="saved-search/:id" component={SearchDetail} />
             <Route path="edit-search/:id" component={SearchEditor} />
 
 

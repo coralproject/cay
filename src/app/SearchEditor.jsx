@@ -20,7 +20,6 @@ import ContentHeader from 'components/ContentHeader';
 import UserFilters from 'filters/UserFilters';
 import FaFloopyO from 'react-icons/lib/fa/floppy-o';
 import UserList from 'users/UserList';
-import UserDetail from 'users/UserDetail';
 import TextField from 'components/forms/TextField';
 import Clauses from 'search/Clauses';
 
@@ -140,11 +139,6 @@ const styles = {
     height: 900,
     display: 'flex',
     clear: 'both'
-  },
-  userDetail: {
-    flex: 2,
-    paddingLeft: 40,
-    height: 900
   },
   rightPanel: {
     flex: 1

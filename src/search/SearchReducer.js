@@ -4,6 +4,9 @@ const initialState = {
   loading: false,
   loadingQueryset: false,
   activeQuery: null,
+  loadingSavedSearch: false,
+  activeSavedSearch: null,
+  savedSearchError: '',
   recentSavedSearch: null,
   updatingSearch: false,
   editableSearch: null, // this search controls the SearchEditor component
@@ -24,6 +27,25 @@ const searches = (state = initialState, action) => {
       ...state,
       loadingQueryset: false,
       showTheError: `failed to load ${action.querysetName}`
+    };
+
+  case types.PILLAR_SEARCH_REQUEST:
+    return {
+      ...state,
+      loadingSavedSearch: true,
+      activeSavedSearch: null,
+      savedSearchError: ''
+    };
+
+  case types.PILLAR_SEARCH_SUCCESS:
+    return {...state, loadingSavedSearch: false, activeSavedSearch: action.search};
+
+  case types.PILLAR_SEARCH_FAILED:
+    return {
+      ...state,
+      loadingSavedSearch: false,
+      activeSavedSearch: null,
+      savedSearchError: action.error
     };
 
   case types.CREATE_QUERY: // store the query so it can be easily saved to pillar

@@ -92,6 +92,7 @@ export const fetchSearch = (id) => {
 
     const app = getState().app;
 
+    console.log('fetchSearch', id);
     fetch(`${app.pillarHost}/api/search/${id}`)
       .then(resp => resp.json())
       .then(search => {
@@ -198,9 +199,7 @@ export const fetchQueryset = (querysetName, page = 0, replace = false) => {
     dispatch(requestQueryset(querysetName, page));
 
     xenia()
-      .limit(20)
-      .skip(20 * page)
-      .exec(querysetName)
+      .exec(querysetName, {skip: 20 * page, limit: 20})
       .then(queryset => dispatch(receiveQueryset(queryset, replace)))
       .catch(err => dispatch(requestQuerysetFailure(err)));
   };
@@ -281,7 +280,7 @@ export const makeQueryFromState = (type, page = 0, replace = false, editMode = f
         if (+filter.max !== +clampedUserMax) {
           let searchMax;
           if (_.isDate(clampedUserMax)) {
-            searchMin = `#date:${clampedUserMax.toISOString()}`;
+            searchMax = `#date:${clampedUserMax.toISOString()}`;
           } else if (filter.type === 'intDateProximity') {
             searchMax = `#time:${-clampedUserMax*24}h`;
           } else {
@@ -320,8 +319,8 @@ export const saveQueryFromState = (queryName, desc, tag) => {
 
     dispatch({type: PILLAR_SEARCH_SAVE_INIT, query: state.searches.activeQuery});
 
-    console.log('about to doPutQuery');
-    doPutQuery(dispatch, state, queryName, desc, tag);
+    console.log('about to save search to pillar');
+    saveSearchToPillar(dispatch, state, queryName, desc, tag);
   };
 };
 
@@ -352,7 +351,7 @@ const createQueryForSave = (query, name, desc) => {
 };
 
 // create the body of request to save a Search to Pillar
-const prepSearch = (filters, query, name, desc, tag, breakdown, specificBreakdown) => {
+const prepSearchForPillar = (filters, query, name, desc, tag, breakdown, specificBreakdown) => {
 
   let values = _.compact(_.map(filters, f => {
     // this will return the ENTIRE filter if only the min OR max was changed.
@@ -367,7 +366,7 @@ const prepSearch = (filters, query, name, desc, tag, breakdown, specificBreakdow
   return {
     name, // the human-readable user-entered name
     description: desc, // user-entered string
-    query: query.name, // the name of the xenia query
+    querySet: query, // the full xenia queryset (without the name)
     tag, // unique name of live-tag
     filters: {
       values,
@@ -387,8 +386,6 @@ the filters object only stores non-default values and the dimension breakdowns
 */
 const doPutQuery = (dispatch, state, name, desc, tag) => {
 
-  const {breakdown, specificBreakdown} = state.filters;
-  const query = createQueryForSave(state.searches.activeQuery, name, desc);
 
   xenia(query)
     .saveQuery()
@@ -396,7 +393,8 @@ const doPutQuery = (dispatch, state, name, desc, tag) => {
       dispatch({type: QUERYSET_SAVE_SUCCESS, name: query.name});
 
       const filters = state.filters.filterList.map(key => state.filters[key]);
-      const body = prepSearch(filters, query, name, desc, tag, breakdown, specificBreakdown);
+
+
 
       fetch(`${state.app.pillarHost}/api/search`, {method: 'POST', body: JSON.stringify(body)})
         .then(resp => resp.json())
@@ -412,6 +410,50 @@ const doPutQuery = (dispatch, state, name, desc, tag) => {
       dispatch({type: QUERYSET_SAVE_FAILED, error});
     });
 };
+
+
+const saveQuerySetToXenia = (state, search, query) => {
+
+  return dispatch => {
+    // we are using a pillar generated queryset name, so
+    //   set the query name from the search, which has
+    //   been returned from pillar/api/search POST
+    query.name = search.query;
+
+    console.log('save search to xenia', query);
+
+    xenia(query)
+    .saveQuery()
+    .then(() => { // if response.status < 400
+      dispatch({type: QUERYSET_SAVE_SUCCESS, name: query.name});
+    }).catch(error => {
+      dispatch({type: QUERYSET_SAVE_FAILED, error});
+    });
+  };
+
+};
+
+const saveSearchToPillar = (dispatch, state, name, desc, tag) => {
+
+  const {breakdown, specificBreakdown} = state.filters;
+  const query = createQueryForSave(state.searches.activeQuery, name, desc);
+  const filters = state.filters.filterList.map(key => state.filters[key]);
+
+  const body = prepSearchForPillar(filters, query, name, desc, tag, breakdown, specificBreakdown);
+
+  fetch(`${state.app.pillarHost}/api/search`, {method: 'POST', body: JSON.stringify(body)})
+    .then(resp => resp.json())
+    .then(search => {
+      // do something with savedSearch?
+      dispatch({type: PILLAR_SEARCH_SAVE_SUCCESS, search});
+      dispatch(saveQuerySetToXenia(state, search, query));
+    })
+    .catch(error => {
+      dispatch({type: PILLAR_SEARCH_SAVE_FAILED, error});
+    });
+}
+
+
 /* xenia_package */
 const doMakeQueryFromStateAsync = _.debounce((query, dispatch, app, replace)=>{
   dispatch(requestQueryset());
@@ -447,7 +489,7 @@ export const updateSearch = staleSearch => {
       });
 
       // update search in pillar
-      const body = prepSearch(editFilters, query, name, description, tag, breakdownEdit, specificBreakdownEdit);
+      const body = prepSearchForPillar(editFilters, query, name, description, tag, breakdownEdit, specificBreakdownEdit);
 
       // append the id for update mode
       body.id = staleSearch.id;

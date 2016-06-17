@@ -41,6 +41,8 @@ export const PILLAR_EDIT_SEARCH_FAILED = 'PILLAR_EDIT_SEARCH_FAILED';
 export const PILLAR_SEARCH_UPDATE_SUCCESS = 'PILLAR_SEARCH_UPDATE_SUCCESS';
 export const PILLAR_SEARCH_UPDATE_FAILED = 'PILLAR_SEARCH_UPDATE_FAILED';
 
+export const UPDATE_EDITABLE_SEARCH_META = 'UPDATE_EDITABLE_SEARCH_META';
+
 // when we're initializing a Saved Search update to Pillar
 export const PILLAR_SAVED_SEARCH_UPDATE = 'PILLAR_SAVED_SEARCH_UPDATE';
 
@@ -144,6 +146,10 @@ export const fetchSavedSearchForEdit = id => {
         dispatch(searchEditFetchFailed(error));
       });
   };
+};
+
+export const updateEditableSearchMeta = (field, value) => {
+  return {type: UPDATE_EDITABLE_SEARCH_META, field, value};
 };
 
 // get a list of Saved Searches from Pillar
@@ -376,42 +382,6 @@ const prepSearchForPillar = (filters, query, name, desc, tag, breakdown, specifi
   };
 };
 
-/*
-
-this method saves the active query to xenia, then saves the resulting query_set
-to pillar with some other metadata to form a "Search"
-
-the filters object only stores non-default values and the dimension breakdowns
-
-*/
-const doPutQuery = (dispatch, state, name, desc, tag) => {
-
-
-  xenia(query)
-    .saveQuery()
-    .then(() => { // if response.status < 400
-      dispatch({type: QUERYSET_SAVE_SUCCESS, name: query.name});
-
-      const filters = state.filters.filterList.map(key => state.filters[key]);
-
-
-
-      fetch(`${state.app.pillarHost}/api/search`, {method: 'POST', body: JSON.stringify(body)})
-        .then(resp => resp.json())
-        .then(search => {
-          // do something with savedSearch?
-          dispatch({type: PILLAR_SEARCH_SAVE_SUCCESS, search});
-        })
-        .catch(error => {
-          dispatch({type: PILLAR_SEARCH_SAVE_FAILED, error});
-        });
-
-    }).catch(error => {
-      dispatch({type: QUERYSET_SAVE_FAILED, error});
-    });
-};
-
-
 const saveQuerySetToXenia = (state, search, query) => {
 
   return dispatch => {
@@ -433,6 +403,16 @@ const saveQuerySetToXenia = (state, search, query) => {
 
 };
 
+/*
+
+this method saves the active query to pillar with some other metadata,
+then saves the resulting id to xenia to form a "Search"
+
+the filters object only stores non-default values and the dimension breakdowns
+
+*/
+
+
 const saveSearchToPillar = (dispatch, state, name, desc, tag) => {
 
   const {breakdown, specificBreakdown} = state.filters;
@@ -451,8 +431,7 @@ const saveSearchToPillar = (dispatch, state, name, desc, tag) => {
     .catch(error => {
       dispatch({type: PILLAR_SEARCH_SAVE_FAILED, error});
     });
-}
-
+};
 
 /* xenia_package */
 const doMakeQueryFromStateAsync = _.debounce((query, dispatch, app, replace)=>{
@@ -471,41 +450,41 @@ export const updateSearch = staleSearch => {
 
     // build query from state
     const {app, searches, filters} = getState();
-    const {name, description, tag} = staleSearch;
+    const {editMeta_name: name, editMeta_tag: tag, editMeta_description: description} = searches;
+    const {id, query: xeniaQueryName} = staleSearch;
     const {breakdownEdit, specificBreakdownEdit} = filters;
 
-    const query = createQueryForSave(searches.activeQuery, name, description);
+    const query = createQueryForSave(searches.activeQuery, xeniaQueryName, description);
+    const editFilters = filters.editFilterList.map(key => {
+      console.log('updateSearch key', key);
+      console.log('updateSearch filters', filters);
+      return filters[key];
+    });
 
     dispatch({type: PILLAR_SAVED_SEARCH_UPDATE, query});
 
-    // update search in xenia
-    xenia(query).saveQuery().then(() => {
-      dispatch({type: QUERYSET_SAVE_SUCCESS, name: query.name});
+    // update search in pillar
+    const body = prepSearchForPillar(editFilters, query, name, description, tag, breakdownEdit, specificBreakdownEdit);
 
-      const editFilters = filters.editFilterList.map(key => {
-        console.log('updateSearch key', key);
-        console.log('updateSearch filters', filters);
-        return filters[key];
-      });
+    // append the id for update mode
+    body.id = id;
+    body.query = xeniaQueryName; // make sure to keep old name so xenia save is an update insted of insert
 
-      // update search in pillar
-      const body = prepSearchForPillar(editFilters, query, name, description, tag, breakdownEdit, specificBreakdownEdit);
+    fetch(`${app.pillarHost}/api/search`, {method: 'PUT', body: JSON.stringify(body)})
+      .then(resp => resp.json())
+      .then(search => {
+        // do something with savedSearch?
+        dispatch({type: PILLAR_SEARCH_UPDATE_SUCCESS, search});
 
-      // append the id for update mode
-      body.id = staleSearch.id;
-
-      fetch(`${app.pillarHost}/api/search`, {method: 'PUT', body: JSON.stringify(body)})
-        .then(resp => resp.json())
-        .then(search => {
-          // do something with savedSearch?
-          dispatch({type: PILLAR_SEARCH_UPDATE_SUCCESS, search});
-        })
-        .catch(error => {
-          dispatch({type: PILLAR_SEARCH_UPDATE_FAILED, error});
+        // update search in xenia
+        xenia(query).saveQuery().then(() => {
+          dispatch({type: QUERYSET_SAVE_SUCCESS, name: query.name});
         });
-    });
 
-    console.log('updateSearch', searches.activeQuery);
+      })
+      .catch(error => {
+        dispatch({type: PILLAR_SEARCH_UPDATE_FAILED, error});
+      });
   };
 };
 

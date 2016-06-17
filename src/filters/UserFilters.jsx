@@ -224,7 +224,7 @@ const styles = {
     backgroundColor: 'white',
     borderRadius: 3,
     overflowY: 'scroll',
-    height: 'calc(100% - 56px)'
+    height: 'calc(100% - 46px)'
     // does not update on window.resize, but this is the best I could do
     // before running out of patience
   },

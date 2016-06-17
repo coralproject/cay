@@ -146,7 +146,7 @@ export default class SearchCreator extends Component {
           visible={this.props.searches.savingSearch || !!this.props.searches.recentSavedSearch}>
           {
             this.props.searches.recentSavedSearch ?
-            (<Link style={styles.searchDetail} to={`/saved-search/${this.props.searches.recentSavedSearch.name}`}>
+            (<Link style={styles.searchDetail} to={`/saved-search/${this.props.searches.recentSavedSearch.id}`}>
               View Your Saved Search [{this.props.searches.recentSavedSearch.name}] →
             </Link>) :
             'Saving Search...'
@@ -182,11 +182,6 @@ export default class SearchCreator extends Component {
 
 
 const styles = {
-  base: {
-    display: 'flex',
-    flexDirection: 'column',
-    height: '100%'
-  },
   pageBase: {
     position: 'absolute',
     overflow: 'hidden',
@@ -194,6 +189,11 @@ const styles = {
     left: 0,
     right: 0,
     bottom: 0
+  },
+  base: {
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%'
   },
   bottomSection: {
     flex: 1,
@@ -217,15 +217,6 @@ const styles = {
     margin: 20,
     display: 'flex',
     clear: 'both'
-  },
-  // userDetail: {
-  //   flex: 2,
-  //   paddingLeft: 40,
-  //   height: 900
-  // },
-  userList: {
-    minWidth: 350,
-    flex: 1
   },
   modalLabel: {
     fontSize: 16,

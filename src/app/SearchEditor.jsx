@@ -7,7 +7,8 @@ import {
   makeQueryFromState,
   fetchInitialData,
   clearUserList,
-  updateSearch
+  updateSearch,
+  updateEditableSearchMeta
 } from 'search/SearchActions';
 import {userSelected} from 'users/UsersActions';
 import {filterChanged, getFilterRanges} from 'filters/FiltersActions';
@@ -80,45 +81,57 @@ export default class SearchEditor extends React.Component {
     this.props.dispatch(fetchCommentsByUser(user._id));
   }
 
+  updateSearchMeta(field, value) {
+    this.props.dispatch(updateEditableSearchMeta(field, value));
+  }
+
   render() {
     return (
       <Page style={styles.pageBase}>
         {
           this.props.searches.editableSearchLoading || !this.props.searches.editableSearch ?
           <p>Loading Saved Search...</p> :
-          <div>
-            {/*
-              can't update name or description just yet
 
-            <TextField label="name" value={this.props.searches.editableSearch.name} />
-            <textarea disabled>{this.props.searches.editableSearch.description}</textarea>
-            <TextField label="tag" value={this.props.searches.editableSearch.tag} />
-            */}
-
-            <div style={styles.base}>
-              <div style={styles.topSection}>
-                <ContentHeader title={ window.L.t('Search Editor') } />
-                <Button
-                  onClick={this.confirmSave.bind(this)}
-                  category="primary"
-                  style={styles.saveButton}>
-                  Update Search <FaFloopyO style={styles.saveIcon} />
-                </Button>
-                <Clauses editMode={true} />
+          <div style={styles.base}>
+            <div style={styles.topSection}>
+              <ContentHeader title={ window.L.t('Search Editor') } />
+              <div style={styles.metaControl}>
+                <TextField
+                  style={styles.editMeta}
+                  label="update name"
+                  onChange={this.updateSearchMeta.bind(this, 'name')}
+                  value={this.props.searches.editMeta_name} />
+                <TextField
+                  style={styles.editMeta}
+                  label="update description"
+                  onChange={this.updateSearchMeta.bind(this, 'description')}
+                  value={this.props.searches.editMeta_description} />
+                <TextField
+                  style={styles.editMeta}
+                  label="update tag"
+                  onChange={this.updateSearchMeta.bind(this, 'tag')}
+                  value={this.props.searches.editMeta_tag} />
               </div>
+              <Button
+                onClick={this.confirmSave.bind(this)}
+                category="primary"
+                style={styles.saveButton}>
+                Update Search <FaFloopyO style={styles.saveIcon} />
+              </Button>
+              <Clauses editMode={true} />
+            </div>
 
-              <div style={styles.bottomSection}>
-                <div style={styles.filtersAndResults}>
-                  <UserFilters
-                    style={styles.filters}
-                    editMode={true}
-                    onChange={this.onFilterChange.bind(this)} />
-                  <UserList
-                    total={this.props.searches.userCount}
-                    onPagination={this.onPagination.bind(this)}
-                    loadingQueryset={this.props.searches.loadingQueryset}
-                    users={this.props.searches.users} />
-                </div>
+            <div style={styles.bottomSection}>
+              <div style={styles.filtersAndResults}>
+                <UserFilters
+                  style={styles.filters}
+                  editMode={true}
+                  onChange={this.onFilterChange.bind(this)} />
+                <UserList
+                  total={this.props.searches.userCount}
+                  onPagination={this.onPagination.bind(this)}
+                  loadingQueryset={this.props.searches.loadingQueryset}
+                  users={this.props.searches.users} />
               </div>
             </div>
           </div>
@@ -157,14 +170,22 @@ const styles = {
     width: '100%',
     height: '100%'
   },
+  rightPanel: {
+    flex: 1
+  },
   userListContainer: {
     margin: 20,
     height: 900,
     display: 'flex',
     clear: 'both'
   },
-  rightPanel: {
-    flex: 1
+  metaControl: {
+    position: 'absolute',
+    right: 200,
+    top: -10
+  },
+  editMeta: {
+    marginRight: 20
   },
   filters: {
     '@media (max-width: 1000px)': {

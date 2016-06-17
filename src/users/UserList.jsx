@@ -77,6 +77,8 @@ export default class UserList extends React.Component {
         elementHeight={57}
         containerHeight={500}
         infiniteLoadBeginEdgeOffset={200}
+        isInfiniteLoading={this.props.loadingQueryset}
+        loadingSpinnerDelegate={<InfiniteSpinner/>}
         onInfiniteLoad={this.handleInfiniteLoad.bind(this)}>
         {users.map((user, i) =>
           <UserRow {...this.props}
@@ -153,7 +155,7 @@ export default class UserList extends React.Component {
               <Spinner />
             </div> :
             <Heading size='medium'>
-              <span style={styles.groupHeader}>{ window.L.t('results') }</span> ({this.props.total || '#'} { window.L.t('users')})
+              <span style={styles.groupHeader}>{ window.L.t('results') }</span> ({this.props.total || '#'} {this.props.total !== 1 ? window.L.t('users') : window.L.t('user')})
             </Heading>
           }
           <div style={styles.sort}>
@@ -187,6 +189,12 @@ export default class UserList extends React.Component {
     );
   }
 }
+
+const InfiniteSpinner = Radium(() => (
+  <div style={styles.infiniteSpinner}>
+    <Spinner />
+  </div>
+));
 
 const styles = {
   base: {
@@ -243,5 +251,11 @@ const styles = {
     perspective: 1000,
     width: '100%',
     height: 500
+  },
+  infiniteSpinner: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    marginTop: -40
   }
 };

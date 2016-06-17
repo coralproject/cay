@@ -169,7 +169,7 @@ export default class UserFilters extends React.Component {
 
       if (f.min === null) {
         if (this.props.filterRangesLoaded) {
-          logOnce("filterNullData-" + i, 'Filter:', i, f.description, 'had null data, so we didn\'t show it. Check getActiveFiltersFromConfig() in UserFilters.');
+          logOnce(`filterNullData-${i}`, 'Filter:', i, f.description, 'had null data, so we didn\'t show it. Check getActiveFiltersFromConfig() in UserFilters.');
         }
         filterComponent = null;
       }
@@ -200,7 +200,9 @@ export default class UserFilters extends React.Component {
 
           {this.getSpecific()}
 
-          {this.getActiveFiltersFromConfig()}
+          <div style={styles.filtersContainer}>
+            {this.getActiveFiltersFromConfig()}
+          </div>
         </div>
       </div>
     );
@@ -209,14 +211,17 @@ export default class UserFilters extends React.Component {
 
 const styles = {
   base: {
-    minWidth: 300,
+    minWidth: 300
   },
   filters: {
     padding: 20,
-    backgroundColor: "white",
+    backgroundColor: 'white',
     borderRadius: 3,
     height: 500,
-    overflow: "scroll",
+    overflow: 'scroll'
+  },
+  filtersContainer: {
+    marginTop: 20
   },
   legend: {
     padding: '10px 0',

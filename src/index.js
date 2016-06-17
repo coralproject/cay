@@ -95,7 +95,7 @@ class Root extends React.Component {
 
 
             {/***** Ask Search Routes *****/}
-            {features.ask ? (
+            {features && features.ask ? (
               <div>
                 <Route path="forms" component={FormList}/>
                 <Route path="forms/create" component={FormCreate}/>

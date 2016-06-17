@@ -232,6 +232,7 @@ export const makeQueryFromState = (type, page = 0, replace = false, editMode = f
 
   return (dispatch, getState) => {
     // make a query from the current state
+
     const fs = getState().filters;
     const app = getState().app;
     const filterList = editMode ? fs.editFilterList : fs.filterList;
@@ -298,8 +299,8 @@ export const makeQueryFromState = (type, page = 0, replace = false, editMode = f
 
       return x;
     };
-
     addMatches(x.addQuery());
+
     if(fs.sortBy) {
       const breakdown = editMode ? fs.breakdownEdit : fs.breakdown;
       const specificBreakdown = editMode ? fs.specificBreakdownEdit : fs.specificBreakdown;
@@ -313,6 +314,7 @@ export const makeQueryFromState = (type, page = 0, replace = false, editMode = f
 
     // get the counts
     addMatches(x.addQuery()).group({_id: null, count: {$sum: 1}});
+
     doMakeQueryFromStateAsync(x, dispatch, app, replace);
   };
 };
@@ -434,7 +436,7 @@ const saveSearchToPillar = (dispatch, state, name, desc, tag) => {
 };
 
 /* xenia_package */
-const doMakeQueryFromStateAsync = _.debounce((query, dispatch, app, replace)=>{
+const doMakeQueryFromStateAsync = _.throttle((query, dispatch, app, replace)=>{
   dispatch(requestQueryset());
 
   dispatch(createQuery(query._data));

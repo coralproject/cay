@@ -49,7 +49,7 @@ class PercentClause extends React.Component {
       f.userMin > f.min &&
       f.userMax >= f.max
     ) {
-      text = `more than ${Math.floor(this.props.userMin * 100)}${this.props.description}`;
+      text = `more than ${Math.floor(this.props.userMin * 100)} ${this.props.description}`;
     }
 
     /* max is changed, so "less than n" */
@@ -57,7 +57,7 @@ class PercentClause extends React.Component {
       f.userMin === f.min &&
       f.userMax < f.max
     ) {
-      text = `less than ${Math.floor(this.props.userMax * 100)}${this.props.description}`;
+      text = `less than ${Math.floor(this.props.userMax * 100)} ${this.props.description}`;
     }
     /*
       the filters are both changed, so "between n and n1"
@@ -67,12 +67,12 @@ class PercentClause extends React.Component {
     if (f.userMin > f.min && f.userMax < f.max) {
       text = `
         between ${Math.floor(this.props.userMin * 100)}%
-        and ${Math.floor(this.props.userMax * 100)}${this.props.description}
+        and ${Math.floor(this.props.userMax * 100)} ${this.props.description}
       `;
     }
     /* sliders on same number, equality, so "exactly n" */
     if (f.userMin === f.userMax) {
-      text = `exactly ${Math.floor(this.props.userMin * 100)}${this.props.description}`;
+      text = `exactly ${Math.floor(this.props.userMin * 100)} ${this.props.description}`;
     }
     return text;
   }

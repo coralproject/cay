@@ -2,7 +2,6 @@ import React from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
 import {fetchQueryset, fetchSearch} from 'search/SearchActions';
-import {xenia} from 'app/AppActions';
 
 import Page from 'app/layout/Page';
 import ContentHeader from 'components/ContentHeader';
@@ -59,12 +58,14 @@ export default class SearchDetail extends React.Component {
           search ?
           <div>
             <ContentHeader title={search.name}/>
-            <p style={styles.description}>Description: {search.description}</p>
+            <p style={styles.description(!!search.description)}>
+              Description: {search.description}
+            </p>
             <div style={styles.base}>
               <UserList
                 total={this.props.searches.userCount}
                 onPagination={this.onPagination.bind(this)}
-                loadingQueryset={this.state.loading}
+                loadingQueryset={this.props.searches.loadingQueryset}
                 style={styles.userList}
                 users={this.props.searches.users} />
             </div>
@@ -88,7 +89,10 @@ const styles = {
   userDetail: {
     flex: 2
   },
-  description: {
-    fontSize: 18
+  description(exists) {
+    return {
+      fontSize: 18,
+      display: exists ? 'block' : 'none'
+    };
   }
 };

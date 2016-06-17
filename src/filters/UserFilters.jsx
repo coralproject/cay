@@ -233,7 +233,8 @@ const styles = {
     fontSize: '12pt'
   },
   filterDropdown: {
-    marginBottom: 10
+    margin: '10px 0 10px 10px',
+    width: '95%'
   },
   comingSoon: {
     fontStyle: 'italic',

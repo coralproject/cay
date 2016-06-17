@@ -58,13 +58,13 @@ export default class FilterNumbers extends React.Component {
   render() {
     return (
       <div style={styles.base}>
+        <span style={styles.description}>{this.props.description}</span>
         <div style={{
           display: 'flex',
           alignItems: 'flex-start',
           justifyContent: 'space-between'
         }}>
-        <span style={styles.description}>{this.props.description}</span>
-        {/*
+        {
           this.props.distributions ?
           <Sparkline
             description={this.props.description}

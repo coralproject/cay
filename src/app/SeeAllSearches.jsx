@@ -94,6 +94,11 @@ class SeeAllSearches extends React.Component {
   }
   renderSearches() {
     const styles = this.getStyles();
+
+    if (!Array.isArray(this.props.searches.searches)) {
+      return ('');
+    }
+
     const searches = this.props.searches.searches.map((search, i) => {
 
       return (

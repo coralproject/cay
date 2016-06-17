@@ -498,7 +498,6 @@ export const fetchInitialData = () => dispatch => {
   // Get initial data for the filters
   dispatch(fetchSections());
   dispatch(fetchAuthors());
-  dispatch(populateDistributionStore());
 
   // Get user list
   dispatch(makeQueryFromState('user', 0, true));

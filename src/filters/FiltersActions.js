@@ -203,6 +203,8 @@ export const getFilterRanges = (editMode = false) => {
         let counter = getState().filters.counter;
         counter++;
 
+        dispatch(populateDistributionStore(data));
+
         dispatch({
           type: RECEIVE_FILTER_RANGES,
           // get filterState again, as it might have changed
@@ -267,6 +269,7 @@ const fetchDistributions = () => {
 };
 
 const fetchDistributionsSuccess = (distros) => {
+  console.log(distros)
   return {
     type: FETCH_DISTRIBUTIONS_SUCCESS,
     distros
@@ -280,30 +283,50 @@ const fetchDistributionsError = (err) => {
   };
 };
 
-const distributionForInput = (x, inputValue) => {
+const distributionForInput = (x, field, filter, ranges) => {
+
+  let min;
+  let max;
+
+  for (const ff in filter) {
+    if (filter[ff] && filter[ff].field && filter[ff].field === field) {
+      /*
+        the ranges for the filter that has the same name,
+        like 'replied_ratio', as the distribution field array below.
+        ranges thinks in keys, not names, so we need the filter to
+        translate between these two.
+      */
+      min = ranges[filter[ff].key + '_min']
+      max = ranges[filter[ff].key + '_max'];
+      break
+    }
+  }
+
   return x.addQuery()
-  // .match({['statistics.comments.all.all.'+inputValue]: {$lte: 15}})
-  .project({
-    count: {
-      $subtract: [
-        '$statistics.comments.all.all.' + inputValue,
-        {
-          $mod: ['$statistics.comments.all.all.' + inputValue, 1]
-        }
-      ]
-    },
-    _id: false
-  })
-  .group({
-    _id: '$count',
-    total: { $sum: 1 }
-  })
-  .sort({
-    '_id': 1
-  });
+    .project({
+      count: {
+        $subtract: [
+          '$statistics.comments.all.all.' + field,
+          {
+            $mod: [
+              '$statistics.comments.all.all.' + field,
+              (max - min) / 20
+            ]
+          }
+        ]
+      },
+      _id: false
+    })
+    .group({
+      _id: '$count',
+      total: { $sum: 1 }
+    })
+    .sort({
+      '_id': 1
+    });
 };
 
-const inputValues = [
+const distributionFields = [
   'count',
   'replied_count',
   'replied_ratio',
@@ -312,24 +335,29 @@ const inputValues = [
   'word_count_average'
 ];
 
-export const populateDistributionStore = () => {
-  return (dispatch) => {
+export const populateDistributionStore = (ranges) => {
+  return (dispatch, getState) => {
     dispatch(fetchDistributions());
     const x = xenia({name: 'distributions'});
 
-    inputValues.map((inputValue) => {
-      distributionForInput(x, inputValue);
+    distributionFields.map((field) => {
+      distributionForInput(
+        x,
+        field,
+        getState().filters,
+        ranges.results[0].Docs[0]
+      );
     });
 
     x.exec().then((data, err) => {
       if (err) {console.log('get dist error',err);}
       const merged = {};
       data.results.map((result, i) => {
-        console.log(result)
-        merged[inputValues[i]] = result.Docs;
+        merged[distributionFields[i]] = result.Docs;
       });
       dispatch(fetchDistributionsSuccess(merged));
     }).catch(error => {
+      console.log(error);
       dispatch(fetchDistributionsError(error));
     });
   };

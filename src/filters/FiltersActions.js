@@ -280,16 +280,15 @@ const fetchDistributionsError = (err) => {
   };
 };
 
-
 const distributionForInput = (x, inputValue) => {
   return x.addQuery()
   // .match({['statistics.comments.all.all.'+inputValue]: {$lte: 15}})
   .project({
     count: {
       $subtract: [
-        '$statistics.comments.all.all.'+inputValue,
+        '$statistics.comments.all.all.' + inputValue,
         {
-          $mod: ['$statistics.comments.all.all.'+inputValue, 1]
+          $mod: ['$statistics.comments.all.all.' + inputValue, 1]
         }
       ]
     },
@@ -297,7 +296,7 @@ const distributionForInput = (x, inputValue) => {
   })
   .group({
     _id: '$count',
-    total: {$sum: 1}
+    total: { $sum: 1 }
   })
   .sort({
     '_id': 1
@@ -326,6 +325,7 @@ export const populateDistributionStore = () => {
       if (err) {console.log('get dist error',err);}
       const merged = {};
       data.results.map((result, i) => {
+        console.log(result)
         merged[inputValues[i]] = result.Docs;
       });
       dispatch(fetchDistributionsSuccess(merged));

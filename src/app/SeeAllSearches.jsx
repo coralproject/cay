@@ -105,7 +105,7 @@ class SeeAllSearches extends React.Component {
               {/* Temporarily disabling View link until view page is debugged
               <RadiumLink
                 style={styles.button}
-                to={`/saved-search/${search.name}`}>{window.L.t('View')}
+                to={`/saved-search/${search.id}`}>{window.L.t('View')}
               </RadiumLink>
               */}
               <RadiumLink

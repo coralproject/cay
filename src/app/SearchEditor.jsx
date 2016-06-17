@@ -7,7 +7,8 @@ import {
   makeQueryFromState,
   fetchInitialData,
   clearUserList,
-  updateSearch
+  updateSearch,
+  updateEditableSearchMeta
 } from 'search/SearchActions';
 import {userSelected} from 'users/UsersActions';
 import {filterChanged, getFilterRanges} from 'filters/FiltersActions';
@@ -80,44 +81,57 @@ export default class SearchEditor extends React.Component {
     this.props.dispatch(fetchCommentsByUser(user._id));
   }
 
+  updateSearchMeta(field, value) {
+    this.props.dispatch(updateEditableSearchMeta(field, value));
+  }
+
   render() {
     return (
-      <Page>
-        <ContentHeader title={ window.L.t('Search Editor') } />
-        <Button
-          onClick={this.confirmSave.bind(this)}
-          category="primary"
-          style={styles.saveButton}>
-          Update Search <FaFloopyO style={styles.saveIcon} />
-        </Button>
-
-        <Clauses editMode={true} />
-
+      <Page style={styles.pageBase}>
         {
           this.props.searches.editableSearchLoading || !this.props.searches.editableSearch ?
           <p>Loading Saved Search...</p> :
-          <div>
-            {/*
-              can't update name or description just yet
 
-            <TextField label="name" value={this.props.searches.editableSearch.name} />
-            <textarea disabled>{this.props.searches.editableSearch.description}</textarea>
-            <TextField label="tag" value={this.props.searches.editableSearch.tag} />
-            */}
-            <div style={styles.base}>
-              <div style={styles.filters}>
+          <div style={styles.base}>
+            <div style={styles.topSection}>
+              <ContentHeader title={ window.L.t('Search Editor') } />
+              <div style={styles.metaControl}>
+                <TextField
+                  style={styles.editMeta}
+                  label="update name"
+                  onChange={this.updateSearchMeta.bind(this, 'name')}
+                  value={this.props.searches.editMeta_name} />
+                <TextField
+                  style={styles.editMeta}
+                  label="update description"
+                  onChange={this.updateSearchMeta.bind(this, 'description')}
+                  value={this.props.searches.editMeta_description} />
+                <TextField
+                  style={styles.editMeta}
+                  label="update tag"
+                  onChange={this.updateSearchMeta.bind(this, 'tag')}
+                  value={this.props.searches.editMeta_tag} />
+              </div>
+              <Button
+                onClick={this.confirmSave.bind(this)}
+                category="primary"
+                style={styles.saveButton}>
+                Update Search <FaFloopyO style={styles.saveIcon} />
+              </Button>
+              <Clauses editMode={true} />
+            </div>
+
+            <div style={styles.bottomSection}>
+              <div style={styles.filtersAndResults}>
                 <UserFilters
+                  style={styles.filters}
                   editMode={true}
                   onChange={this.onFilterChange.bind(this)} />
-              </div>
-              <div style={styles.rightPanel}>
-                <div style={styles.userListContainer}>
-                  <UserList
-                    total={this.props.searches.userCount}
-                    onPagination={this.onPagination.bind(this)}
-                    loadingQueryset={this.props.searches.loadingQueryset}
-                    users={this.props.searches.users} />
-                </div>
+                <UserList
+                  total={this.props.searches.userCount}
+                  onPagination={this.onPagination.bind(this)}
+                  loadingQueryset={this.props.searches.loadingQueryset}
+                  users={this.props.searches.users} />
               </div>
             </div>
           </div>
@@ -128,11 +142,36 @@ export default class SearchEditor extends React.Component {
 }
 
 const styles = {
+  pageBase: {
+    position: 'absolute',
+    overflow: 'hidden',
+    top: 60,
+    left: 0,
+    right: 0,
+    bottom: 0
+  },
   base: {
     display: 'flex',
-    minHeight: 250,
-    justifyContent: 'flex-start',
-    flexWrap: 'no-wrap'
+    flexDirection: 'column',
+    height: '100%'
+  },
+  topSection: {
+  },
+  bottomSection: {
+    flex: 1,
+    display: 'flex',
+    position: 'relative',
+    boxSizing: 'border-box'
+  },
+  filtersAndResults: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    flexWrap: 'no-wrap',
+    width: '100%',
+    height: '100%'
+  },
+  rightPanel: {
+    flex: 1
   },
   userListContainer: {
     margin: 20,
@@ -140,8 +179,13 @@ const styles = {
     display: 'flex',
     clear: 'both'
   },
-  rightPanel: {
-    flex: 1
+  metaControl: {
+    position: 'absolute',
+    right: 200,
+    top: -10
+  },
+  editMeta: {
+    marginRight: 20
   },
   filters: {
     '@media (max-width: 1000px)': {
@@ -153,6 +197,8 @@ const styles = {
     height: 25
   },
   saveButton: {
-    float: 'right'
+    position: 'absolute',
+    top: 10,
+    right: 10
   }
 };

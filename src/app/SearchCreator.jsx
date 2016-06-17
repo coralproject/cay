@@ -72,9 +72,6 @@ export default class SearchCreator extends Component {
     dispatch(getFilterRanges(false)); // editmode => false
   }
 
-  updateUser(user) {
-  }
-
   openModal() {
     this.setState({saveModalOpen: true});
   }
@@ -116,51 +113,58 @@ export default class SearchCreator extends Component {
 
   render() {
     return (
-      <Page>
-          <StatusBar
-            loading={this.props.searches.savingSearch}
-            visible={this.props.searches.savingSearch || !!this.props.searches.recentSavedSearch}>
-            {
-              this.props.searches.recentSavedSearch ?
-              (<Link style={styles.searchDetail} to={`/saved-search/${this.props.searches.recentSavedSearch.id}`}>
-                View Your Saved Search [{this.props.searches.recentSavedSearch.name}] →
-              </Link>) :
-              'Saving Search...'
-            }
-          </StatusBar>
+      <Page style={styles.pageBase}>
+        <div style={styles.base}>
           <div style={styles.topSection}>
             <ContentHeader title={ window.L.t('Create a Search') } />
-            <Button onClick={this.openModal.bind(this)} category="default" style={styles.saveButton}>
+            <Button
+              onClick={this.openModal.bind(this)}
+              category="info"
+              style={styles.saveButton}>
               <FaFloopyO style={styles.saveIcon} />{` Save Search `}
             </Button>
+            <Clauses editMode={false} />
           </div>
-          <Clauses editMode={false} />
-          <div style={styles.base}>
+
+          <div style={styles.bottomSection}>
             <div style={styles.filtersAndResults}>
-              <div style={styles.filters}>
-                <UserFilters
-                  editMode={false}
-                  onChange={this.onFilterChange.bind(this)} />
-              </div>
+              <UserFilters
+                style={styles.filters}
+                editMode={false}
+                onChange={this.onFilterChange.bind(this)} />
               <UserList
                 total={this.props.searches.userCount}
                 onPagination={this.onPagination.bind(this)}
                 loadingQueryset={this.props.searches.loadingQueryset}
                 users={this.props.searches.users} />
             </div>
-          <Modal
-            title="Save Search"
-            isOpen={this.state.saveModalOpen}
-            confirmAction={this.confirmSave.bind(this)}
-            cancelAction={this.cancelSave.bind(this)}>
-            <TextField label="Name" onChange={this.updateSearchName.bind(this)}/>
-            <p style={styles.modalLabel}>Description</p>
-            <textarea
-              style={styles.descriptionInput}
-              onBlur={this.updateSearcDesc.bind(this)}></textarea>
-            <TextField label="Tag Name" onChange={this.updateSearchTag.bind(this)} />
-          </Modal>
+          </div>
         </div>
+
+        <StatusBar
+          loading={this.props.searches.savingSearch}
+          visible={this.props.searches.savingSearch || !!this.props.searches.recentSavedSearch}>
+          {
+            this.props.searches.recentSavedSearch ?
+            (<Link style={styles.searchDetail} to={`/saved-search/${this.props.searches.recentSavedSearch.id}`}>
+              View Your Saved Search [{this.props.searches.recentSavedSearch.name}] →
+            </Link>) :
+            'Saving Search...'
+          }
+        </StatusBar>
+
+        <Modal
+          title="Save Search"
+          isOpen={this.state.saveModalOpen}
+          confirmAction={this.confirmSave.bind(this)}
+          cancelAction={this.cancelSave.bind(this)}>
+          <TextField label="Name" onChange={this.updateSearchName.bind(this)}/>
+          <p style={styles.modalLabel}>Description</p>
+          <textarea
+            style={styles.descriptionInput}
+            onBlur={this.updateSearcDesc.bind(this)}></textarea>
+          <TextField label="Tag Name" onChange={this.updateSearchTag.bind(this)} />
+        </Modal>
       </Page>
     );
   }
@@ -178,40 +182,41 @@ export default class SearchCreator extends Component {
 
 
 const styles = {
+  pageBase: {
+    position: 'absolute',
+    overflow: 'hidden',
+    top: 60,
+    left: 0,
+    right: 0,
+    bottom: 0
+  },
   base: {
-    display: "flex",
-    width: "100%"
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%'
+  },
+  bottomSection: {
+    flex: 1,
+    display: 'flex',
+    position: 'relative',
+    boxSizing: 'border-box'
   },
   filtersAndResults: {
     display: 'flex',
-    minHeight: 250,
     justifyContent: 'space-between',
     flexWrap: 'no-wrap',
-    width: "100%"
-
+    width: '100%',
+    height: '100%'
   },
   rightPanel: {
     flex: 1
   },
   topSection: {
-    display: "flex",
-    justifyContent: "space-between",
-    width: "100%",
-    marginBottom: 20
   },
   userListContainer: {
     margin: 20,
     display: 'flex',
     clear: 'both'
-  },
-  // userDetail: {
-  //   flex: 2,
-  //   paddingLeft: 40,
-  //   height: 900
-  // },
-  userList: {
-    minWidth: 350,
-    flex: 1
   },
   modalLabel: {
     fontSize: 16,
@@ -227,9 +232,9 @@ const styles = {
   },
   saveIcon: {
     marginRight: 7,
-    position: "relative",
+    position: 'relative',
     top: -2,
-    fontSize: 18,
+    fontSize: 18
   },
   filters: {
     '@media (max-width: 1000px)': {
@@ -241,5 +246,8 @@ const styles = {
     textDecoration: 'none'
   },
   saveButton: {
+    position: 'absolute',
+    top: 10,
+    right: 10
   }
 };

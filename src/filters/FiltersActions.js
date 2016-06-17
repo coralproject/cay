@@ -310,7 +310,7 @@ const distributionForInput = (x, field, filter, ranges) => {
           {
             $mod: [
               '$statistics.comments.all.all.' + field,
-              (max - min) / 20
+              (max - min) / 500
             ]
           }
         ]

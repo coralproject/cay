@@ -36,7 +36,8 @@
     "webpack": "^1.12.2",
     "webpack-dev-middleware": "^1.2.0",
     "webpack-hot-middleware": "^2.4.1",
-    "webpack-module-hot-accept": "^1.0.4"
+    "webpack-module-hot-accept": "^1.0.4",
+    "worker-loader": "^0.7.0"
   },
   "dependencies": {
     "amqplib": "^0.4.1",

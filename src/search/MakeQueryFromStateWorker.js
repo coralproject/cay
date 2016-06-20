@@ -84,6 +84,8 @@ onmessage = ({data: [fs, page, editMode]}) => {
     const field = template(sortBy[0])
       ({dimension: `${breakdown}${specificBreakdown ? `.${specificBreakdown}` : ''}`});
     x.sort([field, sortBy[1]]);
+  } else {
+    x.sort(['statistics.comments.all.all.count', -1]);
   }
   x.skip(page * pageSize).limit(pageSize)
     .include(['name', 'avatar', 'statistics.comments']);

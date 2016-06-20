@@ -4,7 +4,6 @@ import {connect} from 'react-redux';
 import {logout} from 'auth/AuthActions';
 // import {Link} from 'react-router';
 
-import MdMenu from 'react-icons/lib/md/menu';
 import Button from 'components/Button';
 import LanguageSwitcher from 'app/layout/LanguageSwitcher';
 import settings from 'settings';
@@ -20,10 +19,6 @@ class Header extends React.Component {
     router: PropTypes.object.isRequired
   }
 
-  handleClick() {
-    this.props.onHamburgerClick();
-  }
-
   logout() {
     this.props.dispatch(logout());
     const {router} = this.context;
@@ -33,7 +28,6 @@ class Header extends React.Component {
   render() {
     return (
       <nav style={styles.nav}>
-        <MdMenu style={styles.sidebarToggle} onClick={this.handleClick.bind(this)} />
           {/*<RadiumLink
             style={[
               styles.link,

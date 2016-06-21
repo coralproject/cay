@@ -125,7 +125,7 @@ export const fetchSavedSearchForEdit = id => {
 
     dispatch(requestSavedSearchForEdit(id));
 
-    fetch(`${app.pillarHost}/api/search/${id}`)
+    return fetch(`${app.pillarHost}/api/search/${id}`)
       .then(resp => resp.json())
       .then(search => {
 
@@ -141,7 +141,7 @@ export const fetchSavedSearchForEdit = id => {
           return accum;
         }, {});
 
-        dispatch(receivedEditSearch(search, updatedFilters, breakdown, specificBreakdown));
+        return dispatch(receivedEditSearch(search, updatedFilters, breakdown, specificBreakdown));
       })
       .catch(error => {
         dispatch(searchEditFetchFailed(error));
@@ -521,14 +521,14 @@ export const deleteSearch = search => {
   };
 };
 
-export const fetchInitialData = () => dispatch => {
+export const fetchInitialData = (editMode = false) => dispatch => {
   // Get initial data for the filters
   dispatch(fetchSections());
   dispatch(fetchAuthors());
   dispatch(populateDistributionStore());
 
   // Get user list
-  dispatch(makeQueryFromState('user', 0, true));
+  dispatch(makeQueryFromState('user', 0, true, editMode));
 };
 
 export const clearUserList = () => {

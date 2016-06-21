@@ -49,10 +49,10 @@ export default class SearchEditor extends React.Component {
     }
 */
     dispatch(clearUserList());
-    dispatch(fetchInitialData());
     dispatch(userSelected(null));
-    dispatch(fetchSavedSearchForEdit(params.id));
     dispatch(getFilterRanges(true)); // editMode => true
+    dispatch(fetchSavedSearchForEdit(params.id))
+    .then(() => dispatch(fetchInitialData(true))); // dispatch after getting search
   }
 
   confirmSave() {

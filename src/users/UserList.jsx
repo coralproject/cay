@@ -181,7 +181,9 @@ export default class UserList extends React.Component {
                 onNextUser={this.onNextUser.bind(this)}
                 isLast={user._id === users[users.length - 1]._id}
                 isFirst={user._id === users[0]._id}
-                user={user} /> : null}
+                user={user}
+                breakdown={this.props.filters.breakdown}
+                specificBreakdown={this.props.filters.specificBreakdown} /> : null}
             </div>
           </div>
         </div>

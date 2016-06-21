@@ -120,11 +120,11 @@ const styles = {
     width: 75,
     height: 75
   },
-  stats: {
-    flex: 1
-  },
   statsContainer: {
-    marginBottom: 20
+    marginBottom: 20,
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'flex-start'
   },
   tabs: {
     marginTop: 20,

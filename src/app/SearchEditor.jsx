@@ -114,9 +114,9 @@ export default class SearchEditor extends React.Component {
               </div>
               <Button
                 onClick={this.confirmSave.bind(this)}
-                category="primary"
+                category={this.props.searches.searchUpdatedSuccessfully ? 'success' : 'primary'}
                 style={styles.saveButton}>
-                Update Search <FaFloopyO style={styles.saveIcon} />
+                {this.props.searches.searchUpdatedSuccessfully ? 'Search Saved!' : 'Update Search'} <FaFloopyO style={styles.saveIcon} />
               </Button>
               <Clauses editMode={true} />
             </div>

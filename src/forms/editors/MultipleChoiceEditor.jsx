@@ -48,6 +48,13 @@ export default class MultipleChoiceEditor extends Component {
     this.updateFieldOptions(optionsCopy);
   }
 
+  onMultipleClick(e) {
+    let { field } = this.props;
+    let updatedProps = Object.assign({}, field.props, { multipleChoice: e.target.checked });
+    let updatedField = Object.assign({}, field, { props: updatedProps });
+    this.props.onEditorChange(updatedField);
+  }
+
   onRequiredClick(e) {
     let { field } = this.props;
     let updatedWrapper = Object.assign({}, field.wrapper, { required: e.target.checked });
@@ -77,6 +84,12 @@ export default class MultipleChoiceEditor extends Component {
           }
 
         </div>
+        <label style={ styles.required }>
+          <input type="checkbox"
+            onClick={ this.onMultipleClick.bind(this) }
+            checked={ field.props.multipleChoice } />
+            Allow multiple selections
+        </label>
         <label style={ styles.required }>
           <input type="checkbox"
             onClick={ this.onRequiredClick.bind(this) }

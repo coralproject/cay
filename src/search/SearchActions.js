@@ -308,6 +308,9 @@ export const makeQueryFromState = (type, page = 0, replace = false, editMode = f
       const field = _.template(sortBy[0])
         ({dimension: `${breakdown}${specificBreakdown ? `.${specificBreakdown}` : ''}`});
       x.sort([field, sortBy[1]]);
+    } else {
+      // default sorting
+      x.sort(['statistics.comments.all.all.count', -1]);
     }
     x.skip(page * pageSize).limit(pageSize)
       .include(['name', 'avatar', 'statistics.comments']);

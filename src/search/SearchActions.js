@@ -343,9 +343,9 @@ const createQueryForSave = (query, name, desc) => {
   // inject $limt and $skip commands before saving
   q.queries[0].commands.forEach((command) => {
     if (typeof command.$skip !== 'undefined') {
-      command.$skip = '#string:skip';
+      command.$skip = '#number:skip';
     } else if (typeof command.$limit !== 'undefined') {
-      command.$limit = '#string:limit';
+      command.$limit = '#number:limit';
     }
   });
 

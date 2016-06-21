@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import Infinite from 'react-infinite';
 import Select from 'react-select';
+import _ from 'lodash';
 
 import UserRow from 'users/UserRow';
 import Heading from 'components/Heading';
@@ -69,6 +70,14 @@ export default class UserList extends React.Component {
     this.setState({
       page: this.state.page + 1
     });
+  }
+
+  getSpecificName() {
+    const { specificBreakdown, breakdown } = this.props.filters;
+    if (!specificBreakdown && specificBreakdown === 'all') return;
+    const bdown = this.props.filters[`${breakdown}s`];
+    const obj = _.find(bdown, {_id: specificBreakdown});
+    return obj && (obj.name || obj.description);
   }
 
   getUserList(users) {
@@ -183,6 +192,7 @@ export default class UserList extends React.Component {
                 isFirst={user._id === users[0]._id}
                 user={user}
                 breakdown={this.props.filters.breakdown}
+                specificBreakdownName={this.getSpecificName()}
                 specificBreakdown={this.props.filters.specificBreakdown} /> : null}
             </div>
           </div>

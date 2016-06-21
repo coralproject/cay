@@ -22,7 +22,8 @@ export default class UserDetail extends Component {
     isFirst: PropTypes.bool.isRequired,
     isLast: PropTypes.bool.isRequired,
     onPrevUser: PropTypes.func.isRequired,
-    onNextUser: PropTypes.func.isRequired
+    onNextUser: PropTypes.func.isRequired,
+    specificBreakdownName: PropTypes.func.isRequired
   }
 
   getStats() {
@@ -59,12 +60,20 @@ export default class UserDetail extends Component {
       return <Stat term="Commenter Stat" description="select a commenter to see details" />;
     }
   }
+
   createDetailsMarkup() {
+    const { breakdown, specificBreakdown, specificBreakdownName } = this.props;
+    const isBreakdown = specificBreakdown && specificBreakdown !== 'all';
     return (
       <div>
         <div style={styles.topPart}>
           <Heading size="medium">{this.props.user.name}</Heading>
         </div>
+        { isBreakdown ?
+          <h4 style={styles.breakdownContainer}>Activity for {breakdown + ' '}
+            <span style={styles.breakdown}>{specificBreakdownName}</span></h4>
+          : ''
+        }
         <div style={styles.statsContainer}>
           { this.getStats() }
         </div>
@@ -149,5 +158,12 @@ const styles = {
   control: {
     marginRight: 25,
     cursor: 'pointer'
+  },
+  breakdown: {
+    fontWeight: 'bold'
+  },
+  breakdownContainer: {
+    fontSize: '1.1em',
+    marginBottom: 30
   }
 };

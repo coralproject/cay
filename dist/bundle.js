@@ -37,7 +37,7 @@
 /******/ 	__webpack_require__.p = "/dist/";
 /******/
 /******/ 	// __webpack_hash__
-/******/ 	__webpack_require__.h = "4cb4390c30ed369feaaf";
+/******/ 	__webpack_require__.h = "132951d6dc098baec3fe";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
@@ -7969,7 +7969,7 @@
 	
 	var styles = {
 	  base: {
-	    transition: 'background-color all 300ms',
+	    transition: 'all 300ms',
 	    backgroundColor: '#fff',
 	    borderRadius: 4,
 	    borderStyle: 'solid',
@@ -21107,8 +21107,10 @@
 	exports.UPDATE_EDITABLE_SEARCH_META = UPDATE_EDITABLE_SEARCH_META;
 	// when we're initializing a Saved Search update to Pillar
 	var PILLAR_SAVED_SEARCH_UPDATE = 'PILLAR_SAVED_SEARCH_UPDATE';
-	
 	exports.PILLAR_SAVED_SEARCH_UPDATE = PILLAR_SAVED_SEARCH_UPDATE;
+	var PILLAR_SEARCH_UPDATE_STALE = 'PILLAR_SEARCH_UPDATE_STALE';
+	
+	exports.PILLAR_SEARCH_UPDATE_STALE = PILLAR_SEARCH_UPDATE_STALE;
 	var CLEAR_USER_LIST = 'CLEAR_USER_LIST';
 	exports.CLEAR_USER_LIST = CLEAR_USER_LIST;
 	var CLEAR_USER = 'CLEAR_USER';
@@ -21532,7 +21534,7 @@
 	};
 	
 	/* xenia_package */
-	var doMakeQueryFromStateAsync = _lodash2['default'].throttle(function (query, dispatch, app, replace) {
+	var doMakeQueryFromStateAsync = _lodash2['default'].debounce(function (query, dispatch, app, replace) {
 	  dispatch(requestQueryset());
 	
 	  dispatch(createQuery(query._data));
@@ -21540,7 +21542,7 @@
 	  query.exec().then(function (json) {
 	    return dispatch(receiveQueryset(json, replace));
 	  })['catch'](function () {});
-	}, 1000);
+	}, 250);
 	
 	var updateSearch = function updateSearch(staleSearch) {
 	
@@ -21585,6 +21587,11 @@
 	
 	      // update search in xenia
 	      (0, _appAppActions.xenia)(query).saveQuery().then(function () {
+	
+	        _lodash2['default'].delay(function () {
+	          return dispatch({ type: PILLAR_SEARCH_UPDATE_STALE });
+	        }, 3000);
+	
 	        dispatch({ type: QUERYSET_SAVE_SUCCESS, name: query.name });
 	      });
 	    })['catch'](function (error) {
@@ -58655,9 +58662,10 @@
 	              _componentsButton2['default'],
 	              {
 	                onClick: this.confirmSave.bind(this),
-	                category: 'primary',
+	                category: this.props.searches.searchUpdatedSuccessfully ? 'success' : 'primary',
 	                style: styles.saveButton },
-	              'Update Search ',
+	              this.props.searches.searchUpdatedSuccessfully ? 'Search Saved!' : 'Update Search',
+	              ' ',
 	              _react2['default'].createElement(_reactIconsLibFaFloppyO2['default'], { style: styles.saveIcon })
 	            ),
 	            _react2['default'].createElement(_searchClauses2['default'], { editMode: true })
@@ -65921,6 +65929,7 @@
 	  editMeta_description: '',
 	  editMeta_tag: '',
 	  pendingSavedSearch: null, // when the search is being prepared to be saved in pillar
+	  searchUpdatedSuccessfully: false, // when the search has been updated on the Edit screen
 	  users: [],
 	  searches: [],
 	  savingSearch: false,
@@ -66027,13 +66036,18 @@
 	
 	    case types.PILLAR_SAVED_SEARCH_UPDATE:
 	      // begin search update
-	      return _extends({}, state, { updatingSearch: true });
+	      return _extends({}, state, { updatingSearch: true, searchUpdatedSuccessfully: false });
 	
 	    case types.PILLAR_SEARCH_UPDATE_SUCCESS:
-	      return _extends({}, state, { editableSearch: action.search, updatingSearch: false });
+	      // search has been successfully updated
+	      return _extends({}, state, { editableSearch: action.search, updatingSearch: false, searchUpdatedSuccessfully: true });
 	
 	    case types.PILLAR_SEARCH_UPDATE_FAILED:
-	      return _extends({}, state, { updatingSearch: false, error: action.error });
+	      return _extends({}, state, { updatingSearch: false, error: action.error, searchUpdatedSuccessfully: false });
+	
+	    case types.PILLAR_SEARCH_UPDATE_STALE:
+	      // just clearing out some UI elements after updating a serach
+	      return _extends({}, state, { searchUpdatedSuccessfully: false });
 	
 	    case types.CLEAR_USER_LIST:
 	      return _extends({}, state, { users: [] });

@@ -439,7 +439,7 @@ const saveSearchToPillar = (dispatch, state, name, desc, tag) => {
 };
 
 /* xenia_package */
-const doMakeQueryFromStateAsync = _.throttle((query, dispatch, app, replace)=>{
+const doMakeQueryFromStateAsync = _.debounce((query, dispatch, app, replace)=>{
   dispatch(requestQueryset());
 
   dispatch(createQuery(query._data));
@@ -447,7 +447,7 @@ const doMakeQueryFromStateAsync = _.throttle((query, dispatch, app, replace)=>{
   query.exec()
     .then(json => dispatch(receiveQueryset(json, replace)))
     .catch(() => {});
-}, 1000);
+}, 250);
 
 export const updateSearch = staleSearch => {
 

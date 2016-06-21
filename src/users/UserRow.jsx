@@ -1,9 +1,6 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import { Link } from 'react-router';
 import ListItem from 'components/lists/ListItem';
-
-const RadiumLink = Radium(Link);
 
 @Radium
 export default class UserRow extends React.Component {
@@ -99,7 +96,7 @@ export default class UserRow extends React.Component {
         >
         <div style={styles.flex}>
           <div>
-            <RadiumLink to={`user/${this.props.user._id}`}>{user.name}</RadiumLink>
+            <span style={styles.link} onClick={this.props.onClick}>{user.name}</span>
             {this.getNonDefaultFilters()}
           </div>
         </div>
@@ -130,6 +127,9 @@ const styles = {
   avatar: {
     height: 50,
     marginRight: 10
-
+  },
+  link: {
+    textDecoration: 'none',
+    color: '#000'
   }
 };

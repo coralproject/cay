@@ -39,7 +39,7 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    position: 'absolute',
+    position: 'fixed',
     zIndex: 100,
     top: 0,
     right: 0,
@@ -48,7 +48,8 @@ const styles = {
     backgroundColor: 'rgba(0, 0, 0, 0.2)'
   },
   modalContainer: {
-    width: '50%',
+    width: '0%',
+    minWidth: 800,
     marginTop: 30,
     marginBottom: 50,
     maxWidth: 500

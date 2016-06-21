@@ -83,6 +83,7 @@ export default Page;
 const styles = {
   wrapper:  {
     backgroundColor: settings.bgColorBase,
-    padding: 20
+    padding: 20,
+    position: 'relative'
   }
 };

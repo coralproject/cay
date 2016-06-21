@@ -2,7 +2,6 @@ import React from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
 
-import Card from 'components/cards/Card';
 //import Sparkline from 'filters/Sparkline';
 
 @connect(state => state.filters)
@@ -53,7 +52,7 @@ export default class FilterNumbers extends React.Component {
   }
   render() {
     return (
-      <div style={styles.base}>
+      <div style={[styles.base, this.props.style]}>
         <div style={{
           display: 'flex',
           alignItems: 'flex-start',
@@ -90,7 +89,7 @@ export default class FilterNumbers extends React.Component {
 
 const styles = {
   base: {
-    marginBottom: 20
+    padding: '4px 8px'
   },
   description: {
     fontWeight: 500,

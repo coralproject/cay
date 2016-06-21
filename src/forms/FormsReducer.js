@@ -5,6 +5,7 @@ const initial = {
   formList: [],
   galleryList: [],
   submissionList: [],
+  answerList: [],
   editAccess: {},
   form: null,
   savingForm: false,
@@ -13,13 +14,16 @@ const initial = {
   activeForm: null, // might be able to combine this with {form} above in the future
   activeGallery: null, // this is an ObjectId string
   widgets: [],
+  loadingAnswerEdit: false,
+  answerBeingEdited: null, // ObjectId string
+  editableAnswer: '',
   activeSubmission: null // ObjectId string
 };
 
 const emptyForm = {
   target: '#ask-form',
   theme: {
-    headerBackground: '#448899',
+    headerBackground: 'rgb(246, 125, 111)',
     headerText: '#FFFFFF',
     headerIntroText: '#EEEEEE',
     formBackground: '#EEEEEE',
@@ -31,7 +35,7 @@ const emptyForm = {
     fieldTitleText: '#222222',
     progressBar: '#44AA44',
     progressBarBackground: '#CCCCCC',
-    submitButtonBackground: '#444499',
+    submitButtonBackground: '#B71C1C',
     submitButtonText: '#FFFFFF',
     selectedItemBackground: '#111111',
     selectedItemText: '#FAFAFA'
@@ -40,7 +44,7 @@ const emptyForm = {
     saveDestination: 'https://pillar_stg.coralproject.net/api/form_submission/',
     showFieldNumbers: true,
     isActive: false,
-    inactiveMessage: "We are not currently accepting submissions. Thank you."
+    inactiveMessage: 'We are not currently accepting submissions. Thank you.'
   },
   header: {
     title: 'Share your story',
@@ -51,7 +55,7 @@ const emptyForm = {
   },
   finishedScreen: {
     title: 'Thanks.',
-    description: 'This is a more verbose thank you message'
+    description: 'Thank you for helping us with our journalism. We read all submissions, and will be in touch if we have any more questions.'
   },
   steps: [{
     id: '1',
@@ -200,7 +204,24 @@ const forms = (state = initial, action) => {
 
   case types.FORM_GALLERY_SUCCESS:
     // action gallery might be more than one gallery in the future
-    return {...state, loadingGallery: false, activeGallery: action.gallery.id, [action.gallery.id]: action.gallery};
+
+    const answers = action.gallery.answers.reduce((accum, ans) => {
+      // so basically, an item in the gallery is unique by 2 keys:
+      // the submission_id AND the widet_id
+      // so I'm keying the answers off a combination of the two
+      const answerKey = `${ans.submission_id}|${ans.answer_id}`;
+      accum[answerKey] = ans;
+      return accum;
+    }, {});
+
+    return {
+      ...state,
+      loadingGallery: false,
+      activeGallery: action.gallery.id,
+      [action.gallery.id]: action.gallery,
+      ...answers,
+      answerList: Object.keys(answers)
+    };
 
   case types.FORM_GALLERY_ERROR:
     return {...state, loadingGallery: false, activeGallery: null, galleryError: action.error};
@@ -213,6 +234,39 @@ const forms = (state = initial, action) => {
 
   case types.FORM_ANSWER_REMOVED_FROM_GALLERY:
     return {...state, [action.gallery.id]: action.gallery};
+
+  // editing Gallery submissions
+  case types.ANSWER_EDIT_BEGIN: // user clicked on button to start editing an answer
+    const answerKey = `${action.submissionId}|${action.answerId}`;
+    return {
+      ...state,
+      // if you can think of a better way to store this, I'm all ears
+      answerBeingEdited: answerKey,
+      editableAnswer: state[answerKey].answer.answer.text
+    };
+
+  case types.ANSWER_EDIT_UPDATE: // user is typing into the field
+    return {...state, editableAnswer: action.text};
+
+  case types.ANSWER_EDIT_CANCEL: // user closed the edit Answer modal or something
+    return {...state, answerBeingEdited: null};
+
+  case types.ANSWER_EDIT_REQUEST: // submit Answer edit to server
+    return {...state, loadingAnswerEdit: true};
+
+  case types.ANSWER_EDIT_SUCCESS: // server successfully updated submission
+    // don't update the answers in state here.
+    // the Answer and Reply objects are different, so instead of doing some horrible
+    // update in place, I'm just going to reload the entire gallery from the server
+    return {
+      ...state,
+      loadingAnswerEdit: false,
+      [action.submission.id]: action.submission,
+      answerBeingEdited: null
+    };
+
+  case types.ANSWER_EDIT_FAILED: // server was unable to update the answer
+    return {...state, loadingAnswerEdit: false, answerBeingEdited: null};
 
   default:
     return state;

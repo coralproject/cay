@@ -1,6 +1,7 @@
 var editWidgetStyles = {
   label: {
-    display: 'block'
+    display: 'block',
+    margin: '20px 0'
   },
   textInput: {
     display: 'block',

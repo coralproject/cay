@@ -62,7 +62,8 @@ class Root extends React.Component {
 
   constructor(props){
     super(props);
-    ga.initialize(window.googleAnalyticsId, { debug: (process && process.env.NODE_ENV !== 'production') });
+
+    ga.initialize(props.app.googleAnalyticsId, { debug: (process && process.env.NODE_ENV !== 'production') });
     window.addEventListener('error', e => ga.exception({
       description: e.error.stack
     }), false);
@@ -73,19 +74,27 @@ class Root extends React.Component {
   }
 
   render() {
-    const { features } = this.props;
+    const { features } = this.props.app;
     return (
       <StyleRoot>
         <Provider store={store}>
           <Router history={browserHistory} onUpdate={ this.logPageView }>
+
             <Redirect from="/" to="search-creator" />
+
             <Route path="login" component={Login} />
             <Route path="about" component={About} />
-            <Route path="search-creator" component={SearchCreator} />
             <Route path="user/:_id" component={User} />
-            <Route path="tag-manager" component={TagManager} />
+
+
+            {/***** Trust Search Routes *****/}
+            <Route path="search-creator" component={SearchCreator} />
             <Route path="saved-searches" component={SeeAllSearches}/>
-            <Route path="saved-search/:name" component={SearchDetail} />
+            <Route path="saved-search/:id" component={SearchDetail} />
+            <Route path="edit-search/:id" component={SearchEditor} />
+
+
+            {/***** Ask Search Routes *****/}
             {features.ask ? (
               <div>
                 <Route path="forms" component={FormList}/>
@@ -95,9 +104,16 @@ class Root extends React.Component {
                 <Route path="forms/:id/gallery" component={SubmissionGallery}/>
               </div>
             ) : null}
-            <Route path="edit-search/:id" component={SearchEditor} />
             <Route path="*" component={NoMatch} />
-            {/*<Route path="explore" component={DataExplorer} />*/}
+
+            {/***** Disabled routes ******
+
+              <Route path="explore" component={DataExplorer} />
+              <Route path="tag-manager" component={TagManager} />
+
+            */}
+
+
           </Router>
         </Provider>
       </StyleRoot>
@@ -126,7 +142,7 @@ Promise.all([loadConfig('/config.json'), loadConfig('/data_config.json')])
   store.dispatch(configXenia());
   store.dispatch({type: 'DATA_CONFIG_LOADED', config: filters});
 
-  ReactDOM.render(<Root features={app.features|| {}}/>, document.getElementById('root'));
+  ReactDOM.render(<Root app={app || {}}/>, document.getElementById('root'));
 })
 .catch(err => console.error(err.stack));
 

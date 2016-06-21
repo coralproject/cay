@@ -25,7 +25,6 @@ class SeeAllSearches extends React.Component {
 
   componentWillMount() {
     // redirect user to /login if they're not logged in
-    //   TODO: refactor: pass in a function that calculates auth state
     if (this.props.app.requireLogin && !this.props.auth.authorized) {
       let {router} = this.context;
       return router.push('/login');
@@ -103,10 +102,12 @@ class SeeAllSearches extends React.Component {
           <div style={styles.topSection}>
             <p style={styles.cardHeader}>{search.name}</p>
             <div style={styles.actionsContainer}>
+              {/* Temporarily disabling View link until view page is debugged
               <RadiumLink
                 style={styles.button}
-                to={`/saved-search/${search.name}`}>{window.L.t('View')}
+                to={`/saved-search/${search.id}`}>{window.L.t('View')}
               </RadiumLink>
+              */}
               <RadiumLink
                 style={styles.button}
                 to={`/edit-search/${search.id}`}>{window.L.t('Edit')}

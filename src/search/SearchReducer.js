@@ -1,14 +1,19 @@
 import * as types from 'search/SearchActions';
 
 const initialState = {
-  authorized: localStorage.authorized || false,
   loading: false,
   loadingQueryset: false,
   activeQuery: null,
+  loadingSavedSearch: false,
+  activeSavedSearch: null,
+  savedSearchError: '',
   recentSavedSearch: null,
   updatingSearch: false,
   editableSearch: null, // this search controls the SearchEditor component
   editableSearchLoading: false,
+  editMeta_name: '',
+  editMeta_description: '',
+  editMeta_tag: '',
   pendingSavedSearch: null, // when the search is being prepared to be saved in pillar
   users: [],
   searches: [],
@@ -25,6 +30,25 @@ const searches = (state = initialState, action) => {
       ...state,
       loadingQueryset: false,
       showTheError: `failed to load ${action.querysetName}`
+    };
+
+  case types.PILLAR_SEARCH_REQUEST:
+    return {
+      ...state,
+      loadingSavedSearch: true,
+      activeSavedSearch: null,
+      savedSearchError: ''
+    };
+
+  case types.PILLAR_SEARCH_SUCCESS:
+    return {...state, loadingSavedSearch: false, activeSavedSearch: action.search};
+
+  case types.PILLAR_SEARCH_FAILED:
+    return {
+      ...state,
+      loadingSavedSearch: false,
+      activeSavedSearch: null,
+      savedSearchError: action.error
     };
 
   case types.CREATE_QUERY: // store the query so it can be easily saved to pillar
@@ -57,7 +81,12 @@ const searches = (state = initialState, action) => {
   case types.PILLAR_SEARCH_SAVE_SUCCESS:
     // mark the search as recent so the mod can view its details
     // push it onto the array of saved searches
-    return {...state, savingSearch: false, recentSavedSearch: action.search, searches: state.searches.concat(action.search)};
+    return {
+      ...state,
+      savingSearch: false,
+      recentSavedSearch: action.search,
+      searches: state.searches.concat(action.search)
+    };
 
   case types.PILLAR_SEARCH_SAVE_FAILED:
     return {...state, savingSearch: false};
@@ -72,18 +101,28 @@ const searches = (state = initialState, action) => {
   case types.PILLAR_SEARCH_DELETE_FAILURE:
     return {...state, pendingDeleteSearch: null};
 
+  case types.UPDATE_EDITABLE_SEARCH_META:
+    return {...state, [`editMeta_${action.field}`]: action.value};
+
   case types.PILLAR_SAVED_SEARCH_EDIT_REQUEST:
     return {...state, editableSearchLoading: true};
 
   // saved search loaded from pillar to be edited
   case types.PILLAR_EDIT_SEARCH_SUCCESS:
-    console.log(types.PILLAR_EDIT_SEARCH_SUCCESS, action);
-    return {...state, editableSearch: action.search, editableSearchLoading: false};
+
+    return {
+      ...state,
+      editableSearch: action.search,
+      editableSearchLoading: false,
+      editMeta_name: action.search.name,
+      editMeta_description: action.search.description,
+      editMeta_tag: action.search.tag
+    };
 
   case types.PILLAR_EDIT_SEARCH_FAILED:
     return {...state, editableSearch: null, editableSearchLoading: false};
 
-  case types.PILLAR_SAVED_SEARCH_UPDATE:
+  case types.PILLAR_SAVED_SEARCH_UPDATE: // begin search update
     return {...state, updatingSearch: true};
 
   case types.PILLAR_SEARCH_UPDATE_SUCCESS:

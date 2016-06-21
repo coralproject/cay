@@ -103,11 +103,15 @@ const styles = {
     position: 'absolute',
     left: 0,
     right: 0,
-    top: 60,
+    top: 0,
     padding: 5
   },
   formName: {
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    cursor: 'auto',
+    ':hover': {
+      backgroundColor: settings.mediumGrey
+    }
   },
   menu: {
     display: 'flex'

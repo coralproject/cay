@@ -3,21 +3,25 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import Infinite from 'react-infinite';
 import Select from 'react-select';
-import settings from 'settings';
 
 import UserRow from 'users/UserRow';
 import Heading from 'components/Heading';
 import {sortBy} from 'filters/FiltersActions';
 import Spinner from 'components/Spinner';
+import { userSelected } from 'users/UsersActions';
+import { fetchCommentsByUser } from 'comments/CommentsActions';
+import UserDetail from 'users/UserDetail';
 
 import { Lang } from 'i18n/lang';
 
-@connect(({filters}) => ({filters}))
+@connect(({filters, users, comments}) =>
+  ({filters, user: users.selectedUser, comments}))
 @Lang
 @Radium
 export default class UserList extends React.Component {
 
   static propTypes = {
+    user: PropTypes.object,
     users: PropTypes.arrayOf(PropTypes.shape({
       name: PropTypes.string.isRequired,
       _id: PropTypes.string.idRequired
@@ -28,18 +32,35 @@ export default class UserList extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { page: 0, selectedSort: props.filters.filterList[0] };
+    this.state = {
+      page: 0,
+      selectedSort: props.filters.filterList[0]
+    };
+
+    var keypress = function (evt) {
+      switch (evt.keyCode) {
+      case 39:
+        return this.onNextUser();
+      case 37:
+        return this.onPrevUser();
+      case 27:
+        return this.onCloseDetail();
+      }
+    };
+
+    this.onKeyPress = keypress.bind(this);
+    document.addEventListener('keydown', this.onKeyPress, true);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.onKeyPress, true);
   }
 
   userSelected(user) {
     if(!this.props.disabled) {
-      // console.log('user!', user);
-      this.props.userSelected(user);
+      this.props.dispatch(userSelected(user));
+      this.props.dispatch(fetchCommentsByUser(user._id));
     }
-  }
-  setAsActiveHandler(index) {
-    // console.log('setAsActiveHandler', index);
-    // this.setState({activeUserIndex: index});
   }
 
   handleInfiniteLoad () {
@@ -49,21 +70,23 @@ export default class UserList extends React.Component {
       page: this.state.page + 1
     });
   }
+
   getUserList(users) {
     return (
       <Infinite
-        elementHeight={100}
+        elementHeight={57}
         containerHeight={500}
         infiniteLoadBeginEdgeOffset={200}
-        onInfiniteLoad={this.handleInfiniteLoad.bind(this)}
-        >
+        isInfiniteLoading={this.props.loadingQueryset}
+        loadingSpinnerDelegate={<InfiniteSpinner/>}
+        onInfiniteLoad={this.handleInfiniteLoad.bind(this)}>
         {users.map((user, i) =>
           <UserRow {...this.props}
             breakdown={this.props.filters.breakdown}
             specificBreakdown={this.props.filters.specificBreakdown}
             active={this.state.activeUserIndex === i ? true : false}
-            setAsActive={this.setAsActiveHandler.bind(this)}
             activeIndex={i}
+            setAsActive={() => {}}
             user={user}
             onClick={this.userSelected.bind(this)}
             key={i} />
@@ -83,17 +106,45 @@ export default class UserList extends React.Component {
     }
   }
 
+  onPrevUser() {
+    const { user, users } = this.props;
+    const actualIndex = users.map(u => u._id).indexOf(user._id);
+    if (actualIndex !== -1) {
+      this.userSelected(users[actualIndex - 1]);
+    }
+  }
+
+  onNextUser() {
+    const { user, users } = this.props;
+    const actualIndex = users.map(u => u._id).indexOf(user._id);
+    if (actualIndex !== -1) {
+      this.userSelected(users[actualIndex + 1]);
+    }
+  }
+
+  onCloseDetail() {
+    // Remove the selected user
+    this.props.dispatch(userSelected(null));
+  }
+
   render() {
+    const { user, users, comments } = this.props;
+
     var noUsersMessage = (<p style={ styles.noUsers }>
       No users loaded yet,<br />
       create a filter on the left to load users.
     </p>);
 
     const {filters} = this.props;
-    var userListContent = this.props.users.length ? this.getUserList(this.props.users) : noUsersMessage;
-    var sortableFilters = filters.filterList.map(filter => {
-      return {label: filters[filter].description, value: filter};
-    });
+    const userListContent = this.props.users.length ? this.getUserList(this.props.users) : noUsersMessage;
+
+    // get a list of only the sortable filters
+    const sortableFilters = filters.filterList
+      .filter(filter => filters[filter].sortable)
+      .map(filter => ({
+        label: filters[filter].description,
+        value: filter
+      }));
 
     return (
       <div style={ [ styles.base, this.props.style ] }>
@@ -104,7 +155,7 @@ export default class UserList extends React.Component {
               <Spinner />
             </div> :
             <Heading size='medium'>
-              <span style={styles.groupHeader}>{ window.L.t('results') }</span> ({this.props.total || '#'} { window.L.t('users')})
+              <span style={styles.groupHeader}>{ window.L.t('results') }</span> ({this.props.total || '#'} {this.props.total !== 1 ? window.L.t('users') : window.L.t('user')})
             </Heading>
           }
           <div style={styles.sort}>
@@ -117,13 +168,33 @@ export default class UserList extends React.Component {
               options={sortableFilters} />
           </div>
         </div>
-        <div style="infinite">
-          {userListContent}
+        <div style={styles.cardContainer}>
+          <div style={styles.cardFlipper(!!user)}>
+            <div style={[styles.cardFace, styles.cardFront]}>
+              {!user ? userListContent : ''}
+            </div>
+            <div style={[styles.cardFace, styles.cardBack]}>
+              {user ? <UserDetail onClose={this.onCloseDetail.bind(this)}
+                comments={comments.items}
+                commentsLoading={comments.loading}
+                onPrevUser={this.onPrevUser.bind(this)}
+                onNextUser={this.onNextUser.bind(this)}
+                isLast={user._id === users[users.length - 1]._id}
+                isFirst={user._id === users[0]._id}
+                user={user} /> : null}
+            </div>
+          </div>
         </div>
       </div>
     );
   }
 }
+
+const InfiniteSpinner = Radium(() => (
+  <div style={styles.infiniteSpinner}>
+    <Spinner />
+  </div>
+));
 
 const styles = {
   base: {
@@ -151,5 +222,40 @@ const styles = {
     fontSize: '14pt',
     color: '#888',
     padding: '10px 0'
+  },
+  cardBack: {
+    transform: 'rotateY(180deg)'
+  },
+  cardFront: {
+    zIndex: 2,
+    transform: 'rotateY(0deg)'
+  },
+  cardFace: {
+    backfaceVisibility: 'hidden',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: 500
+  },
+  cardFlipper(detail) {
+    return {
+      transition: '0.6s',
+      transformStyle: 'preserve-3d',
+      position: 'relative',
+      transform: detail ? 'rotateY(180deg)' : 'rotateY(0deg)',
+      background: '#fff'
+    };
+  },
+  cardContainer: {
+    perspective: 1000,
+    width: '100%',
+    height: 500
+  },
+  infiniteSpinner: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    marginTop: -40
   }
 };

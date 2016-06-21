@@ -11,11 +11,11 @@ import { Provider } from 'react-redux';
 import configureStore from 'store.js';
 import { configXenia } from 'app/AppActions';
 import {StyleRoot} from 'radium';
+import storage from 'storage';
 
 // Routes
 import SearchCreator from 'app/SearchCreator';
 import User from 'app/User';
-import TagManager from 'app/TagManager';
 import Login from 'app/Login';
 import SeeAllSearches from 'app/SeeAllSearches';
 import SearchDetail from 'app/SearchDetail';
@@ -29,7 +29,6 @@ import SubmissionList from 'app/SubmissionList';
 import SubmissionGallery from 'app/SubmissionGallery';
 
 // Utils
-import registerServiceWorker from 'serviceworker!./sw.js';
 import ga from 'react-ga';
 import { Lang } from 'i18n/lang';
 
@@ -50,10 +49,6 @@ require('react-select.css');
 require('react-datepicker.min.css');
 
 require('../fonts/glyphicons-halflings-regular.woff');
-
-if ('serviceWorker' in navigator && process && process.env.NODE_ENV === 'production') {
-  registerServiceWorker({ scope: '/' }).then(() => {}, () => {});
-}
 
 let store;
 
@@ -122,7 +117,19 @@ class Root extends React.Component {
 }
 
 // entry point for the app
-const loadConfig = route => fetch(route).then(res => res.json());
+const loadConfig = route => {
+  const data = storage.get(route);
+  if (data) {
+    fetch(route).then(res => res.json())
+    .then(json => storage.set(route, json));
+    return new Promise(resolve => resolve(data));
+  }
+  return fetch(route).then(res => res.json())
+    .then(json => {
+      storage.set(route, json);
+      return json;
+    });
+};
 
 Promise.all([loadConfig('/config.json'), loadConfig('/data_config.json')])
 .then(results => {

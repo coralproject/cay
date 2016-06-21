@@ -45,6 +45,7 @@ export const UPDATE_EDITABLE_SEARCH_META = 'UPDATE_EDITABLE_SEARCH_META';
 
 // when we're initializing a Saved Search update to Pillar
 export const PILLAR_SAVED_SEARCH_UPDATE = 'PILLAR_SAVED_SEARCH_UPDATE';
+export const PILLAR_SEARCH_UPDATE_STALE = 'PILLAR_SEARCH_UPDATE_STALE';
 
 export const CLEAR_USER_LIST = 'CLEAR_USER_LIST';
 export const CLEAR_USER = 'CLEAR_USER';
@@ -483,6 +484,9 @@ export const updateSearch = staleSearch => {
 
         // update search in xenia
         xenia(query).saveQuery().then(() => {
+
+          _.delay(() => dispatch({type: PILLAR_SEARCH_UPDATE_STALE}), 3000);
+
           dispatch({type: QUERYSET_SAVE_SUCCESS, name: query.name});
         });
 

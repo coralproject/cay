@@ -15,6 +15,7 @@ const initialState = {
   editMeta_description: '',
   editMeta_tag: '',
   pendingSavedSearch: null, // when the search is being prepared to be saved in pillar
+  searchUpdatedSuccessfully: false, // when the search has been updated on the Edit screen
   users: [],
   searches: [],
   savingSearch: false,
@@ -123,13 +124,16 @@ const searches = (state = initialState, action) => {
     return {...state, editableSearch: null, editableSearchLoading: false};
 
   case types.PILLAR_SAVED_SEARCH_UPDATE: // begin search update
-    return {...state, updatingSearch: true};
+    return {...state, updatingSearch: true, searchUpdatedSuccessfully: false};
 
-  case types.PILLAR_SEARCH_UPDATE_SUCCESS:
-    return {...state, editableSearch: action.search, updatingSearch: false};
+  case types.PILLAR_SEARCH_UPDATE_SUCCESS: // search has been successfully updated
+    return {...state, editableSearch: action.search, updatingSearch: false, searchUpdatedSuccessfully: true};
 
   case types.PILLAR_SEARCH_UPDATE_FAILED:
-    return {...state, updatingSearch: false, error: action.error};
+    return {...state, updatingSearch: false, error: action.error, searchUpdatedSuccessfully: false};
+
+  case types.PILLAR_SEARCH_UPDATE_STALE: // just clearing out some UI elements after updating a serach
+    return {...state, searchUpdatedSuccessfully: false};
 
   case types.CLEAR_USER_LIST:
     return {...state, users: []};

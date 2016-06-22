@@ -8,9 +8,9 @@ export default class FilterDateProximity extends React.Component {
 
   onMaxChanged(e) {
     if (e.target.value.match(/[0-9]/)) {
-      this.props.onChange(this.props.fieldName, 'userMax', +e.target.value);
+      this.props.onChange(this.props.fieldName, 'userMin', +e.target.value);
     } else { // if the user enters a non-numeric or an empty string
-      this.props.onChange(this.props.fieldName, 'userMax', this.props.max);
+      this.props.onChange(this.props.fieldName, 'userMin', this.props.min);
     }
   }
 
@@ -50,5 +50,5 @@ const styles = {
     border: '1px solid lightgrey',
     width: 50,
     borderRadius: 3
-  },
+  }
 };

@@ -49,6 +49,14 @@ export default class UserRow extends React.Component {
 
         let dimension = _.template(this.props.filters[filterName].template)({ dimension: `${breakdown}.${specificBreakdown}` });
         dimension = _.get(user, dimension);
+        let num = parseInt(dimension, 10);
+        if (isNaN(num)) {
+          num = parseFloat(dimension).toFixed(2);
+        }
+        if (isNaN(num)) {
+          return;
+        }
+
         let stat;
         switch (this.props.filters[filterName].type) {
         case 'dateRange':
@@ -62,13 +70,6 @@ export default class UserRow extends React.Component {
           // <PercentClause {...this.props.filters[filterName]}/>;
           break;
         default:
-          let num = parseInt(dimension, 10);
-          if (isNaN(num)) {
-            num = parseFloat(dimension).toFixed(2);
-          }
-          if (isNaN(num)) {
-            return;
-          }
           // truncating to 2 decimals
           stat = `${num} ${this.props.filters[filterName].name}`;
           // <IntClause {...this.props.filters[filterName]}/>;

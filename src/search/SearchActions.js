@@ -344,7 +344,7 @@ const createQueryForSave = (query, name, desc) => {
     {
       name: "limit",
       desc: "Limits the number of records returned.",
-      default: "25"
+      default: "0"
     },
     {
       name: "skip",

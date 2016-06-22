@@ -1,11 +1,8 @@
 import React from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
-import maxBy from "lodash.maxby";
-import minBy from "lodash.minby";
 
 import Sparkline from 'filters/Sparkline';
-import Card from 'components/cards/Card';
 
 @connect(state => state.filters)
 @Radium
@@ -54,6 +51,10 @@ export default class FilterNumbers extends React.Component {
     return help;
   }
   render() {
+
+    const distributions = this.props.distributions ? this.props.distributions[this.props[this.props.fieldName].field] : null;
+    const totals = distributions ? distributions.map(d => d.total) : null;
+
     return (
       <div style={[styles.base, this.props.style]}>
         <span style={styles.description}>{this.props.description}</span>
@@ -66,8 +67,8 @@ export default class FilterNumbers extends React.Component {
           this.props.distributions ?
           <Sparkline
             description={this.props.description}
-            distributionMax={maxBy(this.props.distributions[this.props[this.props.fieldName].field], d => return d.total )}
-            distributionMin={minBy(this.props.distributions[this.props[this.props.fieldName].field], d => return d.total )}
+            distributionMax={Math.max(totals)}
+            distributionMin={Math.min(totals)}
             distribution={this.props.distributions[this.props[this.props.fieldName].field]}/> :
             ''
         }
@@ -105,6 +106,6 @@ const styles = {
     padding: '7px 10px',
     border: '1px solid lightgrey',
     borderRadius: 3
-  },
+  }
 
 };

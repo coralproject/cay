@@ -55,7 +55,8 @@ export default class FormComponent extends Component {
 
   constructor(props, context) {
     super(props, context);
-    this.state = { 'expanded': false };
+    // originalField is used to restore params when clicking X
+    this.state = { 'expanded': false, field: props.field, originalField: props.field };
   }
 
   render() {
@@ -83,19 +84,37 @@ export default class FormComponent extends Component {
   }
 
   onIdentityClick(e) {
-    this.props.dispatch(updateWidget(this.props.id, { identity: e.target.checked }));
+    var field = Object.assign({}, this.state.field);
+    field.identity = e.target.checked;
+    this.setState({ field: field });
   }
 
   onDescriptionChange(e) {
-    this.props.dispatch(updateWidget(this.props.id, { description: e.target.value }));
+    var field = Object.assign({}, this.state.field);
+    field.description = e.target.value;
+    this.setState({ field: field });
   }
 
   onTitleChange(e) {
-    this.props.dispatch(updateWidget(this.props.id, { title: e.target.value }));
+    var field = Object.assign({}, this.state.field);
+    field.title = e.target.value;
+    this.setState({ field: field });
+  }
+
+  onSaveClick(e) {
+    this.toggleExpanded();
+    this.setState({ originalField: this.state.field });
+    this.props.dispatch(updateWidget(this.props.id, this.state.field));
+  }
+
+  onCloseClick(e) {
+    this.setState({ field: this.state.originalField });
+    this.toggleExpanded();
   }
 
   renderEdit() {
-    const { id, onMove, isLast, field, position, onDelete } = this.props;
+    const { id, onMove, isLast, position, onDelete } = this.props;
+    const { field } = this.state;
     return (
       <div>
         { this.props.connectDragSource(
@@ -161,8 +180,8 @@ export default class FormComponent extends Component {
 
               {this.editSettings()}
 
-              <button style={ styles.editSettingsPanelSave } onClick={ this.toggleExpanded.bind(this) }>Save</button>
-              <button style={ styles.editSettingsPanelClose } onClick={ this.toggleExpanded.bind(this) }><FaClose /></button>
+              <button style={ styles.editSettingsPanelSave } onClick={ this.onSaveClick.bind(this) }>Save</button>
+              <button style={ styles.editSettingsPanelClose } onClick={ this.onCloseClick.bind(this) }><FaClose /></button>
             </div>
           :
             null
@@ -172,11 +191,12 @@ export default class FormComponent extends Component {
   }
 
   onEditorChange(field) {
-    this.props.dispatch(updateWidget(field.id, field));
+    var fieldCopy = Object.assign({}, this.state.field, field);
+    this.setState({ field: fieldCopy });
   }
 
   editSettings() {
-    const { field } = this.props;
+    const { field } = this.state;
     // Passing listeners down from this class to the editors
     var localProps = { onEditorChange: this.onEditorChange.bind(this) };
     return renderSettings[field.component] ? renderSettings[field.component](field, localProps) : renderSettings['TextField'](field, localProps);

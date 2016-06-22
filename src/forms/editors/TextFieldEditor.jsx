@@ -12,24 +12,32 @@ export default class TextFieldEditor extends Component {
 
   constructor(props) {
     super(props);
+    this.state = { field: props.field }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    let { field } = this.state;
+    let updatedField = Object.assign({}, field, nextProps.field);
+    this.setState({ field: updatedField });
   }
 
   onMaxCharsChange(e) {
-    let { field } = this.props;
+    let { field } = this.state;
     let updatedProps = Object.assign({}, field.props, { maxLength: e.target.value });
     let updatedField = Object.assign({}, field, { props: updatedProps });
     this.props.onEditorChange(updatedField);
   }
 
   onRequiredClick(e) {
-    let { field } = this.props;
+    let { field } = this.state;
     let updatedWrapper = Object.assign({}, field.wrapper, { required: e.target.checked });
     let updatedField = Object.assign({}, field, { wrapper: updatedWrapper });
+    this.setState({ field: updatedField });
     this.props.onEditorChange(updatedField);
   }
 
   render() {
-    let { field } = this.props;
+    let { field } = this.state;
     return (
       <div>
         <label>

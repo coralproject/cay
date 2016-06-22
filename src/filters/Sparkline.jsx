@@ -4,8 +4,6 @@ import _ from 'lodash';
 import { connect } from 'react-redux';
 import {VictoryLine, VictoryScatter, VictoryAxis} from 'victory-chart';
 
-
-@connect(state => state.filters)
 @Radium
 class Sparkline extends React.Component {
   constructor(props) {
@@ -28,6 +26,9 @@ class Sparkline extends React.Component {
 
       }
     };
+  }
+  shouldComponentUpdate(){
+    return false;
   }
   getLastIdInDistributionArray() {
     const last = _.last(this.props.distribution);
@@ -52,6 +53,7 @@ class Sparkline extends React.Component {
   }
   render() {
     const styles = this.getStyles();
+    console.log('rendering')
 
     console.log('Sparkline.render', this.props);
 

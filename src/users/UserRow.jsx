@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
+import _ from 'lodash';
 import ListItem from 'components/lists/ListItem';
 
 @Radium
@@ -34,6 +35,8 @@ export default class UserRow extends React.Component {
   }
 
   getNonDefaultFilters() {
+    const { breakdown, specificBreakdown, user } = this.props;
+
     return this.props.filters.filterList.map((filterName, i) => {
       if (this.userChangedFilter(filterName).either) {
         if (this.props.filters[filterName].field === 'SystemFlagged') {
@@ -44,6 +47,9 @@ export default class UserRow extends React.Component {
           );
         }
 
+        let dimension = _.template(this.props.filters[filterName].template)({ dimension: `${breakdown}.${specificBreakdown}` });
+        console.log(dimension)
+        dimension = _.get(user, dimension);
         let stat;
         switch (this.props.filters[filterName].type) {
         case 'dateRange':
@@ -53,12 +59,19 @@ export default class UserRow extends React.Component {
           // <DateRangeClause {...this.props.filters[filterName]}/>;
           break;
         case 'percentRange':
-          stat = `${Math.floor(this.props.user.statistics.comments.all.all[this.props.filters[filterName].field] * 100)}% ${this.props.filters[filterName].name}`;
+          stat = `${Math.floor(dimension * 100)}% ${this.props.filters[filterName].name}`;
           // <PercentClause {...this.props.filters[filterName]}/>;
           break;
         default:
-          // some long decimal places, so to truncate to two decimals we floor(x*100)/100
-          stat = `${Math.floor(this.props.user.statistics.comments.all.all[this.props.filters[filterName].field]*100)/100} ${this.props.filters[filterName].name}`;
+          let num = parseInt(dimension, 10);
+          if (isNaN(num)) {
+            num = parseFloat(dimension).toFixed(2);
+          }
+          if (isNaN(num)) {
+            return;
+          }
+          // truncating to 2 decimals
+          stat = `${num} ${this.props.filters[filterName].name}`;
           // <IntClause {...this.props.filters[filterName]}/>;
         }
 
@@ -79,14 +92,6 @@ export default class UserRow extends React.Component {
     const {user} = this.props;
 
     let dimension = user.statistics.comments[breakdown][specificBreakdown];
-
-    // Dont break the counts while loading
-    if (dimension && specificBreakdown !== 'all') {
-      dimension = dimension.all;
-    } else {
-      dimension = user.statistics.comments.all.all;
-    }
-    // <img style={styles.avatar} src="/img/user_portrait_placeholder.png" />
 
     return (
       <ListItem

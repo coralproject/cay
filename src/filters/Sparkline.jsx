@@ -37,7 +37,7 @@ class Sparkline extends React.Component {
     let fill = 'none';
 
     if (d.x === 1 || d.y === this.props.distributionMax.total || d.x === this.props.distribution.length - 1) {
-      fill = "rgb(130,130,130)";
+      fill = 'rgb(130,130,130)';
     }
 
     return fill;
@@ -52,6 +52,8 @@ class Sparkline extends React.Component {
   }
   render() {
     const styles = this.getStyles();
+
+    console.log('Sparkline.render', this.props);
 
     return (
       <svg

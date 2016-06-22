@@ -340,19 +340,19 @@ const createQueryForSave = (query, name, desc) => {
   // set params, descriptions, defaults
   q.params = [
     {
-      name: "limit",
-      desc: "Limits the number of records returned.",
-      default: "1000"
+      name: 'limit',
+      desc: 'Limits the number of records returned.',
+      default: '1000'
     },
     {
-      name: "skip",
-      desc: "Skips a number of records before returning.",
-      default: "0"
+      name: 'skip',
+      desc: 'Skips a number of records before returning.',
+      default: '0'
     },
     {
-      name: "sort",
-      desc: "Sort field.",
-      default: "statistics.comments.all.all.count"
+      name: 'sort',
+      desc: 'Sort field.',
+      default: 'statistics.comments.all.all.count'
     }
   ];
 

@@ -52,8 +52,8 @@ export default class FilterNumbers extends React.Component {
   }
   render() {
 
-    const distributions = this.props.distributions ? this.props.distributions[this.props[this.props.fieldName].field] : null;
-    const totals = distributions ? distributions.map(d => d.total) : null;
+    const distribution = this.props.distributions ? this.props.distributions[this.props[this.props.fieldName].field] : null;
+    const totals = distribution ? distribution.map(d => d.total) : null;
 
     return (
       <div style={[styles.base, this.props.style]}>
@@ -64,12 +64,12 @@ export default class FilterNumbers extends React.Component {
           justifyContent: 'space-between'
         }}>
         {
-          this.props.distributions ?
+          this.props.distributions && totals ?
           <Sparkline
             description={this.props.description}
             distributionMax={Math.max(...totals)}
             distributionMin={Math.min(...totals)}
-            distribution={this.props.distributions[this.props[this.props.fieldName].field]}/> :
+            distribution={distribution}/> :
             ''
         }
         </div>

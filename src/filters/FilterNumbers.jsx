@@ -1,7 +1,6 @@
 import React from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
-import _ from "lodash";
 import maxBy from "lodash.maxby";
 import minBy from "lodash.minby";
 
@@ -68,8 +67,8 @@ export default class FilterNumbers extends React.Component {
           this.props.distributions ?
           <Sparkline
             description={this.props.description}
-            distributionMax={maxBy(this.props.distributions[this.props[this.props.fieldName].field], (d) => { return d.total })}
-            distributionMin={minBy(this.props.distributions[this.props[this.props.fieldName].field], (d) => { return d.total })}
+            distributionMax={maxBy(this.props.distributions[this.props[this.props.fieldName].field], d => return d.total )}
+            distributionMin={minBy(this.props.distributions[this.props[this.props.fieldName].field], d => return d.total )}
             distribution={this.props.distributions[this.props[this.props.fieldName].field]}/> :
             ''
         }

@@ -1,13 +1,9 @@
 import React from 'react';
 import Radium from 'radium';
 import _ from 'lodash';
-// import Flex from './layout/Flex';
 import { connect } from 'react-redux';
-// import { FOO } from '../actions';
 import {VictoryLine, VictoryScatter, VictoryAxis} from 'victory-chart';
 
-// const style = {
-// };
 
 @connect(state => state.filters)
 @Radium
@@ -20,15 +16,11 @@ class Sparkline extends React.Component {
   }
   static propTypes = {
     /* react */
-    // dispatch: React.PropTypes.func,
     params: React.PropTypes.object,
     routes: React.PropTypes.array,
-    /* component api */
     style: React.PropTypes.object
-    // foo: React.PropTypes.string
   }
   static defaultProps = {
-    // foo: 'bar'
   }
   getStyles() {
     return {
@@ -45,7 +37,6 @@ class Sparkline extends React.Component {
     let fill = 'none';
 
     if (d.x === 1 || d.y === this.props.distributionMax.total || d.x === this.props.distribution.length - 1) {
-      // fill = 'rgb(255,0,0)';
       fill = "rgb(130,130,130)";
     }
 
@@ -56,18 +47,6 @@ class Sparkline extends React.Component {
     if (d.x === 1 || d.y === this.props.distributionMax.total || d.x === this.props.distribution.length - 1) {
       fill = 'black';
     }
-
-    // if (d.x === 1 || d.x === 2 || d.x === 3 || d.x === 5 || d.x === 20) {
-    //   fill = 'rgb(255,0,0)';
-    // }
-
-    // if (d.x < 100) {
-    //   if (d.x % 50 === 0) fill = 'rgb(255,0,0)';
-    // } else if (d.x < 1000) {
-    //   if (d.x % 500 === 0) fill = 'rgb(255,0,0)';
-    // } else {
-    //   if (d.x % 3000 === 0) fill = 'rgb(255,0,0)';
-    // }
 
     return fill;
   }
@@ -129,7 +108,6 @@ class Sparkline extends React.Component {
             labels: {
               fill: this.getLabelFill.bind(this),
               fontSize: 8,
-
             }
           }}
           size={2}

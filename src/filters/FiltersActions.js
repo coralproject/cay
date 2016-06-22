@@ -269,7 +269,6 @@ const fetchDistributions = () => {
 };
 
 const fetchDistributionsSuccess = (distros) => {
-  console.log(distros)
   return {
     type: FETCH_DISTRIBUTIONS_SUCCESS,
     distros
@@ -340,7 +339,7 @@ export const populateDistributionStore = (ranges) => {
     dispatch(fetchDistributions());
     const x = xenia({name: 'distributions'});
 
-    distributionFields.map((field) => {
+    distributionFields.forEach(field => {
       distributionForInput(
         x,
         field,

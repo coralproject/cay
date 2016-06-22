@@ -24,7 +24,9 @@ export default class Stat extends React.Component {
 
 const styles = {
   base: {
-    marginBottom: 15
+    marginBottom: 15,
+    marginRight: 20,
+    width: '40%'
   },
   number: {
     marginRight: 10,

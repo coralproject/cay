@@ -48,7 +48,6 @@ export default class UserRow extends React.Component {
         }
 
         let dimension = _.template(this.props.filters[filterName].template)({ dimension: `${breakdown}.${specificBreakdown}` });
-        console.log(dimension)
         dimension = _.get(user, dimension);
         let stat;
         switch (this.props.filters[filterName].type) {

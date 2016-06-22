@@ -367,12 +367,17 @@ const createQueryForSave = (query, name, desc) => {
     }
   });
 
-  const lastMatchIndex = _.findLastIndex(q.queries[0].commands, command => _.has(command, '$match'));
 
-  if (lastMatchIndex !== -1) {
-    const sortCommand = { $sort: { '#string:sort': -1 } };
+  // disabling this sort
+  //  there are two sorts being added to searches, here and in makeQueryFromState
+  //  we need to decide whether to store the earch in the query
+  //  or expose it via a param
+  //const lastMatchIndex = _.findLastIndex(q.queries[0].commands, command => _.has(command, '$match'));
+  //if (lastMatchIndex !== -1) {
+  //  const sortCommand = { $sort: { '#string:sort': -1 } };
     //q.queries[0].commands.splice(lastMatchIndex + 1, 0, sortCommand);
-  }
+  //}
+
 
   q.name = name;
   q.desc = desc;

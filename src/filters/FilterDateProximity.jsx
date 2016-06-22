@@ -2,29 +2,31 @@ import React from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
 
-import Card from 'components/cards/Card';
-import CardHeader from 'components/cards/CardHeader';
-
 @connect(state => state.filters)
 @Radium
 export default class FilterDateProximity extends React.Component {
 
   onMaxChanged(e) {
-    this.props.onChange(this.props.fieldName, 'userMax', +e.target.value);
+    if (e.target.value.match(/[0-9]/)) {
+      this.props.onChange(this.props.fieldName, 'userMin', +e.target.value);
+    } else { // if the user enters a non-numeric or an empty string
+      this.props.onChange(this.props.fieldName, 'userMin', this.props.min);
+    }
   }
 
   render() {
-
+    const [startDesc, endDesc] = this.props.description.split('_');
     return (
-      <div style={styles.base}>
+      <div style={[styles.base, this.props.style]}>
         <span style={styles.description}>
-          {this.props.description.split('_')[0]}
+          {startDesc}
           <input
             onChange={this.onMaxChanged.bind(this)}
             style={styles.minMaxInputs}
             type="number"
+            min="0"
              />
-           {this.props.description.split('_')[1]}
+           {endDesc}
         </span>
       </div>
     );
@@ -33,7 +35,7 @@ export default class FilterDateProximity extends React.Component {
 
 const styles = {
   base: {
-    marginBottom: 20,
+    padding: '8px'
   },
   description: {
     fontWeight: 500,
@@ -48,5 +50,5 @@ const styles = {
     border: '1px solid lightgrey',
     width: 50,
     borderRadius: 3
-  },
+  }
 };

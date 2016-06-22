@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import Infinite from 'react-infinite';
 import Select from 'react-select';
+import _ from 'lodash';
 
 import UserRow from 'users/UserRow';
 import Heading from 'components/Heading';
@@ -71,12 +72,22 @@ export default class UserList extends React.Component {
     });
   }
 
+  getSpecificName() {
+    const { specificBreakdown, breakdown } = this.props.filters;
+    if (!specificBreakdown && specificBreakdown === 'all') return;
+    const bdown = this.props.filters[`${breakdown}s`];
+    const obj = _.find(bdown, {_id: specificBreakdown});
+    return obj && (obj.name || obj.description);
+  }
+
   getUserList(users) {
     return (
       <Infinite
         elementHeight={57}
         containerHeight={500}
         infiniteLoadBeginEdgeOffset={200}
+        isInfiniteLoading={this.props.loadingQueryset}
+        loadingSpinnerDelegate={<InfiniteSpinner/>}
         onInfiniteLoad={this.handleInfiniteLoad.bind(this)}>
         {users.map((user, i) =>
           <UserRow {...this.props}
@@ -106,6 +117,7 @@ export default class UserList extends React.Component {
 
   onPrevUser() {
     const { user, users } = this.props;
+    if (!user) return;
     const actualIndex = users.map(u => u._id).indexOf(user._id);
     if (actualIndex !== -1) {
       this.userSelected(users[actualIndex - 1]);
@@ -114,6 +126,7 @@ export default class UserList extends React.Component {
 
   onNextUser() {
     const { user, users } = this.props;
+    if (!user) return;
     const actualIndex = users.map(u => u._id).indexOf(user._id);
     if (actualIndex !== -1) {
       this.userSelected(users[actualIndex + 1]);
@@ -134,10 +147,15 @@ export default class UserList extends React.Component {
     </p>);
 
     const {filters} = this.props;
-    var userListContent = this.props.users.length ? this.getUserList(this.props.users) : noUsersMessage;
-    var sortableFilters = filters.filterList.map(filter => {
-      return {label: filters[filter].description, value: filter};
-    });
+    const userListContent = this.props.users.length ? this.getUserList(this.props.users) : noUsersMessage;
+
+    // get a list of only the sortable filters
+    const sortableFilters = filters.filterList
+      .filter(filter => filters[filter].sortable)
+      .map(filter => ({
+        label: filters[filter].description,
+        value: filter
+      }));
 
     return (
       <div style={ [ styles.base, this.props.style ] }>
@@ -148,7 +166,7 @@ export default class UserList extends React.Component {
               <Spinner />
             </div> :
             <Heading size='medium'>
-              <span style={styles.groupHeader}>{ window.L.t('results') }</span> ({this.props.total || '#'} { window.L.t('users')})
+              <span style={styles.groupHeader}>{ window.L.t('results') }</span> ({this.props.total || '#'} {this.props.total !== 1 ? window.L.t('users') : window.L.t('user')})
             </Heading>
           }
           <div style={styles.sort}>
@@ -174,7 +192,10 @@ export default class UserList extends React.Component {
                 onNextUser={this.onNextUser.bind(this)}
                 isLast={user._id === users[users.length - 1]._id}
                 isFirst={user._id === users[0]._id}
-                user={user} /> : null}
+                user={user}
+                breakdown={this.props.filters.breakdown}
+                specificBreakdownName={this.getSpecificName()}
+                specificBreakdown={this.props.filters.specificBreakdown} /> : null}
             </div>
           </div>
         </div>
@@ -182,6 +203,12 @@ export default class UserList extends React.Component {
     );
   }
 }
+
+const InfiniteSpinner = Radium(() => (
+  <div style={styles.infiniteSpinner}>
+    <Spinner />
+  </div>
+));
 
 const styles = {
   base: {
@@ -238,5 +265,11 @@ const styles = {
     perspective: 1000,
     width: '100%',
     height: 500
+  },
+  infiniteSpinner: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    marginTop: -40
   }
 };

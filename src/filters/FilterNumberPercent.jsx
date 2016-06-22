@@ -3,11 +3,7 @@ import Radium from 'radium';
 import {connect} from 'react-redux';
 // import Flex from '../layout/Flex';
 
-import Card from 'components/cards/Card';
-import CardHeader from 'components/cards/CardHeader';
 //import Sparkline from 'filters/Sparkline';
-
-import Slider from 'components/Slider';
 
 @connect(state => state.filters)
 @Radium
@@ -42,15 +38,15 @@ export default class FilterNumbers extends React.Component {
     let help = '';
 
     if (this.props.userMax > this.props.max) {
-      help = `Max cannot be greater than ${this.props.max}`;
+      help = `Max cannot be greater than ${parseInt(this.props.max * 100, 10)}`;
     }
 
     if (this.props.userMin < this.props.min) {
-      help = `Min cannot be less than ${this.props.min}`;
+      help = `Min cannot be less than ${parseInt(this.props.min * 100, 10)}`;
     }
 
     if (this.props.userMin > this.props.userMax) {
-      help = 'Min cannot be greater than max';
+      help = `Min cannot be greater than max (${parseInt(this.props.max * 100, 10)})`;
     }
 
     return help;
@@ -58,7 +54,7 @@ export default class FilterNumbers extends React.Component {
   render() {
 
     return (
-      <div style={styles.base}>
+      <div style={[styles.base, this.props.style]}>
         <p style={styles.description}>{this.props.description}</p>
         <div>
           <input
@@ -81,7 +77,7 @@ export default class FilterNumbers extends React.Component {
 
 const styles = {
   base: {
-    marginBottom: 20
+    padding: '4px 8px'
   },
   description: {
     fontWeight: 500,

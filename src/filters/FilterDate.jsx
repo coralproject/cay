@@ -4,8 +4,6 @@ import Radium from 'radium';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 
-import Card from 'components/cards/Card';
-
 @connect()
 @Radium
 export default class FilterDate extends React.Component {
@@ -55,7 +53,7 @@ export default class FilterDate extends React.Component {
 
 const styles = {
   base: {
-    marginBottom: 20
+    padding: '6px 8px'
   },
   description: {
     fontWeight: 500,

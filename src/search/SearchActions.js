@@ -41,8 +41,11 @@ export const PILLAR_EDIT_SEARCH_FAILED = 'PILLAR_EDIT_SEARCH_FAILED';
 export const PILLAR_SEARCH_UPDATE_SUCCESS = 'PILLAR_SEARCH_UPDATE_SUCCESS';
 export const PILLAR_SEARCH_UPDATE_FAILED = 'PILLAR_SEARCH_UPDATE_FAILED';
 
+export const UPDATE_EDITABLE_SEARCH_META = 'UPDATE_EDITABLE_SEARCH_META';
+
 // when we're initializing a Saved Search update to Pillar
 export const PILLAR_SAVED_SEARCH_UPDATE = 'PILLAR_SAVED_SEARCH_UPDATE';
+export const PILLAR_SEARCH_UPDATE_STALE = 'PILLAR_SEARCH_UPDATE_STALE';
 
 export const CLEAR_USER_LIST = 'CLEAR_USER_LIST';
 export const CLEAR_USER = 'CLEAR_USER';
@@ -121,7 +124,7 @@ export const fetchSavedSearchForEdit = id => {
 
     dispatch(requestSavedSearchForEdit(id));
 
-    fetch(`${app.pillarHost}/api/search/${id}`)
+    return fetch(`${app.pillarHost}/api/search/${id}`)
       .then(resp => resp.json())
       .then(search => {
 
@@ -137,12 +140,16 @@ export const fetchSavedSearchForEdit = id => {
           return accum;
         }, {});
 
-        dispatch(receivedEditSearch(search, updatedFilters, breakdown, specificBreakdown));
+        return dispatch(receivedEditSearch(search, updatedFilters, breakdown, specificBreakdown));
       })
       .catch(error => {
         dispatch(searchEditFetchFailed(error));
       });
   };
+};
+
+export const updateEditableSearchMeta = (field, value) => {
+  return {type: UPDATE_EDITABLE_SEARCH_META, field, value};
 };
 
 // get a list of Saved Searches from Pillar
@@ -198,9 +205,7 @@ export const fetchQueryset = (querysetName, page = 0, replace = false) => {
     dispatch(requestQueryset(querysetName, page));
 
     xenia()
-      .limit(20)
-      .skip(20 * page)
-      .exec(querysetName)
+      .exec(querysetName, {skip: 20 * page, limit: 20})
       .then(queryset => dispatch(receiveQueryset(queryset, replace)))
       .catch(err => dispatch(requestQuerysetFailure(err)));
   };
@@ -227,6 +232,7 @@ export const makeQueryFromState = (type, page = 0, replace = false, editMode = f
 
   return (dispatch, getState) => {
     // make a query from the current state
+
     const fs = getState().filters;
     const app = getState().app;
     const filterList = editMode ? fs.editFilterList : fs.filterList;
@@ -281,9 +287,7 @@ export const makeQueryFromState = (type, page = 0, replace = false, editMode = f
         if (+filter.max !== +clampedUserMax) {
           let searchMax;
           if (_.isDate(clampedUserMax)) {
-            searchMin = `#date:${clampedUserMax.toISOString()}`;
-          } else if (filter.type === 'intDateProximity') {
-            searchMax = `#time:${-clampedUserMax*24}h`;
+            searchMax = `#date:${clampedUserMax.toISOString()}`;
           } else {
             searchMax = clampedUserMax;
           }
@@ -293,8 +297,8 @@ export const makeQueryFromState = (type, page = 0, replace = false, editMode = f
 
       return x;
     };
-
     addMatches(x.addQuery());
+
     if(fs.sortBy) {
       const breakdown = editMode ? fs.breakdownEdit : fs.breakdown;
       const specificBreakdown = editMode ? fs.specificBreakdownEdit : fs.specificBreakdown;
@@ -302,12 +306,16 @@ export const makeQueryFromState = (type, page = 0, replace = false, editMode = f
       const field = _.template(sortBy[0])
         ({dimension: `${breakdown}${specificBreakdown ? `.${specificBreakdown}` : ''}`});
       x.sort([field, sortBy[1]]);
+    } else {
+      // default sorting
+      x.sort(['statistics.comments.all.all.count', -1]);
     }
     x.skip(page * pageSize).limit(pageSize)
       .include(['name', 'avatar', 'statistics.comments']);
 
     // get the counts
     addMatches(x.addQuery()).group({_id: null, count: {$sum: 1}});
+
     doMakeQueryFromStateAsync(x, dispatch, app, replace);
   };
 };
@@ -320,14 +328,33 @@ export const saveQueryFromState = (queryName, desc, tag) => {
 
     dispatch({type: PILLAR_SEARCH_SAVE_INIT, query: state.searches.activeQuery});
 
-    console.log('about to doPutQuery');
-    doPutQuery(dispatch, state, queryName, desc, tag);
+    saveSearchToPillar(dispatch, state, queryName, desc, tag);
   };
 };
 
 // prepare the active query to be saved to xenia
 const createQueryForSave = (query, name, desc) => {
   const q = _.cloneDeep(query);
+
+
+  // set params, descriptions, defaults
+  q.params = [
+    {
+      name: "limit",
+      desc: "Limits the number of records returned.",
+      default: "1000"
+    },
+    {
+      name: "skip",
+      desc: "Skips a number of records before returning.",
+      default: "0"
+    },
+    {
+      name: "sort",
+      desc: "Sort field.",
+      default: "statistics.comments.all.all.count"
+    }
+  ];
 
   // inject $limt and $skip commands before saving
   q.queries[0].commands.forEach((command) => {
@@ -338,21 +365,28 @@ const createQueryForSave = (query, name, desc) => {
     }
   });
 
-  const lastMatchIndex = _.findLastIndex(q.queries[0].commands, command => _.has(command, '$match'));
 
-  if (lastMatchIndex !== -1) {
-    const sortCommand = { $sort: { '#string:sort': -1 } };
-    q.queries[0].commands.splice(lastMatchIndex + 1, 0, sortCommand);
-  }
+  // disabling this sort
+  //  there are two sorts being added to searches, here and in makeQueryFromState
+  //  we need to decide whether to store the earch in the query
+  //  or expose it via a param
+  //const lastMatchIndex = _.findLastIndex(q.queries[0].commands, command => _.has(command, '$match'));
+  //if (lastMatchIndex !== -1) {
+  //  const sortCommand = { $sort: { '#string:sort': -1 } };
+    //q.queries[0].commands.splice(lastMatchIndex + 1, 0, sortCommand);
+  //}
+
 
   q.name = name;
   q.desc = desc;
+
+  console.log("Query", q);
 
   return q;
 };
 
 // create the body of request to save a Search to Pillar
-const prepSearch = (filters, query, name, desc, tag, breakdown, specificBreakdown) => {
+const prepSearchForPillar = (filters, query, name, desc, tag, breakdown, specificBreakdown) => {
 
   let values = _.compact(_.map(filters, f => {
     // this will return the ENTIRE filter if only the min OR max was changed.
@@ -367,7 +401,7 @@ const prepSearch = (filters, query, name, desc, tag, breakdown, specificBreakdow
   return {
     name, // the human-readable user-entered name
     description: desc, // user-entered string
-    query: query.name, // the name of the xenia query
+    querySet: query, // the full xenia queryset (without the name)
     tag, // unique name of live-tag
     filters: {
       values,
@@ -377,41 +411,57 @@ const prepSearch = (filters, query, name, desc, tag, breakdown, specificBreakdow
   };
 };
 
+const saveQuerySetToXenia = (state, search, query) => {
+
+  return dispatch => {
+    // we are using a pillar generated queryset name, so
+    //   set the query name from the search, which has
+    //   been returned from pillar/api/search POST
+    query.name = search.query;
+
+    console.log('save search to xenia', query);
+
+    xenia(query)
+    .saveQuery()
+    .then(() => { // if response.status < 400
+      dispatch({type: QUERYSET_SAVE_SUCCESS, name: query.name});
+    }).catch(error => {
+      dispatch({type: QUERYSET_SAVE_FAILED, error});
+    });
+  };
+
+};
+
 /*
 
-this method saves the active query to xenia, then saves the resulting query_set
-to pillar with some other metadata to form a "Search"
+this method saves the active query to pillar with some other metadata,
+then saves the resulting id to xenia to form a "Search"
 
 the filters object only stores non-default values and the dimension breakdowns
 
 */
-const doPutQuery = (dispatch, state, name, desc, tag) => {
+
+
+const saveSearchToPillar = (dispatch, state, name, desc, tag) => {
 
   const {breakdown, specificBreakdown} = state.filters;
   const query = createQueryForSave(state.searches.activeQuery, name, desc);
+  const filters = state.filters.filterList.map(key => state.filters[key]);
 
-  xenia(query)
-    .saveQuery()
-    .then(() => { // if response.status < 400
-      dispatch({type: QUERYSET_SAVE_SUCCESS, name: query.name});
+  const body = prepSearchForPillar(filters, query, name, desc, tag, breakdown, specificBreakdown);
 
-      const filters = state.filters.filterList.map(key => state.filters[key]);
-      const body = prepSearch(filters, query, name, desc, tag, breakdown, specificBreakdown);
-
-      fetch(`${state.app.pillarHost}/api/search`, {method: 'POST', body: JSON.stringify(body)})
-        .then(resp => resp.json())
-        .then(search => {
-          // do something with savedSearch?
-          dispatch({type: PILLAR_SEARCH_SAVE_SUCCESS, search});
-        })
-        .catch(error => {
-          dispatch({type: PILLAR_SEARCH_SAVE_FAILED, error});
-        });
-
-    }).catch(error => {
-      dispatch({type: QUERYSET_SAVE_FAILED, error});
+  fetch(`${state.app.pillarHost}/api/search`, {method: 'POST', body: JSON.stringify(body)})
+    .then(resp => resp.json())
+    .then(search => {
+      // do something with savedSearch?
+      dispatch({type: PILLAR_SEARCH_SAVE_SUCCESS, search});
+      dispatch(saveQuerySetToXenia(state, search, query));
+    })
+    .catch(error => {
+      dispatch({type: PILLAR_SEARCH_SAVE_FAILED, error});
     });
 };
+
 /* xenia_package */
 const doMakeQueryFromStateAsync = _.debounce((query, dispatch, app, replace)=>{
   dispatch(requestQueryset());
@@ -421,7 +471,7 @@ const doMakeQueryFromStateAsync = _.debounce((query, dispatch, app, replace)=>{
   query.exec()
     .then(json => dispatch(receiveQueryset(json, replace)))
     .catch(() => {});
-}, 1000);
+}, 250);
 
 export const updateSearch = staleSearch => {
 
@@ -429,41 +479,44 @@ export const updateSearch = staleSearch => {
 
     // build query from state
     const {app, searches, filters} = getState();
-    const {name, description, tag} = staleSearch;
+    const {editMeta_name: name, editMeta_tag: tag, editMeta_description: description} = searches;
+    const {id, query: xeniaQueryName} = staleSearch;
     const {breakdownEdit, specificBreakdownEdit} = filters;
 
-    const query = createQueryForSave(searches.activeQuery, name, description);
+    const query = createQueryForSave(searches.activeQuery, xeniaQueryName, description);
+    const editFilters = filters.editFilterList.map(key => {
+      console.log('updateSearch key', key);
+      console.log('updateSearch filters', filters);
+      return filters[key];
+    });
 
     dispatch({type: PILLAR_SAVED_SEARCH_UPDATE, query});
 
-    // update search in xenia
-    xenia(query).saveQuery().then(() => {
-      dispatch({type: QUERYSET_SAVE_SUCCESS, name: query.name});
+    // update search in pillar
+    const body = prepSearchForPillar(editFilters, query, name, description, tag, breakdownEdit, specificBreakdownEdit);
 
-      const editFilters = filters.editFilterList.map(key => {
-        console.log('updateSearch key', key);
-        console.log('updateSearch filters', filters);
-        return filters[key];
-      });
+    // append the id for update mode
+    body.id = id;
+    body.query = xeniaQueryName; // make sure to keep old name so xenia save is an update insted of insert
 
-      // update search in pillar
-      const body = prepSearch(editFilters, query, name, description, tag, breakdownEdit, specificBreakdownEdit);
+    fetch(`${app.pillarHost}/api/search`, {method: 'PUT', body: JSON.stringify(body)})
+      .then(resp => resp.json())
+      .then(search => {
+        // do something with savedSearch?
+        dispatch({type: PILLAR_SEARCH_UPDATE_SUCCESS, search});
 
-      // append the id for update mode
-      body.id = staleSearch.id;
+        // update search in xenia
+        xenia(query).saveQuery().then(() => {
 
-      fetch(`${app.pillarHost}/api/search`, {method: 'PUT', body: JSON.stringify(body)})
-        .then(resp => resp.json())
-        .then(search => {
-          // do something with savedSearch?
-          dispatch({type: PILLAR_SEARCH_UPDATE_SUCCESS, search});
-        })
-        .catch(error => {
-          dispatch({type: PILLAR_SEARCH_UPDATE_FAILED, error});
+          _.delay(() => dispatch({type: PILLAR_SEARCH_UPDATE_STALE}), 3000);
+
+          dispatch({type: QUERYSET_SAVE_SUCCESS, name: query.name});
         });
-    });
 
-    console.log('updateSearch', searches.activeQuery);
+      })
+      .catch(error => {
+        dispatch({type: PILLAR_SEARCH_UPDATE_FAILED, error});
+      });
   };
 };
 
@@ -474,10 +527,7 @@ export const deleteSearch = search => {
 
     dispatch({type: PILLAR_SEARCH_DELETE_INIT, search});
 
-    xenia().deleteQuery(search.query).then(data => {
-      console.info('query_set deleted from xenia', data);
-      return fetch(`${app.pillarHost}/api/search/${search.id}`, {method: 'DELETE'});
-    })
+    fetch(`${app.pillarHost}/api/search/${search.id}`, {method: 'DELETE'})
     .then(resp => {
       console.info('search deleted from pillar', resp);
       const newSearches = searches.searches.concat();
@@ -494,13 +544,13 @@ export const deleteSearch = search => {
   };
 };
 
-export const fetchInitialData = () => dispatch => {
+export const fetchInitialData = (editMode = false) => dispatch => {
   // Get initial data for the filters
   dispatch(fetchSections());
   dispatch(fetchAuthors());
 
   // Get user list
-  dispatch(makeQueryFromState('user', 0, true));
+  dispatch(makeQueryFromState('user', 0, true, editMode));
 };
 
 export const clearUserList = () => {

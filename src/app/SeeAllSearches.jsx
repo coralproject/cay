@@ -94,6 +94,11 @@ class SeeAllSearches extends React.Component {
   }
   renderSearches() {
     const styles = this.getStyles();
+
+    if (!Array.isArray(this.props.searches.searches)) {
+      return ('');
+    }
+
     const searches = this.props.searches.searches.map((search, i) => {
 
       return (
@@ -105,7 +110,7 @@ class SeeAllSearches extends React.Component {
               {/* Temporarily disabling View link until view page is debugged
               <RadiumLink
                 style={styles.button}
-                to={`/saved-search/${search.name}`}>{window.L.t('View')}
+                to={`/saved-search/${search.id}`}>{window.L.t('View')}
               </RadiumLink>
               */}
               <RadiumLink
@@ -123,12 +128,24 @@ class SeeAllSearches extends React.Component {
 
           <p style={styles.searchDescription}>{search.description}</p>
           <ul style={styles.filterList}>
-            {search.filters.values.map((value, i) => {
-              return (
-                <li style={styles.filterValue} key={i}>
-                  between {value.userMin} and {value.userMax} {value.description}
-                </li>
-              );
+            {search.filters.values.map((filter, i) => {
+              let jsx;
+              if (filter.type === 'intDateProximity') {
+                const [startDesc, endDesc] = filter.description.split('_');
+                jsx = (
+                  <li style={styles.filterValue} key={i}>
+                    {startDesc} more than {filter.userMax} {endDesc}
+                  </li>
+                );
+              } else {
+                jsx = (
+                  <li style={styles.filterValue} key={i}>
+                    between {filter.userMin} and {filter.userMax} {filter.description}
+                  </li>
+                );
+              }
+
+              return jsx;
             })}
           </ul>
         </Card>

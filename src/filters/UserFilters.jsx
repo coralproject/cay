@@ -41,6 +41,7 @@ export default class UserFilters extends React.Component {
       return (
         <div>
           <Select
+            style={styles.filterDropdown}
             options={this.getSections()}
             value={specificBreakdown}
             onChange={this.setSpecificBreakdown.bind(this)}
@@ -51,6 +52,7 @@ export default class UserFilters extends React.Component {
       return (
         <div>
           <Select
+            style={styles.filterDropdown}
             options={this.getAuthors()}
             value={specificBreakdown}
             onChange={this.setSpecificBreakdown.bind(this)}
@@ -111,15 +113,17 @@ export default class UserFilters extends React.Component {
       let filterComponent;
       const fmtDesc = f.description.charAt(0).toUpperCase() + f.description.slice(1, f.description.length);
       const inTitleCase = _.map(f.description.split(' '), _.capitalize).join(' ');
+      const bkd = {backgroundColor: i % 2 ? 'transparent' : '#f0f0f0'};
       if (f.type === 'percentRange') {
         filterComponent = (
           <FilterNumberPercent
+            style={bkd}
             onChange={this.props.onChange}
             key={i}
             min={f.min}
             max={f.max}
-            userMin={f.userMin ? Math.max(f.userMin, f.min) : f.userMin}
-            userMax={f.userMax ? Math.min(f.userMax, f.max) : f.userMax}
+            userMin={f.userMin}
+            userMax={f.userMax}
             description={fmtDesc}
             fieldName={f.key}
             type={f.type}/>
@@ -128,12 +132,13 @@ export default class UserFilters extends React.Component {
         // capitalize first letter of description
         filterComponent = (
           <FilterNumbers
+            style={bkd}
             onChange={this.props.onChange}
             key={i}
             min={f.min}
             max={f.max}
-            userMin={f.userMin ? Math.max(f.userMin, f.min) : f.userMin}
-            userMax={f.userMax ? Math.min(f.userMax, f.max) : f.userMax}
+            userMin={f.userMin}
+            userMax={f.userMax}
             description={inTitleCase}
             fieldName={f.key}
             type={f.type}/>
@@ -141,6 +146,7 @@ export default class UserFilters extends React.Component {
       } else if (f.type === 'dateRange') {
         filterComponent = (
           <FilterDate
+            style={bkd}
             onChange={this.props.onChange}
             key={i}
             min={f.min}
@@ -154,6 +160,7 @@ export default class UserFilters extends React.Component {
       } else if (f.type === 'intDateProximity') {
         filterComponent = (
           <FilterDateProximity
+            style={bkd}
             onChange={this.props.onChange}
             key={i}
             min={f.min}
@@ -169,7 +176,7 @@ export default class UserFilters extends React.Component {
 
       if (f.min === null) {
         if (this.props.filterRangesLoaded) {
-          logOnce("filterNullData-" + i, 'Filter:', i, f.description, 'had null data, so we didn\'t show it. Check getActiveFiltersFromConfig() in UserFilters.');
+          logOnce(`filterNullData-${i}`, 'Filter:', i, f.description, 'had null data, so we didn\'t show it. Check getActiveFiltersFromConfig() in UserFilters.');
         }
         filterComponent = null;
       }
@@ -182,11 +189,12 @@ export default class UserFilters extends React.Component {
     const breakdown = this.props.editMode ? this.props.breakdownEdit : this.props.breakdown;
 
     return (
-      <div style={ styles.base }>
+      <div style={[styles.base, this.props.styles]}>
         <Heading size="medium">
           Filters
         </Heading>
         <div style={styles.filters}>
+
           <Select
             ref="breakdown"
             value={breakdown}
@@ -199,7 +207,6 @@ export default class UserFilters extends React.Component {
             ]} />
 
           {this.getSpecific()}
-
           {this.getActiveFiltersFromConfig()}
         </div>
       </div>
@@ -209,21 +216,25 @@ export default class UserFilters extends React.Component {
 
 const styles = {
   base: {
-    minWidth: 300,
+    flex: '0 0 360px',
+    marginRight: 10
   },
   filters: {
-    padding: 20,
-    backgroundColor: "white",
+    clear: 'both',
+    backgroundColor: 'white',
     borderRadius: 3,
-    height: 500,
-    overflow: "scroll",
+    overflowY: 'scroll',
+    height: 'calc(100% - 46px)'
+    // does not update on window.resize, but this is the best I could do
+    // before running out of patience
   },
   legend: {
     padding: '10px 0',
     fontSize: '12pt'
   },
   filterDropdown: {
-    marginBottom: 20
+    margin: '10px 0 10px 10px',
+    width: '95%'
   },
   comingSoon: {
     fontStyle: 'italic',

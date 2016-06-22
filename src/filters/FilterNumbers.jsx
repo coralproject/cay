@@ -4,9 +4,8 @@ import {connect} from 'react-redux';
 import maxBy from "lodash.maxby";
 import minBy from "lodash.minby";
 
-
-import Card from 'components/cards/Card';
 import Sparkline from 'filters/Sparkline';
+import Card from 'components/cards/Card';
 
 @connect(state => state.filters)
 @Radium
@@ -56,7 +55,7 @@ export default class FilterNumbers extends React.Component {
   }
   render() {
     return (
-      <div style={styles.base}>
+      <div style={[styles.base, this.props.style]}>
         <span style={styles.description}>{this.props.description}</span>
         <div style={{
           display: 'flex',
@@ -94,7 +93,7 @@ export default class FilterNumbers extends React.Component {
 
 const styles = {
   base: {
-    marginBottom: 20
+    padding: '4px 8px'
   },
   description: {
     fontWeight: 500,

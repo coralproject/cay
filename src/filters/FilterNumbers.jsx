@@ -67,8 +67,8 @@ export default class FilterNumbers extends React.Component {
           this.props.distributions ?
           <Sparkline
             description={this.props.description}
-            distributionMax={Math.max(totals)}
-            distributionMin={Math.min(totals)}
+            distributionMax={Math.max(...totals)}
+            distributionMin={Math.min(...totals)}
             distribution={this.props.distributions[this.props[this.props.fieldName].field]}/> :
             ''
         }

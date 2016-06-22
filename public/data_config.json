@@ -43,7 +43,7 @@
       "category": "Activity",
       "field": "last",
       "template": "statistics.comments.<%= dimension %>.all.last",
-      "description": "Last commented in the previous _ days",
+      "description": "Last commented in the last _ days",
       "collection": "user_statistics",
       "type": "intDateProximity",
       "sortable": false,

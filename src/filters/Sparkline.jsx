@@ -35,7 +35,7 @@ class Sparkline extends React.Component {
     return last._id;
   }
   getDotFill(d) {
-    let fill = 'none';
+    let fill = 'transparent';
 
     if (d.x === 1 || d.y === this.props.distributionMax.total || d.x === this.props.distribution.length - 1) {
       fill = 'rgb(130,130,130)';
@@ -53,9 +53,6 @@ class Sparkline extends React.Component {
   }
   render() {
     const styles = this.getStyles();
-    console.log('rendering')
-
-    console.log('Sparkline.render', this.props);
 
     return (
       <svg
@@ -128,6 +125,38 @@ class Sparkline extends React.Component {
               };
             })
           }
+          events={[{
+            target: "data",
+              eventHandlers: {
+                onMouseOver: () => {
+                  return [{
+                    target: "labels",
+                    mutation: (props) => {
+                      return {
+                          style:
+                          Object.assign({}, props.style, {
+                            stroke: "rgb(130,130,130)"
+                          })
+                        };
+                    }
+                  }];
+                },
+                onMouseOut: () => {
+                  return [{
+                    target: "labels",
+                    mutation: (props) => {
+                      return {
+                          style:
+                          Object.assign({}, props.style, {
+                            stroke: "none",
+                          })
+                        };
+                    }
+                  }];
+                }
+              }
+            }
+          ]}
         />
         <VictoryAxis
           padding={{

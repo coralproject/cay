@@ -288,12 +288,10 @@ export const makeQueryFromState = (type, page = 0, replace = false, editMode = f
           let searchMax;
           if (_.isDate(clampedUserMax)) {
             searchMax = `#date:${clampedUserMax.toISOString()}`;
-          } else if (filter.type === 'intDateProximity') {
-            searchMax = `#time:${-clampedUserMax*24}h`;
           } else {
             searchMax = clampedUserMax;
           }
-          x.match({[dbField]: {$gte: searchMax}});
+          x.match({[dbField]: {$lte: searchMax}});
         }
       });
 

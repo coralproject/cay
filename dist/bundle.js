@@ -37,7 +37,7 @@
 /******/ 	__webpack_require__.p = "/dist/";
 /******/
 /******/ 	// __webpack_hash__
-/******/ 	__webpack_require__.h = "e2cb961df9d1a93e6467";
+/******/ 	__webpack_require__.h = "1ca00120f20c61d2c1c3";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
@@ -58313,7 +58313,6 @@
 	var styles = {
 	  pageBase: {
 	    position: 'absolute',
-	    overflow: 'hidden',
 	    top: 60,
 	    left: 0,
 	    right: 0,
@@ -58765,7 +58764,6 @@
 	var styles = {
 	  pageBase: {
 	    position: 'absolute',
-	    overflow: 'hidden',
 	    top: 60,
 	    left: 0,
 	    right: 0,

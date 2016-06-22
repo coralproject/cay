@@ -7,21 +7,26 @@ import {connect} from 'react-redux';
 export default class FilterDateProximity extends React.Component {
 
   onMaxChanged(e) {
-    this.props.onChange(this.props.fieldName, 'userMax', +e.target.value);
+    if (e.target.value.match(/[0-9]/)) {
+      this.props.onChange(this.props.fieldName, 'userMax', +e.target.value);
+    } else { // if the user enters a non-numeric or an empty string
+      this.props.onChange(this.props.fieldName, 'userMax', this.props.max);
+    }
   }
 
   render() {
-
+    const [startDesc, endDesc] = this.props.description.split('_');
     return (
       <div style={[styles.base, this.props.style]}>
         <span style={styles.description}>
-          {this.props.description.split('_')[0]}
+          {startDesc}
           <input
             onChange={this.onMaxChanged.bind(this)}
             style={styles.minMaxInputs}
             type="number"
+            min="0"
              />
-           {this.props.description.split('_')[1]}
+           {endDesc}
         </span>
       </div>
     );

@@ -293,7 +293,7 @@ export const makeQueryFromState = (type, page = 0, replace = false, editMode = f
           } else {
             searchMax = clampedUserMax;
           }
-          x.match({[dbField]: {$lte: searchMax}});
+          x.match({[dbField]: {$gte: searchMax}});
         }
       });
 

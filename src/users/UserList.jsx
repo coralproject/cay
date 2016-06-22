@@ -117,6 +117,7 @@ export default class UserList extends React.Component {
 
   onPrevUser() {
     const { user, users } = this.props;
+    if (!user) return;
     const actualIndex = users.map(u => u._id).indexOf(user._id);
     if (actualIndex !== -1) {
       this.userSelected(users[actualIndex - 1]);
@@ -125,6 +126,7 @@ export default class UserList extends React.Component {
 
   onNextUser() {
     const { user, users } = this.props;
+    if (!user) return;
     const actualIndex = users.map(u => u._id).indexOf(user._id);
     if (actualIndex !== -1) {
       this.userSelected(users[actualIndex + 1]);

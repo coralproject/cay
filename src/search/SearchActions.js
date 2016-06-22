@@ -95,7 +95,6 @@ export const fetchSearch = (id) => {
 
     const app = getState().app;
 
-    console.log('fetchSearch', id);
     fetch(`${app.pillarHost}/api/search/${id}`)
       .then(resp => resp.json())
       .then(search => {
@@ -331,7 +330,6 @@ export const saveQueryFromState = (queryName, desc, tag) => {
 
     dispatch({type: PILLAR_SEARCH_SAVE_INIT, query: state.searches.activeQuery});
 
-    console.log('about to save search to pillar');
     saveSearchToPillar(dispatch, state, queryName, desc, tag);
   };
 };
@@ -339,6 +337,26 @@ export const saveQueryFromState = (queryName, desc, tag) => {
 // prepare the active query to be saved to xenia
 const createQueryForSave = (query, name, desc) => {
   const q = _.cloneDeep(query);
+
+
+  // set params, descriptions, defaults
+  q.params = [
+    {
+      name: "limit",
+      desc: "Limits the number of records returned.",
+      default: "25"
+    },
+    {
+      name: "skip",
+      desc: "Skips a number of records before returning.",
+      default: "0"
+    },
+    {
+      name: "sort",
+      desc: "Sort field.",
+      default: "statistics.comments.all.all.count"
+    }
+  ];
 
   // inject $limt and $skip commands before saving
   q.queries[0].commands.forEach((command) => {
@@ -353,11 +371,13 @@ const createQueryForSave = (query, name, desc) => {
 
   if (lastMatchIndex !== -1) {
     const sortCommand = { $sort: { '#string:sort': -1 } };
-    q.queries[0].commands.splice(lastMatchIndex + 1, 0, sortCommand);
+    //q.queries[0].commands.splice(lastMatchIndex + 1, 0, sortCommand);
   }
 
   q.name = name;
   q.desc = desc;
+
+  console.log("Query", q);
 
   return q;
 };

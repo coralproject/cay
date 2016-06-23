@@ -6,69 +6,19 @@ and all the other smart components (containers)
 */
 import React from 'react';
 import Radium from 'radium';
-import Sidebar from 'react-sidebar';
+import Sidebar from 'app/layout/sidebar/Sidebar';
 
 import Header from 'app/layout/header/Header';
-import Menu from 'app/layout/sidebar/Menu';
 
 import settings from 'settings';
 
 @Radium
 class Page extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      sidebarOpen: false,
-      sidebarDocked: true,
-      shadow: false,
-      shouldTransition: false
-    };
-  }
-
-  onSetSidebarOpen(open) {
-    this.setState({sidebarOpen: open});
-  }
-
-  componentWillMount() {
-    var mql = window.matchMedia('(min-width: 800px)');
-    mql.addListener(this.mediaQueryChanged.bind(this));
-    this.setState({mql: mql, sidebarDocked: mql.matches});
-  }
-
-  componentWillUnmount() {
-    this.state.mql.removeListener(this.mediaQueryChanged);
-  }
-
-  componentDidMount() {
-    setTimeout(function () {
-      // I don't know why this needs to be on nextTick
-      this.setState({shouldTransition: true});
-    }.bind(this), 0);
-  }
-
-  mediaQueryChanged() {
-    this.setState({sidebarDocked: this.state.mql.matches});
-  }
-
-  toggleSidebar() {
-    this.setState({ sidebarDocked: !this.state.sidebarDocked });
-  }
-
   render() {
-
-    var sidebarContent = <Menu />;
-
     return (
-      <Sidebar
-        sidebar={sidebarContent}
-        open={this.state.sidebarOpen}
-        shadow={this.state.shadow}
-        docked={this.state.sidebarDocked}
-        transitions={this.state.shouldTransition}
-        onSetOpen={this.onSetSidebarOpen.bind(this)}
-        styles={ { sidebar: { backgroundColor: "rgb(248,160,149)" } } }>
-        <Header onHamburgerClick={this.toggleSidebar.bind(this)}/>
+      <Sidebar styles={styles.sidebar}>
+        <Header />
         <div style={[styles.wrapper, this.props.style]}>
           {this.props.children}
         </div>
@@ -85,5 +35,10 @@ const styles = {
     backgroundColor: settings.bgColorBase,
     padding: 20,
     position: 'relative'
+  },
+  sidebar: {
+    sidebar: {
+      backgroundColor: '#f0f0f0'
+    }
   }
 };

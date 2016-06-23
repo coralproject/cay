@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import {clamp} from 'components/utils/math';
 import {xenia} from 'app/AppActions';
-import { populateDistributionStore } from 'filters/FiltersActions';
+// import { populateDistributionStore } from 'filters/FiltersActions';
 import { fetchSections, fetchAuthors } from 'filters/FiltersActions';
 
 export const QUERYSET_SELECTED = 'QUERYSET_SELECTED';
@@ -380,7 +380,7 @@ const createQueryForSave = (query, name, desc) => {
   q.name = name;
   q.desc = desc;
 
-  console.log("Query", q);
+  console.log('Query', q);
 
   return q;
 };

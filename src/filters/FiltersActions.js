@@ -295,9 +295,9 @@ const distributionForInput = (x, field, filter, ranges) => {
         ranges thinks in keys, not names, so we need the filter to
         translate between these two.
       */
-      min = ranges[filter[ff].key + '_min']
+      min = ranges[filter[ff].key + '_min'];
       max = ranges[filter[ff].key + '_max'];
-      break
+      break;
     }
   }
 

@@ -187,7 +187,6 @@ export default class SearchCreator extends Component {
 const styles = {
   pageBase: {
     position: 'absolute',
-    overflow: 'hidden',
     top: 60,
     left: 0,
     right: 0,

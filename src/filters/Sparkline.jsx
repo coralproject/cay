@@ -45,8 +45,6 @@ class Sparkline extends React.Component {
     return fill;
   }
   render() {
-    const styles = this.getStyles();
-
     return (
       <svg
         width={300}
@@ -119,37 +117,30 @@ class Sparkline extends React.Component {
             })
           }
           events={[{
-            target: "data",
-              eventHandlers: {
-                onMouseOver: () => {
-                  return [{
-                    target: "labels",
-                    mutation: (props) => {
-                      return {
-                          style:
-                          Object.assign({}, props.style, {
-                            stroke: "rgb(130,130,130)"
-                          })
-                        };
-                    }
-                  }];
-                },
-                onMouseOut: () => {
-                  return [{
-                    target: "labels",
-                    mutation: (props) => {
-                      return {
-                          style:
-                          Object.assign({}, props.style, {
-                            stroke: "none",
-                          })
-                        };
-                    }
-                  }];
-                }
+            target: 'data',
+            eventHandlers: {
+              onMouseOver: () => {
+                return [{
+                  target: 'labels',
+                  mutation: (props) => {
+                    return {
+                      style: {...props.style, stroke: 'rgb(130, 130, 130)'}
+                    };
+                  }
+                }];
+              },
+              onMouseOut: () => {
+                return [{
+                  target: 'labels',
+                  mutation: (props) => {
+                    return {
+                      style: {...props.style, stroke: 'none'}
+                    };
+                  }
+                }];
               }
             }
-          ]}
+          }]}
         />
         <VictoryAxis
           padding={{

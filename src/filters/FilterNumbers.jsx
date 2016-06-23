@@ -2,7 +2,7 @@ import React from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
 
-//import Sparkline from 'filters/Sparkline';
+import Sparkline from 'filters/Sparkline';
 
 @connect(state => state.filters)
 @Radium
@@ -51,22 +51,27 @@ export default class FilterNumbers extends React.Component {
     return help;
   }
   render() {
+
+    const distribution = this.props.distributions ? this.props.distributions[this.props[this.props.fieldName].field] : null;
+    const totals = distribution ? distribution.map(d => d.total) : null;
+
     return (
       <div style={[styles.base, this.props.style]}>
+        <span style={styles.description}>{this.props.description}</span>
         <div style={{
           display: 'flex',
           alignItems: 'flex-start',
           justifyContent: 'space-between'
         }}>
-        <span style={styles.description}>{this.props.description}</span>
-        {/*
-          this.props.distributions ?
+        {
+          this.props.distributions && totals ?
           <Sparkline
-            distribution={
-              this.props.distributions[this.props[this.props.fieldName].field]
-            }/> :
+            description={this.props.description}
+            distributionMax={Math.max(...totals)}
+            distributionMin={Math.min(...totals)}
+            distribution={distribution}/> :
             ''
-        */}
+        }
         </div>
         <div>
           <input
@@ -101,6 +106,6 @@ const styles = {
     padding: '7px 10px',
     border: '1px solid lightgrey',
     borderRadius: 3
-  },
+  }
 
 };

@@ -15,7 +15,7 @@ import {StyleRoot} from 'radium';
 // Routes
 import SearchCreator from 'app/SearchCreator';
 import User from 'app/User';
-import TagManager from 'app/TagManager';
+// import TagManager from 'app/TagManager';
 import Login from 'app/Login';
 import SeeAllSearches from 'app/SeeAllSearches';
 import SearchDetail from 'app/SearchDetail';
@@ -97,7 +97,7 @@ class Root extends React.Component {
 
 
             {/***** Ask Search Routes *****/}
-            {features.ask ? (
+            {features && features.ask ? (
               <div>
                 <Route path="forms" component={FormList}/>
                 <Route path="forms/create" component={FormCreate}/>

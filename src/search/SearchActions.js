@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import {clamp} from 'components/utils/math';
 import {xenia} from 'app/AppActions';
-import { populateDistributionStore } from 'filters/FiltersActions';
+// import { populateDistributionStore } from 'filters/FiltersActions';
 import { fetchSections, fetchAuthors } from 'filters/FiltersActions';
 
 export const QUERYSET_SELECTED = 'QUERYSET_SELECTED';
@@ -340,19 +340,19 @@ const createQueryForSave = (query, name, desc) => {
   // set params, descriptions, defaults
   q.params = [
     {
-      name: "limit",
-      desc: "Limits the number of records returned.",
-      default: "1000"
+      name: 'limit',
+      desc: 'Limits the number of records returned.',
+      default: '1000'
     },
     {
-      name: "skip",
-      desc: "Skips a number of records before returning.",
-      default: "0"
+      name: 'skip',
+      desc: 'Skips a number of records before returning.',
+      default: '0'
     },
     {
-      name: "sort",
-      desc: "Sort field.",
-      default: "statistics.comments.all.all.count"
+      name: 'sort',
+      desc: 'Sort field.',
+      default: 'statistics.comments.all.all.count'
     }
   ];
 
@@ -380,7 +380,7 @@ const createQueryForSave = (query, name, desc) => {
   q.name = name;
   q.desc = desc;
 
-  console.log("Query", q);
+  console.log('Query', q);
 
   return q;
 };
@@ -548,7 +548,6 @@ export const fetchInitialData = (editMode = false) => dispatch => {
   // Get initial data for the filters
   dispatch(fetchSections());
   dispatch(fetchAuthors());
-  dispatch(populateDistributionStore());
 
   // Get user list
   dispatch(makeQueryFromState('user', 0, true, editMode));

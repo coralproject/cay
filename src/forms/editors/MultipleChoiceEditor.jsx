@@ -4,8 +4,7 @@ import { connect } from 'react-redux';
 import Checkbox from 'components/forms/Checkbox';
 import TextField from 'components/forms/TextField';
 
-import FaPlusCircle from 'react-icons/lib/fa/plus-circle';
-import FaMinusCircle from 'react-icons/lib/fa/minus-circle';
+import FaTimesCircle from 'react-icons/lib/fa/times-circle';
 
 @connect(({ forms, app }) => ({ forms, app }))
 @Radium
@@ -29,7 +28,7 @@ export default class MultipleChoiceEditor extends Component {
 
   addOption(i) {
     var optionsCopy = this.state.options.slice();
-    optionsCopy.push({ title: 'Sample option ' + (i + 2) });
+    optionsCopy.push({ title: 'Sample option ' + (this.state.options.length + 1) });
     this.setState({ options: optionsCopy });
     this.updateFieldOptions(optionsCopy);
   }
@@ -72,17 +71,16 @@ export default class MultipleChoiceEditor extends Component {
                 return (
                   <div key={ i }>
                     <TextField label={ option.title } onChange={ this.updateOption.bind(this, i) } />
-                    <button style={ styles.plusMinus } onClick={ this.addOption.bind(this, i) }><FaPlusCircle /></button>
                     {
                       i > 0 ?
-                        <button style={ styles.plusMinus } onClick={ this.removeOption.bind(this, i) }><FaMinusCircle /></button>
+                        <button style={ styles.plusMinus } onClick={ this.removeOption.bind(this, i) }><FaTimesCircle /></button>
                       : null
                     }
                   </div>
                 )
             })
           }
-
+          <button style={ styles.addOption } onClick={ this.addOption.bind(this) }>Add option</button>
         </div>
         <label style={ styles.required }>
           <input type="checkbox"
@@ -122,6 +120,17 @@ const styles = {
     fontSize: '14pt',
     marginLeft: '10px',
     padding: '0',
+    cursor: 'pointer'
+  },
+  addOption: {
+    height: '40px',
+    lineHeight: '40px',
+    padding: '0 10px',
+    fontSize: '12pt',
+    borderRadius: '0',
+    border: '1px solid #ccc',
+    background: '#fff',
+    marginTop: '10px',
     cursor: 'pointer'
   }
 };

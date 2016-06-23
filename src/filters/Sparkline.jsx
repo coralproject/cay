@@ -1,7 +1,6 @@
 import React from 'react';
 import Radium from 'radium';
 import _ from 'lodash';
-import { connect } from 'react-redux';
 import {VictoryLine, VictoryScatter, VictoryAxis} from 'victory-chart';
 
 @Radium
@@ -20,13 +19,7 @@ class Sparkline extends React.Component {
   }
   static defaultProps = {
   }
-  getStyles() {
-    return {
-      base: {
 
-      }
-    };
-  }
   shouldComponentUpdate(){
     return false;
   }
@@ -52,9 +45,6 @@ class Sparkline extends React.Component {
     return fill;
   }
   render() {
-    const styles = this.getStyles();
-    console.log('rendering')
-
     console.log('Sparkline.render', this.props);
 
     return (
@@ -101,22 +91,22 @@ class Sparkline extends React.Component {
             right: 20,
             left: 20,
             top: 20,
-            bottom: 55,
+            bottom: 55
           }}
           style={{
             data: {
               fill: this.getDotFill.bind(this),
               stroke: 'none',
-              strokeWidth: 2,
+              strokeWidth: 2
             },
             labels: {
               fill: this.getLabelFill.bind(this),
-              fontSize: 8,
+              fontSize: 8
             }
           }}
           size={2}
           labels={
-            this.props.distribution.map((bucket, i) => {
+            this.props.distribution.map(bucket => {
               return bucket.total;
             })
           }
@@ -134,7 +124,7 @@ class Sparkline extends React.Component {
             right: 20,
             left: 20,
             top: 10,
-            bottom: 50,
+            bottom: 50
           }}
           width={300}
           height={100}

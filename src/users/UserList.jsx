@@ -142,8 +142,7 @@ export default class UserList extends React.Component {
     const { user, users, comments } = this.props;
 
     var noUsersMessage = (<p style={ styles.noUsers }>
-      No users loaded yet,<br />
-      create a filter on the left to load users.
+      Zero users found...<br />Please widen your search.
     </p>);
 
     const {filters} = this.props;
@@ -166,7 +165,7 @@ export default class UserList extends React.Component {
               <Spinner />
             </div> :
             <Heading size='medium'>
-              <span style={styles.groupHeader}>{ window.L.t('results') }</span> ({this.props.total || '#'} {this.props.total !== 1 ? window.L.t('users') : window.L.t('user')})
+              <span style={styles.groupHeader}>{ window.L.t('results') }</span> ({this.props.total} {this.props.total !== 1 ? window.L.t('users') : window.L.t('user')})
             </Heading>
           }
           <div style={styles.sort}>

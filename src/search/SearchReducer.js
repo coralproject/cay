@@ -2,7 +2,7 @@ import * as types from 'search/SearchActions';
 
 const initialState = {
   loading: false,
-  loadingQueryset: false,
+  loadingQueryset: true,
   activeQuery: null,
   loadingSavedSearch: false,
   activeSavedSearch: null,

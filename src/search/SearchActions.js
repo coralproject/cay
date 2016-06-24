@@ -189,12 +189,13 @@ export const requestQuerysetFailure = (err) => {
 };
 
 export const receiveQueryset = (data, replace) => {
-  console.log('action receiveQueryset', data, replace);
+  const userCount = _.has(data, 'results.1.Docs.0.count') ? data.results[1].Docs[0].count : 0;
+
   return {
     type: QUERYSET_RECEIVED,
     data,
     replace,
-    userCount: data.results[1].Docs[0].length
+    userCount
   };
 };
 

@@ -189,11 +189,12 @@ export const requestQuerysetFailure = (err) => {
 };
 
 export const receiveQueryset = (data, replace) => {
+  console.log('action receiveQueryset', data, replace);
   return {
     type: QUERYSET_RECEIVED,
     data,
     replace,
-    userCount: data.results[1].Docs[0].count
+    userCount: data.results[1].Docs[0].length
   };
 };
 
@@ -237,14 +238,15 @@ export const makeQueryFromState = (type, page = 0, replace = false, editMode = f
     const app = getState().app;
     const filterList = editMode ? fs.editFilterList : fs.filterList;
     const filters = filterList.map(key => fs[key]);
+    let breakdown = editMode ? fs.breakdownEdit : fs.breakdown;
+    let specificBreakdown = editMode ? fs.specificBreakdownEdit : fs.specificBreakdown;
+
     const x = xenia({
       name: 'user_search_' + Math.random().toString().slice(-10),
       desc: 'user search currently. this is going to be more dynamic in the future'
     });
 
     const addMatches = x => {
-      let breakdown = editMode ? fs.breakdownEdit : fs.breakdown;
-      let specificBreakdown = editMode ? fs.specificBreakdownEdit : fs.specificBreakdown;
 
       // filter by breakdown if needed
       if (-1 === ['author', 'section'].indexOf(breakdown) || specificBreakdown === '') {
@@ -253,7 +255,7 @@ export const makeQueryFromState = (type, page = 0, replace = false, editMode = f
         x.match({[`statistics.comments.${breakdown}.${specificBreakdown}`]: { $exists: true }});
       }
 
-      filters.forEach(filter => {
+      return filters.map(filter => {
         let dbField;
         // get the name of the mongo db field we want to $match on.
         if (breakdown !== 'all' && specificBreakdown !== '') {
@@ -293,11 +295,13 @@ export const makeQueryFromState = (type, page = 0, replace = false, editMode = f
           }
           x.match({[dbField]: {$lte: searchMax}});
         }
+
+        return dbField;
       });
 
-      return x;
     };
-    addMatches(x.addQuery());
+
+    const dbFields = addMatches(x.addQuery());
 
     if(fs.sortBy) {
       const breakdown = editMode ? fs.breakdownEdit : fs.breakdown;
@@ -310,11 +314,13 @@ export const makeQueryFromState = (type, page = 0, replace = false, editMode = f
       // default sorting
       x.sort(['statistics.comments.all.all.count', -1]);
     }
+
     x.skip(page * pageSize).limit(pageSize)
-      .include(['name', 'avatar', 'statistics.comments']);
+      .include(['name', 'avatar', ...dbFields]);
 
     // get the counts
-    addMatches(x.addQuery()).group({_id: null, count: {$sum: 1}});
+    addMatches(x.addQuery());
+    x.group({_id: null, count: {$sum: 1}});
 
     doMakeQueryFromStateAsync(x, dispatch, app, replace);
   };
@@ -463,13 +469,16 @@ const saveSearchToPillar = (dispatch, state, name, desc, tag) => {
 };
 
 /* xenia_package */
-const doMakeQueryFromStateAsync = _.debounce((query, dispatch, app, replace)=>{
+const doMakeQueryFromStateAsync = _.debounce((query, dispatch, app, replace) => {
   dispatch(requestQueryset());
 
   dispatch(createQuery(query._data));
 
   query.exec()
-    .then(json => dispatch(receiveQueryset(json, replace)))
+    .then(json => {
+      console.log('receiveQueryset', json, replace);
+      dispatch(receiveQueryset(json, replace));
+    })
     .catch(() => {});
 }, 250);
 

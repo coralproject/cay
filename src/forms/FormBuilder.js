@@ -9,22 +9,9 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import { updateForm } from 'forms/FormActions';
 import FormDiagram from 'forms/FormDiagram';
 
-import FormComponent, {styles as askComponentStyles} from 'forms/FormComponent';
-import Checkbox from 'components/forms/Checkbox';
-import TextField from 'components/forms/TextField';
-import Modal from 'components/modal/Modal';
-import { appendWidget, moveWidget } from 'forms/FormActions';
-
-const askTypes = [
-  {type: 'TextField', title: 'Short Text'},
-  {type: 'TextArea', title: 'Long Text'},
-  {type: 'TextField', title: 'Numbers', props: { validateAs: 'number', validationMessage: "Only numbers are allowed in this field."} },
-  {type: 'MultipleChoice', title: 'Multiple choice'},
-  {type: 'TextField', title: 'Email', props: { validateAs: 'email', validationMessage: "Please type a valid e-mail." } },
-  {type: 'TextField', title: 'Date'},
-  {type: 'LocationDropdown', title: 'Location'},
-  {type: 'TextField', title: 'Phone number'}
-];
+import FormComponent from 'forms/FormComponent';
+import { appendWidget } from 'forms/FormActions';
+import askTypes from 'forms/WidgetTypes';
 
 @connect(({ app, forms }) => ({ app, forms }))
 @DragDropContext(HTML5Backend)

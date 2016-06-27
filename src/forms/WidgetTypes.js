@@ -9,7 +9,7 @@ import FaGlobe from 'react-icons/lib/fa/globe';
 import FaPhone from 'react-icons/lib/fa/phone';
 
 export default [
-  {type: 'TextField', title: 'Short Text', icon: FaFileTextO},
+  {type: 'TextField', title: 'Short Answer', icon: FaFileTextO},
   {type: 'TextArea', title: 'Paragraph', icon: FaParagraph},
   {type: 'TextField', title: 'Numbers', icon: FaHashtag, props: { validateAs: 'number', validationMessage: 'Only numbers are allowed in this field.'} },
   {type: 'MultipleChoice', title: 'Multiple choice', icon: FaListUl},

@@ -21,6 +21,8 @@ import TableCell from 'components/tables/TableCell';
 import Tab from 'components/tabs/Tab';
 import Tabs from 'components/tabs/Tabs';
 
+import ButtonGroup from 'components/ButtonGroup';
+
 // Forms, Widgets, Submissions
 
 @connect(({ forms }) => ({ forms }))
@@ -46,7 +48,6 @@ export default class FormList extends React.Component {
 
   onConfirmClick() {
     var formToDelete = this.state.formToDelete;
-    console.log("Form to delete", formToDelete);
     this.setState({ confirmFormName: '', showConfirmDialog: false, tagToDelete: null });
     this.props.dispatch(deleteForm(...formToDelete));
   }
@@ -98,11 +99,17 @@ export default class FormList extends React.Component {
           <Link to="forms/create"><Button category="info">Create <MdForum /></Button></Link>
         </ContentHeader>
 
+        <ButtonGroup initialActiveIndex={0} behavior="radio">
+          <Button>Open</Button>
+          <Button>Closed</Button>
+        </ButtonGroup>
+
+
         <Tabs initialSelectedIndex={0} style={styles.tabs}>
-          <Tab title="Active">
+          <Tab title="Open">
             {this.renderTable(groups.active || groups[''])}
           </Tab>
-          <Tab title="Inactive">
+          <Tab title="Closed">
             {this.renderTable(groups.inactive || [])}
           </Tab>
         </Tabs>

@@ -99,6 +99,15 @@ const styles = {
       borderColor: color(settings.primaryColor).darken(0.2).hexString()
     }
   },
+  brand: {
+    backgroundColor: settings.brandColor,
+    borderColor: color(settings.brandColor).darken(0.1).hexString(),
+    color: '#fff',
+    ':hover': {
+      backgroundColor: color(settings.brandColor).darken(0.1).hexString(),
+      borderColor: color(settings.brandColor).darken(0.2).hexString()
+    }
+  },
   success: {
     backgroundColor: settings.successColor,
     borderColor: color(settings.successColor).darken(0.1).hexString(),

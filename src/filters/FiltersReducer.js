@@ -1,53 +1,64 @@
 import _ from 'lodash';
-import * as types from 'filters/FiltersActions';
+import * as filterTypes from 'filters/FiltersActions';
+import * as searchTypes from 'search/SearchActions';
+
+const types = {...filterTypes, ...searchTypes};
 
 let initialState = {
   configLoaded: false,
   tags: [],
   authors: [],
   sections: [],
+  filterList: [],
+  editFilterList: [],
+  editableSearchFilters: [],
   loadingFilters: false,
   loadingUserList: false,
   loadingAuthors: false,
   loadingSections: false,
-  'user_name': null,
-  'status': null,
-  'last_login': null,
-  'member_since': null,
+  filterRangesLoaded: false, // naive, this just cleans up the console.log statement in UserFilters
   breakdown: 'all',
+  breakdownEdit: 'all',
   counter: 0, // this is a signal for ajax consumed by userFilters
-  specificBreakdown: ''
+  specificBreakdown: '',
+  specificBreakdownEdit: '',
+  distributions: null,
+  sortBy: null
 };
 
 const filters = (state = initialState, action) => {
   switch (action.type) {
 
-  case types.DATA_CONFIG_REQUEST:
-    return {...state, loadingFilters: true};
-
   // this should run before any ReactDOM stuff happens
   case types.DATA_CONFIG_LOADED:
 
     const filterList = [];
+    const editFilterList = [];
     const filters = action.config.filters.reduce((accum, filter, i) => {
 
       const key = `filter${i}`;
-      accum[key] = Object.assign({}, filter, {min: null, max: null, userMin: null, userMax: null, key});
+      const editableKey = `${key}Editable`;
+      accum[key] = _.assign({}, filter, {min: null, max: null, userMin: null, userMax: null, key});
+      accum[editableKey] = _.assign({}, accum[key], {key: editableKey});
+
+      if (filter.type === 'intDateProximity') {
+        // "ago" filter does not load ranges from xenia yet.
+        accum[key] = _.assign({}, filter, {min: 0, userMin: 0, max: 10000, userMax: 10000, key});
+      }
 
       filterList.push(key);
+      editFilterList.push(editableKey);
 
       return accum;
     }, {});
 
-    return {...state, ...filters, filterList, configLoaded: true};
-
-    // return Object.assign({}, state, filters, {filterList}, {configLoaded: true});
-
-  case types.CREATE_QUERY:
-    return {...state, loadingUserList: true};
-
-  case types.RECEIVE_USER_LIST:
-    return {...state, loadingUserList: false};
+    return {
+      ...state,
+      ...filters,
+      filterList,
+      editFilterList,
+      configLoaded: true
+    };
 
   case types.FILTER_CHANGED:
 
@@ -83,21 +94,48 @@ const filters = (state = initialState, action) => {
   case types.SET_BREAKDOWN:
     return {...state, breakdown: action.breakdown};
 
+  case types.SET_BREAKDOWN_EDIT:
+    return {...state, breakdownEdit: action.breakdown};
+
+  case types.FETCH_DISTRIBUTIONS_SUCCESS:
+    return {...state, distributions: action.distros};
+
   case types.SET_SPECIFIC_BREAKDOWN:
     return {...state, specificBreakdown: action.specificBreakdown};
+
+  case types.SET_SPECIFIC_BREAKDOWN_EDIT:
+    return {...state, specificBreakdownEdit: action.specificBreakdown};
 
   case types.RECEIVE_FILTER_RANGES:
 
     const newFilters = _.reduce(action.data, (accum, filter, key) => {
-      accum[key] = Object.assign({}, state[key], action.data[key]);
+      accum[key] = _.assign({}, state[key], action.data[key]);
       return accum;
     }, {});
 
-    return {...state, ...newFilters, counter: action.counter};
+    return {...state, ...newFilters, counter: action.counter, filterRangesLoaded: true};
 
+  // this is really more of a soft reset, since we're not resetting the dimensions
+  case types.RESET_FILTERS:
+    return {...state, ...action.filters};
+
+  case types.RESET_FILTER:
+    return {...state, ...action.filter};
+
+  // a Saved Search was loaded from Pillar to be edited
+  case types.PILLAR_EDIT_SEARCH_SUCCESS:
+    return {
+      ...state,
+      ...action.filters,
+      breakdown: action.breakdown,
+      specificBreakdown: action.specificBreakdown
+    };
+
+  case types.SORT:
+    const sortBy = action.template ? [action.template, action.direction] : null;
+    return {...state, sortBy};
   default:
     return state;
-
   }
 };
 

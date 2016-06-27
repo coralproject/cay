@@ -10,7 +10,7 @@ import Page from './Page';
 import Card from '../components/cards/Card';
 import DataExplorerVisualization from 'components/DataExplorerVisualization';
 import ExplorerTutorial from 'components/DataExplorerTutorial';
-import GroupFilters from 'groups/GroupFilters';
+import SearchFilters from 'search/SearchFilters';
 import Flex from 'app/layout/Flex';
 import _ from 'lodash';
 
@@ -89,7 +89,7 @@ class DataExplorer extends React.Component {
               getNonActionFiringControlValues={this.getNonActionFiringControlValues.bind(this)}
               getControlValues={this.getControlValues.bind(this)}
               querysets={this.props.querysets} />*/}
-            <GroupFilters
+            <SearchFilters
               authors={this.props.authors}
               sections={this.props.sections}
               dispatch={this.props.dispatch} />

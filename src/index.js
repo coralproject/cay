@@ -7,25 +7,31 @@ import { browserHistory, Router, Route, Redirect } from 'react-router';
 // React Redux
 import { Provider } from 'react-redux';
 // Redux Devtools
-import { DevTools, DebugPanel, LogMonitor } from 'redux-devtools/lib/react';
 
 import configureStore from 'store.js';
+import { configXenia } from 'app/AppActions';
+import {StyleRoot} from 'radium';
 
-import { fetchFilterConfig } from 'filters/FiltersActions';
-import { fetchConfig } from 'app/AppActions';
-// import Dashboard from './containers/Dashboard';
-import GroupCreator from 'app/GroupCreator';
+// Routes
+import SearchCreator from 'app/SearchCreator';
+import User from 'app/User';
 import TagManager from 'app/TagManager';
 import Login from 'app/Login';
-// import DataExplorer from 'app/DataExplorer';
-import SeeAllGroups from 'app/SeeAllGroups';
-import GroupDetail from 'app/GroupDetail';
+import SeeAllSearches from 'app/SeeAllSearches';
+import SearchDetail from 'app/SearchDetail';
+import FormList from 'app/FormList';
+import FormEdit from 'app/FormEdit';
+import FormCreate from 'app/FormCreate';
+import SearchEditor from 'app/SearchEditor';
 import NoMatch from 'app/NoMatch';
 import About from 'app/About';
+import SubmissionList from 'app/SubmissionList';
+import SubmissionGallery from 'app/SubmissionGallery';
 
+// Utils
+//import registerServiceWorker from 'serviceworker!./sw.js';
 import ga from 'react-ga';
-
-const store = configureStore();
+import { Lang } from 'i18n/lang';
 
 import messages from 'i18n/messages'; // Lang does not know where did you get your messages from.
 
@@ -35,27 +41,34 @@ window.L = new LangSugar();
 window.L.addTranslations(messages['en'], 'en');
 window.L.addTranslations(messages['de'], 'de');
 window.L.addTranslations(messages['es'], 'es');
-window.L.setLocale('en');
+window.L.setLocale(window.L.locale);
 
 require('reset.css');
 require('global.css');
 
 require('react-select.css');
+require('react-datepicker.min.css');
 
 require('../fonts/glyphicons-halflings-regular.woff');
 
-import { Lang } from 'i18n/lang';
+/*
+if ('serviceWorker' in navigator && process && process.env.NODE_ENV === 'production') {
+  registerServiceWorker({ scope: '/' }).then(() => {}, () => {});
+}
+*/
+
+let store;
+
 @Lang
 class Root extends React.Component {
 
   constructor(props){
     super(props);
-    ga.initialize(window.googleAnalyticsId, { debug: (process && process.env.NODE_ENV !== 'production') });
-    window.addEventListener('error', e => ga.event({
-      category: 'JS Error',
-      action: e.message,
-      label: e.stack
-    }));
+
+    ga.initialize(props.app.googleAnalyticsId, { debug: (process && process.env.NODE_ENV !== 'production') });
+    window.addEventListener('error', e => ga.exception({
+      description: e.error.stack
+    }), false);
   }
 
   logPageView() {
@@ -63,47 +76,77 @@ class Root extends React.Component {
   }
 
   render() {
-
-    if (process && process.env.NODE_ENV !== 'production') {
-      var debug = (
-        <DebugPanel top right bottom>
-          <DevTools store={store} visibleOnLoad={false} monitor={LogMonitor} />
-        </DebugPanel>
-      );
-    }
-
+    const { features } = this.props.app;
     return (
-      <div>
+      <StyleRoot>
         <Provider store={store}>
           <Router history={browserHistory} onUpdate={ this.logPageView }>
+
             <Redirect from="/" to="search-creator" />
+
             <Route path="login" component={Login} />
             <Route path="about" component={About} />
-            <Route path="search-creator" component={GroupCreator} />
-            <Route path="tag-manager" component={TagManager} />
-            <Route path="saved-searches" component={SeeAllGroups}/>
-            <Route path="saved-search/:name" component={GroupDetail} />
+            <Route path="user/:_id" component={User} />
+
+
+            {/***** Trust Search Routes *****/}
+            <Route path="search-creator" component={SearchCreator} />
+            <Route path="saved-searches" component={SeeAllSearches}/>
+            <Route path="saved-search/:id" component={SearchDetail} />
+            <Route path="edit-search/:id" component={SearchEditor} />
+
+
+            {/***** Ask Search Routes *****/}
+            {features.ask ? (
+              <div>
+                <Route path="forms" component={FormList}/>
+                <Route path="forms/create" component={FormCreate}/>
+                <Route path="forms/:id" component={FormEdit}/>
+                <Route path="forms/:id/submissions" component={SubmissionList}/>
+                <Route path="forms/:id/gallery" component={SubmissionGallery}/>
+              </div>
+            ) : null}
             <Route path="*" component={NoMatch} />
-            {/*<Route path="explore" component={DataExplorer} />*/}
+
+            {/***** Disabled routes ******
+
+              <Route path="explore" component={DataExplorer} />
+              <Route path="tag-manager" component={TagManager} />
+
+            */}
+
+
           </Router>
         </Provider>
-        {debug}
-      </div>
+      </StyleRoot>
     );
   }
 }
 
-store.dispatch(fetchConfig());
-store.dispatch(fetchFilterConfig());
+// entry point for the app
+const loadConfig = route => fetch(route).then(res => res.json());
 
-// yikes. if we can think of a more redux-y way to do this, I'm all ears.
-const configInterval = setInterval(() => {
-  const state = store.getState();
-  if (state.app.configLoaded && state.filters.configLoaded) {
-    window.clearInterval(configInterval);
-    ReactDOM.render(<Root/>, document.getElementById('root'));
+Promise.all([loadConfig('/config.json'), loadConfig('/data_config.json')])
+.then(results => {
+  const [app, filters] = results;
+
+  const requiredKeys = [ 'xeniaHost', 'pillarHost', 'basicAuthorization', 'environment', 'googleAnalyticsId', 'requireLogin' ];
+  const allKeysDefined = requiredKeys.every(key => 'undefined' !== typeof app[key]);
+
+  if (!allKeysDefined) {
+    const message = `missing required keys on config.json. Must define ${requiredKeys.join('|')}`;
+    throw new Error(message);
   }
-}, 1000);
+
+  // load config into initialState so it's ALWAYS available
+  store = configureStore({app});
+
+  store.dispatch(configXenia());
+  store.dispatch({type: 'DATA_CONFIG_LOADED', config: filters});
+
+  ReactDOM.render(<Root app={app || {}}/>, document.getElementById('root'));
+})
+.catch(err => console.error(err.stack));
 
 // prevent browser from navigating backwards if you hit the backspace key
 document.addEventListener('keydown', function (e) {
@@ -117,6 +160,7 @@ document.addEventListener('keydown', function (e) {
         d.type.toUpperCase() === 'FILE' ||
         d.type.toUpperCase() === 'EMAIL' ||
         d.type.toUpperCase() === 'SEARCH' ||
+        d.type.toUpperCase() === 'NUMBER' ||
         d.type.toUpperCase() === 'DATE' )
       ) || d.tagName.toUpperCase() === 'TEXTAREA') {
       doPrevent = d.readOnly || d.disabled;

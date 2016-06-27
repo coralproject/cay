@@ -3,8 +3,6 @@ export const RECEIVE_UPSERTED_USER = 'RECEIVE_UPSERTED_USER';
 export const REQUEST_USER_UPSERT = 'REQUEST_USER_UPSERT';
 export const USER_UPSERT_REQUEST_ERROR = 'USER_UPSERT_REQUEST_ERROR';
 
-export const RECEIVE_USER_LIST = 'RECEIVE_USER_LIST';
-
 /* config */
 
 export const userSelected = (user) => {

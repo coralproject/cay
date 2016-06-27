@@ -1,94 +1,70 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
-import {filterChanged} from 'filters/FiltersActions';
 import Radium from 'radium';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
-
-import Slider from 'components/Slider';
-import Card from 'components/cards/Card';
-import CardHeader from 'components/cards/CardHeader';
 
 @connect()
 @Radium
 export default class FilterDate extends React.Component {
 
   static propTypes = {
-    start: PropTypes.string,
-    end: PropTypes.string,
-    min: PropTypes.string,
-    max: PropTypes.string,
+    userMin: PropTypes.instanceOf(Date),
+    userMax: PropTypes.instanceOf(Date),
+    min: PropTypes.instanceOf(Date),
+    max: PropTypes.instanceOf(Date),
     fieldName: PropTypes.string.isRequired
   }
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      min: moment(this.props.min || '2003-05-13'),
-      max: moment(this.props.max || '2015-01-01'),
-      start: moment(this.props.start || '2013-01-01'),
-      end: moment(this.props.end || '2013-09-01')
-    };
-  }
-
   // called after either <DatePicker /> changes
-  updateDateRange(ref, moment) {
+  updateDateRange(ref, m) {
     if (ref === 'date_start') {
-      this.setState({start: moment});
+      this.props.onChange(this.props.fieldName, 'userMin', m.toDate());
     } else {
-      this.setState({end: moment});
+      this.props.onChange(this.props.fieldName, 'userMax', m.toDate());
     }
-  }
-
-  updateSlider(values) {
-    this.props.dispatch(filterChanged(this.props.fieldName, values));
-    this.setState({
-      start: moment.unix(values[0]),
-      end: moment.unix(values[1])
-    });
   }
 
   render() {
 
     return (
-      <Card style={[styles.base, this.props.style]}>
-        <CardHeader>{this.props.fieldName}</CardHeader>
-
-        <Slider
-          min={this.state.min.unix()}
-          max={this.state.max.unix()}
-          defaultValue={[this.state.start.unix(), this.state.end.unix()]}
-          value={[this.state.start.unix(), this.state.end.unix()]}
-          onChange={this.updateSlider.bind(this)}
-          withBars />
+      <div style={[styles.base, this.props.style]}>
+        <p style={styles.description}>{this.props.description}</p>
 
         <div style={styles.row}>
           <div style={styles.cell}>
             <p style={styles.label}>between</p>
             <DatePicker
-              selected={this.state.start}
+              selected={moment(this.props.userMin)}
               onChange={this.updateDateRange.bind(this, 'date_start')} />
           </div>
           <div style={styles.cell}>
             <p style={styles.label}>and</p>
             <DatePicker
-              selected={this.state.end}
-              onChange={this.updateDateRange.bind(this, 'date_end')} />
+              selected={moment(this.props.userMax)}
+              onChange={this.updateDateRange.bind(this, 'date_end')}
+               />
           </div>
         </div>
-      </Card>
+      </div>
     );
   }
 }
 
 const styles = {
   base: {
-
+    padding: '6px 8px'
+  },
+  description: {
+    fontWeight: 500,
+    marginBottom: 10,
+    color: 'rgb(130,130,130)',
+    fontSize: 16
   },
   row: {
     display: 'flex'
   },
   cell: {
     flex: 1
-  }
+  },
 };

@@ -12,7 +12,7 @@ export default class LangSugar {
 
   translations = {};
   polyglot = new Polyglot();
-  locale = 'en';
+  locale = getDefaultLocale();
   moment = moment;
   renderParent = {};
   componentQueue = [];
@@ -46,6 +46,10 @@ export default class LangSugar {
   }
 
   setLocale(locale) {
+    // Attempt to store it on localStorage
+    try { localStorage.locale = locale; } catch(err) {
+      console.warn('Failed to set locale into localStorage');
+    }
     this.locale = locale;
     this.polyglot.replace(this.translations[locale]);
     this.moment.locale(locale);
@@ -95,3 +99,11 @@ export var Lang = ComposedComponent => class extends React.Component {
   }
 
 };
+
+function getDefaultLocale() {
+  try {
+    return localStorage.locale || 'en';
+  } catch(err) {
+    return 'en';
+  }
+}

@@ -1,5 +1,5 @@
 const settings = {
-  brandColor: '#f77160',
+  brandColor: "rgb(246,125,111)",
   textColor: '#3e3e3e',
   linkColor: '#777777',
   darkColorBase: '#202020',

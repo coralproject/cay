@@ -1,6 +1,5 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
-import { devTools } from 'redux-devtools';
 import createHistory from 'history/lib/createBrowserHistory';
 import createDebounce from 'redux-debounce';
 
@@ -21,10 +20,7 @@ if (process.env.NODE_ENV === 'production') {
 } else {
   finalCreateStore = compose(
     applyMiddleware(...middleware),
-    require('redux-devtools').devTools(),
-    require('redux-devtools').persistState(
-      window.location.href.match(/[?&]debug_session=([^&]+)\b/)
-    )
+    window.devToolsExtension ? window.devToolsExtension() : f => f
   )(createStore);
 }
 

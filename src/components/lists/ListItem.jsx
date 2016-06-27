@@ -48,13 +48,11 @@ const styles = {
     paddingBottom: 20,
     paddingLeft: 20,
     fontSize: 16,
-    backgroundColor: settings.lighterGrey,
+    backgroundColor: "white",
     borderBottom: '1px solid ' + settings.lighterGrey,
     borderRight: '1px solid #ddd',
     ':hover': {
-      backgroundColor: 'white',
-      borderRight: '1px solid #fff',
-      borderBottom: '1px solid #ddd'
+      backgroundColor: 'rgb(240,240,240)'
     }
   },
   active: {

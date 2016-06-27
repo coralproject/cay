@@ -37,7 +37,7 @@ describe('Avatar component', function () {
 
     var avatar = ReactTestUtils.findRenderedDOMComponentWithTag(renderedAvatar, 'div');
 
-    assert.equal(avatar.style.border, '2px solid red');
+    assert.equal(avatar.style.border, 'red');
   });
 
   it('should be a different size if "size" attribute is provided', function () {

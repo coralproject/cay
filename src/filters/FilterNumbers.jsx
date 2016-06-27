@@ -1,38 +1,8 @@
 import React from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
-import {filterChanged} from 'filters/FiltersActions';
-import {clamp} from 'components/utils/math';
-// import Flex from '../layout/Flex';
 
-import Card from 'components/cards/Card';
-import CardHeader from 'components/cards/CardHeader';
-
-import Slider from 'components/Slider';
-
-const style = {
-  // symbol: {
-  //   padding: '8px 10px',
-  //   backgroundColor: 'rgb(240,240,240)',
-  //   margin: 5,
-  //   color: 'rgb(100,100,100)',
-  //   borderRadius: 3,
-  //   fontWeight: 300
-  // },
-  sliderInput: {
-    backgroundColor: 'rgb(245, 245, 245)',
-    border: 'none',
-    textAlign: 'center',
-    padding: '10px 0px',
-    width: 50,
-    fontSize: 14,
-    margin: '0px 5px',
-    borderRadius: 4
-    // 'focus': {
-    //   outline: 0
-    // }
-  }
-};
+//import Sparkline from 'filters/Sparkline';
 
 @connect(state => state.filters)
 @Radium
@@ -41,7 +11,6 @@ export default class FilterNumbers extends React.Component {
     super(props);
     this.state = {
       symbol: 'GTLT',
-      step: (props.type === 'floatRange' || props.type === 'percentRange') ? 0.01 : 1,
       equals: null
     };
   }
@@ -59,103 +28,79 @@ export default class FilterNumbers extends React.Component {
     fieldName: 'UNDEFINED___'
   }
 
-  componentWillReceiveProps(props) {
-    this.setState({step: (props.type === 'floatRange' || props.type === 'percentRange') ? 0.01 : 1});
-  }
-
   handleSymbolClick(){
     const newSymbol = this.state.symbol === 'GTLT' ? 'EQUALS' : 'GTLT';
     this.setState({symbol: newSymbol});
   }
-  handleGTChanged(e) {
-    this.props.dispatch(filterChanged(this.props.fieldName, {userMin: e.target.value}));
-  }
-  handleLTChanged(e) {
-    this.props.dispatch(filterChanged(this.props.fieldName, {userMax: e.target.value}));
-  }
-  // handleEqualChanged(e) {
-  //   this.setState({equals: e.target.value});
-  // }
-  handleGTKeyDown(e) {
-    let userMin;
-    if (e.which === 38) {
-      userMin = Math.min(this.props.userMin + this.state.step, this.props.max);
-      this.props.dispatch(filterChanged(this.props.fieldName, {userMin, userMax: this.props.userMax}));
-    }
-    if (e.which === 40) {
-      userMin = Math.max(this.props.userMin - this.state.step, this.props.min);
-      this.props.dispatch(filterChanged(this.props.fieldName, {userMin, userMax: this.props.userMax}));
-    }
-  }
-  handleLTKeyDown(e) {
-    let userMax;
-    if (e.which === 38) {
-      userMax = Math.min(this.props.userMax + this.state.step, this.props.max);
-      this.props.dispatch(filterChanged(this.props.fieldName, {userMax, userMin: this.props.userMin}));
-    }
-    if (e.which === 40) {
-      userMax = Math.max(this.props.userMax - this.state.step, this.props.min);
-      this.props.dispatch(filterChanged(this.props.fieldName, {userMax, userMin: this.props.userMin}));
-    }
-  }
-  updateSlider(values) {
-    this.props.dispatch(filterChanged(this.props.fieldName, {userMin: values[0], userMax: values[1]}));
-  }
-  renderGTLT() {
 
-    const clampedUserMin = clamp(this.props.userMin, this.props.min, this.props.max);
-    const clampedUserMax = clamp(this.props.userMax, this.props.min, this.props.max);
+  renderHelpText() {
+    let help = '';
 
-    var min = (this.props.isPercentage) ? Math.floor(clampedUserMin * 100) : clampedUserMin;
-    var max = (this.props.isPercentage) ? Math.floor(clampedUserMax * 100) : clampedUserMax;
+    if (this.props.userMax > this.props.max) {
+      help = `Max cannot be greater than ${this.props.max}`;
+    }
 
-    return (
-      <div>
-        <span
-          style={{
-            float: 'left',
-            position: 'relative',
-            top: -6
-          }}>
-          {min} - {max}{this.props.isPercentage ? '%' : ''}
-        </span>
-        <div style={{marginTop: 12, marginLeft: 70, width: 200}}>
-          <Slider
-            min={this.props.min}
-            max={this.props.max}
-            step={this.state.step}
-            defaultValue={[clampedUserMin, clampedUserMax]}
-            value={[clampedUserMin, clampedUserMax]}
-            onChange={this.updateSlider.bind(this)}
-            withBars/>
-        </div>
-      </div>
-    );
-  }
-  renderEQUALS() {
-    return (
-      <div>
-        {/* will be a component */}
-        <span> {this.props.description} </span>
-        <span style={style.symbol} onClick={this.handleSymbolClick.bind(this)}>{'='}</span>
-        <input
-          onFocus={this.popEqualsSlider}
-          style={style.sliderInput}
-          onChange={this.handleEqualChanged.bind(this)}
-          value={this.state.equals || this.props.min}/>
-      </div>
-    );
+    if (this.props.userMin < this.props.min) {
+      help = `Min cannot be less than ${this.props.min}`;
+    }
+
+    if (this.props.userMin > this.props.userMax) {
+      help = 'Min cannot be greater than max';
+    }
+
+    return help;
   }
   render() {
     return (
-      <Card>
-        <CardHeader>{this.props.description}</CardHeader>
-        {
-          this.state.symbol === 'GTLT' ?
-            this.renderGTLT() :
-            this.renderEQUALS()
-        }
-      </Card>
+      <div style={[styles.base, this.props.style]}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'flex-start',
+          justifyContent: 'space-between'
+        }}>
+        <span style={styles.description}>{this.props.description}</span>
+        {/*
+          this.props.distributions ?
+          <Sparkline
+            distribution={
+              this.props.distributions[this.props[this.props.fieldName].field]
+            }/> :
+            ''
+        */}
+        </div>
+        <div>
+          <input
+            onChange={event => this.props.onChange(this.props.fieldName, 'userMin', +event.target.value)}
+            style={styles.minMaxInputs}
+            type='number'
+            value={this.props.userMin}/>
+          {` - `}
+          <input
+            onChange={event => this.props.onChange(this.props.fieldName, 'userMax', +event.target.value)}
+            style={styles.minMaxInputs}
+            type='number'
+            value={this.props.userMax}/>
+        </div>
+        <p style={{marginTop: 10, color: 'red'}}>{this.renderHelpText()}</p>
+        </div>
     );
   }
 }
+
+const styles = {
+  base: {
+    padding: '4px 8px'
+  },
+  description: {
+    fontWeight: 500,
+    marginBottom: 10,
+    color: 'rgb(130,130,130)',
+    fontSize: 16
+  },
+  minMaxInputs: {
+    padding: '7px 10px',
+    border: '1px solid lightgrey',
+    borderRadius: 3
+  },
+
+};

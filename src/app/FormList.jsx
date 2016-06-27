@@ -6,7 +6,7 @@ import MdDelete from 'react-icons/lib/md/delete';
 import _ from 'lodash';
 import MdForum from 'react-icons/lib/md/forum';
 
-import { deleteForm, fetchForms } from 'forms/FormActions';
+import { deleteForm, fetchForms, updateFormStatus } from 'forms/FormActions';
 import settings from 'settings';
 
 import Page from 'app/layout/Page';
@@ -28,6 +28,11 @@ import ButtonGroup from 'components/ButtonGroup';
 @connect(({ forms }) => ({ forms }))
 @Radium
 export default class FormList extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {displayMode: 'open'};
+  }
 
   static contextTypes = {
     router: PropTypes.object.isRequired
@@ -88,10 +93,14 @@ export default class FormList extends React.Component {
     );
   }
 
+  setDisplayMode(displayMode) {
+    this.setState({displayMode});
+  }
+
   render() {
 
     const forms = this.props.forms.formList.map(id => this.props.forms[id]);
-    const groups = _.groupBy(forms, 'status');
+    const visibleForms = forms.filter(form => form.status === this.state.displayMode);
 
     return (
       <Page>
@@ -100,19 +109,11 @@ export default class FormList extends React.Component {
         </ContentHeader>
 
         <ButtonGroup initialActiveIndex={0} behavior="radio">
-          <Button>Open</Button>
-          <Button>Closed</Button>
+          <Button onClick={this.setDisplayMode.bind(this, 'open')}>Open</Button>
+          <Button onClick={this.setDisplayMode.bind(this, 'closed')}>Closed</Button>
         </ButtonGroup>
 
-
-        <Tabs initialSelectedIndex={0} style={styles.tabs}>
-          <Tab title="Open">
-            {this.renderTable(groups.active || groups[''])}
-          </Tab>
-          <Tab title="Closed">
-            {this.renderTable(groups.inactive || [])}
-          </Tab>
-        </Tabs>
+        {this.renderTable(visibleForms)}
 
         {
           this.state.showConfirmDialog ?

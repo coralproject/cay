@@ -61,7 +61,6 @@ export default class ButtonGroup extends React.Component {
         child,
         {
           onClick: () => {
-            console.log('I clicked a button');
             this.setActiveIndex(i);
             // call the click handler on the old button if it exists
             child.props.onClick && child.props.onClick.call(child);

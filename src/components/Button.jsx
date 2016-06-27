@@ -50,7 +50,10 @@ const styles = {
   base: {
     transition: 'all 300ms',
     backgroundColor: '#fff',
-    borderRadius: 4,
+    borderTopLeftRadius: 4, // I know this could be one property
+    borderTopRightRadius: 4, // this is here to supress Radium warnings
+    borderBottomRightRadius: 4,
+    borderBottomLeftRadius: 4,
     borderStyle: 'solid',
     borderWidth: 1,
     borderColor: '#ccc',

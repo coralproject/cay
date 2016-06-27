@@ -57,8 +57,8 @@ export default class FormChrome extends React.Component {
     const name = _.has(this.props, 'form.header.title') ? this.props.form.header.title : 'Untitled Form';
 
     const statusOptions = [
-      {label: 'Active', value: 'active'},
-      {label: 'Inactive', value: 'inactive'}
+      {label: 'Open', value: 'open'},
+      {label: 'Closed', value: 'closed'}
     ];
 
     return (

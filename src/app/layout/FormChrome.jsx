@@ -3,6 +3,7 @@ import Radium from 'radium';
 import _ from 'lodash';
 import Select from 'react-select';
 import Badge from 'components/Badge';
+import color from 'color';
 
 import settings from 'settings';
 
@@ -63,35 +64,43 @@ export default class FormChrome extends React.Component {
 
     return (
       <div style={styles.base}>
-        <ul style={styles.menu}>
-          <li style={[styles.option, styles.formName]}>{name}</li>
-          <li key="huey" style={[
-            styles.option,
-            this.props.activeTab === 'builder' && styles.active]}
-            onClick={this.buildForm.bind(this)}>
-            {this.props.form ? 'Edit Form' : 'Build Form'}
-          </li>
-          <li key="dewey" style={[
-            styles.option,
-            this.props.activeTab === 'submissions' && styles.active,
-            !this.props.form && styles.disabled]}
-            onClick={this.reviewSubmissions.bind(this)}>
-            Review Submissions {this.submissionBadge()}
-          </li>
-          <li key="louie" style={[
-            styles.option,
-            this.props.activeTab === 'gallery' && styles.active,
-            !this.props.form && styles.disabled]}
-            onClick={this.manageGallery.bind(this)}>
-            Manage Gallery {this.galleryBadge()}
-          </li>
-        </ul>
-        <div style={styles.statusSelect}>
-          <Select
-            options={statusOptions}
-            value={this.props.form && this.props.form.status}
-            onChange={this.props.updateStatus} />
+        <div style={styles.menu}>
+
+          <div style={styles.formName}>{name}</div>
+
+          <div style={styles.formControls}>
+            <div key="huey" style={[
+              styles.option,
+              this.props.activeTab === 'builder' && styles.active]}
+              onClick={this.buildForm.bind(this)}>
+              {this.props.form ? 'Edit Form' : 'Build Form'}
+            </div>
+            <div key="dewey" style={[
+              styles.option,
+              this.props.activeTab === 'submissions' && styles.active,
+              !this.props.form && styles.disabled]}
+              onClick={this.reviewSubmissions.bind(this)}>
+              Review Submissions {this.submissionBadge()}
+            </div>
+            <div key="louie" style={[
+              styles.option,
+              this.props.activeTab === 'gallery' && styles.active,
+              !this.props.form && styles.disabled]}
+              onClick={this.manageGallery.bind(this)}>
+              Manage Gallery {this.galleryBadge()}
+            </div>
+          </div>
+
+          <div style={styles.statusSelect}>
+            <Select
+              options={statusOptions}
+              style={styles.statusPicker}
+              value={this.props.form && this.props.form.status}
+              onChange={this.props.updateStatus} />
+          </div>
+
         </div>
+
       </div>
     );
   }
@@ -99,50 +108,57 @@ export default class FormChrome extends React.Component {
 
 const styles = {
   base: {
-    backgroundColor: settings.mediumGrey,
     position: 'absolute',
     left: 0,
     right: 0,
-    top: 0,
+    top: -50,
     padding: 5
   },
   formName: {
+    color: 'white',
+    padding: 10,
     fontWeight: 'bold',
+    fontSize: '20px',
     cursor: 'auto',
     ':hover': {
-      backgroundColor: settings.mediumGrey
+      backgroundColor: 'transparent'
     }
   },
-  menu: {
+
+  formControls: {
     display: 'flex'
   },
+
+  menu: {
+    display: 'flex',
+    justifyContent: 'space-between'
+  },
   option: {
+    fontSize: '16px',
     transition: 'all 300ms',
     cursor: 'pointer',
-    padding: '8px 12px',
-    borderRadius: 50,
-    marginRight: 20,
-    backgroundColor: settings.mediumGrey,
+    borderRadius: 4,
+    marginRight: 5,
+    padding: '12px 12px 0 12px',
+    color: 'white',
+    backgroundColor: 'transparent',
     ':hover': {
-      backgroundColor: settings.darkBlueGrey
+      backgroundColor: color(settings.brandColor).darken(0.1).hexString()
     }
   },
   active: {
-    backgroundColor: settings.grey,
+    backgroundColor: settings.brandColor,
     color: 'white'
   },
   disabled: {
     display: 'none'
   },
   statusSelect: {
-    width: 300,
-    position: 'absolute',
-    top: 2,
-    right: 2
+    width: 110
   },
   badge: {
-    backgroundColor: 'white',
-    fontSize: '12px',
-    color: settings.darkGrey
+    backgroundColor: color(settings.brandColor).darken(0.2).hexString(),
+    fontSize: '14px',
+    color: 'white'
   }
 };

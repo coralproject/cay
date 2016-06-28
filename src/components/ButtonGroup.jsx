@@ -13,6 +13,7 @@ export default class ButtonGroup extends React.Component {
     // if the {behavior} is "radio", there is only one active button at a time
     // if the {behavior} is "checkbox", there could be more than one
     initialActiveIndex: PropTypes.number.isRequired,
+    initialCheckedIndexes: PropTypes.arrayOf(PropTypes.number), // if a checkbox
     behavior: PropTypes.oneOf(['default', 'radio', 'checkbox'])
   }
 

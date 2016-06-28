@@ -4,7 +4,12 @@ import { connect } from 'react-redux';
 import Checkbox from 'components/forms/Checkbox';
 import TextField from 'components/forms/TextField';
 
-import FaTimesCircle from 'react-icons/lib/fa/times-circle';
+import FaArrowUp from 'react-icons/lib/fa/arrow-up';
+import FaArrowDown from 'react-icons/lib/fa/arrow-down';
+import FaTrashO from 'react-icons/lib/fa/trash-o';
+import FaCopy from 'react-icons/lib/fa/copy';
+import FaPlusCircle from 'react-icons/lib/fa/plus-circle';
+import FaQuestionCircle from 'react-icons/lib/fa/question-circle';
 
 @connect(({ forms, app }) => ({ forms, app }))
 @Radium
@@ -15,7 +20,7 @@ export default class MultipleChoiceEditor extends Component {
     this.state = { options: props.field.props.options && props.field.props.options.length ?
         props.field.props.options
       :
-        [ { title: 'Sample option 1' } ]
+        [ { title: 'Option 1' } ]
     };
   }
 
@@ -28,7 +33,7 @@ export default class MultipleChoiceEditor extends Component {
 
   addOption(i) {
     var optionsCopy = this.state.options.slice();
-    optionsCopy.push({ title: 'Sample option ' + (this.state.options.length + 1) });
+    optionsCopy.push({ title: 'Option ' + (this.state.options.length + 1) });
     this.setState({ options: optionsCopy });
     this.updateFieldOptions(optionsCopy);
   }
@@ -40,16 +45,37 @@ export default class MultipleChoiceEditor extends Component {
     this.updateFieldOptions(optionsCopy);
   }
 
-  updateOption(index, value) {
+  updateOption(i, e) {
     var optionsCopy = this.state.options.slice();
-    optionsCopy[index] = { title: value };
+    optionsCopy[i] = { title: e.target.value };
     this.setState({ options: optionsCopy });
     this.updateFieldOptions(optionsCopy);
+  }
+
+  moveOption(index, direction) {
+
+    var moveFrom = index;
+    var moveTo = index + (direction == 'up' ? -1 : 1);
+
+    var optionsCopy = this.state.options.slice();
+    optionsCopy[moveTo] = Object.assign({}, this.state.options[moveFrom]);
+    optionsCopy[moveFrom] = Object.assign({}, this.state.options[moveTo]);
+
+    this.setState({ options: optionsCopy });
+    this.updateFieldOptions(optionsCopy);
+
   }
 
   onMultipleClick(e) {
     let { field } = this.props;
     let updatedProps = Object.assign({}, field.props, { multipleChoice: e.target.checked });
+    let updatedField = Object.assign({}, field, { props: updatedProps });
+    this.props.onEditorChange(updatedField);
+  }
+
+  onOtherClick(e) {
+    let { field } = this.props;
+    let updatedProps = Object.assign({}, field.props, { otherAllowed: e.target.checked });
     let updatedField = Object.assign({}, field, { props: updatedProps });
     this.props.onEditorChange(updatedField);
   }
@@ -61,39 +87,86 @@ export default class MultipleChoiceEditor extends Component {
     this.props.onEditorChange(updatedField);
   }
 
+  onIdentityClick(e) {
+    let { field } = this.props;
+    let updatedField = Object.assign({}, field, { identity: e.target.checked });
+    this.props.onEditorChange(updatedField);
+  }
+
   render() {
     let { field } = this.props;
+
     return (
       <div>
+
         <div style={ styles.options }>
           {
             this.state.options.map((option, i) => {
                 return (
-                  <div key={ i }>
-                    <TextField label={ option.title } onChange={ this.updateOption.bind(this, i) } />
-                    {
-                      i > 0 ?
-                        <button style={ styles.plusMinus } onClick={ this.removeOption.bind(this, i) }><FaTimesCircle /></button>
-                      : null
-                    }
+                  <div key={ i } style={ styles.optionRow }>
+                    <div style={ styles.optionRowText }>
+                      <input style={ styles.optionInput } type="text" value={ option.title } onChange={ this.updateOption.bind(this, i) } />
+                    </div>
+                    <div style={ styles.optionRowButtons }>
+                      <button style={ styles.optionButton } onClick={ this.removeOption.bind(this, i) }><FaCopy /></button>
+                      {
+                        (i > 0) || (i == 0 && this.state.options.length > 1) ?
+                          <button style={ styles.optionButton } onClick={ this.removeOption.bind(this, i) }><FaTrashO /></button>
+                        :
+                          <button style={ styles.optionButton } disabled><FaTrashO /></button>
+                      }
+                      <button disabled={ i == 0 } style={ styles.optionButton } onClick={ this.moveOption.bind(this, i, 'up') }><FaArrowUp /></button>
+                      <button disabled={ i == this.state.options.length - 1 } style={ styles.optionButton } onClick={ this.moveOption.bind(this, i, 'down') }><FaArrowDown /></button>
+                    </div>
                   </div>
                 )
             })
           }
-          <button style={ styles.addOption } onClick={ this.addOption.bind(this) }>Add option</button>
+
+          <div style={ styles.optionRow }>
+            <div style={ styles.optionRowText }>
+              <button style={ styles.addOption } onClick={ this.addOption.bind(this) }><FaPlusCircle /> Add another option</button>
+            </div>
+            <div style={ styles.optionRowButtons }>
+              &nbsp;
+            </div>
+          </div>
         </div>
-        <label style={ styles.required }>
-          <input type="checkbox"
-            onClick={ this.onMultipleClick.bind(this) }
-            checked={ field.props.multipleChoice } />
-            Allow multiple selections
-        </label>
-        <label style={ styles.required }>
-          <input type="checkbox"
-            onClick={ this.onRequiredClick.bind(this) }
-            checked={ field.wrapper.required } />
-            Required
-        </label>
+
+        <div style={ styles.bottomOptions }>
+
+          <div style={ styles.bottomOptionsLeft }>
+            <label style={ styles.bottomCheck }>
+              <input type="checkbox"
+                onClick={ this.onMultipleClick.bind(this) }
+                checked={ field.props.multipleChoice } />
+                Allow multiple
+            </label>
+            <label style={ styles.bottomCheck }>
+              <input type="checkbox"
+                onClick={ this.onOtherClick.bind(this) }
+                checked={ field.props.otherAllowed } />
+                Allow "Other"
+            </label>
+          </div>
+
+          <div style={ styles.bottomOptionsRight }>
+            <label style={ styles.bottomCheck }>
+              <input type="checkbox"
+                onClick={ this.onIdentityClick.bind(this) }
+                checked={ field.identity } />
+                Reader info <FaQuestionCircle />
+            </label>
+            <label style={ styles.bottomCheck }>
+              <input type="checkbox"
+                onClick={ this.onRequiredClick.bind(this) }
+                checked={ field.wrapper.required } />
+                Required
+            </label>
+          </div>
+
+        </div>
+
       </div>
     );
   }
@@ -105,32 +178,61 @@ const styles = {
     backgroundColor: '#F7F7F7'
   },
   options: {
-    padding: '20px',
-    border: '1px solid #ccc',
     margin: '10px 0'
   },
-  required: {
-    display: 'block',
-    padding: '10px 0',
+  bottomCheck: {
+    display: 'inline-block',
+    padding: '10px',
     cursor: 'pointer'
   },
-  plusMinus: {
+  optionButton: {
     border: 'none',
     background: 'none',
     fontSize: '14pt',
     marginLeft: '10px',
-    padding: '0',
+    padding: '0px',
     cursor: 'pointer'
   },
   addOption: {
+    display: 'block',
     height: '40px',
     lineHeight: '40px',
-    padding: '0 10px',
+    padding: '0px 10px',
     fontSize: '12pt',
-    borderRadius: '0',
-    border: '1px solid #ccc',
+    borderRadius: '0px',
+    border: '1px dashed #ccc',
     background: '#fff',
-    marginTop: '10px',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    width: '100%',
+    textAlign: 'left',
+    color: '#999'
+  },
+  optionRow: {
+    marginBottom: '10px',
+    display: 'flex'
+  },
+  optionRowText: {
+    flexGrow: '2'
+  },
+  optionRowButtons: {
+    paddingTop: '10px',
+    width: '120px'
+  },
+  optionInput: {
+    display: 'block',
+    padding: '10px',
+    fontSize: '12pt',
+    width: '100%'
+  },
+  bottomOptions: {
+    display: 'flex',
+    width: '100%'
+  },
+  bottomOptionsLeft: {
+    flexGrow: '1'
+  },
+  bottomOptionsRight: {
+    textAlign: 'right',
+    flexGrow: '1'
   }
 };

@@ -19,7 +19,7 @@ const askTypes = [
   {type: 'TextField', title: 'Short Text'},
   {type: 'TextArea', title: 'Long Text'},
   {type: 'TextField', title: 'Numbers', props: { validateAs: 'number', validationMessage: "Only numbers are allowed in this field."} },
-  {type: 'MultipleChoice', title: 'Multiple choice', props: { multipleChoice: false } },
+  {type: 'MultipleChoice', title: 'Multiple choice', props: { multipleChoice: false, otherAllowed: false } },
   {type: 'TextField', title: 'Email', props: { validateAs: 'email', validationMessage: "Please type a valid e-mail." } },
   {type: 'TextField', title: 'Date'},
   {type: 'LocationDropdown', title: 'Location'},

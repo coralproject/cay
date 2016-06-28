@@ -7,7 +7,7 @@ var RadiumLink = Radium(Link);
 export default Radium(({ target, icon, name, onClick }) => (
   <li style={styles.base}>
     <RadiumLink style={styles.link} onClick={onClick}
-      to={target} activeStyle={styles.base[':hover']}>
+      to={target} activeStyle={styles.link[':hover']}>
       <span style={ styles.icon }>{icon}</span>
       <span style={styles.text}>{name}</span>
     </RadiumLink>

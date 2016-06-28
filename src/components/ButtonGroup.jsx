@@ -62,7 +62,7 @@ export default class ButtonGroup extends React.Component {
             // call the click handler on the old button if it exists
             child.props.onClick && child.props.onClick.call(child);
           },
-          style: [ getCorners(i, children.length)],
+          style: getCorners(i, children.length),
           category: i === this.state.activeIndex ? 'brand' : 'default'
         }
       );

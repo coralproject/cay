@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import MdDelete from 'react-icons/lib/md/delete';
 import _ from 'lodash';
-import MdForum from 'react-icons/lib/md/forum';
+import MdBuild from 'react-icons/lib/md/build';
 
 import { deleteForm, fetchForms } from 'forms/FormActions';
 import settings from 'settings';
@@ -95,7 +95,7 @@ export default class FormList extends React.Component {
     return (
       <Page>
         <ContentHeader title="View Forms" style={styles.header}>
-          <Link to="forms/create"><Button category="info">Create <MdForum /></Button></Link>
+          <Link to="forms/create"><Button category="info">Create <MdBuild /></Button></Link>
         </ContentHeader>
 
         <Tabs initialSelectedIndex={0} style={styles.tabs}>

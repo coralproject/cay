@@ -268,7 +268,7 @@ export const saveForm = (form, widgets) => {
   data.steps[0].widgets = widgets;
 
   // FIXME: remove this hotfix
-  data.status = form.settings.isActive ? 'active' : 'inactive';
+  data.status = form.settings.isActive ? 'open' : 'closed';
 
   return (dispatch, getState) => {
 

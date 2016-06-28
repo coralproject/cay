@@ -6,7 +6,7 @@ import MdDelete from 'react-icons/lib/md/delete';
 import _ from 'lodash';
 import MdForum from 'react-icons/lib/md/forum';
 
-import { deleteForm, fetchForms } from 'forms/FormActions';
+import { deleteForm, fetchForms, updateFormStatus } from 'forms/FormActions';
 import settings from 'settings';
 
 import Page from 'app/layout/Page';
@@ -21,11 +21,18 @@ import TableCell from 'components/tables/TableCell';
 import Tab from 'components/tabs/Tab';
 import Tabs from 'components/tabs/Tabs';
 
+import ButtonGroup from 'components/ButtonGroup';
+
 // Forms, Widgets, Submissions
 
 @connect(({ forms }) => ({ forms }))
 @Radium
 export default class FormList extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {displayMode: 'open'};
+  }
 
   static contextTypes = {
     router: PropTypes.object.isRequired
@@ -46,7 +53,6 @@ export default class FormList extends React.Component {
 
   onConfirmClick() {
     var formToDelete = this.state.formToDelete;
-    console.log("Form to delete", formToDelete);
     this.setState({ confirmFormName: '', showConfirmDialog: false, tagToDelete: null });
     this.props.dispatch(deleteForm(...formToDelete));
   }
@@ -87,10 +93,14 @@ export default class FormList extends React.Component {
     );
   }
 
+  setDisplayMode(displayMode) {
+    this.setState({displayMode});
+  }
+
   render() {
 
     const forms = this.props.forms.formList.map(id => this.props.forms[id]);
-    const groups = _.groupBy(forms, 'status');
+    const visibleForms = forms.filter(form => form.status === this.state.displayMode);
 
     return (
       <Page>
@@ -98,14 +108,12 @@ export default class FormList extends React.Component {
           <Link to="forms/create"><Button category="info">Create <MdForum /></Button></Link>
         </ContentHeader>
 
-        <Tabs initialSelectedIndex={0} style={styles.tabs}>
-          <Tab title="Active">
-            {this.renderTable(groups.active || groups[''])}
-          </Tab>
-          <Tab title="Inactive">
-            {this.renderTable(groups.inactive || [])}
-          </Tab>
-        </Tabs>
+        <ButtonGroup initialActiveIndex={0} behavior="radio">
+          <Button onClick={this.setDisplayMode.bind(this, 'open')}>Open</Button>
+          <Button onClick={this.setDisplayMode.bind(this, 'closed')}>Closed</Button>
+        </ButtonGroup>
+
+        {this.renderTable(visibleForms)}
 
         {
           this.state.showConfirmDialog ?

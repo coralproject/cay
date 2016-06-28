@@ -148,7 +148,7 @@ const styles = {
   },
   row: {
     cursor: 'pointer',
-    borderBottom: '1px solid ' + settings.lightGrey,
+    borderBottom: '5px solid ' + settings.lightGrey,
     backgroundColor: 'white',
     ':hover': {
       backgroundColor: settings.lightGrey

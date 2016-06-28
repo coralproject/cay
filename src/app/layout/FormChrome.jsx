@@ -80,14 +80,14 @@ export default class FormChrome extends React.Component {
               this.props.activeTab === 'submissions' && styles.active,
               !this.props.form && styles.disabled]}
               onClick={this.reviewSubmissions.bind(this)}>
-              Review Submissions {this.submissionBadge()}
+              Submissions {this.submissionBadge()}
             </div>
             <div key="louie" style={[
               styles.option,
               this.props.activeTab === 'gallery' && styles.active,
               !this.props.form && styles.disabled]}
               onClick={this.manageGallery.bind(this)}>
-              Manage Gallery {this.galleryBadge()}
+              Gallery {this.galleryBadge()}
             </div>
           </div>
 

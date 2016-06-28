@@ -104,8 +104,10 @@ export default class FormList extends React.Component {
 
     return (
       <Page>
-        <ContentHeader title="View Forms" style={styles.header}>
-          <Link to="forms/create"><Button category="info">Create <MdBuild /></Button></Link>
+        <ContentHeader title="View Forms" style={styles.header} subhead="Create, edit and view forms">
+          <Link to="forms/create" style={styles.createButton}>
+            <Button category="info">Create <MdBuild /></Button>
+          </Link>
         </ContentHeader>
 
         <ButtonGroup initialActiveIndex={0} behavior="radio">
@@ -136,7 +138,9 @@ const styles = {
   header: {
     display: 'flex',
     justifyContent: 'space-between',
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
+    borderBottom: '1px solid ' + settings.mediumGrey,
+    marginBottom: 10
   },
   list: {
     width: '100%',
@@ -149,6 +153,9 @@ const styles = {
     ':hover': {
       backgroundColor: settings.lightGrey
     }
+  },
+  createButton: {
+    marginTop: 10
   },
   confirmOverlay: {
     background: 'rgba(0,0,0,.7)',

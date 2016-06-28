@@ -17,10 +17,6 @@ export default class ButtonGroup extends React.Component {
     behavior: PropTypes.oneOf(['default', 'radio', 'checkbox'])
   }
 
-  getActiveStyle() {
-    console.log('getActiveStyle');
-  }
-
   setActiveIndex(activeIndex) {
     this.setState({activeIndex});
   }
@@ -75,15 +71,9 @@ export default class ButtonGroup extends React.Component {
 
   render() {
     return (
-      <div style={[styles.base, this.props.style]}>
+      <div style={this.props.style}>
         {this.layoutButtons(this.props.children)}
       </div>
     );
   }
 }
-
-const styles = {
-  base: {
-
-  }
-};

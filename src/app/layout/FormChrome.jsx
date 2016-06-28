@@ -143,7 +143,7 @@ const styles = {
     color: 'white',
     backgroundColor: 'transparent',
     ':hover': {
-      backgroundColor: color(settings.brandColor).darken(0.1).hexString()
+      backgroundColor: settings.brandColor
     }
   },
   active: {
@@ -157,7 +157,7 @@ const styles = {
     width: 110
   },
   badge: {
-    backgroundColor: color(settings.brandColor).darken(0.2).hexString(),
+    backgroundColor: color(settings.brandColor).darken(0.1).hexString(),
     fontSize: '14px',
     color: 'white'
   }

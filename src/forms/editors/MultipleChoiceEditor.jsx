@@ -80,6 +80,7 @@ export default class MultipleChoiceEditor extends Component {
     this.props.onEditorChange(updatedField);
   }
 
+  // TODO: This and identity should probably be generalized, is repeated in every field type
   onRequiredClick(e) {
     let { field } = this.props;
     let updatedWrapper = Object.assign({}, field.wrapper, { required: e.target.checked });

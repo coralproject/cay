@@ -49,10 +49,10 @@ export default class SearchEditor extends React.Component {
     }
 */
     dispatch(clearUserList());
-    dispatch(fetchInitialData());
     dispatch(userSelected(null));
-    dispatch(fetchSavedSearchForEdit(params.id));
     dispatch(getFilterRanges(true)); // editMode => true
+    dispatch(fetchSavedSearchForEdit(params.id))
+    .then(() => dispatch(fetchInitialData(true))); // dispatch after getting search
   }
 
   confirmSave() {
@@ -114,9 +114,9 @@ export default class SearchEditor extends React.Component {
               </div>
               <Button
                 onClick={this.confirmSave.bind(this)}
-                category="primary"
+                category={this.props.searches.searchUpdatedSuccessfully ? 'success' : 'primary'}
                 style={styles.saveButton}>
-                Update Search <FaFloopyO style={styles.saveIcon} />
+                {this.props.searches.searchUpdatedSuccessfully ? 'Search Saved!' : 'Update Search'} <FaFloopyO style={styles.saveIcon} />
               </Button>
               <Clauses editMode={true} />
             </div>
@@ -144,7 +144,6 @@ export default class SearchEditor extends React.Component {
 const styles = {
   pageBase: {
     position: 'absolute',
-    overflow: 'hidden',
     top: 60,
     left: 0,
     right: 0,

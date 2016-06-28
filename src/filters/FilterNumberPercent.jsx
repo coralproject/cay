@@ -38,15 +38,15 @@ export default class FilterNumbers extends React.Component {
     let help = '';
 
     if (this.props.userMax > this.props.max) {
-      help = `Max cannot be greater than ${this.props.max}`;
+      help = `Max cannot be greater than ${parseInt(this.props.max * 100, 10)}`;
     }
 
     if (this.props.userMin < this.props.min) {
-      help = `Min cannot be less than ${this.props.min}`;
+      help = `Min cannot be less than ${parseInt(this.props.min * 100, 10)}`;
     }
 
     if (this.props.userMin > this.props.userMax) {
-      help = 'Min cannot be greater than max';
+      help = `Min cannot be greater than max (${parseInt(this.props.max * 100, 10)})`;
     }
 
     return help;

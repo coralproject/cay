@@ -45,6 +45,7 @@ export const UPDATE_EDITABLE_SEARCH_META = 'UPDATE_EDITABLE_SEARCH_META';
 
 // when we're initializing a Saved Search update to Pillar
 export const PILLAR_SAVED_SEARCH_UPDATE = 'PILLAR_SAVED_SEARCH_UPDATE';
+export const PILLAR_SEARCH_UPDATE_STALE = 'PILLAR_SEARCH_UPDATE_STALE';
 
 export const CLEAR_USER_LIST = 'CLEAR_USER_LIST';
 export const CLEAR_USER = 'CLEAR_USER';
@@ -94,7 +95,6 @@ export const fetchSearch = (id) => {
 
     const app = getState().app;
 
-    console.log('fetchSearch', id);
     fetch(`${app.pillarHost}/api/search/${id}`)
       .then(resp => resp.json())
       .then(search => {
@@ -124,7 +124,7 @@ export const fetchSavedSearchForEdit = id => {
 
     dispatch(requestSavedSearchForEdit(id));
 
-    fetch(`${app.pillarHost}/api/search/${id}`)
+    return fetch(`${app.pillarHost}/api/search/${id}`)
       .then(resp => resp.json())
       .then(search => {
 
@@ -140,7 +140,7 @@ export const fetchSavedSearchForEdit = id => {
           return accum;
         }, {});
 
-        dispatch(receivedEditSearch(search, updatedFilters, breakdown, specificBreakdown));
+        return dispatch(receivedEditSearch(search, updatedFilters, breakdown, specificBreakdown));
       })
       .catch(error => {
         dispatch(searchEditFetchFailed(error));
@@ -288,8 +288,6 @@ export const makeQueryFromState = (type, page = 0, replace = false, editMode = f
           let searchMax;
           if (_.isDate(clampedUserMax)) {
             searchMax = `#date:${clampedUserMax.toISOString()}`;
-          } else if (filter.type === 'intDateProximity') {
-            searchMax = `#time:${-clampedUserMax*24}h`;
           } else {
             searchMax = clampedUserMax;
           }
@@ -308,6 +306,9 @@ export const makeQueryFromState = (type, page = 0, replace = false, editMode = f
       const field = _.template(sortBy[0])
         ({dimension: `${breakdown}${specificBreakdown ? `.${specificBreakdown}` : ''}`});
       x.sort([field, sortBy[1]]);
+    } else {
+      // default sorting
+      x.sort(['statistics.comments.all.all.count', -1]);
     }
     x.skip(page * pageSize).limit(pageSize)
       .include(['name', 'avatar', 'statistics.comments']);
@@ -327,7 +328,6 @@ export const saveQueryFromState = (queryName, desc, tag) => {
 
     dispatch({type: PILLAR_SEARCH_SAVE_INIT, query: state.searches.activeQuery});
 
-    console.log('about to save search to pillar');
     saveSearchToPillar(dispatch, state, queryName, desc, tag);
   };
 };
@@ -335,6 +335,26 @@ export const saveQueryFromState = (queryName, desc, tag) => {
 // prepare the active query to be saved to xenia
 const createQueryForSave = (query, name, desc) => {
   const q = _.cloneDeep(query);
+
+
+  // set params, descriptions, defaults
+  q.params = [
+    {
+      name: "limit",
+      desc: "Limits the number of records returned.",
+      default: "1000"
+    },
+    {
+      name: "skip",
+      desc: "Skips a number of records before returning.",
+      default: "0"
+    },
+    {
+      name: "sort",
+      desc: "Sort field.",
+      default: "statistics.comments.all.all.count"
+    }
+  ];
 
   // inject $limt and $skip commands before saving
   q.queries[0].commands.forEach((command) => {
@@ -345,15 +365,22 @@ const createQueryForSave = (query, name, desc) => {
     }
   });
 
-  const lastMatchIndex = _.findLastIndex(q.queries[0].commands, command => _.has(command, '$match'));
 
-  if (lastMatchIndex !== -1) {
-    const sortCommand = { $sort: { '#string:sort': -1 } };
-    q.queries[0].commands.splice(lastMatchIndex + 1, 0, sortCommand);
-  }
+  // disabling this sort
+  //  there are two sorts being added to searches, here and in makeQueryFromState
+  //  we need to decide whether to store the earch in the query
+  //  or expose it via a param
+  //const lastMatchIndex = _.findLastIndex(q.queries[0].commands, command => _.has(command, '$match'));
+  //if (lastMatchIndex !== -1) {
+  //  const sortCommand = { $sort: { '#string:sort': -1 } };
+    //q.queries[0].commands.splice(lastMatchIndex + 1, 0, sortCommand);
+  //}
+
 
   q.name = name;
   q.desc = desc;
+
+  console.log("Query", q);
 
   return q;
 };
@@ -436,7 +463,7 @@ const saveSearchToPillar = (dispatch, state, name, desc, tag) => {
 };
 
 /* xenia_package */
-const doMakeQueryFromStateAsync = _.throttle((query, dispatch, app, replace)=>{
+const doMakeQueryFromStateAsync = _.debounce((query, dispatch, app, replace)=>{
   dispatch(requestQueryset());
 
   dispatch(createQuery(query._data));
@@ -444,7 +471,7 @@ const doMakeQueryFromStateAsync = _.throttle((query, dispatch, app, replace)=>{
   query.exec()
     .then(json => dispatch(receiveQueryset(json, replace)))
     .catch(() => {});
-}, 1000);
+}, 250);
 
 export const updateSearch = staleSearch => {
 
@@ -480,6 +507,9 @@ export const updateSearch = staleSearch => {
 
         // update search in xenia
         xenia(query).saveQuery().then(() => {
+
+          _.delay(() => dispatch({type: PILLAR_SEARCH_UPDATE_STALE}), 3000);
+
           dispatch({type: QUERYSET_SAVE_SUCCESS, name: query.name});
         });
 
@@ -514,14 +544,14 @@ export const deleteSearch = search => {
   };
 };
 
-export const fetchInitialData = () => dispatch => {
+export const fetchInitialData = (editMode = false) => dispatch => {
   // Get initial data for the filters
   dispatch(fetchSections());
   dispatch(fetchAuthors());
   dispatch(populateDistributionStore());
 
   // Get user list
-  dispatch(makeQueryFromState('user', 0, true));
+  dispatch(makeQueryFromState('user', 0, true, editMode));
 };
 
 export const clearUserList = () => {

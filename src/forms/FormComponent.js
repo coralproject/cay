@@ -78,8 +78,9 @@ export default class FormComponent extends Component {
     const { isDragging, field } = this.props;
     return (
       this.props.connectDragSource(
-        <div onClick={ this.onClick.bind(this) } style={ styles.askComponent(isDragging) }>
-          { field.title }
+        <div onClick={this.onClick.bind(this)} style={styles.askComponent(isDragging)}>
+          <field.icon style={styles.icon} />
+          <span style={styles.title}>{field.title}</span>
         </div>
       )
     );
@@ -221,11 +222,11 @@ export const styles = {
       height: 40,
       backgroundColor: '#fff',
       borderRadius: 3,
-      fontSize: 14,
-      fontWeight: 'bold',
       width: '48%',
       textAlign: 'left',
-      margin: '1%'
+      margin: '1%',
+      display: 'flex',
+      alignItems: 'center'
     };
   },
   editContainer: function(isExpanded) {
@@ -357,5 +358,13 @@ export const styles = {
   },
   bottomButtons: {
     textAlign: 'right'
+  },
+  icon: {
+    marginRight: 8,
+    fontSize: '11pt'
+  },
+  title: {
+    fontSize: 14,
+    fontWeight: 'bold'
   }
 };

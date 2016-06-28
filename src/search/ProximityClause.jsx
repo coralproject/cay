@@ -45,7 +45,7 @@ class ProximityClause extends React.Component {
         styles.base,
         this.props.style
       ]}>
-        {this.props.description.replace("_", this.props.userMax)}
+        {this.props.description.replace('_', this.props.userMin)}
 
       </span>
     );

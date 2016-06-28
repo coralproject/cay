@@ -54,14 +54,23 @@ export default class SearchCreator extends Component {
     router: PropTypes.object.isRequired
   }
 
+  componentWillReceiveProps({ searches }) {
+    // Redirect to edit search after creation
+    if (searches.recentSavedSearch) {
+      const { router } = this.context;
+      return router.push(`/edit-search/${searches.recentSavedSearch.id}`);
+    }
+  }
+
   // only the first time
   componentWillMount() {
-    const {dispatch} = this.props;
+    const { dispatch, app, auth } = this.props;
+    const { router } = this.context;
 
     // redirect user to /login if they're not logged in
     //   TODO: refactor: pass in a function that calculates auth state
-    if (this.props.app.requireLogin && !this.props.auth.authorized) {
-      return this.context.router.push('/login');
+    if (app.requireLogin && !auth.authorized) {
+      return router.push('/login');
     }
 
     // set up the initial default / unfiltered view
@@ -144,13 +153,7 @@ export default class SearchCreator extends Component {
         <StatusBar
           loading={this.props.searches.savingSearch}
           visible={this.props.searches.savingSearch || !!this.props.searches.recentSavedSearch}>
-          {
-            this.props.searches.recentSavedSearch ?
-            (<Link style={styles.searchDetail} to={`/saved-search/${this.props.searches.recentSavedSearch.id}`}>
-              View Your Saved Search [{this.props.searches.recentSavedSearch.name}] →
-            </Link>) :
-            'Saving Search...'
-          }
+          Saving Search...
         </StatusBar>
 
         <Modal
@@ -184,7 +187,6 @@ export default class SearchCreator extends Component {
 const styles = {
   pageBase: {
     position: 'absolute',
-    overflow: 'hidden',
     top: 60,
     left: 0,
     right: 0,

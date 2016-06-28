@@ -2,7 +2,6 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import createHistory from 'history/lib/createBrowserHistory';
 import createDebounce from 'redux-debounce';
-import {middleware as socket} from 'sockets';
 
 import rootReducer from 'app/MainReducer';
 
@@ -12,7 +11,7 @@ const debounceConfig = {
 
 const debouncer = createDebounce(debounceConfig);
 
-const middleware = [thunk, debouncer, socket];
+const middleware = [thunk, debouncer];
 
 let finalCreateStore;
 

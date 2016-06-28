@@ -29,7 +29,7 @@ import SubmissionList from 'app/SubmissionList';
 import SubmissionGallery from 'app/SubmissionGallery';
 
 // Utils
-import registerServiceWorker from 'serviceworker!./sw.js';
+//import registerServiceWorker from 'serviceworker!./sw.js';
 import ga from 'react-ga';
 import { Lang } from 'i18n/lang';
 
@@ -51,9 +51,11 @@ require('react-datepicker.min.css');
 
 require('../fonts/glyphicons-halflings-regular.woff');
 
+/*
 if ('serviceWorker' in navigator && process && process.env.NODE_ENV === 'production') {
   registerServiceWorker({ scope: '/' }).then(() => {}, () => {});
 }
+*/
 
 let store;
 

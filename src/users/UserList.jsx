@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import Infinite from 'react-infinite';
 import Select from 'react-select';
+import _ from 'lodash';
 
 import UserRow from 'users/UserRow';
 import Heading from 'components/Heading';
@@ -71,6 +72,14 @@ export default class UserList extends React.Component {
     });
   }
 
+  getSpecificName() {
+    const { specificBreakdown, breakdown } = this.props.filters;
+    if (!specificBreakdown && specificBreakdown === 'all') return;
+    const bdown = this.props.filters[`${breakdown}s`];
+    const obj = _.find(bdown, {_id: specificBreakdown});
+    return obj && (obj.name || obj.description);
+  }
+
   getUserList(users) {
     return (
       <Infinite
@@ -108,6 +117,7 @@ export default class UserList extends React.Component {
 
   onPrevUser() {
     const { user, users } = this.props;
+    if (!user) return;
     const actualIndex = users.map(u => u._id).indexOf(user._id);
     if (actualIndex !== -1) {
       this.userSelected(users[actualIndex - 1]);
@@ -116,6 +126,7 @@ export default class UserList extends React.Component {
 
   onNextUser() {
     const { user, users } = this.props;
+    if (!user) return;
     const actualIndex = users.map(u => u._id).indexOf(user._id);
     if (actualIndex !== -1) {
       this.userSelected(users[actualIndex + 1]);
@@ -181,7 +192,10 @@ export default class UserList extends React.Component {
                 onNextUser={this.onNextUser.bind(this)}
                 isLast={user._id === users[users.length - 1]._id}
                 isFirst={user._id === users[0]._id}
-                user={user} /> : null}
+                user={user}
+                breakdown={this.props.filters.breakdown}
+                specificBreakdownName={this.getSpecificName()}
+                specificBreakdown={this.props.filters.specificBreakdown} /> : null}
             </div>
           </div>
         </div>

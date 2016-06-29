@@ -87,7 +87,9 @@ export default class FormList extends React.Component {
         <TableCell style={{maxWidth: 400}}>{header.description}</TableCell>
         <TableCell>{form.stats.responses}</TableCell>
         <TableCell>
-          <FaTrash key={i} onClick={ this.confirmDeletion.bind(this, header.title, header.description, form.id) } />
+          <div style={styles.trashButton} onClick={ this.confirmDeletion.bind(this, header.title, header.description, form.id) }>
+            <FaTrash style={styles.trashIcon} key={i} />
+          </div>
         </TableCell>
       </TableRow>
     );
@@ -195,9 +197,21 @@ const styles = {
     left: '30px',
     bottom: '30px'
   },
-  tabs: {
-    backgroundColor: 'white',
-    marginTop: 20,
-    clear: 'both'
+  trashButton: {
+    backgroundColor: settings.lightGrey,
+    width: 30,
+    height: 30,
+    marginTop: 5,
+    borderRadius: 3,
+    position: 'relative',
+    ':hover': {
+      backgroundColor: settings.mediumGrey
+    }
+  },
+  trashIcon: {
+    display: 'block',
+    position: 'absolute',
+    top: 7,
+    left: 7
   }
 };

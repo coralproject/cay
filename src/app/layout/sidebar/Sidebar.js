@@ -4,13 +4,14 @@ import Radium from 'radium';
 import settings from 'settings';
 import Menu from 'app/layout/sidebar/Menu';
 
+let initState = null;
 
 @Radium
 export default class Sidebar extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      open: false
+      open: initState
     };
   }
 
@@ -22,11 +23,16 @@ export default class Sidebar extends Component {
     const mql = this.mql = window.matchMedia('(min-width: 800px)');
     this._mqlChanged = this.mediaQueryChanged.bind(this);
     mql.addListener(this._mqlChanged);
-    this.setState({ open: mql.matches });
+
+    if (initState == null) {
+      initState = mql.matches;
+      this.setState({ open: initState });
+    }
   }
 
   componentWillUnmount() {
     this.mql.removeListener(this._mqlChanged);
+    initState = this.state.open;
   }
 
   mediaQueryChanged() {

@@ -83,8 +83,8 @@ export default class UserList extends React.Component {
   getUserList(users) {
     return (
       <Infinite
-        elementHeight={57}
-        containerHeight={500}
+        elementHeight={125}
+        containerHeight={this.containerRef.clientHeight - this.headerRef.clientHeight}
         infiniteLoadBeginEdgeOffset={200}
         isInfiniteLoading={this.props.loadingQueryset}
         loadingSpinnerDelegate={<InfiniteSpinner/>}
@@ -158,8 +158,10 @@ export default class UserList extends React.Component {
       }));
 
     return (
-      <div style={ [ styles.base, this.props.style ] }>
-        <div style={ styles.columnHeader }>
+      <div ref={element => this.containerRef = element}
+        style={ [ styles.base, this.props.style ] }>
+        <div ref={element => this.headerRef = element}
+          style={ styles.columnHeader }>
           {
             this.props.loadingQueryset ?
             <div style={ styles.loading }>
@@ -249,8 +251,7 @@ const styles = {
     position: 'absolute',
     top: 0,
     left: 0,
-    width: '100%',
-    height: 500
+    width: '100%'
   },
   cardFlipper(detail) {
     return {
@@ -264,7 +265,7 @@ const styles = {
   cardContainer: {
     perspective: 1000,
     width: '100%',
-    height: 500
+    flex: 1
   },
   infiniteSpinner: {
     display: 'flex',

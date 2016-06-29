@@ -55,7 +55,11 @@ export default class FormChrome extends React.Component {
 
   render() {
 
-    const name = _.has(this.props, 'form.header.title') ? this.props.form.header.title : 'Untitled Form';
+    let name = _.has(this.props, 'form.header.title') ? this.props.form.header.title : 'Untitled Form';
+
+    if (name.length > 15) {
+      name = name.split(' ').slice(0, 4).join(' ') + '…'; // use ellipsis character
+    }
 
     const statusOptions = [
       {label: 'Open', value: 'open'},

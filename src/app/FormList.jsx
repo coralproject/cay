@@ -2,11 +2,11 @@ import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import MdDelete from 'react-icons/lib/md/delete';
-import _ from 'lodash';
+import
+ FaTrash from 'react-icons/lib/fa/trash';
 import MdBuild from 'react-icons/lib/md/build';
 
-import { deleteForm, fetchForms, updateFormStatus } from 'forms/FormActions';
+import { deleteForm, fetchForms } from 'forms/FormActions';
 import settings from 'settings';
 
 import Page from 'app/layout/Page';
@@ -18,8 +18,6 @@ import TableHeader from 'components/tables/TableHeader';
 import TableBody from 'components/tables/TableBody';
 import TableRow from 'components/tables/TableRow';
 import TableCell from 'components/tables/TableCell';
-import Tab from 'components/tabs/Tab';
-import Tabs from 'components/tabs/Tabs';
 
 import ButtonGroup from 'components/ButtonGroup';
 
@@ -88,7 +86,9 @@ export default class FormList extends React.Component {
         <TableCell>{header.title}</TableCell>
         <TableCell style={{maxWidth: 400}}>{header.description}</TableCell>
         <TableCell>{form.stats.responses}</TableCell>
-        <TableCell><MdDelete key={i} onClick={ this.confirmDeletion.bind(this, header.title, header.description, form.id) } /></TableCell>
+        <TableCell>
+          <FaTrash key={i} onClick={ this.confirmDeletion.bind(this, header.title, header.description, form.id) } />
+        </TableCell>
       </TableRow>
     );
   }

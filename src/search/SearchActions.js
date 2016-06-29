@@ -476,10 +476,7 @@ const doMakeQueryFromStateAsync = _.debounce((query, dispatch, app, replace) => 
   dispatch(createQuery(query._data));
 
   query.exec()
-    .then(json => {
-      console.log('receiveQueryset', json, replace);
-      dispatch(receiveQueryset(json, replace));
-    })
+    .then(json => dispatch(receiveQueryset(json, replace)))
     .catch(() => {});
 }, 250);
 

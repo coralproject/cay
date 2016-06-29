@@ -49,7 +49,7 @@ const styles = {
     textFillColor: 'transparent',
     WebkitTextFillColor: 'transparent',
     MozTextFillColor: 'transparent',
-    animation: 'animatedBackground 10s linear infinite'
+    animation: 'animatedBackground 10s ease infinite'
   },
   ghLink: {
     color: 'white'

@@ -41,10 +41,10 @@ export default class UserRow extends React.Component {
     return (
       <div style={styles.defaultInfo}>
         <ul>
-          <li>Account created on {moment(stats.all.first).format('D MMM YYYY')}</li>
-          <li>{ratios.ModeratorDeleted ? (ratios.ModeratorDeleted * 100).toFixed(2) : 0}% deleted comments</li>
-          <li>{ratios.SystemFlagged ? (ratios.SystemFlagged * 100).toFixed(2) : 0}% flagged comments</li>
-          <li>{(stats.all.reply_ratio * 100).toFixed(2)}% comments are replies</li>
+          <li style={styles.defaultItem}>First comment {moment(stats.all.first).format('D MMM YYYY')}</li>
+          <li style={styles.defaultItem}>{ratios.ModeratorDeleted ? (ratios.ModeratorDeleted * 100).toFixed(2) : 0}% deleted comments</li>
+          <li style={styles.defaultItem}>{ratios.SystemFlagged ? (ratios.SystemFlagged * 100).toFixed(2) : 0}% flagged comments</li>
+          <li style={styles.defaultItem}>{(stats.all.reply_ratio * 100).toFixed(2)}% comments are replies</li>
         </ul>
         <span style={styles.defaultComments}>{stats.all.count} comments</span>
       </div>
@@ -159,5 +159,8 @@ const styles = {
     background: '#ccc',
     padding: 10,
     borderRadius: 4
+  },
+  defaultItem: {
+    paddingTop: 5
   }
 };

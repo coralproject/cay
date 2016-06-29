@@ -2,11 +2,11 @@ import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import MdDelete from 'react-icons/lib/md/delete';
-import _ from 'lodash';
-import MdForum from 'react-icons/lib/md/forum';
+import
+ FaTrash from 'react-icons/lib/fa/trash';
+import MdBuild from 'react-icons/lib/md/build';
 
-import { deleteForm, fetchForms, updateFormStatus } from 'forms/FormActions';
+import { deleteForm, fetchForms } from 'forms/FormActions';
 import settings from 'settings';
 
 import Page from 'app/layout/Page';
@@ -18,8 +18,6 @@ import TableHeader from 'components/tables/TableHeader';
 import TableBody from 'components/tables/TableBody';
 import TableRow from 'components/tables/TableRow';
 import TableCell from 'components/tables/TableCell';
-import Tab from 'components/tabs/Tab';
-import Tabs from 'components/tabs/Tabs';
 
 import ButtonGroup from 'components/ButtonGroup';
 
@@ -88,7 +86,11 @@ export default class FormList extends React.Component {
         <TableCell>{header.title}</TableCell>
         <TableCell style={{maxWidth: 400}}>{header.description}</TableCell>
         <TableCell>{form.stats.responses}</TableCell>
-        <TableCell><MdDelete key={i} onClick={ this.confirmDeletion.bind(this, header.title, header.description, form.id) } /></TableCell>
+        <TableCell>
+          <div style={styles.trashButton} onClick={ this.confirmDeletion.bind(this, header.title, header.description, form.id) }>
+            <FaTrash style={styles.trashIcon} key={i} />
+          </div>
+        </TableCell>
       </TableRow>
     );
   }
@@ -104,8 +106,10 @@ export default class FormList extends React.Component {
 
     return (
       <Page>
-        <ContentHeader title="View Forms" style={styles.header}>
-          <Link to="forms/create"><Button category="info">Create <MdForum /></Button></Link>
+        <ContentHeader title="View Forms" style={styles.header} subhead="Create, edit and view forms">
+          <Link to="forms/create" style={styles.createButton}>
+            <Button category="info">Create <MdBuild /></Button>
+          </Link>
         </ContentHeader>
 
         <ButtonGroup initialActiveIndex={0} behavior="radio">
@@ -136,7 +140,9 @@ const styles = {
   header: {
     display: 'flex',
     justifyContent: 'space-between',
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
+    borderBottom: '1px solid ' + settings.mediumGrey,
+    marginBottom: 10
   },
   list: {
     width: '100%',
@@ -144,11 +150,14 @@ const styles = {
   },
   row: {
     cursor: 'pointer',
-    borderBottom: '1px solid ' + settings.lightGrey,
+    borderBottom: '5px solid ' + settings.lightGrey,
     backgroundColor: 'white',
     ':hover': {
       backgroundColor: settings.lightGrey
     }
+  },
+  createButton: {
+    marginTop: 10
   },
   confirmOverlay: {
     background: 'rgba(0,0,0,.7)',
@@ -188,9 +197,21 @@ const styles = {
     left: '30px',
     bottom: '30px'
   },
-  tabs: {
-    backgroundColor: 'white',
-    marginTop: 20,
-    clear: 'both'
+  trashButton: {
+    backgroundColor: settings.lightGrey,
+    width: 30,
+    height: 30,
+    marginTop: 5,
+    borderRadius: 3,
+    position: 'relative',
+    ':hover': {
+      backgroundColor: settings.mediumGrey
+    }
+  },
+  trashIcon: {
+    display: 'block',
+    position: 'absolute',
+    top: 7,
+    left: 7
   }
 };

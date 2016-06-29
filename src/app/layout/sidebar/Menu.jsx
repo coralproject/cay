@@ -11,6 +11,7 @@ import FaListAlt from 'react-icons/lib/fa/list-alt';
 import FaCog from 'react-icons/lib/fa/cog';
 import FaAngleDoubleLeft from 'react-icons/lib/fa/angle-double-left';
 import FaAngleDoubleRight from 'react-icons/lib/fa/angle-double-right';
+import MdBuild from 'react-icons/lib/md/build';
 
 import { Lang } from 'i18n/lang';
 import settings from 'settings';
@@ -48,6 +49,7 @@ const TopMenu = ({ features }) => (
   <ul>
     <MenuItem name={ window.L.t('Create search') } target="/search-creator" icon={<FaGroup />} />
     <MenuItem name={ window.L.t('Saved Searches') } target="/saved-searches" icon={<FaDashboard />} />
+    { features.ask ? <MenuItem open={open} name="Create Form" target="/forms/create" icon={<MdBuild />} /> : null }
     { features.ask ? <MenuItem open={open} name="View Forms" target="/forms" icon={<FaListAlt />}/> : null }
   </ul>
 );

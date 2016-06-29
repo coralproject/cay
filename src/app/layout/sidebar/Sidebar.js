@@ -41,7 +41,7 @@ export default class Sidebar extends Component {
     const { open } = this.state;
     return (
       <div style={[styles.wrapper, this.props.styles]}>
-        <div style={styles.sidebar(open)}>
+        <div style={[styles.sidebar(open), this.props.styles.sidebar]}>
           <Menu onToggleSidebar={this.toggleSidebar.bind(this)} open={open} />
         </div>
         <div style={styles.main}>

@@ -9,12 +9,12 @@ import FaGlobe from 'react-icons/lib/fa/globe';
 import FaPhone from 'react-icons/lib/fa/phone';
 
 export default [
-  {type: 'TextField', title: 'Short Answer', icon: FaFileTextO},
-  {type: 'TextArea', title: 'Paragraph', icon: FaParagraph},
-  {type: 'TextField', title: 'Numbers', icon: FaHashtag, props: { validateAs: 'number', validationMessage: 'Only numbers are allowed in this field.'} },
-  {type: 'MultipleChoice', title: 'Multiple choice', icon: FaListUl, props: { multipleChoice: false, otherAllowed: false } },
-  {type: 'TextField', title: 'Email', icon: FaEnvelopeO, props: { validateAs: 'email', validationMessage: 'Please type a valid e-mail.' } },
-  {type: 'TextField', title: 'Date', icon: FaCalendar},
-  {type: 'LocationDropdown', title: 'Location', icon: FaGlobe},
-  {type: 'TextField', title: 'Phone number', icon: FaPhone}
+  { title: 'Short Answer', type: 'TextField', icon: FaFileTextO },
+  { title: 'Paragraph', type: 'TextArea', icon: FaParagraph },
+  { title: 'Numbers', type: 'TextField', icon: FaHashtag, props: { validateAs: 'number', validationMessage: 'Only numbers are allowed in this field.'} },
+  { title: 'Multiple choice', type: 'MultipleChoice', icon: FaListUl, props: { multipleChoice: false, otherAllowed: false } },
+  { title: 'Email', identity: true, type: 'TextField', icon: FaEnvelopeO, props: { validateAs: 'email', validationMessage: 'Please type a valid e-mail.' } },
+  { title: 'Date', type: 'TextField', icon: FaCalendar },
+  { title: 'Location', identity: true, type: 'LocationDropdown', icon: FaGlobe },
+  { title: 'Phone number', identity: true, type: 'TextField', icon: FaPhone }
 ];

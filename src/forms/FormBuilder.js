@@ -9,8 +9,9 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import { updateForm } from 'forms/FormActions';
 import FormDiagram from 'forms/FormDiagram';
 
-import FormComponent from 'forms/FormComponent';
-import { appendWidget } from 'forms/FormActions';
+import FormComponent, {styles as askComponentStyles} from 'forms/FormComponent';
+import { appendWidget, moveWidget } from 'forms/FormActions';
+
 import askTypes from 'forms/WidgetTypes';
 
 @connect(({ app, forms }) => ({ app, forms }))

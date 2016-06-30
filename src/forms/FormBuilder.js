@@ -26,6 +26,7 @@ export default class FormBuilder extends Component {
 
           <div style={styles.leftContainer}>
             <h4 style={styles.leftContainerTitle}>Question Fields</h4>
+            <p>Click on an field type to add it to the form.</p>
             <div style={styles.typeList}>
               {askTypes.map((type, i) => (
                 <FormComponent key={i} field={type} onClick={this.addToBottom.bind(this, type)} />

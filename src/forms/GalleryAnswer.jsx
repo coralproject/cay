@@ -54,10 +54,16 @@ export default class GalleryAnswer extends React.Component {
           <p style={styles.answerText}>{text}</p>
         </div>
         <div style={styles.rightColumn}>
-          <div>
-            <Trash style={styles.icon}/>
-            <FaArrowCircleUp style={styles.icon}/>
-            <FaArrowCircleDown style={styles.icon} />
+          <div style={{textAlign: 'right'}}>
+            <div style={styles.iconHolder} key="foo">
+              <Trash style={styles.icon} />
+            </div>
+            <div style={styles.iconHolder} key="bar">
+              <FaArrowCircleUp style={styles.icon} />
+            </div>
+            <div style={styles.iconHolder} key="baz">
+              <FaArrowCircleDown style={styles.icon} />
+            </div>
           </div>
           <div
             style={styles.editButton}
@@ -86,7 +92,8 @@ const styles = {
   },
   rightColumn: {
     minWidth: 200,
-    maxWidth: 200
+    maxWidth: 200,
+    textAlign: 'right'
   },
   editHighlight: {
     backgroundColor: settings.grey,
@@ -101,7 +108,15 @@ const styles = {
     fontSize: '16px'
   },
   editButton: {
-    marginRight: 10
+    marginRight: 10,
+    display: 'inline-block',
+    backgroundColor: settings.lightGrey,
+    padding: 10,
+    cursor: 'pointer',
+    borderRadius: 4,
+    ':hover': {
+      backgroundColor: settings.mediumGrey
+    }
   },
   heading: {
     fontSize: '18px',
@@ -118,13 +133,18 @@ const styles = {
     fontWeight: 'bold'
   },
   icon: {
-    display: 'inline-block',
     width: 30,
     height: 30,
-    fill: settings.grey,
+    fill: settings.grey
+  },
+  iconHolder: {
+    display: 'inline-block',
     cursor: 'pointer',
+    borderRadius: 4,
+    padding: 8,
     ':hover': {
-      fill: 'black'
+      fill: 'black',
+      backgroundColor: settings.lightGrey
     }
   },
   identityAnswers: {

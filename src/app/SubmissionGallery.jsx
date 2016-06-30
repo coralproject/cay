@@ -14,6 +14,8 @@ import {
 } from 'forms/FormActions';
 import {Link} from 'react-router';
 
+import FaFloppyO from 'react-icons/lib/fa/floppy-o';
+
 import settings from 'settings';
 import Page from 'app/layout/Page';
 import FormChrome from 'app/layout/FormChrome';
@@ -134,6 +136,12 @@ export default class SubmissionGallery extends React.Component {
           gallery={gallery} />
         <div style={styles.base}>
           <ContentHeader title={'Submission Gallery'} />
+          <div style={styles.headingButtonHolder}>
+            <Button style={styles.modButton} category="brand">Preview</Button>
+            <Button style={styles.modButton} category="success">Save <FaFloppyO /></Button>
+            <Button style={styles.modButton} category="inverse">Publish</Button>
+          </div>
+          <hr style={styles.rule} />
           <div style={styles.container}>
             <div style={styles.sidebar}>
               <Card>
@@ -153,6 +161,11 @@ export default class SubmissionGallery extends React.Component {
               </Card>
             </div>
             <div style={styles.gallery}>
+              <div style={styles.galleryTitle}>
+                <TextField style={styles.galleryTitles} label="Write a headline (optional)" />
+                <br />
+                <TextField style={styles.galleryTitles} label="Write description for the gallery (optional)" />
+              </div>
               {
                 this.props.activeGallery ?
                 this.renderGallery(gallery) :
@@ -200,7 +213,7 @@ export default class SubmissionGallery extends React.Component {
 
 const styles = {
   base: {
-    marginTop: 40
+
   },
   embedCode: {
     width: '100%',
@@ -216,10 +229,9 @@ const styles = {
   gallery: {
     flex: 3
   },
-  editButton: {
-    marginRight: 10
+  modButton: {
+    marginLeft: 10
   },
-
   modalBody: {
     display: 'flex'
   },
@@ -248,8 +260,24 @@ const styles = {
     height: 100,
     fontSize: '16px'
   },
-  answerText: {
-    marginBottom: 10,
-    fontSize: '16px'
+  galleryTitle: {
+
+  },
+  rule: {
+    borderTop: 'none',
+    borderRight: 'none',
+    borderLeft: 'none',
+    borderBottom: '1px solid ' + settings.mediumGrey,
+    marginBottom: 20
+  },
+  headingButtonHolder: {
+    position: 'absolute',
+    top: 20,
+    right: 20
+  },
+  galleryTitles: {
+    width: '75%',
+    marginBottom: 15,
+    marginTop: -25
   }
 };

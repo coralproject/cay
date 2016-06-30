@@ -1,10 +1,12 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import moment from 'moment';
-import Delete from 'react-icons/lib/md/delete';
-import Edit from 'react-icons/lib/md/edit';
+import Trash from 'react-icons/lib/fa/trash';
+import Edit from 'react-icons/lib/fa/pencil-square';
+import FaArrowCircleUp from 'react-icons/lib/fa/arrow-circle-up';
+import FaArrowCircleDown from 'react-icons/lib/fa/arrow-circle-down';
 
-import Button from 'components/Button';
+import settings from 'settings';
 
 @Radium
 export default class GalleryAnswer extends React.Component {
@@ -28,59 +30,106 @@ export default class GalleryAnswer extends React.Component {
 
     const {answer, gallery} = this.props;
 
+    console.log('answer', answer);
+    console.log('gallery', gallery);
+
+    const text = answer.answer.edited ? answer.answer.edited : answer.answer.answer.text;
+    const statusFlag = answer.answer.edited ? 'edited' : 'new';
+
+    if (!gallery) {
+      return <p>Loading gallery...</p>;
+    }
+
     return (
       <div style={styles.base}>
-        <p>Added to Gallery > {moment(gallery.date_updated).format('D MMM YYYY')}</p>
-        <p>Gallery id: {gallery ? gallery.id : 'loading gallery'}</p>
-
-        {
-          answer.answer.edited ?
-          (
-            <div>
-              <p style={styles.editHighlight}>Edit:</p>
-              <p style={styles.answerText}>{answer.answer.edited}</p>
-            </div>
-          ) :
-          null
-        }
-        <div>
-          <Button
+        <div style={styles.leftColumn}>
+          <p style={styles.heading}><span style={styles.statusFlag}>{statusFlag}</span> Added to Gallery <span style={styles.date}>{moment(gallery.date_updated).format('D MMM YYYY H:ma')}</span></p>
+          {
+            answer.identity_answers && (
+              <p style={styles.identityAnswers}>
+                {answer.identity_answers.map(a => a.answer.text).join(' ')}
+              </p>
+            )
+          }
+          <p style={styles.answerText}>{text}</p>
+        </div>
+        <div style={styles.rightColumn}>
+          <div>
+            <Trash style={styles.icon}/>
+            <FaArrowCircleUp style={styles.icon}/>
+            <FaArrowCircleDown style={styles.icon} />
+          </div>
+          <div
             style={styles.editButton}
             category="info"
             size="small"
             onClick={this.editAnswer.bind(this)}>
-            Edit <Edit />
-          </Button>
-          <Button
-            category="warning"
-            onClick={this.removeSubmission.bind(this)}
-            size="small">
-            Remove From Gallery <Delete />
-          </Button>
+            <Edit style={styles.icon} /> Edit
+          </div>
         </div>
+
       </div>
     );
   }
 }
-
-/*
-
-<Card key={i}>
-  <p style={styles.answerText}>{answer.answer.answer.text}</p>
-    {/*
-    <p>Answer id: {answer.answer_id}</p>
-    <p>widget id: {answer.answer.widget_id}</p>
-    <p>submission id: {answer.submission_id}</p>
-    }
-</Card>
-
-*/
 
 const styles = {
   base: {
     padding: 20,
     backgroundColor: 'white',
     boxShadow: '0px 0px 5px 0px rgba(0,0,0,0.2)',
-    marginBottom: 15
+    marginBottom: 15,
+    display: 'flex'
+  },
+  leftColumn: {
+    flex: 1
+  },
+  rightColumn: {
+    minWidth: 200,
+    maxWidth: 200
+  },
+  editHighlight: {
+    backgroundColor: settings.grey,
+    padding: '5px 10px',
+    borderRadius: 4,
+    marginBottom: 8,
+    color: 'white',
+    display: 'inline-block'
+  },
+  answerText: {
+    marginBottom: 10,
+    fontSize: '16px'
+  },
+  editButton: {
+    marginRight: 10
+  },
+  heading: {
+    fontSize: '18px',
+    color: settings.darkGrey,
+    letterSpacing: '0.03em',
+    marginBottom: 10
+  },
+  statusFlag: {
+    color: settings.brandColor,
+    fontWeight: 'bold',
+    textTransform: 'uppercase'
+  },
+  date: {
+    fontWeight: 'bold'
+  },
+  icon: {
+    display: 'inline-block',
+    width: 30,
+    height: 30,
+    fill: settings.grey,
+    cursor: 'pointer',
+    ':hover': {
+      fill: 'black'
+    }
+  },
+  identityAnswers: {
+    color: settings.grey,
+    fontStyle: 'italic',
+    marginBottom: 10
   }
 };

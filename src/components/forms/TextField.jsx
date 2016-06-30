@@ -51,7 +51,10 @@ export default class TextField extends React.Component {
           onBlur={this.handleBlur.bind(this)}
           onChange={this.handleChange.bind(this)} />
         <hr style={styles.underline} />
-        <hr style={styles.underlineHighlight} />
+        <hr style={[
+          styles.underlineHighlight,
+          this.state.focused && styles.underlineHighlight.focused
+        ]} />
         <div style={styles.errorMessage}>{this.props.error}</div>
       </div>
     );
@@ -111,10 +114,16 @@ const styles = {
     borderBottomColor: settings.brandColor,
     width: 0, // somehow transition this to 100%
     height: 0,
+    opacity: 0,
     bottom: -3,
     borderBottomWidth: 2,
     position: 'absolute',
-    boxSizing: 'content-box'
+    boxSizing: 'content-box',
+    transition: 'all .3s',
+    focused: {
+      opacity: 1,
+      width: '100%'
+    }
   },
   errorMessage: {
     position: 'absolute',

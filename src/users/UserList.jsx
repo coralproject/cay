@@ -38,6 +38,9 @@ export default class UserList extends React.Component {
       selectedSort: props.filters.filterList[0]
     };
 
+    this.containerHeight = 500;
+    this.headerHeight = 0;
+
     var keypress = function (evt) {
       switch (evt.keyCode) {
       case 39:
@@ -84,7 +87,7 @@ export default class UserList extends React.Component {
     return (
       <Infinite
         elementHeight={125}
-        containerHeight={this.containerRef.clientHeight - this.headerRef.clientHeight}
+        containerHeight={this.containerHeight - this.headerHeight}
         infiniteLoadBeginEdgeOffset={200}
         isInfiniteLoading={this.props.loadingQueryset}
         loadingSpinnerDelegate={<InfiniteSpinner/>}
@@ -157,9 +160,9 @@ export default class UserList extends React.Component {
       }));
 
     return (
-      <div ref={element => this.containerRef = element}
+      <div ref={element => this.containerHeight = element && element.clientHeight || 500}
         style={ [ styles.base, this.props.style ] }>
-        <div ref={element => this.headerRef = element}
+        <div ref={element => this.headerHeight = element && element.clientHeight || 0}
           style={ styles.columnHeader }>
           {
             this.props.loadingQueryset ?

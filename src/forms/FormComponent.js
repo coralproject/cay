@@ -61,8 +61,12 @@ export default class FormComponent extends Component {
     this.state = { 'expanded': false, field: props.field, originalField: props.field };
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.setState({ field: nextProps.field, originalField: nextProps.field });
+  }
+
   render() {
-    const { connectDragSource, onList } = this.props;
+    const { onList } = this.props;
     return onList ?
       this.renderEdit()
       : this.renderType();
@@ -77,12 +81,10 @@ export default class FormComponent extends Component {
   renderType() {
     const { isDragging, field } = this.props;
     return (
-      this.props.connectDragSource(
-        <div onClick={this.onClick.bind(this)} style={styles.askComponent(isDragging)}>
-          <field.icon style={styles.icon} />
-          <span style={styles.title}>{field.title}</span>
-        </div>
-      )
+      <div onClick={this.onClick.bind(this)} style={styles.askComponent(isDragging)}>
+        <field.icon style={styles.icon} />
+        <span style={styles.title}>{field.title}</span>
+      </div>
     );
   }
 
@@ -123,8 +125,8 @@ export default class FormComponent extends Component {
         {
           !this.state.expanded ?
           <div>
-            { this.props.connectDragSource(
-                <div style={ styles.editContainer(this.state.expanded) }>
+            {
+                <div style={ styles.editContainer(this.state.expanded) } key={ id }>
                   <div>{ position + 1 }.</div>
                   <div style={styles.editBody} onClick={ this.toggleExpanded.bind(this) }>
                     <h4>
@@ -149,7 +151,6 @@ export default class FormComponent extends Component {
                     { !isLast ? <button onClick={() => onMove('down', position)} style={styles.arrow}><FaArrowCircleDown /></button> : null  }
                   </div>
                 </div>
-              )
             }
             </div>
           : null

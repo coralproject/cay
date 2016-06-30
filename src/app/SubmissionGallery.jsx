@@ -13,7 +13,6 @@ import {
   beginEdit
 } from 'forms/FormActions';
 import {Link} from 'react-router';
-import moment from 'moment';
 
 import settings from 'settings';
 import Page from 'app/layout/Page';
@@ -22,13 +21,12 @@ import ContentHeader from 'components/ContentHeader';
 import Card from 'components/cards/Card';
 import CardHeader from 'components/cards/CardHeader';
 
-import Delete from 'react-icons/lib/md/delete';
-import Edit from 'react-icons/lib/md/edit';
-
 import TextField from 'components/forms/TextField';
 import Checkbox from 'components/forms/Checkbox';
 import Button from 'components/Button';
 import Modal from 'components/modal/Modal';
+
+import GalleryAnswer from 'forms/GalleryAnswer';
 
 @connect(state => state.forms)
 @Radium
@@ -52,41 +50,12 @@ export default class SubmissionGallery extends React.Component {
   renderGallery(gallery) {
     return gallery.answers.map((answer, i) => {
       return (
-        <Card key={i}>
-          <p>Added to Gallery > {moment(gallery.date_updated).format('D MMM YYYY')}</p>
-          <p style={styles.answerText}>{answer.answer.answer.text}</p>
-            <p>Gallery id: {gallery ? gallery.id : 'loading gallery'}</p>
-            {/*
-            <p>Answer id: {answer.answer_id}</p>
-            <p>widget id: {answer.answer.widget_id}</p>
-            <p>submission id: {answer.submission_id}</p>
-            */}
-          {
-            answer.answer.edited ?
-              (
-                <div>
-                  <p style={styles.editHighlight}>Edit:</p>
-                  <p style={styles.answerText}>{answer.answer.edited}</p>
-                </div>
-              ) :
-              null
-          }
-          <div>
-            <Button
-              style={styles.editButton}
-              category="info"
-              size="small"
-              onClick={this.beginEditAnswer.bind(this, gallery.id, answer.submission_id, answer.answer_id)}>
-              Edit <Edit />
-            </Button>
-            <Button
-              category="warning"
-              onClick={this.removeSubmission.bind(this, gallery.id, answer.submission_id, answer.answer_id)}
-              size="small">
-              Remove From Gallery <Delete />
-            </Button>
-          </div>
-        </Card>
+        <GalleryAnswer
+          removeSubmission={this.removeSubmission.bind(this)}
+          editAnswer={this.beginEditAnswer.bind(this)}
+          answer={answer}
+          gallery={gallery}
+          key={i} />
       );
     });
   }

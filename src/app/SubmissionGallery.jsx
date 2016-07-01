@@ -13,8 +13,10 @@ import {
   beginEdit
 } from 'forms/FormActions';
 import {Link} from 'react-router';
+import moment from 'moment';
 
 import FaFloppyO from 'react-icons/lib/fa/floppy-o';
+import Select from 'react-select';
 
 import settings from 'settings';
 import Page from 'app/layout/Page';
@@ -117,6 +119,14 @@ export default class SubmissionGallery extends React.Component {
     });
   }
 
+  updateOrientation(value) {
+
+  }
+
+  updatePlacement(value) {
+
+  }
+
   render() {
 
     const form = this.props[this.props.activeForm];
@@ -125,6 +135,16 @@ export default class SubmissionGallery extends React.Component {
     const ans = this.props[this.props.answerBeingEdited];
 
     const attributionFields = this.getAttributionFields(form);
+    const orientationOpts = [
+      {label: 'Gallery Orientation - Vertical', value: 'vertical'},
+      {label: 'Gallery Orientation - Horizontal', value: 'horizontal'}
+    ];
+    const placementOpts = [
+      {label: 'Above the submission', value: 'above'},
+      {label: 'Below the submission', value: 'below'}
+    ];
+
+    console.log('SubmissionGallery.render', gallery);
 
     return (
       <Page>
@@ -135,8 +155,15 @@ export default class SubmissionGallery extends React.Component {
           submissions={submissions}
           gallery={gallery} />
         <div style={styles.base}>
-          <ContentHeader title={'Submission Gallery'} />
+          <ContentHeader
+            title={'Submission Gallery'}
+            subhead={`Created By... Created on ${moment(gallery.created_date).format('D MMM YYYY H:ma')}`} />
           <div style={styles.headingButtonHolder}>
+            <div style={styles.orientationOpts}>
+              <Select
+                options={orientationOpts}
+                onChange={this.updateOrientation.bind(this)} />
+            </div>
             <Button style={styles.modButton} category="brand">Preview</Button>
             <Button style={styles.modButton} category="success">Save <FaFloppyO /></Button>
             <Button style={styles.modButton} category="inverse">Publish</Button>
@@ -145,12 +172,18 @@ export default class SubmissionGallery extends React.Component {
           <div style={styles.container}>
             <div style={styles.sidebar}>
               <Card>
-                <CardHeader>Author Attribution</CardHeader>
+                <CardHeader>Reader Information</CardHeader>
 
+                <p style={styles.includeLabel}>Placement</p>
+                <Select
+                  style={styles.placementOpts}
+                  options={placementOpts}
+                  onChange={this.updatePlacement.bind(this)} />
+
+                <p style={styles.includeLabel}>Include</p>
                 {attributionFields.map(function (field, i) {
                   return <Checkbox key={i} label={field.title} />;
                 })}
-
 
               </Card>
               <Card>
@@ -224,7 +257,7 @@ const styles = {
   },
   sidebar: {
     flex: 1,
-    marginRight: 10
+    marginRight: 20
   },
   gallery: {
     flex: 3
@@ -279,5 +312,17 @@ const styles = {
     width: '75%',
     marginBottom: 15,
     marginTop: -25
+  },
+  orientationOpts: {
+    display: 'inline-block',
+    minWidth: 300,
+    position: 'relative',
+    top: 10
+  },
+  placementOpts: {
+    marginBottom: 10
+  },
+  includeLabel: {
+    marginBottom: 5
   }
 };

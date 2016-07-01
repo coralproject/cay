@@ -122,7 +122,11 @@ const parseFilterRanges = (ranges, filterState) => {
       value = possibleDateValue;
     }
 
-    newFilter[field] = value; // where field is {min|max}
+    // do not override the min that has been set if a minRange|maxRange has been set in data_config.json
+    if ((_.isUndefined(oldFilter.minRange) && field === 'min') ||
+      (_.isUndefined(oldFilter.maxRange) && field === 'max')) {
+      newFilter[field] = value; // where field is {min|max}
+    }
     accum[key] = newFilter;
 
     // on the first pass, go ahead and force a change on userMin and userMax

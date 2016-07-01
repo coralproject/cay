@@ -54,8 +54,8 @@ export default class FormChrome extends React.Component {
   }
 
   render() {
-
-    let name = _.has(this.props, 'form.header.title') ? this.props.form.header.title : 'Untitled Form';
+    let name = _.has(this.props, 'form.header.title') ? this.props.form.header.title :
+      this.props.create ? 'Untitled Form' : '';
 
     if (name.length > 15) {
       name = name.split(' ').slice(0, 4).join(' ') + '…'; // use ellipsis character
@@ -77,19 +77,19 @@ export default class FormChrome extends React.Component {
               styles.option,
               this.props.activeTab === 'builder' && styles.active]}
               onClick={this.buildForm.bind(this)}>
-              {this.props.form ? 'Edit Form' : 'Build Form'}
+              {this.props.create ? 'Build Form' : 'Edit Form'}
             </div>
             <div key="dewey" style={[
               styles.option,
               this.props.activeTab === 'submissions' && styles.active,
-              !this.props.form && styles.disabled]}
+              this.props.create && styles.disabled]}
               onClick={this.reviewSubmissions.bind(this)}>
               Submissions {this.submissionBadge()}
             </div>
             <div key="louie" style={[
               styles.option,
               this.props.activeTab === 'gallery' && styles.active,
-              !this.props.form && styles.disabled]}
+              this.props.create && styles.disabled]}
               onClick={this.manageGallery.bind(this)}>
               Gallery {this.galleryBadge()}
             </div>
@@ -123,6 +123,7 @@ const styles = {
     padding: 10,
     fontWeight: 'bold',
     fontSize: '20px',
+    flex: 1,
     cursor: 'auto',
     ':hover': {
       backgroundColor: 'transparent'
@@ -130,7 +131,8 @@ const styles = {
   },
 
   formControls: {
-    display: 'flex'
+    display: 'flex',
+    flex: 2
   },
 
   menu: {

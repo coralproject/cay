@@ -8,6 +8,10 @@ if [[ -z "$PILLAR_URL" ]]; then
     export PILLAR_URL="http://${PILLAR_PORT_8080_TCP_ADDR}:${PILLAR_PORT_8080_TCP_PORT}"
 fi
 
+if [[ -z "$ELKHORN_URL" ]]; then
+    export ELKHORN_URL="http://${ELKHORN_PORT_4444_TCP_ADDR}:${ELKHORN_PORT_4444_TCP_PORT}"
+fi
+
 if [[ -z "$AUTH_TOKEN" ]]; then
     export DO_AUTH=false
 else

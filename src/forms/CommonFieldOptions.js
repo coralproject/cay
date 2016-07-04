@@ -2,6 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import Radium from 'radium';
 import { connect } from 'react-redux';
 
+import ReactTooltip from 'react-tooltip';
+
 import FaQuestionCircle from 'react-icons/lib/fa/question-circle';
 
 @connect(({ forms, app }) => ({ forms, app }))
@@ -45,18 +47,14 @@ export default class TextFieldEditor extends Component {
             checked={ field.identity } />
             Reader info
             <span
-              style={ styles.questionMark }
-              onMouseEnter={ this.onMouseEnter.bind(this) }
-              onMouseLeave={ this.onMouseLeave.bind(this) }>
-              <FaQuestionCircle />
-              {
-                  this.state.showingTooltip ?
-                    <div style={ styles.popOver }>
-                      <strong style={ styles.strong }>What is this feature?</strong>
-                      <p>Check if this field contains personal information.</p>
-                    </div>
-                  : null
-              }
+              style={ styles.questionMark }>
+              <FaQuestionCircle data-tip data-for="readerInfo" />
+              <ReactTooltip class="cayTooltip" id="readerInfo" place="bottom" effect="solid" type="light">
+                <div style={ styles.popOver }>
+                  <strong style={ styles.strong }>What is this feature?</strong>
+                  <p>Check if this field contains personal information.</p>
+                </div>
+              </ReactTooltip>
             </span>
         </label>
         <label style={ styles.bottomCheck }>
@@ -93,17 +91,9 @@ const styles = {
     position: 'relative'
   },
   popOver: {
-    position: 'absolute',
-    top: '20px',
-    width: '200px',
-    left: '-100px',
-    background: 'white',
-    zIndex: '9000',
-    border: '1px solid #ccc',
-    borderRadius: '4px',
-    padding: '20px',
     textAlign: 'left',
-    boxShadow: '0 1px 3px #999'
+    width: '200px',
+    padding: '20px 0'
   },
   strong: {
     fontWeight: 'bold',

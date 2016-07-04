@@ -147,8 +147,18 @@ export default class FormComponent extends Component {
                   </div>
                   <div style={styles.arrowContainer}>
                     <button style={styles.delete} onClick={ () => onDelete(position) }><FaTrash /></button>
-                    { position !== 0 ? <button onClick={() => onMove('up', position)} style={styles.arrow}><FaArrowCircleUp /></button> : null  }
-                    { !isLast ? <button onClick={() => onMove('down', position)} style={styles.arrow}><FaArrowCircleDown /></button> : null  }
+                    {
+                      position !== 0 ?
+                        <button onClick={() => onMove('up', position)} style={styles.arrow}><FaArrowCircleUp /></button>
+                      :
+                        <span style={ styles.arrowPlaceHolder }></span>
+                    }
+                    {
+                      !isLast ?
+                        <button onClick={() => onMove('down', position)} style={styles.arrow}><FaArrowCircleDown /></button>
+                      :
+                        <span style={ styles.arrowPlaceHolder }></span>
+                    }
                   </div>
                 </div>
             }
@@ -263,6 +273,13 @@ export const styles = {
     fontSize: '14pt',
     display: 'inline-block',
     cursor: 'pointer'
+  },
+  arrowPlaceHolder: {
+    width: '40px',
+    height: '40px',
+    padding: '0',
+    marginLeft: '5px',
+    display: 'inline-block'
   },
   delete: {
     width: '40px',

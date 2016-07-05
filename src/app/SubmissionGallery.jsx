@@ -54,7 +54,7 @@ export default class SubmissionGallery extends React.Component {
       return (
         <Card key={i}>
           <p>Added to Gallery > {moment(gallery.date_updated).format('D MMM YYYY')}</p>
-          <p style={styles.answerText}>{answer.answer.answer.text}</p>
+          <p style={styles.answerText}>{answer.answer.answer ? answer.answer.answer.text : ''}</p>
             <p>Gallery id: {gallery ? gallery.id : 'loading gallery'}</p>
             {/*
             <p>Answer id: {answer.answer_id}</p>

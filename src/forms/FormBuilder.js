@@ -5,6 +5,8 @@ import uuid from 'node-uuid';
 
 import { DragDropContext, DropTarget } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
+import FaClose from 'react-icons/lib/fa/close';
+import FaSpinner from 'react-icons/lib/fa/spinner';
 
 import { updateForm } from 'forms/FormActions';
 import FormDiagram from 'forms/FormDiagram';
@@ -83,18 +85,10 @@ export default class FormBuilder extends Component {
 
         </div>
         <FormDiagram onOpenPreview={ onOpenPreview } activeForm={ this.props.activeForm } />
-        {
-          preview ?
-            <div style={ styles.previewPane }>
-              <div style={ styles.previewActions }>
-                <button style={ styles.previewClose } onClick={ onClosePreview.bind(this) }>Close</button>
-              </div>
-              <div style={ styles.previewContent }>
-                {this.renderPreview.call(this)}
-              </div>
-            </div>
-          : null
-        }
+        { preview ? <Preview
+          renderPreview={this.renderPreview.bind(this)}
+          onClosePreview={onClosePreview.bind(this)}
+          /> : null }
       </div>
     );
   }
@@ -104,7 +98,7 @@ export default class FormBuilder extends Component {
       title: data.title,
       type: 'field',
       component: data.type,
-      identity: false,
+      identity: data.identity ? data.identity : false,
       wrapper: {},
       props: { ...data.props },
       id: Math.floor(Math.random() * 99999) + ''
@@ -141,11 +135,23 @@ export default class FormBuilder extends Component {
 
     return (
       <div>
+        <FaSpinner style={styles.previewSpinner} />
         <div id="ask-form"></div>
       </div>
     );
   }
 }
+
+const Preview = ({ onClosePreview, renderPreview }) => (
+  <div style={ styles.previewPane }>
+    <div style={ styles.previewActions }>
+      <span style={ styles.previewClose } onClick={onClosePreview}><FaClose /></span>
+    </div>
+    <div style={ styles.previewContent }>
+      {renderPreview()}
+    </div>
+  </div>
+);
 
 const styles = {
   builderContainer: {
@@ -285,10 +291,13 @@ const styles = {
     flexDirection: 'column'
   },
   previewActions: {
-    background: 'white',
     padding: '10px',
     flex: 'none',
-    height: '60px'
+    height: '60px',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    zIndex: 10
   },
   previewClose: {
     padding: '0 10px',
@@ -298,8 +307,17 @@ const styles = {
     cursor: 'pointer'
   },
   previewContent: {
-    overflow: 'scroll',
+    overflow: 'auto',
     flexGrow: '2'
+  },
+  previewSpinner: {
+    position: 'absolute',
+    left: '50%',
+    top: '50%',
+    animationName: 'spin',
+    animationDuration: '1000ms',
+    animationIterationCount: 'infinite',
+    animationTimingFunction: 'linear'
   },
   embedCode: {
     width: '100%',

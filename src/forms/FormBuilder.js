@@ -72,10 +72,11 @@ export default class FormBuilder extends Component {
                 this.props.forms.savedForm ?
                 (
                   <div>
-                  <p>Copy this code to embed your form.</p>
-                  <textarea style={styles.embedCode} value={`<div id=“ask-form”></div><script src=“${this.props.app.elkhornHost}/${this.props.forms.savedForm}.js”></script>`}>
-                  </textarea>
-                    <a href={ `${this.props.app.elkhornHost}/iframe/${this.props.forms.savedForm}` } target="_blank" style={ styles.formSettingsAction }>Live Form</a>
+                    <p>Embed code</p>
+                    <textarea style={styles.embedCode} value={`<div id="ask-form"></div><script src="${this.props.app.elkhornHost}/${this.props.forms.savedForm}.js"></script>`}/>
+                    <p>Embed code (iframe)</p>
+                    <textarea style={styles.embedCode} value={`<iframe width="100%" height="580" src="${this.props.app.elkhornHost}/iframe/${this.props.forms.savedForm}"></iframe>`}/>
+                    <a href={ `${this.props.app.elkhornHost}/iframe/${this.props.forms.savedForm}` } target="_blank" style={ styles.formSettingsAction }>Standalone Form</a>
                   </div>
                 ) :
                 <p>This form is not saved. Once you save it you will see embed code here.</p>

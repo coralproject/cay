@@ -2,16 +2,13 @@ import React, { Component, PropTypes } from 'react';
 import Radium from 'radium';
 import { connect } from 'react-redux';
 
-import editWidgetStyles from 'forms/editors/editWidgetStyles';
-
-import FaCalendar from 'react-icons/lib/fa/calendar';
-import FaCaretDown from 'react-icons/lib/fa/caret-down';
-
 import CommonFieldOptions from 'forms/CommonFieldOptions';
+
+import editWidgetStyles from 'forms/editors/editWidgetStyles';
 
 @connect(({ forms, app }) => ({ forms, app }))
 @Radium
-export default class DateFieldEditor extends Component {
+export default class NumberFieldEditor extends Component {
 
   constructor(props) {
     super(props);
@@ -24,28 +21,34 @@ export default class DateFieldEditor extends Component {
     this.setState({ field: updatedField });
   }
 
+  onMaxCharsChange(e) {
+    let { field } = this.state;
+    let updatedProps = Object.assign({}, field.props, { maxLength: e.target.value });
+    let updatedField = Object.assign({}, field, { props: updatedProps });
+    this.props.onEditorChange(updatedField);
+  }
+
   render() {
     let { field } = this.state;
     return (
       <div>
 
         <div style={ styles.responseArea }>
-          <span style={ styles.responseAreaSelect }>
-            MM
-            <span style={ styles.caret }><FaCaretDown /></span>
-          </span>
-          <span style={ styles.responseAreaSelect }>
-            DD
-            <span style={ styles.caret }><FaCaretDown /></span>
-          </span>
-          <span style={ styles.responseAreaSelect }>
-            YYYY
-            <span style={ styles.caret }><FaCaretDown /></span>
-          </span>
-          <span style={ styles.calendarIcon }><FaCalendar /></span>
+          <input style={ styles.responseAreaInput } type="text" disabled placeholder="Response Area" />
         </div>
 
         <div style={ styles.bottomOptions }>
+
+          <div style={ styles.bottomOptionsLeft }>
+            <label style={ styles.bottomCheck }>
+                Max. chars:
+                <input
+                  onChange={ this.onMaxCharsChange.bind(this) }
+                  defaultValue={ field.props.maxLength || 0 }
+                  type="text"
+                  style={ styles.bottomCheckTextInput }></input>
+            </label>
+          </div>
 
           <CommonFieldOptions {...this.props} />
 
@@ -85,22 +88,11 @@ const styles = {
     marginLeft: '10px',
     fontSize: '12pt'
   },
-  responseAreaSelect: {
-    padding: '0 10px',
-    lineHeight: '40px',
+  responseAreaInput: {
+    padding: '10px',
     height: '40px',
-    border: '1px solid #ccc',
-    marginRight: '5px',
-    display: 'inline-block'
-  },
-  caret: {
-    position: 'relative',
-    paddingLeft: '10px',
-    top: '-2px'
-  },
-  calendarIcon: {
-    fontSize: '20pt',
-    marginLeft: '10px'
+    display: 'block',
+    width: '100%'
   }
 
 };

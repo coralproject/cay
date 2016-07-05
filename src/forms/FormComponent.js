@@ -11,12 +11,20 @@ import FaArrowCircleDown from 'react-icons/lib/fa/arrow-circle-down';
 
 import TextFieldEditor from 'forms/editors/TextFieldEditor';
 import MultipleChoiceEditor from 'forms/editors/MultipleChoiceEditor';
+import DateFieldEditor from 'forms/editors/DateFieldEditor';
+import NumberFieldEditor from 'forms/editors/NumberFieldEditor';
 
 const renderSettings = {
 
   DateField(field, props) {
     return (
       <DateFieldEditor field={ field } { ...props } />
+    );
+  },
+
+  NumberField(field, props) {
+    return (
+      <NumberFieldEditor field={ field } { ...props } />
     );
   },
 

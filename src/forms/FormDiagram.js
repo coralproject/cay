@@ -12,10 +12,7 @@ import FaArrowCircleUp from 'react-icons/lib/fa/arrow-circle-up';
 import FaUserPlus from 'react-icons/lib/fa/user-plus';
 import FaFloppyO from 'react-icons/lib/fa/floppy-o';
 import FaEye from 'react-icons/lib/fa/eye';
-import Spinner from 'components/spinner';
-
-
-import settings from 'settings';
+import Spinner from 'components/Spinner';
 
 @connect(({ forms, app }) => ({ forms, app }))
 export default class FormDiagram extends Component {

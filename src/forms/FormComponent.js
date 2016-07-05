@@ -69,7 +69,7 @@ export default class FormComponent extends Component {
   }
 
   render() {
-    const { connectDragSource, onList } = this.props;
+    const { onList } = this.props;
     return onList ?
       this.renderEdit()
       : this.renderType();
@@ -84,12 +84,10 @@ export default class FormComponent extends Component {
   renderType() {
     const { isDragging, field } = this.props;
     return (
-      this.props.connectDragSource(
-        <div onClick={this.onClick.bind(this)} style={styles.askComponent(isDragging)}>
-          <field.icon style={styles.icon} />
-          <span style={styles.title}>{field.title}</span>
-        </div>
-      )
+      <div onClick={this.onClick.bind(this)} style={styles.askComponent(isDragging)}>
+        <field.icon style={styles.icon} />
+        <span style={styles.title}>{field.title}</span>
+      </div>
     );
   }
 
@@ -130,33 +128,32 @@ export default class FormComponent extends Component {
         {
           !this.state.expanded ?
           <div>
-            { this.props.connectDragSource(
-                <div style={ styles.editContainer(this.state.expanded) }>
-                  <div>{ position + 1 }.</div>
-                  <div style={styles.editBody} onClick={ this.toggleExpanded.bind(this) }>
-                    <h4>
-                      { field.title }
-                      {
-                        field.wrapper && field.wrapper.required ?
-                          <span style={ styles.requiredAsterisk }>*</span>
-                        :
-                          null
-                      }
-                      {
-                        field.identity ?
-                          <span style={ styles.identityLabel }>PII</span>
-                        :
-                          null
-                      }
-                    </h4>
-                  </div>
-                  <div style={styles.arrowContainer}>
-                    <button style={styles.delete} onClick={ () => onDelete(position) }><FaTrash /></button>
-                    { position !== 0 ? <button onClick={() => onMove('up', position)} style={styles.arrow}><FaArrowCircleUp /></button> : null  }
-                    { !isLast ? <button onClick={() => onMove('down', position)} style={styles.arrow}><FaArrowCircleDown /></button> : null  }
-                  </div>
+            {
+              <div style={ styles.editContainer(this.state.expanded) }>
+                <div>{ position + 1 }.</div>
+                <div style={styles.editBody} onClick={ this.toggleExpanded.bind(this) }>
+                  <h4>
+                    { field.title }
+                    {
+                      field.wrapper && field.wrapper.required ?
+                        <span style={ styles.requiredAsterisk }>*</span>
+                      :
+                        null
+                    }
+                    {
+                      field.identity ?
+                        <span style={ styles.identityLabel }>PII</span>
+                      :
+                        null
+                    }
+                  </h4>
                 </div>
-              )
+                <div style={styles.arrowContainer}>
+                  <button style={styles.delete} onClick={ () => onDelete(position) }><FaTrash /></button>
+                  { position !== 0 ? <button onClick={() => onMove('up', position)} style={styles.arrow}><FaArrowCircleUp /></button> : null  }
+                  { !isLast ? <button onClick={() => onMove('down', position)} style={styles.arrow}><FaArrowCircleDown /></button> : null  }
+                </div>
+              </div>
             }
             </div>
           : null

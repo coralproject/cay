@@ -37,6 +37,15 @@ p {
     to {transform:rotate(360deg);}
 }
 
+/* react-tooltip theme */
+.cayTooltip {
+  color: #222 !important;
+  background-color: #fff !important;
+  border: 1px solid #AAA;
+  box-shadow: 0 0 10px #AAA;
+  opacity: 1 !important;
+}
+
 /* react-datepicker shim */
 .datepicker__tether-element {
   z-index: 3;

@@ -16,6 +16,7 @@ import {Link} from 'react-router';
 import moment from 'moment';
 
 import FaFloppyO from 'react-icons/lib/fa/floppy-o';
+import Clipboard from 'react-icons/lib/fa/clipboard';
 import Select from 'react-select';
 
 import settings from 'settings';
@@ -35,6 +36,11 @@ import GalleryAnswer from 'forms/GalleryAnswer';
 @connect(state => state.forms)
 @Radium
 export default class SubmissionGallery extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {publishModalOpen: false};
+  }
 
   componentWillMount() {
     this.props.dispatch(fetchForm(this.props.params.id));
@@ -127,6 +133,20 @@ export default class SubmissionGallery extends React.Component {
 
   }
 
+  openPublishModal() {
+    this.setState({publishModalOpen: true});
+  }
+
+  closePublishModal() {
+    this.setState({publishModalOpen: false});
+  }
+
+  copyEmbedToClipboard(iframe) {
+    if (iframe) {
+
+    }
+  }
+
   render() {
 
     const form = this.props[this.props.activeForm];
@@ -188,7 +208,10 @@ export default class SubmissionGallery extends React.Component {
               </Card>
               <Card>
                 <CardHeader>Gallery Settings</CardHeader>
-                <Button category="primary" size="small">Publish Gallery/Updates</Button>
+                <Button
+                  onClick={this.openPublishModal.bind(this)}
+                  category="primary"
+                  size="small">Publish Gallery/Updates</Button>
                 <p>Embed Code</p>
                 <textarea style={styles.embedCode}></textarea>
               </Card>
@@ -209,6 +232,7 @@ export default class SubmissionGallery extends React.Component {
           </div>
 
         </div>
+        {/* this is the Edit Answer modal */}
         {
           ans ?
             <Modal
@@ -239,6 +263,33 @@ export default class SubmissionGallery extends React.Component {
             </Modal>
           : null
         }
+
+        {/* this is the Embed Code modal */}
+
+        <Modal
+          style={styles.publishModal}
+          title="Publish Gallery"
+          isOpen={this.state.publishModalOpen}
+          confirmAction={() => {}}
+          cancelAction={this.closePublishModal.bind(this)}>
+          <div>
+            <p>Embed code</p>
+            <textarea style={styles.embedTextarea}></textarea>
+            <Button
+              style={styles.copyButton}
+              onClick={this.copyEmbedToClipboard.bind(this)}>
+              Copy <Clipboard />
+            </Button>
+            <p style={{clear: 'both'}}>Embed code (with iframe)</p>
+            <textarea style={styles.embedTextarea}></textarea>
+            <Button
+              style={styles.copyButton}
+              onClick={this.copyEmbedToClipboard.bind(this, 'iframe')}>
+              Copy <Clipboard />
+            </Button>
+          </div>
+        </Modal>
+
       </Page>
     );
   }
@@ -247,6 +298,25 @@ export default class SubmissionGallery extends React.Component {
 const styles = {
   base: {
 
+  },
+  publishModal: {
+    modalContainer: {
+      minWidth: 400
+    }
+  },
+  embedTextarea: {
+    width: '100%',
+    marginBottom: 5,
+    border: '1px solid ' + settings.mediumGrey,
+    minHeight: 100
+  },
+  copyButton: {
+    float: 'right',
+    marginBottom: 10,
+    backgroundColor: settings.lightGrey,
+    ':hover': {
+      backgroundColor: settings.mediumGrey
+    }
   },
   embedCode: {
     width: '100%',

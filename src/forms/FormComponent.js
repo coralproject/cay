@@ -8,6 +8,7 @@ import FaClose from 'react-icons/lib/fa/close';
 import FaFloppyO from 'react-icons/lib/fa/floppy-o';
 import FaArrowCircleUp from 'react-icons/lib/fa/arrow-circle-up';
 import FaArrowCircleDown from 'react-icons/lib/fa/arrow-circle-down';
+import FaUser from 'react-icons/lib/fa/user';
 
 import TextFieldEditor from 'forms/editors/TextFieldEditor';
 import MultipleChoiceEditor from 'forms/editors/MultipleChoiceEditor';
@@ -139,7 +140,7 @@ export default class FormComponent extends Component {
                     }
                     {
                       field.identity ?
-                        <span style={ styles.identityLabel }>PII</span>
+                        <span style={ styles.identityLabel }><FaUser/></span>
                       :
                         null
                     }
@@ -147,18 +148,8 @@ export default class FormComponent extends Component {
                 </div>
                 <div style={styles.arrowContainer}>
                   <button style={styles.delete} onClick={ () => onDelete(position) }><FaTrash /></button>
-                  {
-                    position !== 0 ?
-                      <button onClick={() => onMove('up', position)} style={styles.arrow}><FaArrowCircleUp /></button>
-                    :
-                      <span style={ styles.arrowPlaceHolder }></span>
-                  }
-                  {
-                    !isLast ?
-                      <button onClick={() => onMove('down', position)} style={styles.arrow}><FaArrowCircleDown /></button>
-                    :
-                      <span style={ styles.arrowPlaceHolder }></span>
-                  }
+                  <button onClick={() => position !== 0 && onMove('up', position)} style={styles.arrow} disabled={position === 0}><FaArrowCircleUp /></button>
+                  <button onClick={() => !isLast && onMove('down', position)} style={styles.arrow} disabled={!!isLast}><FaArrowCircleDown /></button>
                 </div>
               </div>
             }
@@ -365,13 +356,11 @@ export const styles = {
     padding: '20px 0'
   },
   identityLabel: {
-    fontSize: '10pt',
-    color: 'white',
+    color: '#333',
     padding: '0 5px',
     borderRadius: '3px',
-    marginLeft: '15px',
+    marginLeft: '5px',
     display: 'inline-block',
-    background: '#999',
     height: '30px',
     lineHeight: '30px'
   },

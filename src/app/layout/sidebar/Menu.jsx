@@ -86,7 +86,9 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     width: 200,
-    overflowX: 'hidden'
+    overflowX: 'hidden',
+    position: 'fixed',
+    backgroundColor: 'rgb(240, 240, 240)'
   },
   menuWrapper: {
     display: 'flex',

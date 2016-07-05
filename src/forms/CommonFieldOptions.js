@@ -88,7 +88,9 @@ const styles = {
     fontSize: '12pt'
   },
   questionMark: {
-    position: 'relative'
+    position: 'relative',
+    bottom: 2,
+    left: 3
   },
   popOver: {
     textAlign: 'left',

@@ -39,11 +39,12 @@ const filters = (state = initialState, action) => {
       const key = `filter${i}`;
       const editableKey = `${key}Editable`;
 
-      const min = filter.minRange || null;
-      const max = filter.maxRange || null;
+      const min = _.isUndefined(filter.minRange) ? null : filter.minRange;
+      const max = _.isUndefined(filter.maxRange) ? null : filter.maxRange;
+      const userMin = _.isNull(min) ? null : filter.minRange;
+      const userMax = _.isNull(max) ? null : filter.maxRange;
 
-
-      accum[key] = {...filter, min, max, userMin: null, userMax: null, key};
+      accum[key] = {...filter, min, max, userMin, userMax, key};
       accum[editableKey] = {...accum[key], key: editableKey};
 
       if (filter.type === 'intDateProximity') {

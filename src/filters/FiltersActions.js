@@ -131,9 +131,9 @@ const parseFilterRanges = (ranges, filterState) => {
 
     // on the first pass, go ahead and force a change on userMin and userMax
     // but only if the userMin and userMax are defaults.
-    if (field === 'min' && +oldFilter.min === +clampedUserMin) {
+    if (field === 'min' && +oldFilter.min === +clampedUserMin && _.isUndefined(oldFilter.minRange)) {
       newFilter.userMin = value;
-    } else if (field === 'max' && +oldFilter.max === +clampedUserMax) {
+    } else if (field === 'max' && +oldFilter.max === +clampedUserMax && _.isUndefined(oldFilter.maxRange)) {
       newFilter.userMax = value;
     }
 

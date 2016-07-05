@@ -244,6 +244,7 @@ export const styles = {
     return {
       display: 'flex',
       justifyContent: 'flex-start',
+      alignItems: 'center',
       backgroundColor: '#fff',
       padding: '10px 10px 10px 20px',
       width: '100%',

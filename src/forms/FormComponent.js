@@ -13,6 +13,13 @@ import TextFieldEditor from 'forms/editors/TextFieldEditor';
 import MultipleChoiceEditor from 'forms/editors/MultipleChoiceEditor';
 
 const renderSettings = {
+
+  DateField(field, props) {
+    return (
+      <DateFieldEditor field={ field } { ...props } />
+    );
+  },
+
   TextField(field, props) {
     return (
       <TextFieldEditor field={ field } { ...props } />

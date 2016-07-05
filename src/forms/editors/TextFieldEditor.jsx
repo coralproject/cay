@@ -1,8 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import Radium from 'radium';
 import { connect } from 'react-redux';
-import Checkbox from 'components/forms/Checkbox';
-import TextField from 'components/forms/TextField';
 
 import editWidgetStyles from 'forms/editors/editWidgetStyles';
 
@@ -30,24 +28,15 @@ export default class TextFieldEditor extends Component {
     this.props.onEditorChange(updatedField);
   }
 
-  onRequiredClick(e) {
-    let { field } = this.state;
-    let updatedWrapper = Object.assign({}, field.wrapper, { required: e.target.checked });
-    let updatedField = Object.assign({}, field, { wrapper: updatedWrapper });
-    this.setState({ field: updatedField });
-    this.props.onEditorChange(updatedField);
-  }
-
-  onIdentityClick(e) {
-    let { field } = this.props;
-    let updatedField = Object.assign({}, field, { identity: e.target.checked });
-    this.props.onEditorChange(updatedField);
-  }
-
   render() {
     let { field } = this.state;
     return (
       <div>
+
+        <div style={ styles.responseArea }>
+          <input style={ styles.responseAreaInput } type="text" disabled placeholder="Response Area" />
+        </div>
+
         <div style={ styles.bottomOptions }>
 
           <div style={ styles.bottomOptionsLeft }>
@@ -111,6 +100,12 @@ const styles = {
     borderRight: 'none',
     marginLeft: '10px',
     fontSize: '12pt'
+  },
+  responseAreaInput: {
+    padding: '10px',
+    height: '40px',
+    display: 'block',
+    width: '100%'
   }
 
 };

@@ -170,8 +170,7 @@ const styles = {
     position: 'relative'
   },
   formDiagramContainer: {
-    flex: 2,
-    marginRight: 20,
+    flex: 1,
     padding: 20,
     color: '#5d5d5d'
   },

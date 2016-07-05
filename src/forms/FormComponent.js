@@ -246,10 +246,11 @@ export const styles = {
       justifyContent: 'flex-start',
       backgroundColor: '#fff',
       padding: '10px 10px 10px 20px',
+      width: '100%',
       boxShadow: '0 1px 3px #9B9B9B',
       borderRadius: 4,
       height: isExpanded ? '60px' : 'auto',
-      lineHeight: '40px'
+      lineHeight: '20px'
     }
   },
   editBody: {
@@ -317,7 +318,6 @@ export const styles = {
     textAlign: 'center',
     cursor: 'pointer',
     padding: '0 20px',
-    lineHeight: '40px',
     marginLeft: '10px'
   },
   cancelButton: {

@@ -70,7 +70,7 @@ export default class SubmissionList extends Component {
             submissions={submissions}
             form={form}/>
           <Sidebar
-            submissions={submissions}
+            submissions={submissions.reverse()}
             activeSubmission={activeSubmission}
             onSelect={this.onSubmissionSelect.bind(this)} />
           <SubmissionDetail
@@ -101,7 +101,7 @@ class Sidebar extends Component {
             styles.sidebar.submissionContainer,
             submission.id === activeSubmission && styles.sidebar.activeSubmission
           ]} key={key}>
-          <span>{submissions.length - key}</span>
+          <span>{key + 1}</span>
           <span>{moment(submission.date_updated).format('L LT')}</span>
           <div>
             {submission.flagged ? <span style={styles.sidebar.icon}><BFlag/></span> : null}

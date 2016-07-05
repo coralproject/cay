@@ -1,15 +1,14 @@
 import React, { Component, PropTypes } from 'react';
 import Radium from 'radium';
 import { connect } from 'react-redux';
-import Checkbox from 'components/forms/Checkbox';
-import TextField from 'components/forms/TextField';
+
+import CommonFieldOptions from 'forms/CommonFieldOptions';
 
 import FaArrowUp from 'react-icons/lib/fa/arrow-up';
 import FaArrowDown from 'react-icons/lib/fa/arrow-down';
 import FaTrashO from 'react-icons/lib/fa/trash-o';
 import FaCopy from 'react-icons/lib/fa/copy';
 import FaPlusCircle from 'react-icons/lib/fa/plus-circle';
-import FaQuestionCircle from 'react-icons/lib/fa/question-circle';
 
 @connect(({ forms, app }) => ({ forms, app }))
 @Radium
@@ -80,20 +79,6 @@ export default class MultipleChoiceEditor extends Component {
     this.props.onEditorChange(updatedField);
   }
 
-  // TODO: This and identity should probably be generalized, is repeated in every field type
-  onRequiredClick(e) {
-    let { field } = this.props;
-    let updatedWrapper = Object.assign({}, field.wrapper, { required: e.target.checked });
-    let updatedField = Object.assign({}, field, { wrapper: updatedWrapper });
-    this.props.onEditorChange(updatedField);
-  }
-
-  onIdentityClick(e) {
-    let { field } = this.props;
-    let updatedField = Object.assign({}, field, { identity: e.target.checked });
-    this.props.onEditorChange(updatedField);
-  }
-
   render() {
     let { field } = this.props;
 
@@ -151,20 +136,7 @@ export default class MultipleChoiceEditor extends Component {
             </label>
           </div>
 
-          <div style={ styles.bottomOptionsRight }>
-            <label style={ styles.bottomCheck }>
-              <input type="checkbox"
-                onClick={ this.onIdentityClick.bind(this) }
-                checked={ field.identity } />
-                Reader info <FaQuestionCircle />
-            </label>
-            <label style={ styles.bottomCheck }>
-              <input type="checkbox"
-                onClick={ this.onRequiredClick.bind(this) }
-                checked={ field.wrapper.required } />
-                Required
-            </label>
-          </div>
+          <CommonFieldOptions {...this.props} />
 
         </div>
 
@@ -230,10 +202,6 @@ const styles = {
     width: '100%'
   },
   bottomOptionsLeft: {
-    flexGrow: '1'
-  },
-  bottomOptionsRight: {
-    textAlign: 'right',
     flexGrow: '1'
   }
 };

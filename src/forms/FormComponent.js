@@ -10,6 +10,7 @@ import FaArrowCircleUp from 'react-icons/lib/fa/arrow-circle-up';
 import FaArrowCircleDown from 'react-icons/lib/fa/arrow-circle-down';
 
 import TextFieldEditor from 'forms/editors/TextFieldEditor';
+import TextAreaEditor from 'forms/editors/TextAreaEditor';
 import MultipleChoiceEditor from 'forms/editors/MultipleChoiceEditor';
 import DateFieldEditor from 'forms/editors/DateFieldEditor';
 import NumberFieldEditor from 'forms/editors/NumberFieldEditor';
@@ -31,6 +32,12 @@ const renderSettings = {
   TextField(field, props) {
     return (
       <TextFieldEditor field={ field } { ...props } />
+    );
+  },
+
+  TextArea(field, props) {
+    return (
+      <TextAreaEditor field={ field } { ...props } />
     );
   },
 

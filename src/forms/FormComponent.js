@@ -126,41 +126,41 @@ export default class FormComponent extends Component {
           !this.state.expanded ?
           <div>
             {
-                <div style={ styles.editContainer(this.state.expanded) } key={ id }>
-                  <div>{ position + 1 }.</div>
-                  <div style={styles.editBody} onClick={ this.toggleExpanded.bind(this) }>
-                    <h4>
-                      { field.title }
-                      {
-                        field.wrapper && field.wrapper.required ?
-                          <span style={ styles.requiredAsterisk }>*</span>
-                        :
-                          null
-                      }
-                      {
-                        field.identity ?
-                          <span style={ styles.identityLabel }>PII</span>
-                        :
-                          null
-                      }
-                    </h4>
-                  </div>
-                  <div style={styles.arrowContainer}>
-                    <button style={styles.delete} onClick={ () => onDelete(position) }><FaTrash /></button>
+              <div style={ styles.editContainer(this.state.expanded) } key={ id }>
+                <div>{ position + 1 }.</div>
+                <div style={styles.editBody} onClick={ this.toggleExpanded.bind(this) }>
+                  <h4>
+                    { field.title }
                     {
-                      position !== 0 ?
-                        <button onClick={() => onMove('up', position)} style={styles.arrow}><FaArrowCircleUp /></button>
+                      field.wrapper && field.wrapper.required ?
+                        <span style={ styles.requiredAsterisk }>*</span>
                       :
-                        <span style={ styles.arrowPlaceHolder }></span>
+                        null
                     }
                     {
-                      !isLast ?
-                        <button onClick={() => onMove('down', position)} style={styles.arrow}><FaArrowCircleDown /></button>
+                      field.identity ?
+                        <span style={ styles.identityLabel }>PII</span>
                       :
-                        <span style={ styles.arrowPlaceHolder }></span>
+                        null
                     }
-                  </div>
+                  </h4>
                 </div>
+                <div style={styles.arrowContainer}>
+                  <button style={styles.delete} onClick={ () => onDelete(position) }><FaTrash /></button>
+                  {
+                    position !== 0 ?
+                      <button onClick={() => onMove('up', position)} style={styles.arrow}><FaArrowCircleUp /></button>
+                    :
+                      <span style={ styles.arrowPlaceHolder }></span>
+                  }
+                  {
+                    !isLast ?
+                      <button onClick={() => onMove('down', position)} style={styles.arrow}><FaArrowCircleDown /></button>
+                    :
+                      <span style={ styles.arrowPlaceHolder }></span>
+                  }
+                </div>
+              </div>
             }
             </div>
           : null

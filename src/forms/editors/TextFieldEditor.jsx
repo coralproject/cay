@@ -1,12 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import Radium from 'radium';
 import { connect } from 'react-redux';
-import Checkbox from 'components/forms/Checkbox';
-import TextField from 'components/forms/TextField';
+
+import CommonFieldOptions from 'forms/CommonFieldOptions';
 
 import editWidgetStyles from 'forms/editors/editWidgetStyles';
-
-import FaQuestionCircle from 'react-icons/lib/fa/question-circle';
 
 @connect(({ forms, app }) => ({ forms, app }))
 @Radium
@@ -30,20 +28,6 @@ export default class TextFieldEditor extends Component {
     this.props.onEditorChange(updatedField);
   }
 
-  onRequiredClick(e) {
-    let { field } = this.state;
-    let updatedWrapper = Object.assign({}, field.wrapper, { required: e.target.checked });
-    let updatedField = Object.assign({}, field, { wrapper: updatedWrapper });
-    this.setState({ field: updatedField });
-    this.props.onEditorChange(updatedField);
-  }
-
-  onIdentityClick(e) {
-    let { field } = this.props;
-    let updatedField = Object.assign({}, field, { identity: e.target.checked });
-    this.props.onEditorChange(updatedField);
-  }
-
   render() {
     let { field } = this.state;
     return (
@@ -61,20 +45,7 @@ export default class TextFieldEditor extends Component {
             </label>
           </div>
 
-          <div style={ styles.bottomOptionsRight }>
-            <label style={ styles.bottomCheck }>
-              <input type="checkbox"
-                onClick={ this.onIdentityClick.bind(this) }
-                checked={ field.identity } />
-                Reader info <FaQuestionCircle />
-            </label>
-            <label style={ styles.bottomCheck }>
-              <input type="checkbox"
-                onClick={ this.onRequiredClick.bind(this) }
-                checked={ field.wrapper.required } />
-                Required
-            </label>
-          </div>
+          <CommonFieldOptions {...this.props} />
 
         </div>
 

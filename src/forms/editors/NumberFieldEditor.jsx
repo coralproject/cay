@@ -12,20 +12,49 @@ export default class NumberFieldEditor extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { field: props.field }
+    this.state = { field: props.field, minValueEnabled: props.field.props.minLength > 0, maxValueEnabled: props.field.props.maxLength > 0 }
   }
 
   componentWillReceiveProps(nextProps) {
     let { field } = this.state;
     let updatedField = Object.assign({}, field, nextProps.field);
-    this.setState({ field: updatedField });
+    this.setState({ field: updatedField, minValueEnabled: nextProps.field.props.minLength > 0, maxValueEnabled: nextProps.field.props.maxLength > 0 });
   }
 
-  onMaxCharsChange(e) {
+  onMinValueChange(e) {
+    let { field } = this.state;
+    let updatedProps = Object.assign({}, field.props, { minLength: e.target.value });
+    let updatedField = Object.assign({}, field, { props: updatedProps });
+    this.props.onEditorChange(updatedField);
+  }
+
+  onMaxValueChange(e) {
     let { field } = this.state;
     let updatedProps = Object.assign({}, field.props, { maxLength: e.target.value });
     let updatedField = Object.assign({}, field, { props: updatedProps });
     this.props.onEditorChange(updatedField);
+  }
+
+  onMinValueCheckChange(e) {
+    this.setState({ minValueEnabled: e.target.checked });
+    // Set to 0 if disabled
+    if (!e.target.checked) {
+      let { field } = this.state;
+      let updatedProps = Object.assign({}, field.props, { minLength: 0 });
+      let updatedField = Object.assign({}, field, { props: updatedProps });
+      this.props.onEditorChange(updatedField);
+    }
+  }
+
+  onMaxValueCheckChange(e) {
+    this.setState({ maxValueEnabled: e.target.checked });
+    // Set to 0 if disabled
+    if (!e.target.checked) {
+      let { field } = this.state;
+      let updatedProps = Object.assign({}, field.props, { maxLength: 0 });
+      let updatedField = Object.assign({}, field, { props: updatedProps });
+      this.props.onEditorChange(updatedField);
+    }
   }
 
   render() {
@@ -41,12 +70,25 @@ export default class NumberFieldEditor extends Component {
 
           <div style={ styles.bottomOptionsLeft }>
             <label style={ styles.bottomCheck }>
-                Max. chars:
-                <input
-                  onChange={ this.onMaxCharsChange.bind(this) }
-                  defaultValue={ field.props.maxLength || 0 }
-                  type="text"
-                  style={ styles.bottomCheckTextInput }></input>
+              <input type="checkbox" checked={ this.state.minValueEnabled } onChange={ this.onMinValueCheckChange.bind(this) } />
+              <span style={ [ this.state.minValueEnabled ? '' : styles.disabled ] }>Min. value</span>
+              <input
+                onChange={ this.onMinValueChange.bind(this) }
+                defaultValue={ field.props.minLength || 0 }
+                type="number"
+                disabled={ !this.state.minValueEnabled }
+                style={ [ styles.bottomCheckTextInput, !this.state.minValueEnabled ? styles.disabled : '' ] }></input>
+            </label>
+
+            <label style={ styles.bottomCheck }>
+              <input type="checkbox" checked={ this.state.maxValueEnabled } onChange={ this.onMaxValueCheckChange.bind(this) } />
+              <span style={ [ this.state.maxValueEnabled ? '' : styles.disabled ] }>Max. value</span>
+              <input
+                onChange={ this.onMaxValueChange.bind(this) }
+                defaultValue={ field.props.maxLength || 0 }
+                type="number"
+                disabled={ !this.state.maxValueEnabled }
+                style={ [ styles.bottomCheckTextInput, !this.state.maxValueEnabled ? styles.disabled : '' ] }></input>
             </label>
           </div>
 
@@ -86,13 +128,18 @@ const styles = {
     borderLeft: 'none',
     borderRight: 'none',
     marginLeft: '10px',
-    fontSize: '12pt'
+    fontSize: '10pt',
+    width: '50px',
+    textAlign: 'center'
   },
   responseAreaInput: {
     padding: '10px',
     height: '40px',
     display: 'block',
     width: '100%'
+  },
+  disabled: {
+    color: '#AAA'
   }
 
 };

@@ -30,8 +30,8 @@ export default class GalleryAnswer extends React.Component {
 
     const {answer, gallery} = this.props;
 
-    console.log('answer', answer);
-    console.log('gallery', gallery);
+    // console.log('answer', answer);
+    // console.log('gallery', gallery);
 
     const text = answer.answer.edited ? answer.answer.edited : answer.answer.answer.text;
     const statusFlag = answer.answer.edited ? 'edited' : 'new';
@@ -54,7 +54,7 @@ export default class GalleryAnswer extends React.Component {
           <p style={styles.answerText}>{text}</p>
         </div>
         <div style={styles.rightColumn}>
-          <div style={{textAlign: 'right'}}>
+          <div style={styles.modButtons}>
             <div style={styles.iconHolder} key="foo">
               <Trash style={styles.icon} />
             </div>
@@ -150,6 +150,10 @@ const styles = {
   identityAnswers: {
     color: settings.grey,
     fontStyle: 'italic',
+    marginBottom: 10
+  },
+  modButtons: {
+    textAlign: 'right',
     marginBottom: 10
   }
 };

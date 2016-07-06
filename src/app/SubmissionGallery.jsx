@@ -186,7 +186,10 @@ export default class SubmissionGallery extends React.Component {
             </div>
             <Button style={styles.modButton} category="brand">Preview</Button>
             <Button style={styles.modButton} category="success">Save <FaFloppyO /></Button>
-            <Button style={styles.modButton} category="inverse">Publish</Button>
+            <Button
+              onClick={this.openPublishModal.bind(this)}
+              style={styles.modButton}
+              category="inverse">Publish</Button>
           </div>
           <hr style={styles.rule} />
           <div style={styles.container}>
@@ -205,15 +208,6 @@ export default class SubmissionGallery extends React.Component {
                   return <Checkbox key={i} label={field.title} />;
                 })}
 
-              </Card>
-              <Card>
-                <CardHeader>Gallery Settings</CardHeader>
-                <Button
-                  onClick={this.openPublishModal.bind(this)}
-                  category="primary"
-                  size="small">Publish Gallery/Updates</Button>
-                <p>Embed Code</p>
-                <textarea style={styles.embedCode}></textarea>
               </Card>
             </div>
             <div style={styles.gallery}>
@@ -317,10 +311,6 @@ const styles = {
     ':hover': {
       backgroundColor: settings.mediumGrey
     }
-  },
-  embedCode: {
-    width: '100%',
-    height: 100
   },
   container: {
     display: 'flex'

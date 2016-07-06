@@ -1,4 +1,3 @@
-
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
@@ -19,6 +18,7 @@ import {
 import SubmissionDetail from 'forms/SubmissionDetail';
 import FormChrome from 'app/layout/FormChrome';
 import Page from 'app/layout/Page';
+import settings from 'settings';
 
 @connect(({ forms }) => ({ forms }))
 @Radium
@@ -99,7 +99,7 @@ class Sidebar extends Component {
             styles.sidebar.submissionContainer,
             submission.id === activeSubmission && styles.sidebar.activeSubmission
           ]} key={key}>
-          <span>{key + 1}</span>
+          <span style={{fontWeight: 'bold'}}>{key + 1}</span>
           <span>{moment(submission.date_updated).format('L LT')}</span>
           <div>
             {submission.flagged ? <span style={styles.sidebar.icon}><BFlag/></span> : null}
@@ -115,11 +115,10 @@ class Sidebar extends Component {
     return (
       <div style={styles.sidebar.container}>
         <div style={styles.sidebar.countContainer}>
-          <p style={styles.sidebar.count}>{submissions.length}</p>
-          <p style={styles.sidebar.count}>Submission{submissions.length === 1 ? '' : 's'}</p>
+          <p style={styles.sidebar.count}>{submissions.length} Submission{submissions.length === 1 ? '' : 's'}</p>
         </div>
         <input style={styles.sidebar.search} type='text' placeholder='Search' />
-        <div style={styles.sidebar.sortContainer}>
+        {/*<div style={styles.sidebar.sortContainer}>
           <select style={[styles.sidebar.sort, styles.sidebar.firstSort]}>
             <option>View All</option>
           </select>
@@ -127,7 +126,7 @@ class Sidebar extends Component {
           <select style={styles.sidebar.sort}>
             <option>Newest First</option>
           </select>
-        </div>
+        </div>*/}
         <div>{this.listSubmissions(submissions, activeSubmission, onSelect)}</div>
       </div>
     );
@@ -136,28 +135,30 @@ class Sidebar extends Component {
 
 const styles = {
   container: {
-    display: 'flex',
-    marginTop: 40
+    display: 'flex'
   },
   sidebar: {
     container: {
       flex: 1,
       display: 'flex',
-      flexDirection: 'column'
+      flexDirection: 'column',
+      backgroundColor: 'white',
+      boxShadow: '0px 0px 5px 0px rgba(0,0,0,0.2)'
     },
     icon: {
       marginLeft: 3
     },
     count: {
-      textAlign: 'center',
-      fontSize: '1.5em'
+      fontWeight: 'bold',
+      fontSize: '1.2em',
+      color: settings.darkGrey
     },
     countContainer: {
-      marginBottom: 20
+      margin: 10
     },
     search: {
       height: 25,
-      marginBottom: 20
+      margin: 10
     },
     sortContainer: {
       display: 'flex',
@@ -171,19 +172,20 @@ const styles = {
       marginRight: 10
     },
     submissionContainer: {
-      borderRadius: 2,
-      backgroundColor: '#ddd',
-      marginBottom: 5,
+      transition: 'all .3s',
+      height: 40,
+      border: '5px solid transparent',
       padding: 8,
       display: 'flex',
       justifyContent: 'space-between',
       cursor: 'pointer',
+      boxSizing: 'border-box',
       ':hover': {
-        backgroundColor: '#bbb'
+        backgroundColor: settings.lightGrey
       }
     },
     activeSubmission: {
-      backgroundColor: '#bbb'
+      border: '5px solid ' + settings.grey
     }
   }
 };

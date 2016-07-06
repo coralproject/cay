@@ -30,6 +30,7 @@ export default class ModalFooter extends React.Component {
 
 const styles = {
   base: {
+    clear: 'both',
     borderTop: '1px solid ' + settings.mediumGrey,
     paddingTop: 16,
     marginTop: 16

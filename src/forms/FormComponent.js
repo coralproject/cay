@@ -1,11 +1,13 @@
 import React, {Component, PropTypes} from 'react';
 import { connect } from 'react-redux';
 import { DragSource } from 'react-dnd';
+import { updateWidget } from 'forms/FormActions';
+
 import FaTrash from 'react-icons/lib/fa/trash';
 import FaClose from 'react-icons/lib/fa/close';
+import FaFloppyO from 'react-icons/lib/fa/floppy-o';
 import FaArrowCircleUp from 'react-icons/lib/fa/arrow-circle-up';
 import FaArrowCircleDown from 'react-icons/lib/fa/arrow-circle-down';
-import { updateWidget } from 'forms/FormActions';
 
 import TextFieldEditor from 'forms/editors/TextFieldEditor';
 import MultipleChoiceEditor from 'forms/editors/MultipleChoiceEditor';
@@ -50,16 +52,21 @@ export default class FormComponent extends Component {
     field: PropTypes.object.isRequired,
     connectDragSource: PropTypes.func.isRequired,
     isDragging: PropTypes.bool.isRequired,
-    id: PropTypes.number
+    id: PropTypes.string
   };
 
   constructor(props, context) {
     super(props, context);
-    this.state = { 'expanded': false };
+    // originalField is used to restore params when clicking X
+    this.state = { 'expanded': false, field: props.field, originalField: props.field };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({ field: nextProps.field, originalField: nextProps.field });
   }
 
   render() {
-    const { connectDragSource, onList } = this.props;
+    const { onList } = this.props;
     return onList ?
       this.renderEdit()
       : this.renderType();
@@ -74,95 +81,116 @@ export default class FormComponent extends Component {
   renderType() {
     const { isDragging, field } = this.props;
     return (
-      this.props.connectDragSource(
-        <div onClick={this.onClick.bind(this)} style={styles.askComponent(isDragging)}>
-          {field.title}
-        </div>
-      )
+      <div onClick={this.onClick.bind(this)} style={styles.askComponent(isDragging)}>
+        <field.icon style={styles.icon} />
+        <span style={styles.title}>{field.title}</span>
+      </div>
     );
   }
 
   onIdentityClick(e) {
-    this.props.dispatch(updateWidget(this.props.id, { identity: e.target.checked }));
+    var field = Object.assign({}, this.state.field);
+    field.identity = e.target.checked;
+    this.setState({ field: field });
   }
 
   onDescriptionChange(e) {
-    this.props.dispatch(updateWidget(this.props.id, { description: e.target.value }));
+    var field = Object.assign({}, this.state.field);
+    field.description = e.target.value;
+    this.setState({ field: field });
   }
 
   onTitleChange(e) {
-    this.props.dispatch(updateWidget(this.props.id, { title: e.target.value }));
+    var field = Object.assign({}, this.state.field);
+    field.title = e.target.value;
+    this.setState({ field: field });
+  }
+
+  onSaveClick(e) {
+    this.toggleExpanded();
+    this.setState({ originalField: this.state.field });
+    this.props.dispatch(updateWidget(this.props.id, this.state.field));
+  }
+
+  onCloseClick(e) {
+    this.setState({ field: this.state.originalField });
+    this.toggleExpanded();
   }
 
   renderEdit() {
-    const { id, onMove, isLast, field, position, onDelete } = this.props;
+    const { id, onMove, isLast, position, onDelete } = this.props;
+    const { field } = this.state;
     return (
       <div>
-        { this.props.connectDragSource(
-            <div style={styles.editContainer}>
-              <div>{ position + 1 }.</div>
-              <div style={styles.editBody} onClick={ this.toggleExpanded.bind(this) }>
-                <h4>
-                  { field.title }
+        {
+          !this.state.expanded ?
+          <div>
+            {
+              <div style={ styles.editContainer(this.state.expanded) } key={ id }>
+                <div>{ position + 1 }.</div>
+                <div style={styles.editBody} onClick={ this.toggleExpanded.bind(this) }>
+                  <h4>
+                    { field.title }
+                    {
+                      field.wrapper && field.wrapper.required ?
+                        <span style={ styles.requiredAsterisk }>*</span>
+                      :
+                        null
+                    }
+                    {
+                      field.identity ?
+                        <span style={ styles.identityLabel }>PII</span>
+                      :
+                        null
+                    }
+                  </h4>
+                </div>
+                <div style={styles.arrowContainer}>
+                  <button style={styles.delete} onClick={ () => onDelete(position) }><FaTrash /></button>
                   {
-                    field.wrapper && field.wrapper.required ?
-                      <span style={ styles.requiredAsterisk }>*</span>
+                    position !== 0 ?
+                      <button onClick={() => onMove('up', position)} style={styles.arrow}><FaArrowCircleUp /></button>
                     :
-                      null
+                      <span style={ styles.arrowPlaceHolder }></span>
                   }
                   {
-                    field.identity ?
-                      <span style={ styles.identityLabel }>PII</span>
+                    !isLast ?
+                      <button onClick={() => onMove('down', position)} style={styles.arrow}><FaArrowCircleDown /></button>
                     :
-                      null
+                      <span style={ styles.arrowPlaceHolder }></span>
                   }
-                </h4>
+                </div>
               </div>
-              <div style={styles.arrowContainer}>
-                <button style={styles.delete} onClick={ () => onDelete(position) }><FaTrash /></button>
-                { position !== 0 ? <button onClick={() => onMove('up', position)} style={styles.arrow}><FaArrowCircleUp /></button> : null  }
-                { !isLast ? <button onClick={() => onMove('down', position)} style={styles.arrow}><FaArrowCircleDown /></button> : null  }
-              </div>
+            }
             </div>
-          )
+          : null
         }
         {
           this.state.expanded ?
             <div style={ styles.editSettingsPanel }>
-              <label style={ styles.label }>
-                <strong>Question</strong>:
+
+              <div style={ styles.titleAndDescription }>
                 <input
                   onChange={ this.onTitleChange.bind(this) }
-                  style={ styles.bigInput }
+                  style={ styles.fieldTitle }
                   defaultValue={ this.props.field.title }
                   type="text"
-                  placeholder="Ex: What is art?" />
-              </label>
-              <label style={ styles.label }>
-                <strong>Description</strong>/helper text:
+                  placeholder="Ask readers a question" />
                 <input
                   onChange={ this.onDescriptionChange.bind(this) }
                   defaultValue={ field.description }
-                  style={ styles.bigInput }
+                  style={ styles.fieldDescription }
                   type="text"
-                  placeholder="Ex: Explain ART in a short sentence." />
-              </label>
-              <div style={ styles.identity }>
-                <label>
-                  <input
-                    onClick={ this.onIdentityClick.bind(this) }
-                    checked={ field.identity }
-                    type="checkbox"
-                     />
-                   Has identity data
-                </label>
-                <p>Check if this field contains <a href="#" style={ { color: '#999' } }>Personally Identifiable Information</a> (e-mails, last names, etc)</p>
+                  placeholder="Description text (optional)" />
               </div>
 
-              {this.editSettings()}
+              { this.editSettings() }
 
-              <button style={ styles.editSettingsPanelSave } onClick={ this.toggleExpanded.bind(this) }>Save</button>
-              <button style={ styles.editSettingsPanelClose } onClick={ this.toggleExpanded.bind(this) }><FaClose /></button>
+              <div style={ styles.bottomButtons }>
+                <button style={ styles.cancelButton } onClick={ this.onCloseClick.bind(this) }><FaClose /> Cancel</button>
+                <button style={ styles.saveButton } onClick={ this.onSaveClick.bind(this) }><FaFloppyO /> Save</button>
+              </div>
+
             </div>
           :
             null
@@ -172,11 +200,12 @@ export default class FormComponent extends Component {
   }
 
   onEditorChange(field) {
-    this.props.dispatch(updateWidget(field.id, field));
+    var fieldCopy = Object.assign({}, this.state.field, field);
+    this.setState({ field: fieldCopy });
   }
 
   editSettings() {
-    const { field } = this.props;
+    const { field } = this.state;
     // Passing listeners down from this class to the editors
     var localProps = { onEditorChange: this.onEditorChange.bind(this) };
     return renderSettings[field.component] ? renderSettings[field.component](field, localProps) : renderSettings['TextField'](field, localProps);
@@ -204,22 +233,24 @@ export const styles = {
       height: 40,
       backgroundColor: '#fff',
       borderRadius: 3,
-      fontSize: 14,
-      fontWeight: 'bold',
       width: '48%',
       textAlign: 'left',
-      margin: '1%'
+      margin: '1%',
+      display: 'flex',
+      alignItems: 'center'
     };
   },
-  editContainer: {
-    display: 'flex',
-    justifyContent: 'flex-start',
-    backgroundColor: '#fff',
-    padding: '10px 10px 10px 20px',
-    boxShadow: '0 1px 3px #9B9B9B',
-    borderRadius: 4,
-    height: 60,
-    lineHeight: '40px'
+  editContainer: function(isExpanded) {
+    return {
+      display: 'flex',
+      justifyContent: 'flex-start',
+      backgroundColor: '#fff',
+      padding: '10px 10px 10px 20px',
+      boxShadow: '0 1px 3px #9B9B9B',
+      borderRadius: 4,
+      height: isExpanded ? '60px' : 'auto',
+      lineHeight: '40px'
+    }
   },
   editBody: {
     flex: 1,
@@ -243,6 +274,13 @@ export const styles = {
     display: 'inline-block',
     cursor: 'pointer'
   },
+  arrowPlaceHolder: {
+    width: '40px',
+    height: '40px',
+    padding: '0',
+    marginLeft: '5px',
+    display: 'inline-block'
+  },
   delete: {
     width: '40px',
     height: '40px',
@@ -257,51 +295,67 @@ export const styles = {
     cursor: 'pointer'
   },
   editSettingsPanel: {
-    position: 'absolute',
+    position: 'relative',
     top: '0px',
     left: '0px',
     width: '100%',
     height: 'auto',
-    padding: '40px',
-    backgroundColor: '#fafafa',
-    boxShadow: '0px 2px 15px #444'
+    padding: '20px',
+    backgroundColor: 'white',
+    boxShadow: '0px 1px 2px #444'
   },
-  editSettingsPanelSave: {
+  saveButton: {
+    display: 'inline-block',
     fontSize: '11pt',
     height: '40px',
+    color: 'white',
+    background: '#36B278',
+    border: 'none',
+    borderRadius: '4px',
+    marginTop: '10px',
+    lineHeight: '40px',
+    textAlign: 'center',
+    cursor: 'pointer',
+    padding: '0 20px',
+    lineHeight: '40px',
+    marginLeft: '10px'
+  },
+  cancelButton: {
+    fontSize: '11pt',
+    height: '40px',
+    color: '#777',
     background: 'white',
     border: '1px solid #ccc',
     borderRadius: '4px',
     marginTop: '10px',
     lineHeight: '40px',
     textAlign: 'center',
-    cursor: 'pointer'
-  },
-  editSettingsPanelClose: {
-    position: 'absolute',
-    top: '20px',
-    right: '20px',
-    fontSize: '16pt',
-    border: 'none',
-    background: '#ddd',
-    borderRadius: '40px',
-    height: '40px',
-    width: '40px',
-    lineHeight: '20px',
-    textAlign: 'center',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    padding: '0 20px',
+    lineHeight: '40px',
+    marginLeft: '10px'
   },
   label: {
     display: 'block',
     width: '100%',
     marginBottom: '10px'
   },
-  bigInput: {
-    fontSize: '12pt',
-    padding: '10px',
+  fieldTitle: {
+    fontSize: '14pt',
+    padding: '5px 0',
     width: '50%',
-    border: '1px solid #ccc',
-    display: 'block'
+    display: 'block',
+    border: 'none',
+    background: 'none'
+  },
+  fieldDescription: {
+    fontSize: '11pt',
+    padding: '5px 0',
+    marginBottom: '20px',
+    width: '50%',
+    display: 'block',
+    border: 'none',
+    background: 'none'
   },
   requiredAsterisk: {
     color: '#B22'
@@ -319,5 +373,17 @@ export const styles = {
     background: '#999',
     height: '30px',
     lineHeight: '30px'
+  },
+  bottomButtons: {
+    textAlign: 'right'
+  },
+  icon: {
+    marginRight: 8,
+    fontSize: '11pt'
+  },
+  title: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    lineHeight: '1em'
   }
 };

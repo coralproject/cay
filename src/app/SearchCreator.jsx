@@ -116,6 +116,8 @@ export default class SearchCreator extends Component {
     const {dispatch} = this.props;
 
     dispatch(userSelected(null));
+    // this must be here because when a filter is changed, ALL results are stale
+    dispatch(clearUserList());
     dispatch(filterChanged(fieldName, {[attr]: val}));
     dispatch(makeQueryFromState('user', 0, true));
   }
@@ -187,7 +189,7 @@ export default class SearchCreator extends Component {
 const styles = {
   pageBase: {
     position: 'absolute',
-    top: 60,
+    top: 50,
     left: 0,
     right: 0,
     bottom: 0

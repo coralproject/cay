@@ -12,11 +12,14 @@ import FaArrowCircleUp from 'react-icons/lib/fa/arrow-circle-up';
 import FaUserPlus from 'react-icons/lib/fa/user-plus';
 import FaFloppyO from 'react-icons/lib/fa/floppy-o';
 import FaEye from 'react-icons/lib/fa/eye';
-
-import settings from 'settings';
+import Spinner from 'components/Spinner';
 
 @connect(({ forms, app }) => ({ forms, app }))
 export default class FormDiagram extends Component {
+
+  static contextTypes = {
+    router: PropTypes.object.isRequired
+  };
 
   constructor(props, context) {
     super(props, context);
@@ -62,18 +65,15 @@ export default class FormDiagram extends Component {
   }
 
   onSaveClick() {
-    const { forms, dispatch } = this.props;
+    const { router } = this.context;
+    const { forms, dispatch, activeForm } = this.props;
     const { form, widgets } = forms;
-    dispatch(saveForm(form, widgets));
-  }
-
-  onPreviewClick() {
-
+    dispatch(saveForm(activeForm ? forms[activeForm] : form, widgets))
+      .then(data => !activeForm && router.push(`/forms/${data.id}`));
   }
 
   render() {
     const { onFieldSelect, forms, onOpenPreview } = this.props;
-    const { widgets } = forms;
     const form = this.props.activeForm ? forms[this.props.activeForm] : forms.form;
     return (
       <div style={styles.formDiagramContainer}>
@@ -92,7 +92,7 @@ export default class FormDiagram extends Component {
           <div style={ styles.formActions }>
             <button style={ styles.formAction }><FaUserPlus /></button>
             <button onClick={ onOpenPreview } style={ styles.formAction }><FaEye /></button>
-            <button onClick={ this.onSaveClick.bind(this) } style={ styles.formAction }><FaFloppyO /></button>
+            <button onClick={ this.onSaveClick.bind(this) } style={ styles.formAction }>{ forms.savingForm ? <Spinner/> : <FaFloppyO /> }</button>
           </div>
         </div>
         <input onChange={ this.onFormTitleChange.bind(this) } style={ styles.headLine } type="text" placeholder={ "Write a headline" } defaultValue={ form.header.title } />
@@ -105,26 +105,23 @@ export default class FormDiagram extends Component {
         <textarea onChange={ this.onFormDescriptionChange.bind(this) } style={ styles.description } placeholder={ "Add instructions or a description" } defaultValue={ form.header.description } />
         <div style={styles.formDiagram}>
 
-          { this.state.tempWidgets.map((field, i) => (
-            <DropPlaceHolder key={i} formDiagram={ this } position={ i } dropped={ field.dropped }>
-              <FormComponent
-                id={ field.id } key={i}
-                field={field}
-                position={ i }
-                onFieldSelect={onFieldSelect}
-                onList={true}
-                isLast={i === this.state.tempWidgets.length - 1}
-                onMove={this.onMove.bind(this)}
-                onDelete={this.onDelete.bind(this)}
-                 />
-            </DropPlaceHolder>
-          ))}
-          {
-            this.state.isHovering ?
-              null
-            :
-              <DropPlaceHolder empty={ true } formDiagram={ this } position={ this.state.tempWidgets.length } key={ this.state.tempWidgets.length } />
-          }
+          { this.props.forms.widgets.map((field, i) => {
+            return (
+              <DropPlaceHolder key={i} formDiagram={ this } position={ i } dropped={ field.dropped }>
+                <FormComponent
+                  id={ field.id }
+                  key={ i }
+                  field={ field }
+                  position={ i }
+                  onFieldSelect={ onFieldSelect }
+                  onList={ true }
+                  isLast={ i === this.props.forms.widgets.length - 1 }
+                  onMove={ this.onMove.bind(this) }
+                  onDelete={ this.onDelete.bind(this) }
+                   />
+              </DropPlaceHolder>
+            );
+          })}
         </div>
         <div style={ styles.extraFields }>
           <h3 style={ styles.thankYouMessageTitle }>Thank you message</h3>

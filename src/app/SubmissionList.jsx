@@ -70,7 +70,7 @@ export default class SubmissionList extends Component {
             submissions={submissions}
             form={form}/>
           <Sidebar
-            submissions={submissions}
+            submissions={submissions.reverse()}
             activeSubmission={activeSubmission}
             onSelect={this.onSubmissionSelect.bind(this)} />
           <SubmissionDetail
@@ -101,7 +101,7 @@ class Sidebar extends Component {
             styles.sidebar.submissionContainer,
             submission.id === activeSubmission && styles.sidebar.activeSubmission
           ]} key={key}>
-          <span>{submissions.length - key}</span>
+          <span>{key + 1}</span>
           <span>{moment(submission.date_updated).format('L LT')}</span>
           <div>
             {submission.flagged ? <span style={styles.sidebar.icon}><BFlag/></span> : null}
@@ -192,7 +192,7 @@ class SubmissionDetail extends Component {
           return (
             <div style={styles.detail.questionContainer} key={key}>
               <h2 style={styles.detail.question}>{reply.question}</h2>
-              <p>{this.renderAnswer(reply.answer)}</p>
+              <div>{this.renderAnswer(reply.answer)}</div>
               {/*<p>galleryId: {gallery ? gallery.id : 'loading gallery'}</p>
               <p>submissionId: {submission.id}</p>
               <p>widget id: {reply.widget_id}</p>*/}
@@ -223,8 +223,8 @@ class SubmissionDetail extends Component {
     if (answer.options) {
       return (
         <ul>
-          {answer.options.map(option => (
-            <li>- {option.title}</li>
+          {answer.options.map((option, key) => (
+            <li key={key}>- {option.title}</li>
           ))}
         </ul>
       );
@@ -269,7 +269,7 @@ class SubmissionDetail extends Component {
             <h2 style={styles.detail.authorTitle}>Submission Author Information</h2>
             <div style={styles.detail.authorDetailsContainer}>
               <div style={styles.detail.authorDetailsColumn}>
-                { authorDetails.map(detail => <p>{detail.label}: {detail.answer}</p>) }
+                { authorDetails.map(detail => <div>{detail.label}: {detail.answer}</div>) }
               </div>
             </div>
           </div>

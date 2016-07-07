@@ -15,7 +15,7 @@ class Heading extends React.Component {
         this.props.style
       ]}>
         <span style={ { fontWeight: this.props.fontWeight } }>{this.props.children}</span>
-        <small style={styles.subhead}>{this.props.subhead}</small>
+        <p style={styles.subhead}>{this.props.subhead}</p>
       </p>
     );
   }
@@ -24,9 +24,8 @@ class Heading extends React.Component {
 const styles = {
   subhead: {
     fontSize: '.5em',
-    display: 'inline-block',
     paddingLeft: '4px',
-    fontWeight: 600,
+    fontWeight: 300,
     color: '#777',
     lineHeight: 1
   },
@@ -35,7 +34,7 @@ const styles = {
     marginBottom: '.5em'
   },
   xsmall: {
-    fontSize: 14,
+    fontSize: 14
   },
   small: {
     fontSize: 18
@@ -49,6 +48,6 @@ const styles = {
   xlarge: {
     fontSize: 36
   }
-}
+};
 
 export default Heading;

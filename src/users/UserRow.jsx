@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import _ from 'lodash';
 import ListItem from 'components/lists/ListItem';
+import moment from 'moment';
 
 @Radium
 export default class UserRow extends React.Component {
@@ -32,6 +33,22 @@ export default class UserRow extends React.Component {
       either: maxDifferent || minDifferent,
       both: !(maxDifferent && minDifferent)
     };
+  }
+
+  getDefaultInfo() {
+    const stats = this.props.user.statistics.comments.all;
+    const ratios = stats.ratios;
+    return (
+      <div style={styles.defaultInfo}>
+        <ul>
+          <li style={styles.defaultItem}>First comment {moment(stats.all.first).format('D MMM YYYY')}</li>
+          <li style={styles.defaultItem}>{ratios.ModeratorDeleted ? (ratios.ModeratorDeleted * 100).toFixed(2) : 0}% deleted comments</li>
+          <li style={styles.defaultItem}>{ratios.SystemFlagged ? (ratios.SystemFlagged * 100).toFixed(2) : 0}% flagged comments</li>
+          <li style={styles.defaultItem}>{(stats.all.reply_ratio * 100).toFixed(2)}% comments are replies</li>
+        </ul>
+        <span style={styles.defaultComments}>{stats.all.count} comments</span>
+      </div>
+    );
   }
 
   getNonDefaultFilters() {
@@ -85,13 +102,8 @@ export default class UserRow extends React.Component {
   }
 
   render() {
-    let {active, disabled, breakdown, specificBreakdown} = this.props;
-    specificBreakdown = specificBreakdown || 'all';
-    if (specificBreakdown === 'all') breakdown = 'all';
-
+    let {active, disabled} = this.props;
     const {user} = this.props;
-
-    let dimension = user.statistics.comments[breakdown][specificBreakdown];
 
     return (
       <ListItem
@@ -99,12 +111,9 @@ export default class UserRow extends React.Component {
         style={[styles.base, disabled && styles.disabled, this.props.style]}
         onClick={this.handleClick.bind(this)}
         >
-        <div style={styles.flex}>
-          <div>
-            <span style={styles.link} onClick={this.props.onClick}>{user.name}</span>
-            {this.getNonDefaultFilters()}
-          </div>
-        </div>
+        <span style={styles.link} onClick={this.props.onClick}>{user.name}</span>
+          {this.getDefaultInfo()}
+        {this.getNonDefaultFilters()}
       </ListItem>
     );
   }
@@ -135,6 +144,23 @@ const styles = {
   },
   link: {
     textDecoration: 'none',
-    color: '#000'
+    color: '#000',
+    fontWeight: 'bold'
+  },
+  defaultInfo: {
+    fontSize: '0.8em',
+    marginTop: 20,
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  defaultComments: {
+    fontSize: '1.3em',
+    background: '#ccc',
+    padding: 10,
+    borderRadius: 4
+  },
+  defaultItem: {
+    paddingTop: 5
   }
 };

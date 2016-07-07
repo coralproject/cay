@@ -27,7 +27,7 @@
     <meta name="theme-color" content="#ffffff">
     <style>
       body {
-        background-color: #ecf0f5;
+        background-color: #f9f9f9;
       }
 
       .loader {
@@ -44,6 +44,12 @@
         100% {
           transform: rotate(360deg);
         }
+      }
+
+      @keyframes animatedBackground {
+        0% { background-position: 0 0; }
+        50% { background-position: 0 100%; }
+        100% { background-position: 0 0; }
       }
     </style>
   </head>

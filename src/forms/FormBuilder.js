@@ -5,26 +5,16 @@ import uuid from 'node-uuid';
 
 import { DragDropContext, DropTarget } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
+import FaClose from 'react-icons/lib/fa/close';
+import Spinner from 'components/Spinner';
 
 import { updateForm } from 'forms/FormActions';
 import FormDiagram from 'forms/FormDiagram';
 
 import FormComponent, {styles as askComponentStyles} from 'forms/FormComponent';
-import Checkbox from 'components/forms/Checkbox';
-import TextField from 'components/forms/TextField';
-import Modal from 'components/modal/Modal';
 import { appendWidget, moveWidget } from 'forms/FormActions';
 
-const askTypes = [
-  {type: 'TextField', title: 'Short Text'},
-  {type: 'TextArea', title: 'Long Text'},
-  {type: 'TextField', title: 'Numbers', props: { validateAs: 'number', validationMessage: "Only numbers are allowed in this field."} },
-  {type: 'MultipleChoice', title: 'Multiple choice'},
-  {type: 'TextField', title: 'Email', props: { validateAs: 'email', validationMessage: "Please type a valid e-mail." } },
-  {type: 'TextField', title: 'Date'},
-  {type: 'LocationDropdown', title: 'Location'},
-  {type: 'TextField', title: 'Phone number'}
-];
+import askTypes from 'forms/WidgetTypes';
 
 @connect(({ app, forms }) => ({ app, forms }))
 @DragDropContext(HTML5Backend)
@@ -38,6 +28,7 @@ export default class FormBuilder extends Component {
 
           <div style={styles.leftContainer}>
             <h4 style={styles.leftContainerTitle}>Question Fields</h4>
+            <p>Click on an field type to add it to the form.</p>
             <div style={styles.typeList}>
               {askTypes.map((type, i) => (
                 <FormComponent key={i} field={type} onClick={this.addToBottom.bind(this, type)} />
@@ -95,18 +86,10 @@ export default class FormBuilder extends Component {
 
         </div>
         <FormDiagram onOpenPreview={ onOpenPreview } activeForm={ this.props.activeForm } />
-        {
-          preview ?
-            <div style={ styles.previewPane }>
-              <div style={ styles.previewActions }>
-                <button style={ styles.previewClose } onClick={ onClosePreview.bind(this) }>Close</button>
-              </div>
-              <div style={ styles.previewContent }>
-                {this.renderPreview.call(this)}
-              </div>
-            </div>
-          : null
-        }
+        { preview ? <Preview
+          renderPreview={this.renderPreview.bind(this)}
+          onClosePreview={onClosePreview.bind(this)}
+          /> : null }
       </div>
     );
   }
@@ -116,7 +99,7 @@ export default class FormBuilder extends Component {
       title: data.title,
       type: 'field',
       component: data.type,
-      identity: false,
+      identity: data.identity ? data.identity : false,
       wrapper: {},
       props: { ...data.props },
       id: Math.floor(Math.random() * 99999) + ''
@@ -153,11 +136,23 @@ export default class FormBuilder extends Component {
 
     return (
       <div>
+        <Spinner />
         <div id="ask-form"></div>
       </div>
     );
   }
 }
+
+const Preview = ({ onClosePreview, renderPreview }) => (
+  <div style={ styles.previewPane }>
+    <div style={ styles.previewActions }>
+      <span style={ styles.previewClose } onClick={onClosePreview}><FaClose /></span>
+    </div>
+    <div style={ styles.previewContent }>
+      {renderPreview()}
+    </div>
+  </div>
+);
 
 const styles = {
   builderContainer: {
@@ -297,10 +292,13 @@ const styles = {
     flexDirection: 'column'
   },
   previewActions: {
-    background: 'white',
     padding: '10px',
     flex: 'none',
-    height: '60px'
+    height: '60px',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    zIndex: 10
   },
   previewClose: {
     padding: '0 10px',
@@ -310,7 +308,7 @@ const styles = {
     cursor: 'pointer'
   },
   previewContent: {
-    overflow: 'scroll',
+    overflow: 'auto',
     flexGrow: '2'
   },
   embedCode: {

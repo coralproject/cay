@@ -1,50 +1,49 @@
 import React from 'react';
 import Radium from 'radium';
 import {Link} from 'react-router';
-import settings from 'settings';
-
-import color from 'color';
 
 var RadiumLink = Radium(Link);
 
-@Radium
-class MenuItem extends React.Component {
-  render() {
-    return (
-      <li style={styles.base}>
-        <RadiumLink style={styles.link} to={this.props.target} activeStyle={styles.base[':hover']}>
-          <span style={ styles.icon }>{this.props.icon}</span>
-        </RadiumLink>
-      </li>
-    );
-  }
-}
+export default Radium(({ target, icon, name, onClick }) => (
+  <li style={styles.base}>
+    <RadiumLink style={styles.link} onClick={onClick}
+      to={target} activeStyle={styles.activeLink}>
+      <span style={ styles.icon }>{icon}</span>
+      <span style={styles.text}>{name}</span>
+    </RadiumLink>
+  </li>
+));
+
 
 const styles = {
   base: {
     transition: 'all .4s',
-    backgroundColor: 'transparent',
-    ':hover': {
-      backgroundColor: 'white',
-      color: settings.brandColor
-    }
+    backgroundColor: 'transparent'
   },
   link: {
-    padding: 20,
+    padding: 10,
+    cursor: 'pointer',
     display: 'block',
-    color: 'white',
     textDecoration: 'none',
+    color: '#9b9b9b',
+    fontWeight: 'bold',
+    fontSize: 14,
+    margin: 10,
+    borderRadius: 5,
     ':hover': {
-      backgroundColor: color(settings.brandColor).lighten(0.3).hexString(),
-      color: settings.brandColor
+      color: '#4a4a4a'
     }
   },
-
+  activeLink: {
+    color: '#4a4a4a',
+    backgroundColor: '#d8d8d8'
+  },
   icon: {
     textAlign: 'center',
     display: 'inline-block',
     fontSize: 24
+  },
+  text: {
+    marginLeft: 20
   }
 };
-
-export default MenuItem;

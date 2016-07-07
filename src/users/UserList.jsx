@@ -38,6 +38,9 @@ export default class UserList extends React.Component {
       selectedSort: props.filters.filterList[0]
     };
 
+    this.containerHeight = 500;
+    this.headerHeight = 0;
+
     var keypress = function (evt) {
       switch (evt.keyCode) {
       case 39:
@@ -83,8 +86,8 @@ export default class UserList extends React.Component {
   getUserList(users) {
     return (
       <Infinite
-        elementHeight={57}
-        containerHeight={500}
+        elementHeight={125}
+        containerHeight={this.containerHeight - this.headerHeight}
         infiniteLoadBeginEdgeOffset={200}
         isInfiniteLoading={this.props.loadingQueryset}
         loadingSpinnerDelegate={<InfiniteSpinner/>}
@@ -142,8 +145,7 @@ export default class UserList extends React.Component {
     const { user, users, comments } = this.props;
 
     var noUsersMessage = (<p style={ styles.noUsers }>
-      No users loaded yet,<br />
-      create a filter on the left to load users.
+      Zero users found...<br />Please widen your search.
     </p>);
 
     const {filters} = this.props;
@@ -158,15 +160,17 @@ export default class UserList extends React.Component {
       }));
 
     return (
-      <div style={ [ styles.base, this.props.style ] }>
-        <div style={ styles.columnHeader }>
+      <div ref={element => this.containerHeight = element && element.clientHeight || 500}
+        style={ [ styles.base, this.props.style ] }>
+        <div ref={element => this.headerHeight = element && element.clientHeight || 0}
+          style={ styles.columnHeader }>
           {
             this.props.loadingQueryset ?
             <div style={ styles.loading }>
               <Spinner />
             </div> :
             <Heading size='medium'>
-              <span style={styles.groupHeader}>{ window.L.t('results') }</span> ({this.props.total || '#'} {this.props.total !== 1 ? window.L.t('users') : window.L.t('user')})
+              <span style={styles.groupHeader}>{ window.L.t('results') }</span> ({this.props.total} {this.props.total !== 1 ? window.L.t('users') : window.L.t('user')})
             </Heading>
           }
           <div style={styles.sort}>
@@ -249,8 +253,7 @@ const styles = {
     position: 'absolute',
     top: 0,
     left: 0,
-    width: '100%',
-    height: 500
+    width: '100%'
   },
   cardFlipper(detail) {
     return {
@@ -264,7 +267,7 @@ const styles = {
   cardContainer: {
     perspective: 1000,
     width: '100%',
-    height: 500
+    flex: 1
   },
   infiniteSpinner: {
     display: 'flex',

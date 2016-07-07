@@ -5,12 +5,13 @@ import { Link } from 'react-router';
 
 import MenuItem from 'app/layout/sidebar/MenuItem';
 
+import FaGroup from 'react-icons/lib/fa/group';
+import FaDashboard from 'react-icons/lib/fa/dashboard';
+import FaListAlt from 'react-icons/lib/fa/list-alt';
+import FaCog from 'react-icons/lib/fa/cog';
+import FaAngleDoubleLeft from 'react-icons/lib/fa/angle-double-left';
+import FaAngleDoubleRight from 'react-icons/lib/fa/angle-double-right';
 import MdBuild from 'react-icons/lib/md/build';
-import MdSettings from 'react-icons/lib/md/settings';
-import MdInfoOutline from 'react-icons/lib/md/info-outline';
-import MdGroup from 'react-icons/lib/md/group';
-import MdForum from 'react-icons/lib/md/forum';
-import MdArtTrack from 'react-icons/lib/md/art-track';
 
 import { Lang } from 'i18n/lang';
 import settings from 'settings';
@@ -21,54 +22,80 @@ import settings from 'settings';
 class Menu extends React.Component {
 
   render() {
-    const { app } = this.props;
+    const { app, open, onToggleSidebar } = this.props;
     const features = app.features || {};
     return (
-      <div>
-        <Link to="/" style={styles.logo}></Link>
-        <ul>
-          {/*<MenuItem name="Dashboard" target="/" icon={<MdInsertChart />} />*/}
-          {/*<MenuItem name="Explore" target="/explore" icon={<MdTimeline />} />*/}
-          <MenuItem name={ window.L.t('Search Creator') } target="/search-creator" icon={<MdBuild />} />
-          <MenuItem name={ window.L.t('Saved Searches') } target="/saved-searches" icon={<MdGroup />} />
-          {/*<MenuItem name={ window.L.t('Tag Manager') } target="/tag-manager" icon={<MdSettings />}/>*/}
-          {
-            features.ask ?
-              <MenuItem
-                name="View Forms"
-                target="/forms"
-                icon={<MdArtTrack/>}/> :
-                null
-          }
-          {
-            features.ask ?
-              <MenuItem name={ window.L.t('Create Form') } target="/forms/create" icon={<MdForum />} /> :
-              null
-          }
-          {/*<MenuItem name={ window.L.t('About') } target="/about" icon={<MdInfoOutline />}/>*/}
-          {/*<MenuItem name="Settings" target="/settings" icon={<MdSettings />} />*/}
-        </ul>
+      <div style={styles.sidebarWrapper}>
+        <Link to="/" style={styles.logo}>
+          <img width="30" height="30" src="/img/logo_white.png" />
+          <span style={styles.logoText}>The Coral Project</span>
+        </Link>
+        <div style={styles.menuWrapper}>
+          <TopMenu open={open} features={features} />
+          <BottomMenu onToggleSidebar={onToggleSidebar} open={open} />
+        </div>
       </div>
     );
   }
 }
 
-var styles = {
+const stopAndBubble = fn => evt => {
+  evt.preventDefault();
+  evt.stopPropagation();
+  fn();
+};
+
+const TopMenu = ({ features }) => (
+  <ul>
+    <MenuItem name={ window.L.t('Create Search') } target="/search-creator" icon={<FaGroup />} />
+    <MenuItem name={ window.L.t('Saved Searches') } target="/saved-searches" icon={<FaDashboard />} />
+    { features.ask ? <MenuItem open={open} name="Create Form" target="/forms/create" icon={<MdBuild />} /> : null }
+    { features.ask ? <MenuItem open={open} name="View Forms" target="/forms" icon={<FaListAlt />}/> : null }
+  </ul>
+);
+
+const BottomMenu = ({ open, onToggleSidebar }) => (
+  <ul>
+    <MenuItem name="Settings" target='#' onClick={stopAndBubble(()=>{})}
+      icon={<FaCog />} />
+    <MenuItem name="Collapse menu" target='#' onClick={stopAndBubble(onToggleSidebar)}
+      icon={open ? <FaAngleDoubleLeft /> : <FaAngleDoubleRight />} />
+  </ul>
+);
+
+const styles = {
   logo: {
-    backgroundImage: 'url(/img/logo_white.png)',
-    backgroundSize: '40px 40px',
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: '10px 10px',
-    backgroundColor: settings.brandColor,
+    display: 'flex',
+    alignItems: 'center',
+    backgroundColor: settings.bgColorLogo,
     color: 'white',
     fontSize: '1em',
     // padding: '0 20px 0 35px',
     textDecoration: 'none',
-    display: 'block',
-    height: '60px',
-    lineHeight: '50px'
+    height: 50,
+    lineHeight: '50px',
+    padding: 10,
+    paddingLeft: 17
   },
-
+  logoText: {
+    marginLeft: 15,
+    width: 128
+  },
+  sidebarWrapper: {
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    width: 200,
+    overflowX: 'hidden',
+    position: 'fixed',
+    backgroundColor: 'rgb(240, 240, 240)'
+  },
+  menuWrapper: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    flex: 1
+  }
 };
 
 export default Menu;

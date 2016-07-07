@@ -1,5 +1,5 @@
 const settings = {
-  brandColor: "rgb(246,125,111)",
+  brandColor: 'rgb(246,125,111)',
   textColor: '#3e3e3e',
   linkColor: '#777777',
   darkColorBase: '#202020',
@@ -9,7 +9,10 @@ const settings = {
   highlightColor: '#006FC7',
   transitionAll: 'all ease .3s',
   bgColorOffset: '#f8f8f8',
-  bgColorBase: '#ecf0f5',
+  bgColorBase: '#f9f9f9',
+  bgColorTopNav: '#f99588',
+  bgColorLogo: '#f67d6f',
+  bgColorSidebar: '#f0f0f0',
   borderColorBase: '#D2D6DE',
   borderRadiusBase: 4,
   borderStyleBase: 'solid',

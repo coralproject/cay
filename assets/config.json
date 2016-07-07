@@ -1,13 +1,14 @@
 {
  "xeniaHost": "${XENIA_URL}",
  "pillarHost": "${PILLAR_URL}",
+ "elkHornHost": "${ELKHORN_URL}",
  "environment": "${ENV}",
  "brand": "${PROJECT}",
  "googleAnalyticsId": "${GAID}",
  "requireLogin": false,
- "basicAuthorization": " ${AUTH_TOKEN}",
+ "basicAuthorization": "Basic ${AUTH_TOKEN}",
   "features": {
-    "ask": false
+    "ask": true
   }
 }
 

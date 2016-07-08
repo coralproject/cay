@@ -157,8 +157,10 @@ const styles = {
       margin: 10
     },
     search: {
-      height: 25,
-      margin: 10
+      height: 35,
+      margin: 10,
+      padding: 10,
+      fontSize: '16px'
     },
     sortContainer: {
       display: 'flex',
@@ -174,7 +176,7 @@ const styles = {
     submissionContainer: {
       transition: 'all .3s',
       height: 40,
-      border: '5px solid transparent',
+      border: '3px solid transparent',
       padding: 8,
       display: 'flex',
       justifyContent: 'space-between',
@@ -185,7 +187,7 @@ const styles = {
       }
     },
     activeSubmission: {
-      border: '5px solid ' + settings.grey
+      border: '3px solid ' + settings.grey
     }
   }
 };

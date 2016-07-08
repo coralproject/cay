@@ -1,10 +1,13 @@
 import React from 'react';
 import Radium from 'radium';
 import moment from 'moment';
-import WFlag from 'react-icons/lib/fa/flag-o';
-import WBookmark from 'react-icons/lib/fa/bookmark-o';
 import BBookmark from 'react-icons/lib/fa/bookmark';
+import PaperPlaneIcon from 'react-icons/lib/fa/paper-plane';
+import TagsIcon from 'react-icons/lib/fa/tags';
+import FlagIcon from 'react-icons/lib/fa/flag';
+import TrashIcon from 'react-icons/lib/fa/trash';
 
+import settings from 'settings';
 import Button from 'components/Button';
 
 @Radium
@@ -51,34 +54,30 @@ export default class SubmissionDetail extends React.Component {
           //  we need to find if BOTH
           //   this submission id matches
           //   and the answer has come form the widget
-          var inGallery = false;
-          for (var i in gallery.answers) {
-            if (gallery.answers[i].answer_id === reply.widget_id &&
-                gallery.answers[i].submission_id === submission.id) {
-              inGallery = true;
-              break;
-            }
-          }
+          const inGallery = gallery.answers.some(ans => {
+            return ans.answer_id === reply.widget_id && ans.submission_id === submission.id;
+          });
+
+          const modAnswer = inGallery ? this.props.removeFromGallery : this.props.sendToGallery;
 
           return (
-            <div style={styles.questionContainer} key={key}>
+            <div style={styles.answer} key={key}>
               <h2 style={styles.question}>{reply.question}</h2>
-              <div>{this.renderAnswer(reply.answer)}</div>
+              {this.renderAnswer(reply.answer)}
               {/*<p>galleryId: {gallery ? gallery.id : 'loading gallery'}</p>
               <p>submissionId: {submission.id}</p>
               <p>widget id: {reply.widget_id}</p>*/}
               <Button
                 style={styles.galleryButton}
-                category={inGallery ? 'success' : 'primary'}
-                size="small"
-                onClick={
+                category={inGallery ? 'success' : 'default'}
+                onClick={modAnswer.bind(this, gallery.id, submission.id, reply.widget_id)}>
+                {
                   inGallery ?
-                    () => this.props.removeFromGallery(gallery.id, submission.id, reply.widget_id) :
-                    () => this.props.sendToGallery(gallery.id, submission.id, reply.widget_id)
-                }>
-
-                {inGallery ? 'In Gallery' : 'Send to gallery'}
+                    <span>Remove from Gallery <TrashIcon /></span> :
+                    <span>Send to gallery <PaperPlaneIcon /></span>
+                }
               </Button>
+
             </div>
           );
         })}
@@ -119,28 +118,31 @@ export default class SubmissionDetail extends React.Component {
 
     return (
       <div>
+        <div style={styles.headerButtons}>
+          <Button
+            style={styles.headerButton}
+            category="primary">Add Tags <TagsIcon /></Button>
+          <Button
+            style={styles.headerButton}
+            onClick={() => onFlag(!submission.flagged)}
+            category="danger">Flag <FlagIcon /></Button>
+          <Button
+            style={styles.headerButton}
+            onClick={() => onBookmark(!submission.bookmarked)}
+            category="success">Bookmark <BBookmark /></Button>
+        </div>
         <div style={styles.headerContainer}>
-          <span>{moment(submission.date_updated).format('L LT')}</span>
-          <div>
-            <span style={styles.icon}>
-              {submission.flagged ?
-                <BFlag style={styles.action} onClick={() => onFlag(false)}/> :
-                <WFlag style={styles.action} onClick={() => onFlag(true)}/> }
-            </span>
-            <span style={styles.icon}>
-              {submission.bookmarked ?
-                <BBookmark style={styles.action} onClick={() => onBookmark(false)}/> :
-                <WBookmark style={styles.action} onClick={() => onBookmark(true)}/>
-              }
-            </span>
-          </div>
+          <span style={styles.subNum}>37</span> {moment(submission.date_updated).format('L LT')}
         </div>
         <div style={styles.submissionContainer}>
           <div style={styles.authorContainer}>
-            <h2 style={styles.authorTitle}>Submission Author Information</h2>
             <div style={styles.authorDetailsContainer}>
               <div style={styles.authorDetailsColumn}>
-                { authorDetails.map(detail => <div>{detail.label}: {detail.answer}</div>) }
+                { authorDetails.map(detail => {
+                  return (
+                    <p style={styles.identity}><span style={styles.identity.label}>{detail.label}</span> {detail.answer}</p>
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -151,14 +153,17 @@ export default class SubmissionDetail extends React.Component {
 }
 
 const styles = {
+  identity: {
+    fontSize: '16px',
+    marginBottom: 10,
+    label: {
+      fontWeight: 'bold'
+    }
+  },
   galleryButton: {
-    float: 'right'
-  },
-  questionContainer: {
+    float: 'right',
+    marginTop: 10,
     marginBottom: 20
-  },
-  action: {
-    cursor: 'pointer'
   },
   answersContainer: {
     padding: '0 50px 50px 50px'
@@ -167,6 +172,9 @@ const styles = {
     fontWeight: 'bold',
     fontSize: '1.2em',
     marginBottom: 10
+  },
+  answer: {
+    clear: 'both'
   },
   authorDetailsContainer: {
     display: 'flex',
@@ -186,18 +194,22 @@ const styles = {
   },
   headerContainer: {
     paddingBottom: 8,
-    borderBottom: '3px solid #aaa',
-    display: 'flex',
-    justifyContent: 'space-between'
+    borderBottom: '1px solid ' + settings.mediumGrey,
+    position: 'relative'
+  },
+  headerButtons: {
+    position: 'absolute',
+    top: 10,
+    right: 10
+  },
+  headerButton: {
+    marginLeft: 10
   },
   authorContainer: {
-    padding: 15,
-    backgroundColor: '#ddd'
+
   },
-  authorTitle: {
-    fontSize: '1.2em'
-  },
-  icon: {
-    marginLeft: 3
+  subNum: {
+    fontSize: '2.2em',
+    fontWeight: 'bold'
   }
 };

@@ -80,6 +80,16 @@ export default class FormChrome extends React.Component {
     };
   }
 
+  getStatusSelectStyle() {
+    return {
+      padding: '12px 12px 0',
+      borderRadius: 5,
+      cursor: 'pointer',
+      userSelect: 'none',
+      backgroundColor: this.state.statusDropdownOpen ? '#d8d8d8' : '#fff'
+    };
+  }
+
   getAngleBtn() {
     return this.state.statusDropdownOpen ? <AngleUpIcon /> : <AngleDownIcon />;
   }
@@ -91,6 +101,8 @@ export default class FormChrome extends React.Component {
     if (name.length > 15) {
       name = name.split(' ').slice(0, 4).join(' ') + '…'; // use ellipsis character
     }
+
+    const {form} = this.props;
 
     return (
       <div style={styles.base}>
@@ -121,25 +133,42 @@ export default class FormChrome extends React.Component {
             </div>
           </div>
 
-          <div style={styles.statusSelect} onClick={this.toggleDropdown.bind(this)}>
-            <span style={{fontWeight: 'bold'}}>Form Status:</span> {this.props.form ? this.props.form.status : ''} {this.getAngleBtn()}
-          </div>
+          {
+            form ?
+              <div style={this.getStatusSelectStyle()} onClick={this.toggleDropdown.bind(this)}>
+                <span style={{fontWeight: 'bold'}}>Form Status:</span> {form.status} {this.getAngleBtn()}
+              </div> :
+              null
+          }
 
-          <div style={this.getStatusDropdownStyles()}>
-            <div style={styles.tabBkd} />
-            <div style={styles.tab} />
-            <RadioButton style={styles.openRadio} label="Open" value="open" onClick={this.props.updateStatus} />
-            <div style={styles.closeRadio}>
-              <RadioButton value="closed" label="Closed" onClick={this.props.updateStatus} />
-              <textarea style={styles.statusMessage}></textarea>
-              <Button
-                style={{float: 'left', marginRight: 10}}
-                category="success"
+          {
+            form ?
+              <div style={this.getStatusDropdownStyles()}>
+                <div style={styles.tabBkd} />
+                <div style={styles.tab} />
+                <RadioButton
+                  style={styles.openRadio}
+                  label="Open"
+                  value="open"
+                  checked={form.status === 'open'}
+                  onClick={this.props.updateStatus} />
+                <div style={styles.closeRadio}>
+                  <RadioButton
+                    value="closed"
+                    label="Closed"
+                    checked={form.status === 'closed'}
+                    onClick={this.props.updateStatus} />
+                  <textarea style={styles.statusMessage}></textarea>
+                  <Button
+                    style={{float: 'left', marginRight: 10}}
+                    category="success"
 
-              >Save <SaveIcon /></Button>
-            <p>The message will appear to readers when you close the form and are no longer collecting submissions.</p>
-            </div>
-          </div>
+                    >Save <SaveIcon /></Button>
+                  <p>The message will appear to readers when you close the form and are no longer collecting submissions.</p>
+                </div>
+              </div> :
+              null
+          }
 
         </div>
 
@@ -197,11 +226,6 @@ const styles = {
   disabled: {
     display: 'none'
   },
-  statusSelect: {
-    padding: '12px 12px 0',
-    borderRadius: 5,
-    backgroundColor: '#d8d8d8'
-  },
   badge: {
     backgroundColor: color(settings.brandColor).darken(0.1).hexString(),
     fontSize: '14px',
@@ -246,6 +270,7 @@ const styles = {
     border: '1px solid ' + settings.mediumGrey,
     height: 50,
     borderRadius: 4,
+    fontSize: '14px',
     marginBottom: 10
   }
 };

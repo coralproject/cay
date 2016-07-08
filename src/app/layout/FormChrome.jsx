@@ -1,9 +1,14 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import _ from 'lodash';
-import Select from 'react-select';
 import Badge from 'components/Badge';
 import color from 'color';
+import AngleDownIcon from 'react-icons/lib/fa/angle-down';
+import AngleUpIcon from 'react-icons/lib/fa/angle-up';
+import SaveIcon from 'react-icons/lib/fa/floppy-o';
+
+import Button from 'components/Button';
+import RadioButton from 'components/forms/RadioButton';
 
 import settings from 'settings';
 
@@ -15,11 +20,16 @@ export default class FormChrome extends React.Component {
     activeTab: PropTypes.oneOf(['builder', 'submissions', 'gallery']).isRequired,
     form: PropTypes.object,
     gallery: PropTypes.object,
-    updateStatus: PropTypes.func
+    updateStatus: PropTypes.func.isRequired
   }
 
   static contextTypes = {
     router: PropTypes.object.isRequired
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = {statusDropdownOpen: false};
   }
 
   buildForm() { // navigate to the form builder or editor
@@ -53,6 +63,27 @@ export default class FormChrome extends React.Component {
     return this.props.submissions ? <Badge style={styles.badge} count={this.props.submissions.length} /> : '';
   }
 
+  toggleDropdown() {
+    this.setState({statusDropdownOpen: !this.state.statusDropdownOpen});
+  }
+
+  getStatusDropdownStyles() {
+    return {
+      display: this.state.statusDropdownOpen ? 'block' : 'none',
+      position: 'absolute',
+      top: 55,
+      right: 5,
+      background: 'white',
+      border: '1px solid ' + settings.mediumGrey,
+      borderRadius: 4,
+      width: 370
+    };
+  }
+
+  getAngleBtn() {
+    return this.state.statusDropdownOpen ? <AngleUpIcon /> : <AngleDownIcon />;
+  }
+
   render() {
     let name = _.has(this.props, 'form.header.title') ? this.props.form.header.title :
       this.props.create ? 'Untitled Form' : '';
@@ -60,11 +91,6 @@ export default class FormChrome extends React.Component {
     if (name.length > 15) {
       name = name.split(' ').slice(0, 4).join(' ') + '…'; // use ellipsis character
     }
-
-    const statusOptions = [
-      {label: 'Open', value: 'open'},
-      {label: 'Closed', value: 'closed'}
-    ];
 
     return (
       <div style={styles.base}>
@@ -95,12 +121,24 @@ export default class FormChrome extends React.Component {
             </div>
           </div>
 
-          <div style={styles.statusSelect}>
-            <Select
-              options={statusOptions}
-              style={styles.statusPicker}
-              value={this.props.form && this.props.form.status}
-              onChange={this.props.updateStatus} />
+          <div style={styles.statusSelect} onClick={this.toggleDropdown.bind(this)}>
+            <span style={{fontWeight: 'bold'}}>Form Status:</span> {this.props.form ? this.props.form.status : ''} {this.getAngleBtn()}
+          </div>
+
+          <div style={this.getStatusDropdownStyles()}>
+            <div style={styles.tabBkd} />
+            <div style={styles.tab} />
+            <RadioButton style={styles.openRadio} label="Open" value="open" onClick={this.props.updateStatus} />
+            <div style={styles.closeRadio}>
+              <RadioButton value="closed" label="Closed" onClick={this.props.updateStatus} />
+              <textarea style={styles.statusMessage}></textarea>
+              <Button
+                style={{float: 'left', marginRight: 10}}
+                category="success"
+
+              >Save <SaveIcon /></Button>
+            <p>The message will appear to readers when you close the form and are no longer collecting submissions.</p>
+            </div>
           </div>
 
         </div>
@@ -160,11 +198,54 @@ const styles = {
     display: 'none'
   },
   statusSelect: {
-    width: 110
+    padding: '12px 12px 0',
+    borderRadius: 5,
+    backgroundColor: '#d8d8d8'
   },
   badge: {
     backgroundColor: color(settings.brandColor).darken(0.1).hexString(),
     fontSize: '14px',
     color: 'white'
+  },
+  tab: {
+    display: 'block',
+    content: '',
+    width: 16,
+    height: 16,
+    borderTop: '8px solid transparent',
+    borderLeft: '8px solid transparent',
+    borderRight: '8px solid transparent',
+    borderBottom: '8px solid white',
+    position: 'absolute',
+    top: -16,
+    right: 30
+  },
+  tabBkd: {
+    display: 'block',
+    content: '',
+    width: 18,
+    height: 18,
+    borderTop: '9px solid transparent',
+    borderRight: '9px solid transparent',
+    borderLeft: '9px solid transparent',
+    borderBottom: '9px solid ' + settings.mediumGrey,
+    position: 'absolute',
+    top: -18,
+    right: 29
+  },
+  openRadio: {
+    width: '100%',
+    padding: 20,
+    borderBottom: '1px solid ' + settings.mediumGrey
+  },
+  closeRadio: {
+    padding: 20
+  },
+  statusMessage: {
+    width: '100%',
+    border: '1px solid ' + settings.mediumGrey,
+    height: 50,
+    borderRadius: 4,
+    marginBottom: 10
   }
 };

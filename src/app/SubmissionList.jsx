@@ -48,8 +48,8 @@ export default class SubmissionList extends Component {
     this.props.dispatch(updateSubmission({ bookmarked }));
   }
 
-  updateFormStatus(option) {
-    this.props.dispatch(updateFormStatus(this.props.forms.activeForm, option.value));
+  updateFormStatus(value) {
+    this.props.dispatch(updateFormStatus(this.props.forms.activeForm, value));
   }
 
   render() {
@@ -148,7 +148,6 @@ class SubmissionDetail extends Component {
     return (
       <div style={styles.detail.container}>
         {this.renderAuthorDetail()}
-        {this.renderAnswers()}
       </div>
     );
   }
@@ -269,7 +268,7 @@ class SubmissionDetail extends Component {
             <h2 style={styles.detail.authorTitle}>Submission Author Information</h2>
             <div style={styles.detail.authorDetailsContainer}>
               <div style={styles.detail.authorDetailsColumn}>
-                { authorDetails.map(detail => <div>{detail.label}: {detail.answer}</div>) }
+                { authorDetails.map((detail, i) => <div key={i}>{detail.label}: {detail.answer}</div>) }
               </div>
             </div>
           </div>

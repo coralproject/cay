@@ -76,6 +76,7 @@ export default class FormChrome extends React.Component {
       background: 'white',
       border: '1px solid ' + settings.mediumGrey,
       borderRadius: 4,
+      boxShadow: '0px 0px 5px 0px rgba(0,0,0,0.2)',
       width: 370
     };
   }
@@ -152,10 +153,11 @@ export default class FormChrome extends React.Component {
                   value="open"
                   checked={form.status === 'open'}
                   onClick={this.props.updateStatus} />
-                <div style={styles.closeRadio}>
+                <div style={styles.closeStatusHolder}>
                   <RadioButton
                     value="closed"
                     label="Closed"
+                    style={styles.closeRadio}
                     checked={form.status === 'closed'}
                     onClick={this.props.updateStatus} />
                   <textarea style={styles.statusMessage}></textarea>
@@ -262,8 +264,11 @@ const styles = {
     padding: 20,
     borderBottom: '1px solid ' + settings.mediumGrey
   },
-  closeRadio: {
+  closeStatusHolder: {
     padding: 20
+  },
+  closeRadio: {
+    marginBottom: 15
   },
   statusMessage: {
     width: '100%',

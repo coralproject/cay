@@ -34,8 +34,8 @@ const settings = {
   darkerGrey: '#34383C',
   darkestGrey: '#1E2226',
 
-  primaryColor: '#337ab7',
-  successColor: '#5cb85c',
+  primaryColor: '#4A90E2',
+  successColor: '#2E9766',
   infoColor: '#5bc0de',
   warningColor: 'rgb(240, 173, 78)',
   dangerColor: '#d9534f'

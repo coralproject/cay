@@ -1,13 +1,9 @@
-
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 import moment from 'moment';
-import WFlag from 'react-icons/lib/fa/flag-o';
-import WBookmark from 'react-icons/lib/fa/bookmark-o';
 import BFlag from 'react-icons/lib/fa/flag';
 import BBookmark from 'react-icons/lib/fa/bookmark';
-import Button from 'components/Button';
 
 import {
   fetchSubmissions,
@@ -19,8 +15,10 @@ import {
   updateFormStatus,
   fetchForm } from 'forms/FormActions';
 
+import SubmissionDetail from 'forms/SubmissionDetail';
 import FormChrome from 'app/layout/FormChrome';
 import Page from 'app/layout/Page';
+import settings from 'settings';
 
 @connect(({ forms }) => ({ forms }))
 @Radium
@@ -101,7 +99,7 @@ class Sidebar extends Component {
             styles.sidebar.submissionContainer,
             submission.id === activeSubmission && styles.sidebar.activeSubmission
           ]} key={key}>
-          <span>{key + 1}</span>
+          <span style={{fontWeight: 'bold'}}>{key + 1}</span>
           <span>{moment(submission.date_updated).format('L LT')}</span>
           <div>
             {submission.flagged ? <span style={styles.sidebar.icon}><BFlag/></span> : null}
@@ -115,20 +113,21 @@ class Sidebar extends Component {
   render() {
     const { submissions, activeSubmission, onSelect} = this.props;
     return (
-      <div style={styles.sidebar.container}>
-        <div style={styles.sidebar.countContainer}>
-          <p style={styles.sidebar.count}>{submissions.length}</p>
-          <p style={styles.sidebar.count}>Submission{submissions.length === 1 ? '' : 's'}</p>
-        </div>
-        <input style={styles.sidebar.search} type='text' placeholder='Search' />
-        <div style={styles.sidebar.sortContainer}>
-          <select style={[styles.sidebar.sort, styles.sidebar.firstSort]}>
-            <option>View All</option>
-          </select>
+      <div>
+        <div style={styles.sidebar.container}>
+          <div style={styles.sidebar.countContainer}>
+            <p style={styles.sidebar.count}>{submissions.length} Submission{submissions.length === 1 ? '' : 's'}</p>
+          </div>
+          <input style={styles.sidebar.search} type='text' placeholder='Search' />
+          {/*<div style={styles.sidebar.sortContainer}>
+            <select style={[styles.sidebar.sort, styles.sidebar.firstSort]}>
+              <option>View All</option>
+            </select>
 
-          <select style={styles.sidebar.sort}>
-            <option>Newest First</option>
-          </select>
+            <select style={styles.sidebar.sort}>
+              <option>Newest First</option>
+            </select>
+          </div>*/}
         </div>
         <div>{this.listSubmissions(submissions, activeSubmission, onSelect)}</div>
       </div>
@@ -136,220 +135,36 @@ class Sidebar extends Component {
   }
 }
 
-@Radium
-class SubmissionDetail extends Component {
-  render() {
-    const { submission } = this.props;
-
-    if(!submission) {
-      return (<h1 style={styles.detail.container}>No submissions</h1>);
-    }
-
-    return (
-      <div style={styles.detail.container}>
-        {this.renderAuthorDetail()}
-      </div>
-    );
-  }
-
-  renderAnswers() {
-    const { submission, gallery } = this.props;
-
-    if (!submission) {
-      return (<p>loading submission...</p>);
-    }
-
-    if (!gallery) {
-      return (<p>Loading gallery...</p>);
-    }
-
-    return (
-      <div style={styles.detail.answersContainer}>
-        {submission.replies.map((reply, key) => {
-
-          // identity fields are shown above, not as part of
-          //   the reply list
-          if (reply.identity === true) {
-            return (<span></span>);
-          }
-
-
-          // determine whether or not the answers is already
-          //  in the gallery
-          //  we need to find if BOTH
-          //   this submission id matches
-          //   and the answer has come form the widget
-          var inGallery = false;
-          for (var i in gallery.answers) {
-            if (gallery.answers[i].answer_id === reply.widget_id &&
-                gallery.answers[i].submission_id === submission.id) {
-              inGallery = true;
-              break;
-            }
-          }
-
-          return (
-            <div style={styles.detail.questionContainer} key={key}>
-              <h2 style={styles.detail.question}>{reply.question}</h2>
-              <div>{this.renderAnswer(reply.answer)}</div>
-              {/*<p>galleryId: {gallery ? gallery.id : 'loading gallery'}</p>
-              <p>submissionId: {submission.id}</p>
-              <p>widget id: {reply.widget_id}</p>*/}
-              <Button
-                style={styles.detail.galleryButton}
-                category={inGallery ? 'success' : 'primary'}
-                size="small"
-                onClick={
-                  inGallery ?
-                    () => this.props.removeFromGallery(gallery.id, submission.id, reply.widget_id) :
-                    () => this.props.sendToGallery(gallery.id, submission.id, reply.widget_id)
-                }>
-
-                {inGallery ? 'In Gallery' : 'Send to gallery'}
-              </Button>
-            </div>
-          );
-        })}
-      </div>
-    );
-  }
-
-  renderAnswer(answer = {}) {
-    if (answer === null) {
-      return (<span>No response</span>);
-    }
-
-    if (answer.options) {
-      return (
-        <ul>
-          {answer.options.map((option, key) => (
-            <li key={key}>- {option.title}</li>
-          ))}
-        </ul>
-      );
-    }
-
-    if (answer.text) {
-      return answer.text;
-    }
-
-    return answer;
-  }
-
-  renderAuthorDetail() {
-    const { submission, onFlag, onBookmark } = this.props;
-
-    var authorDetails = submission.replies.filter(reply => {
-      return reply.identity === true;
-    }).map(reply => {
-      return {label: reply.question, answer: this.renderAnswer(reply.answer)};
-    });
-
-    return (
-      <div>
-        <div style={styles.detail.headerContainer}>
-          <span>{moment(submission.date_updated).format('L LT')}</span>
-          <div>
-            <span style={styles.sidebar.icon}>
-              {submission.flagged ?
-                <BFlag style={styles.detail.action} onClick={() => onFlag(false)}/> :
-                <WFlag style={styles.detail.action} onClick={() => onFlag(true)}/> }
-            </span>
-            <span style={styles.sidebar.icon}>
-              {submission.bookmarked ?
-                <BBookmark style={styles.detail.action} onClick={() => onBookmark(false)}/> :
-                <WBookmark style={styles.detail.action} onClick={() => onBookmark(true)}/>
-              }
-            </span>
-          </div>
-        </div>
-        <div style={styles.detail.submissionContainer}>
-          <div style={styles.detail.authorContainer}>
-            <h2 style={styles.detail.authorTitle}>Submission Author Information</h2>
-            <div style={styles.detail.authorDetailsContainer}>
-              <div style={styles.detail.authorDetailsColumn}>
-                { authorDetails.map((detail, i) => <div key={i}>{detail.label}: {detail.answer}</div>) }
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-}
-
 const styles = {
-  detail: {
-    galleryButton: {
-      float: 'right'
-    },
-    questionContainer: {
-      marginBottom: 20
-    },
-    action: {
-      cursor: 'pointer'
-    },
-    answersContainer: {
-      padding: '0 50px 50px 50px'
-    },
-    question: {
-      fontWeight: 'bold',
-      fontSize: '1.2em',
-      marginBottom: 10
-    },
-    authorDetailsContainer: {
-      display: 'flex',
-      paddingTop: 10
-    },
-    authorDetailsColumn: {
-      flex: 1
-    },
-    container: {
-      flex: 3,
-      display: 'flex',
-      flexDirection: 'column',
-      margin: '0 30px 30px 30px'
-    },
-    submissionContainer: {
-      padding: 50
-    },
-    headerContainer: {
-      paddingBottom: 8,
-      borderBottom: '3px solid #aaa',
-      display: 'flex',
-      justifyContent: 'space-between'
-    },
-    authorContainer: {
-      padding: 15,
-      backgroundColor: '#ddd'
-    },
-    authorTitle: {
-      fontSize: '1.2em'
-    }
-  },
   container: {
-    display: 'flex',
-    marginTop: 40
+    display: 'flex'
   },
   sidebar: {
     container: {
       flex: 1,
       display: 'flex',
-      flexDirection: 'column'
+      flexDirection: 'column',
+      backgroundColor: 'white',
+      minWidth: 300,
+      marginBottom: 10,
+      boxShadow: '0px 0px 5px 0px rgba(0,0,0,0.2)'
     },
     icon: {
       marginLeft: 3
     },
     count: {
-      textAlign: 'center',
-      fontSize: '1.5em'
+      fontWeight: 'bold',
+      fontSize: '1.2em',
+      color: settings.darkGrey
     },
     countContainer: {
-      marginBottom: 20
+      margin: 10
     },
     search: {
-      height: 25,
-      marginBottom: 20
+      height: 35,
+      margin: 10,
+      padding: 10,
+      fontSize: '16px'
     },
     sortContainer: {
       display: 'flex',
@@ -363,19 +178,24 @@ const styles = {
       marginRight: 10
     },
     submissionContainer: {
-      borderRadius: 2,
-      backgroundColor: '#ddd',
-      marginBottom: 5,
+      transition: 'all .3s',
+      height: 40,
+      border: '3px solid transparent',
       padding: 8,
+      marginBottom: 5,
       display: 'flex',
       justifyContent: 'space-between',
       cursor: 'pointer',
+      backgroundColor: 'white',
+      boxSizing: 'border-box',
+      transform: 'scale(1)',
+      boxShadow: '0px 0px 5px 0px rgba(0,0,0,0.2)',
       ':hover': {
-        backgroundColor: '#bbb'
+        transform: 'scale(1.05)'
       }
     },
     activeSubmission: {
-      backgroundColor: '#bbb'
+      border: '3px solid ' + settings.grey
     }
   }
 };

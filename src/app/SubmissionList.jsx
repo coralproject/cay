@@ -113,20 +113,22 @@ class Sidebar extends Component {
   render() {
     const { submissions, activeSubmission, onSelect} = this.props;
     return (
-      <div style={styles.sidebar.container}>
-        <div style={styles.sidebar.countContainer}>
-          <p style={styles.sidebar.count}>{submissions.length} Submission{submissions.length === 1 ? '' : 's'}</p>
-        </div>
-        <input style={styles.sidebar.search} type='text' placeholder='Search' />
-        {/*<div style={styles.sidebar.sortContainer}>
-          <select style={[styles.sidebar.sort, styles.sidebar.firstSort]}>
-            <option>View All</option>
-          </select>
+      <div>
+        <div style={styles.sidebar.container}>
+          <div style={styles.sidebar.countContainer}>
+            <p style={styles.sidebar.count}>{submissions.length} Submission{submissions.length === 1 ? '' : 's'}</p>
+          </div>
+          <input style={styles.sidebar.search} type='text' placeholder='Search' />
+          {/*<div style={styles.sidebar.sortContainer}>
+            <select style={[styles.sidebar.sort, styles.sidebar.firstSort]}>
+              <option>View All</option>
+            </select>
 
-          <select style={styles.sidebar.sort}>
-            <option>Newest First</option>
-          </select>
-        </div>*/}
+            <select style={styles.sidebar.sort}>
+              <option>Newest First</option>
+            </select>
+          </div>*/}
+        </div>
         <div>{this.listSubmissions(submissions, activeSubmission, onSelect)}</div>
       </div>
     );
@@ -143,6 +145,8 @@ const styles = {
       display: 'flex',
       flexDirection: 'column',
       backgroundColor: 'white',
+      minWidth: 300,
+      marginBottom: 10,
       boxShadow: '0px 0px 5px 0px rgba(0,0,0,0.2)'
     },
     icon: {
@@ -178,12 +182,16 @@ const styles = {
       height: 40,
       border: '3px solid transparent',
       padding: 8,
+      marginBottom: 5,
       display: 'flex',
       justifyContent: 'space-between',
       cursor: 'pointer',
+      backgroundColor: 'white',
       boxSizing: 'border-box',
+      transform: 'scale(1)',
+      boxShadow: '0px 0px 5px 0px rgba(0,0,0,0.2)',
       ':hover': {
-        backgroundColor: settings.lightGrey
+        transform: 'scale(1.05)'
       }
     },
     activeSubmission: {

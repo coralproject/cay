@@ -62,10 +62,6 @@ export default class NumberFieldEditor extends Component {
     return (
       <div>
 
-        <div style={ styles.responseArea }>
-          <input style={ styles.responseAreaInput } type="text" disabled placeholder="Response Area" />
-        </div>
-
         <div style={ styles.bottomOptions }>
 
           <div style={ styles.bottomOptionsLeft }>
@@ -131,12 +127,6 @@ const styles = {
     fontSize: '10pt',
     width: '50px',
     textAlign: 'center'
-  },
-  responseAreaInput: {
-    padding: '10px',
-    height: '40px',
-    display: 'block',
-    width: '100%'
   },
   disabled: {
     color: '#AAA'

@@ -97,6 +97,7 @@ export default class FormBuilder extends Component {
   addToBottom(data) {
     this.props.dispatch(appendWidget({
       title: data.title,
+      friendlyType: data.friendlyType,
       type: 'field',
       component: data.type,
       identity: data.identity ? data.identity : false,

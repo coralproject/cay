@@ -126,7 +126,7 @@ export default class MultipleChoiceEditor extends Component {
               <input type="checkbox"
                 onClick={ this.onMultipleClick.bind(this) }
                 checked={ field.props.multipleChoice } />
-                Allow multiple
+                Allow multiple selections
             </label>
             <label style={ styles.bottomCheck }>
               <input type="checkbox"

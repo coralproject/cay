@@ -8,7 +8,7 @@ import editWidgetStyles from 'forms/editors/editWidgetStyles';
 
 @connect(({ forms, app }) => ({ forms, app }))
 @Radium
-export default class TextFieldEditor extends Component {
+export default class PhoneNumberEditor extends Component {
 
   constructor(props) {
     super(props);
@@ -61,38 +61,9 @@ export default class TextFieldEditor extends Component {
     let { field } = this.state;
     return (
       <div>
-
         <div style={ styles.bottomOptions }>
-
-          <div style={ styles.bottomOptionsLeft }>
-            <label style={ styles.bottomCheck }>
-              <input type="checkbox" checked={ this.state.minLengthEnabled } onChange={ this.onMinLengthChange.bind(this) } />
-              <span style={ [ this.state.minLengthEnabled ? '' : styles.disabled ] }>Min. chars</span>
-              <input
-                onChange={ this.onMinCharsChange.bind(this) }
-                defaultValue={ field.props.minLength || 0 }
-                type="text"
-                disabled={ !this.state.minLengthEnabled }
-                style={ [ styles.bottomCheckTextInput, !this.state.minLengthEnabled ? styles.disabled : '' ] }></input>
-            </label>
-
-            <label style={ styles.bottomCheck }>
-              <input type="checkbox" checked={ this.state.maxLengthEnabled } onChange={ this.onMaxLengthChange.bind(this) } />
-              <span style={ [ this.state.maxLengthEnabled ? '' : styles.disabled ] }>Max. chars</span>
-              <input
-                onChange={ this.onMaxCharsChange.bind(this) }
-                defaultValue={ field.props.maxLength || 0 }
-                type="text"
-                disabled={ !this.state.maxLengthEnabled }
-                style={ [ styles.bottomCheckTextInput, !this.state.maxLengthEnabled ? styles.disabled : '' ] }></input>
-            </label>
-
-          </div>
-
           <CommonFieldOptions {...this.props} />
-
         </div>
-
       </div>
     );
   }
@@ -100,38 +71,4 @@ export default class TextFieldEditor extends Component {
 }
 
 const styles = {
-  page: {
-    backgroundColor: '#F7F7F7'
-  },
-  bottomCheck: {
-    display: 'inline-block',
-    padding: '10px 10px 10px 0',
-    cursor: 'pointer'
-  },
-  bottomOptions: {
-    display: 'flex',
-    width: '100%'
-  },
-  bottomOptionsLeft: {
-    flexGrow: '1'
-  },
-  bottomOptionsRight: {
-    textAlign: 'right',
-    flexGrow: '1'
-  },
-  bottomCheckTextInput: {
-    display: 'inline-block',
-    borderTop: 'none',
-    borderLeft: 'none',
-    borderRight: 'none',
-    marginLeft: '10px',
-    fontSize: '12pt',
-    width: '50px',
-    textAlign: 'center',
-    padding: '4px'
-  },
-  disabled: {
-    color: '#AAA'
-  }
-
 };

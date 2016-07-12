@@ -83,6 +83,7 @@ export default class FormChrome extends React.Component {
       border: '1px solid ' + settings.mediumGrey,
       borderRadius: 4,
       boxShadow: '0px 0px 5px 0px rgba(0,0,0,0.2)',
+      overflow: 'hidden',
       width: 370
     };
   }
@@ -118,24 +119,23 @@ export default class FormChrome extends React.Component {
   }
 
   getLoaderStyles(isBackground = false) {
+    const base = {
+      display: this.state.updatingInactiveMessage ? 'block' : 'none',
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0
+    };
+
     if (isBackground) {
       return {
-        display: this.state.updatingInactiveMessage ? 'block' : 'none',
-        backgroundColor: 'rgba(0, 0, 0, .2)',
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0
+        ...base,
+        backgroundColor: 'rgba(0, 0, 0, .2)'
       };
     } else {
       return {
-        display: this.state.updatingInactiveMessage ? 'block' : 'none',
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
+        ...base,
         animation: 'load 2s infinite ease',
         backgroundImage: 'url(/img/apple-icon-120x120.png)',
         backgroundRepeat: 'no-repeat',

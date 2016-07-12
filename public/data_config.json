@@ -134,7 +134,8 @@
       "collection": "user_statistics",
       "type": "intRange",
       "sortable": true,
-      "sortDesc": true
+      "sortDesc": true,
+      "minRange": 0
     },
     {
       "name": "Last time ModeratorDeleted",
@@ -183,7 +184,8 @@
       "collection": "user_statistics",
       "type": "percentRange",
       "sortable": true,
-      "sortDesc": true
+      "sortDesc": true,
+      "minRange": 0
     },
     {
       "name": "Percent SystemFlagged",
@@ -267,7 +269,9 @@
       "collection": "user_statistics",
       "type": "intRange",
       "sortable": true,
-      "sortDesc": true
+      "sortDesc": true,
+      "minRange": 0
+
     },
     {
       "name": "Flags performed",
@@ -289,7 +293,8 @@
       "collection": "user_statistics",
       "type": "intRange",
       "sortable": true,
-      "sortDesc": true
+      "sortDesc": true,
+      "minRange": 0
     }
   ]
 }

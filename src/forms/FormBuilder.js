@@ -6,7 +6,7 @@ import uuid from 'node-uuid';
 import { DragDropContext, DropTarget } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import FaClose from 'react-icons/lib/fa/close';
-import FaSpinner from 'react-icons/lib/fa/spinner';
+import Spinner from 'components/Spinner';
 
 import { updateForm } from 'forms/FormActions';
 import FormDiagram from 'forms/FormDiagram';
@@ -137,7 +137,7 @@ export default class FormBuilder extends Component {
 
     return (
       <div>
-        <FaSpinner style={styles.previewSpinner} />
+        <Spinner />
         <div id="ask-form"></div>
       </div>
     );
@@ -311,15 +311,6 @@ const styles = {
   previewContent: {
     overflow: 'auto',
     flexGrow: '2'
-  },
-  previewSpinner: {
-    position: 'absolute',
-    left: '50%',
-    top: '50%',
-    animationName: 'spin',
-    animationDuration: '1000ms',
-    animationIterationCount: 'infinite',
-    animationTimingFunction: 'linear'
   },
   embedCode: {
     width: '100%',

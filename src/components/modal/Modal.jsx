@@ -21,7 +21,10 @@ export default class Modal extends React.Component {
         styles.backdrop,
         this.props.style
       ]}>
-        <Card style={styles.modalContainer}>
+        <Card style={[
+          styles.modalContainer,
+          this.props.style && this.props.style.modalContainer
+        ]}>
           <ModalHeader title={this.props.title} cancelAction={this.props.cancelAction} />
           {this.props.children}
           <ModalFooter
@@ -51,8 +54,7 @@ const styles = {
     width: '0%',
     minWidth: 800,
     marginTop: 30,
-    marginBottom: 50,
-    maxWidth: 500
+    marginBottom: 50
   },
   isClosed: {
     display: 'none',

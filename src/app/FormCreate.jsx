@@ -11,9 +11,6 @@ import FormChrome from 'app/layout/FormChrome';
 @connect(({ forms }) => ({ forms }))
 @Radium
 export default class FormCreate extends Component {
-  static contextTypes = {
-    router: PropTypes.object.isRequired
-  };
 
   constructor(props) {
     super(props);
@@ -37,12 +34,6 @@ export default class FormCreate extends Component {
         </div>
       </Page>
     );
-  }
-
-  saveAndExit() {
-    const { forms, dispatch } = this.props;
-    const { form, widgets } = forms;
-    dispatch(saveForm(form, widgets));
   }
 
   onClosePreview() {

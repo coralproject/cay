@@ -98,6 +98,10 @@ export default class FormComponent extends Component {
     this.state = { 'expanded': false, field: props.field, originalField: props.field };
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.setState({ field: nextProps.field, originalField: nextProps.field });
+  }
+
   render() {
     const { onList } = this.props;
     return onList ?
@@ -159,7 +163,7 @@ export default class FormComponent extends Component {
           !this.state.expanded ?
           <div>
             {
-              <div style={ styles.editContainer(this.state.expanded) }>
+              <div style={ styles.editContainer(this.state.expanded) } key={ id }>
                 <div>{ position + 1 }.</div>
                 <div style={styles.editBody} onClick={ this.toggleExpanded.bind(this) }>
                   <h4>
@@ -180,8 +184,18 @@ export default class FormComponent extends Component {
                 </div>
                 <div style={styles.arrowContainer}>
                   <button style={styles.delete} onClick={ () => onDelete(position) }><FaTrash /></button>
-                  { position !== 0 ? <button onClick={() => onMove('up', position)} style={styles.arrow}><FaArrowCircleUp /></button> : null  }
-                  { !isLast ? <button onClick={() => onMove('down', position)} style={styles.arrow}><FaArrowCircleDown /></button> : null  }
+                  {
+                    position !== 0 ?
+                      <button onClick={() => onMove('up', position)} style={styles.arrow}><FaArrowCircleUp /></button>
+                    :
+                      <span style={ styles.arrowPlaceHolder }></span>
+                  }
+                  {
+                    !isLast ?
+                      <button onClick={() => onMove('down', position)} style={styles.arrow}><FaArrowCircleDown /></button>
+                    :
+                      <span style={ styles.arrowPlaceHolder }></span>
+                  }
                 </div>
               </div>
             }
@@ -297,6 +311,13 @@ export const styles = {
     display: 'inline-block',
     cursor: 'pointer'
   },
+  arrowPlaceHolder: {
+    width: '40px',
+    height: '40px',
+    padding: '0',
+    marginLeft: '5px',
+    display: 'inline-block'
+  },
   delete: {
     width: '40px',
     height: '40px',
@@ -399,6 +420,7 @@ export const styles = {
   },
   title: {
     fontSize: 14,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    lineHeight: '1em'
   }
 };

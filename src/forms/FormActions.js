@@ -283,7 +283,7 @@ export const saveForm = (form, widgets) => {
     const {app} = getState();
 
     dispatch({type: FORM_CREATE_INIT, data});
-    fetch(`${app.elkhornHost}/create`, {
+    return fetch(`${app.elkhornHost}/create`, {
       method: 'POST',
       mode: 'cors',
       headers: new Headers({
@@ -294,6 +294,7 @@ export const saveForm = (form, widgets) => {
     .then(res => res.json())
     .then(json => {
       dispatch(formCreated(json));
+      return json;
     })
     .catch(error => {
       dispatch(formCreationFailure(error));

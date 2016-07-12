@@ -93,6 +93,15 @@ const styles = {
       borderColor: '#adadad'
     }
   },
+  inverse: {
+    backgroundColor: '#333',
+    borderColor: '#000',
+    color: 'white',
+    ':hover': {
+      backgroundColor: '#111',
+      borderColor: '#444'
+    }
+  },
   primary: {
     backgroundColor: settings.primaryColor,
     borderColor: color(settings.primaryColor).darken(0.1).hexString(),

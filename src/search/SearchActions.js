@@ -316,8 +316,11 @@ export const makeQueryFromState = (type, page = 0, replace = false, editMode = f
       x.sort(['statistics.comments.all.all.count', -1]);
     }
 
+    // statistics.comments.all.all is always needed
+    const breakdownFields = specificBreakdown !== '' ?
+      `statistics.comments.${breakdown}.${specificBreakdown}` : null;
     x.skip(page * pageSize).limit(pageSize)
-      .include(['name', 'avatar', ...dbFields]);
+      .include(['name', 'avatar', 'statistics.comments.all', breakdownFields]);
 
     // get the counts
     addMatches(x.addQuery());

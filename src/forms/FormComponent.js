@@ -389,6 +389,7 @@ export const styles = {
   },
   title: {
     fontSize: 14,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    lineHeight: '1em'
   }
 };

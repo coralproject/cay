@@ -193,6 +193,7 @@ const styles = {
     padding: 50
   },
   headerContainer: {
+    display: 'inline-block',
     paddingBottom: 8,
     borderBottom: '1px solid ' + settings.mediumGrey,
     position: 'relative'

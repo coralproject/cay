@@ -89,8 +89,8 @@ export default class SubmissionGallery extends React.Component {
     );
   }
 
-  updateFormStatus(option) {
-    this.props.dispatch(updateFormStatus(this.props.activeForm, option.value));
+  updateFormStatus(value) {
+    this.props.dispatch(updateFormStatus(this.props.activeForm, value));
   }
 
   getAttributionFields(form) {

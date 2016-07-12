@@ -53,6 +53,14 @@ export const ANSWER_EDIT_REQUEST = 'ANSWER_EDIT_REQUEST';
 export const ANSWER_EDIT_SUCCESS = 'ANSWER_EDIT_SUCCESS';
 export const ANSWER_EDIT_FAILED = 'ANSWER_EDIT_FAILED';
 
+export const FORM_EDIT_INIT = 'FORM_EDIT_INIT';
+export const FORM_EDIT_SUCCESS = 'FORM_EDIT_SUCCESS';
+export const FORM_EDIT_FAILURE = 'FORM_EDIT_FAILURE';
+
+export const UPDATE_FORM_INACTIVE_MESSAGE_INIT = 'UPDATE_FORM_INACTIVE_MESSAGE_INIT';
+export const UPDATE_FORM_INACTIVE_MESSAGE_SUCCESS = 'UPDATE_FORM_INACTIVE_MESSAGE_SUCCESS';
+export const UPDATE_FORM_INACTIVE_MESSAGE_FAILURE = 'UPDATE_FORM_INACTIVE_MESSAGE_FAILURE';
+
 const getInit = (body, method) => {
 
   var headers = new Headers({ 'Accept': 'application/json', 'Content-Type': 'application/json' });
@@ -293,6 +301,47 @@ export const saveForm = (form, widgets) => {
     });
   };
 
+};
+
+export const editForm = (form, widgets) => {
+  const data = {...form};
+  data.steps[0].widgets = widgets;
+
+  return (dispatch, getState) => {
+    const {app} = getState();
+
+    dispatch({type: FORM_EDIT_INIT, data});
+    return fetch(`${app.elkhornHost}/create`, getInit(data, 'POST'))
+    .then(res => res.json())
+    .then(json => {
+      dispatch({type: FORM_EDIT_SUCCESS, data: json});
+      return json;
+    })
+    .catch(error => {
+      dispatch({type: FORM_EDIT_FAILURE, error});
+    });
+  };
+};
+
+export const updateInactiveMessage = (message, form, widgets) => {
+  const formData = {...form};
+  formData.steps[0].widgets = widgets;
+  formData.settings.inactiveMessage = message;
+
+  return (dispatch, getState) => {
+    const {app} = getState();
+
+    dispatch({type: UPDATE_FORM_INACTIVE_MESSAGE_INIT});
+    return fetch(`${app.elkhornHost}/create`, getInit(formData, 'POST'))
+    .then(res => res.json())
+    .then(json => {
+      dispatch({type: UPDATE_FORM_INACTIVE_MESSAGE_SUCCESS, data: json});
+      return json;
+    })
+    .catch(error => {
+      dispatch({type: UPDATE_FORM_INACTIVE_MESSAGE_FAILURE, error});
+    });
+  };
 };
 
 export const fetchSubmissions = formId => {

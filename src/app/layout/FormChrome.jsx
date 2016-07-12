@@ -1,17 +1,22 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import _ from 'lodash';
+import {connect} from 'react-redux';
+import {updateInactiveMessage} from 'forms/FormActions';
 import Badge from 'components/Badge';
 import color from 'color';
 import AngleDownIcon from 'react-icons/lib/fa/angle-down';
 import AngleUpIcon from 'react-icons/lib/fa/angle-up';
 import SaveIcon from 'react-icons/lib/fa/floppy-o';
+import onClickOutside from 'react-onclickoutside';
 
 import Button from 'components/Button';
 import RadioButton from 'components/forms/RadioButton';
 
 import settings from 'settings';
 
+@connect()
+@onClickOutside
 @Radium
 export default class FormChrome extends React.Component {
 
@@ -70,6 +75,7 @@ export default class FormChrome extends React.Component {
   getStatusDropdownStyles() {
     return {
       display: this.state.statusDropdownOpen ? 'block' : 'none',
+      zIndex: 2,
       position: 'absolute',
       top: 55,
       right: 5,
@@ -95,6 +101,19 @@ export default class FormChrome extends React.Component {
     return this.state.statusDropdownOpen ? <AngleUpIcon /> : <AngleDownIcon />;
   }
 
+  setInactiveMessage(e) { // onBlur handler for the message textarea
+    console.log('set inactive message', e.target.value);
+  }
+
+  updateInactiveMessage() {
+    console.log('updateInactiveMessage');
+    console.log(this.props.form);
+  }
+
+  handleClickOutside(evt) {
+    this.setState({statusDropdownOpen: false});
+  }
+
   render() {
     let name = _.has(this.props, 'form.header.title') ? this.props.form.header.title :
       this.props.create ? 'Untitled Form' : '';
@@ -104,6 +123,8 @@ export default class FormChrome extends React.Component {
     }
 
     const {form} = this.props;
+
+    console.log('FormChrome', form);
 
     return (
       <div style={styles.base}>
@@ -160,11 +181,13 @@ export default class FormChrome extends React.Component {
                     style={styles.closeRadio}
                     checked={form.status === 'closed'}
                     onClick={this.props.updateStatus} />
-                  <textarea style={styles.statusMessage}></textarea>
+                  <textarea
+                    onBlur={this.setInactiveMessage.bind(this)}
+                    style={styles.statusMessage}></textarea>
                   <Button
                     style={{float: 'left', marginRight: 10}}
                     category="success"
-
+                    onClick={this.updateInactiveMessage.bind(this)}
                     >Save <SaveIcon /></Button>
                   <p>The message will appear to readers when you close the form and are no longer collecting submissions.</p>
                 </div>

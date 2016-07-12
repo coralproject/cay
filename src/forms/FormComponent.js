@@ -14,6 +14,7 @@ import TextAreaEditor from 'forms/editors/TextAreaEditor';
 import MultipleChoiceEditor from 'forms/editors/MultipleChoiceEditor';
 import DateFieldEditor from 'forms/editors/DateFieldEditor';
 import NumberFieldEditor from 'forms/editors/NumberFieldEditor';
+import EmailFieldEditor from 'forms/editors/EmailFieldEditor';
 import PhoneNumberEditor from 'forms/editors/PhoneNumberEditor';
 
 // TODO: Generalize this into dynamically generated components
@@ -35,6 +36,12 @@ const renderSettings = {
     return (
       <TextFieldEditor field={ field } { ...props } />
     );
+  },
+
+  EmailField(field, props) {
+    return (
+      <EmailFieldEditor field={ field } { ...props } />
+    )
   },
 
   TextArea(field, props) {

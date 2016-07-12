@@ -8,7 +8,7 @@ import editWidgetStyles from 'forms/editors/editWidgetStyles';
 
 @connect(({ forms, app }) => ({ forms, app }))
 @Radium
-export default class PhoneNumberEditor extends Component {
+export default class EmailFieldEditor extends Component {
 
   constructor(props) {
     super(props);

@@ -6,9 +6,10 @@ import { updateWidget } from 'forms/FormActions';
 import FaTrash from 'react-icons/lib/fa/trash';
 import FaClose from 'react-icons/lib/fa/close';
 import FaFloppyO from 'react-icons/lib/fa/floppy-o';
-import FaArrowCircleUp from 'react-icons/lib/fa/arrow-circle-up';
-import FaArrowCircleDown from 'react-icons/lib/fa/arrow-circle-down';
+import FaArrowUp from 'react-icons/lib/fa/arrow-up';
+import FaArrowDown from 'react-icons/lib/fa/arrow-down';
 import FaUser from 'react-icons/lib/fa/user';
+import FaCopy from 'react-icons/lib/fa/copy';
 
 import TextFieldEditor from 'forms/editors/TextFieldEditor';
 import MultipleChoiceEditor from 'forms/editors/MultipleChoiceEditor';
@@ -119,7 +120,7 @@ export default class FormComponent extends Component {
   }
 
   renderEdit() {
-    const { id, onMove, isLast, position, onDelete } = this.props;
+    const { id, onMove, isLast, position, onDelete, onDuplicate } = this.props;
     const { field } = this.state;
     return (
       <div>
@@ -127,10 +128,10 @@ export default class FormComponent extends Component {
           !this.state.expanded ?
           <div>
             {
-              <div style={ styles.editContainer(this.state.expanded) } key={ id }>
-                <div>{ position + 1 }.</div>
-                <div style={styles.editBody} onClick={ this.toggleExpanded.bind(this) }>
-                  <h4>
+              <div style={ styles.editContainer(this.state.expanded) } key={ id } onClick={ this.toggleExpanded.bind(this) }>
+                <div style={ styles.fieldAndPosition }>
+                  <div style={ styles.fieldPosition }>{ position + 1 }.</div>
+                  <h4 style={styles.editBody}>
                     { field.title }
                     {
                       field.wrapper && field.wrapper.required ?
@@ -147,9 +148,10 @@ export default class FormComponent extends Component {
                   </h4>
                 </div>
                 <div style={styles.arrowContainer}>
-                  <button style={styles.delete} onClick={ () => onDelete(position) }><FaTrash /></button>
-                  <button onClick={() => position !== 0 && onMove('up', position)} style={styles.arrow} disabled={position === 0}><FaArrowCircleUp /></button>
-                  <button onClick={() => !isLast && onMove('down', position)} style={styles.arrow} disabled={!!isLast}><FaArrowCircleDown /></button>
+                  <button style={styles.copy} onClick={ onDuplicate.bind(this, position) }><FaCopy /></button>
+                  <button style={styles.delete} onClick={ onDelete.bind(this, position) }><FaTrash /></button>
+                  <button onClick={ position !== 0 ? onMove.bind(this, 'up', position) : null } style={styles.arrow} disabled={position === 0}><FaArrowUp /></button>
+                  <button onClick={ !isLast ? onMove.bind(this, 'down', position) : null } style={styles.arrow} disabled={!!isLast}><FaArrowDown /></button>
                 </div>
               </div>
             }
@@ -237,17 +239,19 @@ export const styles = {
       justifyContent: 'flex-start',
       alignItems: 'center',
       backgroundColor: '#fff',
-      padding: '10px 10px 10px 20px',
+      padding: '20px',
       width: '100%',
       boxShadow: '0 1px 3px #9B9B9B',
       borderRadius: 4,
       height: isExpanded ? '60px' : 'auto',
-      lineHeight: '20px'
+      lineHeight: '20px',
+      cursor: 'pointer'
     }
   },
   editBody: {
     flex: 1,
-    marginLeft: 10
+    marginLeft: 10,
+    alignSelf: 'flex-start'
   },
   arrowContainer: {
     display: 'flex',
@@ -255,34 +259,41 @@ export const styles = {
     justifyContent: 'space-between'
   },
   arrow: {
-    width: '40px',
-    height: '40px',
+    width: '25px',
+    height: '30px',
     padding: '0',
     lineHeight: '20px',
-    marginLeft: '5px',
-    border: '1px solid #CCC',
+    border: 'none',
     background: 'none',
-    borderRadius: '4px',
     fontSize: '14pt',
     display: 'inline-block',
     cursor: 'pointer'
   },
   arrowPlaceHolder: {
-    width: '40px',
-    height: '40px',
+    width: '25px',
+    height: '30px',
     padding: '0',
     marginLeft: '5px',
     display: 'inline-block'
   },
   delete: {
-    width: '40px',
-    height: '40px',
+    width: '25px',
+    height: '30px',
     padding: '0',
     lineHeight: '20px',
-    marginLeft: '5px',
-    border: '1px solid #CCC',
-    background: '#DDD',
-    borderRadius: '4px',
+    border: 'none',
+    background: 'none',
+    fontSize: '14pt',
+    display: 'inline-block',
+    cursor: 'pointer'
+  },
+  copy: {
+    width: '25px',
+    height: '30px',
+    padding: '0',
+    lineHeight: '20px',
+    border: 'none',
+    background: 'none',
     fontSize: '14pt',
     display: 'inline-block',
     cursor: 'pointer'
@@ -349,6 +360,14 @@ export const styles = {
     border: 'none',
     background: 'none'
   },
+  fieldPosition: {
+    alignSelf: 'flex-start',
+    fontWeight: 'bold'
+  },
+  fieldAndPosition: {
+    display: 'flex',
+    flexGrow: '1'
+  },
   requiredAsterisk: {
     color: '#B22'
   },
@@ -358,11 +377,8 @@ export const styles = {
   identityLabel: {
     color: '#333',
     padding: '0 5px',
-    borderRadius: '3px',
     marginLeft: '5px',
-    display: 'inline-block',
-    height: '30px',
-    lineHeight: '30px'
+    display: 'inline-block'
   },
   bottomButtons: {
     textAlign: 'right'

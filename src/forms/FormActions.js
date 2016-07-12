@@ -15,6 +15,7 @@ export const FORM_REQUEST_SUCCESS = 'FORM_REQUEST_SUCCESS';
 export const FORM_REQUEST_FAILURE = 'FORM_REQUEST_FAILURE';
 export const FORM_APPEND_WIDGET = 'FORM_APPEND_WIDGET';
 export const FORM_DELETE_WIDGET = 'FORM_DELETE_WIDGET';
+export const FORM_DUPLICATE_WIDGET = 'FORM_DUPLICATE_WIDGET';
 
 export const FORM_CREATE_INIT = 'FORM_CREATE_INIT';
 export const FORM_CREATED = 'FORM_CREATED';
@@ -200,6 +201,13 @@ export const appendWidget = (type, targetPosition) => {
     type: FORM_APPEND_WIDGET,
     widget: type,
     targetPosition: targetPosition
+  };
+};
+
+export const duplicateWidget = (position) => {
+  return {
+    type: FORM_DUPLICATE_WIDGET,
+    position
   };
 };
 

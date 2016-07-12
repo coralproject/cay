@@ -34,7 +34,7 @@ export default class FormChrome extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {statusDropdownOpen: false};
+    this.state = {statusDropdownOpen: false, updatingInactiveMessage: false};
   }
 
   buildForm() { // navigate to the form builder or editor
@@ -102,16 +102,47 @@ export default class FormChrome extends React.Component {
   }
 
   setInactiveMessage(e) { // onBlur handler for the message textarea
-    console.log('set inactive message', e.target.value);
+    this.setState({inactiveMessageDraft: e.target.value});
   }
 
   updateInactiveMessage() {
-    console.log('updateInactiveMessage');
-    console.log(this.props.form);
+    this.setState({updatingInactiveMessage: true})
+    this.props.dispatch(updateInactiveMessage(this.state.inactiveMessageDraft, this.props.form))
+      .then(() => {
+        this.setState({statusDropdownOpen: false, updatingInactiveMessage: false});
+      });
   }
 
   handleClickOutside(evt) {
     this.setState({statusDropdownOpen: false});
+  }
+
+  getLoaderStyles(isBackground = false) {
+    if (isBackground) {
+      return {
+        display: this.state.updatingInactiveMessage ? 'block' : 'none',
+        backgroundColor: 'rgba(0, 0, 0, .2)',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0
+      };
+    } else {
+      return {
+        display: this.state.updatingInactiveMessage ? 'block' : 'none',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        animation: 'load 2s infinite ease',
+        backgroundImage: 'url(/img/apple-icon-120x120.png)',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center center'
+      };
+    }
+
   }
 
   render() {
@@ -123,8 +154,6 @@ export default class FormChrome extends React.Component {
     }
 
     const {form} = this.props;
-
-    console.log('FormChrome', form);
 
     return (
       <div style={styles.base}>
@@ -186,10 +215,12 @@ export default class FormChrome extends React.Component {
                     style={styles.statusMessage}></textarea>
                   <Button
                     style={{float: 'left', marginRight: 10}}
-                    category="success"
+                    category={this.state.updatingInactiveMessage ? 'disabled' : 'success'}
                     onClick={this.updateInactiveMessage.bind(this)}
                     >Save <SaveIcon /></Button>
                   <p>The message will appear to readers when you close the form and are no longer collecting submissions.</p>
+                  <div style={this.getLoaderStyles(this, true)} />
+                  <div style={this.getLoaderStyles()} />
                 </div>
               </div> :
               null

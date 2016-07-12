@@ -303,9 +303,8 @@ export const saveForm = (form, widgets) => {
 
 };
 
-export const editForm = (form, widgets) => {
+export const editForm = (form) => {
   const data = {...form};
-  data.steps[0].widgets = widgets;
 
   return (dispatch, getState) => {
     const {app} = getState();
@@ -323,9 +322,8 @@ export const editForm = (form, widgets) => {
   };
 };
 
-export const updateInactiveMessage = (message, form, widgets) => {
+export const updateInactiveMessage = (message, form) => {
   const formData = {...form};
-  formData.steps[0].widgets = widgets;
   formData.settings.inactiveMessage = message;
 
   return (dispatch, getState) => {

@@ -12,25 +12,25 @@ export default class NumberFieldEditor extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { field: props.field, minValueEnabled: props.field.props.minLength > 0, maxValueEnabled: props.field.props.maxLength > 0 }
+    this.state = { field: props.field, minValueEnabled: props.field.props.minValue > 0, maxValueEnabled: props.field.props.maxValue > 0 }
   }
 
   componentWillReceiveProps(nextProps) {
     let { field } = this.state;
     let updatedField = Object.assign({}, field, nextProps.field);
-    this.setState({ field: updatedField, minValueEnabled: nextProps.field.props.minLength > 0, maxValueEnabled: nextProps.field.props.maxLength > 0 });
+    this.setState({ field: updatedField });
   }
 
   onMinValueChange(e) {
     let { field } = this.state;
-    let updatedProps = Object.assign({}, field.props, { minLength: e.target.value });
+    let updatedProps = Object.assign({}, field.props, { minValue: e.target.value });
     let updatedField = Object.assign({}, field, { props: updatedProps });
     this.props.onEditorChange(updatedField);
   }
 
   onMaxValueChange(e) {
     let { field } = this.state;
-    let updatedProps = Object.assign({}, field.props, { maxLength: e.target.value });
+    let updatedProps = Object.assign({}, field.props, { maxValue: e.target.value });
     let updatedField = Object.assign({}, field, { props: updatedProps });
     this.props.onEditorChange(updatedField);
   }
@@ -40,7 +40,7 @@ export default class NumberFieldEditor extends Component {
     // Set to 0 if disabled
     if (!e.target.checked) {
       let { field } = this.state;
-      let updatedProps = Object.assign({}, field.props, { minLength: 0 });
+      let updatedProps = Object.assign({}, field.props, { minValue: 0 });
       let updatedField = Object.assign({}, field, { props: updatedProps });
       this.props.onEditorChange(updatedField);
     }
@@ -51,7 +51,7 @@ export default class NumberFieldEditor extends Component {
     // Set to 0 if disabled
     if (!e.target.checked) {
       let { field } = this.state;
-      let updatedProps = Object.assign({}, field.props, { maxLength: 0 });
+      let updatedProps = Object.assign({}, field.props, { maxValue: 0 });
       let updatedField = Object.assign({}, field, { props: updatedProps });
       this.props.onEditorChange(updatedField);
     }
@@ -70,7 +70,7 @@ export default class NumberFieldEditor extends Component {
               <span style={ [ this.state.minValueEnabled ? '' : styles.disabled ] }>Min. value</span>
               <input
                 onChange={ this.onMinValueChange.bind(this) }
-                defaultValue={ field.props.minLength || 0 }
+                defaultValue={ field.props.minValue || 0 }
                 type="number"
                 disabled={ !this.state.minValueEnabled }
                 style={ [ styles.bottomCheckTextInput, !this.state.minValueEnabled ? styles.disabled : '' ] }></input>
@@ -81,7 +81,7 @@ export default class NumberFieldEditor extends Component {
               <span style={ [ this.state.maxValueEnabled ? '' : styles.disabled ] }>Max. value</span>
               <input
                 onChange={ this.onMaxValueChange.bind(this) }
-                defaultValue={ field.props.maxLength || 0 }
+                defaultValue={ field.props.maxValue || 0 }
                 type="number"
                 disabled={ !this.state.maxValueEnabled }
                 style={ [ styles.bottomCheckTextInput, !this.state.maxValueEnabled ? styles.disabled : '' ] }></input>
@@ -124,9 +124,10 @@ const styles = {
     borderLeft: 'none',
     borderRight: 'none',
     marginLeft: '10px',
-    fontSize: '10pt',
+    fontSize: '12pt',
     width: '50px',
-    textAlign: 'center'
+    textAlign: 'center',
+    padding: '4px'
   },
   disabled: {
     color: '#AAA'

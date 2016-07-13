@@ -18,7 +18,7 @@ export default class TextFieldEditor extends Component {
   componentWillReceiveProps(nextProps) {
     let { field } = this.state;
     let updatedField = Object.assign({}, field, nextProps.field);
-    this.setState({ field: updatedField, minLengthEnabled: nextProps.field.props.minLength > 0, maxLengthEnabled: nextProps.field.props.maxLength > 0 });
+    this.setState({ field: updatedField });
   }
 
   onMinCharsChange(e) {

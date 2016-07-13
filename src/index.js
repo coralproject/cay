@@ -77,12 +77,22 @@ class Root extends React.Component {
 
   render() {
     const { features } = this.props.app;
+
+    let defaultRoute;
+    if (features.trust) {
+      defaultRoute = 'saved-searches';
+    } else if (features.ask) {
+      defaultRoute = 'forms';
+    } else {
+      defaultRoute = '404';
+    }
+
     return (
       <StyleRoot>
         <Provider store={store}>
           <Router history={browserHistory} onUpdate={ this.logPageView }>
 
-            <Redirect from="/" to="search-creator" />
+            <Redirect from="/" to={defaultRoute} />
 
             <Route path="login" component={Login} />
             <Route path="about" component={About} />

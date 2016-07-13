@@ -37,6 +37,15 @@ export default class MultipleChoiceEditor extends Component {
     this.updateFieldOptions(optionsCopy);
   }
 
+  duplicateOption(i) {
+    var optionsStart = this.state.options.slice(0, i);
+    var optionsEnd = this.state.options.slice(i);
+    var optionCopy = Object.assign({}, this.state.options[i]);
+    var optionsCopy = optionsStart.concat(optionCopy).concat(optionsEnd);
+    this.setState({ options: optionsCopy });
+    this.updateFieldOptions(optionsCopy);
+  }
+
   removeOption(i) {
     var optionsCopy = this.state.options.slice();
     optionsCopy.splice(i, 1);
@@ -94,7 +103,7 @@ export default class MultipleChoiceEditor extends Component {
                       <input style={ styles.optionInput } type="text" value={ option.title } onChange={ this.updateOption.bind(this, i) } />
                     </div>
                     <div style={ styles.optionRowButtons }>
-                      <button style={ styles.optionButton } onClick={ this.removeOption.bind(this, i) }><FaCopy /></button>
+                      <button style={ styles.optionButton } onClick={ this.duplicateOption.bind(this, i) }><FaCopy /></button>
                       {
                         (i > 0) || (i == 0 && this.state.options.length > 1) ?
                           <button style={ styles.optionButton } onClick={ this.removeOption.bind(this, i) }><FaTrashO /></button>
@@ -126,7 +135,7 @@ export default class MultipleChoiceEditor extends Component {
               <input type="checkbox"
                 onClick={ this.onMultipleClick.bind(this) }
                 checked={ field.props.multipleChoice } />
-                Allow multiple
+                Allow multiple selections
             </label>
             <label style={ styles.bottomCheck }>
               <input type="checkbox"

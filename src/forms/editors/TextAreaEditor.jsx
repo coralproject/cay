@@ -8,7 +8,7 @@ import editWidgetStyles from 'forms/editors/editWidgetStyles';
 
 @connect(({ forms, app }) => ({ forms, app }))
 @Radium
-export default class TextFieldEditor extends Component {
+export default class TextAreaEditor extends Component {
 
   constructor(props) {
     super(props);
@@ -18,7 +18,7 @@ export default class TextFieldEditor extends Component {
   componentWillReceiveProps(nextProps) {
     let { field } = this.state;
     let updatedField = Object.assign({}, field, nextProps.field);
-    this.setState({ field: updatedField });
+    this.setState({ field: updatedField, minLengthEnabled: nextProps.field.props.minLength > 0, maxLengthEnabled: nextProps.field.props.maxLength > 0 });
   }
 
   onMinCharsChange(e) {
@@ -105,8 +105,8 @@ const styles = {
   },
   bottomCheck: {
     display: 'inline-block',
-    padding: '10px 10px 10px 0',
-    cursor: 'pointer'
+    padding: '10px 20px 10px 0',
+    cursor: 'pointer',
   },
   bottomOptions: {
     display: 'flex',

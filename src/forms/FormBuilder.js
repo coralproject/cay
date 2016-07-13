@@ -77,20 +77,15 @@ export default class FormBuilder extends Component {
                 </div>
               </label>
               {
-                form.settings.isActive ?
-                  <p>You are accepting submissions.</p> :
-                  <p>You are not currently accepting submissions.</p>
-              }
-
-              {
-                !form.settings.isActive ?
+                forms[this.props.activeForm] ?
+                (
                   <div>
-                    <h5 style={ styles.leftContainerSubTitle }>Custom Inactive Message</h5>
-                    <textarea onChange={ this.onInactiveMessageChange.bind(this) } style={ styles.inactiveMessage }
-                      defaultValue={ form.settings.inactiveMessage }
-                      placeholder="Ex: We are not currently accepting submissions. Thank you."
-                      ></textarea>
+                  <p>Copy this code to embed your form.</p>
+                  <textarea style={styles.embedCode} value={`<div id=“ask-form”></div><script src=“${this.props.app.elkhornHost}/${this.props.activeForm}.js”></script>`}>
+                  </textarea>
+                    <a href={ `${this.props.app.elkhornHost}/iframe/${this.props.activeForm}` } target="_blank" style={ styles.formSettingsAction }>Live Form</a>
                   </div>
+                )
                 : null
               }
               <div style={ styles.formSettingsBottomActions }>

@@ -46,8 +46,8 @@ export default class SubmissionList extends Component {
     this.props.dispatch(updateSubmission({ bookmarked }));
   }
 
-  updateFormStatus(option) {
-    this.props.dispatch(updateFormStatus(this.props.forms.activeForm, option.value));
+  updateFormStatus(value) {
+    this.props.dispatch(updateFormStatus(this.props.forms.activeForm, value));
   }
 
   render() {

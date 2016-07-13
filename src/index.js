@@ -77,22 +77,32 @@ class Root extends React.Component {
 
   render() {
     const { features } = this.props.app;
+    let defaultRoute;
+    if (features.trust !== false) {
+      defaultRoute = 'saved-searches';
+    } else if (features.ask) {
+      defaultRoute = 'forms';
+    } else {
+      defaultRoute = '404';
+    }
     // moving this to a var gets rid of that annoying warning. ¯\_(ツ)_/¯
     const routes = (
       <div>
-        <Redirect from="/" to="search-creator" />
+        <Redirect from="/" to={defaultRoute} />
 
         <Route path="login" component={Login} />
         <Route path="about" component={About} />
         <Route path="user/:_id" component={User} />
 
-
         {/***** Trust Search Routes *****/}
-        <Route path="search-creator" component={SearchCreator} />
-        <Route path="saved-searches" component={SeeAllSearches}/>
-        <Route path="saved-search/:id" component={SearchDetail} />
-        <Route path="edit-search/:id" component={SearchEditor} />
-
+        {features.trust === false ? null : (
+          <div>
+            <Route path="search-creator" component={SearchCreator} />
+            <Route path="saved-searches" component={SeeAllSearches}/>
+            <Route path="saved-search/:id" component={SearchDetail} />
+            <Route path="edit-search/:id" component={SearchEditor} />
+          </div>
+        )}
 
         {/***** Ask Search Routes *****/}
         {features.ask ? (
@@ -119,10 +129,7 @@ class Root extends React.Component {
       <StyleRoot>
         <Provider store={store}>
           <Router history={browserHistory} onUpdate={ this.logPageView }>
-
             {routes}
-
-
           </Router>
         </Provider>
       </StyleRoot>

@@ -69,7 +69,7 @@ export default class FormBuilder extends Component {
             <div style={ styles.formSettingsBottomActions }>
               <hr />
               {
-                this.props.forms.savedForm ?
+                this.props.activeForm ?
                 (
                   <div>
                     <p>Embed code</p>

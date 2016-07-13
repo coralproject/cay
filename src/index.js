@@ -79,7 +79,7 @@ class Root extends React.Component {
     const { features } = this.props.app;
 
     let defaultRoute;
-    if (features.trust) {
+    if (features.trust !== false) {
       defaultRoute = 'saved-searches';
     } else if (features.ask) {
       defaultRoute = 'forms';

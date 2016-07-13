@@ -89,14 +89,14 @@ class Root extends React.Component {
             <Route path="user/:_id" component={User} />
 
             {/***** Trust Search Routes *****/}
-            {features.trust ? (
+            {features.trust === false ? null : (
               <div>
                 <Route path="search-creator" component={SearchCreator} />
                 <Route path="saved-searches" component={SeeAllSearches}/>
                 <Route path="saved-search/:id" component={SearchDetail} />
                 <Route path="edit-search/:id" component={SearchEditor} />
               </div>
-            ) : null }
+            )}
 
 
             {/***** Ask Search Routes *****/}

@@ -4,7 +4,8 @@ import Radium from 'radium';
 import Page from './Page';
 import Card from '../components/cards/Card';
 
-import DatePicker from 'react-datepicker';
+// https://github.com/Hacker0x01/react-datepicker/issues/483
+import DatePicker from 'react-datepicker/lib/datepicker';
 import moment from 'moment';
 
 // this doesn't seem wise, but copying the file to /css seems worse.

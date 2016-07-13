@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import Radium from 'radium';
 import { connect } from 'react-redux';
 
-import { createEmpty, saveForm } from 'forms/FormActions';
+import { createEmpty } from 'forms/FormActions';
 import Page from 'app/layout/Page';
 
 import FormBuilder from 'forms/FormBuilder.js';

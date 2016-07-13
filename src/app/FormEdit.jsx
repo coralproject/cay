@@ -58,9 +58,8 @@ export default class FormEdit extends Component {
     });
   }
 
-  updateFormStatus(option) {
-    console.log(this.props);
-    this.props.dispatch(updateFormStatus(this.props.forms.activeForm, option.value));
+  updateFormStatus(value) {
+    this.props.dispatch(updateFormStatus(this.props.forms.activeForm, value));
   }
 
   render() {

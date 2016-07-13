@@ -1,7 +1,8 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
-import DatePicker from 'react-datepicker';
+// https://github.com/Hacker0x01/react-datepicker/issues/483
+import DatePicker from 'react-datepicker/lib/datepicker';
 import moment from 'moment';
 
 @connect()

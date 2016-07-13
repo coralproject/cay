@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import { DropTarget } from 'react-dnd';
 
 import DropPlaceHolder from 'forms/DropPlaceHolder';
-import { appendWidget, moveWidget, replaceWidgets, deleteWidget, updateForm, saveForm } from 'forms/FormActions';
+import { appendWidget, moveWidget, replaceWidgets, deleteWidget, duplicateWidget, updateForm, saveForm } from 'forms/FormActions';
 import FormComponent, {styles as askComponentStyles} from 'forms/FormComponent';
 
 import FaArrowCircleUp from 'react-icons/lib/fa/arrow-circle-up';
@@ -104,24 +104,22 @@ export default class FormDiagram extends Component {
         }
         <textarea onChange={ this.onFormDescriptionChange.bind(this) } style={ styles.description } placeholder={ "Add instructions or a description" } defaultValue={ form.header.description } />
         <div style={styles.formDiagram}>
-
-          { this.props.forms.widgets.map((field, i) => {
-            return (
-              <DropPlaceHolder key={i} formDiagram={ this } position={ i } dropped={ field.dropped }>
-                <FormComponent
-                  id={ field.id }
-                  key={ i }
-                  field={ field }
-                  position={ i }
-                  onFieldSelect={ onFieldSelect }
-                  onList={ true }
-                  isLast={ i === this.props.forms.widgets.length - 1 }
-                  onMove={ this.onMove.bind(this) }
-                  onDelete={ this.onDelete.bind(this) }
-                   />
-              </DropPlaceHolder>
-            );
-          })}
+          { this.props.forms.widgets.map((field, i) => (
+            <DropPlaceHolder key={i} formDiagram={ this } position={ i } dropped={ field.dropped }>
+              <FormComponent
+                id={ field.id }
+                key={ i }
+                field={ field }
+                position={ i }
+                onFieldSelect={ onFieldSelect }
+                onList={ true }
+                isLast={ i === this.props.forms.widgets.length - 1 }
+                onMove={ this.onMove.bind(this) }
+                onDuplicate={ this.onDuplicate.bind(this) }
+                onDelete={ this.onDelete.bind(this) }
+                 />
+            </DropPlaceHolder>
+          ))}
         </div>
         <div style={ styles.extraFields }>
           <h3 style={ styles.thankYouMessageTitle }>Thank you message</h3>
@@ -134,11 +132,18 @@ export default class FormDiagram extends Component {
     );
   }
 
-  onDelete(position) {
+  onDelete(position, e) {
+    e.stopPropagation();
     this.props.dispatch(deleteWidget(position));
   }
 
-  onMove(direction, position) {
+  onDuplicate(position, e) {
+    e.stopPropagation();
+    this.props.dispatch(duplicateWidget(position));
+  }
+
+  onMove(direction, position, e) {
+    e.stopPropagation();
     this.props.dispatch(moveWidget(position, position + (direction === 'up' ? -1 : 1)));
   }
 
@@ -172,8 +177,7 @@ const styles = {
     position: 'relative'
   },
   formDiagramContainer: {
-    flex: 2,
-    marginRight: 20,
+    flex: 1,
     padding: 20,
     color: '#5d5d5d'
   },

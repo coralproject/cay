@@ -15,6 +15,7 @@ export const FORM_REQUEST_SUCCESS = 'FORM_REQUEST_SUCCESS';
 export const FORM_REQUEST_FAILURE = 'FORM_REQUEST_FAILURE';
 export const FORM_APPEND_WIDGET = 'FORM_APPEND_WIDGET';
 export const FORM_DELETE_WIDGET = 'FORM_DELETE_WIDGET';
+export const FORM_DUPLICATE_WIDGET = 'FORM_DUPLICATE_WIDGET';
 
 export const FORM_CREATE_INIT = 'FORM_CREATE_INIT';
 export const FORM_CREATED = 'FORM_CREATED';
@@ -52,6 +53,14 @@ export const ANSWER_EDIT_CANCEL = 'ANSWER_EDIT_CANCEL';
 export const ANSWER_EDIT_REQUEST = 'ANSWER_EDIT_REQUEST';
 export const ANSWER_EDIT_SUCCESS = 'ANSWER_EDIT_SUCCESS';
 export const ANSWER_EDIT_FAILED = 'ANSWER_EDIT_FAILED';
+
+export const FORM_EDIT_INIT = 'FORM_EDIT_INIT';
+export const FORM_EDIT_SUCCESS = 'FORM_EDIT_SUCCESS';
+export const FORM_EDIT_FAILURE = 'FORM_EDIT_FAILURE';
+
+export const UPDATE_FORM_INACTIVE_MESSAGE_INIT = 'UPDATE_FORM_INACTIVE_MESSAGE_INIT';
+export const UPDATE_FORM_INACTIVE_MESSAGE_SUCCESS = 'UPDATE_FORM_INACTIVE_MESSAGE_SUCCESS';
+export const UPDATE_FORM_INACTIVE_MESSAGE_FAILURE = 'UPDATE_FORM_INACTIVE_MESSAGE_FAILURE';
 
 const getInit = (body, method) => {
 
@@ -203,6 +212,13 @@ export const appendWidget = (type, targetPosition) => {
   };
 };
 
+export const duplicateWidget = (position) => {
+  return {
+    type: FORM_DUPLICATE_WIDGET,
+    position
+  };
+};
+
 export const deleteWidget = (widgetPosition) => {
   return {
     type: FORM_DELETE_WIDGET,
@@ -293,6 +309,45 @@ export const saveForm = (form, widgets) => {
     });
   };
 
+};
+
+export const editForm = (form) => {
+  const data = {...form};
+
+  return (dispatch, getState) => {
+    const {app} = getState();
+
+    dispatch({type: FORM_EDIT_INIT, data});
+    return fetch(`${app.elkhornHost}/create`, getInit(data, 'POST'))
+    .then(res => res.json())
+    .then(json => {
+      dispatch({type: FORM_EDIT_SUCCESS, data: json});
+      return json;
+    })
+    .catch(error => {
+      dispatch({type: FORM_EDIT_FAILURE, error});
+    });
+  };
+};
+
+export const updateInactiveMessage = (message, form) => {
+  const formData = {...form};
+  formData.settings.inactiveMessage = message;
+
+  return (dispatch, getState) => {
+    const {app} = getState();
+
+    dispatch({type: UPDATE_FORM_INACTIVE_MESSAGE_INIT});
+    return fetch(`${app.elkhornHost}/create`, getInit(formData, 'POST'))
+    .then(res => res.json())
+    .then(json => {
+      dispatch({type: UPDATE_FORM_INACTIVE_MESSAGE_SUCCESS, data: json});
+      return json;
+    })
+    .catch(error => {
+      dispatch({type: UPDATE_FORM_INACTIVE_MESSAGE_FAILURE, error});
+    });
+  };
 };
 
 export const fetchSubmissions = formId => {

@@ -161,7 +161,7 @@ const styles = {
     justifyContent: 'space-between'
   },
   leftPan: {
-    flex: 1
+    width: 400
   },
   leftContainer: {
     flex: 1,
@@ -189,7 +189,7 @@ const styles = {
   leftContainerTitle: {
     fontSize: 18.78,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 10
   },
   leftContainerSubTitle: {
     margin: '20px 0',
@@ -207,7 +207,7 @@ const styles = {
   },
   typesSubTitle: {
     fontSize: 16,
-    marginBottom: 10,
+    marginBottom: 10
   },
   formSettingsAction: {
     display: 'inline-block',

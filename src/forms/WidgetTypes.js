@@ -10,7 +10,7 @@ import FaPhone from 'react-icons/lib/fa/phone';
 
 export default [
   { friendlyType: 'Short Answer', type: 'TextField', icon: FaFileTextO },
-  { friendlyType: 'Paragraph', type: 'TextArea', icon: FaParagraph },
+  { friendlyType: 'Long Answer', type: 'TextArea', icon: FaParagraph },
   { friendlyType: 'Numbers', type: 'NumberField', icon: FaHashtag, props: { validateAs: 'number', validationMessage: 'Only numbers are allowed in this field.'} },
   { friendlyType: 'Multiple choice', type: 'MultipleChoice', icon: FaListUl, props: { multipleChoice: false, otherAllowed: false } },
   { friendlyType: 'Email', identity: true, type: 'EmailField', icon: FaEnvelopeO, props: { validateAs: 'email', validationMessage: 'Please type a valid e-mail.' } },

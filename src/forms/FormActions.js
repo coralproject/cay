@@ -62,6 +62,11 @@ export const UPDATE_FORM_INACTIVE_MESSAGE_INIT = 'UPDATE_FORM_INACTIVE_MESSAGE_I
 export const UPDATE_FORM_INACTIVE_MESSAGE_SUCCESS = 'UPDATE_FORM_INACTIVE_MESSAGE_SUCCESS';
 export const UPDATE_FORM_INACTIVE_MESSAGE_FAILURE = 'UPDATE_FORM_INACTIVE_MESSAGE_FAILURE';
 
+export const UPDATE_FILTER_BY = 'UPDATE_FILTER_BY';
+export const UPDATE_ORDER = 'UPDATE_ORDER';
+export const UPDATE_SEARCH = 'UPDATE_SEARCH';
+export const CLEAN_SUBMISSION_FILTERS = 'CLEAN_SUBMISSION_FILTERS';
+
 const getInit = (body, method) => {
 
   var headers = new Headers({ 'Accept': 'application/json', 'Content-Type': 'application/json' });
@@ -477,3 +482,22 @@ export const editAnswer = (edited, answer, formId) => {
       .catch(error => dispatch({type: ANSWER_EDIT_FAILED, error}));
   };
 };
+
+export const updateFilterBy = filterBy => ({
+  type: UPDATE_FILTER_BY,
+  value: filterBy
+});
+
+export const updateOrder = order => ({
+  type: UPDATE_ORDER,
+  value: order
+});
+
+export const updateSearch = search => ({
+  type: UPDATE_SEARCH,
+  value: search
+});
+
+export const cleanSubmissionFilters = () => ({
+  type: CLEAN_SUBMISSION_FILTERS
+});

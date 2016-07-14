@@ -4,6 +4,12 @@ import Radium from 'radium';
 import moment from 'moment';
 import BFlag from 'react-icons/lib/fa/flag';
 import BBookmark from 'react-icons/lib/fa/bookmark';
+import FaSearch from 'react-icons/lib/fa/search';
+import FaFilter from 'react-icons/lib/fa/filter';
+import FaLongArrowUp from 'react-icons/lib/fa/long-arrow-up';
+import FaLongArrowDown from 'react-icons/lib/fa/long-arrow-down';
+import RadioButton from 'components/forms/RadioButton';
+import onClickOutside from 'react-onclickoutside';
 
 import {
   fetchSubmissions,
@@ -13,7 +19,12 @@ import {
   sendToGallery,
   removeFromGallery,
   updateFormStatus,
-  fetchForm } from 'forms/FormActions';
+  fetchForm,
+  updateOrder,
+  updateSearch,
+  updateFilterBy,
+  cleanSubmissionFilters
+ } from 'forms/FormActions';
 
 import SubmissionDetail from 'forms/SubmissionDetail';
 import FormChrome from 'app/layout/FormChrome';
@@ -25,6 +36,7 @@ import settings from 'settings';
 export default class SubmissionList extends Component {
   constructor(props) {
     super(props);
+    props.dispatch(cleanSubmissionFilters());
     props.dispatch(fetchForm(props.params.id));
     props.dispatch(fetchGallery(props.params.id));
     props.dispatch(fetchSubmissions(props.params.id));
@@ -50,9 +62,25 @@ export default class SubmissionList extends Component {
     this.props.dispatch(updateFormStatus(this.props.forms.activeForm, value));
   }
 
+  onOrderChange(order) {
+    this.props.dispatch(updateOrder(order));
+    this.props.dispatch(fetchSubmissions(this.props.params.id));
+  }
+
+  onSearchChange(search) {
+    this.props.dispatch(updateSearch(search));
+    this.props.dispatch(fetchSubmissions(this.props.params.id));
+  }
+
+  onFilterByChange(filterBy) {
+    this.props.dispatch(updateFilterBy(filterBy));
+    this.props.dispatch(fetchSubmissions(this.props.params.id));
+  }
+
   render() {
 
-    const { submissionList, activeSubmission, activeForm, activeGallery } = this.props.forms;
+    const { submissionList, activeSubmission, activeForm, activeGallery,
+      submissionFilterBy, submissionOrder } = this.props.forms;
     const submissions = submissionList.map(id => this.props.forms[id]);
     const submission = this.props.forms[activeSubmission];
     const form = this.props.forms[activeForm];
@@ -70,7 +98,12 @@ export default class SubmissionList extends Component {
           <Sidebar
             submissions={submissions.reverse()}
             activeSubmission={activeSubmission}
-            onSelect={this.onSubmissionSelect.bind(this)} />
+            filterBy={submissionFilterBy}
+            order={submissionOrder}
+            onSelect={this.onSubmissionSelect.bind(this)}
+            onFilterByChange={this.onFilterByChange.bind(this)}
+            onOrderChange={this.onOrderChange.bind(this)}
+            onSearchChange={this.onSearchChange.bind(this)} />
           <SubmissionDetail
             submission={submission}
             removeFromGallery={this.removeFromGallery.bind(this)}
@@ -90,6 +123,24 @@ export default class SubmissionList extends Component {
 
 @Radium
 class Sidebar extends Component {
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      filterByOpen: false,
+      orderOpen: false,
+      search: ''
+    };
+  }
+
+  onFilterByToggle(filterByOpen) {
+    this.setState({ filterByOpen });
+  }
+
+  onOrderToggle(orderOpen) {
+    this.setState({ orderOpen });
+  }
 
   listSubmissions(submissions, activeSubmission, onSelect) {
     return submissions.map((submission, key) => {
@@ -111,23 +162,34 @@ class Sidebar extends Component {
   }
 
   render() {
-    const { submissions, activeSubmission, onSelect} = this.props;
+    const { submissions, activeSubmission, onSelect, filterBy, order } = this.props;
+    const { filterByOpen, orderOpen, search } = this.state;
     return (
       <div>
         <div style={styles.sidebar.container}>
           <div style={styles.sidebar.countContainer}>
-            <p style={styles.sidebar.count}>{submissions.length} Submission{submissions.length === 1 ? '' : 's'}</p>
+            <p style={styles.sidebar.count}>{submissions.length} of {submissions.length} Submission{submissions.length === 1 ? '' : 's'}</p>
           </div>
-          <input style={styles.sidebar.search} type='text' placeholder='Search' />
-          {/*<div style={styles.sidebar.sortContainer}>
-            <select style={[styles.sidebar.sort, styles.sidebar.firstSort]}>
-              <option>View All</option>
-            </select>
+          <div style={styles.sidebar.searchContainer}>
+            <input style={styles.sidebar.search} type='text' value={search}
+              onChange={evt => this.setState({ search: evt.target.value })}
+              placeholder='Search' />
+            <button onClick={() => this.props.onSearchChange(search)}
+              style={[styles.sidebar.filterButton, styles.sidebar.filterLeftButton]}><FaSearch /></button>
+            <button onClick={this.onFilterByToggle.bind(this, true)}
+              style={[styles.sidebar.filterButton, styles.sidebar.filterRightButton]}><FaFilter /></button>
+            <button onClick={this.onOrderToggle.bind(this, true)}
+              style={[styles.sidebar.filterButton, styles.sidebar.filterAsideButton]}><FaLongArrowUp /><FaLongArrowDown /></button>
+          </div>
+          <FilterDropdown open={filterByOpen}
+            filterBy={filterBy}
+            onToggle={this.onFilterByToggle.bind(this)}
+            onChange={this.props.onFilterByChange} />
 
-            <select style={styles.sidebar.sort}>
-              <option>Newest First</option>
-            </select>
-          </div>*/}
+          <OrderDropdown open={orderOpen}
+            filterBy={order}
+            onToggle={this.onOrderToggle.bind(this)}
+            onChange={this.props.onOrderChange} />
         </div>
         <div>{this.listSubmissions(submissions, activeSubmission, onSelect)}</div>
       </div>
@@ -135,7 +197,101 @@ class Sidebar extends Component {
   }
 }
 
+const FilterByOptions = {
+  'default': 'Default (flagged submissions hidden)',
+  'bookmarked': 'Bookmarked',
+  'flagged': 'Flagged',
+  'all': 'All (including flagged submissions)'
+};
+
+@Radium
+@onClickOutside
+class FilterDropdown extends Component {
+  handleClickOutside() {
+    this.props.onToggle(false);
+  }
+
+  render() {
+    const { filterBy='', onChange, open=false } = this.props;
+    return (
+      <div style={styles.filterBy.container(open)}>
+        <p style={styles.filterBy.current}>{FilterByOptions[filterBy]}</p>
+        {Object.keys(FilterByOptions).map(value => (
+          <RadioButton style={styles.filterBy.radio}
+            checked={filterBy === value ? 'checked' : null}
+            label={FilterByOptions[value]} value={value}
+            onClick={() => onChange(value)} />
+        ))}
+      </div>
+    );
+  }
+}
+
+const OrderOptions = {
+  'desc': 'Newest submission first',
+  'asc': 'Oldest submission first'
+};
+
+@Radium
+@onClickOutside
+class OrderDropdown extends Component {
+  handleClickOutside() {
+    this.props.onToggle(false);
+  }
+
+  render() {
+    const { order='desc', onChange, open=false } = this.props;
+    return (
+      <div style={styles.order.container(open)}>
+        <p style={styles.filterBy.current}>{OrderOptions[order]}</p>
+        {Object.keys(OrderOptions).map(value => (
+          <RadioButton style={styles.filterBy.radio}
+            checked={value === order ? 'checked' : null}
+            label={OrderOptions[value]} value={value} onClick={() => onChange(value)} />
+        ))}
+      </div>
+    );
+  }
+}
+
 const styles = {
+  filterBy: {
+    container(open) {
+      return {
+        display: open ? 'block' : 'none',
+        position: 'absolute',
+        zIndex: 2,
+        backgroundColor: '#fff',
+        padding: 10,
+        left: 15,
+        border: '1px solid #ccc',
+        borderRadius: 4
+      };
+    },
+    radio: {
+      borderTop: '1px solid #ccc',
+      padding: 10
+    },
+    current: {
+      padding: 10,
+      fontSize: '0.9em',
+      fontWeight: 'bold'
+    }
+  },
+  order: {
+    container(open) {
+      return {
+        display: open ? 'block' : 'none',
+        position: 'absolute',
+        zIndex: 2,
+        backgroundColor: '#fff',
+        padding: 10,
+        left: 100,
+        border: '1px solid #ccc',
+        borderRadius: 4
+      };
+    }
+  },
   container: {
     display: 'flex'
   },
@@ -162,20 +318,11 @@ const styles = {
     },
     search: {
       height: 35,
-      margin: 10,
       padding: 10,
-      fontSize: '16px'
-    },
-    sortContainer: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      marginBottom: 20
-    },
-    sort: {
-      flex: 1
-    },
-    firstSort: {
-      marginRight: 10
+      fontSize: '16px',
+      borderBottomLeftRadius: 6,
+      borderTopLeftRadius: 6,
+      border: '1px solid #ccc'
     },
     submissionContainer: {
       transition: 'all .3s',
@@ -196,6 +343,33 @@ const styles = {
     },
     activeSubmission: {
       border: '3px solid ' + settings.grey
+    },
+    filterButton: {
+      width: 35,
+      height: 35,
+      backgroundColor: '#fff',
+      border: '1px solid #ccc',
+      display: 'inline-block',
+      color: 'rgb(94,94,94)',
+      cursor: 'pointer'
+    },
+    filterLeftButton: {
+      borderLeft: 0,
+      borderRight: 0
+    },
+    filterRightButton: {
+      borderBottomRightRadius: 6,
+      borderTopRightRadius: 6
+    },
+    filterAsideButton: {
+      marginLeft: 5,
+      borderRadius: 6,
+      display: 'flex'
+    },
+    searchContainer: {
+      display: 'flex',
+      margin: 10,
+      marginTop: 0
     }
   }
 };

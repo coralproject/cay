@@ -9,6 +9,9 @@ const initial = {
   editAccess: {},
   form: null,
   savingForm: false,
+  submissionFilterBy: 'default',
+  submissionOrder: 'desc',
+  submissionSearch: '',
   savedForm: null, // this is the Objectid of the created form returned from Elkhorn.
   formCreationError: null,
   activeForm: null, // might be able to combine this with {form} above in the future
@@ -280,6 +283,18 @@ const forms = (state = initial, action) => {
 
   case types.ANSWER_EDIT_FAILED: // server was unable to update the answer
     return {...state, loadingAnswerEdit: false, answerBeingEdited: null};
+
+  case types.UPDATE_FILTER_BY:
+    return {...state, submissionFilterBy: action.value};
+
+  case types.UPDATE_ORDER:
+    return {...state, submissionOrder: action.value};
+
+  case types.UPDATE_SEARCH:
+    return {...state, submissionSearch: action.value};
+
+  case types.CLEAN_SUBMISSION_FILTERS:
+    return {...state, submissionFilterBy: 'default', submissionOrder: 'desc', submissionSearch: ''};
 
   default:
     return state;

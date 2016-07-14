@@ -28,6 +28,8 @@ export default class SubmissionList extends Component {
     props.dispatch(fetchForm(props.params.id));
     props.dispatch(fetchGallery(props.params.id));
     props.dispatch(fetchSubmissions(props.params.id));
+
+    this.state = {subPageOffset: 0};
   }
 
   sendToGallery(galleryId, subId, key) {
@@ -110,6 +112,10 @@ class Sidebar extends Component {
     });
   }
 
+  paginate(requestedPage) {
+    console.log('offset', this.state.subPageOffset);
+  }
+
   render() {
     const { submissions, activeSubmission, onSelect} = this.props;
     return (
@@ -130,6 +136,25 @@ class Sidebar extends Component {
           </div>*/}
         </div>
         <div>{this.listSubmissions(submissions, activeSubmission, onSelect)}</div>
+        <div style={styles.sidebar.pagination}>
+          <div
+            onClick={this.paginate.bind(this, 0)}
+            key="alpha"
+            style={styles.sidebar.arrow}>«</div>
+          <div
+            onClick={this.paginate.bind(this, this.state.subPageOffset - 1)}
+            key="bravo"
+            style={styles.sidebar.arrow}>‹</div>
+          <div key="charlie">Page</div>
+          <div
+            onClick={this.paginate.bind(this, this.state.subPageOffset + 1)}
+            key="delta"
+            style={styles.sidebar.arrow}>›</div>
+          <div
+            onClick={this.paginate.bind(this, this.state.subsCount % 10)}
+            key="echo"
+            style={styles.sidebar.arrow}>»</div>
+        </div>
       </div>
     );
   }
@@ -148,6 +173,26 @@ const styles = {
       minWidth: 300,
       marginBottom: 10,
       boxShadow: '0px 0px 5px 0px rgba(0,0,0,0.2)'
+    },
+    pagination: {
+      display: 'flex',
+      justifyContent: 'space-between'
+    },
+    arrow: {
+      width: 32,
+      height: 32,
+      textAlign: 'center',
+      cursor: 'pointer',
+      color: settings.grey,
+      fontSize: '20px',
+      fontWeight: 'bold',
+      backgroundColor: 'transparent',
+      borderRadius: 16,
+      lineHeight: '1.5em',
+      ':hover': {
+        color: '#000',
+        backgroundColor: settings.grey
+      }
     },
     icon: {
       marginLeft: 3

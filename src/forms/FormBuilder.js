@@ -70,13 +70,13 @@ export default class FormBuilder extends Component {
             <div style={ styles.formSettingsBottomActions }>
               <hr />
               {
-                this.props.forms.savedForm ?
+                forms[this.props.activeForm] ?
                 (
                   <div>
                   <p>Copy this code to embed your form.</p>
-                  <textarea style={styles.embedCode} value={`<div id=“ask-form”></div><script src=“${this.props.app.elkhornHost}/${this.props.forms.savedForm}.js”></script>`}>
+                  <textarea style={styles.embedCode} value={`<div id=“ask-form”></div><script src=“${this.props.app.elkhornHost}/${this.props.activeForm}.js”></script>`}>
                   </textarea>
-                    <a href={ `${this.props.app.elkhornHost}/iframe/${this.props.forms.savedForm}` } target="_blank" style={ styles.formSettingsAction }>Live Form</a>
+                    <a href={ `${this.props.app.elkhornHost}/iframe/${this.props.activeForm}` } target="_blank" style={ styles.formSettingsAction }>Live Form</a>
                   </div>
                 ) :
                 <p>This form is not saved. Once you save it you will see embed code here.</p>
@@ -97,6 +97,7 @@ export default class FormBuilder extends Component {
   addToBottom(data) {
     this.props.dispatch(appendWidget({
       title: data.title,
+      friendlyType: data.friendlyType,
       type: 'field',
       component: data.type,
       identity: data.identity ? data.identity : false,
@@ -160,7 +161,7 @@ const styles = {
     justifyContent: 'space-between'
   },
   leftPan: {
-    flex: 1
+    width: 400
   },
   leftContainer: {
     flex: 1,
@@ -188,7 +189,7 @@ const styles = {
   leftContainerTitle: {
     fontSize: 18.78,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 10
   },
   leftContainerSubTitle: {
     margin: '20px 0',
@@ -206,7 +207,7 @@ const styles = {
   },
   typesSubTitle: {
     fontSize: 16,
-    marginBottom: 10,
+    marginBottom: 10
   },
   formSettingsAction: {
     display: 'inline-block',

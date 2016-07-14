@@ -72,7 +72,7 @@ export default class TextFieldEditor extends Component {
 const styles = {
   bottomCheck: {
     display: 'inline-block',
-    padding: '10px',
+    padding: '10px 0 10px 20px',
     cursor: 'pointer'
   },
   bottomOptionsRight: {
@@ -99,7 +99,7 @@ const styles = {
   },
   strong: {
     fontWeight: 'bold',
-    fontSize: '11pt',
+    fontSize: '12pt',
     marginBottom: '10px',
     display: 'block'
   }

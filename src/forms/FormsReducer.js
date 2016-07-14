@@ -28,7 +28,7 @@ const emptyForm = {
     headerIntroText: '#444444',
     formBackground: '#FFFFFF',
     footerBackground: '#FFFFFF',
-    requiredAsterisk: '#FF44FF',
+    requiredAsterisk: '#DDDDDD',
     inputBackground: '#FFFFFF',
     inputText: '#222222',
     footerText: '#222222',

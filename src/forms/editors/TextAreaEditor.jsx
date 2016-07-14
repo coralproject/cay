@@ -62,10 +62,6 @@ export default class TextAreaEditor extends Component {
     return (
       <div>
 
-        <div style={ styles.responseArea }>
-          <textarea style={ styles.responseAreaText } disabled placeholder="Response Area" />
-        </div>
-
         <div style={ styles.bottomOptions }>
 
           <div style={ styles.bottomOptionsLeft }>
@@ -75,7 +71,7 @@ export default class TextAreaEditor extends Component {
               <input
                 onChange={ this.onMinCharsChange.bind(this) }
                 defaultValue={ field.props.minLength || 0 }
-                type="text"
+                type="number"
                 disabled={ !this.state.minLengthEnabled }
                 style={ [ styles.bottomCheckTextInput, !this.state.minLengthEnabled ? styles.disabled : '' ] }></input>
             </label>
@@ -86,7 +82,7 @@ export default class TextAreaEditor extends Component {
               <input
                 onChange={ this.onMaxCharsChange.bind(this) }
                 defaultValue={ field.props.maxLength || 0 }
-                type="text"
+                type="number"
                 disabled={ !this.state.maxLengthEnabled }
                 style={ [ styles.bottomCheckTextInput, !this.state.maxLengthEnabled ? styles.disabled : '' ] }></input>
             </label>
@@ -109,9 +105,8 @@ const styles = {
   },
   bottomCheck: {
     display: 'inline-block',
-    padding: '10px',
+    padding: '10px 20px 10px 0',
     cursor: 'pointer',
-    fontSize: '10pt'
   },
   bottomOptions: {
     display: 'flex',
@@ -130,16 +125,10 @@ const styles = {
     borderLeft: 'none',
     borderRight: 'none',
     marginLeft: '10px',
-    fontSize: '10pt',
+    fontSize: '12pt',
     width: '50px',
-    textAlign: 'center'
-  },
-  responseAreaText: {
-    padding: '10px',
-    height: '100px',
-    display: 'block',
-    width: '100%',
-    resize: 'none'
+    textAlign: 'center',
+    padding: '4px'
   },
   disabled: {
     color: '#AAA'

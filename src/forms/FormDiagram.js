@@ -5,18 +5,21 @@ import {connect} from 'react-redux';
 import { DropTarget } from 'react-dnd';
 
 import DropPlaceHolder from 'forms/DropPlaceHolder';
-import { appendWidget, moveWidget, replaceWidgets, deleteWidget, updateForm, saveForm } from 'forms/FormActions';
+import { appendWidget, moveWidget, replaceWidgets, deleteWidget, duplicateWidget, updateForm, saveForm } from 'forms/FormActions';
 import FormComponent, {styles as askComponentStyles} from 'forms/FormComponent';
 
 import FaArrowCircleUp from 'react-icons/lib/fa/arrow-circle-up';
 import FaUserPlus from 'react-icons/lib/fa/user-plus';
 import FaFloppyO from 'react-icons/lib/fa/floppy-o';
 import FaEye from 'react-icons/lib/fa/eye';
-
-import settings from 'settings';
+import Spinner from 'components/Spinner';
 
 @connect(({ forms, app }) => ({ forms, app }))
 export default class FormDiagram extends Component {
+
+  static contextTypes = {
+    router: PropTypes.object.isRequired
+  };
 
   constructor(props, context) {
     super(props, context);
@@ -62,18 +65,15 @@ export default class FormDiagram extends Component {
   }
 
   onSaveClick() {
-    const { forms, dispatch } = this.props;
-    const { form, widgets, activeForm } = forms;
-    dispatch(saveForm(activeForm ? forms[activeForm] : form, widgets));
-  }
-
-  onPreviewClick() {
-
+    const { router } = this.context;
+    const { forms, dispatch, activeForm } = this.props;
+    const { form, widgets } = forms;
+    dispatch(saveForm(activeForm ? forms[activeForm] : form, widgets))
+      .then(data => !activeForm && router.push(`/forms/${data.id}`));
   }
 
   render() {
     const { onFieldSelect, forms, onOpenPreview } = this.props;
-    const { widgets } = forms;
     const form = this.props.activeForm ? forms[this.props.activeForm] : forms.form;
     return (
       <div style={styles.formDiagramContainer}>
@@ -92,7 +92,7 @@ export default class FormDiagram extends Component {
           <div style={ styles.formActions }>
             <button style={ styles.formAction }><FaUserPlus /></button>
             <button onClick={ onOpenPreview } style={ styles.formAction }><FaEye /></button>
-            <button onClick={ this.onSaveClick.bind(this) } style={ styles.formAction }><FaFloppyO /></button>
+            <button onClick={ this.onSaveClick.bind(this) } style={ styles.formAction }>{ forms.savingForm ? <Spinner/> : <FaFloppyO /> }</button>
           </div>
         </div>
         <input onChange={ this.onFormTitleChange.bind(this) } style={ styles.headLine } type="text" placeholder={ "Write a headline" } defaultValue={ form.header.title } />
@@ -104,18 +104,19 @@ export default class FormDiagram extends Component {
         }
         <textarea onChange={ this.onFormDescriptionChange.bind(this) } style={ styles.description } placeholder={ "Add instructions or a description" } defaultValue={ form.header.description } />
         <div style={styles.formDiagram}>
-
-          { this.state.tempWidgets.map((field, i) => (
+          { this.props.forms.widgets.map((field, i) => (
             <DropPlaceHolder key={i} formDiagram={ this } position={ i } dropped={ field.dropped }>
               <FormComponent
-                id={ field.id } key={i}
-                field={field}
+                id={ field.id }
+                key={ i }
+                field={ field }
                 position={ i }
-                onFieldSelect={onFieldSelect}
-                onList={true}
-                isLast={i === this.state.tempWidgets.length - 1}
-                onMove={this.onMove.bind(this)}
-                onDelete={this.onDelete.bind(this)}
+                onFieldSelect={ onFieldSelect }
+                onList={ true }
+                isLast={ i === this.props.forms.widgets.length - 1 }
+                onMove={ this.onMove.bind(this) }
+                onDuplicate={ this.onDuplicate.bind(this) }
+                onDelete={ this.onDelete.bind(this) }
                  />
             </DropPlaceHolder>
           ))}
@@ -131,11 +132,18 @@ export default class FormDiagram extends Component {
     );
   }
 
-  onDelete(position) {
+  onDelete(position, e) {
+    e.stopPropagation();
     this.props.dispatch(deleteWidget(position));
   }
 
-  onMove(direction, position) {
+  onDuplicate(position, e) {
+    e.stopPropagation();
+    this.props.dispatch(duplicateWidget(position));
+  }
+
+  onMove(direction, position, e) {
+    e.stopPropagation();
     this.props.dispatch(moveWidget(position, position + (direction === 'up' ? -1 : 1)));
   }
 
@@ -169,8 +177,7 @@ const styles = {
     position: 'relative'
   },
   formDiagramContainer: {
-    flex: 2,
-    marginRight: 20,
+    flex: 1,
     padding: 20,
     color: '#5d5d5d'
   },

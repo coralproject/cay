@@ -38,12 +38,18 @@ const filters = (state = initialState, action) => {
 
       const key = `filter${i}`;
       const editableKey = `${key}Editable`;
-      accum[key] = _.assign({}, filter, {min: null, max: null, userMin: null, userMax: null, key});
-      accum[editableKey] = _.assign({}, accum[key], {key: editableKey});
+
+      const min = _.isUndefined(filter.minRange) ? null : filter.minRange;
+      const max = _.isUndefined(filter.maxRange) ? null : filter.maxRange;
+      const userMin = _.isNull(min) ? null : filter.minRange;
+      const userMax = _.isNull(max) ? null : filter.maxRange;
+
+      accum[key] = {...filter, min, max, userMin, userMax, key};
+      accum[editableKey] = {...accum[key], key: editableKey};
 
       if (filter.type === 'intDateProximity') {
         // "ago" filter does not load ranges from xenia yet.
-        accum[key] = _.assign({}, filter, {min: 0, userMin: 0, max: 10000, userMax: 10000, key});
+        accum[key] = {...filter, min: 0, userMin: 0, max: 10000, userMax: 10000, key};
       }
 
       filterList.push(key);

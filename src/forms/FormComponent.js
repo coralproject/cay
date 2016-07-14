@@ -6,15 +6,20 @@ import { updateWidget } from 'forms/FormActions';
 import FaTrash from 'react-icons/lib/fa/trash';
 import FaClose from 'react-icons/lib/fa/close';
 import FaFloppyO from 'react-icons/lib/fa/floppy-o';
-import FaArrowCircleUp from 'react-icons/lib/fa/arrow-circle-up';
-import FaArrowCircleDown from 'react-icons/lib/fa/arrow-circle-down';
+import FaArrowUp from 'react-icons/lib/fa/arrow-up';
+import FaArrowDown from 'react-icons/lib/fa/arrow-down';
+import FaUser from 'react-icons/lib/fa/user';
+import FaCopy from 'react-icons/lib/fa/copy';
 
 import TextFieldEditor from 'forms/editors/TextFieldEditor';
 import TextAreaEditor from 'forms/editors/TextAreaEditor';
 import MultipleChoiceEditor from 'forms/editors/MultipleChoiceEditor';
 import DateFieldEditor from 'forms/editors/DateFieldEditor';
 import NumberFieldEditor from 'forms/editors/NumberFieldEditor';
+import EmailFieldEditor from 'forms/editors/EmailFieldEditor';
+import PhoneNumberEditor from 'forms/editors/PhoneNumberEditor';
 
+// TODO: Generalize this into dynamically generated components
 const renderSettings = {
 
   DateField(field, props) {
@@ -35,6 +40,12 @@ const renderSettings = {
     );
   },
 
+  EmailField(field, props) {
+    return (
+      <EmailFieldEditor field={ field } { ...props } />
+    )
+  },
+
   TextArea(field, props) {
     return (
       <TextAreaEditor field={ field } { ...props } />
@@ -44,6 +55,12 @@ const renderSettings = {
   MultipleChoice(field, props) {
     return (
       <MultipleChoiceEditor field={ field } { ...props } />
+    )
+  },
+
+  PhoneNumber(field, props) {
+    return (
+      <PhoneNumberEditor field={ field } { ...props } />
     )
   }
 };
@@ -83,6 +100,10 @@ export default class FormComponent extends Component {
     this.state = { 'expanded': false, field: props.field, originalField: props.field };
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.setState({ field: nextProps.field, originalField: nextProps.field });
+  }
+
   render() {
     const { onList } = this.props;
     return onList ?
@@ -101,7 +122,7 @@ export default class FormComponent extends Component {
     return (
       <div onClick={this.onClick.bind(this)} style={styles.askComponent(isDragging)}>
         <field.icon style={styles.icon} />
-        <span style={styles.title}>{field.title}</span>
+        <span style={styles.title}>{ field.friendlyType }</span>
       </div>
     );
   }
@@ -136,7 +157,7 @@ export default class FormComponent extends Component {
   }
 
   renderEdit() {
-    const { id, onMove, isLast, position, onDelete } = this.props;
+    const { id, onMove, isLast, position, onDelete, onDuplicate } = this.props;
     const { field } = this.state;
     return (
       <div>
@@ -144,11 +165,11 @@ export default class FormComponent extends Component {
           !this.state.expanded ?
           <div>
             {
-              <div style={ styles.editContainer(this.state.expanded) }>
-                <div>{ position + 1 }.</div>
-                <div style={styles.editBody} onClick={ this.toggleExpanded.bind(this) }>
-                  <h4>
-                    { field.title }
+              <div style={ styles.editContainer(this.state.expanded) } key={ id } onClick={ this.toggleExpanded.bind(this) }>
+                <div style={ styles.fieldAndPosition }>
+                  <div style={ styles.fieldPosition }>{ position + 1 }.</div>
+                  <h4 style={styles.editBody}>
+                    { field.title ? field.title : field.friendlyType }
                     {
                       field.wrapper && field.wrapper.required ?
                         <span style={ styles.requiredAsterisk }>*</span>
@@ -157,16 +178,17 @@ export default class FormComponent extends Component {
                     }
                     {
                       field.identity ?
-                        <span style={ styles.identityLabel }>PII</span>
+                        <span style={ styles.identityLabel }><FaUser/></span>
                       :
                         null
                     }
                   </h4>
                 </div>
                 <div style={styles.arrowContainer}>
-                  <button style={styles.delete} onClick={ () => onDelete(position) }><FaTrash /></button>
-                  { position !== 0 ? <button onClick={() => onMove('up', position)} style={styles.arrow}><FaArrowCircleUp /></button> : null  }
-                  { !isLast ? <button onClick={() => onMove('down', position)} style={styles.arrow}><FaArrowCircleDown /></button> : null  }
+                  <button style={styles.copy} onClick={ onDuplicate.bind(this, position) }><FaCopy /></button>
+                  <button style={styles.delete} onClick={ onDelete.bind(this, position) }><FaTrash /></button>
+                  <button onClick={ position !== 0 ? onMove.bind(this, 'up', position) : null } style={styles.arrow} disabled={position === 0}><FaArrowUp /></button>
+                  <button onClick={ !isLast ? onMove.bind(this, 'down', position) : null } style={styles.arrow} disabled={!!isLast}><FaArrowDown /></button>
                 </div>
               </div>
             }
@@ -183,7 +205,7 @@ export default class FormComponent extends Component {
                   style={ styles.fieldTitle }
                   defaultValue={ this.props.field.title }
                   type="text"
-                  placeholder="Ask readers a question" />
+                  placeholder={ `Type your question here (${ field.friendlyType })` } />
                 <input
                   onChange={ this.onDescriptionChange.bind(this) }
                   defaultValue={ field.description }
@@ -252,17 +274,21 @@ export const styles = {
     return {
       display: 'flex',
       justifyContent: 'flex-start',
+      alignItems: 'center',
       backgroundColor: '#fff',
-      padding: '10px 10px 10px 20px',
+      padding: '20px',
+      width: '100%',
       boxShadow: '0 1px 3px #9B9B9B',
       borderRadius: 4,
       height: isExpanded ? '60px' : 'auto',
-      lineHeight: '40px'
+      lineHeight: '20px',
+      cursor: 'pointer'
     }
   },
   editBody: {
     flex: 1,
-    marginLeft: 10
+    marginLeft: 10,
+    alignSelf: 'flex-start'
   },
   arrowContainer: {
     display: 'flex',
@@ -270,27 +296,41 @@ export const styles = {
     justifyContent: 'space-between'
   },
   arrow: {
-    width: '40px',
-    height: '40px',
+    width: '25px',
+    height: '30px',
     padding: '0',
     lineHeight: '20px',
-    marginLeft: '5px',
-    border: '1px solid #CCC',
+    border: 'none',
     background: 'none',
-    borderRadius: '4px',
     fontSize: '14pt',
     display: 'inline-block',
     cursor: 'pointer'
   },
+  arrowPlaceHolder: {
+    width: '25px',
+    height: '30px',
+    padding: '0',
+    marginLeft: '5px',
+    display: 'inline-block'
+  },
   delete: {
-    width: '40px',
-    height: '40px',
+    width: '25px',
+    height: '30px',
     padding: '0',
     lineHeight: '20px',
-    marginLeft: '5px',
-    border: '1px solid #CCC',
-    background: '#DDD',
-    borderRadius: '4px',
+    border: 'none',
+    background: 'none',
+    fontSize: '14pt',
+    display: 'inline-block',
+    cursor: 'pointer'
+  },
+  copy: {
+    width: '25px',
+    height: '30px',
+    padding: '0',
+    lineHeight: '20px',
+    border: 'none',
+    background: 'none',
     fontSize: '14pt',
     display: 'inline-block',
     cursor: 'pointer'
@@ -318,7 +358,6 @@ export const styles = {
     textAlign: 'center',
     cursor: 'pointer',
     padding: '0 20px',
-    lineHeight: '40px',
     marginLeft: '10px'
   },
   cancelButton: {
@@ -344,7 +383,7 @@ export const styles = {
   fieldTitle: {
     fontSize: '14pt',
     padding: '5px 0',
-    width: '50%',
+    width: '75%',
     display: 'block',
     border: 'none',
     background: 'none'
@@ -358,6 +397,14 @@ export const styles = {
     border: 'none',
     background: 'none'
   },
+  fieldPosition: {
+    alignSelf: 'flex-start',
+    fontWeight: 'bold'
+  },
+  fieldAndPosition: {
+    display: 'flex',
+    flexGrow: '1'
+  },
   requiredAsterisk: {
     color: '#B22'
   },
@@ -365,15 +412,10 @@ export const styles = {
     padding: '20px 0'
   },
   identityLabel: {
-    fontSize: '10pt',
-    color: 'white',
+    color: '#333',
     padding: '0 5px',
-    borderRadius: '3px',
-    marginLeft: '15px',
-    display: 'inline-block',
-    background: '#999',
-    height: '30px',
-    lineHeight: '30px'
+    marginLeft: '5px',
+    display: 'inline-block'
   },
   bottomButtons: {
     textAlign: 'right'
@@ -384,6 +426,7 @@ export const styles = {
   },
   title: {
     fontSize: 14,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    lineHeight: '1em'
   }
 };

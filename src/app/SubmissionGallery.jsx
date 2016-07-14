@@ -15,6 +15,10 @@ import {
 import {Link} from 'react-router';
 import moment from 'moment';
 
+import FaFloppyO from 'react-icons/lib/fa/floppy-o';
+import Clipboard from 'react-icons/lib/fa/clipboard';
+import Select from 'react-select';
+
 import settings from 'settings';
 import Page from 'app/layout/Page';
 import FormChrome from 'app/layout/FormChrome';
@@ -22,17 +26,21 @@ import ContentHeader from 'components/ContentHeader';
 import Card from 'components/cards/Card';
 import CardHeader from 'components/cards/CardHeader';
 
-import Delete from 'react-icons/lib/md/delete';
-import Edit from 'react-icons/lib/md/edit';
-
 import TextField from 'components/forms/TextField';
 import Checkbox from 'components/forms/Checkbox';
 import Button from 'components/Button';
 import Modal from 'components/modal/Modal';
 
+import GalleryAnswer from 'forms/GalleryAnswer';
+
 @connect(state => state.forms)
 @Radium
 export default class SubmissionGallery extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {publishModalOpen: false};
+  }
 
   componentWillMount() {
     this.props.dispatch(fetchForm(this.props.params.id));
@@ -52,41 +60,12 @@ export default class SubmissionGallery extends React.Component {
   renderGallery(gallery) {
     return gallery.answers.map((answer, i) => {
       return (
-        <Card key={i}>
-          <p>Added to Gallery > {moment(gallery.date_updated).format('D MMM YYYY')}</p>
-          <p style={styles.answerText}>{answer.answer.answer ? answer.answer.answer.text : ''}</p>
-            <p>Gallery id: {gallery ? gallery.id : 'loading gallery'}</p>
-            {/*
-            <p>Answer id: {answer.answer_id}</p>
-            <p>widget id: {answer.answer.widget_id}</p>
-            <p>submission id: {answer.submission_id}</p>
-            */}
-          {
-            answer.answer.edited ?
-              (
-                <div>
-                  <p style={styles.editHighlight}>Edit:</p>
-                  <p style={styles.answerText}>{answer.answer.edited}</p>
-                </div>
-              ) :
-              null
-          }
-          <div>
-            <Button
-              style={styles.editButton}
-              category="info"
-              size="small"
-              onClick={this.beginEditAnswer.bind(this, gallery.id, answer.submission_id, answer.answer_id)}>
-              Edit <Edit />
-            </Button>
-            <Button
-              category="warning"
-              onClick={this.removeSubmission.bind(this, gallery.id, answer.submission_id, answer.answer_id)}
-              size="small">
-              Remove From Gallery <Delete />
-            </Button>
-          </div>
-        </Card>
+        <GalleryAnswer
+          removeSubmission={this.removeSubmission.bind(this)}
+          editAnswer={this.beginEditAnswer.bind(this)}
+          answer={answer}
+          gallery={gallery}
+          key={i} />
       );
     });
   }
@@ -110,8 +89,8 @@ export default class SubmissionGallery extends React.Component {
     );
   }
 
-  updateFormStatus(option) {
-    this.props.dispatch(updateFormStatus(this.props.activeForm, option.value));
+  updateFormStatus(value) {
+    this.props.dispatch(updateFormStatus(this.props.activeForm, value));
   }
 
   getAttributionFields(form) {
@@ -146,6 +125,28 @@ export default class SubmissionGallery extends React.Component {
     });
   }
 
+  updateOrientation(value) {
+
+  }
+
+  updatePlacement(value) {
+
+  }
+
+  openPublishModal() {
+    this.setState({publishModalOpen: true});
+  }
+
+  closePublishModal() {
+    this.setState({publishModalOpen: false});
+  }
+
+  copyEmbedToClipboard(iframe) {
+    if (iframe) {
+
+    }
+  }
+
   render() {
 
     const form = this.props[this.props.activeForm];
@@ -154,6 +155,16 @@ export default class SubmissionGallery extends React.Component {
     const ans = this.props[this.props.answerBeingEdited];
 
     const attributionFields = this.getAttributionFields(form);
+    const orientationOpts = [
+      {label: 'Gallery Orientation - Vertical', value: 'vertical'},
+      {label: 'Gallery Orientation - Horizontal', value: 'horizontal'}
+    ];
+    const placementOpts = [
+      {label: 'Above the submission', value: 'above'},
+      {label: 'Below the submission', value: 'below'}
+    ];
+
+    // console.log('SubmissionGallery.render', gallery);
 
     return (
       <Page>
@@ -164,26 +175,47 @@ export default class SubmissionGallery extends React.Component {
           submissions={submissions}
           gallery={gallery} />
         <div style={styles.base}>
-          <ContentHeader title={'Submission Gallery'} />
+          <ContentHeader
+            title={'Submission Gallery'}
+            subhead={gallery ? `Created on ${moment(gallery.created_date).format('D MMM YYYY H:ma')}` : ''} />
+          <div style={styles.headingButtonHolder}>
+            <div style={styles.orientationOpts}>
+              <Select
+                options={orientationOpts}
+                onChange={this.updateOrientation.bind(this)} />
+            </div>
+            <Button style={styles.modButton} category="brand">Preview</Button>
+            <Button style={styles.modButton} category="success">Save <FaFloppyO /></Button>
+            <Button
+              onClick={this.openPublishModal.bind(this)}
+              style={styles.modButton}
+              category="inverse">Publish</Button>
+          </div>
+          <hr style={styles.rule} />
           <div style={styles.container}>
             <div style={styles.sidebar}>
               <Card>
-                <CardHeader>Author Attribution</CardHeader>
+                <CardHeader>Reader Information</CardHeader>
 
+                <p style={styles.includeLabel}>Placement</p>
+                <Select
+                  style={styles.placementOpts}
+                  options={placementOpts}
+                  onChange={this.updatePlacement.bind(this)} />
+
+                <p style={styles.includeLabel}>Include</p>
                 {attributionFields.map(function (field, i) {
                   return <Checkbox key={i} label={field.title} />;
                 })}
 
-
-              </Card>
-              <Card>
-                <CardHeader>Gallery Settings</CardHeader>
-                <Button category="primary" size="small">Publish Gallery/Updates</Button>
-                <p>Embed Code</p>
-                <textarea style={styles.embedCode}></textarea>
               </Card>
             </div>
             <div style={styles.gallery}>
+              <div style={styles.galleryTitle}>
+                <TextField style={styles.galleryTitles} label="Write a headline (optional)" />
+                <br />
+                <TextField style={styles.galleryTitles} label="Write description for the gallery (optional)" />
+              </div>
               {
                 this.props.activeGallery ?
                 this.renderGallery(gallery) :
@@ -194,6 +226,7 @@ export default class SubmissionGallery extends React.Component {
           </div>
 
         </div>
+        {/* this is the Edit Answer modal */}
         {
           ans ?
             <Modal
@@ -224,6 +257,33 @@ export default class SubmissionGallery extends React.Component {
             </Modal>
           : null
         }
+
+        {/* this is the Embed Code modal */}
+
+        <Modal
+          style={styles.publishModal}
+          title="Publish Gallery"
+          isOpen={this.state.publishModalOpen}
+          confirmAction={() => {}}
+          cancelAction={this.closePublishModal.bind(this)}>
+          <div>
+            <p>Embed code</p>
+            <textarea style={styles.embedTextarea}></textarea>
+            <Button
+              style={styles.copyButton}
+              onClick={this.copyEmbedToClipboard.bind(this)}>
+              Copy <Clipboard />
+            </Button>
+            <p style={{clear: 'both'}}>Embed code (with iframe)</p>
+            <textarea style={styles.embedTextarea}></textarea>
+            <Button
+              style={styles.copyButton}
+              onClick={this.copyEmbedToClipboard.bind(this, 'iframe')}>
+              Copy <Clipboard />
+            </Button>
+          </div>
+        </Modal>
+
       </Page>
     );
   }
@@ -231,26 +291,40 @@ export default class SubmissionGallery extends React.Component {
 
 const styles = {
   base: {
-    marginTop: 40
+
   },
-  embedCode: {
+  publishModal: {
+    modalContainer: {
+      minWidth: 400
+    }
+  },
+  embedTextarea: {
     width: '100%',
-    height: 100
+    marginBottom: 5,
+    border: '1px solid ' + settings.mediumGrey,
+    minHeight: 100
+  },
+  copyButton: {
+    float: 'right',
+    marginBottom: 10,
+    backgroundColor: settings.lightGrey,
+    ':hover': {
+      backgroundColor: settings.mediumGrey
+    }
   },
   container: {
     display: 'flex'
   },
   sidebar: {
     flex: 1,
-    marginRight: 10
+    marginRight: 20
   },
   gallery: {
     flex: 3
   },
-  editButton: {
-    marginRight: 10
+  modButton: {
+    marginLeft: 10
   },
-
   modalBody: {
     display: 'flex'
   },
@@ -279,8 +353,36 @@ const styles = {
     height: 100,
     fontSize: '16px'
   },
-  answerText: {
-    marginBottom: 10,
-    fontSize: '16px'
+  galleryTitle: {
+
+  },
+  rule: {
+    borderTop: 'none',
+    borderRight: 'none',
+    borderLeft: 'none',
+    borderBottom: '1px solid ' + settings.mediumGrey,
+    marginBottom: 20
+  },
+  headingButtonHolder: {
+    position: 'absolute',
+    top: 20,
+    right: 20
+  },
+  galleryTitles: {
+    width: '75%',
+    marginBottom: 15,
+    marginTop: -25
+  },
+  orientationOpts: {
+    display: 'inline-block',
+    minWidth: 300,
+    position: 'relative',
+    top: 10
+  },
+  placementOpts: {
+    marginBottom: 10
+  },
+  includeLabel: {
+    marginBottom: 5
   }
 };

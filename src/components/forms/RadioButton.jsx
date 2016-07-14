@@ -8,7 +8,9 @@ import settings from '../../settings';
 export default class RadioButton extends React.Component {
 
   static propTypes = {
-    value: PropTypes.any.isRequired
+    label: PropTypes.string,
+    value: PropTypes.any.isRequired,
+    onClick: PropTypes.func.isRequired
   }
 
   getWrapperStyles() {
@@ -39,10 +41,10 @@ export default class RadioButton extends React.Component {
 
   getLabelStyles() {
     return {
-      display: "inline",
+      display: 'inline',
       left: -12,
       marginRight: 4,
-      position: "relative"
+      position: 'relative'
     };
   }
 
@@ -50,8 +52,8 @@ export default class RadioButton extends React.Component {
 
   }
 
-  clickHandler(e) {
-    this.props.handleClick(this.props.order, this.props.value);
+  clickHandler() {
+    this.props.onClick(this.props.value);
   }
 
   getRadioButtonStyles() {
@@ -76,7 +78,7 @@ export default class RadioButton extends React.Component {
       active: {
         backgroundColor: activeColor
       }
-    }
+    };
   }
 
   render() {
@@ -84,7 +86,7 @@ export default class RadioButton extends React.Component {
     const radioButtonStyles = this.getRadioButtonStyles();
 
     return (
-      <div style={this.getWrapperStyles()}>
+      <div style={[this.getWrapperStyles(), this.props.style]}>
         <span
           style={this.getLabelWrapperStyles()}
           onClick={this.clickHandler.bind(this)}

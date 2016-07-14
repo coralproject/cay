@@ -28,8 +28,6 @@ export default class SubmissionList extends Component {
     props.dispatch(fetchForm(props.params.id));
     props.dispatch(fetchGallery(props.params.id));
     props.dispatch(fetchSubmissions(props.params.id));
-
-    this.state = {subPageOffset: 0};
   }
 
   sendToGallery(galleryId, subId, key) {
@@ -70,6 +68,8 @@ export default class SubmissionList extends Component {
             submissions={submissions}
             form={form}/>
           <Sidebar
+            form={form}
+            dispatch={this.props.dispatch}
             submissions={submissions.reverse()}
             activeSubmission={activeSubmission}
             onSelect={this.onSubmissionSelect.bind(this)} />
@@ -93,6 +93,11 @@ export default class SubmissionList extends Component {
 @Radium
 class Sidebar extends Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {subPageOffset: 0};
+  }
+
   listSubmissions(submissions, activeSubmission, onSelect) {
     return submissions.map((submission, key) => {
       return (
@@ -113,11 +118,18 @@ class Sidebar extends Component {
   }
 
   paginate(requestedPage) {
-    console.log('offset', this.state.subPageOffset);
+    const {form} = this.props;
+
+    if (requestedPage >= 0 && requestedPage <= Math.floor(form.stats.responses / 10)) {
+      this.props.dispatch(fetchSubmissions(form.id, requestedPage)).then(() => {
+        this.setState({subPageOffset: requestedPage});
+      });
+    }
   }
 
   render() {
-    const { submissions, activeSubmission, onSelect} = this.props;
+    const { submissions, activeSubmission, onSelect, form} = this.props;
+
     return (
       <div>
         <div style={styles.sidebar.container}>
@@ -136,25 +148,31 @@ class Sidebar extends Component {
           </div>*/}
         </div>
         <div>{this.listSubmissions(submissions, activeSubmission, onSelect)}</div>
-        <div style={styles.sidebar.pagination}>
-          <div
-            onClick={this.paginate.bind(this, 0)}
-            key="alpha"
-            style={styles.sidebar.arrow}>«</div>
-          <div
-            onClick={this.paginate.bind(this, this.state.subPageOffset - 1)}
-            key="bravo"
-            style={styles.sidebar.arrow}>‹</div>
-          <div key="charlie">Page</div>
-          <div
-            onClick={this.paginate.bind(this, this.state.subPageOffset + 1)}
-            key="delta"
-            style={styles.sidebar.arrow}>›</div>
-          <div
-            onClick={this.paginate.bind(this, this.state.subsCount % 10)}
-            key="echo"
-            style={styles.sidebar.arrow}>»</div>
-        </div>
+        {
+          form ?
+            <div style={styles.sidebar.pagination}>
+              <div
+                onClick={this.paginate.bind(this, 0)}
+                key="alpha"
+                style={styles.sidebar.arrow}>«</div>
+              <div
+                onClick={this.paginate.bind(this, this.state.subPageOffset - 1)}
+                key="bravo"
+                style={styles.sidebar.arrow}>‹</div>
+              <div
+                style={styles.sidebar.pageNum}
+                key="charlie">Page {this.state.subPageOffset + 1} of {Math.ceil(form.stats.responses / 10)}</div>
+              <div
+                onClick={this.paginate.bind(this, this.state.subPageOffset + 1)}
+                key="delta"
+                style={styles.sidebar.arrow}>›</div>
+              <div
+                onClick={this.paginate.bind(this, Math.floor(form.stats.responses / 10))}
+                key="echo"
+                style={styles.sidebar.arrow}>»</div>
+            </div> :
+            null
+        }
       </div>
     );
   }
@@ -189,10 +207,14 @@ const styles = {
       backgroundColor: 'transparent',
       borderRadius: 16,
       lineHeight: '1.5em',
+      transition: 'all .3s',
       ':hover': {
         color: '#000',
         backgroundColor: settings.grey
       }
+    },
+    pageNum: {
+      lineHeight: '1.8em'
     },
     icon: {
       marginLeft: 3

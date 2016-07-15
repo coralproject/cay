@@ -96,6 +96,29 @@ class Sidebar extends Component {
   constructor(props) {
     super(props);
     this.state = {subPageOffset: 0};
+
+    const keyPress = (e) => {
+
+      const {activeSubmission, submissions, onSelect} = this.props;
+
+      const subIds = submissions.map(s => s.id);
+      const activeIndex = subIds.indexOf(activeSubmission);
+
+      // e.code here since {e} is a synthetic React event
+      if (e.code === 'KeyJ' && subIds[activeIndex + 1]) {
+        onSelect(subIds[activeIndex + 1]);
+      } else if (e.code === 'KeyK' && subIds[activeIndex - 1] && activeIndex !== 0) {
+        onSelect(subIds[activeIndex - 1]);
+      }
+    };
+
+    this.onKeyPress = keyPress.bind(this);
+    // if the listener is bound on the next line, removeEventListener doesn't work
+    document.addEventListener('keypress', this.onKeyPress, true);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keypress', this.onKeyPress, true);
   }
 
   listSubmissions(submissions, activeSubmission, onSelect) {

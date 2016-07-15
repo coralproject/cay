@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import uuid from 'node-uuid';
 
@@ -127,10 +126,11 @@ export default class FormBuilder extends Component {
   renderPreview() {
     if(!this.props.preview) return null;
 
-    const form = Object.assign({}, this.props.forms.form);
-    form.steps[0].widgets = this.props.forms.widgets;
+    const form = this.props.activeForm ? this.props.forms[this.props.activeForm] : this.props.forms.form;
+    const previewForm = {...form};
+    previewForm.steps[0].widgets = this.props.forms.widgets;
 
-    const src = `${this.props.app.elkhornHost}/preview.js?props=${encodeURIComponent(JSON.stringify(form))}`;
+    const src = `${this.props.app.elkhornHost}/preview.js?props=${encodeURIComponent(JSON.stringify(previewForm))}`;
     const script = document.createElement('script');
     script.src = src;
     document.getElementsByTagName('head')[0].appendChild(script);

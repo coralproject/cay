@@ -59,7 +59,7 @@ export default class SubmissionList extends Component {
     const gallery = this.props.forms[activeGallery];
 
     return (
-      <Page>
+      <Page style={styles.page}>
         <div style={styles.container}>
           <FormChrome
             activeTab="submissions"
@@ -69,7 +69,6 @@ export default class SubmissionList extends Component {
             form={form}/>
           <Sidebar
             form={form}
-            dispatch={this.props.dispatch}
             submissions={submissions.reverse()}
             activeSubmission={activeSubmission}
             onSelect={this.onSubmissionSelect.bind(this)} />
@@ -90,6 +89,7 @@ export default class SubmissionList extends Component {
   }
 }
 
+@connect()
 @Radium
 class Sidebar extends Component {
 
@@ -154,7 +154,7 @@ class Sidebar extends Component {
     const { submissions, activeSubmission, onSelect, form} = this.props;
 
     return (
-      <div>
+      <div style={styles.sidebar}>
         <div style={styles.sidebar.container}>
           <div style={styles.sidebar.countContainer}>
             <p style={styles.sidebar.count}>{submissions.length} Submission{submissions.length === 1 ? '' : 's'}</p>
@@ -202,10 +202,21 @@ class Sidebar extends Component {
 }
 
 const styles = {
+  page: {
+    position: 'absolute',
+    top: 50,
+    bottom: 0,
+    left: 0,
+    right: 0
+  },
   container: {
-    display: 'flex'
+    display: 'flex',
+    height: '100%'
   },
   sidebar: {
+    height: '100%',
+    position: 'relative',
+
     container: {
       flex: 1,
       display: 'flex',
@@ -216,6 +227,10 @@ const styles = {
       boxShadow: '0px 0px 5px 0px rgba(0,0,0,0.2)'
     },
     pagination: {
+      position: 'absolute',
+      width: '100%',
+      bottom: 0,
+      backgroundColor: settings.bgColorBase,
       display: 'flex',
       justifyContent: 'space-between'
     },

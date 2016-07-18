@@ -123,7 +123,8 @@
       "collection": "user_statistics",
       "type": "percentRange",
       "sortable": true,
-      "sortDesc": true
+      "sortDesc": true,
+      "minRange": 0
     },
     {
       "name": "Comments ModeratorDeleted",
@@ -134,7 +135,8 @@
       "collection": "user_statistics",
       "type": "intRange",
       "sortable": true,
-      "sortDesc": true
+      "sortDesc": true,
+      "minRange": 0
     },
     {
       "name": "Last time ModeratorDeleted",
@@ -156,7 +158,8 @@
       "collection": "user_statistics",
       "type": "percentRange",
       "sortable": false,
-      "sortDesc": true
+      "sortDesc": true,
+      "minRange": 0
     },
     {
       "name": "Percent of ModeratorDeleted that got replies",
@@ -167,7 +170,8 @@
       "collection": "user_statistics",
       "type": "percentRange",
       "sortable": true,
-      "sortDesc": true
+      "sortDesc": true,
+      "minRange": 0
     },
 
 
@@ -183,7 +187,9 @@
       "collection": "user_statistics",
       "type": "percentRange",
       "sortable": true,
-      "sortDesc": true
+      "sortDesc": true,
+      "minRange": 0,
+      "minRange": 0
     },
     {
       "name": "Percent SystemFlagged",
@@ -194,7 +200,8 @@
       "collection": "user_statistics",
       "type": "percentRange",
       "sortable": true,
-      "sortDesc": true
+      "sortDesc": true,
+      "minRange": 0
     },
     {
       "name": "Percent CommunityFlagged",
@@ -205,7 +212,8 @@
       "collection": "user_statistics",
       "type": "percentRange",
       "sortable": true,
-      "sortDesc": true
+      "sortDesc": true,
+      "minRange": 0
     },
     {
       "name": "Percent Untouched",
@@ -216,7 +224,8 @@
       "collection": "user_statistics",
       "type": "percentRange",
       "sortable": false,
-      "sortDesc": true
+      "sortDesc": true,
+      "minRange": 0
     },
 
 
@@ -256,7 +265,8 @@
       "collection": "user_statistics",
       "type": "intRange",
       "sortable": true,
-      "sortDesc": true
+      "sortDesc": true,
+      "minRange": 0
     },
     {
       "name": "Likes received",
@@ -267,7 +277,9 @@
       "collection": "user_statistics",
       "type": "intRange",
       "sortable": true,
-      "sortDesc": true
+      "sortDesc": true,
+      "minRange": 0
+
     },
     {
       "name": "Flags performed",
@@ -278,7 +290,8 @@
       "collection": "user_statistics",
       "type": "intRange",
       "sortable": true,
-      "sortDesc": true
+      "sortDesc": true,
+      "minRange": 0
     },
     {
       "name": "Flags received",
@@ -289,7 +302,8 @@
       "collection": "user_statistics",
       "type": "intRange",
       "sortable": true,
-      "sortDesc": true
+      "sortDesc": true,
+      "minRange": 0
     }
   ]
 }

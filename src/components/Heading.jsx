@@ -5,7 +5,7 @@ import Radium from 'radium';
 class Heading extends React.Component {
   render() {
     return (
-      <p style={[
+      <div style={[
         styles.base,
         this.props.size === 'xsmall' && styles.xsmall,
         this.props.size === 'small' && styles.small,
@@ -15,8 +15,8 @@ class Heading extends React.Component {
         this.props.style
       ]}>
         <span style={ { fontWeight: this.props.fontWeight } }>{this.props.children}</span>
-        <p style={styles.subhead}>{this.props.subhead}</p>
-      </p>
+        <div style={styles.subhead}>{this.props.subhead}</div>
+      </div>
     );
   }
 }

@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import Radium from 'radium';
 import { connect } from 'react-redux';
 
-import { createEmpty, saveForm } from 'forms/FormActions';
+import { createEmpty } from 'forms/FormActions';
 import Page from 'app/layout/Page';
 
 import FormBuilder from 'forms/FormBuilder.js';
@@ -11,9 +11,6 @@ import FormChrome from 'app/layout/FormChrome';
 @connect(({ forms }) => ({ forms }))
 @Radium
 export default class FormCreate extends Component {
-  static contextTypes = {
-    router: PropTypes.object.isRequired
-  };
 
   constructor(props) {
     super(props);
@@ -37,12 +34,6 @@ export default class FormCreate extends Component {
         </div>
       </Page>
     );
-  }
-
-  saveAndExit() {
-    const { forms, dispatch } = this.props;
-    const { form, widgets } = forms;
-    dispatch(saveForm(form, widgets));
   }
 
   onClosePreview() {
@@ -109,7 +100,6 @@ const styles = {
     marginLeft: 10
   },
   formBuilderContainer: {
-    marginTop: 50
   },
   builderTitle: {
     marginBottom: 30,

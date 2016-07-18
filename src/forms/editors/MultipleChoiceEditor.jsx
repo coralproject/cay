@@ -1,15 +1,14 @@
 import React, { Component, PropTypes } from 'react';
 import Radium from 'radium';
 import { connect } from 'react-redux';
-import Checkbox from 'components/forms/Checkbox';
-import TextField from 'components/forms/TextField';
+
+import CommonFieldOptions from 'forms/CommonFieldOptions';
 
 import FaArrowUp from 'react-icons/lib/fa/arrow-up';
 import FaArrowDown from 'react-icons/lib/fa/arrow-down';
 import FaTrashO from 'react-icons/lib/fa/trash-o';
 import FaCopy from 'react-icons/lib/fa/copy';
 import FaPlusCircle from 'react-icons/lib/fa/plus-circle';
-import FaQuestionCircle from 'react-icons/lib/fa/question-circle';
 
 @connect(({ forms, app }) => ({ forms, app }))
 @Radium
@@ -34,6 +33,15 @@ export default class MultipleChoiceEditor extends Component {
   addOption(i) {
     var optionsCopy = this.state.options.slice();
     optionsCopy.push({ title: 'Option ' + (this.state.options.length + 1) });
+    this.setState({ options: optionsCopy });
+    this.updateFieldOptions(optionsCopy);
+  }
+
+  duplicateOption(i) {
+    var optionsStart = this.state.options.slice(0, i);
+    var optionsEnd = this.state.options.slice(i);
+    var optionCopy = Object.assign({}, this.state.options[i]);
+    var optionsCopy = optionsStart.concat(optionCopy).concat(optionsEnd);
     this.setState({ options: optionsCopy });
     this.updateFieldOptions(optionsCopy);
   }
@@ -80,20 +88,6 @@ export default class MultipleChoiceEditor extends Component {
     this.props.onEditorChange(updatedField);
   }
 
-  // TODO: This and identity should probably be generalized, is repeated in every field type
-  onRequiredClick(e) {
-    let { field } = this.props;
-    let updatedWrapper = Object.assign({}, field.wrapper, { required: e.target.checked });
-    let updatedField = Object.assign({}, field, { wrapper: updatedWrapper });
-    this.props.onEditorChange(updatedField);
-  }
-
-  onIdentityClick(e) {
-    let { field } = this.props;
-    let updatedField = Object.assign({}, field, { identity: e.target.checked });
-    this.props.onEditorChange(updatedField);
-  }
-
   render() {
     let { field } = this.props;
 
@@ -109,7 +103,7 @@ export default class MultipleChoiceEditor extends Component {
                       <input style={ styles.optionInput } type="text" value={ option.title } onChange={ this.updateOption.bind(this, i) } />
                     </div>
                     <div style={ styles.optionRowButtons }>
-                      <button style={ styles.optionButton } onClick={ this.removeOption.bind(this, i) }><FaCopy /></button>
+                      <button style={ styles.optionButton } onClick={ this.duplicateOption.bind(this, i) }><FaCopy /></button>
                       {
                         (i > 0) || (i == 0 && this.state.options.length > 1) ?
                           <button style={ styles.optionButton } onClick={ this.removeOption.bind(this, i) }><FaTrashO /></button>
@@ -141,7 +135,7 @@ export default class MultipleChoiceEditor extends Component {
               <input type="checkbox"
                 onClick={ this.onMultipleClick.bind(this) }
                 checked={ field.props.multipleChoice } />
-                Allow multiple
+                Allow multiple selections
             </label>
             <label style={ styles.bottomCheck }>
               <input type="checkbox"
@@ -151,20 +145,7 @@ export default class MultipleChoiceEditor extends Component {
             </label>
           </div>
 
-          <div style={ styles.bottomOptionsRight }>
-            <label style={ styles.bottomCheck }>
-              <input type="checkbox"
-                onClick={ this.onIdentityClick.bind(this) }
-                checked={ field.identity } />
-                Reader info <FaQuestionCircle />
-            </label>
-            <label style={ styles.bottomCheck }>
-              <input type="checkbox"
-                onClick={ this.onRequiredClick.bind(this) }
-                checked={ field.wrapper.required } />
-                Required
-            </label>
-          </div>
+          <CommonFieldOptions {...this.props} />
 
         </div>
 
@@ -230,10 +211,6 @@ const styles = {
     width: '100%'
   },
   bottomOptionsLeft: {
-    flexGrow: '1'
-  },
-  bottomOptionsRight: {
-    textAlign: 'right',
     flexGrow: '1'
   }
 };

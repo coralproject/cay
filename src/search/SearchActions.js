@@ -294,7 +294,20 @@ export const makeQueryFromState = (type, page = 0, replace = false, editMode = f
           } else {
             searchMax = clampedUserMax;
           }
-          x.match({[dbField]: {$lte: searchMax}});
+          // This minRange condition is in place to handle fields that
+          //  do not exist in documents for their zero value
+          //  In these cases we need to account for both less than the max
+          //    and the non-existence of the field
+          if (filter.minRange === 0) {
+            x.match({
+              $or: [
+                {[dbField]: {$lte: searchMax}},
+                {[dbField]: {$exists: false}}
+              ]
+            });
+          } else {
+            x.match({[dbField]: {$lte: searchMax}});
+          }
         }
 
         return dbField;
@@ -316,8 +329,11 @@ export const makeQueryFromState = (type, page = 0, replace = false, editMode = f
       x.sort(['statistics.comments.all.all.count', -1]);
     }
 
+    // statistics.comments.all.all is always needed
+    const breakdownFields = specificBreakdown !== '' ?
+      `statistics.comments.${breakdown}.${specificBreakdown}` : null;
     x.skip(page * pageSize).limit(pageSize)
-      .include(['name', 'avatar', ...dbFields]);
+      .include(['name', 'avatar', 'statistics.comments.all', breakdownFields]);
 
     // get the counts
     addMatches(x.addQuery());

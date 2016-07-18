@@ -47,8 +47,8 @@ const stopAndBubble = fn => evt => {
 
 const TopMenu = ({ features }) => (
   <ul>
-    <MenuItem name={ window.L.t('Create search') } target="/search-creator" icon={<FaGroup />} />
-    <MenuItem name={ window.L.t('Saved Searches') } target="/saved-searches" icon={<FaDashboard />} />
+    { features.trust === false ? null : <MenuItem name={ window.L.t('Create Search') } target="/search-creator" icon={<FaGroup />} />}
+    { features.trust === false ? null : <MenuItem name={ window.L.t('Saved Searches') } target="/saved-searches" icon={<FaDashboard />} />}
     { features.ask ? <MenuItem open={open} name="Create Form" target="/forms/create" icon={<MdBuild />} /> : null }
     { features.ask ? <MenuItem open={open} name="View Forms" target="/forms" icon={<FaListAlt />}/> : null }
   </ul>
@@ -86,7 +86,9 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     width: 200,
-    overflowX: 'hidden'
+    overflowX: 'hidden',
+    position: 'fixed',
+    backgroundColor: 'rgb(240, 240, 240)'
   },
   menuWrapper: {
     display: 'flex',

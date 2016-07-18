@@ -1,12 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import Radium from 'radium';
 import { connect } from 'react-redux';
-import Checkbox from 'components/forms/Checkbox';
-import TextField from 'components/forms/TextField';
+
+import CommonFieldOptions from 'forms/CommonFieldOptions';
 
 import editWidgetStyles from 'forms/editors/editWidgetStyles';
-
-import FaQuestionCircle from 'react-icons/lib/fa/question-circle';
 
 @connect(({ forms, app }) => ({ forms, app }))
 @Radium
@@ -14,13 +12,20 @@ export default class TextFieldEditor extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { field: props.field }
+    this.state = { field: props.field, minLengthEnabled: props.field.props.minLength > 0, maxLengthEnabled: props.field.props.maxLength > 0 }
   }
 
   componentWillReceiveProps(nextProps) {
     let { field } = this.state;
     let updatedField = Object.assign({}, field, nextProps.field);
     this.setState({ field: updatedField });
+  }
+
+  onMinCharsChange(e) {
+    let { field } = this.state;
+    let updatedProps = Object.assign({}, field.props, { minLength: e.target.value });
+    let updatedField = Object.assign({}, field, { props: updatedProps });
+    this.props.onEditorChange(updatedField);
   }
 
   onMaxCharsChange(e) {
@@ -30,51 +35,61 @@ export default class TextFieldEditor extends Component {
     this.props.onEditorChange(updatedField);
   }
 
-  onRequiredClick(e) {
-    let { field } = this.state;
-    let updatedWrapper = Object.assign({}, field.wrapper, { required: e.target.checked });
-    let updatedField = Object.assign({}, field, { wrapper: updatedWrapper });
-    this.setState({ field: updatedField });
-    this.props.onEditorChange(updatedField);
+  onMinLengthChange(e) {
+    this.setState({ minLengthEnabled: e.target.checked });
+    // Set to 0 if disabled
+    if (!e.target.checked) {
+      let { field } = this.state;
+      let updatedProps = Object.assign({}, field.props, { minLength: 0 });
+      let updatedField = Object.assign({}, field, { props: updatedProps });
+      this.props.onEditorChange(updatedField);
+    }
   }
 
-  onIdentityClick(e) {
-    let { field } = this.props;
-    let updatedField = Object.assign({}, field, { identity: e.target.checked });
-    this.props.onEditorChange(updatedField);
+  onMaxLengthChange(e) {
+    this.setState({ maxLengthEnabled: e.target.checked });
+    // Set to 0 if disabled
+    if (!e.target.checked) {
+      let { field } = this.state;
+      let updatedProps = Object.assign({}, field.props, { maxLength: 0 });
+      let updatedField = Object.assign({}, field, { props: updatedProps });
+      this.props.onEditorChange(updatedField);
+    }
   }
 
   render() {
     let { field } = this.state;
     return (
       <div>
+
         <div style={ styles.bottomOptions }>
 
           <div style={ styles.bottomOptionsLeft }>
             <label style={ styles.bottomCheck }>
-                Max. chars:
-                <input
-                  onChange={ this.onMaxCharsChange.bind(this) }
-                  defaultValue={ field.props.maxLength || 0 }
-                  type="text"
-                  style={ styles.bottomCheckTextInput }></input>
+              <input type="checkbox" checked={ this.state.minLengthEnabled } onChange={ this.onMinLengthChange.bind(this) } />
+              <span style={ [ styles.bottomLabelText, this.state.minLengthEnabled ? '' : styles.disabled ] }>Min. chars</span>
+              <input
+                onChange={ this.onMinCharsChange.bind(this) }
+                defaultValue={ field.props.minLength || 0 }
+                type="number"
+                disabled={ !this.state.minLengthEnabled }
+                style={ [ styles.bottomCheckTextInput, !this.state.minLengthEnabled ? styles.disabled : '' ] }></input>
             </label>
+
+            <label style={ styles.bottomCheck }>
+              <input type="checkbox" checked={ this.state.maxLengthEnabled } onChange={ this.onMaxLengthChange.bind(this) } />
+              <span style={ [ styles.bottomLabelText, this.state.maxLengthEnabled ? '' : styles.disabled ] }>Max. chars</span>
+              <input
+                onChange={ this.onMaxCharsChange.bind(this) }
+                defaultValue={ field.props.maxLength || 0 }
+                type="number"
+                disabled={ !this.state.maxLengthEnabled }
+                style={ [ styles.bottomCheckTextInput, !this.state.maxLengthEnabled ? styles.disabled : '' ] }></input>
+            </label>
+
           </div>
 
-          <div style={ styles.bottomOptionsRight }>
-            <label style={ styles.bottomCheck }>
-              <input type="checkbox"
-                onClick={ this.onIdentityClick.bind(this) }
-                checked={ field.identity } />
-                Reader info <FaQuestionCircle />
-            </label>
-            <label style={ styles.bottomCheck }>
-              <input type="checkbox"
-                onClick={ this.onRequiredClick.bind(this) }
-                checked={ field.wrapper.required } />
-                Required
-            </label>
-          </div>
+          <CommonFieldOptions {...this.props} />
 
         </div>
 
@@ -90,8 +105,9 @@ const styles = {
   },
   bottomCheck: {
     display: 'inline-block',
-    padding: '10px',
-    cursor: 'pointer'
+    padding: '10px 10px 10px 0',
+    cursor: 'pointer',
+    lineHeight: '30px'
   },
   bottomOptions: {
     display: 'flex',
@@ -110,7 +126,17 @@ const styles = {
     borderLeft: 'none',
     borderRight: 'none',
     marginLeft: '10px',
-    fontSize: '12pt'
+    fontSize: '12pt',
+    width: '50px',
+    textAlign: 'center',
+    padding: '4px'
+  },
+  bottomLabelText: {
+    height: '30px',
+    display: 'inline-block'
+  },
+  disabled: {
+    color: '#AAA'
   }
 
 };

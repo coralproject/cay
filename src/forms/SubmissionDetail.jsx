@@ -9,6 +9,7 @@ import TrashIcon from 'react-icons/lib/fa/trash';
 
 import settings from 'settings';
 import Button from 'components/Button';
+import { hasFlag } from 'forms/FormActions';
 
 @Radium
 export default class SubmissionDetail extends React.Component {
@@ -124,11 +125,11 @@ export default class SubmissionDetail extends React.Component {
             category="primary">Add Tags <TagsIcon /></Button>
           <Button
             style={styles.headerButton}
-            onClick={() => onFlag(submission.id, !submission.flagged)}
+            onClick={() => onFlag(!hasFlag(submission, 'flagged'))}
             category="danger">Flag <FlagIcon /></Button>
           <Button
             style={styles.headerButton}
-            onClick={() => onBookmark(!submission.bookmarked)}
+            onClick={() => onBookmark(!hasFlag(submission, 'bookmarked'))}
             category="success">Bookmark <BBookmark /></Button>
         </div>
         <div style={styles.headerContainer}>

@@ -361,14 +361,22 @@ export const fetchSubmissions = (formId, page = 0) => {
   };
 };
 
-export const updateSubmission = props => dispatch => {
-  dispatch(updateActiveSubmission(props));
-};
+export const updateSubmissionFlags = props => (dispatch, getState) => {
+  const state = getState();
+  const { activeSubmission } = state.forms;
+  const keys = Object.keys(props);
+  const allKeys = keys.concat(state.forms[activeSubmission].flags);
 
-export const flag = (id, flag) => (dispatch, getState) =>
-fetch(`${getState().app.pillarHost}/api/form_submission/${id}/flag/${flag}`,
-{ method: 'PUT', mode: 'cors' })
-.then(() => updateSubmission({ flagged: flag }));
+  dispatch(updateActiveSubmission({
+    // remove the flags that are for removing
+    flags: [...new Set(allKeys.filter(k => props[k] !== false))]
+  }));
+  return Promise.all(keys.map(prop =>
+    fetch(`${state.app.pillarHost}/api/form_submission/${activeSubmission}/flag/${prop}`,
+          { method: props[prop] ? 'PUT': 'DELETE', mode: 'cors' })
+    .then(res=> res.json())
+  ));
+};
 
 const requestGallery = () => {
   console.log(FORM_GALLERY_REQUEST);
@@ -482,3 +490,5 @@ export const editAnswer = (edited, answer, formId) => {
       .catch(error => dispatch({type: ANSWER_EDIT_FAILED, error}));
   };
 };
+
+export const hasFlag = (submission, flag) => -1 !== submission.flags.indexOf(flag);

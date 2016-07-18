@@ -207,10 +207,7 @@ const forms = (state = initial, action) => {
     return {...state, activeSubmission: action.submissionId };
 
   case types.UPDATE_ACTIVE_SUBMISSION:
-    // const newSubmissions = [...state.submissions];
-    // newSubmissions[state.activeSubmission] = Object.assign({}, newSubmissions[state.activeSubmission], action.props);
-    // return Object.assign({}, state, { submissions: newSubmissions });
-    return state;
+    return Object.assign({}, state, { [state.activeSubmission]: { ...state[state.activeSubmission], ...action.props } });
 
   case types.FORM_GALLERY_REQUEST:
     return {...state, loadingGallery: true, activeGallery: null};

@@ -102,7 +102,7 @@ export default class FormBuilder extends Component {
       identity: data.identity ? data.identity : false,
       wrapper: {},
       props: { ...data.props },
-      id: Math.floor(Math.random() * 99999) + ''
+      id: uuid.v4() + ''
     }));
   }
 

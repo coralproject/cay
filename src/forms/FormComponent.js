@@ -12,18 +12,55 @@ import FaUser from 'react-icons/lib/fa/user';
 import FaCopy from 'react-icons/lib/fa/copy';
 
 import TextFieldEditor from 'forms/editors/TextFieldEditor';
+import TextAreaEditor from 'forms/editors/TextAreaEditor';
 import MultipleChoiceEditor from 'forms/editors/MultipleChoiceEditor';
+import DateFieldEditor from 'forms/editors/DateFieldEditor';
+import NumberFieldEditor from 'forms/editors/NumberFieldEditor';
+import EmailFieldEditor from 'forms/editors/EmailFieldEditor';
+import PhoneNumberEditor from 'forms/editors/PhoneNumberEditor';
 
+// TODO: Generalize this into dynamically generated components
 const renderSettings = {
+
+  DateField(field, props) {
+    return (
+      <DateFieldEditor field={ field } { ...props } />
+    );
+  },
+
+  NumberField(field, props) {
+    return (
+      <NumberFieldEditor field={ field } { ...props } />
+    );
+  },
+
   TextField(field, props) {
     return (
       <TextFieldEditor field={ field } { ...props } />
     );
   },
 
+  EmailField(field, props) {
+    return (
+      <EmailFieldEditor field={ field } { ...props } />
+    )
+  },
+
+  TextArea(field, props) {
+    return (
+      <TextAreaEditor field={ field } { ...props } />
+    );
+  },
+
   MultipleChoice(field, props) {
     return (
       <MultipleChoiceEditor field={ field } { ...props } />
+    )
+  },
+
+  PhoneNumber(field, props) {
+    return (
+      <PhoneNumberEditor field={ field } { ...props } />
     )
   }
 };
@@ -85,7 +122,7 @@ export default class FormComponent extends Component {
     return (
       <div onClick={this.onClick.bind(this)} style={styles.askComponent(isDragging)}>
         <field.icon style={styles.icon} />
-        <span style={styles.title}>{field.title}</span>
+        <span style={styles.title}>{ field.friendlyType }</span>
       </div>
     );
   }
@@ -132,7 +169,7 @@ export default class FormComponent extends Component {
                 <div style={ styles.fieldAndPosition }>
                   <div style={ styles.fieldPosition }>{ position + 1 }.</div>
                   <h4 style={styles.editBody}>
-                    { field.title }
+                    { field.title ? field.title : field.friendlyType }
                     {
                       field.wrapper && field.wrapper.required ?
                         <span style={ styles.requiredAsterisk }>*</span>
@@ -168,7 +205,7 @@ export default class FormComponent extends Component {
                   style={ styles.fieldTitle }
                   defaultValue={ this.props.field.title }
                   type="text"
-                  placeholder="Ask readers a question" />
+                  placeholder={ `Type your question here (${ field.friendlyType })` } />
                 <input
                   onChange={ this.onDescriptionChange.bind(this) }
                   defaultValue={ field.description }
@@ -346,7 +383,7 @@ export const styles = {
   fieldTitle: {
     fontSize: '14pt',
     padding: '5px 0',
-    width: '50%',
+    width: '75%',
     display: 'block',
     border: 'none',
     background: 'none'

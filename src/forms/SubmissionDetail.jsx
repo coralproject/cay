@@ -124,7 +124,7 @@ export default class SubmissionDetail extends React.Component {
             category="primary">Add Tags <TagsIcon /></Button>
           <Button
             style={styles.headerButton}
-            onClick={() => onFlag(!submission.flagged)}
+            onClick={() => onFlag(submission.id, !submission.flagged)}
             category="danger">Flag <FlagIcon /></Button>
           <Button
             style={styles.headerButton}

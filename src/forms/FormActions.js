@@ -363,8 +363,12 @@ export const fetchSubmissions = (formId, page = 0) => {
 
 export const updateSubmission = props => dispatch => {
   dispatch(updateActiveSubmission(props));
-  // TODO: go to server when API is done
 };
+
+export const flag = (id, flag) => (dispatch, getState) =>
+fetch(`${getState().app.pillarHost}/api/form_submission/${id}/flag/${flag}`,
+{ method: 'PUT', mode: 'cors' })
+.then(() => updateSubmission({ flagged: flag }));
 
 const requestGallery = () => {
   console.log(FORM_GALLERY_REQUEST);

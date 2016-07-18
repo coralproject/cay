@@ -13,7 +13,8 @@ import {
   sendToGallery,
   removeFromGallery,
   updateFormStatus,
-  fetchForm } from 'forms/FormActions';
+  fetchForm,
+  flag } from 'forms/FormActions';
 
 import SubmissionDetail from 'forms/SubmissionDetail';
 import FormChrome from 'app/layout/FormChrome';
@@ -38,8 +39,8 @@ export default class SubmissionList extends Component {
     this.props.dispatch(removeFromGallery(galleryId, subId, key));
   }
 
-  onFlag(flagged) {
-    this.props.dispatch(updateSubmission({ flagged }));
+  onFlag(id, flagged) {
+    this.props.dispatch(flag(id, flagged));
   }
 
   onBookmark(bookmarked) {

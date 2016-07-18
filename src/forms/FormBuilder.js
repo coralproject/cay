@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import uuid from 'node-uuid';
 import { saveForm } from 'forms/FormActions';
@@ -24,6 +23,10 @@ import askTypes from 'forms/WidgetTypes';
 @connect(({ app, forms }) => ({ app, forms }))
 @DragDropContext(HTML5Backend)
 export default class FormBuilder extends Component {
+  static contextTypes = {
+    router: PropTypes.object.isRequired
+  };
+
   render() {
     const {preview, onClosePreview, onOpenPreview, forms} = this.props;
     const form = this.props.activeForm ? forms[this.props.activeForm] : forms.form;
@@ -119,6 +122,7 @@ export default class FormBuilder extends Component {
   addToBottom(data) {
     this.props.dispatch(appendWidget({
       title: data.title,
+      friendlyType: data.friendlyType,
       type: 'field',
       component: data.type,
       identity: data.identity ? data.identity : false,
@@ -167,17 +171,18 @@ export default class FormBuilder extends Component {
   renderPreview() {
     if(!this.props.preview) return null;
 
-    const form = Object.assign({}, this.props.forms.form);
-    form.steps[0].widgets = this.props.forms.widgets;
+    const form = this.props.activeForm ? this.props.forms[this.props.activeForm] : this.props.forms.form;
+    const previewForm = {...form};
+    previewForm.steps[0].widgets = this.props.forms.widgets;
 
-    const src = `${this.props.app.elkhornHost}/preview.js?props=${encodeURIComponent(JSON.stringify(form))}`;
+    const src = `${this.props.app.elkhornHost}/preview.js?props=${encodeURIComponent(JSON.stringify(previewForm))}`;
     const script = document.createElement('script');
     script.src = src;
     document.getElementsByTagName('head')[0].appendChild(script);
 
     return (
-      <div>
-        <Spinner />
+      <div style={ styles.previewContainer }>
+        <div style={ styles.previewSpinner }><Spinner /></div>
         <div id="ask-form"></div>
       </div>
     );
@@ -356,6 +361,7 @@ const styles = {
     width: '100%',
     height: 50
   },
+<<<<<<< HEAD
   formHeader: {
     display: 'flex',
     paddingBottom: 10,
@@ -399,5 +405,17 @@ const styles = {
     border: 'none',
     background: 'none',
     marginBottom: 10
+  },
+  previewContainer: {
+    position: 'relative'
+  },
+  previewSpinner: {
+    position: 'absolute',
+    textAlign: 'center',
+    top: '100px',
+    fontSize: '30pt',
+    width: '200px',
+    left: '50%',
+    marginLeft: '-100px' // width / 2
   }
 };

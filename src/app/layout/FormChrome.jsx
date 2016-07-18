@@ -65,7 +65,7 @@ export default class FormChrome extends React.Component {
   }
 
   submissionBadge() {
-    return this.props.submissions ? <Badge style={styles.badge} count={this.props.submissions.length} /> : '';
+    return this.props.form ? <Badge style={styles.badge} count={this.props.form.stats.responses} /> : '';
   }
 
   toggleDropdown() {

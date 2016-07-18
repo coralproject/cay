@@ -55,7 +55,10 @@ export default class GalleryAnswer extends React.Component {
         </div>
         <div style={styles.rightColumn}>
           <div style={styles.modButtons}>
-            <div style={styles.iconHolder} key="foo">
+            <div
+              onClick={this.removeSubmission.bind(this)}
+              style={styles.iconHolder}
+              key="foo">
               <Trash style={styles.icon} />
             </div>
             <div style={styles.iconHolder} key="bar">

@@ -103,7 +103,7 @@ class Sidebar extends Component {
 
     const keyPress = (e) => {
 
-      const {activeSubmission, submissions, onSelect} = this.props;
+      const {activeSubmission, submissions, onSelect, onFlag} = this.props;
 
       const subIds = submissions.map(s => s.id);
       const activeIndex = subIds.indexOf(activeSubmission);
@@ -113,6 +113,8 @@ class Sidebar extends Component {
         onSelect(subIds[activeIndex + 1]);
       } else if (e.code === 'KeyK' && subIds[activeIndex - 1] && activeIndex !== 0) {
         onSelect(subIds[activeIndex - 1]);
+      } else if (e.code === 'KeyF') {
+        onFlag(!hasFlag(submissions[subIds.indexOf(activeSubmission)], 'flagged'));
       }
     };
 

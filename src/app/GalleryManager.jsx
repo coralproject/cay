@@ -8,6 +8,7 @@ import {
   removeFromGallery,
   updateFormStatus,
   updateEditableAnswer,
+  publishGallery,
   editAnswer,
   cancelEdit,
   beginEdit
@@ -134,7 +135,9 @@ export default class SubmissionGallery extends React.Component {
   }
 
   openPublishModal() {
-    this.setState({publishModalOpen: true});
+    this.props.dispatch(publishGallery()).then(gallery => {
+      this.setState({publishModalOpen: true});
+    });
   }
 
   closePublishModal() {
@@ -262,7 +265,7 @@ export default class SubmissionGallery extends React.Component {
 
         <Modal
           style={styles.publishModal}
-          title="Publish Gallery"
+          title="Get embed codes"
           isOpen={this.state.publishModalOpen}
           confirmAction={() => {}}
           cancelAction={this.closePublishModal.bind(this)}>

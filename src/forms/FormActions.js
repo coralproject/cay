@@ -62,6 +62,10 @@ export const UPDATE_FORM_INACTIVE_MESSAGE_INIT = 'UPDATE_FORM_INACTIVE_MESSAGE_I
 export const UPDATE_FORM_INACTIVE_MESSAGE_SUCCESS = 'UPDATE_FORM_INACTIVE_MESSAGE_SUCCESS';
 export const UPDATE_FORM_INACTIVE_MESSAGE_FAILURE = 'UPDATE_FORM_INACTIVE_MESSAGE_FAILURE';
 
+export const PUBLISH_GALLERY_INIT = 'PUBLISH_GALLERY_INIT';
+export const PUBLISH_GALLERY_SUCCESS = 'PUBLISH_GALLERY_SUCCESS';
+export const PUBLISH_GALLERY_FAILURE = 'PUBLISH_GALLERY_FAILURE';
+
 const getInit = (body, method) => {
 
   var headers = new Headers({ 'Accept': 'application/json', 'Content-Type': 'application/json' });
@@ -476,5 +480,23 @@ export const editAnswer = (edited, answer, formId) => {
         dispatch(fetchGallery(formId));
       })
       .catch(error => dispatch({type: ANSWER_EDIT_FAILED, error}));
+  };
+};
+
+export const publishGallery = () => {
+  return (dispatch, getState) => {
+    const {app} = getState();
+    dispatch({type: PUBLISH_GALLERY_INIT});
+    return fetch(`${app.elkhornHost}/publish-gallery`, {
+      method: 'POST',
+      headers: new Headers({'Content-Type': 'application/json'}),
+      body: JSON.stringify({name: 'louvre', loc: 'Paris'})
+    }).then(res => res.json())
+      .then(gallery => {
+        console.log(gallery);
+        dispatch({type: PUBLISH_GALLERY_SUCCESS, gallery});
+        return gallery;
+      })
+      .catch(error => dispatch({type: PUBLISH_GALLERY_FAILURE, error}));
   };
 };

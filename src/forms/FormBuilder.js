@@ -136,8 +136,8 @@ export default class FormBuilder extends Component {
     document.getElementsByTagName('head')[0].appendChild(script);
 
     return (
-      <div>
-        <Spinner />
+      <div style={ styles.previewContainer }>
+        <div style={ styles.previewSpinner }><Spinner /></div>
         <div id="ask-form"></div>
       </div>
     );
@@ -315,5 +315,17 @@ const styles = {
   embedCode: {
     width: '100%',
     height: 50
+  },
+  previewContainer: {
+    position: 'relative'
+  },
+  previewSpinner: {
+    position: 'absolute',
+    textAlign: 'center',
+    top: '100px',
+    fontSize: '30pt',
+    width: '200px',
+    left: '50%',
+    marginLeft: '-100px' // width / 2
   }
 };

@@ -1,7 +1,7 @@
 {
  "xeniaHost": "${XENIA_URL}",
  "pillarHost": "${PILLAR_URL}",
- "elkHornHost": "${ELKHORN_URL}",
+ "elkhornHost": "${ELKHORN_URL}",
  "environment": "${ENV}",
  "brand": "${PROJECT}",
  "googleAnalyticsId": "${GAID}",

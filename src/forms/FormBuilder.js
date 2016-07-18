@@ -361,7 +361,6 @@ const styles = {
     width: '100%',
     height: 50
   },
-<<<<<<< HEAD
   formHeader: {
     display: 'flex',
     paddingBottom: 10,

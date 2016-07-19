@@ -113,6 +113,7 @@ const forms = (state = initial, action) => {
 
     var widgetsCopy = state.widgets.slice();
     var widgetCopy = Object.assign({}, widgetsCopy[position]);
+    widgetCopy.id = uuid.v4();
 
     var fieldsBefore = widgetsCopy.slice(0, position);
     var fieldsAfter = widgetsCopy.slice(position);

@@ -100,9 +100,12 @@ const forms = (state = initial, action) => {
     delete newState.editAccess[action.formId];
     return newState;
 
+  case types.FORM_EDIT_SUCCESS:
+    return { ...state, form: action.data };
+
   case types.FORM_CREATE_EMPTY:
     const form = Object.assign({}, emptyForm, { steps: [{ id: uuid.v4(), name: 'first_step', createdAt: Date.now() }] });
-    return Object.assign({}, state, {form: form, widgets: [], savingForm: false, savedForm: null });
+    return Object.assign({}, state, {activeForm: null, form: form, widgets: [], savingForm: false, savedForm: null });
 
   case types.FORM_DUPLICATE_WIDGET:
 

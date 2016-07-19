@@ -139,6 +139,19 @@ export default class MultipleChoiceEditor extends Component {
 
           { this.getOptions() }
 
+          {
+            field.props.otherAllowed ?
+              <div style={ styles.optionRow }>
+                <div style={ styles.optionRowText }>
+                  <span style={ styles.otherSample }>Other</span>
+                </div>
+                <div style={ styles.optionRowButtons }>
+                  &nbsp;
+                </div>
+              </div>
+            : null
+          }
+
           <div style={ styles.optionRow }>
             <div style={ styles.optionRowText }>
               <button style={ styles.addOption } onClick={ this.addOption.bind(this) }><FaPlusCircle /> Add another option</button>
@@ -234,5 +247,18 @@ const styles = {
   },
   bottomOptionsLeft: {
     flexGrow: '1'
+  },
+  otherSample: {
+    display: 'block',
+    height: '40px',
+    lineHeight: '40px',
+    padding: '0px 10px',
+    fontSize: '12pt',
+    borderRadius: '0px',
+    border: '1px solid #ddd',
+    background: '#fff',
+    width: '100%',
+    textAlign: 'left',
+    color: '#999'
   }
 };

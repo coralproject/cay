@@ -102,7 +102,7 @@ export default class FormBuilder extends Component {
       identity: data.identity ? data.identity : false,
       wrapper: {},
       props: { ...data.props },
-      id: uuid.v4() + ''
+      id: uuid.v4()
     }));
   }
 

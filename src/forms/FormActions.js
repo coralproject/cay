@@ -356,7 +356,7 @@ export const fetchSubmissions = (formId, page = 0) => {
     const skip = page * 10;
     return fetch(`${app.pillarHost}/api/form_submissions/${formId}?skip=${skip}&limit=10`)
       .then(res => res.json())
-      .then(submissions => dispatch(submissionsFetched(submissions)))
+      .then(data => dispatch(submissionsFetched(data.submissions)))
       .catch(error => dispatch(submissionsFetchError(error)));
   };
 };

@@ -360,14 +360,36 @@ export const fetchSubmissions = (formId, page = 0) => {
     const skip = page * 10;
     return fetch(`${app.pillarHost}/api/form_submissions/${formId}?skip=${skip}&limit=10`)
       .then(res => res.json())
-      .then(submissions => dispatch(submissionsFetched(submissions)))
+      .then(data => dispatch(submissionsFetched(data.submissions)))
       .catch(error => dispatch(submissionsFetchError(error)));
   };
 };
 
-export const updateSubmission = props => dispatch => {
-  dispatch(updateActiveSubmission(props));
-  // TODO: go to server when API is done
+// Receives an object of <string>, <bool> elements like {flagged: true, bookmarked: false}
+// and updates the submission flags. The flags attribute on a submission is
+// an array of strings. For example `flags: ["flagged", "bookmarked"]`
+
+export const updateSubmissionFlags = props => (dispatch, getState) => {
+  const state = getState();
+  const { activeSubmission } = state.forms;
+  const keys = Object.keys(props);
+
+  // Create an array with the old and new flags
+  const allKeys = keys.concat(state.forms[activeSubmission].flags);
+
+  dispatch(updateActiveSubmission({
+    // remove the flags that are for removing and prevent duplicates using a Set
+    flags: [...new Set(allKeys.filter(k => props[k] !== false))]
+  }));
+
+  // Perform an http request for each flag passed in the original object
+  // and return the responses as an array (we are not using it but is good
+  // to return the promise so the caller know when everything is done)
+  return Promise.all(keys.map(prop =>
+    fetch(`${state.app.pillarHost}/api/form_submission/${activeSubmission}/flag/${prop}`,
+          { method: props[prop] ? 'PUT': 'DELETE', mode: 'cors' })
+    .then(res=> res.json())
+  ));
 };
 
 const requestGallery = () => {
@@ -500,3 +522,5 @@ export const publishGallery = () => {
       .catch(error => dispatch({type: PUBLISH_GALLERY_FAILURE, error}));
   };
 };
+
+export const hasFlag = (submission, flag) => -1 !== submission.flags.indexOf(flag);

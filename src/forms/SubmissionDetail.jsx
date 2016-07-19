@@ -9,6 +9,7 @@ import TrashIcon from 'react-icons/lib/fa/trash';
 
 import settings from 'settings';
 import Button from 'components/Button';
+import { hasFlag } from 'forms/FormActions';
 
 @Radium
 export default class SubmissionDetail extends React.Component {
@@ -116,6 +117,7 @@ export default class SubmissionDetail extends React.Component {
       return {label: reply.question, answer: this.renderAnswer(reply.answer)};
     });
 
+    const [flagged, bookmarked] = [hasFlag(submission, 'flagged'), hasFlag(submission, 'bookmarked')];
     return (
       <div>
         <div style={styles.headerButtons}>
@@ -124,12 +126,16 @@ export default class SubmissionDetail extends React.Component {
             category="primary">Add Tags <TagsIcon /></Button>
           <Button
             style={styles.headerButton}
-            onClick={() => onFlag(!submission.flagged)}
-            category="danger">Flag <FlagIcon /></Button>
+            onClick={() => onFlag(!flagged)}
+            category={flagged ? 'danger' : ''}>
+              Flag{flagged ? 'ged' : ''} <FlagIcon style={styles.headerButtonIcon(flagged, 'rgb(217, 83, 79)')} />
+            </Button>
           <Button
             style={styles.headerButton}
-            onClick={() => onBookmark(!submission.bookmarked)}
-            category="success">Bookmark <BBookmark /></Button>
+            onClick={() => onBookmark(!bookmarked)}
+            category={bookmarked ? 'success' : ''}>
+            Bookmark{bookmarked ? 'ed' : ''} <BBookmark  style={styles.headerButtonIcon(bookmarked, 'rgb(46, 151, 102)')} />
+          </Button>
         </div>
         <div style={styles.headerContainer}>
           <span style={styles.subNum}>37</span> {moment(submission.date_updated).format('L LT')}
@@ -205,6 +211,11 @@ const styles = {
   },
   headerButton: {
     marginLeft: 10
+  },
+  headerButtonIcon(show, color) {
+    return {
+      color: !show ? color : '#fff'
+    };
   },
   authorContainer: {
 

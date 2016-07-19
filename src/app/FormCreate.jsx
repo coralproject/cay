@@ -100,7 +100,6 @@ const styles = {
     marginLeft: 10
   },
   formBuilderContainer: {
-    marginTop: 50
   },
   builderTitle: {
     marginBottom: 30,

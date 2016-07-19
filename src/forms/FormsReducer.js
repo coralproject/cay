@@ -156,13 +156,9 @@ const forms = (state = initial, action) => {
     return Object.assign({}, state, { widgets: updatedWidgets });
 
   case types.FORM_UPDATE:
-    var stateCopy = Object.assign({}, state);
-    if (stateCopy.activeForm) {
-      stateCopy[stateCopy.activeForm] = Object.assign({}, stateCopy[stateCopy.activeForm], action.data);
-    } else {
-      stateCopy.form = Object.assign({}, stateCopy.form, action.data);
-    }
-    return stateCopy;
+    const formProp = state.activeForm ? state.activeForm : 'form';
+    var updatedForm = Object.assign({}, state[formProp], action.data);
+    return Object.assign({}, state, { [formProp]: updatedForm });
 
   case types.WIDGET_MOVE:
 

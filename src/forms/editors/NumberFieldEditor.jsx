@@ -104,7 +104,7 @@ const styles = {
   },
   bottomCheck: {
     display: 'inline-block',
-    padding: '10px',
+    padding: '10px 10px 10px 0px',
     cursor: 'pointer'
   },
   bottomOptions: {

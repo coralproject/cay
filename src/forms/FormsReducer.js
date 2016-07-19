@@ -37,7 +37,7 @@ const emptyForm = {
     progressBarBackground: '#CCCCCC',
     submitButtonBackground: '#F67D6E',
     submitButtonText: '#FFFFFF',
-    selectedItemBackground: '#111111',
+    selectedItemBackground: '#2E343B',
     selectedItemText: '#FAFAFA'
   },
   settings: {

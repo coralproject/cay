@@ -361,16 +361,26 @@ export const fetchSubmissions = (formId, page = 0) => {
   };
 };
 
+// Receives an object of <string>, <bool> elements like {flagged: true, bookmarked: false}
+// and updates the submission flags. The flags attribute on a submission is
+// an array of strings. For example `flags: ["flagged", "bookmarked"]`
+
 export const updateSubmissionFlags = props => (dispatch, getState) => {
   const state = getState();
   const { activeSubmission } = state.forms;
   const keys = Object.keys(props);
+
+  // Create an array with the old and new flags
   const allKeys = keys.concat(state.forms[activeSubmission].flags);
 
   dispatch(updateActiveSubmission({
-    // remove the flags that are for removing
+    // remove the flags that are for removing and prevent duplicates using a Set
     flags: [...new Set(allKeys.filter(k => props[k] !== false))]
   }));
+
+  // Perform an http request for each flag passed in the original object
+  // and return the responses as an array (we are not using it but is good
+  // to return the promise so the caller know when everything is done)
   return Promise.all(keys.map(prop =>
     fetch(`${state.app.pillarHost}/api/form_submission/${activeSubmission}/flag/${prop}`,
           { method: props[prop] ? 'PUT': 'DELETE', mode: 'cors' })

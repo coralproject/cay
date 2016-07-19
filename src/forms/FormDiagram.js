@@ -2,13 +2,12 @@ import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import {connect} from 'react-redux';
 
-import { DropTarget } from 'react-dnd';
+//import { DropTarget } from 'react-dnd';
 
 import DropPlaceHolder from 'forms/DropPlaceHolder';
-import { appendWidget, moveWidget, replaceWidgets, deleteWidget, duplicateWidget, updateForm, saveForm } from 'forms/FormActions';
+import { appendWidget, moveWidget, replaceWidgets, deleteWidget, duplicateWidget, editForm, updateForm, saveForm } from 'forms/FormActions';
 import FormComponent, {styles as askComponentStyles} from 'forms/FormComponent';
 
-import FaArrowCircleUp from 'react-icons/lib/fa/arrow-circle-up';
 import FaUserPlus from 'react-icons/lib/fa/user-plus';
 import FaFloppyO from 'react-icons/lib/fa/floppy-o';
 import FaEye from 'react-icons/lib/fa/eye';
@@ -33,9 +32,13 @@ export default class FormDiagram extends Component {
     this.previousState = nextProps.forms.widgets;
   }
 
+  getForm() {
+    return this.props.activeForm ? this.props.forms[this.props.activeForm] : this.props.forms.form;
+  }
+
   // TODO: Refactor: All this methods look very similar, maybe generalize into one?
   onFormTitleChange(e) {
-    let { form } = this.props.forms;
+    let form = this.getForm();
     this.props.dispatch(updateForm({
       header: {
         title: e.target.value,
@@ -45,7 +48,7 @@ export default class FormDiagram extends Component {
   }
 
   onFormDescriptionChange(e) {
-    let { form } = this.props.forms;
+    let form = this.getForm();
     this.props.dispatch(updateForm({
       header: {
         title: form.header.title,
@@ -55,7 +58,7 @@ export default class FormDiagram extends Component {
   }
 
   onThankYouDescriptionChange(e) {
-    let { form } = this.props.forms;
+    let form = this.getForm();
     this.props.dispatch(updateForm({
       finishedScreen: {
         title: form.finishedScreen.title,

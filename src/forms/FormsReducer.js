@@ -100,9 +100,12 @@ const forms = (state = initial, action) => {
     delete newState.editAccess[action.formId];
     return newState;
 
+  case types.FORM_EDIT_SUCCESS:
+    return { ...state, form: action.data };
+
   case types.FORM_CREATE_EMPTY:
     const form = Object.assign({}, emptyForm, { steps: [{ id: uuid.v4(), name: 'first_step', createdAt: Date.now() }] });
-    return Object.assign({}, state, {form: form, widgets: [], savingForm: false, savedForm: null });
+    return Object.assign({}, state, {activeForm: null, form: form, widgets: [], savingForm: false, savedForm: null });
 
   case types.FORM_DUPLICATE_WIDGET:
 
@@ -153,8 +156,13 @@ const forms = (state = initial, action) => {
     return Object.assign({}, state, { widgets: updatedWidgets });
 
   case types.FORM_UPDATE:
-    var updatedForm = Object.assign({}, state.form, action.data);
-    return Object.assign({}, state, { form: updatedForm });
+    var stateCopy = Object.assign({}, state);
+    if (stateCopy.activeForm) {
+      stateCopy[stateCopy.activeForm] = Object.assign({}, stateCopy[stateCopy.activeForm], action.data);
+    } else {
+      stateCopy.form = Object.assign({}, stateCopy.form, action.data);
+    }
+    return stateCopy;
 
   case types.WIDGET_MOVE:
 

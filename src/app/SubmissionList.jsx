@@ -9,11 +9,13 @@ import {
   fetchSubmissions,
   fetchGallery,
   setActiveSubmission,
-  updateSubmission,
+  updateSubmissionFlags,
   sendToGallery,
   removeFromGallery,
   updateFormStatus,
-  fetchForm } from 'forms/FormActions';
+  fetchForm,
+  hasFlag
+} from 'forms/FormActions';
 
 import SubmissionDetail from 'forms/SubmissionDetail';
 import FormChrome from 'app/layout/FormChrome';
@@ -39,11 +41,11 @@ export default class SubmissionList extends Component {
   }
 
   onFlag(flagged) {
-    this.props.dispatch(updateSubmission({ flagged }));
+    this.props.dispatch(updateSubmissionFlags({ flagged }));
   }
 
   onBookmark(bookmarked) {
-    this.props.dispatch(updateSubmission({ bookmarked }));
+    this.props.dispatch(updateSubmissionFlags({ bookmarked }));
   }
 
   updateFormStatus(value) {
@@ -71,6 +73,8 @@ export default class SubmissionList extends Component {
             form={form}
             submissions={submissions.reverse()}
             activeSubmission={activeSubmission}
+            onFlag={this.onFlag.bind(this)}
+            onBookmark={this.onBookmark.bind(this)}
             onSelect={this.onSubmissionSelect.bind(this)} />
           <SubmissionDetail
             submission={submission}
@@ -99,7 +103,7 @@ class Sidebar extends Component {
 
     const keyPress = (e) => {
 
-      const {activeSubmission, submissions, onSelect} = this.props;
+      const {activeSubmission, submissions, onSelect, onFlag} = this.props;
 
       const subIds = submissions.map(s => s.id);
       const activeIndex = subIds.indexOf(activeSubmission);
@@ -109,6 +113,8 @@ class Sidebar extends Component {
         onSelect(subIds[activeIndex + 1]);
       } else if (e.code === 'KeyK' && subIds[activeIndex - 1] && activeIndex !== 0) {
         onSelect(subIds[activeIndex - 1]);
+      } else if (e.code === 'KeyF') {
+        onFlag(!hasFlag(submissions[subIds.indexOf(activeSubmission)], 'flagged'));
       }
     };
 
@@ -132,8 +138,16 @@ class Sidebar extends Component {
           <span style={{fontWeight: 'bold'}}>{key + 1}</span>
           <span>{moment(submission.date_updated).format('L LT')}</span>
           <div>
-            {submission.flagged ? <span style={styles.sidebar.icon}><BFlag/></span> : null}
-            {submission.bookmarked ? <span style={styles.sidebar.icon}><BBookmark/></span> : null}
+            <span key={`${key}-0`} style={[styles.sidebar.iconContainer(hasFlag(submission, 'flagged'),
+              submission.id === activeSubmission),styles.sidebar.iconFlagged]}
+              onClick={() => this.props.onFlag(!hasFlag(submission, 'flagged'))}>
+              <BFlag style={styles.sidebar.icon(hasFlag(submission, 'flagged'))} /></span>
+
+            <span key={`${key}-1`} style={[styles.sidebar.iconContainer(hasFlag(submission, 'bookmarked'),
+              submission.id === activeSubmission), styles.sidebar.iconBookmarked]}
+              onClick={() => this.props.onBookmark(!hasFlag(submission, 'bookmarked'))}>
+              <BBookmark style={styles.sidebar.icon(hasFlag(submission, 'bookmarked'))}/>
+              </span>
           </div>
         </div>
       );
@@ -254,8 +268,29 @@ const styles = {
     pageNum: {
       lineHeight: '1.8em'
     },
-    icon: {
-      marginLeft: 3
+    iconContainer(show, active) {
+      return {
+        display: show || active ? 'inline' : 'none',
+        marginLeft: 3
+      };
+    },
+    icon(show) {
+      return {
+        fill: show ? 'currentColor' : 'transparent',
+        stroke: 'currentColor'
+      };
+    },
+    iconFlagged: {
+      color: 'rgb(217, 83, 79)'
+    },
+    hover: {
+      display: 'none',
+      ':hover': {
+        display: 'inline'
+      }
+    },
+    iconBookmarked: {
+      color: 'rgb(46, 151, 102)'
     },
     count: {
       fontWeight: 'bold',

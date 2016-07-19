@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import Radium from 'radium';
 import { connect } from 'react-redux';
 
@@ -21,6 +21,7 @@ export default class MultipleChoiceEditor extends Component {
       :
         [ { title: 'Option 1' } ]
     };
+    this.focusNew = false;
   }
 
   updateFieldOptions(options) {
@@ -30,9 +31,11 @@ export default class MultipleChoiceEditor extends Component {
     this.props.onEditorChange(updatedField);
   }
 
-  addOption(i) {
+  addOption() {
     var optionsCopy = this.state.options.slice();
     optionsCopy.push({ title: 'Option ' + (this.state.options.length + 1) });
+    // We are not using state on this, it's going to be manipulated on render
+    this.focusNew = true;
     this.setState({ options: optionsCopy });
     this.updateFieldOptions(optionsCopy);
   }
@@ -88,6 +91,44 @@ export default class MultipleChoiceEditor extends Component {
     this.props.onEditorChange(updatedField);
   }
 
+  getOptions() {
+    return this.state.options.map((option, i) => {
+      return (
+        <div key={ i } style={ styles.optionRow }>
+          <div style={ styles.optionRowText }>
+            <input
+              ref={
+                (el) => {
+                  if (el) {
+                    // Setting focus on the last element if the 'focusNew' flag is set
+                    if (this.focusNew && i == this.state.options.length - 1) {
+                      el.focus();
+                      this.focusNew = false;
+                    }
+                  }
+                }
+              }
+              style={ styles.optionInput } type="text" value={ option.title } onChange={ this.updateOption.bind(this, i) } />
+          </div>
+
+          {/* Action buttons for an option */}
+          <div style={ styles.optionRowButtons }>
+            <button style={ styles.optionButton } onClick={ this.duplicateOption.bind(this, i) }><FaCopy /></button>
+            {
+              (i > 0) || (i == 0 && this.state.options.length > 1) ?
+                <button style={ styles.optionButton } onClick={ this.removeOption.bind(this, i) }><FaTrashO /></button>
+              :
+                <button style={ styles.optionButton } disabled><FaTrashO /></button>
+            }
+            <button disabled={ i == 0 } style={ styles.optionButton } onClick={ this.moveOption.bind(this, i, 'up') }><FaArrowUp /></button>
+            <button disabled={ i == this.state.options.length - 1 } style={ styles.optionButton } onClick={ this.moveOption.bind(this, i, 'down') }><FaArrowDown /></button>
+          </div>
+
+        </div>
+      );
+    });
+  }
+
   render() {
     let { field } = this.props;
 
@@ -95,28 +136,8 @@ export default class MultipleChoiceEditor extends Component {
       <div>
 
         <div style={ styles.options }>
-          {
-            this.state.options.map((option, i) => {
-                return (
-                  <div key={ i } style={ styles.optionRow }>
-                    <div style={ styles.optionRowText }>
-                      <input style={ styles.optionInput } type="text" value={ option.title } onChange={ this.updateOption.bind(this, i) } />
-                    </div>
-                    <div style={ styles.optionRowButtons }>
-                      <button style={ styles.optionButton } onClick={ this.duplicateOption.bind(this, i) }><FaCopy /></button>
-                      {
-                        (i > 0) || (i == 0 && this.state.options.length > 1) ?
-                          <button style={ styles.optionButton } onClick={ this.removeOption.bind(this, i) }><FaTrashO /></button>
-                        :
-                          <button style={ styles.optionButton } disabled><FaTrashO /></button>
-                      }
-                      <button disabled={ i == 0 } style={ styles.optionButton } onClick={ this.moveOption.bind(this, i, 'up') }><FaArrowUp /></button>
-                      <button disabled={ i == this.state.options.length - 1 } style={ styles.optionButton } onClick={ this.moveOption.bind(this, i, 'down') }><FaArrowDown /></button>
-                    </div>
-                  </div>
-                )
-            })
-          }
+
+          { this.getOptions() }
 
           <div style={ styles.optionRow }>
             <div style={ styles.optionRowText }>
@@ -126,6 +147,7 @@ export default class MultipleChoiceEditor extends Component {
               &nbsp;
             </div>
           </div>
+
         </div>
 
         <div style={ styles.bottomOptions }>

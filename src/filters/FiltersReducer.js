@@ -140,6 +140,11 @@ const filters = (state = initialState, action) => {
   case types.SORT:
     const sortBy = action.template ? [action.template, action.direction] : null;
     return {...state, sortBy};
+
+  case types.CLEAR_EDITABLE_FILTERS:
+    // reset editable filters to their default state while a Saved Search is loading
+    return {...state, ...action.filters};
+
   default:
     return state;
   }

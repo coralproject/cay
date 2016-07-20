@@ -15,7 +15,7 @@ import {
   fetchSubmissions,
   fetchGallery,
   setActiveSubmission,
-  updateSubmission,
+  updateSubmissionFlags,
   sendToGallery,
   removeFromGallery,
   updateFormStatus,
@@ -23,8 +23,9 @@ import {
   updateOrder,
   updateSearch,
   updateFilterBy,
-  cleanSubmissionFilters
- } from 'forms/FormActions';
+  cleanSubmissionFilters,
+  hasFlag
+} from 'forms/FormActions';
 
 import SubmissionDetail from 'forms/SubmissionDetail';
 import FormChrome from 'app/layout/FormChrome';
@@ -51,11 +52,11 @@ export default class SubmissionList extends Component {
   }
 
   onFlag(flagged) {
-    this.props.dispatch(updateSubmission({ flagged }));
+    this.props.dispatch(updateSubmissionFlags({ flagged }));
   }
 
   onBookmark(bookmarked) {
-    this.props.dispatch(updateSubmission({ bookmarked }));
+    this.props.dispatch(updateSubmissionFlags({ bookmarked }));
   }
 
   updateFormStatus(value) {
@@ -80,14 +81,14 @@ export default class SubmissionList extends Component {
   render() {
 
     const { submissionList, activeSubmission, activeForm, activeGallery,
-      submissionFilterBy, submissionOrder } = this.props.forms;
+      submissionFilterBy, submissionOrder, formCounts } = this.props.forms;
     const submissions = submissionList.map(id => this.props.forms[id]);
     const submission = this.props.forms[activeSubmission];
     const form = this.props.forms[activeForm];
     const gallery = this.props.forms[activeGallery];
 
     return (
-      <Page>
+      <Page style={styles.page}>
         <div style={styles.container}>
           <FormChrome
             activeTab="submissions"
@@ -96,6 +97,8 @@ export default class SubmissionList extends Component {
             submissions={submissions}
             form={form}/>
           <Sidebar
+            form={form}
+            formCounts={formCounts}
             submissions={submissions.reverse()}
             activeSubmission={activeSubmission}
             filterBy={submissionFilterBy}
@@ -103,7 +106,10 @@ export default class SubmissionList extends Component {
             onSelect={this.onSubmissionSelect.bind(this)}
             onFilterByChange={this.onFilterByChange.bind(this)}
             onOrderChange={this.onOrderChange.bind(this)}
-            onSearchChange={this.onSearchChange.bind(this)} />
+            onSearchChange={this.onSearchChange.bind(this)}
+            onFlag={this.onFlag.bind(this)}
+            onBookmark={this.onBookmark.bind(this)}
+            onSelect={this.onSubmissionSelect.bind(this)} />
           <SubmissionDetail
             submission={submission}
             removeFromGallery={this.removeFromGallery.bind(this)}
@@ -121,6 +127,7 @@ export default class SubmissionList extends Component {
   }
 }
 
+@connect()
 @Radium
 class Sidebar extends Component {
 
@@ -130,8 +137,30 @@ class Sidebar extends Component {
     this.state = {
       filterByOpen: false,
       orderOpen: false,
-      search: ''
+      search: '',
+      subPageOffset: 0
     };
+
+    const keyPress = (e) => {
+
+      const {activeSubmission, submissions, onSelect, onFlag} = this.props;
+
+      const subIds = submissions.map(s => s.id);
+      const activeIndex = subIds.indexOf(activeSubmission);
+
+      // e.code here since {e} is a synthetic React event
+      if (e.code === 'KeyJ' && subIds[activeIndex + 1]) {
+        onSelect(subIds[activeIndex + 1]);
+      } else if (e.code === 'KeyK' && subIds[activeIndex - 1] && activeIndex !== 0) {
+        onSelect(subIds[activeIndex - 1]);
+      } else if (e.code === 'KeyF') {
+        onFlag(!hasFlag(submissions[subIds.indexOf(activeSubmission)], 'flagged'));
+      }
+    };
+
+    this.onKeyPress = keyPress.bind(this);
+    // if the listener is bound on the next line, removeEventListener doesn't work
+    document.addEventListener('keypress', this.onKeyPress, true);
   }
 
   onFilterByToggle(filterByOpen) {
@@ -140,6 +169,10 @@ class Sidebar extends Component {
 
   onOrderToggle(orderOpen) {
     this.setState({ orderOpen });
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keypress', this.onKeyPress, true);
   }
 
   listSubmissions(submissions, activeSubmission, onSelect) {
@@ -153,22 +186,41 @@ class Sidebar extends Component {
           <span style={{fontWeight: 'bold'}}>{key + 1}</span>
           <span>{moment(submission.date_updated).format('L LT')}</span>
           <div>
-            {submission.flagged ? <span style={styles.sidebar.icon}><BFlag/></span> : null}
-            {submission.bookmarked ? <span style={styles.sidebar.icon}><BBookmark/></span> : null}
+            <span key={`${key}-0`} style={[styles.sidebar.iconContainer(hasFlag(submission, 'flagged'),
+              submission.id === activeSubmission),styles.sidebar.iconFlagged]}
+              onClick={() => this.props.onFlag(!hasFlag(submission, 'flagged'))}>
+              <BFlag style={styles.sidebar.icon(hasFlag(submission, 'flagged'))} /></span>
+
+            <span key={`${key}-1`} style={[styles.sidebar.iconContainer(hasFlag(submission, 'bookmarked'),
+              submission.id === activeSubmission), styles.sidebar.iconBookmarked]}
+              onClick={() => this.props.onBookmark(!hasFlag(submission, 'bookmarked'))}>
+              <BBookmark style={styles.sidebar.icon(hasFlag(submission, 'bookmarked'))}/>
+              </span>
           </div>
         </div>
       );
     });
   }
 
+  paginate(requestedPage) {
+    const { form } = this.props;
+
+    if (requestedPage >= 0 && requestedPage <= Math.floor(form.stats.responses / 10)) {
+      this.props.dispatch(fetchSubmissions(form.id, requestedPage)).then(() => {
+        this.setState({subPageOffset: requestedPage});
+      });
+    }
+  }
+
   render() {
-    const { submissions, activeSubmission, onSelect, filterBy, order } = this.props;
+    const { submissions, activeSubmission, onSelect, filterBy, order, form, formCounts } = this.props;
     const { filterByOpen, orderOpen, search } = this.state;
+
     return (
-      <div>
+      <div style={styles.sidebar}>
         <div style={styles.sidebar.container}>
           <div style={styles.sidebar.countContainer}>
-            <p style={styles.sidebar.count}>{submissions.length} of {submissions.length} Submission{submissions.length === 1 ? '' : 's'}</p>
+            <p style={styles.sidebar.count}>{formCounts.totalSearch} of {formCounts.totalSubmissions} Submission{formCounts.totalSubmissions === 1 ? '' : 's'}</p>
           </div>
           <div style={styles.sidebar.searchContainer}>
             <input style={styles.sidebar.search} type='text' value={search}
@@ -187,21 +239,46 @@ class Sidebar extends Component {
             onChange={this.props.onFilterByChange} />
 
           <OrderDropdown open={orderOpen}
-            filterBy={order}
+            order={order}
             onToggle={this.onOrderToggle.bind(this)}
             onChange={this.props.onOrderChange} />
         </div>
         <div>{this.listSubmissions(submissions, activeSubmission, onSelect)}</div>
+        {
+          form ?
+            <div style={styles.sidebar.pagination}>
+              <div
+                onClick={this.paginate.bind(this, 0)}
+                key="alpha"
+                style={styles.sidebar.arrow}>«</div>
+              <div
+                onClick={this.paginate.bind(this, this.state.subPageOffset - 1)}
+                key="bravo"
+                style={styles.sidebar.arrow}>‹</div>
+              <div
+                style={styles.sidebar.pageNum}
+                key="charlie">Page {this.state.subPageOffset + 1} of {Math.ceil(form.stats.responses / 10)}</div>
+              <div
+                onClick={this.paginate.bind(this, this.state.subPageOffset + 1)}
+                key="delta"
+                style={styles.sidebar.arrow}>›</div>
+              <div
+                onClick={this.paginate.bind(this, Math.floor(form.stats.responses / 10))}
+                key="echo"
+                style={styles.sidebar.arrow}>»</div>
+            </div> :
+            null
+        }
       </div>
     );
   }
 }
 
 const FilterByOptions = {
-  'default': 'Default (flagged submissions hidden)',
+  'default': 'All submissions',
+  '-flagged': 'Flagged submssions hidden',
   'bookmarked': 'Bookmarked',
-  'flagged': 'Flagged',
-  'all': 'All (including flagged submissions)'
+  'flagged': 'Flagged'
 };
 
 @Radium
@@ -292,10 +369,21 @@ const styles = {
       };
     }
   },
+  page: {
+    position: 'absolute',
+    top: 50,
+    bottom: 0,
+    left: 0,
+    right: 0
+  },
   container: {
-    display: 'flex'
+    display: 'flex',
+    height: '100%'
   },
   sidebar: {
+    height: '100%',
+    position: 'relative',
+
     container: {
       flex: 1,
       display: 'flex',
@@ -305,8 +393,57 @@ const styles = {
       marginBottom: 10,
       boxShadow: '0px 0px 5px 0px rgba(0,0,0,0.2)'
     },
-    icon: {
-      marginLeft: 3
+    pagination: {
+      position: 'absolute',
+      width: '100%',
+      bottom: 0,
+      backgroundColor: settings.bgColorBase,
+      display: 'flex',
+      justifyContent: 'space-between'
+    },
+    arrow: {
+      width: 32,
+      height: 32,
+      textAlign: 'center',
+      cursor: 'pointer',
+      color: settings.grey,
+      fontSize: '20px',
+      fontWeight: 'bold',
+      backgroundColor: 'transparent',
+      borderRadius: 16,
+      lineHeight: '1.5em',
+      transition: 'all .3s',
+      ':hover': {
+        color: '#000',
+        backgroundColor: settings.grey
+      }
+    },
+    pageNum: {
+      lineHeight: '1.8em'
+    },
+    iconContainer(show, active) {
+      return {
+        display: show || active ? 'inline' : 'none',
+        marginLeft: 3
+      };
+    },
+    icon(show) {
+      return {
+        fill: show ? 'currentColor' : 'transparent',
+        stroke: 'currentColor'
+      };
+    },
+    iconFlagged: {
+      color: 'rgb(217, 83, 79)'
+    },
+    hover: {
+      display: 'none',
+      ':hover': {
+        display: 'inline'
+      }
+    },
+    iconBookmarked: {
+      color: 'rgb(46, 151, 102)'
     },
     count: {
       fontWeight: 'bold',

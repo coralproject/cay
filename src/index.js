@@ -77,7 +77,6 @@ class Root extends React.Component {
 
   render() {
     const { features } = this.props.app;
-
     let defaultRoute;
     if (features.trust !== false) {
       defaultRoute = 'saved-searches';
@@ -86,49 +85,51 @@ class Root extends React.Component {
     } else {
       defaultRoute = '404';
     }
+    // moving this to a var gets rid of that annoying warning. ¯\_(ツ)_/¯
+    const routes = (
+      <div>
+        <Redirect from="/" to={defaultRoute} />
+
+        <Route path="login" component={Login} />
+        <Route path="about" component={About} />
+        <Route path="user/:_id" component={User} />
+
+        {/***** Trust Search Routes *****/}
+        {features.trust === false ? null : (
+          <div>
+            <Route path="search-creator" component={SearchCreator} />
+            <Route path="saved-searches" component={SeeAllSearches}/>
+            <Route path="saved-search/:id" component={SearchDetail} />
+            <Route path="edit-search/:id" component={SearchEditor} />
+          </div>
+        )}
+
+        {/***** Ask Search Routes *****/}
+        {features.ask ? (
+          <div>
+            <Route path="forms" component={FormList}/>
+            <Route path="forms/create" component={FormCreate}/>
+            <Route path="forms/:id" component={FormEdit}/>
+            <Route path="forms/:id/submissions" component={SubmissionList}/>
+            <Route path="forms/:id/gallery" component={SubmissionGallery}/>
+          </div>
+        ) : null}
+        <Route path="*" component={NoMatch} />
+
+        {/***** Disabled routes ******
+
+          <Route path="explore" component={DataExplorer} />
+          <Route path="tag-manager" component={TagManager} />
+
+        */}
+      </div>
+    );
 
     return (
       <StyleRoot>
         <Provider store={store}>
           <Router history={browserHistory} onUpdate={ this.logPageView }>
-
-            <Redirect from="/" to={defaultRoute} />
-
-            <Route path="login" component={Login} />
-            <Route path="about" component={About} />
-            <Route path="user/:_id" component={User} />
-
-            {/***** Trust Search Routes *****/}
-            {features.trust === false ? null : (
-              <div>
-                <Route path="search-creator" component={SearchCreator} />
-                <Route path="saved-searches" component={SeeAllSearches}/>
-                <Route path="saved-search/:id" component={SearchDetail} />
-                <Route path="edit-search/:id" component={SearchEditor} />
-              </div>
-            )}
-
-
-            {/***** Ask Search Routes *****/}
-            {features.ask ? (
-              <div>
-                <Route path="forms" component={FormList}/>
-                <Route path="forms/create" component={FormCreate}/>
-                <Route path="forms/:id" component={FormEdit}/>
-                <Route path="forms/:id/submissions" component={SubmissionList}/>
-                <Route path="forms/:id/gallery" component={SubmissionGallery}/>
-              </div>
-            ) : null}
-            <Route path="*" component={NoMatch} />
-
-            {/***** Disabled routes ******
-
-              <Route path="explore" component={DataExplorer} />
-              <Route path="tag-manager" component={TagManager} />
-
-            */}
-
-
+            {routes}
           </Router>
         </Provider>
       </StyleRoot>

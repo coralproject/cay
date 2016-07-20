@@ -236,7 +236,8 @@ class Sidebar extends Component {
           <FilterDropdown open={filterByOpen}
             filterBy={filterBy}
             onToggle={this.onFilterByToggle.bind(this)}
-            onChange={this.props.onFilterByChange} />
+            onChange={this.props.onFilterByChange}
+            counts={this.props.formCounts} />
 
           <OrderDropdown open={orderOpen}
             order={order}
@@ -288,6 +289,19 @@ class FilterDropdown extends Component {
     this.props.onToggle(false);
   }
 
+  getCount(value) {
+    const { counts } = this.props;
+    switch (value) {
+    case 'flagged':
+    case 'bookmarked':
+      return counts[value];
+    case 'default':
+      return counts['totalSearch'];
+    case '-flagged':
+      return counts['totalSearch'] - counts['flagged'];
+    }
+  }
+
   render() {
     const { filterBy='', onChange, open=false } = this.props;
     return (
@@ -296,7 +310,7 @@ class FilterDropdown extends Component {
         {Object.keys(FilterByOptions).map(value => (
           <RadioButton style={styles.filterBy.radio}
             checked={filterBy === value ? 'checked' : null}
-            label={FilterByOptions[value]} value={value}
+            label={`${FilterByOptions[value]} (${this.getCount(value)})`} value={value}
             onClick={() => onChange(value)} />
         ))}
       </div>

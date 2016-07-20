@@ -143,7 +143,7 @@ const filters = (state = initialState, action) => {
 
   case types.CLEAR_EDITABLE_FILTERS:
     // reset editable filters to their default state while a Saved Search is loading
-    return {...state, ...action.filters};
+    return {...state, ...action.filters, breakdownEdit: 'all', specificBreakdownEdit: ''};
 
   default:
     return state;

@@ -18,5 +18,9 @@ else
     export DO_AUTH=true
 fi
 
+if [[ -z "$TRUST" ]]; then
+    export TRUST=false
+fi
+
 envsubst < /assets/config.json > /usr/share/nginx/html/config.json
 nginx -g "daemon off;"

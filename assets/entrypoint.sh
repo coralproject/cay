@@ -19,7 +19,7 @@ else
 fi
 
 if [[ -z "$TRUST" ]]; then
-    export TRUST=false
+    export TRUST=true
 fi
 
 envsubst < /assets/config.json > /usr/share/nginx/html/config.json

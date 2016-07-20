@@ -58,16 +58,26 @@ export default class FilterNumbers extends React.Component {
         <p style={styles.description}>{this.props.description}</p>
         <div>
           <input
-            onChange={event => this.props.onChange(this.props.fieldName, 'userMin', event.target.value/100)}
+            onChange={event => {
+              let val = parseFloat(event.target.value, 10) / 100;
+              // just in case something crazy is happening
+              val = Math.abs(val) < 0.001 ? 0 : val;
+              this.props.onChange(this.props.fieldName, 'userMin', val);
+            }}
             style={styles.minMaxInputs}
             type='number'
-            value={Math.floor(this.props.userMin*100)}/>
+            value={Math.floor(this.props.userMin * 100)}/>
           {` - `}
           <input
-            onChange={event => this.props.onChange(this.props.fieldName, 'userMax', event.target.value/100)}
+            onChange={event => {
+              let val = parseFloat(event.target.value, 10) / 100;
+              // just in case something crazy is happening
+              val = Math.abs(val) < 0.001 ? 0 : val;
+              this.props.onChange(this.props.fieldName, 'userMax', val);
+            }}
             style={styles.minMaxInputs}
             type='number'
-            value={Math.floor(this.props.userMax*100)}/>
+            value={Math.floor(this.props.userMax * 100)}/>
           <p style={{marginTop: 10, color: 'red'}}>{this.renderHelpText()}</p>
         </div>
       </div>

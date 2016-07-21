@@ -16,7 +16,7 @@ const initial = {
   form: null,
   savingForm: false,
   submissionFilterBy: 'default',
-  submissionOrder: 'desc',
+  submissionOrder: 'dsc',
   submissionSearch: '',
   savedForm: null, // this is the Objectid of the created form returned from Elkhorn.
   formCreationError: null,
@@ -307,7 +307,7 @@ const forms = (state = initial, action) => {
     return {...state, submissionSearch: action.value};
 
   case types.CLEAN_SUBMISSION_FILTERS:
-    return {...state, submissionFilterBy: 'default', submissionOrder: 'desc', submissionSearch: '',
+    return {...state, submissionFilterBy: 'default', submissionOrder: 'dsc', submissionSearch: '',
             formCounts: {...initial.formCounts} };
 
   default:

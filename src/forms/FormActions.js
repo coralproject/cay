@@ -62,6 +62,11 @@ export const UPDATE_FORM_INACTIVE_MESSAGE_INIT = 'UPDATE_FORM_INACTIVE_MESSAGE_I
 export const UPDATE_FORM_INACTIVE_MESSAGE_SUCCESS = 'UPDATE_FORM_INACTIVE_MESSAGE_SUCCESS';
 export const UPDATE_FORM_INACTIVE_MESSAGE_FAILURE = 'UPDATE_FORM_INACTIVE_MESSAGE_FAILURE';
 
+export const UPDATE_FILTER_BY = 'UPDATE_FILTER_BY';
+export const UPDATE_ORDER = 'UPDATE_ORDER';
+export const UPDATE_SEARCH = 'UPDATE_SEARCH';
+export const CLEAN_SUBMISSION_FILTERS = 'CLEAN_SUBMISSION_FILTERS';
+
 const getInit = (body, method) => {
 
   var headers = new Headers({ 'Accept': 'application/json', 'Content-Type': 'application/json' });
@@ -249,9 +254,10 @@ export const updateForm = (data) => {
   };
 };
 
-export const submissionsFetched = submissions => ({
+export const submissionsFetched = (counts, submissions) => ({
   type: SUBMISSIONS_REQUEST_SUCCESS,
-  submissions
+  submissions,
+  counts
 });
 
 export const submissionsFetchError = error => {
@@ -352,11 +358,13 @@ export const updateInactiveMessage = (message, form) => {
 
 export const fetchSubmissions = (formId, page = 0) => {
   return (dispatch, getState) => {
-    const {app} = getState();
+    const { app, forms } = getState();
+    const { submissionOrder, submissionFilterBy, submissionSearch } = forms;
+    const filterBy = submissionFilterBy === 'default' ? '' : submissionFilterBy;
     const skip = page * 10;
-    return fetch(`${app.pillarHost}/api/form_submissions/${formId}?skip=${skip}&limit=10`)
+    return fetch(`${app.pillarHost}/api/form_submissions/${formId}?skip=${skip}&limit=10&orderby=${submissionOrder}&filterby=${filterBy}&search=${submissionSearch}`)
       .then(res => res.json())
-      .then(data => dispatch(submissionsFetched(data.submissions)))
+      .then(data => dispatch(submissionsFetched(data.counts, data.submissions || [])))
       .catch(error => dispatch(submissionsFetchError(error)));
   };
 };
@@ -500,5 +508,24 @@ export const editAnswer = (edited, answer, formId) => {
       .catch(error => dispatch({type: ANSWER_EDIT_FAILED, error}));
   };
 };
+
+export const updateFilterBy = filterBy => ({
+  type: UPDATE_FILTER_BY,
+  value: filterBy
+});
+
+export const updateOrder = order => ({
+  type: UPDATE_ORDER,
+  value: order
+});
+
+export const updateSearch = search => ({
+  type: UPDATE_SEARCH,
+  value: search
+});
+
+export const cleanSubmissionFilters = () => ({
+  type: CLEAN_SUBMISSION_FILTERS
+});
 
 export const hasFlag = (submission, flag) => -1 !== submission.flags.indexOf(flag);

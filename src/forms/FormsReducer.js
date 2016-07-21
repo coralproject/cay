@@ -5,10 +5,19 @@ const initial = {
   formList: [],
   galleryList: [],
   submissionList: [],
+  formCounts: {
+    totalSearch: 0,
+    totalSubmissions: 0,
+    bookmarked: 0,
+    flagged: 0
+  },
   answerList: [],
   editAccess: {},
   form: null,
   savingForm: false,
+  submissionFilterBy: 'default',
+  submissionOrder: 'dsc',
+  submissionSearch: '',
   savedForm: null, // this is the Objectid of the created form returned from Elkhorn.
   formCreationError: null,
   activeForm: null, // might be able to combine this with {form} above in the future
@@ -202,11 +211,16 @@ const forms = (state = initial, action) => {
       return accum;
     }, {});
     const activeSubmission = submissionList.length ? submissionList[0] : null;
+    const formCounts = Object.assign({}, state.formCounts, {
+      totalSearch: action.counts.total_search,
+      totalSubmissions: action.counts.total_submissions,
+      ...action.counts.search_by_flag
+    });
 
     // this will add more submission ids and overwrite existing ones.
     // it will not erase old submission ids.
     // current viewable ids are managed in {submissionList}
-    return {...state, submissionList, ...submissions, activeSubmission};
+    return {...state, submissionList, ...submissions, formCounts, activeSubmission};
 
   case types.SET_ACTIVE_SUBMISSION:
     return {...state, activeSubmission: action.submissionId };
@@ -282,6 +296,19 @@ const forms = (state = initial, action) => {
 
   case types.ANSWER_EDIT_FAILED: // server was unable to update the answer
     return {...state, loadingAnswerEdit: false, answerBeingEdited: null};
+
+  case types.UPDATE_FILTER_BY:
+    return {...state, submissionFilterBy: action.value};
+
+  case types.UPDATE_ORDER:
+    return {...state, submissionOrder: action.value};
+
+  case types.UPDATE_SEARCH:
+    return {...state, submissionSearch: action.value};
+
+  case types.CLEAN_SUBMISSION_FILTERS:
+    return {...state, submissionFilterBy: 'default', submissionOrder: 'dsc', submissionSearch: '',
+            formCounts: {...initial.formCounts} };
 
   default:
     return state;

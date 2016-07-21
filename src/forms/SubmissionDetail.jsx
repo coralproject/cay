@@ -123,9 +123,6 @@ export default class SubmissionDetail extends React.Component {
         <div style={styles.headerButtons}>
           <Button
             style={styles.headerButton}
-            category="primary">Add Tags <TagsIcon /></Button>
-          <Button
-            style={styles.headerButton}
             onClick={() => onFlag(!flagged)}
             category={flagged ? 'danger' : ''}>
               Flag{flagged ? 'ged' : ''} <FlagIcon style={styles.headerButtonIcon(flagged, 'rgb(217, 83, 79)')} />

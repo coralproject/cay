@@ -15,6 +15,5 @@ export default [
   { friendlyType: 'Multiple choice', type: 'MultipleChoice', icon: FaListUl, props: { multipleChoice: false, otherAllowed: false } },
   { friendlyType: 'Email', identity: true, type: 'EmailField', icon: FaEnvelopeO, props: { validateAs: 'email', validationMessage: 'Please type a valid e-mail.' } },
   { friendlyType: 'Date', type: 'DateField', icon: FaCalendar, props: { validationMessage: 'Please type a valid date' } },
-  { friendlyType: 'Location', identity: true, type: 'LocationDropdown', icon: FaGlobe },
   { friendlyType: 'Phone number', identity: true, type: 'PhoneNumber', icon: FaPhone }
 ];

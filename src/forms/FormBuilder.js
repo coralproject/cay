@@ -47,7 +47,6 @@ export default class FormBuilder extends Component {
           : ''}
           </div>
           <div style={ styles.formActions }>
-            <button style={ styles.formAction }><FaUserPlus /></button>
             <button onClick={ onOpenPreview } style={ styles.formAction }><FaEye /></button>
             <button onClick={ this.onSaveClick.bind(this) } style={ styles.formAction }>{ forms.savingForm ? <Spinner/> : <FaFloppyO /> }</button>
           </div>

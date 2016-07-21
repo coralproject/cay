@@ -191,11 +191,13 @@ export const leavingEdit = formId => {
   };
 };
 
-export const createEmpty = () => {
-  return {
-    type: FORM_CREATE_EMPTY
-  };
-};
+export const createEmpty = () => (dispatch, getState) =>
+dispatch(createEmptyAction(`${getState().app.pillarHost}/api/form_submission/`));
+
+const createEmptyAction = saveDestination => ({
+  type: FORM_CREATE_EMPTY,
+  saveDestination
+});
 
 export const replaceWidgets = fields => {
   return {

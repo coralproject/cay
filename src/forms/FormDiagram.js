@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import {connect} from 'react-redux';
 
-//import { DropTarget } from 'react-dnd';
+import { DropTarget } from 'react-dnd';
 
 import DropPlaceHolder from 'forms/DropPlaceHolder';
 
@@ -23,14 +23,22 @@ export default class FormDiagram extends Component {
 
   constructor(props, context) {
     super(props, context);
-    this.state = { widgets: [], isHovering: false, tempWidgets: [], showTitleIsRequired: false };
-    this.previousState = []; // a copy of state.fields
-    this.previousHover = null; // cache the element previously hovered
+    this.state = { widgets: [], isHovering: false, tempWidgets: [], showTitleIsRequired: false, itemBeingDragged: -1 };
+    this.stateBeforeDrag = []; // a copy of state.fields
+    this.previousHover = null;
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({ widgets: nextProps.forms.widgets, tempWidgets: nextProps.forms.widgets, isHovering: false });
-    this.previousState = nextProps.forms.widgets;
+    this.stateBeforeDrag = nextProps.forms.widgets;
+  }
+
+  resetForm() {
+    this.setState({ widgets: this.stateBeforeDrag.slice(), tempWidgets: this.stateBeforeDrag.slice() });
+  }
+
+  saveState() {
+    this.stateBeforeDrag = this.state.widgets.slice();
   }
 
   getForm() {
@@ -83,22 +91,25 @@ export default class FormDiagram extends Component {
         }
         <textarea onChange={ this.onFormDescriptionChange.bind(this) } style={ styles.description } placeholder={ "Add instructions or a description" } defaultValue={ form.header.description } />
         <div style={styles.formDiagram}>
-          { this.props.forms.widgets.map((field, i) => (
-            <DropPlaceHolder key={i} formDiagram={ this } position={ i } dropped={ field.dropped }>
-              <FormComponent
-                id={ field.id }
-                key={ i }
-                field={ field }
-                position={ i }
-                onFieldSelect={ onFieldSelect }
-                onList={ true }
-                isLast={ i === this.props.forms.widgets.length - 1 }
-                onMove={ this.onMove.bind(this) }
-                onDuplicate={ this.onDuplicate.bind(this) }
-                onDelete={ this.onDelete.bind(this) }
-                 />
+          { this.state.tempWidgets.map((field, i) => (
+            <DropPlaceHolder beingDragged={ i == this.state.itemBeingDragged } key={i} formDiagram={ this } position={ i } dropped={ field.dropped }>
+                <FormComponent
+                  id={ field.id }
+                  key={ i }
+                  field={ field }
+                  formDiagram={ this }
+                  position={ i }
+                  onFieldSelect={ onFieldSelect }
+                  onList={ true }
+                  beingDragged={ i == this.state.itemBeingDragged }
+                  isLast={ i === this.props.forms.widgets.length - 1 }
+                  onMove={ this.onMove.bind(this) }
+                  onDuplicate={ this.onDuplicate.bind(this) }
+                  onDelete={ this.onDelete.bind(this) }
+                   />
             </DropPlaceHolder>
           ))}
+          <DropPlaceHolder empty={ true } formDiagram={ this } position={ this.state.tempWidgets.length } key={ this.state.tempWidgets.length } />
         </div>
         <div style={ styles.extraFields }>
           <h3 style={ styles.thankYouMessageTitle }>Thank you message</h3>

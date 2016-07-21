@@ -19,12 +19,11 @@ const askTarget = {
       return; // hovering the same as before? early return, do nothing.
     }
 
-    let tempWidgets = formDiagram.previousState.slice();
+    let tempWidgets = formDiagram.stateBeforeDrag.slice();
     var draggedItem = monitor.getItem();
 
-    draggedItem.field.dropped = false;
+    if (draggedItem.component.props.formDiagram) {
 
-    if (draggedItem.onList) {
       // First we make a copy removing the dragged element
       let fieldsCopy = tempWidgets.slice();
       fieldsCopy.splice(draggedItem.position, 1);
@@ -34,6 +33,8 @@ const askTarget = {
       tempWidgets = fieldsBefore.concat(draggedItem.field).concat(fieldsAfter);
 
     } else {
+
+      draggedItem.field.dropped = true;
       // If hovering over the default empty placeholder (the bottom one)
       if (component.props.empty) {
         tempWidgets[targetPosition] = draggedItem.field;
@@ -45,7 +46,7 @@ const askTarget = {
       }
     }
 
-    formDiagram.setState({ tempWidgets: tempWidgets, isHovering: true });
+    formDiagram.setState({ tempWidgets: tempWidgets });
 
   },
 
@@ -53,7 +54,7 @@ const askTarget = {
   drop(props, monitor, component) {
 
     let formDiagram = component.props.formDiagram;
-    let fields = formDiagram.previousState.slice();
+    let fields = formDiagram.stateBeforeDrag.slice();
     let targetPosition = component.props.position;
 
     var draggedItem = monitor.getItem();
@@ -65,12 +66,11 @@ const askTarget = {
       formDiagram.moveWidget(draggedItem.position, targetPosition);
     } else {
       formDiagram.appendWidget(draggedItem.field, targetPosition);
-      formDiagram.setState({ isHovering: false });
+      //formDiagram.setState({ isHovering: false });
     }
 
   }
 };
-
 
 @DropTarget('form_component', askTarget, (connect, monitor) => ({
   connectDropTarget: connect.dropTarget(),
@@ -79,21 +79,34 @@ const askTarget = {
 @connect(({ app, forms }) => ({ app, forms }))
 export default class DropPlaceHolder extends Component {
 
+  componentWillReceiveProps(nextProps) {
+    if (this.props.isOver && !nextProps.isOver) {
+      // You can use this as leave handler
+      this.props.formDiagram.resetForm();
+      //this.setState({ widgets: this.stateBeforeDrag.slice(), tempWidgets: this.stateBeforeDrag.slice(), isHovering: false });
+    } else {
+      //this.setState({ widgets: nextProps.forms.widgets, tempWidgets: nextProps.forms.widgets, isHovering: false });
+      //this.stateBeforeDrag = nextProps.forms.widgets;
+    }
+  }
+
   render() {
     return (
       this.props.connectDropTarget(
-        this.props.isOver ?
-          <div style={ styles.dropPlaceHolderActive }>
-          </div>
-        :
-          <div style={ styles.dropPlaceHolder }>
-            {
-              this.props.children ?
-                this.props.children
-              :
-                null /*<p style={ styles.emptyPlaceholderText }>Drag and drop fields here to add a question</p>*/
-            }
-          </div>
+        <div style={ styles.padder }>
+          {
+            this.props.isOver
+              ? <div style={ styles.dropPlaceHolderActive }></div>
+              : <div style={ styles.dropPlaceHolder }>
+                  {
+                    this.props.children ?
+                      this.props.children
+                    :
+                      <p style={ styles.emptyPlaceholderText }>Drag and drop fields here to add a question</p>
+                  }
+                </div>
+          }
+        </div>
       )
     );
   }
@@ -101,23 +114,29 @@ export default class DropPlaceHolder extends Component {
 
 const styles = {
   dropPlaceHolder: {
-    minHeight: '60px',
-    background: 'rgba(128,128,128,.1)',
-    marginBottom: '10px',
-    borderRadius: '4px'
+    minHeight: '70px',
+    background: '#eee',
+    borderRadius: '4px',
+    //marginBottom: '10px',
+    transition: 'background .3s'
   },
   dropPlaceHolderActive: {
     border: '1px dashed #111',
-    minHeight: '60px',
-    background: 'rgba(0,0,0,.1)',
+    minHeight: '70px',
+    background: '#aaccbb',
     padding: '30px',
     borderRadius: '4px',
-    marginBottom: '10px'
+    //marginBottom: '10px',
+    transition: 'background .3s'
   },
   emptyPlaceholderText: {
     textAlign: 'center',
     fontSize: '15pt',
-    lineHeight: '60px',
+    lineHeight: '70px',
     border: '1px dashed #111'
+  },
+  padder: {
+    height: '80px',
+    paddingBottom: '10px'
   }
 };

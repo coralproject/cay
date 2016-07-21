@@ -53,7 +53,6 @@ export default class FormBuilder extends Component {
         </div>
         <div style={styles.builderContainer}>
           <div style={styles.leftPan}>
-
             <div style={styles.leftContainer}>
               <h4 style={styles.leftContainerTitle}>Question Fields</h4>
               <p>Click on an field type to add it to the form.</p>
@@ -83,28 +82,14 @@ export default class FormBuilder extends Component {
                 (
                   <div>
                     <p>Embed code</p>
-                    <textarea style={styles.embedCode} value={`<div id="ask-form"></div><script src="${this.props.app.elkhornHost}/${this.props.forms.savedForm}.js"></script>`}/>
+                    <textarea style={styles.embedCode} value={`<div id="ask-form"></div><script src="${this.props.app.elkhornStaticHost}/${this.props.activeForm}.js"></script>`}/>
                     <p>Embed code (iframe)</p>
-                    <textarea style={styles.embedCode} value={`<iframe width="100%" height="580" src="${this.props.app.elkhornHost}/iframe/${this.props.forms.savedForm}"></iframe>`}/>
-                    <a href={ `${this.props.app.elkhornHost}/iframe/${this.props.forms.savedForm}` } target="_blank" style={ styles.formSettingsAction }>Standalone Form</a>
+                    <textarea style={styles.embedCode} value={`<iframe width="100%" height="580" src="${this.props.app.elkhornHost}/iframe/${this.props.activeForm}"></iframe>`}/>
+                    <a href={ `${this.props.app.elkhornHost}/iframe/${this.props.activeForm}` } target="_blank" style={ styles.formSettingsAction }>Standalone Form</a>
                   </div>
                 )
-                : null
+                : <p>This form is not saved. Once you save it you will see embed code here.</p>
               }
-              <div style={ styles.formSettingsBottomActions }>
-                <hr />
-                {
-                  this.props.forms.savedForm ?
-                  (
-                    <div>
-                    <p>Copy this code to embed your form.</p>
-                    <textarea style={styles.embedCode} value={`<div id=“ask-form”></div><script src=“${this.props.app.elkhornHost}/${this.props.forms.savedForm}.js”></script>`}>
-                    </textarea>
-                      <a href={ `${this.props.app.elkhornHost}/iframe/${this.props.forms.savedForm}` } target="_blank" style={ styles.formSettingsAction }>Live Form</a>
-                    </div>
-                  ) :
-                  <p>This form is not saved. Once you save it you will see embed code here.</p>
-                }
               </div>
             </div>
           </div>
@@ -114,7 +99,6 @@ export default class FormBuilder extends Component {
             onClosePreview={onClosePreview.bind(this)}
             /> : null }
         </div>
-      </div>
     );
   }
 

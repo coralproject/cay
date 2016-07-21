@@ -66,6 +66,9 @@ export const PUBLISH_GALLERY_INIT = 'PUBLISH_GALLERY_INIT';
 export const PUBLISH_GALLERY_SUCCESS = 'PUBLISH_GALLERY_SUCCESS';
 export const PUBLISH_GALLERY_FAILURE = 'PUBLISH_GALLERY_FAILURE';
 
+export const UPDATE_READER_INFO_PLACEMENT = 'UPDATE_READER_INFO_PLACEMENT';
+export const UPDATE_GALLERY_ORIENTATION = 'UPDATE_GALLERY_ORIENTATION';
+
 const getInit = (body, method) => {
 
   var headers = new Headers({ 'Accept': 'application/json', 'Content-Type': 'application/json' });
@@ -505,15 +508,35 @@ export const editAnswer = (edited, answer, formId) => {
   };
 };
 
-export const publishGallery = () => {
+export const updateReaderInfoPlacement = placement => {
+  return {type: UPDATE_READER_INFO_PLACEMENT, placement};
+};
+
+export const updateGalleryOrientation = orientation => {
+  return {type: UPDATE_GALLERY_ORIENTATION, orientation};
+};
+
+export const publishGallery = formId => {
   return (dispatch, getState) => {
-    const {app} = getState();
+    const {app, forms} = getState();
     dispatch({type: PUBLISH_GALLERY_INIT});
-    return fetch(`${app.elkhornHost}/publish-gallery`, {
-      method: 'POST',
-      headers: new Headers({'Content-Type': 'application/json'}),
-      body: JSON.stringify({name: 'louvre', loc: 'Paris'})
-    }).then(res => res.json())
+
+    console.log('activeGallery', forms.activeGallery);
+
+    // get the most recent state of truth from the server
+    return fetch(`${app.pillarHost}/api/form_galleries/${formId}`)
+      .then(res => res.json())
+      .then(galleries => {
+        // there is only one gallery per form so far
+        const [gallery] = galleries;
+
+        return fetch(`${app.elkhornHost}/gallery/${gallery.id}/publish`, {
+          method: 'POST',
+          headers: new Headers({'Content-Type': 'application/json'}),
+          body: JSON.stringify(gallery)
+        });
+      })
+      .then(res => res.json())
       .then(gallery => {
         console.log(gallery);
         dispatch({type: PUBLISH_GALLERY_SUCCESS, gallery});

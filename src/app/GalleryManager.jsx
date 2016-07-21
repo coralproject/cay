@@ -8,6 +8,8 @@ import {
   removeFromGallery,
   updateFormStatus,
   updateEditableAnswer,
+  updateGalleryOrientation,
+  updateReaderInfoPlacement,
   publishGallery,
   editAnswer,
   cancelEdit,
@@ -126,16 +128,16 @@ export default class SubmissionGallery extends React.Component {
     });
   }
 
-  updateOrientation(value) {
-
+  updateOrientation(option) {
+    this.props.dispatch(updateGalleryOrientation(option.value));
   }
 
-  updatePlacement(value) {
-
+  updatePlacement(option) {
+    this.props.dispatch(updateReaderInfoPlacement(option.value));
   }
 
   openPublishModal() {
-    this.props.dispatch(publishGallery()).then(gallery => {
+    this.props.dispatch(publishGallery(this.props.activeForm)).then(gallery => {
       this.setState({publishModalOpen: true});
     });
   }
@@ -185,6 +187,7 @@ export default class SubmissionGallery extends React.Component {
             <div style={styles.orientationOpts}>
               <Select
                 options={orientationOpts}
+                value={this.props.galleryOrientation}
                 onChange={this.updateOrientation.bind(this)} />
             </div>
             <Button style={styles.modButton} category="brand">Preview</Button>
@@ -203,6 +206,7 @@ export default class SubmissionGallery extends React.Component {
                 <p style={styles.includeLabel}>Placement</p>
                 <Select
                   style={styles.placementOpts}
+                  value={this.props.galleryReaderInfoPlacement}
                   options={placementOpts}
                   onChange={this.updatePlacement.bind(this)} />
 

@@ -13,6 +13,8 @@ const initial = {
   formCreationError: null,
   activeForm: null, // might be able to combine this with {form} above in the future
   activeGallery: null, // this is an ObjectId string
+  galleryOrientation: 'vertical', // vertical|horizontal
+  galleryReaderInfoPlacement: 'above', // above|below
   widgets: [],
   loadingAnswerEdit: false,
   answerBeingEdited: null, // ObjectId string
@@ -282,6 +284,12 @@ const forms = (state = initial, action) => {
 
   case types.ANSWER_EDIT_FAILED: // server was unable to update the answer
     return {...state, loadingAnswerEdit: false, answerBeingEdited: null};
+
+  case types.UPDATE_READER_INFO_PLACEMENT:
+    return {...state, galleryReaderInfoPlacement: action.placement};
+
+  case types.UPDATE_GALLERY_ORIENTATION:
+    return {...state, galleryOrientation: action.orientation};
 
   default:
     return state;

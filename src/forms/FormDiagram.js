@@ -69,6 +69,14 @@ export default class FormDiagram extends Component {
     }));
   }
 
+  onConditionsChange(e) {
+    this.props.dispatch(updateForm({
+      footer: {
+        conditions: e.target.value
+      }
+    }));
+  }
+
   render() {
     const { onFieldSelect, forms } = this.props;
     const form = this.props.activeForm ? forms[this.props.activeForm] : forms.form;
@@ -101,11 +109,17 @@ export default class FormDiagram extends Component {
           ))}
         </div>
         <div style={ styles.extraFields }>
-          <h3 style={ styles.thankYouMessageTitle }>Thank you message</h3>
+          <h3 style={ styles.extraFieldTitle }>Thank you message</h3>
           <textarea
             defaultValue={ form.finishedScreen.description }
-            style={ styles.customThankYouMessage }
+            style={ styles.extraFieldTextArea }
             onChange={ this.onThankYouDescriptionChange.bind(this) }></textarea>
+
+          <h3 style={ styles.extraFieldTitle }>Terms and conditions</h3>
+          <textarea
+            defaultValue={ form.footer.conditions }
+            style={ styles.extraFieldTextArea }
+            onChange={ this.onConditionsChange.bind(this) }></textarea>
         </div>
       </div>
     );
@@ -190,13 +204,14 @@ const styles = {
     border: 'none',
     background: 'none'
   },
-  customThankYouMessage: {
+  extraFieldTextArea: {
     display: 'block',
     width: '100%',
     padding: '10px',
-    fontSize: '12pt'
+    fontSize: '12pt',
+    border: '1px solid #ddd'
   },
-  thankYouMessageTitle: {
+  extraFieldTitle: {
     fontSize: '14pt',
     fontWeight: 'bold',
     margin: '30px 0 20px 0'

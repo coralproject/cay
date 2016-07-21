@@ -11,7 +11,7 @@ import {
   updateEditableSearchMeta
 } from 'search/SearchActions';
 import {userSelected} from 'users/UsersActions';
-import {filterChanged, getFilterRanges} from 'filters/FiltersActions';
+import {clearEditableFilters, filterChanged, getFilterRanges} from 'filters/FiltersActions';
 import {fetchCommentsByUser} from 'comments/CommentsActions';
 
 import Button from 'components/Button';
@@ -50,6 +50,7 @@ export default class SearchEditor extends React.Component {
 */
     dispatch(clearUserList());
     dispatch(userSelected(null));
+    dispatch(clearEditableFilters()); // clear filters out from previous viewing of Saved Search
     dispatch(getFilterRanges(true)); // editMode => true
     dispatch(fetchSavedSearchForEdit(params.id))
     .then(() => dispatch(fetchInitialData(true))); // dispatch after getting search

@@ -157,77 +157,73 @@ export default class FormChrome extends React.Component {
 
     return (
       <div style={styles.base}>
-        <div style={styles.menu}>
 
-          <div style={styles.formName}>{name}</div>
+        <p style={styles.formName}>{name}</p>
 
-          <div style={styles.formControls}>
-            <div key="huey" style={[
-              styles.option,
-              this.props.activeTab === 'builder' && styles.active]}
-              onClick={this.buildForm.bind(this)}>
-              {this.props.create ? 'Build Form' : 'Edit Form'}
-            </div>
-            <div key="dewey" style={[
-              styles.option,
-              this.props.activeTab === 'submissions' && styles.active,
-              this.props.create && styles.disabled]}
-              onClick={this.reviewSubmissions.bind(this)}>
-              Submissions {this.submissionBadge()}
-            </div>
-            <div key="louie" style={[
-              styles.option,
-              this.props.activeTab === 'gallery' && styles.active,
-              this.props.create && styles.disabled]}
-              onClick={this.manageGallery.bind(this)}>
-              Gallery {this.galleryBadge()}
-            </div>
+        <div style={styles.formControls}>
+          <div key="huey" style={[
+            styles.option,
+            this.props.activeTab === 'builder' && styles.active]}
+            onClick={this.buildForm.bind(this)}>
+            {this.props.create ? 'Build Form' : 'Edit Form'}
           </div>
-
-          {
-            form ?
-              <div style={this.getStatusSelectStyle()} onClick={this.toggleDropdown.bind(this)}>
-                <span style={{fontWeight: 'bold'}}>Form Status:</span> {form.status} {this.getAngleBtn()}
-              </div> :
-              null
-          }
-
-          {
-            form ?
-              <div style={this.getStatusDropdownStyles()}>
-                <div style={styles.tabBkd} />
-                <div style={styles.tab} />
-                <RadioButton
-                  style={styles.openRadio}
-                  label="Open"
-                  value="open"
-                  checked={form.status === 'open'}
-                  onClick={this.props.updateStatus} />
-                <div style={styles.closeStatusHolder}>
-                  <RadioButton
-                    value="closed"
-                    label="Closed"
-                    style={styles.closeRadio}
-                    checked={form.status === 'closed'}
-                    onClick={this.props.updateStatus} />
-                  <textarea
-                    onBlur={this.setInactiveMessage.bind(this)}
-                    style={styles.statusMessage}></textarea>
-                  <Button
-                    style={{float: 'left', marginRight: 10}}
-                    category={this.state.updatingInactiveMessage ? 'disabled' : 'success'}
-                    onClick={this.updateInactiveMessage.bind(this)}
-                    >Save <SaveIcon /></Button>
-                  <p>The message will appear to readers when you close the form and are no longer collecting submissions.</p>
-                  <div style={this.getLoaderStyles(this, true)} />
-                  <div style={this.getLoaderStyles()} />
-                </div>
-              </div> :
-              null
-          }
-
+          <div key="dewey" style={[
+            styles.option,
+            this.props.activeTab === 'submissions' && styles.active,
+            this.props.create && styles.disabled]}
+            onClick={this.reviewSubmissions.bind(this)}>
+            Submissions {this.submissionBadge()}
+          </div>
+          <div key="louie" style={[
+            styles.option,
+            this.props.activeTab === 'gallery' && styles.active,
+            this.props.create && styles.disabled]}
+            onClick={this.manageGallery.bind(this)}>
+            Gallery {this.galleryBadge()}
+          </div>
         </div>
 
+        {
+          form ?
+            <div style={this.getStatusSelectStyle()} onClick={this.toggleDropdown.bind(this)}>
+              <span style={{fontWeight: 'bold'}}>Form Status:</span> {form.status} {this.getAngleBtn()}
+            </div> :
+            null
+        }
+
+        {
+          form ?
+            <div style={this.getStatusDropdownStyles()}>
+              <div style={styles.tabBkd}></div>
+              <div style={styles.tab}></div>
+              <RadioButton
+                style={styles.openRadio}
+                label="Open"
+                value="open"
+                checked={form.status === 'open'}
+                onClick={this.props.updateStatus} />
+              <div style={styles.closeStatusHolder}>
+                <RadioButton
+                  value="closed"
+                  label="Closed"
+                  style={styles.closeRadio}
+                  checked={form.status === 'closed'}
+                  onClick={this.props.updateStatus} />
+                <textarea
+                  onBlur={this.setInactiveMessage.bind(this)}
+                  style={styles.statusMessage}></textarea>
+                <Button
+                  style={{float: 'left', marginRight: 10}}
+                  category={this.state.updatingInactiveMessage ? 'disabled' : 'success'}
+                  onClick={this.updateInactiveMessage.bind(this)}
+                  >Save <SaveIcon /></Button>
+                <p>The message will appear to readers when you close the form and are no longer collecting submissions.</p>
+                <div style={this.getLoaderStyles(this, true)}></div>
+                <div style={this.getLoaderStyles()}></div>
+              </div>
+            </div> :
+            null
+        }
       </div>
     );
   }
@@ -239,15 +235,21 @@ const styles = {
     left: 0,
     right: 0,
     top: -50,
-    padding: 5
+    padding: 5,
+    height: 50,
+    display: 'flex',
+    justifyContent: 'space-between'
   },
   formName: {
     color: 'white',
-    padding: 10,
+    padding: 5,
     fontWeight: 'bold',
     fontSize: '20px',
     flex: 1,
     cursor: 'auto',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    marginRight: 20,
     ':hover': {
       backgroundColor: 'transparent'
     }
@@ -256,11 +258,6 @@ const styles = {
   formControls: {
     display: 'flex',
     flex: 2
-  },
-
-  menu: {
-    display: 'flex',
-    justifyContent: 'space-between'
   },
   option: {
     fontSize: '16px',

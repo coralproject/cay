@@ -98,6 +98,5 @@ export default class FormEdit extends Component {
 
 const styles = {
   base: {
-    marginTop: 40
   }
 };

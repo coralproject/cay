@@ -152,6 +152,9 @@ Promise.all([loadConfig('/config.json'), loadConfig('/data_config.json')])
     throw new Error(message);
   }
 
+  // redefine elkhornStaticHost if not set
+  app.elkhornStaticHost = app.elkhornStaticHost || app.elkhornHost + '/widgets';
+
   // load config into initialState so it's ALWAYS available
   store = configureStore({app});
 

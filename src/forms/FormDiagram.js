@@ -1,18 +1,11 @@
 import React, { Component, PropTypes } from 'react';
-import ReactDOM from 'react-dom';
 import {connect} from 'react-redux';
 
-//import { DropTarget } from 'react-dnd';
-
+import { grey } from 'settings';
 import DropPlaceHolder from 'forms/DropPlaceHolder';
 
-import { appendWidget, moveWidget, replaceWidgets, deleteWidget, duplicateWidget, updateForm, saveForm } from 'forms/FormActions';
-import FormComponent, {styles as askComponentStyles} from 'forms/FormComponent';
-
-import FaUserPlus from 'react-icons/lib/fa/user-plus';
-import FaFloppyO from 'react-icons/lib/fa/floppy-o';
-import FaEye from 'react-icons/lib/fa/eye';
-import Spinner from 'components/Spinner';
+import { appendWidget, moveWidget, replaceWidgets, deleteWidget, duplicateWidget, updateForm } from 'forms/FormActions';
+import FormComponent from 'forms/FormComponent';
 
 @connect(({ forms, app }) => ({ forms, app }))
 export default class FormDiagram extends Component {
@@ -69,6 +62,14 @@ export default class FormDiagram extends Component {
     }));
   }
 
+  onConditionsChange(e) {
+    this.props.dispatch(updateForm({
+      footer: {
+        conditions: e.target.value
+      }
+    }));
+  }
+
   render() {
     const { onFieldSelect, forms } = this.props;
     const form = this.props.activeForm ? forms[this.props.activeForm] : forms.form;
@@ -99,13 +100,20 @@ export default class FormDiagram extends Component {
                  />
             </DropPlaceHolder>
           ))}
+          { !this.props.forms.widgets.length ? <BlankState /> : null }
         </div>
         <div style={ styles.extraFields }>
-          <h3 style={ styles.thankYouMessageTitle }>Thank you message</h3>
+          <h3 style={ styles.extraFieldTitle }>Thank you message</h3>
           <textarea
             defaultValue={ form.finishedScreen.description }
-            style={ styles.customThankYouMessage }
+            style={ styles.extraFieldTextArea }
             onChange={ this.onThankYouDescriptionChange.bind(this) }></textarea>
+
+          <h3 style={ styles.extraFieldTitle }>Terms and conditions</h3>
+          <textarea
+            defaultValue={ form.footer.conditions }
+            style={ styles.extraFieldTextArea }
+            onChange={ this.onConditionsChange.bind(this) }></textarea>
         </div>
       </div>
     );
@@ -145,19 +153,35 @@ export default class FormDiagram extends Component {
   persist(fields) {
     this.props.dispatch(replaceWidgets(fields));
   }
-
 }
+
+const BlankState = () => (
+  <div style={styles.blankContainer}>
+    <h1 style={styles.blankTitle}>Select Question Fields in the left panel to build a form.</h1>
+  </div>
+);
 
 
 const styles = {
+  blankContainer: {
+    background: '#fff',
+    border: '1px dashed #ccc',
+    width: '100%'
+  },
+  blankTitle: {
+    textAlign: 'center',
+    padding: 20,
+    fontSize: '1em'
+  },
   formDiagram: {
     height: 'auto',
-    minHeight: '300px',
+    minHeight: 130,
+    minWidth: 350,
     position: 'relative'
   },
   formDiagramContainer: {
     flex: 1,
-    padding: 20,
+    paddingLeft: 10,
     color: '#5d5d5d'
   },
   typeList: {
@@ -176,11 +200,13 @@ const styles = {
     paddingLeft: 5
   },
   headLine: {
-    fontSize: '20pt',
+    fontSize: '2em',
     width: '100%',
     display: 'block',
     border: 'none',
-    background: 'none'
+    background: 'none',
+    fontWeight: 'normal',
+    color: grey
   },
   description: {
     fontSize: '14pt',
@@ -190,13 +216,14 @@ const styles = {
     border: 'none',
     background: 'none'
   },
-  customThankYouMessage: {
+  extraFieldTextArea: {
     display: 'block',
     width: '100%',
     padding: '10px',
-    fontSize: '12pt'
+    fontSize: '12pt',
+    border: '1px solid #ddd'
   },
-  thankYouMessageTitle: {
+  extraFieldTitle: {
     fontSize: '14pt',
     fontWeight: 'bold',
     margin: '30px 0 20px 0'

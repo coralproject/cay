@@ -2,6 +2,7 @@
   "xeniaHost": "",
   "pillarHost": "",
   "elkhornHost": "",
+  "elkhornStaticHost": "",
   "environment": "development",
   "brand": "",
   "googleAnalyticsId": "UA-12345678-9",

@@ -5,10 +5,19 @@ const initial = {
   formList: [],
   galleryList: [],
   submissionList: [],
+  formCounts: {
+    totalSearch: 0,
+    totalSubmissions: 0,
+    bookmarked: 0,
+    flagged: 0
+  },
   answerList: [],
   editAccess: {},
   form: null,
   savingForm: false,
+  submissionFilterBy: 'default',
+  submissionOrder: 'dsc',
+  submissionSearch: '',
   savedForm: null, // this is the Objectid of the created form returned from Elkhorn.
   formCreationError: null,
   activeForm: null, // might be able to combine this with {form} above in the future
@@ -35,7 +44,7 @@ const emptyForm = {
     headerIntroText: '#444444',
     formBackground: '#FFFFFF',
     footerBackground: '#FFFFFF',
-    requiredAsterisk: '#DDDDDD',
+    requiredAsterisk: '#939393',
     inputBackground: '#FFFFFF',
     inputText: '#222222',
     footerText: '#222222',
@@ -58,7 +67,7 @@ const emptyForm = {
     description: 'This is a sample ask!'
   },
   footer: {
-    conditions: 'This is a conditions field'
+    conditions: ''
   },
   finishedScreen: {
     title: 'Thanks.',
@@ -67,7 +76,8 @@ const emptyForm = {
   steps: [{
     id: '1',
     name: 'first_page'
-  }]
+  }],
+  status: 'closed'
 };
 
 const forms = (state = initial, action) => {
@@ -112,6 +122,7 @@ const forms = (state = initial, action) => {
 
   case types.FORM_CREATE_EMPTY:
     const form = Object.assign({}, emptyForm, { steps: [{ id: uuid.v4(), name: 'first_step', createdAt: Date.now() }] });
+    form.settings.saveDestination = action.saveDestination;
     return Object.assign({}, state, {activeForm: null, form: form, widgets: [], savingForm: false, savedForm: null });
 
   case types.FORM_DUPLICATE_WIDGET:
@@ -200,11 +211,16 @@ const forms = (state = initial, action) => {
       return accum;
     }, {});
     const activeSubmission = submissionList.length ? submissionList[0] : null;
+    const formCounts = Object.assign({}, state.formCounts, {
+      totalSearch: action.counts.total_search,
+      totalSubmissions: action.counts.total_submissions,
+      ...action.counts.search_by_flag
+    });
 
     // this will add more submission ids and overwrite existing ones.
     // it will not erase old submission ids.
     // current viewable ids are managed in {submissionList}
-    return {...state, submissionList, ...submissions, activeSubmission};
+    return {...state, submissionList, ...submissions, formCounts, activeSubmission};
 
   case types.SET_ACTIVE_SUBMISSION:
     return {...state, activeSubmission: action.submissionId };
@@ -306,6 +322,19 @@ const forms = (state = initial, action) => {
 
   case types.PUBLISH_GALLERY_FAILURE:
     return {...state, loadingGallery: true, galleryUrl: '', galleryCode: ''};
+
+  case types.UPDATE_FILTER_BY:
+    return {...state, submissionFilterBy: action.value};
+
+  case types.UPDATE_ORDER:
+    return {...state, submissionOrder: action.value};
+
+  case types.UPDATE_SEARCH:
+    return {...state, submissionSearch: action.value};
+
+  case types.CLEAN_SUBMISSION_FILTERS:
+    return {...state, submissionFilterBy: 'default', submissionOrder: 'dsc', submissionSearch: '',
+            formCounts: {...initial.formCounts} };
 
   default:
     return state;

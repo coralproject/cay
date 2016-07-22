@@ -22,10 +22,12 @@ export default class FormCreate extends Component {
   }
 
   render() {
-    const {preview} = this.state;
+    const { preview } = this.state;
+    const { forms } = this.props;
     return (
       <Page style={styles.page}>
-        <FormChrome create={true} updateStatus={() => {}} activeTab="builder" />
+        <FormChrome form={forms.form}
+          create={true} updateStatus={() => {}} activeTab="builder" />
         <div style={styles.formBuilderContainer}>
           <FormBuilder
             onClosePreview={this.onClosePreview.bind(this)}
@@ -73,8 +75,7 @@ const styles = {
     justifyContent: 'space-between',
     flexWrap: 'wrap',
     paddingBottom: 20,
-    borderBottom: '1px solid #E9E9E9',
-    marginTop: 40
+    borderBottom: '1px solid #E9E9E9'
   },
   textField: {
     marginRight: 20

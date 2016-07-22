@@ -1,12 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 import {connect} from 'react-redux';
 
-//import { DropTarget } from 'react-dnd';
-
+import { grey } from 'settings';
 import DropPlaceHolder from 'forms/DropPlaceHolder';
 
-import { appendWidget, moveWidget, replaceWidgets, deleteWidget, duplicateWidget, updateForm, saveForm } from 'forms/FormActions';
-import FormComponent, {styles as askComponentStyles} from 'forms/FormComponent';
+import { appendWidget, moveWidget, replaceWidgets, deleteWidget, duplicateWidget, updateForm } from 'forms/FormActions';
+import FormComponent from 'forms/FormComponent';
 
 @connect(({ forms, app }) => ({ forms, app }))
 export default class FormDiagram extends Component {
@@ -158,33 +157,31 @@ export default class FormDiagram extends Component {
 
 const BlankState = () => (
   <div style={styles.blankContainer}>
-    <h1 style={styles.blankTitle}>Select question fields in the left panel to build a form.</h1>
+    <h1 style={styles.blankTitle}>Select Question Fields in the left panel to build a form.</h1>
   </div>
 );
 
 
 const styles = {
   blankContainer: {
-    marginTop: 50,
     background: '#fff',
     border: '1px dashed #ccc',
-    height: 180,
     width: '100%'
   },
   blankTitle: {
     textAlign: 'center',
-    padding: 80,
-    fontSize: '1.4em'
+    padding: 20,
+    fontSize: '1em'
   },
   formDiagram: {
     height: 'auto',
-    minHeight: 300,
+    minHeight: 130,
     minWidth: 350,
     position: 'relative'
   },
   formDiagramContainer: {
     flex: 1,
-    padding: 20,
+    paddingLeft: 10,
     color: '#5d5d5d'
   },
   typeList: {
@@ -203,11 +200,13 @@ const styles = {
     paddingLeft: 5
   },
   headLine: {
-    fontSize: '20pt',
+    fontSize: '2em',
     width: '100%',
     display: 'block',
     border: 'none',
-    background: 'none'
+    background: 'none',
+    fontWeight: 'normal',
+    color: grey
   },
   description: {
     fontSize: '14pt',

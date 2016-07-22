@@ -60,7 +60,7 @@ const emptyForm = {
     description: 'This is a sample ask!'
   },
   footer: {
-    conditions: 'This is a conditions field'
+    conditions: ''
   },
   finishedScreen: {
     title: 'Thanks.',
@@ -69,7 +69,8 @@ const emptyForm = {
   steps: [{
     id: '1',
     name: 'first_page'
-  }]
+  }],
+  status: 'closed'
 };
 
 const forms = (state = initial, action) => {

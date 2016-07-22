@@ -6,21 +6,11 @@ import FaEye from 'react-icons/lib/fa/eye';
 import askTypes from 'forms/WidgetTypes';
 import Spinner from 'components/Spinner';
 
-export const Header = ({ onTitleChange, form, forms, activeForm, onSaveClick, onOpenPreview }) => (
+export const Header = ({ onTitleChange, form, forms, onSaveClick, onOpenPreview }) => (
   <div style={ styles.formHeader }>
     <div style={ styles.titleAndMeta }>
       <input onChange={onTitleChange} style={styles.headLine} type="text"
         placeholder={ "Write a title" } defaultValue={ form.header.title } />
-      {activeForm ?
-        <div>
-          <span style={ styles.created }>
-            <strong style={ styles.strong }>Created by</strong> First Name, Last Name
-          </span>
-          <span style={ styles.created }>
-            <strong style={ styles.strong }>Created on</strong> { form.createdAt }
-          </span>
-        </div>
-    : ''}
     </div>
     <div style={ styles.formActions }>
       <button onClick={onOpenPreview} style={ styles.formAction }><FaEye /></button>
@@ -29,45 +19,25 @@ export const Header = ({ onTitleChange, form, forms, activeForm, onSaveClick, on
   </div>
 );
 
-export const Sidebar = ({ form, addToBottom, onFormStatusChange, activeForm, app }) => (
+export const Sidebar = ({ addToBottom, app, activeForm }) => (
   <div style={styles.leftPan}>
     <div style={styles.leftContainer}>
       <h4 style={styles.leftContainerTitle}>Question Fields</h4>
-      <p>Click on an field type to add it to the form.</p>
       <div style={styles.typeList}>
         {askTypes.map((type, i) => (
           <FormComponent key={i} field={type} onClick={() => addToBottom(type)} />
         ))}
       </div>
-    </div>
-
-    <div style={styles.leftContainer}>
-      <h4 style={styles.leftContainerTitle}>Form Settings</h4>
-      <h5 style={ styles.leftContainerSubTitle }>Set Form Status</h5>
-      <label style={ styles.switch }>
-        <input
-          style={ styles.switchInput }
-          checked={ form.settings.isActive }
-          onChange={onFormStatusChange} type="checkbox" />
-        <div style={ styles.switchSlider(form.settings.isActive) }>
-          <span style={ styles.switchInactiveText }>Inactive</span>
-          <span style={ styles.switchHandle }></span>
-          <span style={ styles.switchActiveText }>Active</span>
+      {activeForm ? (
+        <div style={styles.embedContainer}>
+          <h4 style={styles.leftContainerTitle}>Embed codes</h4>
+          <p>Embed code</p>
+          <textarea style={styles.embedCode} value={`<div id="ask-form"></div><script src="${app.elkhornStaticHost}/${activeForm}.js"></script>`}/>
+          <p>Embed code (iframe)</p>
+          <textarea style={styles.embedCode} value={`<iframe width="100%" height="580" src="${app.elkhornHost}/iframe/${activeForm}"></iframe>`}/>
+          <a href={ `${app.elkhornHost}/iframe/${activeForm}` } target="_blank" style={ styles.formSettingsAction }>Standalone Form</a>
         </div>
-      </label>
-      {
-        activeForm ?
-        (
-          <div>
-            <p>Embed code</p>
-            <textarea style={styles.embedCode} value={`<div id="ask-form"></div><script src="${app.elkhornStaticHost}/${activeForm}.js"></script>`}/>
-            <p>Embed code (iframe)</p>
-            <textarea style={styles.embedCode} value={`<iframe width="100%" height="580" src="${app.elkhornHost}/iframe/${activeForm}"></iframe>`}/>
-            <a href={ `${app.elkhornHost}/iframe/${activeForm}` } target="_blank" style={styles.formSettingsAction}>Standalone Form</a>
-          </div>
-        )
-        : <p>This form is not saved. Once you save it you will see embed code here.</p>
-      }
+      ): null }
     </div>
   </div>
 );
@@ -79,8 +49,8 @@ const styles = {
   leftContainer: {
     flex: 1,
     marginRight: 20,
-    backgroundColor: '#D8D8D8',
     padding: 20,
+    paddingTop: 10,
     color: '#5D5D5D',
     borderRadius: 4,
     marginBottom: 20
@@ -97,12 +67,13 @@ const styles = {
   },
   typeList: {
     display: 'flex',
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
+    marginLeft: -8
   },
   leftContainerTitle: {
-    fontSize: 18.78,
     fontWeight: 'bold',
-    marginBottom: 10
+    marginBottom: 10,
+    fontSize: '.9em'
   },
   leftContainerSubTitle: {
     margin: '20px 0',
@@ -194,8 +165,9 @@ const styles = {
     textShadow: '0px 1px 2px #444'
   },
   embedCode: {
-    width: '100%',
-    height: 50
+    width: 315,
+    height: 50,
+    marginBottom: 10
   },
   formHeader: {
     display: 'flex',
@@ -240,5 +212,8 @@ const styles = {
     border: 'none',
     background: 'none',
     marginBottom: 10
+  },
+  embedContainer: {
+    marginTop: 20
   }
 };

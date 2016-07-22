@@ -37,7 +37,7 @@ const emptyForm = {
     headerIntroText: '#444444',
     formBackground: '#FFFFFF',
     footerBackground: '#FFFFFF',
-    requiredAsterisk: '#DDDDDD',
+    requiredAsterisk: '#939393',
     inputBackground: '#FFFFFF',
     inputText: '#222222',
     footerText: '#222222',

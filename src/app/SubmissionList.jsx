@@ -111,6 +111,7 @@ export default class SubmissionList extends Component {
             onSelect={this.onSubmissionSelect.bind(this)} />
           <SubmissionDetail
             submission={submission}
+            submissionId={submissionList.length - submissionList.indexOf(activeSubmission)}
             removeFromGallery={this.removeFromGallery.bind(this)}
             sendToGallery={this.sendToGallery.bind(this)}
             gallery={gallery}

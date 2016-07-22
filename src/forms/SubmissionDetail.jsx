@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import Radium from 'radium';
 import moment from 'moment';
 import BBookmark from 'react-icons/lib/fa/bookmark';
@@ -11,7 +11,7 @@ import Button from 'components/Button';
 import { hasFlag } from 'forms/FormActions';
 
 @Radium
-export default class SubmissionDetail extends React.Component {
+export default class SubmissionDetail extends Component {
   render() {
     const { submission } = this.props;
 
@@ -107,33 +107,35 @@ export default class SubmissionDetail extends React.Component {
   }
 
   renderAuthorDetail() {
-    const { submission, onFlag, onBookmark } = this.props;
-
-    var authorDetails = submission.replies.filter(reply => {
-      return reply.identity === true;
-    }).map(reply => {
-      return {label: reply.question, answer: this.renderAnswer(reply.answer)};
-    });
+    const { submission, submissionId, onFlag, onBookmark } = this.props;
+    const authorDetails = submission.replies
+      .filter(({ identity }) => identity === true)
+      .map(reply => ({
+        label: reply.question,
+        answer: this.renderAnswer(reply.answer)
+      }));
 
     const [flagged, bookmarked] = [hasFlag(submission, 'flagged'), hasFlag(submission, 'bookmarked')];
     return (
       <div>
-        <div style={styles.headerButtons}>
-          <Button
-            style={styles.headerButton}
-            onClick={() => onFlag(!flagged)}
-            category={flagged ? 'danger' : ''}>
-              Flag{flagged ? 'ged' : ''} <FlagIcon style={styles.headerButtonIcon(flagged, 'rgb(217, 83, 79)')} />
+        <div style={styles.authorHeaderContainer}>
+          <div style={styles.authorHeaderInfo}>
+            <span style={styles.subNum}>{submissionId}</span> {moment(submission.date_updated).format('L LT')}
+          </div>
+          <div style={styles.headerButtons}>
+            <Button
+              style={styles.headerButton}
+              onClick={() => onFlag(!flagged)}
+              category={flagged ? 'danger' : ''}>
+                Flag{flagged ? 'ged' : ''} <FlagIcon style={styles.headerButtonIcon(flagged, 'rgb(217, 83, 79)')} />
+              </Button>
+            <Button
+              style={styles.headerButton}
+              onClick={() => onBookmark(!bookmarked)}
+              category={bookmarked ? 'success' : ''}>
+              Bookmark{bookmarked ? 'ed' : ''} <BBookmark  style={styles.headerButtonIcon(bookmarked, 'rgb(46, 151, 102)')} />
             </Button>
-          <Button
-            style={styles.headerButton}
-            onClick={() => onBookmark(!bookmarked)}
-            category={bookmarked ? 'success' : ''}>
-            Bookmark{bookmarked ? 'ed' : ''} <BBookmark  style={styles.headerButtonIcon(bookmarked, 'rgb(46, 151, 102)')} />
-          </Button>
-        </div>
-        <div style={styles.headerContainer}>
-          <span style={styles.subNum}>37</span> {moment(submission.date_updated).format('L LT')}
+          </div>
         </div>
         <div style={styles.submissionContainer}>
           <div style={styles.authorContainer}>
@@ -177,6 +179,11 @@ const styles = {
   answer: {
     clear: 'both'
   },
+  authorHeaderContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
   authorDetailsContainer: {
     display: 'flex',
     paddingTop: 10
@@ -195,14 +202,9 @@ const styles = {
   },
   headerContainer: {
     display: 'inline-block',
-    paddingBottom: 8,
-    borderBottom: '1px solid ' + settings.mediumGrey,
     position: 'relative'
   },
   headerButtons: {
-    position: 'absolute',
-    top: 10,
-    right: 10
   },
   headerButton: {
     marginLeft: 10
@@ -212,11 +214,15 @@ const styles = {
       color: !show ? color : '#fff'
     };
   },
-  authorContainer: {
-
+  authorHeaderInfo: {
+    flex: 1,
+    paddingBottom: 15,
+    borderBottom: '1px solid ' + settings.mediumGrey,
+    marginRight: 20
   },
   subNum: {
-    fontSize: '2.2em',
+    fontSize: '1.2em',
+    marginRight: 10,
     fontWeight: 'bold'
   }
 };

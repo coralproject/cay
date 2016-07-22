@@ -166,7 +166,8 @@ export default class FormDiagram extends Component {
 const styles = {
   formDiagram: {
     height: 'auto',
-    minHeight: '300px',
+    minHeight: 300,
+    minWidth: 350,
     position: 'relative'
   },
   formDiagramContainer: {

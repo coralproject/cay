@@ -51,6 +51,7 @@ const styles = {
     width: 500
   },
   closeButton: {
+    borderRadius: '4px 0 0 4px',
     cursor: 'pointer',
     backgroundColor: 'white',
     color: '#888',
@@ -62,6 +63,9 @@ const styles = {
     position: 'absolute',
     right: 500,
     top: 25,
-    paddingRight: 10
+    paddingRight: 10,
+    ':hover': {
+      color: 'black'
+    }
   }
 };

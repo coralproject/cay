@@ -76,6 +76,8 @@ export const UPDATE_ORDER = 'UPDATE_ORDER';
 export const UPDATE_SEARCH = 'UPDATE_SEARCH';
 export const CLEAN_SUBMISSION_FILTERS = 'CLEAN_SUBMISSION_FILTERS';
 
+export const GALLERY_ENABLE_IDENTIFIABLE = 'GALLERY_ENABLE_IDENTIFIABLE';
+
 const getInit = (body, method) => {
 
   var headers = new Headers({ 'Accept': 'application/json', 'Content-Type': 'application/json' });
@@ -536,6 +538,29 @@ export const updateGalleryOrientation = orientation => {
   return {type: UPDATE_GALLERY_ORIENTATION, orientation};
 };
 
+/*
+
+{id} is the id of a widget in a form
+{add} is a boolean indicating whether the id should be added or removed
+
+*/
+export const toggleIdentifiable = (id, add) => {
+  return (dispatch, getState) => {
+    const {forms: {identifiableIds: oldIds}} = getState();
+
+    let ids;
+
+    if (add) { // add the new id
+      ids = [id, ...oldIds];
+    } else { // splice out the old one
+      ids = [...oldIds];
+      ids.splice(ids.indexOf(id), 1);
+    }
+
+    dispatch({type: GALLERY_ENABLE_IDENTIFIABLE, ids});
+  };
+};
+
 export const publishGallery = formId => {
   return (dispatch, getState) => {
     const {app, forms} = getState();
@@ -543,7 +568,8 @@ export const publishGallery = formId => {
       galleryTitle,
       galleryDescription,
       galleryReaderInfoPlacement,
-      galleryOrientation
+      galleryOrientation,
+      identifiableIds
     } = forms;
     dispatch({type: PUBLISH_GALLERY_INIT});
 
@@ -564,7 +590,8 @@ export const publishGallery = formId => {
             galleryTitle,
             galleryDescription,
             galleryReaderInfoPlacement,
-            galleryOrientation
+            galleryOrientation,
+            identifiableIds
           })
         });
       })

@@ -26,6 +26,7 @@ const initial = {
   galleryDescription: '',
   galleryOrientation: 'vertical', // vertical|horizontal
   galleryReaderInfoPlacement: 'above', // above|below
+  identifiableIds: [],
   widgets: [],
   loadingAnswerEdit: false,
   loadingGallery: false,
@@ -308,6 +309,9 @@ const forms = (state = initial, action) => {
 
   case types.UPDATE_GALLERY_ORIENTATION:
     return {...state, galleryOrientation: action.orientation};
+
+  case types.GALLERY_ENABLE_IDENTIFIABLE:
+    return {...state, identifiableIds: action.ids};
 
   case types.PUBLISH_GALLERY_INIT:
     return {...state, loadingGallery: true, galleryUrl: '', galleryCode: ''};

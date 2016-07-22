@@ -12,6 +12,7 @@ import {
   updateReaderInfoPlacement,
   updateGalleryTitle,
   updateGalleryDesc,
+  toggleIdentifiable,
   publishGallery,
   editAnswer,
   cancelEdit,
@@ -34,7 +35,6 @@ import CardHeader from 'components/cards/CardHeader';
 import GalleryPreview from 'forms/GalleryPreview';
 
 import TextField from 'components/forms/TextField';
-import Checkbox from 'components/forms/Checkbox';
 import Button from 'components/Button';
 import Modal from 'components/modal/Modal';
 
@@ -165,7 +165,6 @@ export default class SubmissionGallery extends React.Component {
   }
 
   togglePreview() {
-    console.log('togglePreview', this.state.previewOpen);
     const previewOpen = !this.state.previewOpen;
     if (previewOpen) {
       // fetch gallery from server
@@ -182,11 +181,13 @@ export default class SubmissionGallery extends React.Component {
     this.setState({previewOpen: false});
   }
 
+  updateIdentifiable(id, add) {
+    this.props.dispatch(toggleIdentifiable(id, add));
+  }
+
   render() {
 
     const {forms, app} = this.props;
-
-    console.log('render.forms', forms.activeGallery, forms.activeGallery, forms.galleryUrl);
 
     const form = forms[forms.activeForm];
     const gallery = forms[forms.activeGallery];
@@ -250,9 +251,19 @@ export default class SubmissionGallery extends React.Component {
                   styles.includeLabel,
                   {display: attributionFields.length ? 'block' : 'none'}
                 ]}>Include</p>
-                {attributionFields.map(function (field, i) {
-                  return <Checkbox key={i} label={field.title} />;
-                })}
+              {attributionFields.map((field, i) => {
+                const isChecked = forms.identifiableIds.indexOf(field.id) !== -1;
+                return (
+                  <label style={styles.idLabel}>
+                    <input
+                      onChange={this.updateIdentifiable.bind(this, field.id, !isChecked)}
+                      type="checkbox"
+                      checked={isChecked}
+                      key={i} />
+                    {field.title}
+                  </label>
+                );
+              })}
 
               </Card>
               <div
@@ -321,7 +332,7 @@ export default class SubmissionGallery extends React.Component {
           style={styles.publishModal}
           title="Get embed codes"
           isOpen={this.state.publishModalOpen}
-          confirmAction={() => {}}
+          confirmAction={this.closePublishModal.bind(this)}
           cancelAction={this.closePublishModal.bind(this)}>
           <div>
             <p>Embed code</p>
@@ -447,6 +458,11 @@ const styles = {
     marginBottom: 10
   },
   includeLabel: {
+    marginBottom: 5
+  },
+  idLabel: {
+    display: 'block',
+    cursor: 'pointer',
     marginBottom: 5
   },
   embedCodes: {

@@ -27,6 +27,7 @@ export default class GalleryPreview extends React.Component {
           {display: this.props.open ? 'block' : 'none'}
         ]}>
         <div id="ask-gallery" style={styles.preview} />
+        <div style={styles.closeButton}>×</div>
       </div>
     );
   }
@@ -48,5 +49,19 @@ const styles = {
     right: 0,
     height: '100%',
     width: 500
+  },
+  closeButton: {
+    cursor: 'pointer',
+    backgroundColor: 'white',
+    color: '#888',
+    fontWeight: 'bold',
+    fontSize: '40px',
+    width: 40,
+    height: 40,
+    textAlign: 'right',
+    position: 'absolute',
+    right: 500,
+    top: 25,
+    paddingRight: 10
   }
 };

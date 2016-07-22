@@ -40,7 +40,7 @@ import Modal from 'components/modal/Modal';
 
 import GalleryAnswer from 'forms/GalleryAnswer';
 
-@connect(state => state.forms)
+@connect(({app, forms}) => ({app, forms}))
 @Radium
 export default class SubmissionGallery extends React.Component {
 
@@ -78,18 +78,18 @@ export default class SubmissionGallery extends React.Component {
   }
 
   renderBlank() {
-    if (this.props.loadingGallery) {
+    if (this.props.forms.loadingGallery) {
       return (<p>Loading submissions...</p>);
     }
 
-    if (this.props.formLoading && !this.props.activeForm) {
+    if (this.props.forms.formLoading && !this.props.forms.activeForm) {
       return (<p>Loading form...</p>);
     }
 
     return (
       <p>
         There are currently no items in your gallery.
-        You may add items by visiting <Link to={`/forms/${this.props.activeForm}/submissions`}>
+        You may add items by visiting <Link to={`/forms/${this.props.forms.activeForm}/submissions`}>
         Review Submissions
         </Link>
       </p>
@@ -97,7 +97,7 @@ export default class SubmissionGallery extends React.Component {
   }
 
   updateFormStatus(value) {
-    this.props.dispatch(updateFormStatus(this.props.activeForm, value));
+    this.props.dispatch(updateFormStatus(this.props.forms.activeForm, value));
   }
 
   getAttributionFields(form) {
@@ -115,7 +115,7 @@ export default class SubmissionGallery extends React.Component {
   }
 
   confirmEdit(answer) {
-    this.props.dispatch(editAnswer(this.props.editableAnswer, answer, this.props.activeForm));
+    this.props.dispatch(editAnswer(this.props.forms.editableAnswer, answer, this.props.forms.activeForm));
   }
 
   cancelEdit() {
@@ -141,7 +141,7 @@ export default class SubmissionGallery extends React.Component {
   }
 
   openPublishModal() {
-    this.props.dispatch(publishGallery(this.props.activeForm)).then(gallery => {
+    this.props.dispatch(publishGallery(this.props.forms.activeForm)).then(gallery => {
       this.setState({publishModalOpen: true});
     });
   }
@@ -169,7 +169,7 @@ export default class SubmissionGallery extends React.Component {
     const previewOpen = !this.state.previewOpen;
     if (previewOpen) {
       // fetch gallery from server
-      this.props.dispatch(publishGallery(this.props.activeForm)).then(gallery => {
+      this.props.dispatch(publishGallery(this.props.forms.activeForm)).then(gallery => {
         this.setState({previewOpen});
       });
     } else {
@@ -184,10 +184,14 @@ export default class SubmissionGallery extends React.Component {
 
   render() {
 
-    const form = this.props[this.props.activeForm];
-    const gallery = this.props[this.props.activeGallery];
-    const submissions = this.props.submissionList.map(id => this.props[id]);
-    const ans = this.props[this.props.answerBeingEdited];
+    const {forms, app} = this.props;
+
+    console.log('render.forms', forms.activeGallery, forms.activeGallery, forms.galleryUrl);
+
+    const form = forms[forms.activeForm];
+    const gallery = forms[forms.activeGallery];
+    const submissions = forms.submissionList.map(id => forms[id]);
+    const ans = forms[forms.answerBeingEdited];
 
     const attributionFields = this.getAttributionFields(form);
     const orientationOpts = [
@@ -217,7 +221,7 @@ export default class SubmissionGallery extends React.Component {
             <div style={styles.orientationOpts}>
               <Select
                 options={orientationOpts}
-                value={this.props.galleryOrientation}
+                value={forms.galleryOrientation}
                 onChange={this.updateOrientation.bind(this)} />
             </div>
             <Button
@@ -238,7 +242,7 @@ export default class SubmissionGallery extends React.Component {
                 <p style={styles.includeLabel}>Placement</p>
                 <Select
                   style={styles.placementOpts}
-                  value={this.props.galleryReaderInfoPlacement}
+                  value={forms.galleryReaderInfoPlacement}
                   options={placementOpts}
                   onChange={this.updatePlacement.bind(this)} />
 
@@ -258,19 +262,19 @@ export default class SubmissionGallery extends React.Component {
             <div style={styles.gallery}>
               <div style={styles.galleryTitle}>
                 <TextField
-                  value={this.props.galleryTitle}
+                  value={forms.galleryTitle}
                   onBlur={this.setHeadline.bind(this)}
                   style={styles.galleryTitles}
                   label="Write a headline (optional)" />
                 <br />
                 <TextField
-                  value={this.props.galleryDescription}
+                  value={forms.galleryDescription}
                   onBlur={this.setDescription.bind(this)}
                   style={styles.galleryTitles}
                   label="Write description for the gallery (optional)" />
               </div>
               {
-                this.props.activeGallery ?
+                forms.activeGallery ?
                 this.renderGallery(gallery) :
                 this.renderBlank()
               }
@@ -302,7 +306,7 @@ export default class SubmissionGallery extends React.Component {
                       <textarea
                         style={styles.editText}
                         onChange={this.updateEditableAnswer.bind(this)}
-                        value={this.props.editableAnswer}></textarea>
+                        value={forms.editableAnswer}></textarea>
                       {this.showIdentityAnswers(ans)}
                     </div>
                 </div>
@@ -321,14 +325,14 @@ export default class SubmissionGallery extends React.Component {
           cancelAction={this.closePublishModal.bind(this)}>
           <div>
             <p>Embed code</p>
-            <textarea style={styles.embedTextarea}></textarea>
+            <textarea style={styles.embedTextarea} value={`<script src="${forms.galleryUrl}"></script><div id="ask-gallery" />`}></textarea>
             <Button
               style={styles.copyButton}
               onClick={this.copyEmbedToClipboard.bind(this)}>
               Copy <Clipboard />
             </Button>
             <p style={{clear: 'both'}}>Embed code (with iframe)</p>
-            <textarea style={styles.embedTextarea}></textarea>
+            <textarea style={styles.embedTextarea} value={`<iframe width="100%" height="580" src="${app.elkhornHost}/iframe-gallery/${forms.activeGallery}"></iframe>`}></textarea>
             <Button
               style={styles.copyButton}
               onClick={this.copyEmbedToClipboard.bind(this, 'iframe')}>
@@ -338,7 +342,7 @@ export default class SubmissionGallery extends React.Component {
         </Modal>
 
         <GalleryPreview
-          {...this.props}
+          {...forms}
           closePreview={this.closePreview.bind(this)}
           open={this.state.previewOpen} />
 
@@ -357,6 +361,8 @@ const styles = {
     }
   },
   embedTextarea: {
+    fontFamily: 'monospace',
+    fontSize: 16,
     width: '100%',
     marginBottom: 5,
     border: '1px solid ' + settings.mediumGrey,

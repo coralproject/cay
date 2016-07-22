@@ -15,7 +15,7 @@ import RadioButton from 'components/forms/RadioButton';
 
 import settings from 'settings';
 
-@connect()
+@connect(({ forms }) => ({ forms }))
 @onClickOutside
 @Radium
 export default class FormChrome extends React.Component {
@@ -65,7 +65,7 @@ export default class FormChrome extends React.Component {
   }
 
   submissionBadge() {
-    return this.props.form ? <Badge style={styles.badge} count={this.props.form.stats.responses} /> : '';
+    return this.props.form && this.props.form.stats ? <Badge style={styles.badge} count={this.props.form.stats.responses} /> : '';
   }
 
   toggleDropdown() {
@@ -94,7 +94,7 @@ export default class FormChrome extends React.Component {
       borderRadius: 5,
       cursor: 'pointer',
       userSelect: 'none',
-      backgroundColor: this.state.statusDropdownOpen ? '#d8d8d8' : '#fff'
+      backgroundColor: this.state.statusDropdownOpen ? '#fff' : '#d8d8d8'
     };
   }
 
@@ -107,14 +107,12 @@ export default class FormChrome extends React.Component {
   }
 
   updateInactiveMessage() {
-    this.setState({updatingInactiveMessage: true})
+    this.setState({updatingInactiveMessage: true});
     this.props.dispatch(updateInactiveMessage(this.state.inactiveMessageDraft, this.props.form))
-      .then(() => {
-        this.setState({statusDropdownOpen: false, updatingInactiveMessage: false});
-      });
+      .then(() =>this.setState({statusDropdownOpen: false, updatingInactiveMessage: false}));
   }
 
-  handleClickOutside(evt) {
+  handleClickOutside() {
     this.setState({statusDropdownOpen: false});
   }
 
@@ -146,14 +144,12 @@ export default class FormChrome extends React.Component {
   }
 
   render() {
-    let name = _.has(this.props, 'form.header.title') ? this.props.form.header.title :
-      this.props.create ? 'Untitled Form' : '';
+    const { form, create, activeTab } = this.props;
+    let name = _.has(this.props, 'form.header.title') ? form.header.title : '';
 
     if (name.length > 15) {
       name = name.split(' ').slice(0, 4).join(' ') + '…'; // use ellipsis character
     }
-
-    const {form} = this.props;
 
     return (
       <div style={styles.base}>
@@ -169,15 +165,15 @@ export default class FormChrome extends React.Component {
           </div>
           <div key="dewey" style={[
             styles.option,
-            this.props.activeTab === 'submissions' && styles.active,
-            this.props.create && styles.disabled]}
+            activeTab === 'submissions' && styles.active,
+            create && styles.disabled]}
             onClick={this.reviewSubmissions.bind(this)}>
             Submissions {this.submissionBadge()}
           </div>
           <div key="louie" style={[
             styles.option,
-            this.props.activeTab === 'gallery' && styles.active,
-            this.props.create && styles.disabled]}
+            activeTab === 'gallery' && styles.active,
+            create && styles.disabled]}
             onClick={this.manageGallery.bind(this)}>
             Gallery {this.galleryBadge()}
           </div>
@@ -212,11 +208,6 @@ export default class FormChrome extends React.Component {
                 <textarea
                   onBlur={this.setInactiveMessage.bind(this)}
                   style={styles.statusMessage}></textarea>
-                <Button
-                  style={{float: 'left', marginRight: 10}}
-                  category={this.state.updatingInactiveMessage ? 'disabled' : 'success'}
-                  onClick={this.updateInactiveMessage.bind(this)}
-                  >Save <SaveIcon /></Button>
                 <p>The message will appear to readers when you close the form and are no longer collecting submissions.</p>
                 <div style={this.getLoaderStyles(this, true)}></div>
                 <div style={this.getLoaderStyles()}></div>

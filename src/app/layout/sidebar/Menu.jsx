@@ -56,8 +56,8 @@ const TopMenu = ({ features }) => (
 
 const BottomMenu = ({ open, onToggleSidebar }) => (
   <ul>
-    <MenuItem name="Settings" target='#' onClick={stopAndBubble(()=>{})}
-      icon={<FaCog />} />
+    {/*<MenuItem name="Settings" target='#' onClick={stopAndBubble(()=>{})}
+      icon={<FaCog />} /> */}
     <MenuItem name="Collapse menu" target='#' onClick={stopAndBubble(onToggleSidebar)}
       icon={open ? <FaAngleDoubleLeft /> : <FaAngleDoubleRight />} />
   </ul>

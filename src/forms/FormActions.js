@@ -519,6 +519,7 @@ export const updateGalleryOrientation = orientation => {
 export const publishGallery = formId => {
   return (dispatch, getState) => {
     const {app, forms} = getState();
+    const {galleryReaderInfoPlacement, galleryOrientation} = forms;
     dispatch({type: PUBLISH_GALLERY_INIT});
 
     console.log('activeGallery', forms.activeGallery);
@@ -533,7 +534,7 @@ export const publishGallery = formId => {
         return fetch(`${app.elkhornHost}/gallery/${gallery.id}/publish`, {
           method: 'POST',
           headers: new Headers({'Content-Type': 'application/json'}),
-          body: JSON.stringify(gallery)
+          body: JSON.stringify({...gallery, galleryReaderInfoPlacement, galleryOrientation})
         });
       })
       .then(res => res.json())

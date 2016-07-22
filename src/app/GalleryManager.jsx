@@ -19,6 +19,8 @@ import {Link} from 'react-router';
 import moment from 'moment';
 
 import FaFloppyO from 'react-icons/lib/fa/floppy-o';
+import Eye from 'react-icons/lib/fa/eye';
+import Refresh from 'react-icons/lib/fa/refresh';
 import Clipboard from 'react-icons/lib/fa/clipboard';
 import Select from 'react-select';
 
@@ -28,6 +30,7 @@ import FormChrome from 'app/layout/FormChrome';
 import ContentHeader from 'components/ContentHeader';
 import Card from 'components/cards/Card';
 import CardHeader from 'components/cards/CardHeader';
+import GalleryPreview from 'forms/GalleryPreview';
 
 import TextField from 'components/forms/TextField';
 import Checkbox from 'components/forms/Checkbox';
@@ -42,7 +45,7 @@ export default class SubmissionGallery extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {publishModalOpen: false};
+    this.state = {publishModalOpen: false, previewOpen: true};
   }
 
   componentWillMount() {
@@ -152,6 +155,15 @@ export default class SubmissionGallery extends React.Component {
     }
   }
 
+  togglePreview() {
+    console.log('togglePreview', this.state.previewOpen);
+    this.setState({previewOpen: !this.state.previewOpen});
+  }
+
+  closePreview() {
+    this.setState({previewOpen: false});
+  }
+
   render() {
 
     const form = this.props[this.props.activeForm];
@@ -190,12 +202,14 @@ export default class SubmissionGallery extends React.Component {
                 value={this.props.galleryOrientation}
                 onChange={this.updateOrientation.bind(this)} />
             </div>
-            <Button style={styles.modButton} category="brand">Preview</Button>
-            <Button style={styles.modButton} category="success">Save <FaFloppyO /></Button>
+            <Button
+              style={styles.modButton}
+              onClick={this.togglePreview.bind(this)}
+              category="brand"><Eye /> Preview</Button>
             <Button
               onClick={this.openPublishModal.bind(this)}
               style={styles.modButton}
-              category="inverse">Publish</Button>
+              category="success"><Refresh /> Publish</Button>
           </div>
           <hr style={styles.rule} />
           <div style={styles.container}>
@@ -210,12 +224,16 @@ export default class SubmissionGallery extends React.Component {
                   options={placementOpts}
                   onChange={this.updatePlacement.bind(this)} />
 
-                <p style={styles.includeLabel}>Include</p>
+                <p style={[
+                  styles.includeLabel,
+                  {display: attributionFields.length ? 'block' : 'none'}
+                ]}>Include</p>
                 {attributionFields.map(function (field, i) {
                   return <Checkbox key={i} label={field.title} />;
                 })}
 
               </Card>
+              <div style={styles.embedCodes}><Refresh /> Get embed codes</div>
             </div>
             <div style={styles.gallery}>
               <div style={styles.galleryTitle}>
@@ -290,6 +308,10 @@ export default class SubmissionGallery extends React.Component {
             </Button>
           </div>
         </Modal>
+
+        <GalleryPreview
+          closePreview={this.closePreview.bind(this)}
+          open={this.state.previewOpen} />
 
       </Page>
     );
@@ -391,5 +413,15 @@ const styles = {
   },
   includeLabel: {
     marginBottom: 5
+  },
+  embedCodes: {
+    backgroundColor: settings.darkGrey,
+    color: 'white',
+    padding: 8,
+    borderRadius: 4,
+    cursor: 'pointer',
+    ':hover': {
+      backgroundColor: '#444'
+    }
   }
 };

@@ -67,21 +67,21 @@ export default class Sidebar extends Component {
       return (
         <div onClick={() => onSelect(submission.id)}
           style={[
-            styles.sidebar.submissionContainer,
-            submission.id === activeSubmission && styles.sidebar.activeSubmission
+            styles.submissionContainer,
+            submission.id === activeSubmission && styles.activeSubmission
           ]} key={key}>
           <span style={{fontWeight: 'bold'}}>{key + 1}</span>
           <span>{moment(submission.date_updated).format('L LT')}</span>
           <div>
-            <span key={`${key}-0`} style={[styles.sidebar.iconContainer(hasFlag(submission, 'flagged'),
-              submission.id === activeSubmission),styles.sidebar.iconFlagged]}
+            <span key={`${key}-0`} style={[styles.iconContainer(hasFlag(submission, 'flagged'),
+              submission.id === activeSubmission),styles.iconFlagged]}
               onClick={() => this.props.onFlag(!hasFlag(submission, 'flagged'))}>
-              <BFlag style={styles.sidebar.icon(hasFlag(submission, 'flagged'))} /></span>
+              <BFlag style={styles.icon(hasFlag(submission, 'flagged'))} /></span>
 
-            <span key={`${key}-1`} style={[styles.sidebar.iconContainer(hasFlag(submission, 'bookmarked'),
-              submission.id === activeSubmission), styles.sidebar.iconBookmarked]}
+            <span key={`${key}-1`} style={[styles.iconContainer(hasFlag(submission, 'bookmarked'),
+              submission.id === activeSubmission), styles.iconBookmarked]}
               onClick={() => this.props.onBookmark(!hasFlag(submission, 'bookmarked'))}>
-              <BBookmark style={styles.sidebar.icon(hasFlag(submission, 'bookmarked'))}/>
+              <BBookmark style={styles.icon(hasFlag(submission, 'bookmarked'))}/>
               </span>
           </div>
         </div>
@@ -104,21 +104,21 @@ export default class Sidebar extends Component {
     const { filterByOpen, orderOpen, search, subPageOffset } = this.state;
 
     return (
-      <div style={styles.sidebar}>
-        <div style={styles.sidebar.container}>
-          <div style={styles.sidebar.countContainer}>
-            <p style={styles.sidebar.count}>{formCounts.totalSearch} of {formCounts.totalSubmissions} Submission{formCounts.totalSubmissions === 1 ? '' : 's'}</p>
+      <div style={styles}>
+        <div style={styles.container}>
+          <div style={styles.countContainer}>
+            <p style={styles.count}>{formCounts.totalSearch} of {formCounts.totalSubmissions} Submission{formCounts.totalSubmissions === 1 ? '' : 's'}</p>
           </div>
-          <div style={styles.sidebar.searchContainer}>
-            <input style={styles.sidebar.search} type='text' value={search}
+          <div style={styles.searchContainer}>
+            <input style={styles.search} type='text' value={search}
               onChange={evt => this.setState({ search: evt.target.value })}
               placeholder='Search' />
             <button onClick={() => this.props.onSearchChange(search)}
-              style={[styles.sidebar.filterButton, styles.sidebar.filterLeftButton]}><FaSearch /></button>
+              style={[styles.filterButton, styles.filterLeftButton]}><FaSearch /></button>
             <button onClick={this.onFilterByToggle.bind(this, true)}
-              style={[styles.sidebar.filterButton, styles.sidebar.filterRightButton]}><FaFilter /></button>
+              style={[styles.filterButton, styles.filterRightButton]}><FaFilter /></button>
             <button onClick={this.onOrderToggle.bind(this, true)}
-              style={[styles.sidebar.filterButton, styles.sidebar.filterAsideButton]}><FaLongArrowUp /><FaLongArrowDown /></button>
+              style={[styles.filterButton, styles.filterAsideButton]}><FaLongArrowUp /><FaLongArrowDown /></button>
           </div>
           <FilterDropdown open={filterByOpen}
             filterBy={filterBy}

@@ -62,6 +62,11 @@ export const UPDATE_FORM_INACTIVE_MESSAGE_INIT = 'UPDATE_FORM_INACTIVE_MESSAGE_I
 export const UPDATE_FORM_INACTIVE_MESSAGE_SUCCESS = 'UPDATE_FORM_INACTIVE_MESSAGE_SUCCESS';
 export const UPDATE_FORM_INACTIVE_MESSAGE_FAILURE = 'UPDATE_FORM_INACTIVE_MESSAGE_FAILURE';
 
+export const UPDATE_FILTER_BY = 'UPDATE_FILTER_BY';
+export const UPDATE_ORDER = 'UPDATE_ORDER';
+export const UPDATE_SEARCH = 'UPDATE_SEARCH';
+export const CLEAN_SUBMISSION_FILTERS = 'CLEAN_SUBMISSION_FILTERS';
+
 const getInit = (body, method) => {
 
   var headers = new Headers({ 'Accept': 'application/json', 'Content-Type': 'application/json' });
@@ -191,11 +196,13 @@ export const leavingEdit = formId => {
   };
 };
 
-export const createEmpty = () => {
-  return {
-    type: FORM_CREATE_EMPTY
-  };
-};
+export const createEmpty = () => (dispatch, getState) =>
+dispatch(createEmptyAction(`${getState().app.pillarHost}/api/form_submission/`));
+
+const createEmptyAction = saveDestination => ({
+  type: FORM_CREATE_EMPTY,
+  saveDestination
+});
 
 export const replaceWidgets = fields => {
   return {
@@ -249,9 +256,10 @@ export const updateForm = (data) => {
   };
 };
 
-export const submissionsFetched = submissions => ({
+export const submissionsFetched = (counts, submissions) => ({
   type: SUBMISSIONS_REQUEST_SUCCESS,
-  submissions
+  submissions,
+  counts
 });
 
 export const submissionsFetchError = error => {
@@ -352,18 +360,42 @@ export const updateInactiveMessage = (message, form) => {
 
 export const fetchSubmissions = (formId, page = 0) => {
   return (dispatch, getState) => {
-    const {app} = getState();
+    const { app, forms } = getState();
+    const { submissionOrder, submissionFilterBy, submissionSearch } = forms;
+    const filterBy = submissionFilterBy === 'default' ? '' : submissionFilterBy;
     const skip = page * 10;
-    return fetch(`${app.pillarHost}/api/form_submissions/${formId}?skip=${skip}&limit=10`)
+    return fetch(`${app.pillarHost}/api/form_submissions/${formId}?skip=${skip}&limit=10&orderby=${submissionOrder}&filterby=${filterBy}&search=${submissionSearch}`)
       .then(res => res.json())
-      .then(submissions => dispatch(submissionsFetched(submissions)))
+      .then(data => dispatch(submissionsFetched(data.counts, data.submissions || [])))
       .catch(error => dispatch(submissionsFetchError(error)));
   };
 };
 
-export const updateSubmission = props => dispatch => {
-  dispatch(updateActiveSubmission(props));
-  // TODO: go to server when API is done
+// Receives an object of <string>, <bool> elements like {flagged: true, bookmarked: false}
+// and updates the submission flags. The flags attribute on a submission is
+// an array of strings. For example `flags: ["flagged", "bookmarked"]`
+
+export const updateSubmissionFlags = props => (dispatch, getState) => {
+  const state = getState();
+  const { activeSubmission } = state.forms;
+  const keys = Object.keys(props);
+
+  // Create an array with the old and new flags
+  const allKeys = keys.concat(state.forms[activeSubmission].flags);
+
+  dispatch(updateActiveSubmission({
+    // remove the flags that are for removing and prevent duplicates using a Set
+    flags: [...new Set(allKeys.filter(k => props[k] !== false))]
+  }));
+
+  // Perform an http request for each flag passed in the original object
+  // and return the responses as an array (we are not using it but is good
+  // to return the promise so the caller know when everything is done)
+  return Promise.all(keys.map(prop =>
+    fetch(`${state.app.pillarHost}/api/form_submission/${activeSubmission}/flag/${prop}`,
+          { method: props[prop] ? 'PUT': 'DELETE', mode: 'cors' })
+    .then(res=> res.json())
+  ));
 };
 
 const requestGallery = () => {
@@ -478,3 +510,24 @@ export const editAnswer = (edited, answer, formId) => {
       .catch(error => dispatch({type: ANSWER_EDIT_FAILED, error}));
   };
 };
+
+export const updateFilterBy = filterBy => ({
+  type: UPDATE_FILTER_BY,
+  value: filterBy
+});
+
+export const updateOrder = order => ({
+  type: UPDATE_ORDER,
+  value: order
+});
+
+export const updateSearch = search => ({
+  type: UPDATE_SEARCH,
+  value: search
+});
+
+export const cleanSubmissionFilters = () => ({
+  type: CLEAN_SUBMISSION_FILTERS
+});
+
+export const hasFlag = (submission, flag) => -1 !== submission.flags.indexOf(flag);

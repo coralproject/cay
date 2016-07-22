@@ -72,8 +72,9 @@ export default class TextFieldEditor extends Component {
 const styles = {
   bottomCheck: {
     display: 'inline-block',
-    padding: '10px 0 10px 20px',
-    cursor: 'pointer'
+    padding: '10px 0 10px 10px',
+    cursor: 'pointer',
+    lineHeight: '30px'
   },
   bottomOptionsRight: {
     textAlign: 'right',

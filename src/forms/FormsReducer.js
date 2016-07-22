@@ -5,10 +5,19 @@ const initial = {
   formList: [],
   galleryList: [],
   submissionList: [],
+  formCounts: {
+    totalSearch: 0,
+    totalSubmissions: 0,
+    bookmarked: 0,
+    flagged: 0
+  },
   answerList: [],
   editAccess: {},
   form: null,
   savingForm: false,
+  submissionFilterBy: 'default',
+  submissionOrder: 'dsc',
+  submissionSearch: '',
   savedForm: null, // this is the Objectid of the created form returned from Elkhorn.
   formCreationError: null,
   activeForm: null, // might be able to combine this with {form} above in the future
@@ -23,21 +32,21 @@ const initial = {
 const emptyForm = {
   target: '#ask-form',
   theme: {
-    headerBackground: 'rgb(246, 125, 111)',
-    headerText: '#FFFFFF',
-    headerIntroText: '#EEEEEE',
-    formBackground: '#EEEEEE',
-    footerBackground: '#DDDDDD',
-    requiredAsterisk: '#FF44FF',
-    inputBackground: '#F0F0F0',
+    headerBackground: '#FFFFFF',
+    headerText: '#222222',
+    headerIntroText: '#444444',
+    formBackground: '#FFFFFF',
+    footerBackground: '#FFFFFF',
+    requiredAsterisk: '#DDDDDD',
+    inputBackground: '#FFFFFF',
     inputText: '#222222',
     footerText: '#222222',
     fieldTitleText: '#222222',
     progressBar: '#44AA44',
     progressBarBackground: '#CCCCCC',
-    submitButtonBackground: '#B71C1C',
+    submitButtonBackground: '#F67D6E',
     submitButtonText: '#FFFFFF',
-    selectedItemBackground: '#111111',
+    selectedItemBackground: '#2E343B',
     selectedItemText: '#FAFAFA'
   },
   settings: {
@@ -100,9 +109,13 @@ const forms = (state = initial, action) => {
     delete newState.editAccess[action.formId];
     return newState;
 
+  case types.FORM_EDIT_SUCCESS:
+    return { ...state, form: action.data };
+
   case types.FORM_CREATE_EMPTY:
     const form = Object.assign({}, emptyForm, { steps: [{ id: uuid.v4(), name: 'first_step', createdAt: Date.now() }] });
-    return Object.assign({}, state, {form: form, widgets: [], savingForm: false, savedForm: null });
+    form.settings.saveDestination = action.saveDestination;
+    return Object.assign({}, state, {activeForm: null, form: form, widgets: [], savingForm: false, savedForm: null });
 
   case types.FORM_DUPLICATE_WIDGET:
 
@@ -110,6 +123,7 @@ const forms = (state = initial, action) => {
 
     var widgetsCopy = state.widgets.slice();
     var widgetCopy = Object.assign({}, widgetsCopy[position]);
+    widgetCopy.id = uuid.v4();
 
     var fieldsBefore = widgetsCopy.slice(0, position);
     var fieldsAfter = widgetsCopy.slice(position);
@@ -153,8 +167,9 @@ const forms = (state = initial, action) => {
     return Object.assign({}, state, { widgets: updatedWidgets });
 
   case types.FORM_UPDATE:
-    var updatedForm = Object.assign({}, state.form, action.data);
-    return Object.assign({}, state, { form: updatedForm });
+    const formProp = state.activeForm ? state.activeForm : 'form';
+    var updatedForm = Object.assign({}, state[formProp], action.data);
+    return Object.assign({}, state, { [formProp]: updatedForm });
 
   case types.WIDGET_MOVE:
 
@@ -197,20 +212,22 @@ const forms = (state = initial, action) => {
       return accum;
     }, {});
     const activeSubmission = submissionList.length ? submissionList[0] : null;
+    const formCounts = Object.assign({}, state.formCounts, {
+      totalSearch: action.counts.total_search,
+      totalSubmissions: action.counts.total_submissions,
+      ...action.counts.search_by_flag
+    });
 
     // this will add more submission ids and overwrite existing ones.
     // it will not erase old submission ids.
     // current viewable ids are managed in {submissionList}
-    return {...state, submissionList, ...submissions, activeSubmission};
+    return {...state, submissionList, ...submissions, formCounts, activeSubmission};
 
   case types.SET_ACTIVE_SUBMISSION:
     return {...state, activeSubmission: action.submissionId };
 
   case types.UPDATE_ACTIVE_SUBMISSION:
-    // const newSubmissions = [...state.submissions];
-    // newSubmissions[state.activeSubmission] = Object.assign({}, newSubmissions[state.activeSubmission], action.props);
-    // return Object.assign({}, state, { submissions: newSubmissions });
-    return state;
+    return Object.assign({}, state, { [state.activeSubmission]: { ...state[state.activeSubmission], ...action.props } });
 
   case types.FORM_GALLERY_REQUEST:
     return {...state, loadingGallery: true, activeGallery: null};
@@ -280,6 +297,19 @@ const forms = (state = initial, action) => {
 
   case types.ANSWER_EDIT_FAILED: // server was unable to update the answer
     return {...state, loadingAnswerEdit: false, answerBeingEdited: null};
+
+  case types.UPDATE_FILTER_BY:
+    return {...state, submissionFilterBy: action.value};
+
+  case types.UPDATE_ORDER:
+    return {...state, submissionOrder: action.value};
+
+  case types.UPDATE_SEARCH:
+    return {...state, submissionSearch: action.value};
+
+  case types.CLEAN_SUBMISSION_FILTERS:
+    return {...state, submissionFilterBy: 'default', submissionOrder: 'dsc', submissionSearch: '',
+            formCounts: {...initial.formCounts} };
 
   default:
     return state;

@@ -67,7 +67,7 @@ export default class TextFieldEditor extends Component {
           <div style={ styles.bottomOptionsLeft }>
             <label style={ styles.bottomCheck }>
               <input type="checkbox" checked={ this.state.minLengthEnabled } onChange={ this.onMinLengthChange.bind(this) } />
-              <span style={ [ this.state.minLengthEnabled ? '' : styles.disabled ] }>Min. chars</span>
+              <span style={ [ styles.bottomLabelText, this.state.minLengthEnabled ? '' : styles.disabled ] }>Min. chars</span>
               <input
                 onChange={ this.onMinCharsChange.bind(this) }
                 defaultValue={ field.props.minLength || 0 }
@@ -78,7 +78,7 @@ export default class TextFieldEditor extends Component {
 
             <label style={ styles.bottomCheck }>
               <input type="checkbox" checked={ this.state.maxLengthEnabled } onChange={ this.onMaxLengthChange.bind(this) } />
-              <span style={ [ this.state.maxLengthEnabled ? '' : styles.disabled ] }>Max. chars</span>
+              <span style={ [ styles.bottomLabelText, this.state.maxLengthEnabled ? '' : styles.disabled ] }>Max. chars</span>
               <input
                 onChange={ this.onMaxCharsChange.bind(this) }
                 defaultValue={ field.props.maxLength || 0 }
@@ -106,7 +106,8 @@ const styles = {
   bottomCheck: {
     display: 'inline-block',
     padding: '10px 10px 10px 0',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    lineHeight: '30px'
   },
   bottomOptions: {
     display: 'flex',
@@ -129,6 +130,10 @@ const styles = {
     width: '50px',
     textAlign: 'center',
     padding: '4px'
+  },
+  bottomLabelText: {
+    height: '30px',
+    display: 'inline-block'
   },
   disabled: {
     color: '#AAA'

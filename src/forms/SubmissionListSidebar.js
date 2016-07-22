@@ -71,7 +71,7 @@ export default class Sidebar extends Component {
             submission.id === activeSubmission && styles.activeSubmission
           ]} key={key}>
           <span style={{fontWeight: 'bold'}}>{key + 1}</span>
-          <span>{moment(submission.date_updated).format('L LT')}</span>
+          <span>{moment(submission.date_created).format('L LT')}</span>
           <div>
             <span key={`${key}-0`} style={[styles.iconContainer(hasFlag(submission, 'flagged'),
               submission.id === activeSubmission),styles.iconFlagged]}

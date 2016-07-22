@@ -120,7 +120,7 @@ export default class SubmissionDetail extends Component {
       <div>
         <div style={styles.authorHeaderContainer}>
           <div style={styles.authorHeaderInfo}>
-            <span style={styles.subNum}>{submissionId}</span> {moment(submission.date_updated).format('L LT')}
+            <span style={styles.subNum}>{submissionId}</span> {moment(submission.date_created).format('L LT')}
           </div>
           <div style={styles.headerButtons}>
             <Button

@@ -90,7 +90,6 @@ export default class FormBuilder extends Component {
                 )
                 : <p>This form is not saved. Once you save it you will see embed code here.</p>
               }
-              </div>
             </div>
           </div>
           <FormDiagram activeForm={ this.props.activeForm } />
@@ -99,6 +98,7 @@ export default class FormBuilder extends Component {
             onClosePreview={onClosePreview.bind(this)}
             /> : null }
         </div>
+      </div>
     );
   }
 
@@ -186,7 +186,8 @@ const Preview = ({ onClosePreview, renderPreview }) => (
 const styles = {
   builderContainer: {
     display: 'flex',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    flexWrap: 'wrap-reverse'
   },
   leftPan: {
     width: 400

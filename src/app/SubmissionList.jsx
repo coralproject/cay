@@ -89,7 +89,7 @@ export default class SubmissionList extends Component {
           <Sidebar
             form={form}
             formCounts={formCounts}
-            submissions={submissions.reverse()}
+            submissions={submissions}
             activeSubmission={activeSubmission}
             filterBy={submissionFilterBy}
             order={submissionOrder}

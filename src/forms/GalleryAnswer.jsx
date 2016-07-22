@@ -43,7 +43,7 @@ export default class GalleryAnswer extends React.Component {
     return (
       <div style={styles.base}>
         <div style={styles.leftColumn}>
-          <p style={styles.heading}><span style={styles.statusFlag}>{statusFlag}</span> Added to Gallery <span style={styles.date}>{moment(gallery.date_updated).format('D MMM YYYY H:ma')}</span></p>
+          <p style={styles.heading}><span style={styles.statusFlag}>{statusFlag}</span> Added to Gallery <span style={styles.date}>{moment(gallery.date_created).format('D MMM YYYY H:ma')}</span></p>
           {
             answer.identity_answers && (
               <p style={styles.identityAnswers}>

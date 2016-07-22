@@ -3,7 +3,6 @@ import Radium from 'radium';
 import moment from 'moment';
 import BBookmark from 'react-icons/lib/fa/bookmark';
 import PaperPlaneIcon from 'react-icons/lib/fa/paper-plane';
-import TagsIcon from 'react-icons/lib/fa/tags';
 import FlagIcon from 'react-icons/lib/fa/flag';
 import TrashIcon from 'react-icons/lib/fa/trash';
 
@@ -60,7 +59,6 @@ export default class SubmissionDetail extends React.Component {
           });
 
           const modAnswer = inGallery ? this.props.removeFromGallery : this.props.sendToGallery;
-
           return (
             <div style={styles.answer} key={key}>
               <h2 style={styles.question}>{reply.question}</h2>
@@ -101,11 +99,11 @@ export default class SubmissionDetail extends React.Component {
       );
     }
 
-    if (answer.text) {
+    if ('text' in answer) {
       return answer.text;
     }
 
-    return answer;
+    return '';
   }
 
   renderAuthorDetail() {

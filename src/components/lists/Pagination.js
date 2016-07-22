@@ -1,0 +1,58 @@
+
+import React from 'react';
+import { bgColorBase, grey } from 'settings';
+
+export default ({ current, total, onChange }) => (
+  <div style={styles.pagination}>
+    <div
+      onClick={() => onChange(0)}
+      key="alpha"
+      style={styles.arrow}>«</div>
+    <div
+      onClick={() => current && onChange(current - 1)}
+      key="bravo"
+      style={styles.arrow}>‹</div>
+    <div
+      style={styles.pageNum}
+      key="charlie">Page {current + 1} of {total}</div>
+    <div
+      onClick={() => current < total && onChange(current + 1)}
+      key="delta"
+      style={styles.arrow}>›</div>
+    <div
+      onClick={() => onChange(total - 1)}
+      key="echo"
+      style={styles.arrow}>»</div>
+  </div>
+);
+
+const styles = {
+  pagination: {
+    position: 'absolute',
+    width: '100%',
+    bottom: 0,
+    backgroundColor: bgColorBase,
+    display: 'flex',
+    justifyContent: 'space-between'
+  },
+  arrow: {
+    width: 32,
+    height: 32,
+    textAlign: 'center',
+    cursor: 'pointer',
+    color: grey,
+    fontSize: '20px',
+    fontWeight: 'bold',
+    backgroundColor: 'transparent',
+    borderRadius: 16,
+    lineHeight: '1.5em',
+    transition: 'all .3s',
+    ':hover': {
+      color: '#000',
+      backgroundColor: grey
+    }
+  },
+  pageNum: {
+    lineHeight: '1.8em'
+  }
+};

@@ -25,7 +25,7 @@ export default class FormCreate extends Component {
     const {preview} = this.state;
     return (
       <Page style={styles.page}>
-        <FormChrome create={true} activeTab="builder" />
+        <FormChrome create={true} updateStatus={() => {}} activeTab="builder" />
         <div style={styles.formBuilderContainer}>
           <FormBuilder
             onClosePreview={this.onClosePreview.bind(this)}

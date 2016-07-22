@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import ReactDOM from 'react-dom';
 import {connect} from 'react-redux';
 
 //import { DropTarget } from 'react-dnd';
@@ -8,11 +7,6 @@ import DropPlaceHolder from 'forms/DropPlaceHolder';
 
 import { appendWidget, moveWidget, replaceWidgets, deleteWidget, duplicateWidget, updateForm, saveForm } from 'forms/FormActions';
 import FormComponent, {styles as askComponentStyles} from 'forms/FormComponent';
-
-import FaUserPlus from 'react-icons/lib/fa/user-plus';
-import FaFloppyO from 'react-icons/lib/fa/floppy-o';
-import FaEye from 'react-icons/lib/fa/eye';
-import Spinner from 'components/Spinner';
 
 @connect(({ forms, app }) => ({ forms, app }))
 export default class FormDiagram extends Component {
@@ -107,6 +101,7 @@ export default class FormDiagram extends Component {
                  />
             </DropPlaceHolder>
           ))}
+          { !this.props.forms.widgets.length ? <BlankState /> : null }
         </div>
         <div style={ styles.extraFields }>
           <h3 style={ styles.extraFieldTitle }>Thank you message</h3>
@@ -159,11 +154,28 @@ export default class FormDiagram extends Component {
   persist(fields) {
     this.props.dispatch(replaceWidgets(fields));
   }
-
 }
+
+const BlankState = () => (
+  <div style={styles.blankContainer}>
+    <h1 style={styles.blankTitle}>Select question fields in the left panel to build a form.</h1>
+  </div>
+);
 
 
 const styles = {
+  blankContainer: {
+    marginTop: 50,
+    background: '#fff',
+    border: '1px dashed #ccc',
+    height: 180,
+    width: '100%'
+  },
+  blankTitle: {
+    textAlign: 'center',
+    padding: 80,
+    fontSize: '1.4em'
+  },
   formDiagram: {
     height: 'auto',
     minHeight: 300,

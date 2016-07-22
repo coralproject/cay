@@ -66,6 +66,8 @@ export const PUBLISH_GALLERY_INIT = 'PUBLISH_GALLERY_INIT';
 export const PUBLISH_GALLERY_SUCCESS = 'PUBLISH_GALLERY_SUCCESS';
 export const PUBLISH_GALLERY_FAILURE = 'PUBLISH_GALLERY_FAILURE';
 
+export const UPDATE_GALLERY_TITLE = 'UPDATE_GALLERY_TITLE';
+export const UPDATE_GALLERY_DESCRIPTION = 'UPDATE_GALLERY_DESCRIPTION';
 export const UPDATE_READER_INFO_PLACEMENT = 'UPDATE_READER_INFO_PLACEMENT';
 export const UPDATE_GALLERY_ORIENTATION = 'UPDATE_GALLERY_ORIENTATION';
 
@@ -508,6 +510,14 @@ export const editAnswer = (edited, answer, formId) => {
   };
 };
 
+export const updateGalleryTitle = title => {
+  return {type: UPDATE_GALLERY_TITLE, title};
+};
+
+export const updateGalleryDesc = description => {
+  return {type: UPDATE_GALLERY_DESCRIPTION, description};
+};
+
 export const updateReaderInfoPlacement = placement => {
   return {type: UPDATE_READER_INFO_PLACEMENT, placement};
 };
@@ -519,7 +529,12 @@ export const updateGalleryOrientation = orientation => {
 export const publishGallery = formId => {
   return (dispatch, getState) => {
     const {app, forms} = getState();
-    const {galleryReaderInfoPlacement, galleryOrientation} = forms;
+    const {
+      galleryTitle,
+      galleryDescription,
+      galleryReaderInfoPlacement,
+      galleryOrientation
+    } = forms;
     dispatch({type: PUBLISH_GALLERY_INIT});
 
     console.log('activeGallery', forms.activeGallery);
@@ -534,7 +549,13 @@ export const publishGallery = formId => {
         return fetch(`${app.elkhornHost}/gallery/${gallery.id}/publish`, {
           method: 'POST',
           headers: new Headers({'Content-Type': 'application/json'}),
-          body: JSON.stringify({...gallery, galleryReaderInfoPlacement, galleryOrientation})
+          body: JSON.stringify({
+            ...gallery,
+            galleryTitle,
+            galleryDescription,
+            galleryReaderInfoPlacement,
+            galleryOrientation
+          })
         });
       })
       .then(res => res.json())

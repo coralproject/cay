@@ -13,10 +13,15 @@ const initial = {
   formCreationError: null,
   activeForm: null, // might be able to combine this with {form} above in the future
   activeGallery: null, // this is an ObjectId string
+  galleryTitle: '',
+  galleryDescription: '',
   galleryOrientation: 'vertical', // vertical|horizontal
   galleryReaderInfoPlacement: 'above', // above|below
   widgets: [],
   loadingAnswerEdit: false,
+  loadingGallery: false,
+  galleryUrl: '',
+  galleryCode: '',
   answerBeingEdited: null, // ObjectId string
   editableAnswer: '',
   activeSubmission: null // ObjectId string
@@ -113,13 +118,10 @@ const forms = (state = initial, action) => {
 
     var position = action.position;
 
-    var widgetsCopy = state.widgets.slice();
-    var widgetCopy = Object.assign({}, widgetsCopy[position]);
-    widgetCopy.id = uuid.v4();
+    var widgetsCopy = [...state.widgets];
+    var widgetCopy = {...widgetsCopy[position], id: uuid.v4()};
 
-    var fieldsBefore = widgetsCopy.slice(0, position);
-    var fieldsAfter = widgetsCopy.slice(position);
-    widgetsCopy = fieldsBefore.concat(widgetCopy).concat(fieldsAfter);
+    widgetsCopy.splice(position, 0, widgetCopy);
 
     return Object.assign({}, state, { widgets: widgetsCopy, tempWidgets: widgetsCopy });
 
@@ -128,13 +130,11 @@ const forms = (state = initial, action) => {
     var widget = action.widget;
 
     var targetPosition = action.targetPosition || state.widgets.length;
-    var widgetsCopy = state.widgets.slice();
+    var widgetsCopy = [...state.widgets];
 
-    var fieldsBefore = widgetsCopy.slice(0, targetPosition);
-    var fieldsAfter = widgetsCopy.slice(targetPosition);
-    widgetsCopy = fieldsBefore.concat(widget).concat(fieldsAfter);
+    widgetsCopy.splice(targetPosition, 0, widget);
 
-    return Object.assign({}, state, { widgets: widgetsCopy, tempWidgets: widgetsCopy });
+    return {...state, widgets: widgetsCopy, tempWidgets: widgetsCopy };
 
   case types.FORMS_REQUEST_SUCCESS:
 
@@ -166,20 +166,16 @@ const forms = (state = initial, action) => {
   case types.WIDGET_MOVE:
 
     // First we make a copy removing the dragged element
-    var widgetsCopy = state.widgets.slice();
-    var removed = widgetsCopy.splice(action.from, 1);
+    var newWidgets = [...state.widgets];
+    var removed = newWidgets.splice(action.from, 1)[0];
+    newWidgets.splice(action.to, 0, removed);
 
-    // Then we insert the dragged element into the desired position
-    var fieldsBefore = widgetsCopy.slice(0, action.to);
-    var fieldsAfter = widgetsCopy.slice(action.to);
-    var newWidgets = fieldsBefore.concat(removed).concat(fieldsAfter);
-
-    return Object.assign({}, state, { tempWidgets: newWidgets, widgets: newWidgets });
+    return {...state, tempWidgets: newWidgets, widgets: newWidgets };
 
   case types.FORM_DELETE_WIDGET:
-    var widgetsCopy = state.widgets.slice();
+    var widgetsCopy = [...state.widgets];
     widgetsCopy.splice(action.widgetPosition, 1);
-    return Object.assign({}, state, { widgets: widgetsCopy, tempWidgets: widgetsCopy });
+    return {...state, widgets: widgetsCopy, tempWidgets: widgetsCopy };
 
   case types.FORM_CREATE_INIT:
     return {...state, savingForm: true, formCreationError: null, savedForm: null};
@@ -285,11 +281,31 @@ const forms = (state = initial, action) => {
   case types.ANSWER_EDIT_FAILED: // server was unable to update the answer
     return {...state, loadingAnswerEdit: false, answerBeingEdited: null};
 
+  case types.UPDATE_GALLERY_TITLE:
+    return {...state, galleryTitle: action.title};
+
+  case types.UPDATE_GALLERY_DESCRIPTION:
+    return {...state, galleryDescription: action.description};
+
   case types.UPDATE_READER_INFO_PLACEMENT:
     return {...state, galleryReaderInfoPlacement: action.placement};
 
   case types.UPDATE_GALLERY_ORIENTATION:
     return {...state, galleryOrientation: action.orientation};
+
+  case types.PUBLISH_GALLERY_INIT:
+    return {...state, loadingGallery: true, galleryUrl: '', galleryCode: ''};
+
+  case types.PUBLISH_GALLERY_SUCCESS:
+    return {
+      ...state,
+      loadingGallery: false,
+      galleryUrl: action.gallery.url,
+      galleryCode: action.gallery.build.code
+    };
+
+  case types.PUBLISH_GALLERY_FAILURE:
+    return {...state, loadingGallery: true, galleryUrl: '', galleryCode: ''};
 
   default:
     return state;

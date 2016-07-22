@@ -10,6 +10,8 @@ import {
   updateEditableAnswer,
   updateGalleryOrientation,
   updateReaderInfoPlacement,
+  updateGalleryTitle,
+  updateGalleryDesc,
   publishGallery,
   editAnswer,
   cancelEdit,
@@ -18,7 +20,6 @@ import {
 import {Link} from 'react-router';
 import moment from 'moment';
 
-import FaFloppyO from 'react-icons/lib/fa/floppy-o';
 import Eye from 'react-icons/lib/fa/eye';
 import Refresh from 'react-icons/lib/fa/refresh';
 import Clipboard from 'react-icons/lib/fa/clipboard';
@@ -45,7 +46,7 @@ export default class SubmissionGallery extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {publishModalOpen: false, previewOpen: true};
+    this.state = {publishModalOpen: false, previewOpen: false};
   }
 
   componentWillMount() {
@@ -155,9 +156,26 @@ export default class SubmissionGallery extends React.Component {
     }
   }
 
+  setHeadline(title) {
+    this.props.dispatch(updateGalleryTitle(title));
+  }
+
+  setDescription(description) {
+    this.props.dispatch(updateGalleryDesc(description));
+  }
+
   togglePreview() {
     console.log('togglePreview', this.state.previewOpen);
-    this.setState({previewOpen: !this.state.previewOpen});
+    const previewOpen = !this.state.previewOpen;
+    if (previewOpen) {
+      // fetch gallery from server
+      this.props.dispatch(publishGallery(this.props.activeForm)).then(gallery => {
+        this.setState({previewOpen});
+      });
+    } else {
+      // close it
+      this.setState({previewOpen});
+    }
   }
 
   closePreview() {
@@ -233,13 +251,23 @@ export default class SubmissionGallery extends React.Component {
                 })}
 
               </Card>
-              <div style={styles.embedCodes}><Refresh /> Get embed codes</div>
+              <div
+                style={styles.embedCodes}
+                onClick={this.openPublishModal.bind(this)}><Refresh /> Get embed codes</div>
             </div>
             <div style={styles.gallery}>
               <div style={styles.galleryTitle}>
-                <TextField style={styles.galleryTitles} label="Write a headline (optional)" />
+                <TextField
+                  value={this.props.galleryTitle}
+                  onBlur={this.setHeadline.bind(this)}
+                  style={styles.galleryTitles}
+                  label="Write a headline (optional)" />
                 <br />
-                <TextField style={styles.galleryTitles} label="Write description for the gallery (optional)" />
+                <TextField
+                  value={this.props.galleryDescription}
+                  onBlur={this.setDescription.bind(this)}
+                  style={styles.galleryTitles}
+                  label="Write description for the gallery (optional)" />
               </div>
               {
                 this.props.activeGallery ?
@@ -310,6 +338,7 @@ export default class SubmissionGallery extends React.Component {
         </Modal>
 
         <GalleryPreview
+          {...this.props}
           closePreview={this.closePreview.bind(this)}
           open={this.state.previewOpen} />
 

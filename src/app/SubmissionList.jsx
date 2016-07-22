@@ -9,6 +9,7 @@ import FaFilter from 'react-icons/lib/fa/filter';
 import FaLongArrowUp from 'react-icons/lib/fa/long-arrow-up';
 import FaLongArrowDown from 'react-icons/lib/fa/long-arrow-down';
 import { FilterDropdown, OrderDropdown } from 'forms/SubmissionFilters';
+import Pagination from 'components/lists/Pagination';
 
 import {
   fetchSubmissions,
@@ -214,7 +215,7 @@ class Sidebar extends Component {
 
   render() {
     const { submissions, activeSubmission, onSelect, filterBy, order, form, formCounts } = this.props;
-    const { filterByOpen, orderOpen, search } = this.state;
+    const { filterByOpen, orderOpen, search, subPageOffset } = this.state;
 
     return (
       <div style={styles.sidebar}>
@@ -245,31 +246,9 @@ class Sidebar extends Component {
             onChange={this.props.onOrderChange} />
         </div>
         <div>{this.listSubmissions(submissions, activeSubmission, onSelect)}</div>
-        {
-          form ?
-            <div style={styles.sidebar.pagination}>
-              <div
-                onClick={this.paginate.bind(this, 0)}
-                key="alpha"
-                style={styles.sidebar.arrow}>«</div>
-              <div
-                onClick={this.paginate.bind(this, this.state.subPageOffset - 1)}
-                key="bravo"
-                style={styles.sidebar.arrow}>‹</div>
-              <div
-                style={styles.sidebar.pageNum}
-                key="charlie">Page {this.state.subPageOffset + 1} of {Math.ceil(form.stats.responses / 10)}</div>
-              <div
-                onClick={this.paginate.bind(this, this.state.subPageOffset + 1)}
-                key="delta"
-                style={styles.sidebar.arrow}>›</div>
-              <div
-                onClick={this.paginate.bind(this, Math.floor(form.stats.responses / 10))}
-                key="echo"
-                style={styles.sidebar.arrow}>»</div>
-            </div> :
-            null
-        }
+        { form ? <Pagination current={subPageOffset}
+          total={Math.ceil(form.stats.responses / 10)}
+          onChange={this.paginate.bind(this)} /> : null }
       </div>
     );
   }
@@ -299,34 +278,6 @@ const styles = {
       minWidth: 300,
       marginBottom: 10,
       boxShadow: '0px 0px 5px 0px rgba(0,0,0,0.2)'
-    },
-    pagination: {
-      position: 'absolute',
-      width: '100%',
-      bottom: 0,
-      backgroundColor: settings.bgColorBase,
-      display: 'flex',
-      justifyContent: 'space-between'
-    },
-    arrow: {
-      width: 32,
-      height: 32,
-      textAlign: 'center',
-      cursor: 'pointer',
-      color: settings.grey,
-      fontSize: '20px',
-      fontWeight: 'bold',
-      backgroundColor: 'transparent',
-      borderRadius: 16,
-      lineHeight: '1.5em',
-      transition: 'all .3s',
-      ':hover': {
-        color: '#000',
-        backgroundColor: settings.grey
-      }
-    },
-    pageNum: {
-      lineHeight: '1.8em'
     },
     iconContainer(show, active) {
       return {

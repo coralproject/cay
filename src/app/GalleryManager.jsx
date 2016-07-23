@@ -349,6 +349,8 @@ export default class SubmissionGallery extends React.Component {
               onClick={this.copyEmbedToClipboard.bind(this, 'iframe')}>
               Copy <Clipboard />
             </Button>
+            <p style={{clear: 'both'}}>Standalone link</p>
+            <input type="text" value={forms.galleryUrl} style={styles.standalone} />
           </div>
         </Modal>
 
@@ -474,5 +476,10 @@ const styles = {
     ':hover': {
       backgroundColor: '#444'
     }
+  },
+  standalone: {
+    fontFamily: 'monospace',
+    fontSize: 14,
+    width: '100%'
   }
 };

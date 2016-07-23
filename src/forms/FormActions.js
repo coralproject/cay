@@ -62,10 +62,21 @@ export const UPDATE_FORM_INACTIVE_MESSAGE_INIT = 'UPDATE_FORM_INACTIVE_MESSAGE_I
 export const UPDATE_FORM_INACTIVE_MESSAGE_SUCCESS = 'UPDATE_FORM_INACTIVE_MESSAGE_SUCCESS';
 export const UPDATE_FORM_INACTIVE_MESSAGE_FAILURE = 'UPDATE_FORM_INACTIVE_MESSAGE_FAILURE';
 
+export const PUBLISH_GALLERY_INIT = 'PUBLISH_GALLERY_INIT';
+export const PUBLISH_GALLERY_SUCCESS = 'PUBLISH_GALLERY_SUCCESS';
+export const PUBLISH_GALLERY_FAILURE = 'PUBLISH_GALLERY_FAILURE';
+
+export const UPDATE_GALLERY_TITLE = 'UPDATE_GALLERY_TITLE';
+export const UPDATE_GALLERY_DESCRIPTION = 'UPDATE_GALLERY_DESCRIPTION';
+export const UPDATE_READER_INFO_PLACEMENT = 'UPDATE_READER_INFO_PLACEMENT';
+export const UPDATE_GALLERY_ORIENTATION = 'UPDATE_GALLERY_ORIENTATION';
+
 export const UPDATE_FILTER_BY = 'UPDATE_FILTER_BY';
 export const UPDATE_ORDER = 'UPDATE_ORDER';
 export const UPDATE_SEARCH = 'UPDATE_SEARCH';
 export const CLEAN_SUBMISSION_FILTERS = 'CLEAN_SUBMISSION_FILTERS';
+
+export const GALLERY_ENABLE_IDENTIFIABLE = 'GALLERY_ENABLE_IDENTIFIABLE';
 
 const getInit = (body, method) => {
 
@@ -508,6 +519,89 @@ export const editAnswer = (edited, answer, formId) => {
         dispatch(fetchGallery(formId));
       })
       .catch(error => dispatch({type: ANSWER_EDIT_FAILED, error}));
+  };
+};
+
+export const updateGalleryTitle = title => {
+  return {type: UPDATE_GALLERY_TITLE, title};
+};
+
+export const updateGalleryDesc = description => {
+  return {type: UPDATE_GALLERY_DESCRIPTION, description};
+};
+
+export const updateReaderInfoPlacement = placement => {
+  return {type: UPDATE_READER_INFO_PLACEMENT, placement};
+};
+
+export const updateGalleryOrientation = orientation => {
+  return {type: UPDATE_GALLERY_ORIENTATION, orientation};
+};
+
+/*
+
+{id} is the id of a widget in a form
+{add} is a boolean indicating whether the id should be added or removed
+
+*/
+export const toggleIdentifiable = (id, add) => {
+  return (dispatch, getState) => {
+    const {forms: {identifiableIds: oldIds}} = getState();
+
+    let ids;
+
+    if (add) { // add the new id
+      ids = [id, ...oldIds];
+    } else { // splice out the old one
+      ids = [...oldIds];
+      ids.splice(ids.indexOf(id), 1);
+    }
+
+    dispatch({type: GALLERY_ENABLE_IDENTIFIABLE, ids});
+  };
+};
+
+export const publishGallery = formId => {
+  return (dispatch, getState) => {
+    const {app, forms} = getState();
+    const {
+      galleryTitle,
+      galleryDescription,
+      galleryReaderInfoPlacement,
+      galleryOrientation,
+      identifiableIds
+    } = forms;
+    dispatch({type: PUBLISH_GALLERY_INIT});
+
+    console.log('activeGallery', forms.activeGallery);
+
+    // get the most recent state of truth from the server
+    return fetch(`${app.pillarHost}/api/form_galleries/${formId}`)
+      .then(res => res.json())
+      .then(galleries => {
+        // there is only one gallery per form so far
+        const [gallery] = galleries;
+
+        return fetch(`${app.elkhornHost}/gallery/${gallery.id}/publish`, {
+          method: 'POST',
+          headers: new Headers({'Content-Type': 'application/json'}),
+          body: JSON.stringify({
+            ...gallery,
+            galleryTitle,
+            galleryDescription,
+            galleryReaderInfoPlacement,
+            galleryOrientation,
+            identifiableIds
+          })
+        });
+      })
+      .then(res => res.json())
+      .then(gallery => {
+        console.log(gallery);
+        dispatch({type: PUBLISH_GALLERY_SUCCESS, gallery});
+        return gallery;
+      })
+      .catch(error => dispatch({type: PUBLISH_GALLERY_FAILURE, error}));
   };
 };
 

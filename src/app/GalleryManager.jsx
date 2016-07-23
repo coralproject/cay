@@ -8,6 +8,12 @@ import {
   removeFromGallery,
   updateFormStatus,
   updateEditableAnswer,
+  updateGalleryOrientation,
+  updateReaderInfoPlacement,
+  updateGalleryTitle,
+  updateGalleryDesc,
+  toggleIdentifiable,
+  publishGallery,
   editAnswer,
   cancelEdit,
   beginEdit
@@ -15,7 +21,8 @@ import {
 import {Link} from 'react-router';
 import moment from 'moment';
 
-import FaFloppyO from 'react-icons/lib/fa/floppy-o';
+import Eye from 'react-icons/lib/fa/eye';
+import Refresh from 'react-icons/lib/fa/refresh';
 import Clipboard from 'react-icons/lib/fa/clipboard';
 import Select from 'react-select';
 
@@ -25,21 +32,21 @@ import FormChrome from 'app/layout/FormChrome';
 import ContentHeader from 'components/ContentHeader';
 import Card from 'components/cards/Card';
 import CardHeader from 'components/cards/CardHeader';
+import GalleryPreview from 'forms/GalleryPreview';
 
 import TextField from 'components/forms/TextField';
-import Checkbox from 'components/forms/Checkbox';
 import Button from 'components/Button';
 import Modal from 'components/modal/Modal';
 
 import GalleryAnswer from 'forms/GalleryAnswer';
 
-@connect(state => state.forms)
+@connect(({app, forms}) => ({app, forms}))
 @Radium
 export default class SubmissionGallery extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {publishModalOpen: false};
+    this.state = {publishModalOpen: false, previewOpen: false};
   }
 
   componentWillMount() {
@@ -71,18 +78,18 @@ export default class SubmissionGallery extends React.Component {
   }
 
   renderBlank() {
-    if (this.props.loadingGallery) {
+    if (this.props.forms.loadingGallery) {
       return (<p>Loading submissions...</p>);
     }
 
-    if (this.props.formLoading && !this.props.activeForm) {
+    if (this.props.forms.formLoading && !this.props.forms.activeForm) {
       return (<p>Loading form...</p>);
     }
 
     return (
       <p>
         There are currently no items in your gallery.
-        You may add items by visiting <Link to={`/forms/${this.props.activeForm}/submissions`}>
+        You may add items by visiting <Link to={`/forms/${this.props.forms.activeForm}/submissions`}>
         Review Submissions
         </Link>
       </p>
@@ -90,7 +97,7 @@ export default class SubmissionGallery extends React.Component {
   }
 
   updateFormStatus(value) {
-    this.props.dispatch(updateFormStatus(this.props.activeForm, value));
+    this.props.dispatch(updateFormStatus(this.props.forms.activeForm, value));
   }
 
   getAttributionFields(form) {
@@ -108,7 +115,7 @@ export default class SubmissionGallery extends React.Component {
   }
 
   confirmEdit(answer) {
-    this.props.dispatch(editAnswer(this.props.editableAnswer, answer, this.props.activeForm));
+    this.props.dispatch(editAnswer(this.props.forms.editableAnswer, answer, this.props.forms.activeForm));
   }
 
   cancelEdit() {
@@ -125,16 +132,18 @@ export default class SubmissionGallery extends React.Component {
     });
   }
 
-  updateOrientation(value) {
-
+  updateOrientation(option) {
+    this.props.dispatch(updateGalleryOrientation(option.value));
   }
 
-  updatePlacement(value) {
-
+  updatePlacement(option) {
+    this.props.dispatch(updateReaderInfoPlacement(option.value));
   }
 
   openPublishModal() {
-    this.setState({publishModalOpen: true});
+    this.props.dispatch(publishGallery(this.props.forms.activeForm)).then(gallery => {
+      this.setState({publishModalOpen: true});
+    });
   }
 
   closePublishModal() {
@@ -147,12 +156,43 @@ export default class SubmissionGallery extends React.Component {
     }
   }
 
+  setHeadline(title) {
+    this.props.dispatch(updateGalleryTitle(title));
+  }
+
+  setDescription(description) {
+    this.props.dispatch(updateGalleryDesc(description));
+  }
+
+  togglePreview() {
+    const previewOpen = !this.state.previewOpen;
+    if (previewOpen) {
+      // fetch gallery from server
+      this.props.dispatch(publishGallery(this.props.forms.activeForm)).then(gallery => {
+        this.setState({previewOpen});
+      });
+    } else {
+      // close it
+      this.setState({previewOpen});
+    }
+  }
+
+  closePreview() {
+    this.setState({previewOpen: false});
+  }
+
+  updateIdentifiable(id, add) {
+    this.props.dispatch(toggleIdentifiable(id, add));
+  }
+
   render() {
 
-    const form = this.props[this.props.activeForm];
-    const gallery = this.props[this.props.activeGallery];
-    const submissions = this.props.submissionList.map(id => this.props[id]);
-    const ans = this.props[this.props.answerBeingEdited];
+    const {forms, app} = this.props;
+
+    const form = forms[forms.activeForm];
+    const gallery = forms[forms.activeGallery];
+    const submissions = forms.submissionList.map(id => forms[id]);
+    const ans = forms[forms.answerBeingEdited];
 
     const attributionFields = this.getAttributionFields(form);
     const orientationOpts = [
@@ -182,14 +222,17 @@ export default class SubmissionGallery extends React.Component {
             <div style={styles.orientationOpts}>
               <Select
                 options={orientationOpts}
+                value={forms.galleryOrientation}
                 onChange={this.updateOrientation.bind(this)} />
             </div>
-            <Button style={styles.modButton} category="brand">Preview</Button>
-            <Button style={styles.modButton} category="success">Save <FaFloppyO /></Button>
+            <Button
+              style={styles.modButton}
+              onClick={this.togglePreview.bind(this)}
+              category="brand"><Eye /> Preview</Button>
             <Button
               onClick={this.openPublishModal.bind(this)}
               style={styles.modButton}
-              category="inverse">Publish</Button>
+              category="success"><Refresh /> Publish</Button>
           </div>
           <hr style={styles.rule} />
           <div style={styles.container}>
@@ -200,24 +243,49 @@ export default class SubmissionGallery extends React.Component {
                 <p style={styles.includeLabel}>Placement</p>
                 <Select
                   style={styles.placementOpts}
+                  value={forms.galleryReaderInfoPlacement}
                   options={placementOpts}
                   onChange={this.updatePlacement.bind(this)} />
 
-                <p style={styles.includeLabel}>Include</p>
-                {attributionFields.map(function (field, i) {
-                  return <Checkbox key={i} label={field.title} />;
-                })}
+                <p style={[
+                  styles.includeLabel,
+                  {display: attributionFields.length ? 'block' : 'none'}
+                ]}>Include</p>
+              {attributionFields.map((field, i) => {
+                const isChecked = forms.identifiableIds.indexOf(field.id) !== -1;
+                return (
+                  <label style={styles.idLabel}>
+                    <input
+                      onChange={this.updateIdentifiable.bind(this, field.id, !isChecked)}
+                      type="checkbox"
+                      checked={isChecked}
+                      key={i} />
+                    {field.title}
+                  </label>
+                );
+              })}
 
               </Card>
+              <div
+                style={styles.embedCodes}
+                onClick={this.openPublishModal.bind(this)}><Refresh /> Get embed codes</div>
             </div>
             <div style={styles.gallery}>
               <div style={styles.galleryTitle}>
-                <TextField style={styles.galleryTitles} label="Write a headline (optional)" />
+                <TextField
+                  value={forms.galleryTitle}
+                  onBlur={this.setHeadline.bind(this)}
+                  style={styles.galleryTitles}
+                  label="Write a headline (optional)" />
                 <br />
-                <TextField style={styles.galleryTitles} label="Write description for the gallery (optional)" />
+                <TextField
+                  value={forms.galleryDescription}
+                  onBlur={this.setDescription.bind(this)}
+                  style={styles.galleryTitles}
+                  label="Write description for the gallery (optional)" />
               </div>
               {
-                this.props.activeGallery ?
+                forms.activeGallery ?
                 this.renderGallery(gallery) :
                 this.renderBlank()
               }
@@ -249,7 +317,7 @@ export default class SubmissionGallery extends React.Component {
                       <textarea
                         style={styles.editText}
                         onChange={this.updateEditableAnswer.bind(this)}
-                        value={this.props.editableAnswer}></textarea>
+                        value={forms.editableAnswer}></textarea>
                       {this.showIdentityAnswers(ans)}
                     </div>
                 </div>
@@ -262,27 +330,34 @@ export default class SubmissionGallery extends React.Component {
 
         <Modal
           style={styles.publishModal}
-          title="Publish Gallery"
+          title="Get embed codes"
           isOpen={this.state.publishModalOpen}
-          confirmAction={() => {}}
+          confirmAction={this.closePublishModal.bind(this)}
           cancelAction={this.closePublishModal.bind(this)}>
           <div>
             <p>Embed code</p>
-            <textarea style={styles.embedTextarea}></textarea>
+            <textarea style={styles.embedTextarea} value={`<script src="${forms.galleryUrl}"></script><div id="ask-gallery" />`}></textarea>
             <Button
               style={styles.copyButton}
               onClick={this.copyEmbedToClipboard.bind(this)}>
               Copy <Clipboard />
             </Button>
             <p style={{clear: 'both'}}>Embed code (with iframe)</p>
-            <textarea style={styles.embedTextarea}></textarea>
+            <textarea style={styles.embedTextarea} value={`<iframe width="100%" height="580" src="${app.elkhornHost}/iframe-gallery/${forms.activeGallery}"></iframe>`}></textarea>
             <Button
               style={styles.copyButton}
               onClick={this.copyEmbedToClipboard.bind(this, 'iframe')}>
               Copy <Clipboard />
             </Button>
+            <p style={{clear: 'both'}}>Standalone link</p>
+            <input type="text" value={forms.galleryUrl} style={styles.standalone} />
           </div>
         </Modal>
+
+        <GalleryPreview
+          {...forms}
+          closePreview={this.closePreview.bind(this)}
+          open={this.state.previewOpen} />
 
       </Page>
     );
@@ -299,6 +374,8 @@ const styles = {
     }
   },
   embedTextarea: {
+    fontFamily: 'monospace',
+    fontSize: 16,
     width: '100%',
     marginBottom: 5,
     border: '1px solid ' + settings.mediumGrey,
@@ -384,5 +461,25 @@ const styles = {
   },
   includeLabel: {
     marginBottom: 5
+  },
+  idLabel: {
+    display: 'block',
+    cursor: 'pointer',
+    marginBottom: 5
+  },
+  embedCodes: {
+    backgroundColor: settings.darkGrey,
+    color: 'white',
+    padding: 8,
+    borderRadius: 4,
+    cursor: 'pointer',
+    ':hover': {
+      backgroundColor: '#444'
+    }
+  },
+  standalone: {
+    fontFamily: 'monospace',
+    fontSize: 14,
+    width: '100%'
   }
 };

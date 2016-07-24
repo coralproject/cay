@@ -206,8 +206,6 @@ export default class SubmissionGallery extends React.Component {
       {label: 'Below the submission', value: 'below'}
     ];
 
-    // console.log('SubmissionGallery.render', gallery);
-
     return (
       <Page>
         <FormChrome
@@ -219,7 +217,7 @@ export default class SubmissionGallery extends React.Component {
         <div style={styles.base}>
           <ContentHeader
             title={'Submission Gallery'}
-            subhead={gallery ? `Created on ${moment(gallery.created_date).format('D MMM YYYY H:ma')}` : ''} />
+            subhead={gallery ? `Created on ${moment(gallery.date_created).format('D MMM YYYY H:ma')}` : ''} />
           <div style={styles.headingButtonHolder}>
             {/*<div style={styles.orientationOpts}>
               <Select

@@ -30,8 +30,6 @@ export default class GalleryAnswer extends React.Component {
 
     const {answer, gallery, identifiableIds} = this.props;
 
-    // console.log('answer', answer);
-    // console.log('gallery', gallery);
     if (!answer.answer.answer.text && answer.answer.answer.options) {
       answer.answer.answer.text = answer.answer.answer.options.map(o => o.title).join(', ');
     }

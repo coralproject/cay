@@ -1,6 +1,8 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 
+import settings from 'settings';
+
 @Radium
 export default class GalleryPreview extends React.Component {
 
@@ -21,13 +23,15 @@ export default class GalleryPreview extends React.Component {
 
     return (
       <div
-        onClick={this.props.closePreview}
         style={[
           styles.previewBkd,
           {display: this.props.open ? 'block' : 'none'}
         ]}>
-        <div id="ask-gallery" style={styles.preview} />
-        <div style={styles.closeButton}>×</div>
+        <div style={styles.drawer}>
+          <div style={styles.header}>Preview</div>
+          <div id="ask-gallery" />
+        </div>
+        <div onClick={this.props.closePreview} style={styles.closeButton}>×</div>
       </div>
     );
   }
@@ -42,13 +46,19 @@ const styles = {
     bottom: 0,
     backgroundColor: 'rgba(0, 0, 0, .2)'
   },
-  preview: {
+  drawer: {
     backgroundColor: 'white',
     position: 'absolute',
     top: 0,
     right: 0,
     height: '100%',
-    width: 500
+    width: 500,
+    overflowY: 'scroll'
+  },
+  header: {
+    backgroundColor: settings.brandColor,
+    color: 'white',
+    padding: 20
   },
   closeButton: {
     borderRadius: '4px 0 0 4px',

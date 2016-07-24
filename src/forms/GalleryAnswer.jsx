@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
+import _ from 'lodash';
 import moment from 'moment';
 import Trash from 'react-icons/lib/fa/trash';
 import Edit from 'react-icons/lib/fa/pencil-square';
@@ -26,13 +27,40 @@ export default class GalleryAnswer extends React.Component {
     this.props.removeSubmission(gallery.id, answer.submission_id, answer.answer_id);
   }
 
+  renderMultipleChoice(answer) {
+    console.log('renderMultipleChoice', answer);
+    const selectedIndexes = answer.answer.answer.options.map(o => o.index);
+    const options = answer.answer.props.options.map((option, key) => {
+      const selected = selectedIndexes.indexOf(key) !== -1;
+      return <li style={[styles.multiple.option, selected && styles.multiple.selected]} key={key}>{key}. {option.title}</li>;
+    });
+
+    // check for Other answer
+    if (_.last(selectedIndexes) >= answer.answer.props.options.length) {
+      options.push(
+        <li
+          style={[styles.multiple.option, styles.multiple.other]}
+          key={_.last(selectedIndexes)}>
+          Other: {_.last(answer.answer.answer.options).title}
+        </li>
+      );
+    }
+
+    return <ul style={styles.multiple}>{options}</ul>;
+  }
+
   render() {
 
     const {answer, gallery, identifiableIds} = this.props;
+    let multipleChoice;
 
-    if (!answer.answer.answer.text && answer.answer.answer.options) {
-      answer.answer.answer.text = answer.answer.answer.options.map(o => o.title).join(', ');
+    if (_.has(answer, 'answer.props.multipleChoice') && answer.answer.props.multipleChoice) {
+      multipleChoice = this.renderMultipleChoice(answer);
     }
+
+    // if (!answer.answer.answer.text && answer.answer.answer.options) {
+    //   answer.answer.answer.text = answer.answer.answer.options.map(o => o.title).join(', ');
+    // }
 
     const text = answer.answer.edited ? answer.answer.edited : answer.answer.answer.text;
     const statusFlag = answer.answer.edited ? 'edited' : 'new';
@@ -52,7 +80,11 @@ export default class GalleryAnswer extends React.Component {
               </p>
             )
           }
-          <p style={styles.answerText}>{text}</p>
+          {
+            multipleChoice
+            ? multipleChoice
+            : <p style={styles.answerText}>{text}</p>
+          }
         </div>
         <div style={styles.rightColumn}>
           <div style={styles.modButtons}>
@@ -159,5 +191,26 @@ const styles = {
   modButtons: {
     textAlign: 'right',
     marginBottom: 10
+  },
+  multiple: {
+    option: {
+      width: '49%',
+      marginRight: '1%',
+      padding: 10,
+      display: 'inline-block',
+      marginBottom: 8,
+      borderRadius: 4,
+      backgroundColor: 'white',
+      border: '1px solid ' + settings.mediumGrey
+    },
+    selected: {
+      backgroundColor: settings.darkerGrey,
+      color: 'white'
+    },
+    other: {
+      width: '99%',
+      backgroundColor: settings.darkerGrey,
+      color: 'white'
+    }
   }
 };

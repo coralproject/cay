@@ -28,10 +28,13 @@ export default class GalleryAnswer extends React.Component {
 
   render() {
 
-    const {answer, gallery} = this.props;
+    const {answer, gallery, identifiableIds} = this.props;
 
     // console.log('answer', answer);
     // console.log('gallery', gallery);
+    if (!answer.answer.answer.text && answer.answer.answer.options) {
+      answer.answer.answer.text = answer.answer.answer.options.map(o => o.title).join(', ');
+    }
 
     const text = answer.answer.edited ? answer.answer.edited : answer.answer.answer.text;
     const statusFlag = answer.answer.edited ? 'edited' : 'new';
@@ -39,7 +42,6 @@ export default class GalleryAnswer extends React.Component {
     if (!gallery) {
       return <p>Loading gallery...</p>;
     }
-
     return (
       <div style={styles.base}>
         <div style={styles.leftColumn}>
@@ -47,7 +49,8 @@ export default class GalleryAnswer extends React.Component {
           {
             answer.identity_answers && (
               <p style={styles.identityAnswers}>
-                {answer.identity_answers.map(a => a.answer.text).join(' ')}
+                {answer.identity_answers.filter(iid => identifiableIds.indexOf(iid.widget_id) !== -1)
+                  .map(a => a.answer.text).join(' ')}
               </p>
             )
           }

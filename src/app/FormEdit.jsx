@@ -5,10 +5,10 @@ import {connect} from 'react-redux';
 import {
   fetchSubmissions,
   fetchGallery,
-  updateInactiveMessage,
   updateFormStatus,
   requestEditAccess,
   leavingEdit,
+  updateForm,
   fetchForm } from 'forms/FormActions';
 
 import Page from 'app/layout/Page';
@@ -59,7 +59,7 @@ export default class FormEdit extends Component {
   }
 
   updateInactive(value) {
-    this.props.dispatch(updateInactiveMessage(value, this.props.forms[this.props.forms.activeForm]));
+    this.props.dispatch(updateForm({ settings: { inactiveMessage: value } }));
   }
 
   render() {

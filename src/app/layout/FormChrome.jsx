@@ -200,7 +200,7 @@ export default class FormChrome extends React.Component {
                   checked={form.status === 'closed'}
                   onClick={this.props.updateStatus} />
                 <textarea
-                  onBlur={this.setInactiveMessage.bind(this)}
+                  onChange={this.setInactiveMessage.bind(this)}
                   style={styles.statusMessage}
                   defaultValue={form.settings.inactiveMessage}></textarea>
                 <p>The message will appear to readers when you close the form and are no longer collecting submissions.</p>

@@ -30,9 +30,6 @@ export default class GalleryAnswer extends React.Component {
 
     const {answer, gallery} = this.props;
 
-    // console.log('answer', answer);
-    // console.log('gallery', gallery);
-
     const text = answer.answer.edited ? answer.answer.edited : answer.answer.answer.text;
     const statusFlag = answer.answer.edited ? 'edited' : 'new';
 

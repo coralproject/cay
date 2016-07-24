@@ -1,0 +1,53 @@
+.askGallery {
+  position: relative;
+}
+
+.askGallery__title {
+  font-weight: bold;
+  color: #444;
+  font-size: 24;
+  margin: 20px 20px 10px;
+}
+
+.askGallery__description {
+  color: #444;
+  line-height: 1.3em;
+  font-size: 18px;
+  margin: 10px 20px;
+}
+
+.askGallery__answers {
+  padding: 20px;
+}
+
+.askGallery__answer {
+  background-color: white;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  margin-bottom: 10px;
+}
+
+.askGallery__pii {
+  color: #979B9F;
+  font-style: italic;
+}
+
+.askgallery__pii-above {
+  margin-bottom: 10px;
+}
+
+.askGallery__pii-below {
+  margin-top: 10px;
+}
+
+.askGallery__answerText {
+  line-height: 1.3em;
+}
+
+.askGallery__answerMultiOption {
+  background-color: #444;
+  font-size: 16px;
+  padding: 8px;
+  color: white;
+}

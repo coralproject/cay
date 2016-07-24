@@ -236,7 +236,7 @@ const styles = {
     border: '1px solid ' + settings.mediumGrey,
     padding: 10,
     display: 'inline-block',
-    width: '48%',
+    width: '49%',
     marginRight: '1%',
     marginBottom: 8,
     borderRadius: 4,

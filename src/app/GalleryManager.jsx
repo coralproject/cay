@@ -65,6 +65,7 @@ export default class SubmissionGallery extends React.Component {
   }
 
   renderGallery(gallery) {
+    const { identifiableIds } = this.props.forms;
     return gallery.answers.map((answer, i) => {
       return (
         <GalleryAnswer
@@ -72,6 +73,7 @@ export default class SubmissionGallery extends React.Component {
           editAnswer={this.beginEditAnswer.bind(this)}
           answer={answer}
           gallery={gallery}
+          identifiableIds={identifiableIds}
           key={i} />
       );
     });
@@ -195,10 +197,10 @@ export default class SubmissionGallery extends React.Component {
     const ans = forms[forms.answerBeingEdited];
 
     const attributionFields = this.getAttributionFields(form);
-    const orientationOpts = [
+    /*const orientationOpts = [
       {label: 'Gallery Orientation - Vertical', value: 'vertical'},
       {label: 'Gallery Orientation - Horizontal', value: 'horizontal'}
-    ];
+    ];*/
     const placementOpts = [
       {label: 'Above the submission', value: 'above'},
       {label: 'Below the submission', value: 'below'}
@@ -217,12 +219,13 @@ export default class SubmissionGallery extends React.Component {
             title={'Submission Gallery'}
             subhead={gallery ? `Created on ${moment(gallery.date_created).format('D MMM YYYY H:ma')}` : ''} />
           <div style={styles.headingButtonHolder}>
-            <div style={styles.orientationOpts}>
+            {/*<div style={styles.orientationOpts}>
               <Select
+                clearable={false}
                 options={orientationOpts}
                 value={forms.galleryOrientation}
                 onChange={this.updateOrientation.bind(this)} />
-            </div>
+            </div>*/}
             <Button
               style={styles.modButton}
               onClick={this.togglePreview.bind(this)}
@@ -243,6 +246,7 @@ export default class SubmissionGallery extends React.Component {
                   style={styles.placementOpts}
                   value={forms.galleryReaderInfoPlacement}
                   options={placementOpts}
+                  clearable={false}
                   onChange={this.updatePlacement.bind(this)} />
 
                 <p style={[
@@ -348,7 +352,7 @@ export default class SubmissionGallery extends React.Component {
               Copy <Clipboard />
             </Button>
             <p style={{clear: 'both'}}>Standalone link</p>
-            <input type="text" value={forms.galleryUrl} style={styles.standalone} />
+            <input type="text" value={`${app.elkhornHost}/iframe-gallery/${forms.activeGallery}`} style={styles.standalone} />
           </div>
         </Modal>
 

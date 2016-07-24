@@ -64,8 +64,9 @@ const emptyForm = {
     inactiveMessage: 'We are not currently accepting submissions. Thank you.'
   },
   header: {
-    title: 'Share your story',
-    description: 'This is a sample ask!'
+    title: 'Form name',
+    description: 'This is a sample ask!',
+    heading: ''
   },
   footer: {
     conditions: ''

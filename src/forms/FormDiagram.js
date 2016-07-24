@@ -82,7 +82,7 @@ export default class FormDiagram extends Component {
           :
             null
         }
-        <textarea onChange={ this.onFormDescriptionChange.bind(this) } style={ styles.description } placeholder={ "Add instructions or a description" } defaultValue={ form.header.description } />
+        <textarea onChange={ this.onFormDescriptionChange.bind(this) } style={ styles.description } placeholder={ "Write instructions and a description for the form below" } defaultValue={ form.header.description } />
         <div style={styles.formDiagram}>
           { this.props.forms.widgets.map((field, i) => (
             <DropPlaceHolder key={i} formDiagram={ this } position={ i } dropped={ field.dropped }>
@@ -103,13 +103,13 @@ export default class FormDiagram extends Component {
           { !this.props.forms.widgets.length ? <BlankState /> : null }
         </div>
         <div style={ styles.extraFields }>
-          <h3 style={ styles.extraFieldTitle }>Thank you message</h3>
+          <h3 style={ styles.extraFieldTitle }>Thank you message (optional)</h3>
           <textarea
             defaultValue={ form.finishedScreen.description }
             style={ styles.extraFieldTextArea }
             onChange={ this.onThankYouDescriptionChange.bind(this) }></textarea>
 
-          <h3 style={ styles.extraFieldTitle }>Terms and conditions</h3>
+          <h3 style={ styles.extraFieldTitle }>Include Privacy Policy</h3>
           <textarea
             defaultValue={ form.footer.conditions }
             style={ styles.extraFieldTextArea }

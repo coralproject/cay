@@ -223,7 +223,8 @@ const styles = {
     width: '100%',
     display: 'block',
     border: 'none',
-    background: 'none'
+    background: 'none',
+    resize: 'none'
   },
   extraFieldTextArea: {
     display: 'block',

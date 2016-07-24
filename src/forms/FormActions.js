@@ -326,6 +326,7 @@ export const saveForm = (form, widgets) => {
     .catch(error => {
       dispatch(formCreationFailure(error));
     });
+
   };
 
 };

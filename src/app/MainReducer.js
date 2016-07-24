@@ -8,6 +8,7 @@ import tags from 'tags/TagReducer';
 import filters from 'filters/FiltersReducer';
 import users from 'users/UsersReducer';
 import forms from 'forms/FormsReducer';
+import flashMessages from 'flashmessages/FlashMessagesReducer';
 
 const rootReducer = combineReducers({
   app,
@@ -18,7 +19,8 @@ const rootReducer = combineReducers({
   tags,
   filters,
   users,
-  forms
+  forms,
+  flashMessages
 });
 
 export default rootReducer;

@@ -9,6 +9,7 @@ import Radium from 'radium';
 import Sidebar from 'app/layout/sidebar/Sidebar';
 
 import Header from 'app/layout/header/Header';
+import FlashMessages from 'flashmessages/FlashMessages';
 
 import settings from 'settings';
 
@@ -19,6 +20,7 @@ class Page extends React.Component {
     return (
       <Sidebar styles={styles.sidebar}>
         <Header />
+        <FlashMessages />
         <div style={[styles.wrapper, this.props.style]}>
           {this.props.children}
         </div>

@@ -1,18 +1,20 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import uuid from 'node-uuid';
-import { saveForm } from 'forms/FormActions';
 
-import Spinner from 'components/Spinner';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
+
+// Actions
+import { saveForm, appendWidget, updateForm } from 'forms/FormActions';
+import { showFlashMessage } from 'flashMessages/FlashMessagesActions';
+
+import Spinner from 'components/Spinner';
 import FaClose from 'react-icons/lib/fa/close';
 
-import { updateForm } from 'forms/FormActions';
 import FormDiagram from 'forms/FormDiagram';
 import { Header, Sidebar } from 'forms/FormBuilderLayout';
 
-import { appendWidget } from 'forms/FormActions';
 
 @connect(({ app, forms }) => ({ app, forms }))
 @DragDropContext(HTML5Backend)
@@ -65,7 +67,14 @@ export default class FormBuilder extends Component {
     const { forms, dispatch, activeForm } = this.props;
     const { form, widgets } = forms;
     dispatch(saveForm(activeForm ? forms[activeForm] : form, widgets))
-      .then(data => !activeForm && router.push(`/forms/${data.id}`));
+      .then(data => {
+        if (data && data.id) {
+          this.props.dispatch(showFlashMessage('Your form saved.', 'success'));
+          return !activeForm && router.push(`/forms/${data.id}`);
+        } else {
+          this.props.dispatch(showFlashMessage('Uh-oh, we can\'t save your form. Try again or report the error to your technical team', 'warning'));
+        }
+      });
   }
 
   onFormStatusChange(e) {

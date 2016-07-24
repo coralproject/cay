@@ -21,6 +21,28 @@ export default class FormBuilder extends Component {
     router: PropTypes.object.isRequired
   };
 
+  constructor(props) {
+    super(props);
+    // An empty form with no changes is valid as 'saved'
+    this.saved = true;
+  }
+
+  markAsUnsaved() {
+    this.saved = false;
+  }
+
+  hookRouter() {
+    this.context.router.setRouteLeaveHook(this.props.route, () => {
+      if (this.saved === false) {
+        return 'This form has unsaved changes. Are you sure you want to leave this page?';
+      }
+    });
+  }
+
+  componentDidMount() {
+    this.hookRouter();
+  }
+
   render() {
     const { preview, onClosePreview, onOpenPreview, forms, activeForm, app } = this.props;
     const form = activeForm ? forms[activeForm] : forms.form;
@@ -37,7 +59,7 @@ export default class FormBuilder extends Component {
             addToBottom={this.addToBottom.bind(this)}
             activeForm={activeForm}
             app={app} />
-          <FormDiagram activeForm={ this.props.activeForm } />
+          <FormDiagram activeForm={ this.props.activeForm } markAsUnsaved={this.markAsUnsaved.bind(this)} />
           { preview ? <Preview
             renderPreview={this.renderPreview.bind(this)}
             onClosePreview={onClosePreview.bind(this)}
@@ -48,6 +70,7 @@ export default class FormBuilder extends Component {
   }
 
   addToBottom(data) {
+    this.markAsUnsaved();
     this.props.dispatch(appendWidget({
       title: data.title,
       friendlyType: data.friendlyType,
@@ -65,10 +88,16 @@ export default class FormBuilder extends Component {
     const { forms, dispatch, activeForm } = this.props;
     const { form, widgets } = forms;
     dispatch(saveForm(activeForm ? forms[activeForm] : form, widgets))
-      .then(data => !activeForm && router.push(`/forms/${data.id}`));
+      .then(data => {
+        if (data && data.id) {
+          this.saved = true;
+          return !activeForm && router.push(`/forms/${data.id}`);
+        } 
+      });
   }
 
   onFormStatusChange(e) {
+    this.markAsUnsaved();
     let { form } = this.props.forms;
     var newSettings = Object.assign({}, form.settings, { isActive: e.target.checked });
     this.props.dispatch(updateForm({
@@ -77,6 +106,7 @@ export default class FormBuilder extends Component {
   }
 
   onInactiveMessageChange(e) {
+    this.markAsUnsaved();
     let { form } = this.props.forms;
     var newSettings = Object.assign({}, form.settings, { inactiveMessage: e.target.value });
     this.props.dispatch(updateForm({
@@ -86,6 +116,7 @@ export default class FormBuilder extends Component {
   }
 
   onFormTitleChange(e) {
+    this.markAsUnsaved();
     const { form, activeForm } = this.props.forms;
     const header = activeForm ? this.props.forms[activeForm].header : form.header;
     this.props.dispatch(updateForm({

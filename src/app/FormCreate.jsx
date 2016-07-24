@@ -1,8 +1,8 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import Radium from 'radium';
 import { connect } from 'react-redux';
 
-import { createEmpty } from 'forms/FormActions';
+import { createEmpty, updateForm } from 'forms/FormActions';
 import Page from 'app/layout/Page';
 
 import FormBuilder from 'forms/FormBuilder.js';
@@ -21,13 +21,24 @@ export default class FormCreate extends Component {
     this.props.dispatch(createEmpty());
   }
 
+  updateFormStatus(status) {
+    this.props.dispatch(updateForm({ status, settings: { isActive: status === 'open' } }));
+  }
+
+  updateInactive(value) {
+    this.props.dispatch(updateForm({ settings: { inactiveMessage: value } }));
+  }
+
   render() {
     const { preview } = this.state;
     const { forms } = this.props;
     return (
       <Page style={styles.page}>
         <FormChrome form={forms.form}
-          create={true} updateStatus={() => {}} activeTab="builder" />
+          create={true}
+          updateStatus={this.updateFormStatus.bind(this)}
+          updateInactive={this.updateInactive.bind(this)}
+          activeTab="builder" />
         <div style={styles.formBuilderContainer}>
           <FormBuilder
             onClosePreview={this.onClosePreview.bind(this)}

@@ -34,7 +34,7 @@ export default class FormChrome extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {statusDropdownOpen: false, updatingInactiveMessage: false};
+    this.state = {statusDropdownOpen: false};
   }
 
   buildForm() { // navigate to the form builder or editor
@@ -102,14 +102,8 @@ export default class FormChrome extends React.Component {
     return this.state.statusDropdownOpen ? <AngleUpIcon /> : <AngleDownIcon />;
   }
 
-  setInactiveMessage(e) { // onBlur handler for the message textarea
-    this.setState({inactiveMessageDraft: e.target.value});
-  }
-
-  updateInactiveMessage() {
-    this.setState({updatingInactiveMessage: true});
-    this.props.dispatch(updateInactiveMessage(this.state.inactiveMessageDraft, this.props.form))
-      .then(() =>this.setState({statusDropdownOpen: false, updatingInactiveMessage: false}));
+  setInactiveMessage(e) {
+    this.props.updateInactive(e.target.value);
   }
 
   handleClickOutside() {
@@ -207,7 +201,8 @@ export default class FormChrome extends React.Component {
                   onClick={this.props.updateStatus} />
                 <textarea
                   onBlur={this.setInactiveMessage.bind(this)}
-                  style={styles.statusMessage}></textarea>
+                  style={styles.statusMessage}
+                  defaultValue={form.settings.inactiveMessage}></textarea>
                 <p>The message will appear to readers when you close the form and are no longer collecting submissions.</p>
                 <div style={this.getLoaderStyles(this, true)}></div>
                 <div style={this.getLoaderStyles()}></div>

@@ -481,7 +481,7 @@ export const updateFormStatus = (formId, status) => {
 
     fetch(`${app.pillarHost}/api/form/${formId}/status/${status}`, options)
       .then(res => res.json())
-      .then(form => dispatch({type: FORM_STATUS_UPDATED, form}))
+      .then(form => dispatch({type: FORM_STATUS_UPDATED, form, status}))
       .catch(error => dispatch({type: FORM_STATUS_UPDATE_ERROR, error}));
   };
 };

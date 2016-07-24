@@ -258,7 +258,8 @@ const forms = (state = initial, action) => {
 
   case types.FORM_STATUS_UPDATED:
     return {...state, activeForm: action.form.id, [action.form.id]: Object.assign({},
-      action.form, {status: action.status, settings: { isActive: action.status === 'open' }})};
+      action.form, {status: action.status, settings: Object.assign({},
+      action.form.settings, { isActive: action.status === 'open' })})};
 
   case types.FORM_ANSWER_SENT_TO_GALLERY:
     return {...state, [action.gallery.id]: action.gallery};

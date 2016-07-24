@@ -339,18 +339,18 @@ export default class SubmissionGallery extends React.Component {
           <div>
             <p>Embed code</p>
             <textarea style={styles.embedTextarea} value={`<script src="${forms.galleryUrl}"></script><div id="ask-gallery" />`}></textarea>
-            <Button
+            {/*<Button
               style={styles.copyButton}
               onClick={this.copyEmbedToClipboard.bind(this)}>
               Copy <Clipboard />
-            </Button>
+            </Button>*/}
             <p style={{clear: 'both'}}>Embed code (with iframe)</p>
             <textarea style={styles.embedTextarea} value={`<iframe width="100%" height="580" src="${app.elkhornHost}/iframe-gallery/${forms.activeGallery}"></iframe>`}></textarea>
-            <Button
+            {/*<Button
               style={styles.copyButton}
               onClick={this.copyEmbedToClipboard.bind(this, 'iframe')}>
               Copy <Clipboard />
-            </Button>
+            </Button>*/}
             <p style={{clear: 'both'}}>Standalone link</p>
             <input type="text" value={`${app.elkhornHost}/iframe-gallery/${forms.activeGallery}`} style={styles.standalone} />
           </div>

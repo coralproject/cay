@@ -130,7 +130,7 @@ export default class SubmissionGallery extends React.Component {
 
   showIdentityAnswers(answer) {
     if (!answer.identity_answers) return null;
-    
+
     return answer.identity_answers.map(a => {
       return <TextField label={a.question} value={a.answer.text} />;
     });
@@ -302,7 +302,7 @@ export default class SubmissionGallery extends React.Component {
         {
           ans ?
             <Modal
-              title="Edit Submission for Gallery"
+              title="Edit Submission"
               isOpen={!!ans}
               confirmAction={this.confirmEdit.bind(this, ans)}
               cancelAction={this.cancelEdit.bind(this)}>

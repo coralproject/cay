@@ -270,12 +270,11 @@ const forms = (state = initial, action) => {
 
   // editing Gallery submissions
   case types.ANSWER_EDIT_BEGIN: // user clicked on button to start editing an answer
-    const answerKey = `${action.submissionId}|${action.answerId}`;
     return {
       ...state,
       // if you can think of a better way to store this, I'm all ears
-      answerBeingEdited: answerKey,
-      editableAnswer: state[answerKey].answer.answer.text
+      answerBeingEdited: action.answerKey,
+      editableAnswer: action.editableAnswer
     };
 
   case types.ANSWER_EDIT_UPDATE: // user is typing into the field

@@ -489,7 +489,15 @@ export const updateFormStatus = (formId, status) => {
 
 // user opens the Edit Answer modal
 export const beginEdit = (galleryId, submissionId, answerId) => {
-  return {type: ANSWER_EDIT_BEGIN, answerId, submissionId};
+  return (dispatch, getState) => {
+
+    const {forms} = getState();
+    const answerKey = `${submissionId}|${answerId}`;
+    const reply = forms[answerKey];
+    const editableAnswer = reply.answer.edited ? reply.answer.edited : reply.answer.answer.text;
+
+    dispatch({type: ANSWER_EDIT_BEGIN, answerId, submissionId, editableAnswer, answerKey});
+  };
 };
 
 // user starts typing and changing the Answer

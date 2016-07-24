@@ -1,6 +1,6 @@
-import * as flashMessagesActions from 'flashmessages/FlashMessagesActions';
+import * as FlashMessagesActions from 'flashmessages/FlashMessagesActions';
 
-const types = Object.assign({}, flashMessagesActions);
+const types = Object.assign({}, FlashMessagesActions);
 
 const initialState = {
   type: 'warning',

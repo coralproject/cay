@@ -7,7 +7,7 @@ import HTML5Backend from 'react-dnd-html5-backend';
 
 // Actions
 import { saveForm, appendWidget, updateForm } from 'forms/FormActions';
-import { showFlashMessage } from 'flashMessages/FlashMessagesActions';
+import { showFlashMessage } from 'flashmessages/FlashMessagesActions';
 
 import Spinner from 'components/Spinner';
 import FaClose from 'react-icons/lib/fa/close';

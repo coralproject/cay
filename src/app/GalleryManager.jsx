@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { Component } from 'react';
 import Radium from 'radium';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import {
   fetchForm,
   fetchGallery,
@@ -16,14 +16,14 @@ import {
   publishGallery,
   editAnswer,
   cancelEdit,
-  beginEdit
+  beginEdit,
+  reinsertGalleryAnswer
 } from 'forms/FormActions';
 import {Link} from 'react-router';
 import moment from 'moment';
 
 import Eye from 'react-icons/lib/fa/eye';
 import Refresh from 'react-icons/lib/fa/refresh';
-import Clipboard from 'react-icons/lib/fa/clipboard';
 import Select from 'react-select';
 
 import settings from 'settings';
@@ -42,7 +42,7 @@ import GalleryAnswer from 'forms/GalleryAnswer';
 
 @connect(({app, forms}) => ({app, forms}))
 @Radium
-export default class SubmissionGallery extends React.Component {
+export default class SubmissionGallery extends Component {
 
   constructor(props) {
     super(props);
@@ -64,6 +64,14 @@ export default class SubmissionGallery extends React.Component {
     this.props.dispatch(beginEdit(galleryId, submissionId, answerId));
   }
 
+  onMoveAnswerUp(id, key) {
+    this.props.dispatch(reinsertGalleryAnswer(id, key, -1));
+  }
+
+  onMoveAnswerDown(id, key) {
+    this.props.dispatch(reinsertGalleryAnswer(id, key, 1));
+  }
+
   renderGallery(gallery) {
     const { identifiableIds } = this.props.forms;
     return gallery.answers.map((answer, i) => {
@@ -74,6 +82,8 @@ export default class SubmissionGallery extends React.Component {
           answer={answer}
           gallery={gallery}
           identifiableIds={identifiableIds}
+          onMoveAnswerDown={this.onMoveAnswerDown.bind(this, gallery.id, i)}
+          onMoveAnswerUp={this.onMoveAnswerUp.bind(this, gallery.id, i)}
           key={i} />
       );
     });
@@ -130,7 +140,7 @@ export default class SubmissionGallery extends React.Component {
 
   showIdentityAnswers(answer) {
     if (!answer.identity_answers) return null;
-    
+
     return answer.identity_answers.map(a => {
       return <TextField label={a.question} value={a.answer.text} />;
     });

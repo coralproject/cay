@@ -242,6 +242,8 @@ const forms = (state = initial, action) => {
       return accum;
     }, {});
 
+    action.gallery.config = action.gallery.config || {};
+
     return {
       ...state,
       loadingGallery: false,

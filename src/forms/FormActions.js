@@ -41,6 +41,8 @@ export const FORM_STATUS_UPDATE_ERROR = 'FORM_STATUS_UPDATE_ERROR';
 export const FORM_ANSWER_SENT_TO_GALLERY = 'FORM_ANSWER_SENT_TO_GALLERY';
 export const FORM_ANSWER_REMOVED_FROM_GALLERY = 'FORM_ANSWER_REMOVED_FROM_GALLERY';
 
+export const FORM_ANSWER_REINSERT = 'FORM_ANSWER_REINSERT';
+
 export const FORM_DELETED = 'FORM_DELETED';
 
 export const FORM_CREATE_EMPTY= 'FORM_CREATE_EMPTY';
@@ -626,3 +628,10 @@ export const cleanSubmissionFilters = () => ({
 });
 
 export const hasFlag = (submission, flag) => -1 !== submission.flags.indexOf(flag);
+
+export const reinsertGalleryAnswer = (galleryId, key, position) => ({
+  type: FORM_ANSWER_REINSERT,
+  galleryId,
+  key,
+  position
+});

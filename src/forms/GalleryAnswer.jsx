@@ -28,8 +28,7 @@ export default class GalleryAnswer extends React.Component {
 
   render() {
 
-    const {answer, gallery, identifiableIds} = this.props;
-
+    const { answer, gallery, identifiableIds, onMoveAnswerUp, onMoveAnswerDown, key } = this.props;
     if (!answer.answer.answer.text && answer.answer.answer.options) {
       answer.answer.answer.text = answer.answer.answer.options.map(o => o.title).join(', ');
     }
@@ -62,10 +61,13 @@ export default class GalleryAnswer extends React.Component {
               key="foo">
               <Trash style={styles.icon} />
             </div>
-            <div style={styles.iconHolder} key="bar">
+            <div onClick={() => onMoveAnswerUp(key)}
+              style={styles.iconHolder} key="bar">
               <FaArrowCircleUp style={styles.icon} />
             </div>
-            <div style={styles.iconHolder} key="baz">
+            <div
+              onClick={() => onMoveAnswerDown(key)}
+              style={styles.iconHolder} key="baz">
               <FaArrowCircleDown style={styles.icon} />
             </div>
           </div>

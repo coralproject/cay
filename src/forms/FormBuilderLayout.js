@@ -3,6 +3,7 @@ import React from 'react';
 import FormComponent from 'forms/FormComponent';
 import FaFloppyO from 'react-icons/lib/fa/floppy-o';
 import FaEye from 'react-icons/lib/fa/eye';
+import FaExternalLink from 'react-icons/lib/fa/external-link';
 import askTypes from 'forms/WidgetTypes';
 import Spinner from 'components/Spinner';
 import Button from 'components/Button';
@@ -46,7 +47,9 @@ export const Sidebar = ({ addToBottom, app, activeForm }) => (
           <textarea style={styles.embedCode} value={`<div id="ask-form"></div><script src="${app.elkhornStaticHost}/${activeForm}.js"></script>`}/>
           <p>Embed code (iframe)</p>
           <textarea style={styles.embedCode} value={`<iframe width="100%" height="580" src="${app.elkhornHost}/iframe/${activeForm}"></iframe>`}/>
-          <a href={ `${app.elkhornHost}/iframe/${activeForm}` } target="_blank" style={ styles.formSettingsAction }>Standalone Form</a>
+          <a href={ `${app.elkhornHost}/iframe/${activeForm}` } target="_blank" style={ styles.formSettingsAction }>
+            <FaExternalLink /> Standalone Form
+          </a>
         </div>
       ): null }
     </div>
@@ -108,15 +111,16 @@ const styles = {
   formSettingsAction: {
     display: 'inline-block',
     textDecoration: 'none',
-    color: 'black',
+    color: 'white',
     marginTop: 10,
-    marginRight: 10,
+    width: '315px',
     padding: 10,
-    border: '1px solid #BBB',
+    border: 'none',
     borderRadius: '3px',
-    background: 'white',
+    background: '#4a4a4a',
     fontSize: '12pt',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    textAlign: 'center'
   },
   switchSlider: function(isActive) {
     return {

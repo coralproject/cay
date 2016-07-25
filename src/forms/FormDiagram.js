@@ -215,7 +215,7 @@ const styles = {
     border: 'none',
     background: 'none',
     fontWeight: 'normal',
-    color: grey
+    color: 'black'
   },
   description: {
     fontSize: '1em',

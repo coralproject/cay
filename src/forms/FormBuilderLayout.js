@@ -5,6 +5,7 @@ import FaFloppyO from 'react-icons/lib/fa/floppy-o';
 import FaEye from 'react-icons/lib/fa/eye';
 import askTypes from 'forms/WidgetTypes';
 import Spinner from 'components/Spinner';
+import Button from 'components/Button';
 
 export const Header = ({ onTitleChange, form, forms, onSaveClick, onOpenPreview }) => (
   <div style={ styles.formHeader }>
@@ -13,8 +14,18 @@ export const Header = ({ onTitleChange, form, forms, onSaveClick, onOpenPreview 
         placeholder={ "Write a title" } defaultValue={ form.header.title } />
     </div>
     <div style={ styles.formActions }>
-      <button onClick={onOpenPreview} style={ styles.formAction }><FaEye /></button>
-      <button onClick={onSaveClick} style={ styles.formAction }>{ forms.savingForm ? <Spinner/> : <FaFloppyO /> }</button>
+      <Button
+        onClick={onOpenPreview}
+        category="brand"
+        style={styles.topButton}>
+        <FaEye style={styles.topButtonicon} />{` Preview `}
+      </Button>
+      <Button
+        onClick={onSaveClick}
+        category="success"
+        style={styles.topButton}>
+        { forms.savingForm ? <Spinner/> : <FaFloppyO /> }{` Save `}
+      </Button>
     </div>
   </div>
 );
@@ -51,6 +62,7 @@ const styles = {
     marginRight: 20,
     padding: 20,
     paddingTop: 10,
+    paddingLeft: 0,
     color: '#5D5D5D',
     borderRadius: 4,
     marginBottom: 20
@@ -72,7 +84,7 @@ const styles = {
   },
   leftContainerTitle: {
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: '5px',
     fontSize: '.9em'
   },
   leftContainerSubTitle: {
@@ -182,18 +194,11 @@ const styles = {
     width: '30%',
     textAlign: 'right'
   },
-  formAction: {
-    width: '40px',
-    height: '40px',
-    padding: 0,
-    lineHeight: '20px',
-    marginLeft: '10px',
-    border: '1px solid #AAA',
-    backgroundColor: 'transparent',
-    borderRadius: '4px',
-    fontSize: '14pt',
-    display: 'inline-block',
-    cursor: 'pointer'
+  topButton: {
+    marginLeft: 10
+  },
+  topButtonIcon: {
+    bottom: 5
   },
   strong: {
     fontWeight: 'bold'

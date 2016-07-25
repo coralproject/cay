@@ -209,7 +209,7 @@ const styles = {
     paddingLeft: 5
   },
   headLine: {
-    fontSize: '2em',
+    fontSize: '1.25em',
     width: '100%',
     display: 'block',
     border: 'none',
@@ -218,7 +218,7 @@ const styles = {
     color: grey
   },
   description: {
-    fontSize: '14pt',
+    fontSize: '1em',
     marginBottom: '20px',
     width: '100%',
     display: 'block',
@@ -234,7 +234,7 @@ const styles = {
     border: '1px solid #ddd'
   },
   extraFieldTitle: {
-    fontSize: '14pt',
+    fontSize: '1em',
     fontWeight: 'bold',
     margin: '30px 0 20px 0'
   }

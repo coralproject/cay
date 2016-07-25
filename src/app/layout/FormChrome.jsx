@@ -61,7 +61,8 @@ export default class FormChrome extends React.Component {
   }
 
   galleryBadge() {
-    return this.props.gallery ? <Badge style={styles.badge} count={this.props.gallery.answers.length} /> : '';
+    return this.props.gallery && this.props.gallery.answers ?
+      <Badge style={styles.badge} count={this.props.gallery.answers.length} /> : '';
   }
 
   submissionBadge() {

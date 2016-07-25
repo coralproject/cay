@@ -549,7 +549,8 @@ export const updateGalleryOrientation = orientation => {
 */
 export const toggleIdentifiable = (id, add) => {
   return (dispatch, getState) => {
-    const {forms: {identifiableIds: oldIds}} = getState();
+    const { forms } = getState();
+    const oldIds = forms[forms.activeGallery].config.identifiableIds || [];
 
     let ids;
 
@@ -570,10 +571,6 @@ export const publishGallery = () => {
     const { activeGallery } = forms;
     const gallery = forms[activeGallery];
     /*const {
-      galleryTitle,
-      galleryDescription,
-      galleryReaderInfoPlacement,
-      galleryOrientation,
       identifiableIds
     } = forms;*/
     dispatch({type: PUBLISH_GALLERY_INIT});

@@ -22,10 +22,6 @@ const initial = {
   formCreationError: null,
   activeForm: null, // might be able to combine this with {form} above in the future
   activeGallery: null, // this is an ObjectId string
-  galleryTitle: '',
-  galleryDescription: '',
-  galleryOrientation: 'vertical', // vertical|horizontal
-  galleryReaderInfoPlacement: 'above', // above|below
   identifiableIds: [],
   widgets: [],
   loadingAnswerEdit: false,
@@ -302,7 +298,7 @@ const forms = (state = initial, action) => {
     return {...state, loadingAnswerEdit: false, answerBeingEdited: null};
 
   case types.UPDATE_GALLERY_TITLE:
-    return {...state, galleryTitle: action.title};
+    return {...state, [state.activeGallery]: {...state[state.activeGallery], headline: action.title}};
 
   case types.UPDATE_GALLERY_DESCRIPTION:
     return {...state, galleryDescription: action.description};

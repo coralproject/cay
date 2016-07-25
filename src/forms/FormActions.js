@@ -564,47 +564,33 @@ export const toggleIdentifiable = (id, add) => {
   };
 };
 
-export const publishGallery = formId => {
+export const publishGallery = () => {
   return (dispatch, getState) => {
     const {app, forms} = getState();
-    const {
+    const { activeGallery } = forms;
+    const gallery = forms[activeGallery];
+    /*const {
       galleryTitle,
       galleryDescription,
       galleryReaderInfoPlacement,
       galleryOrientation,
       identifiableIds
-    } = forms;
+    } = forms;*/
     dispatch({type: PUBLISH_GALLERY_INIT});
 
-    console.log('activeGallery', forms.activeGallery);
 
-    // get the most recent state of truth from the server
-    return fetch(`${app.pillarHost}/api/form_galleries/${formId}`)
-      .then(res => res.json())
-      .then(galleries => {
-        // there is only one gallery per form so far
-        const [gallery] = galleries;
-
-        return fetch(`${app.elkhornHost}/gallery/${gallery.id}/publish`, {
-          method: 'POST',
-          headers: new Headers({'Content-Type': 'application/json'}),
-          body: JSON.stringify({
-            ...gallery,
-            galleryTitle,
-            galleryDescription,
-            galleryReaderInfoPlacement,
-            galleryOrientation,
-            identifiableIds
-          })
-        });
-      })
-      .then(res => res.json())
-      .then(gallery => {
-        console.log(gallery);
-        dispatch({type: PUBLISH_GALLERY_SUCCESS, gallery});
-        return gallery;
-      })
-      .catch(error => dispatch({type: PUBLISH_GALLERY_FAILURE, error}));
+    return fetch(`${app.elkhornHost}/gallery/${gallery.id}/publish`, {
+      method: 'POST',
+      headers: new Headers({'Content-Type': 'application/json'}),
+      body: JSON.stringify(gallery)
+    })
+    .then(res => res.json())
+    .then(gallery => {
+      console.log(gallery);
+      dispatch({type: PUBLISH_GALLERY_SUCCESS, gallery});
+      return gallery;
+    })
+    .catch(error => dispatch({type: PUBLISH_GALLERY_FAILURE, error}));
   };
 };
 

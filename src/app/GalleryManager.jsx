@@ -204,7 +204,7 @@ export default class SubmissionGallery extends Component {
     const {forms, app} = this.props;
 
     const form = forms[forms.activeForm];
-    const gallery = forms[forms.activeGallery];
+    const gallery = forms[forms.activeGallery] || {};
     const submissions = forms.submissionList.map(id => forms[id]);
     const ans = forms[forms.answerBeingEdited];
 
@@ -287,13 +287,13 @@ export default class SubmissionGallery extends Component {
             <div style={styles.gallery}>
               <div style={styles.galleryTitle}>
                 <TextField
-                  value={forms.galleryTitle}
+                  value={gallery.headline || ''}
                   onBlur={this.setHeadline.bind(this)}
                   style={styles.galleryTitles}
                   label="Write a headline (optional)" />
                 <br />
                 <TextField
-                  value={forms.galleryDescription}
+                  value={gallery.description || ''}
                   onBlur={this.setDescription.bind(this)}
                   style={styles.galleryTitles}
                   label="Write description for the gallery (optional)" />

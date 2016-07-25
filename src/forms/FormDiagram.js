@@ -34,6 +34,7 @@ export default class FormDiagram extends Component {
 
   onFormHeadingChange(e) {
     let form = this.getForm();
+    this.props.markAsUnsaved();
     this.props.dispatch(updateForm({
       header: {
         ...form.header,
@@ -44,6 +45,7 @@ export default class FormDiagram extends Component {
 
   onFormDescriptionChange(e) {
     let form = this.getForm();
+    this.props.markAsUnsaved();
     this.props.dispatch(updateForm({
       header: {
         ...form.header,
@@ -54,6 +56,7 @@ export default class FormDiagram extends Component {
 
   onThankYouDescriptionChange(e) {
     let form = this.getForm();
+    this.props.markAsUnsaved();
     this.props.dispatch(updateForm({
       finishedScreen: {
         title: form.finishedScreen.title,
@@ -63,6 +66,7 @@ export default class FormDiagram extends Component {
   }
 
   onConditionsChange(e) {
+    this.props.markAsUnsaved();
     this.props.dispatch(updateForm({
       footer: {
         conditions: e.target.value
@@ -121,24 +125,29 @@ export default class FormDiagram extends Component {
 
   onDelete(position, e) {
     e.stopPropagation();
+    this.props.markAsUnsaved();
     this.props.dispatch(deleteWidget(position));
   }
 
   onDuplicate(position, e) {
     e.stopPropagation();
+    this.props.markAsUnsaved();
     this.props.dispatch(duplicateWidget(position));
   }
 
   onMove(direction, position, e) {
     e.stopPropagation();
+    this.props.markAsUnsaved();
     this.props.dispatch(moveWidget(position, position + (direction === 'up' ? -1 : 1)));
   }
 
   moveWidget(origin, target) {
+    this.props.markAsUnsaved();
     this.props.dispatch(moveWidget(origin, target));
   }
 
   appendWidget(field, targetPosition) {
+    this.props.markAsUnsaved();
     this.props.dispatch(appendWidget({
       title: field.title,
       type: 'field',

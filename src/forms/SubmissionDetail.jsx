@@ -5,6 +5,7 @@ import BBookmark from 'react-icons/lib/fa/bookmark';
 import PaperPlaneIcon from 'react-icons/lib/fa/paper-plane';
 import FlagIcon from 'react-icons/lib/fa/flag';
 import TrashIcon from 'react-icons/lib/fa/trash';
+import _ from 'lodash';
 
 import settings from 'settings';
 import Button from 'components/Button';
@@ -89,6 +90,14 @@ export default class SubmissionDetail extends Component {
       return (<span>No response</span>);
     }
 
+    // wow, this is a gross hack, and it WILL break soon
+    const possibleDateValue = new Date(reply.answer.value);
+
+    // render a Date answer
+    if (_.isString(reply.answer.value) && _.isDate(possibleDateValue) && !isNaN(possibleDateValue)) {
+      return moment(possibleDateValue).format('D MMM YYYY');
+    }
+
     if (reply.answer.options) {
 
       const selectedIndexes = reply.answer.options.map(o => o.index);
@@ -104,6 +113,11 @@ export default class SubmissionDetail extends Component {
           })}
         </ul>
       );
+    }
+
+    // if the date was invalid, just show whatever they entered.
+    if ('value' in reply.answer) {
+      return reply.answer.value;
     }
 
     if ('text' in reply.answer) {

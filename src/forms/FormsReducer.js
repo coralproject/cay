@@ -22,10 +22,6 @@ const initial = {
   formCreationError: null,
   activeForm: null, // might be able to combine this with {form} above in the future
   activeGallery: null, // this is an ObjectId string
-  galleryTitle: '',
-  galleryDescription: '',
-  galleryOrientation: 'vertical', // vertical|horizontal
-  galleryReaderInfoPlacement: 'above', // above|below
   identifiableIds: [],
   widgets: [],
   loadingAnswerEdit: false,
@@ -301,19 +297,21 @@ const forms = (state = initial, action) => {
     return {...state, loadingAnswerEdit: false, answerBeingEdited: null};
 
   case types.UPDATE_GALLERY_TITLE:
-    return {...state, galleryTitle: action.title};
+    return {...state, [state.activeGallery]: {...state[state.activeGallery], headline: action.title}};
 
   case types.UPDATE_GALLERY_DESCRIPTION:
-    return {...state, galleryDescription: action.description};
+    return {...state, [state.activeGallery]: {...state[state.activeGallery], description: action.description}};
 
   case types.UPDATE_READER_INFO_PLACEMENT:
-    return {...state, galleryReaderInfoPlacement: action.placement};
+    const gal = state[state.activeGallery];
+    return {...state, [state.activeGallery]: {...gal, config: {...gal.config, placement: action.placement}}};
 
   case types.UPDATE_GALLERY_ORIENTATION:
     return {...state, galleryOrientation: action.orientation};
 
   case types.GALLERY_ENABLE_IDENTIFIABLE:
-    return {...state, identifiableIds: action.ids};
+    const gallery = state[state.activeGallery];
+    return {...state, [state.activeGallery]: {...gallery, config: {...gallery.config, identifiableIds: action.ids}}};
 
   case types.PUBLISH_GALLERY_INIT:
     return {...state, loadingGallery: true, galleryUrl: '', galleryCode: ''};

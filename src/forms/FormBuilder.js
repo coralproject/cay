@@ -62,10 +62,16 @@ export default class FormBuilder extends Component {
             activeForm={activeForm}
             app={app} />
           <FormDiagram activeForm={ this.props.activeForm } markAsUnsaved={this.markAsUnsaved.bind(this)} />
-          { preview ? <Preview
-            renderPreview={this.renderPreview.bind(this)}
-            onClosePreview={onClosePreview.bind(this)}
-            /> : null }
+          { preview
+            ? <div>
+                <div style={ styles.previewOverlay }></div>
+                <Preview
+                  renderPreview={this.renderPreview.bind(this)}
+                  onClosePreview={onClosePreview.bind(this)}
+                  />
+              </div>
+            : null
+          }
         </div>
       </div>
     );
@@ -230,5 +236,14 @@ const styles = {
     width: '200px',
     left: '50%',
     marginLeft: '-100px' // width / 2
+  },
+  previewOverlay: {
+    position: 'fixed',
+    backgroundColor: '#E2E2E2',
+    opacity: '.8',
+    width: '100%',
+    height: '100%',
+    top: 0,
+    left: 0
   }
 };

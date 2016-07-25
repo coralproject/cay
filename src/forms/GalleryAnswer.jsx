@@ -50,16 +50,12 @@ export default class GalleryAnswer extends React.Component {
 
   render() {
 
-    const {answer, gallery, identifiableIds} = this.props;
+    const { answer, gallery, identifiableIds, onMoveAnswerUp, onMoveAnswerDown, key } = this.props;
     let multipleChoice;
 
     if (_.has(answer, 'answer.props.multipleChoice') && answer.answer.props.multipleChoice) {
       multipleChoice = this.renderMultipleChoice(answer);
     }
-
-    // if (!answer.answer.answer.text && answer.answer.answer.options) {
-    //   answer.answer.answer.text = answer.answer.answer.options.map(o => o.title).join(', ');
-    // }
 
     const text = answer.answer.edited ? answer.answer.edited : answer.answer.answer.text;
     const statusFlag = answer.answer.edited ? 'edited' : 'new';
@@ -93,10 +89,13 @@ export default class GalleryAnswer extends React.Component {
               key="foo">
               <Trash style={styles.icon} />
             </div>
-            <div style={styles.iconHolder} key="bar">
+            <div onClick={() => onMoveAnswerUp(key)}
+              style={styles.iconHolder} key="bar">
               <FaArrowCircleUp style={styles.icon} />
             </div>
-            <div style={styles.iconHolder} key="baz">
+            <div
+              onClick={() => onMoveAnswerDown(key)}
+              style={styles.iconHolder} key="baz">
               <FaArrowCircleDown style={styles.icon} />
             </div>
           </div>

@@ -23,6 +23,28 @@ export default class FormBuilder extends Component {
     router: PropTypes.object.isRequired
   };
 
+  constructor(props) {
+    super(props);
+    // An empty form with no changes is valid as 'saved'
+    this.saved = true;
+  }
+
+  markAsUnsaved() {
+    this.saved = false;
+  }
+
+  hookRouter() {
+    this.context.router.setRouteLeaveHook(this.props.route, () => {
+      if (this.saved === false) {
+        return 'This form has unsaved changes. Are you sure you want to leave this page?';
+      }
+    });
+  }
+
+  componentDidMount() {
+    this.hookRouter();
+  }
+
   render() {
     const { preview, onClosePreview, onOpenPreview, forms, activeForm, app } = this.props;
     const form = activeForm ? forms[activeForm] : forms.form;
@@ -39,17 +61,24 @@ export default class FormBuilder extends Component {
             addToBottom={this.addToBottom.bind(this)}
             activeForm={activeForm}
             app={app} />
-          <FormDiagram activeForm={ this.props.activeForm } />
-          { preview ? <Preview
-            renderPreview={this.renderPreview.bind(this)}
-            onClosePreview={onClosePreview.bind(this)}
-            /> : null }
+          <FormDiagram activeForm={ this.props.activeForm } markAsUnsaved={this.markAsUnsaved.bind(this)} />
+          { preview
+            ? <div>
+                <div style={ styles.previewOverlay }></div>
+                <Preview
+                  renderPreview={this.renderPreview.bind(this)}
+                  onClosePreview={onClosePreview.bind(this)}
+                  />
+              </div>
+            : null
+          }
         </div>
       </div>
     );
   }
 
   addToBottom(data) {
+    this.markAsUnsaved();
     this.props.dispatch(appendWidget({
       title: data.title,
       friendlyType: data.friendlyType,
@@ -69,6 +98,7 @@ export default class FormBuilder extends Component {
     dispatch(saveForm(activeForm ? forms[activeForm] : form, widgets))
       .then(data => {
         if (data && data.id) {
+          this.saved = true;
           this.props.dispatch(showFlashMessage('Your form saved.', 'success'));
           return !activeForm && router.push(`/forms/${data.id}`);
         } else {
@@ -78,6 +108,7 @@ export default class FormBuilder extends Component {
   }
 
   onFormStatusChange(e) {
+    this.markAsUnsaved();
     let { form } = this.props.forms;
     var newSettings = Object.assign({}, form.settings, { isActive: e.target.checked });
     this.props.dispatch(updateForm({
@@ -86,6 +117,7 @@ export default class FormBuilder extends Component {
   }
 
   onInactiveMessageChange(e) {
+    this.markAsUnsaved();
     let { form } = this.props.forms;
     var newSettings = Object.assign({}, form.settings, { inactiveMessage: e.target.value });
     this.props.dispatch(updateForm({
@@ -95,6 +127,7 @@ export default class FormBuilder extends Component {
   }
 
   onFormTitleChange(e) {
+    this.markAsUnsaved();
     const { form, activeForm } = this.props.forms;
     const header = activeForm ? this.props.forms[activeForm].header : form.header;
     this.props.dispatch(updateForm({
@@ -120,6 +153,7 @@ export default class FormBuilder extends Component {
     return (
       <div style={ styles.previewContainer }>
         <div style={ styles.previewSpinner }><Spinner /></div>
+        <div style={ styles.previewHeader}>Preview</div>
         <div id="ask-form"></div>
       </div>
     );
@@ -129,7 +163,7 @@ export default class FormBuilder extends Component {
 const Preview = ({ onClosePreview, renderPreview }) => (
   <div style={ styles.previewPane }>
     <div style={ styles.previewActions }>
-      <span style={ styles.previewClose } onClick={onClosePreview}><FaClose /></span>
+      <span style={ styles.previewClose } onClick={onClosePreview}><span style={ styles.previewCloseIcon }><FaClose /></span></span>
     </div>
     <div style={ styles.previewContent }>
       {renderPreview()}
@@ -150,7 +184,6 @@ const styles = {
     height: '100%',
     width: '600px',
     background: 'white',
-    borderLeft: '1px solid #eee',
     boxShadow: '-5px -5px 20px #999',
     display: 'flex',
     flexDirection: 'column'
@@ -160,16 +193,33 @@ const styles = {
     flex: 'none',
     height: '60px',
     position: 'absolute',
-    top: 0,
-    left: 0,
+    top: 40,
+    left: -40,
     zIndex: 10
   },
+  previewHeader: {
+    background: '#F36451',
+    color: 'white',
+    width: '100%',
+    height: '50px',
+    lineHeight: '50px',
+    padding: '0 20px'
+  },
   previewClose: {
-    padding: '0 10px',
-    height: '40px',
-    lineHeight: '40px',
+    padding: '10px 0px',
+    lineHeight: '80px',
     fontSize: '12pt',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    borderRight: '30px solid white',
+    borderTop: '10px solid transparent',
+    borderBottom: '10px solid transparent',
+    height: '0px',
+    width: '50px'
+  },
+  previewCloseIcon: {
+    position: 'absolute',
+    top: 8,
+    left: 17
   },
   previewContent: {
     overflow: 'auto',
@@ -186,5 +236,14 @@ const styles = {
     width: '200px',
     left: '50%',
     marginLeft: '-100px' // width / 2
+  },
+  previewOverlay: {
+    position: 'fixed',
+    backgroundColor: '#E2E2E2',
+    opacity: '.8',
+    width: '100%',
+    height: '100%',
+    top: 0,
+    left: 0
   }
 };

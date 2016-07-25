@@ -328,11 +328,6 @@ export default class SubmissionGallery extends Component {
                   </div>
                   <div style={styles.replyModal.rightPanel}>
                     <p style={styles.replyModal.subhead}>Edit</p>
-                    <input type="text" style={styles.replyModal.questionInput} value={ans.answer.question} />
-                    <label style={styles.replyModal.showQuestion}>
-                      <input type="checkbox" checked={false} />
-                      Show Question
-                    </label>
                     <textarea
                       onChange={this.updateEditableAnswer.bind(this)}
                       style={styles.replyModal.editText}
@@ -538,21 +533,11 @@ const styles = {
     originalQuestion: {
       fontSize: 20
     },
-    questionInput: {
-      width: '100%',
-      padding: 10,
-      fontSize: 16,
-      marginBottom: 10
-    },
     editText: {
       width: '100%',
       height: 100,
       fontSize: '16px',
       padding: 8
-    },
-    showQuestion: {
-      display: 'block',
-      marginBottom: 10
     },
     footer: {
       marginTop: 10,

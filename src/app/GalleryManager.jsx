@@ -24,6 +24,8 @@ import moment from 'moment';
 
 import Eye from 'react-icons/lib/fa/eye';
 import Refresh from 'react-icons/lib/fa/refresh';
+import FloppyO from 'react-icons/lib/fa/floppy-o';
+import Times from 'react-icons/lib/fa/times-circle';
 import Select from 'react-select';
 
 import settings from 'settings';
@@ -310,34 +312,44 @@ export default class SubmissionGallery extends Component {
         </div>
         {/* this is the Edit Answer modal */}
         {
-          ans ?
-            <Modal
-              title="Edit Submission for Gallery"
-              isOpen={!!ans}
-              confirmAction={this.confirmEdit.bind(this, ans)}
-              cancelAction={this.cancelEdit.bind(this)}>
-              <div style={styles.modalBody}>
-                <div style={styles.original}>
-                  <h3 style={styles.modalHeading}>Original Text</h3>
-                    <div>
-                      <p style={styles.editHighlight}>{ans.answer.question}</p>
-                      <p>{ans.answer.answer.text}</p>
+          ans
+            ? <div style={styles.replyModal}>
+              <div style={styles.replyModal.container}>
+                <div
+                  onClick={this.cancelEdit.bind(this)}
+                  key="closebutton"
+                  style={styles.replyModal.close}>×</div>
+                <p style={styles.replyModal.heading}>Edit Submission</p>
+                <div style={styles.replyModal.panels}>
+                  <div style={styles.replyModal.leftPanel}>
+                    <p style={styles.replyModal.subhead}>Original Submission</p>
+                    <p style={styles.replyModal.originalQuestion}>{ans.answer.question}</p>
+                    <p style={styles.replyModal.originalText}>{ans.answer.answer.text}</p>
+                  </div>
+                  <div style={styles.replyModal.rightPanel}>
+                    <p style={styles.replyModal.subhead}>Edit</p>
+                    <textarea
+                      onChange={this.updateEditableAnswer.bind(this)}
+                      style={styles.replyModal.editText}
+                      value={forms.editableAnswer}></textarea>
+                    {this.showIdentityAnswers(ans)}
+                    <div style={styles.replyModal.footer}>
+                      <p
+                        key="resetButton"
+                        onClick={this.cancelEdit.bind(this)}
+                        style={styles.replyModal.resetButton}>Reset Changes</p>
+                      <Button onClick={this.cancelEdit.bind(this)}><Times /> Cancel</Button>
+                      <Button
+                        onClick={this.confirmEdit.bind(this, ans)}
+                        category="success"
+                        style={styles.replyModal.save}>
+                        <FloppyO /> Save Edits</Button>
                     </div>
-                </div>
-                <div style={styles.modified}>
-                  <h3 style={styles.modalHeading}>Edit</h3>
-                  <p>Submission</p>
-                    <div>
-                      <textarea
-                        style={styles.editText}
-                        onChange={this.updateEditableAnswer.bind(this)}
-                        value={forms.editableAnswer}></textarea>
-                      {this.showIdentityAnswers(ans)}
-                    </div>
+                  </div>
                 </div>
               </div>
-            </Modal>
-          : null
+            </div>
+            : null
         }
 
         {/* this is the Embed Code modal */}
@@ -416,34 +428,6 @@ const styles = {
   modButton: {
     marginLeft: 10
   },
-  modalBody: {
-    display: 'flex'
-  },
-  modalHeading: {
-    fontWeight: 'bold',
-    fontSize: 20,
-    marginBottom: 10
-  },
-  original: {
-    flex: 1
-  },
-  modified: {
-    flex: 1,
-    marginLeft: 20
-  },
-  editHighlight: {
-    backgroundColor: settings.grey,
-    padding: '5px 10px',
-    borderRadius: 4,
-    marginBottom: 8,
-    color: 'white',
-    display: 'inline-block'
-  },
-  editText: {
-    width: '100%',
-    height: 100,
-    fontSize: '16px'
-  },
   galleryTitle: {
 
   },
@@ -495,5 +479,82 @@ const styles = {
     fontFamily: 'monospace',
     fontSize: 14,
     width: '100%'
+  },
+
+  replyModal: {
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'fixed',
+    zIndex: 100,
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+
+    container: {
+      padding: 20,
+      minWidth: 800,
+      backgroundColor: 'white',
+      position: 'relative'
+    },
+    close: {
+      position: 'absolute',
+      top: 6,
+      right: 10,
+      color: settings.grey,
+      cursor: 'pointer',
+      fontSize: '35px',
+      fontWeight: 'bold',
+      ':hover': {
+        color: 'black'
+      }
+    },
+    heading: {
+      fontWeight: 'bold',
+      fontSize: 30
+    },
+    subhead: {
+      color: settings.brandColor,
+      fontSize: 16,
+      fontWeight: 'bold'
+    },
+    panels: {
+      display: 'flex'
+    },
+    leftPanel: {
+      flex: 1,
+      marginRight: 10
+    },
+    rightPanel: {
+      flex: 1
+    },
+    originalQuestion: {
+      fontSize: 20
+    },
+    editText: {
+      width: '100%',
+      height: 100,
+      fontSize: '16px',
+      padding: 8
+    },
+    footer: {
+      marginTop: 10,
+      display: 'flex'
+    },
+    resetButton: {
+      flex: 1,
+      fontWeight: 'bold',
+      cursor: 'pointer',
+      fontStyle: 'italic',
+      color: settings.grey,
+      ':hover': {
+        color: 'black'
+      }
+    },
+    save: {
+      marginLeft: 10
+    }
   }
 };

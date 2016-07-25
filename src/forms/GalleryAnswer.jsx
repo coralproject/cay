@@ -28,7 +28,6 @@ export default class GalleryAnswer extends React.Component {
   }
 
   renderMultipleChoice(answer) {
-    console.log('renderMultipleChoice', answer);
     const selectedIndexes = answer.answer.answer.options.map(o => o.index);
     const options = answer.answer.props.options.map((option, key) => {
       const selected = selectedIndexes.indexOf(key) !== -1;

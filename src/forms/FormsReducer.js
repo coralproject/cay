@@ -343,6 +343,15 @@ const forms = (state = initial, action) => {
     return {...state, submissionFilterBy: 'default', submissionOrder: 'dsc', submissionSearch: '',
             formCounts: {...initial.formCounts} };
 
+  // TODO implement!
+  case types.FORM_ANSWER_REINSERT:
+    const newAnswers = [...state[action.galleryId].answers];
+    const aux = newAnswers[action.key];
+    let newPos = (action.key + action.position) % newAnswers.length;
+    newPos = newPos === -1 ? newAnswers.length - 1 : newPos;
+    newAnswers[action.key] = newAnswers[newPos];
+    newAnswers[newPos] = aux;
+    return { ...state, [action.galleryId]: {...state[action.galleryId], answers: newAnswers}};
   default:
     return state;
   }

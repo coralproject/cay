@@ -147,6 +147,7 @@ export default class FormBuilder extends Component {
     return (
       <div style={ styles.previewContainer }>
         <div style={ styles.previewSpinner }><Spinner /></div>
+        <div style={ styles.previewHeader}>Preview</div>
         <div id="ask-form"></div>
       </div>
     );
@@ -156,7 +157,7 @@ export default class FormBuilder extends Component {
 const Preview = ({ onClosePreview, renderPreview }) => (
   <div style={ styles.previewPane }>
     <div style={ styles.previewActions }>
-      <span style={ styles.previewClose } onClick={onClosePreview}><FaClose /></span>
+      <span style={ styles.previewClose } onClick={onClosePreview}><span style={ styles.previewCloseIcon }><FaClose /></span></span>
     </div>
     <div style={ styles.previewContent }>
       {renderPreview()}
@@ -177,7 +178,6 @@ const styles = {
     height: '100%',
     width: '600px',
     background: 'white',
-    borderLeft: '1px solid #eee',
     boxShadow: '-5px -5px 20px #999',
     display: 'flex',
     flexDirection: 'column'
@@ -187,16 +187,33 @@ const styles = {
     flex: 'none',
     height: '60px',
     position: 'absolute',
-    top: 0,
-    left: 0,
+    top: 40,
+    left: -40,
     zIndex: 10
   },
+  previewHeader: {
+    background: '#F36451',
+    color: 'white',
+    width: '100%',
+    height: '50px',
+    lineHeight: '50px',
+    padding: '0 20px'
+  },
   previewClose: {
-    padding: '0 10px',
-    height: '40px',
-    lineHeight: '40px',
+    padding: '10px 0px',
+    lineHeight: '80px',
     fontSize: '12pt',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    borderRight: '30px solid white',
+    borderTop: '10px solid transparent',
+    borderBottom: '10px solid transparent',
+    height: '0px',
+    width: '50px'
+  },
+  previewCloseIcon: {
+    position: 'absolute',
+    top: 8,
+    left: 17
   },
   previewContent: {
     overflow: 'auto',

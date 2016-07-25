@@ -34,6 +34,7 @@ const initial = {
   galleryCode: '',
   answerBeingEdited: null, // ObjectId string
   editableAnswer: '',
+  editablePii: [],
   activeSubmission: null // ObjectId string
 };
 
@@ -274,7 +275,8 @@ const forms = (state = initial, action) => {
       ...state,
       // if you can think of a better way to store this, I'm all ears
       answerBeingEdited: action.answerKey,
-      editableAnswer: action.editableAnswer
+      editableAnswer: action.editableAnswer,
+      editablePii: action.editablePii
     };
 
   case types.ANSWER_EDIT_UPDATE: // user is typing into the field
@@ -285,6 +287,12 @@ const forms = (state = initial, action) => {
 
   case types.ANSWER_EDIT_REQUEST: // submit Answer edit to server
     return {...state, loadingAnswerEdit: true};
+
+  case types.RESET_EDITABLE_TEXT:
+    return {...state, editableAnswer: action.text};
+
+  case types.UPDATE_EDITABLE_PII:
+    return {...state, editablePii: action.editablePii};
 
   case types.ANSWER_EDIT_SUCCESS: // server successfully updated submission
     // don't update the answers in state here.

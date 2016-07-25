@@ -109,7 +109,7 @@ export default class FormDiagram extends Component {
                    />
             </DropPlaceHolder>
           ))}
-          <DropPlaceHolder empty={ true } formDiagram={ this } position={ this.state.tempWidgets.length } key={ this.state.tempWidgets.length } />
+          <DropPlaceHolder formDiagram={ this } position={ this.state.tempWidgets.length } key={ this.state.tempWidgets.length } />
         </div>
         <div style={ styles.extraFields }>
           <h3 style={ styles.thankYouMessageTitle }>Thank you message</h3>

@@ -13,6 +13,8 @@ const askTarget = {
     let formDiagram = component.props.formDiagram;
     let targetPosition = component.props.position;
 
+    // Hover is fired a gazillion times, this is to prevent
+    // unnecessary re-renders
     if (targetPosition != formDiagram.previousHover) {
       formDiagram.previousHover = targetPosition;
     } else {
@@ -80,13 +82,9 @@ const askTarget = {
 export default class DropPlaceHolder extends Component {
 
   componentWillReceiveProps(nextProps) {
+    // This acts as an onLeave handler 
     if (this.props.isOver && !nextProps.isOver) {
-      // You can use this as leave handler
       this.props.formDiagram.resetForm();
-      //this.setState({ widgets: this.stateBeforeDrag.slice(), tempWidgets: this.stateBeforeDrag.slice(), isHovering: false });
-    } else {
-      //this.setState({ widgets: nextProps.forms.widgets, tempWidgets: nextProps.forms.widgets, isHovering: false });
-      //this.stateBeforeDrag = nextProps.forms.widgets;
     }
   }
 

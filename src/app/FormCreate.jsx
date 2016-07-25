@@ -30,6 +30,8 @@ export default class FormCreate extends Component {
           <FormBuilder
             onClosePreview={this.onClosePreview.bind(this)}
             onOpenPreview={ this.showPreview.bind(this) }
+            route={ this.props.route }
+            create={true}
             preview={preview} />
         </div>
       </Page>

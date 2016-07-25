@@ -80,6 +80,8 @@ const askSource = {
   },
   endDrag(props, monitor, component) {
     // console.log("enddrag");
+    console.log(monitor.didDrop());
+    props.formDiagram.resetForm();
   }
 };
 

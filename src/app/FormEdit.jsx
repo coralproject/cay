@@ -87,6 +87,7 @@ export default class FormEdit extends Component {
                 activeForm={ this.props.forms.activeForm }
                 onClosePreview={this.onClosePreview.bind(this)}
                 onOpenPreview={ this.showPreview.bind(this) }
+                route={ this.props.route }
                 preview={preview} />
             : null
           }

@@ -205,7 +205,7 @@ export default class FormComponent extends Component {
                   style={ styles.fieldTitle }
                   defaultValue={ this.props.field.title }
                   type="text"
-                  placeholder={ `Type your question here (${ field.friendlyType })` } />
+                  placeholder={ `Ask readers a question (${ field.friendlyType })` } />
                 <input
                   onChange={ this.onDescriptionChange.bind(this) }
                   defaultValue={ field.description }
@@ -254,7 +254,7 @@ export const styles = {
   askComponent: function(isDragging) {
     return {
       opacity: isDragging ? 0.75 : 1,
-      margin: 8,
+      margin: 5,
       shadowOffset: { height: 1, width: 0},
       boxShadow: '0 1px 3px #9B9B9B',
       lineHeight: '40px',

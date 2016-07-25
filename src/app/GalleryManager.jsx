@@ -77,20 +77,34 @@ export default class SubmissionGallery extends Component {
   }
 
   renderGallery(gallery) {
-    const { identifiableIds } = this.props.forms;
-    return gallery.answers.map((answer, i) => {
-      return (
-        <GalleryAnswer
-          removeSubmission={this.removeSubmission.bind(this)}
-          editAnswer={this.beginEditAnswer.bind(this)}
-          answer={answer}
-          gallery={gallery}
-          identifiableIds={identifiableIds}
-          onMoveAnswerDown={this.onMoveAnswerDown.bind(this, gallery.id, i)}
-          onMoveAnswerUp={this.onMoveAnswerUp.bind(this, gallery.id, i)}
-          key={i} />
-      );
-    });
+    return (
+      <div>
+        <div style={styles.galleryTitle}>
+          <TextField
+            value={gallery.headline}
+            onChange={this.setHeadline.bind(this)}
+            style={styles.galleryTitles}
+            label="Write a headline (optional)" />
+          <br />
+          <TextField
+            value={gallery.description}
+            onChange={this.setDescription.bind(this)}
+            style={styles.galleryTitles}
+            label="Write description for the gallery (optional)" />
+        </div>
+        {gallery.answers.map((answer, i) => (
+          <GalleryAnswer
+            removeSubmission={this.removeSubmission.bind(this)}
+            editAnswer={this.beginEditAnswer.bind(this)}
+            answer={answer}
+            gallery={gallery}
+            identifiableIds={gallery.config.identifiableIds || []}
+            onMoveAnswerDown={this.onMoveAnswerDown.bind(this, gallery.id, i)}
+            onMoveAnswerUp={this.onMoveAnswerUp.bind(this, gallery.id, i)}
+            key={i} />
+        ))}
+      </div>
+    );
   }
 
   renderBlank() {
@@ -243,7 +257,12 @@ export default class SubmissionGallery extends Component {
     const {forms, app} = this.props;
 
     const form = forms[forms.activeForm];
-    const gallery = forms[forms.activeGallery];
+    const gallery = forms[forms.activeGallery] || {
+      headline: '', description: '',
+      config: { placement: 'above', identifiableIds: [] },
+      answers: []
+    };
+
     const submissions = forms.submissionList.map(id => forms[id]);
     const ans = forms[forms.answerBeingEdited];
 
@@ -256,7 +275,6 @@ export default class SubmissionGallery extends Component {
       {label: 'Above the submission', value: 'above'},
       {label: 'Below the submission', value: 'below'}
     ];
-
     return (
       <Page>
         <FormChrome
@@ -295,7 +313,7 @@ export default class SubmissionGallery extends Component {
                 <p style={styles.includeLabel}>Placement</p>
                 <Select
                   style={styles.placementOpts}
-                  value={forms.galleryReaderInfoPlacement}
+                  value={gallery.config.placement || 'above'}
                   options={placementOpts}
                   clearable={false}
                   onChange={this.updatePlacement.bind(this)} />
@@ -305,7 +323,7 @@ export default class SubmissionGallery extends Component {
                   {display: attributionFields.length ? 'block' : 'none'}
                 ]}>Include</p>
               {attributionFields.map((field, i) => {
-                const isChecked = forms.identifiableIds.indexOf(field.id) !== -1;
+                const isChecked = gallery.config.identifiableIds && gallery.config.identifiableIds.indexOf(field.id) !== -1;
                 return (
                   <label style={styles.idLabel}>
                     <input
@@ -324,19 +342,6 @@ export default class SubmissionGallery extends Component {
                 onClick={this.openPublishModal.bind(this)}><Refresh /> Get embed codes</div>
             </div>
             <div style={styles.gallery}>
-              <div style={styles.galleryTitle}>
-                <TextField
-                  value={forms.galleryTitle}
-                  onBlur={this.setHeadline.bind(this)}
-                  style={styles.galleryTitles}
-                  label="Write a headline (optional)" />
-                <br />
-                <TextField
-                  value={forms.galleryDescription}
-                  onBlur={this.setDescription.bind(this)}
-                  style={styles.galleryTitles}
-                  label="Write description for the gallery (optional)" />
-              </div>
               {
                 forms.activeGallery ?
                 this.renderGallery(gallery) :

@@ -1,5 +1,7 @@
 'use strict';
 
+import _ from 'lodash';
+
 export const SUBMISSIONS_REQUEST_STARTED = 'SUBMISSIONS_REQUEST_STARTED';
 export const SUBMISSIONS_REQUEST_SUCCESS = 'SUBMISSIONS_REQUEST_SUCCESS';
 export const SUBMISSIONS_REQUEST_FAILED = 'SUBMISSIONS_REQUEST_FAILED';
@@ -79,6 +81,9 @@ export const UPDATE_SEARCH = 'UPDATE_SEARCH';
 export const CLEAN_SUBMISSION_FILTERS = 'CLEAN_SUBMISSION_FILTERS';
 
 export const GALLERY_ENABLE_IDENTIFIABLE = 'GALLERY_ENABLE_IDENTIFIABLE';
+
+export const UPDATE_EDITABLE_PII = 'UPDATE_EDITABLE_PII';
+export const RESET_EDITABLE_TEXT = 'RESET_EDITABLE_TEXT';
 
 const getInit = (body, method) => {
 
@@ -497,8 +502,17 @@ export const beginEdit = (galleryId, submissionId, answerId) => {
     const answerKey = `${submissionId}|${answerId}`;
     const reply = forms[answerKey];
     const editableAnswer = reply.answer.edited ? reply.answer.edited : reply.answer.answer.text;
+    // deep clone on the array
+    const editablePii = reply.identity_answers ? reply.identity_answers.map(a => _.cloneDeep(a)) : [];
 
-    dispatch({type: ANSWER_EDIT_BEGIN, answerId, submissionId, editableAnswer, answerKey});
+    dispatch({
+      type: ANSWER_EDIT_BEGIN,
+      answerId,
+      submissionId,
+      editableAnswer,
+      editablePii,
+      answerKey
+    });
   };
 };
 
@@ -511,14 +525,41 @@ export const cancelEdit = () => {
   return {type: ANSWER_EDIT_CANCEL};
 };
 
+// this just resets the editable text to the original
+// it does NOT remove the edit on the data object.
+export const resetEditableTextToOriginal = (answer) => {
+  return {type: RESET_EDITABLE_TEXT, text: answer.answer.answer.text};
+};
+
+export const updateEditablePii = (reply, idAnswer, value) => {
+  return (dispatch, getState) => {
+
+    const {forms: {editablePii: editablePii}} = getState();
+
+    console.log('updateEditablePii', reply, idAnswer, value, editablePii);
+
+    // set the new value to the edited field in the editablePII array
+    const newEditablePii = editablePii.map(entry => {
+      if (entry.widget_id === idAnswer.widget_id) {
+        return {...entry, edited: value};
+      } else {
+        return {...entry};
+      }
+    });
+
+    dispatch({type: UPDATE_EDITABLE_PII, editablePii: newEditablePii});
+  };
+};
+
 // post updates to the server
-export const editAnswer = (edited, answer, formId) => {
+// answer_id is the same as widget_id if updating PII
+export const editAnswer = (edited, submission_id, answer_id, formId) => {
   return (dispatch, getState) => {
     dispatch({type: ANSWER_EDIT_REQUEST});
 
     const {app} = getState();
 
-    fetch(`${app.pillarHost}/api/form_submission/${answer.submission_id}/${answer.answer_id}`, {
+    fetch(`${app.pillarHost}/api/form_submission/${submission_id}/${answer_id}`, {
       method: 'PUT',
       mode: 'cors',
       body: JSON.stringify({edited})

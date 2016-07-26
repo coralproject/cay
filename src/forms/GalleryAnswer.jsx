@@ -77,8 +77,11 @@ export default class GalleryAnswer extends React.Component {
           {
             answer.identity_answers && (
               <p style={styles.identityAnswers}>
-                {answer.identity_answers.filter(iid => identifiableIds.indexOf(iid.widget_id) !== -1)
-                  .map(a => a.answer.text).join(' ')}
+                {answer.identity_answers
+                  .filter(iid => identifiableIds.indexOf(iid.widget_id) !== -1)
+                  .map(a => {
+                    return a.edited ? a.edited : a.answer.text;
+                  }).join(' ')}
               </p>
             )
           }

@@ -14,7 +14,9 @@ import {
   updateGalleryDesc,
   toggleIdentifiable,
   publishGallery,
+  updateEditablePii,
   editAnswer,
+  resetEditableTextToOriginal,
   cancelEdit,
   beginEdit,
   reinsertGalleryAnswer
@@ -143,7 +145,18 @@ export default class SubmissionGallery extends Component {
   }
 
   confirmEdit(answer) {
-    this.props.dispatch(editAnswer(this.props.forms.editableAnswer, answer, this.props.forms.activeForm));
+    this.props.dispatch(editAnswer(this.props.forms.editableAnswer, answer.submission_id, answer.answer_id, this.props.forms.activeForm));
+
+    // probably a better way to do this.
+    // UI is going to get weird if there are lots of PII answers
+
+    // filter out answers that have not changed
+    this.props.forms.editablePii
+      // this is going to re-edit an edited question, but oh well.
+      .filter(idAns => idAns.edited)
+      .forEach(idAns => {
+        this.props.dispatch(editAnswer(idAns.edited, answer.submission_id, idAns.widget_id, this.props.forms.activeForm));
+      });
   }
 
   cancelEdit() {
@@ -154,11 +167,31 @@ export default class SubmissionGallery extends Component {
     this.props.dispatch(updateEditableAnswer(e.currentTarget.value));
   }
 
-  showIdentityAnswers(answer) {
-    if (!answer.identity_answers) return null;
+  // user is updating PII info from inside the edit Answer modal (onBlur)
+  // this updates the state, but does not save to the server.
+  // confirmEdit saves PII stuff to the server
+  updatePiiInfo(reply, idAnswer, updatedInfo) {
+    // console.log('updatePiiInfo', idAnswer, updatedInfo);
+    this.props.dispatch(updateEditablePii(reply, idAnswer, updatedInfo));
+  }
 
-    return answer.identity_answers.map(a => {
-      return <TextField label={a.question} value={a.answer.text} />;
+  renderIdentityAnswers(reply, identityAnswers) {
+    if (!identityAnswers) return null;
+
+    // where identityAnswers is the cloned state object,
+    // not saved on the submission from the server
+    // console.log('renderIdentityAnswers', identityAnswers);
+
+    return identityAnswers.map(idAnswer => {
+      const text = idAnswer.edited ? idAnswer.edited : idAnswer.answer.text;
+
+      return <div>
+        <TextField
+          onBlur={this.updatePiiInfo.bind(this, reply, idAnswer)}
+          label={idAnswer.question}
+          value={text} />
+        <p>Original: {idAnswer.answer.text}</p>
+      </div>;
     });
   }
 
@@ -171,7 +204,7 @@ export default class SubmissionGallery extends Component {
   }
 
   openPublishModal() {
-    this.props.dispatch(publishGallery(this.props.forms.activeForm)).then(gallery => {
+    this.props.dispatch(publishGallery(this.props.forms.activeForm)).then(() => {
       this.setState({publishModalOpen: true});
     });
   }
@@ -213,6 +246,10 @@ export default class SubmissionGallery extends Component {
 
   updateIdentifiable(id, add) {
     this.props.dispatch(toggleIdentifiable(id, add));
+  }
+
+  resetText(ans) {
+    this.props.dispatch(resetEditableTextToOriginal(ans));
   }
 
   render() {
@@ -340,11 +377,11 @@ export default class SubmissionGallery extends Component {
                       onChange={this.updateEditableAnswer.bind(this)}
                       style={styles.replyModal.editText}
                       value={forms.editableAnswer}></textarea>
-                    {this.showIdentityAnswers(ans)}
+                    {this.renderIdentityAnswers(ans, forms.editablePii)}
                     <div style={styles.replyModal.footer}>
                       <p
                         key="resetButton"
-                        onClick={this.cancelEdit.bind(this)}
+                        onClick={this.resetText.bind(this, ans)}
                         style={styles.replyModal.resetButton}>Reset Changes</p>
                       <Button onClick={this.cancelEdit.bind(this)}><Times /> Cancel</Button>
                       <Button
@@ -490,7 +527,7 @@ const styles = {
   },
 
   replyModal: {
-    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',

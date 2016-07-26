@@ -22,10 +22,6 @@ const initial = {
   formCreationError: null,
   activeForm: null, // might be able to combine this with {form} above in the future
   activeGallery: null, // this is an ObjectId string
-  galleryTitle: '',
-  galleryDescription: '',
-  galleryOrientation: 'vertical', // vertical|horizontal
-  galleryReaderInfoPlacement: 'above', // above|below
   identifiableIds: [],
   widgets: [],
   loadingAnswerEdit: false,
@@ -34,6 +30,7 @@ const initial = {
   galleryCode: '',
   answerBeingEdited: null, // ObjectId string
   editableAnswer: '',
+  editablePii: [],
   activeSubmission: null // ObjectId string
 };
 
@@ -64,8 +61,9 @@ const emptyForm = {
     inactiveMessage: 'We are not currently accepting submissions. Thank you.'
   },
   header: {
-    title: 'Share your story',
-    description: 'This is a sample ask!'
+    title: '',
+    description: '',
+    heading: ''
   },
   footer: {
     conditions: ''
@@ -150,7 +148,7 @@ const forms = (state = initial, action) => {
 
   case types.FORMS_REQUEST_SUCCESS:
 
-    const formList = action.forms.map(form => form.id);
+    const formList = action.forms.reverse().map(form => form.id);
     const forms = action.forms.reduce((accum, form) => {
       accum[form.id] = form;
       return accum;
@@ -244,6 +242,13 @@ const forms = (state = initial, action) => {
       return accum;
     }, {});
 
+    action.gallery.config = action.gallery.config || {};
+
+    if (!action.gallery.config.placement) {
+      // default for sending to Elkhorn
+      action.gallery.config.placement = 'below';
+    }
+
     return {
       ...state,
       loadingGallery: false,
@@ -257,7 +262,9 @@ const forms = (state = initial, action) => {
     return {...state, loadingGallery: false, activeGallery: null, galleryError: action.error};
 
   case types.FORM_STATUS_UPDATED:
-    return {...state, activeForm: action.form.id, [action.form.id]: action.form};
+    return {...state, activeForm: action.form.id, [action.form.id]: Object.assign({},
+      action.form, {status: action.status, settings: Object.assign({},
+      action.form.settings, { isActive: action.status === 'open' })})};
 
   case types.FORM_ANSWER_SENT_TO_GALLERY:
     return {...state, [action.gallery.id]: action.gallery};
@@ -267,12 +274,12 @@ const forms = (state = initial, action) => {
 
   // editing Gallery submissions
   case types.ANSWER_EDIT_BEGIN: // user clicked on button to start editing an answer
-    const answerKey = `${action.submissionId}|${action.answerId}`;
     return {
       ...state,
       // if you can think of a better way to store this, I'm all ears
-      answerBeingEdited: answerKey,
-      editableAnswer: state[answerKey].answer.answer.text
+      answerBeingEdited: action.answerKey,
+      editableAnswer: action.editableAnswer,
+      editablePii: action.editablePii
     };
 
   case types.ANSWER_EDIT_UPDATE: // user is typing into the field
@@ -283,6 +290,12 @@ const forms = (state = initial, action) => {
 
   case types.ANSWER_EDIT_REQUEST: // submit Answer edit to server
     return {...state, loadingAnswerEdit: true};
+
+  case types.RESET_EDITABLE_TEXT:
+    return {...state, editableAnswer: action.text};
+
+  case types.UPDATE_EDITABLE_PII:
+    return {...state, editablePii: action.editablePii};
 
   case types.ANSWER_EDIT_SUCCESS: // server successfully updated submission
     // don't update the answers in state here.
@@ -299,19 +312,22 @@ const forms = (state = initial, action) => {
     return {...state, loadingAnswerEdit: false, answerBeingEdited: null};
 
   case types.UPDATE_GALLERY_TITLE:
-    return {...state, galleryTitle: action.title};
+    return {...state, [state.activeGallery]: {...state[state.activeGallery], headline: action.title}};
 
   case types.UPDATE_GALLERY_DESCRIPTION:
-    return {...state, galleryDescription: action.description};
+    return {...state, [state.activeGallery]: {...state[state.activeGallery], description: action.description}};
 
   case types.UPDATE_READER_INFO_PLACEMENT:
-    return {...state, galleryReaderInfoPlacement: action.placement};
+    const gal = state[state.activeGallery];
+    console.log(types.UPDATE_READER_INFO_PLACEMENT, gal);
+    return {...state, [state.activeGallery]: {...gal, config: {...gal.config, placement: action.placement}}};
 
   case types.UPDATE_GALLERY_ORIENTATION:
     return {...state, galleryOrientation: action.orientation};
 
   case types.GALLERY_ENABLE_IDENTIFIABLE:
-    return {...state, identifiableIds: action.ids};
+    const gallery = state[state.activeGallery];
+    return {...state, [state.activeGallery]: {...gallery, config: {...gallery.config, identifiableIds: action.ids}}};
 
   case types.PUBLISH_GALLERY_INIT:
     return {...state, loadingGallery: true, galleryUrl: '', galleryCode: ''};
@@ -340,6 +356,15 @@ const forms = (state = initial, action) => {
     return {...state, submissionFilterBy: 'default', submissionOrder: 'dsc', submissionSearch: '',
             formCounts: {...initial.formCounts} };
 
+  // TODO implement!
+  case types.FORM_ANSWER_REINSERT:
+    const newAnswers = [...state[action.galleryId].answers];
+    const aux = newAnswers[action.key];
+    let newPos = (action.key + action.position) % newAnswers.length;
+    newPos = newPos === -1 ? newAnswers.length - 1 : newPos;
+    newAnswers[action.key] = newAnswers[newPos];
+    newAnswers[newPos] = aux;
+    return { ...state, [action.galleryId]: {...state[action.galleryId], answers: newAnswers}};
   default:
     return state;
   }

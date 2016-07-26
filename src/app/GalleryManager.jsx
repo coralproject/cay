@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { Component } from 'react';
 import Radium from 'radium';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import {
   fetchForm,
   fetchGallery,
@@ -14,16 +14,20 @@ import {
   updateGalleryDesc,
   toggleIdentifiable,
   publishGallery,
+  updateEditablePii,
   editAnswer,
+  resetEditableTextToOriginal,
   cancelEdit,
-  beginEdit
+  beginEdit,
+  reinsertGalleryAnswer
 } from 'forms/FormActions';
 import {Link} from 'react-router';
 import moment from 'moment';
 
 import Eye from 'react-icons/lib/fa/eye';
 import Refresh from 'react-icons/lib/fa/refresh';
-import Clipboard from 'react-icons/lib/fa/clipboard';
+import FloppyO from 'react-icons/lib/fa/floppy-o';
+import Times from 'react-icons/lib/fa/times-circle';
 import Select from 'react-select';
 
 import settings from 'settings';
@@ -42,7 +46,7 @@ import GalleryAnswer from 'forms/GalleryAnswer';
 
 @connect(({app, forms}) => ({app, forms}))
 @Radium
-export default class SubmissionGallery extends React.Component {
+export default class SubmissionGallery extends Component {
 
   constructor(props) {
     super(props);
@@ -64,17 +68,43 @@ export default class SubmissionGallery extends React.Component {
     this.props.dispatch(beginEdit(galleryId, submissionId, answerId));
   }
 
+  onMoveAnswerUp(id, key) {
+    this.props.dispatch(reinsertGalleryAnswer(id, key, -1));
+  }
+
+  onMoveAnswerDown(id, key) {
+    this.props.dispatch(reinsertGalleryAnswer(id, key, 1));
+  }
+
   renderGallery(gallery) {
-    return gallery.answers.map((answer, i) => {
-      return (
-        <GalleryAnswer
-          removeSubmission={this.removeSubmission.bind(this)}
-          editAnswer={this.beginEditAnswer.bind(this)}
-          answer={answer}
-          gallery={gallery}
-          key={i} />
-      );
-    });
+    return (
+      <div>
+        <div style={styles.galleryTitle}>
+          <TextField
+            value={gallery.headline}
+            onChange={this.setHeadline.bind(this)}
+            style={styles.galleryTitles}
+            label="Write a headline (optional)" />
+          <br />
+          <TextField
+            value={gallery.description}
+            onChange={this.setDescription.bind(this)}
+            style={styles.galleryTitles}
+            label="Write description for the gallery (optional)" />
+        </div>
+        {gallery.answers.map((answer, i) => (
+          <GalleryAnswer
+            removeSubmission={this.removeSubmission.bind(this)}
+            editAnswer={this.beginEditAnswer.bind(this)}
+            answer={answer}
+            gallery={gallery}
+            identifiableIds={gallery.config.identifiableIds || []}
+            onMoveAnswerDown={this.onMoveAnswerDown.bind(this, gallery.id, i)}
+            onMoveAnswerUp={this.onMoveAnswerUp.bind(this, gallery.id, i)}
+            key={i} />
+        ))}
+      </div>
+    );
   }
 
   renderBlank() {
@@ -115,7 +145,18 @@ export default class SubmissionGallery extends React.Component {
   }
 
   confirmEdit(answer) {
-    this.props.dispatch(editAnswer(this.props.forms.editableAnswer, answer, this.props.forms.activeForm));
+    this.props.dispatch(editAnswer(this.props.forms.editableAnswer, answer.submission_id, answer.answer_id, this.props.forms.activeForm));
+
+    // probably a better way to do this.
+    // UI is going to get weird if there are lots of PII answers
+
+    // filter out answers that have not changed
+    this.props.forms.editablePii
+      // this is going to re-edit an edited question, but oh well.
+      .filter(idAns => idAns.edited)
+      .forEach(idAns => {
+        this.props.dispatch(editAnswer(idAns.edited, answer.submission_id, idAns.widget_id, this.props.forms.activeForm));
+      });
   }
 
   cancelEdit() {
@@ -126,9 +167,31 @@ export default class SubmissionGallery extends React.Component {
     this.props.dispatch(updateEditableAnswer(e.currentTarget.value));
   }
 
-  showIdentityAnswers(answer) {
-    return answer.identity_answers.map(a => {
-      return <TextField label={a.question} value={a.answer.text} />;
+  // user is updating PII info from inside the edit Answer modal (onBlur)
+  // this updates the state, but does not save to the server.
+  // confirmEdit saves PII stuff to the server
+  updatePiiInfo(reply, idAnswer, updatedInfo) {
+    // console.log('updatePiiInfo', idAnswer, updatedInfo);
+    this.props.dispatch(updateEditablePii(reply, idAnswer, updatedInfo));
+  }
+
+  renderIdentityAnswers(reply, identityAnswers) {
+    if (!identityAnswers) return null;
+
+    // where identityAnswers is the cloned state object,
+    // not saved on the submission from the server
+    // console.log('renderIdentityAnswers', identityAnswers);
+
+    return identityAnswers.map(idAnswer => {
+      const text = idAnswer.edited ? idAnswer.edited : idAnswer.answer.text;
+
+      return <div>
+        <TextField
+          onBlur={this.updatePiiInfo.bind(this, reply, idAnswer)}
+          label={idAnswer.question}
+          value={text} />
+        <p>Original: {idAnswer.answer.text}</p>
+      </div>;
     });
   }
 
@@ -141,7 +204,7 @@ export default class SubmissionGallery extends React.Component {
   }
 
   openPublishModal() {
-    this.props.dispatch(publishGallery(this.props.forms.activeForm)).then(gallery => {
+    this.props.dispatch(publishGallery(this.props.forms.activeForm)).then(() => {
       this.setState({publishModalOpen: true});
     });
   }
@@ -185,26 +248,35 @@ export default class SubmissionGallery extends React.Component {
     this.props.dispatch(toggleIdentifiable(id, add));
   }
 
+  resetText(ans) {
+    this.props.dispatch(resetEditableTextToOriginal(ans));
+  }
+
   render() {
 
     const {forms, app} = this.props;
 
     const form = forms[forms.activeForm];
-    const gallery = forms[forms.activeGallery];
+    const gallery = forms[forms.activeGallery] || {
+      headline: '', description: '',
+      config: { placement: 'below', identifiableIds: [] },
+      answers: []
+    };
+
     const submissions = forms.submissionList.map(id => forms[id]);
     const ans = forms[forms.answerBeingEdited];
 
     const attributionFields = this.getAttributionFields(form);
-    const orientationOpts = [
+    /*const orientationOpts = [
       {label: 'Gallery Orientation - Vertical', value: 'vertical'},
       {label: 'Gallery Orientation - Horizontal', value: 'horizontal'}
-    ];
+    ];*/
     const placementOpts = [
       {label: 'Above the submission', value: 'above'},
       {label: 'Below the submission', value: 'below'}
     ];
 
-    // console.log('SubmissionGallery.render', gallery);
+    console.log('GalleryManager.render', gallery.config.placement);
 
     return (
       <Page>
@@ -217,14 +289,15 @@ export default class SubmissionGallery extends React.Component {
         <div style={styles.base}>
           <ContentHeader
             title={'Submission Gallery'}
-            subhead={gallery ? `Created on ${moment(gallery.created_date).format('D MMM YYYY H:ma')}` : ''} />
+            subhead={gallery ? `Created on ${moment(gallery.date_created).format('D MMM YYYY H:ma')}` : ''} />
           <div style={styles.headingButtonHolder}>
-            <div style={styles.orientationOpts}>
+            {/*<div style={styles.orientationOpts}>
               <Select
+                clearable={false}
                 options={orientationOpts}
                 value={forms.galleryOrientation}
                 onChange={this.updateOrientation.bind(this)} />
-            </div>
+            </div>*/}
             <Button
               style={styles.modButton}
               onClick={this.togglePreview.bind(this)}
@@ -243,8 +316,9 @@ export default class SubmissionGallery extends React.Component {
                 <p style={styles.includeLabel}>Placement</p>
                 <Select
                   style={styles.placementOpts}
-                  value={forms.galleryReaderInfoPlacement}
+                  value={gallery.config.placement}
                   options={placementOpts}
+                  clearable={false}
                   onChange={this.updatePlacement.bind(this)} />
 
                 <p style={[
@@ -252,7 +326,7 @@ export default class SubmissionGallery extends React.Component {
                   {display: attributionFields.length ? 'block' : 'none'}
                 ]}>Include</p>
               {attributionFields.map((field, i) => {
-                const isChecked = forms.identifiableIds.indexOf(field.id) !== -1;
+                const isChecked = gallery.config.identifiableIds && gallery.config.identifiableIds.indexOf(field.id) !== -1;
                 return (
                   <label style={styles.idLabel}>
                     <input
@@ -271,19 +345,6 @@ export default class SubmissionGallery extends React.Component {
                 onClick={this.openPublishModal.bind(this)}><Refresh /> Get embed codes</div>
             </div>
             <div style={styles.gallery}>
-              <div style={styles.galleryTitle}>
-                <TextField
-                  value={forms.galleryTitle}
-                  onBlur={this.setHeadline.bind(this)}
-                  style={styles.galleryTitles}
-                  label="Write a headline (optional)" />
-                <br />
-                <TextField
-                  value={forms.galleryDescription}
-                  onBlur={this.setDescription.bind(this)}
-                  style={styles.galleryTitles}
-                  label="Write description for the gallery (optional)" />
-              </div>
               {
                 forms.activeGallery ?
                 this.renderGallery(gallery) :
@@ -296,34 +357,44 @@ export default class SubmissionGallery extends React.Component {
         </div>
         {/* this is the Edit Answer modal */}
         {
-          ans ?
-            <Modal
-              title="Edit Submission for Gallery"
-              isOpen={!!ans}
-              confirmAction={this.confirmEdit.bind(this, ans)}
-              cancelAction={this.cancelEdit.bind(this)}>
-              <div style={styles.modalBody}>
-                <div style={styles.original}>
-                  <h3 style={styles.modalHeading}>Original Text</h3>
-                    <div>
-                      <p style={styles.editHighlight}>{ans.answer.question}</p>
-                      <p>{ans.answer.answer.text}</p>
+          ans
+            ? <div style={styles.replyModal}>
+              <div style={styles.replyModal.container}>
+                <div
+                  onClick={this.cancelEdit.bind(this)}
+                  key="closebutton"
+                  style={styles.replyModal.close}>×</div>
+                <p style={styles.replyModal.heading}>Edit Submission</p>
+                <div style={styles.replyModal.panels}>
+                  <div style={styles.replyModal.leftPanel}>
+                    <p style={styles.replyModal.subhead}>Original Submission</p>
+                    <p style={styles.replyModal.originalQuestion}>{ans.answer.question}</p>
+                    <p style={styles.replyModal.originalText}>{ans.answer.answer.text}</p>
+                  </div>
+                  <div style={styles.replyModal.rightPanel}>
+                    <p style={styles.replyModal.subhead}>Edit</p>
+                    <textarea
+                      onChange={this.updateEditableAnswer.bind(this)}
+                      style={styles.replyModal.editText}
+                      value={forms.editableAnswer}></textarea>
+                    {this.renderIdentityAnswers(ans, forms.editablePii)}
+                    <div style={styles.replyModal.footer}>
+                      <p
+                        key="resetButton"
+                        onClick={this.resetText.bind(this, ans)}
+                        style={styles.replyModal.resetButton}>Reset Changes</p>
+                      <Button onClick={this.cancelEdit.bind(this)}><Times /> Cancel</Button>
+                      <Button
+                        onClick={this.confirmEdit.bind(this, ans)}
+                        category="success"
+                        style={styles.replyModal.save}>
+                        <FloppyO /> Save Edits</Button>
                     </div>
-                </div>
-                <div style={styles.modified}>
-                  <h3 style={styles.modalHeading}>Edit</h3>
-                  <p>Submission</p>
-                    <div>
-                      <textarea
-                        style={styles.editText}
-                        onChange={this.updateEditableAnswer.bind(this)}
-                        value={forms.editableAnswer}></textarea>
-                      {this.showIdentityAnswers(ans)}
-                    </div>
+                  </div>
                 </div>
               </div>
-            </Modal>
-          : null
+            </div>
+            : null
         }
 
         {/* this is the Embed Code modal */}
@@ -337,20 +408,20 @@ export default class SubmissionGallery extends React.Component {
           <div>
             <p>Embed code</p>
             <textarea style={styles.embedTextarea} value={`<script src="${forms.galleryUrl}"></script><div id="ask-gallery" />`}></textarea>
-            <Button
+            {/*<Button
               style={styles.copyButton}
               onClick={this.copyEmbedToClipboard.bind(this)}>
               Copy <Clipboard />
-            </Button>
+            </Button>*/}
             <p style={{clear: 'both'}}>Embed code (with iframe)</p>
             <textarea style={styles.embedTextarea} value={`<iframe width="100%" height="580" src="${app.elkhornHost}/iframe-gallery/${forms.activeGallery}"></iframe>`}></textarea>
-            <Button
+            {/*<Button
               style={styles.copyButton}
               onClick={this.copyEmbedToClipboard.bind(this, 'iframe')}>
               Copy <Clipboard />
-            </Button>
+            </Button>*/}
             <p style={{clear: 'both'}}>Standalone link</p>
-            <input type="text" value={forms.galleryUrl} style={styles.standalone} />
+            <input type="text" value={`${app.elkhornHost}/iframe-gallery/${forms.activeGallery}`} style={styles.standalone} />
           </div>
         </Modal>
 
@@ -401,34 +472,6 @@ const styles = {
   },
   modButton: {
     marginLeft: 10
-  },
-  modalBody: {
-    display: 'flex'
-  },
-  modalHeading: {
-    fontWeight: 'bold',
-    fontSize: 20,
-    marginBottom: 10
-  },
-  original: {
-    flex: 1
-  },
-  modified: {
-    flex: 1,
-    marginLeft: 20
-  },
-  editHighlight: {
-    backgroundColor: settings.grey,
-    padding: '5px 10px',
-    borderRadius: 4,
-    marginBottom: 8,
-    color: 'white',
-    display: 'inline-block'
-  },
-  editText: {
-    width: '100%',
-    height: 100,
-    fontSize: '16px'
   },
   galleryTitle: {
 
@@ -481,5 +524,82 @@ const styles = {
     fontFamily: 'monospace',
     fontSize: 14,
     width: '100%'
+  },
+
+  replyModal: {
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'fixed',
+    zIndex: 100,
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+
+    container: {
+      padding: 20,
+      minWidth: 800,
+      backgroundColor: 'white',
+      position: 'relative'
+    },
+    close: {
+      position: 'absolute',
+      top: 6,
+      right: 10,
+      color: settings.grey,
+      cursor: 'pointer',
+      fontSize: '35px',
+      fontWeight: 'bold',
+      ':hover': {
+        color: 'black'
+      }
+    },
+    heading: {
+      fontWeight: 'bold',
+      fontSize: 30
+    },
+    subhead: {
+      color: settings.brandColor,
+      fontSize: 16,
+      fontWeight: 'bold'
+    },
+    panels: {
+      display: 'flex'
+    },
+    leftPanel: {
+      flex: 1,
+      marginRight: 10
+    },
+    rightPanel: {
+      flex: 1
+    },
+    originalQuestion: {
+      fontSize: 20
+    },
+    editText: {
+      width: '100%',
+      height: 100,
+      fontSize: '16px',
+      padding: 8
+    },
+    footer: {
+      marginTop: 10,
+      display: 'flex'
+    },
+    resetButton: {
+      flex: 1,
+      fontWeight: 'bold',
+      cursor: 'pointer',
+      fontStyle: 'italic',
+      color: settings.grey,
+      ':hover': {
+        color: 'black'
+      }
+    },
+    save: {
+      marginLeft: 10
+    }
   }
 };

@@ -3,8 +3,10 @@ import React from 'react';
 import FormComponent from 'forms/FormComponent';
 import FaFloppyO from 'react-icons/lib/fa/floppy-o';
 import FaEye from 'react-icons/lib/fa/eye';
+import FaExternalLink from 'react-icons/lib/fa/external-link';
 import askTypes from 'forms/WidgetTypes';
 import Spinner from 'components/Spinner';
+import Button from 'components/Button';
 
 export const Header = ({ onTitleChange, form, forms, onSaveClick, onOpenPreview }) => (
   <div style={ styles.formHeader }>
@@ -13,8 +15,18 @@ export const Header = ({ onTitleChange, form, forms, onSaveClick, onOpenPreview 
         placeholder={ "Write a title" } defaultValue={ form.header.title } />
     </div>
     <div style={ styles.formActions }>
-      <button onClick={onOpenPreview} style={ styles.formAction }><FaEye /></button>
-      <button onClick={onSaveClick} style={ styles.formAction }>{ forms.savingForm ? <Spinner/> : <FaFloppyO /> }</button>
+      <Button
+        onClick={onOpenPreview}
+        category="brand"
+        style={styles.topButton}>
+        <FaEye style={styles.topButtonicon} />{` Preview `}
+      </Button>
+      <Button
+        onClick={onSaveClick}
+        category="success"
+        style={styles.topButton}>
+        { forms.savingForm ? <Spinner/> : <FaFloppyO /> }{` Save `}
+      </Button>
     </div>
   </div>
 );
@@ -35,7 +47,9 @@ export const Sidebar = ({ addToBottom, app, activeForm }) => (
           <textarea style={styles.embedCode} value={`<div id="ask-form"></div><script src="${app.elkhornStaticHost}/${activeForm}.js"></script>`}/>
           <p>Embed code (iframe)</p>
           <textarea style={styles.embedCode} value={`<iframe width="100%" height="580" src="${app.elkhornHost}/iframe/${activeForm}"></iframe>`}/>
-          <a href={ `${app.elkhornHost}/iframe/${activeForm}` } target="_blank" style={ styles.formSettingsAction }>Standalone Form</a>
+          <a href={ `${app.elkhornHost}/iframe/${activeForm}` } target="_blank" style={ styles.formSettingsAction }>
+            <FaExternalLink /> Standalone Form
+          </a>
         </div>
       ): null }
     </div>
@@ -51,6 +65,7 @@ const styles = {
     marginRight: 20,
     padding: 20,
     paddingTop: 10,
+    paddingLeft: 0,
     color: '#5D5D5D',
     borderRadius: 4,
     marginBottom: 20
@@ -72,7 +87,7 @@ const styles = {
   },
   leftContainerTitle: {
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: '5px',
     fontSize: '.9em'
   },
   leftContainerSubTitle: {
@@ -96,15 +111,16 @@ const styles = {
   formSettingsAction: {
     display: 'inline-block',
     textDecoration: 'none',
-    color: 'black',
+    color: 'white',
     marginTop: 10,
-    marginRight: 10,
+    width: '315px',
     padding: 10,
-    border: '1px solid #BBB',
+    border: 'none',
     borderRadius: '3px',
-    background: 'white',
+    background: '#4a4a4a',
     fontSize: '12pt',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    textAlign: 'center'
   },
   switchSlider: function(isActive) {
     return {
@@ -182,18 +198,11 @@ const styles = {
     width: '30%',
     textAlign: 'right'
   },
-  formAction: {
-    width: '40px',
-    height: '40px',
-    padding: 0,
-    lineHeight: '20px',
-    marginLeft: '10px',
-    border: '1px solid #AAA',
-    backgroundColor: 'transparent',
-    borderRadius: '4px',
-    fontSize: '14pt',
-    display: 'inline-block',
-    cursor: 'pointer'
+  topButton: {
+    marginLeft: 10
+  },
+  topButtonIcon: {
+    bottom: 5
   },
   strong: {
     fontWeight: 'bold'

@@ -45,6 +45,7 @@ window.L.setLocale(window.L.locale);
 
 require('reset.css');
 require('global.css');
+require('ask-gallery-preview.css');
 
 require('react-select.css');
 require('react-datepicker.min.css');

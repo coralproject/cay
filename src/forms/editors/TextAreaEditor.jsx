@@ -65,6 +65,7 @@ export default class TextAreaEditor extends Component {
         <div style={ styles.bottomOptions }>
 
           <div style={ styles.bottomOptionsLeft }>
+            {/*
             <label style={ styles.bottomCheck }>
               <input type="checkbox" checked={ this.state.minLengthEnabled } onChange={ this.onMinLengthChange.bind(this) } />
               <span style={ [ this.state.minLengthEnabled ? '' : styles.disabled ] }>Min. chars</span>
@@ -86,7 +87,7 @@ export default class TextAreaEditor extends Component {
                 disabled={ !this.state.maxLengthEnabled }
                 style={ [ styles.bottomCheckTextInput, !this.state.maxLengthEnabled ? styles.disabled : '' ] }></input>
             </label>
-
+            */}
           </div>
 
           <CommonFieldOptions {...this.props} />

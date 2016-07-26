@@ -34,6 +34,7 @@ export default class FormDiagram extends Component {
 
   onFormHeadingChange(e) {
     let form = this.getForm();
+    this.props.markAsUnsaved();
     this.props.dispatch(updateForm({
       header: {
         ...form.header,
@@ -44,6 +45,7 @@ export default class FormDiagram extends Component {
 
   onFormDescriptionChange(e) {
     let form = this.getForm();
+    this.props.markAsUnsaved();
     this.props.dispatch(updateForm({
       header: {
         ...form.header,
@@ -54,6 +56,7 @@ export default class FormDiagram extends Component {
 
   onThankYouDescriptionChange(e) {
     let form = this.getForm();
+    this.props.markAsUnsaved();
     this.props.dispatch(updateForm({
       finishedScreen: {
         title: form.finishedScreen.title,
@@ -63,6 +66,7 @@ export default class FormDiagram extends Component {
   }
 
   onConditionsChange(e) {
+    this.props.markAsUnsaved();
     this.props.dispatch(updateForm({
       footer: {
         conditions: e.target.value
@@ -82,7 +86,7 @@ export default class FormDiagram extends Component {
           :
             null
         }
-        <textarea onChange={ this.onFormDescriptionChange.bind(this) } style={ styles.description } placeholder={ "Add instructions or a description" } defaultValue={ form.header.description } />
+        <textarea onChange={ this.onFormDescriptionChange.bind(this) } style={ styles.description } placeholder={ "Write instructions and a description for the form below" } defaultValue={ form.header.description } />
         <div style={styles.formDiagram}>
           { this.props.forms.widgets.map((field, i) => (
             <DropPlaceHolder key={i} formDiagram={ this } position={ i } dropped={ field.dropped }>
@@ -103,13 +107,13 @@ export default class FormDiagram extends Component {
           { !this.props.forms.widgets.length ? <BlankState /> : null }
         </div>
         <div style={ styles.extraFields }>
-          <h3 style={ styles.extraFieldTitle }>Thank you message</h3>
+          <h3 style={ styles.extraFieldTitle }>Thank you message (optional)</h3>
           <textarea
             defaultValue={ form.finishedScreen.description }
             style={ styles.extraFieldTextArea }
             onChange={ this.onThankYouDescriptionChange.bind(this) }></textarea>
 
-          <h3 style={ styles.extraFieldTitle }>Terms and conditions</h3>
+          <h3 style={ styles.extraFieldTitle }>Include Privacy Policy</h3>
           <textarea
             defaultValue={ form.footer.conditions }
             style={ styles.extraFieldTextArea }
@@ -121,26 +125,32 @@ export default class FormDiagram extends Component {
 
   onDelete(position, e) {
     e.stopPropagation();
+    this.props.markAsUnsaved();
     this.props.dispatch(deleteWidget(position));
   }
 
   onDuplicate(position, e) {
     e.stopPropagation();
+    this.props.markAsUnsaved();
     this.props.dispatch(duplicateWidget(position));
   }
 
   onMove(direction, position, e) {
     e.stopPropagation();
+    this.props.markAsUnsaved();
     this.props.dispatch(moveWidget(position, position + (direction === 'up' ? -1 : 1)));
   }
 
   moveWidget(origin, target) {
+    this.props.markAsUnsaved();
     this.props.dispatch(moveWidget(origin, target));
   }
 
   appendWidget(field, targetPosition) {
+    this.props.markAsUnsaved();
     this.props.dispatch(appendWidget({
       title: field.title,
+      description: field.description,
       type: 'field',
       component: field.type,
       identity: false,
@@ -200,21 +210,22 @@ const styles = {
     paddingLeft: 5
   },
   headLine: {
-    fontSize: '2em',
+    fontSize: '1.25em',
     width: '100%',
     display: 'block',
     border: 'none',
     background: 'none',
     fontWeight: 'normal',
-    color: grey
+    color: 'black'
   },
   description: {
-    fontSize: '14pt',
+    fontSize: '1em',
     marginBottom: '20px',
     width: '100%',
     display: 'block',
     border: 'none',
-    background: 'none'
+    background: 'none',
+    resize: 'none'
   },
   extraFieldTextArea: {
     display: 'block',
@@ -224,7 +235,7 @@ const styles = {
     border: '1px solid #ddd'
   },
   extraFieldTitle: {
-    fontSize: '14pt',
+    fontSize: '1em',
     fontWeight: 'bold',
     margin: '30px 0 20px 0'
   }

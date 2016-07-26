@@ -1,17 +1,14 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import Radium from 'radium';
-import ContentHeader from 'components/ContentHeader';
 import {connect} from 'react-redux';
 
 import {
   fetchSubmissions,
   fetchGallery,
-  setActiveSubmission,
-  updateSubmission,
-  sendToGallery,
   updateFormStatus,
   requestEditAccess,
   leavingEdit,
+  updateForm,
   fetchForm } from 'forms/FormActions';
 
 import Page from 'app/layout/Page';
@@ -35,7 +32,6 @@ export default class FormEdit extends Component {
     const {dispatch, params} = this.props;
     dispatch(requestEditAccess(params.id));
     dispatch(fetchForm(params.id));
-    console.log("edit mount", this.props.forms)
   }
 
   componentDidMount() {
@@ -62,6 +58,10 @@ export default class FormEdit extends Component {
     this.props.dispatch(updateFormStatus(this.props.forms.activeForm, value));
   }
 
+  updateInactive(value) {
+    this.props.dispatch(updateForm({ settings: { inactiveMessage: value } }));
+  }
+
   render() {
     const canEdit = this.props.forms.editAccess[this.props.params.id];
     const {preview} = this.state;
@@ -77,6 +77,7 @@ export default class FormEdit extends Component {
         <FormChrome
           activeTab="builder"
           updateStatus={this.updateFormStatus.bind(this)}
+          updateInactive={this.updateInactive.bind(this)}
           gallery={gallery}
           submissions={submissions}
           form={form}/>
@@ -87,6 +88,7 @@ export default class FormEdit extends Component {
                 activeForm={ this.props.forms.activeForm }
                 onClosePreview={this.onClosePreview.bind(this)}
                 onOpenPreview={ this.showPreview.bind(this) }
+                route={ this.props.route }
                 preview={preview} />
             : null
           }

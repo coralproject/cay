@@ -5,6 +5,7 @@ import BBookmark from 'react-icons/lib/fa/bookmark';
 import PaperPlaneIcon from 'react-icons/lib/fa/paper-plane';
 import FlagIcon from 'react-icons/lib/fa/flag';
 import TrashIcon from 'react-icons/lib/fa/trash';
+import _ from 'lodash';
 
 import settings from 'settings';
 import Button from 'components/Button';
@@ -62,7 +63,7 @@ export default class SubmissionDetail extends Component {
           return (
             <div style={styles.answer} key={key}>
               <h2 style={styles.question}>{reply.question}</h2>
-              {this.renderAnswer(reply.answer)}
+              {this.renderAnswer(reply)}
               {/*<p>galleryId: {gallery ? gallery.id : 'loading gallery'}</p>
               <p>submissionId: {submission.id}</p>
               <p>widget id: {reply.widget_id}</p>*/}
@@ -84,23 +85,43 @@ export default class SubmissionDetail extends Component {
     );
   }
 
-  renderAnswer(answer = {}) {
-    if (answer === null) {
+  renderAnswer(reply) {
+    if (reply.answer === null) {
       return (<span>No response</span>);
     }
 
-    if (answer.options) {
+    // wow, this is a gross hack, and it WILL break soon
+    const possibleDateValue = new Date(reply.answer.value);
+
+    // render a Date answer
+    if (_.isString(reply.answer.value) && _.isDate(possibleDateValue) && !isNaN(possibleDateValue)) {
+      return moment(possibleDateValue).format('D MMM YYYY');
+    }
+
+    if (reply.answer.options) {
+
+      const selectedIndexes = reply.answer.options.map(o => o.index);
+
       return (
         <ul>
-          {answer.options.map((option, key) => (
-            <li key={key}>- {option.title}</li>
-          ))}
+          {reply.props.options.map((option, key) => {
+            const selected = selectedIndexes.indexOf(key) !== -1;
+
+            return <li
+              style={[styles.multiple, selected && styles.multiple.selected]}
+              key={key}>{key + 1}. {option.title}</li>;
+          })}
         </ul>
       );
     }
 
-    if ('text' in answer) {
-      return answer.text;
+    // if the date was invalid, just show whatever they entered.
+    if ('value' in reply.answer) {
+      return reply.answer.value;
+    }
+
+    if ('text' in reply.answer) {
+      return reply.answer.text;
     }
 
     return '';
@@ -112,7 +133,7 @@ export default class SubmissionDetail extends Component {
       .filter(({ identity }) => identity === true)
       .map(reply => ({
         label: reply.question,
-        answer: this.renderAnswer(reply.answer)
+        answer: this.renderAnswer(reply)
       }));
 
     const [flagged, bookmarked] = [hasFlag(submission, 'flagged'), hasFlag(submission, 'bookmarked')];
@@ -224,5 +245,19 @@ const styles = {
     fontSize: '1.2em',
     marginRight: 10,
     fontWeight: 'bold'
+  },
+  multiple: {
+    border: '1px solid ' + settings.mediumGrey,
+    padding: 10,
+    display: 'inline-block',
+    width: '49%',
+    marginRight: '1%',
+    marginBottom: 8,
+    borderRadius: 4,
+    backgroundColor: 'white',
+    selected: {
+      backgroundColor: settings.darkerGrey,
+      color: 'white'
+    }
   }
 };

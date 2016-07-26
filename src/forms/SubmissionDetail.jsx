@@ -128,7 +128,7 @@ export default class SubmissionDetail extends Component {
   }
 
   renderAuthorDetail() {
-    const { submission, submissionId, onFlag, onBookmark } = this.props;
+    const { submission, onFlag, onBookmark } = this.props;
     const authorDetails = submission.replies
       .filter(({ identity }) => identity === true)
       .map(reply => ({
@@ -141,7 +141,7 @@ export default class SubmissionDetail extends Component {
       <div>
         <div style={styles.authorHeaderContainer}>
           <div style={styles.authorHeaderInfo}>
-            <span style={styles.subNum}>{submissionId}</span> {moment(submission.date_created).format('L LT')}
+            <span style={styles.subNum}>{submission.number || ''}</span> {moment(submission.date_created).format('L LT')}
           </div>
           <div style={styles.headerButtons}>
             <Button
@@ -242,7 +242,7 @@ const styles = {
     marginRight: 20
   },
   subNum: {
-    fontSize: '1.2em',
+    fontSize: '1.5em',
     marginRight: 10,
     fontWeight: 'bold'
   },

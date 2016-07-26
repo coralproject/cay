@@ -177,7 +177,7 @@ export default class FormChrome extends React.Component {
         {
           form ?
             <div style={this.getStatusSelectStyle()} onClick={this.toggleDropdown.bind(this)}>
-              <span style={{fontWeight: 'bold'}}>Form Status:</span> {form.status} {this.getAngleBtn()}
+              <span style={{fontWeight: 'bold'}}>Form Status:</span> {form.status==='open' ? 'Live' : 'Closed'} {this.getAngleBtn()}
             </div> :
             null
         }
@@ -189,7 +189,7 @@ export default class FormChrome extends React.Component {
               <div style={styles.tab}></div>
               <RadioButton
                 style={styles.openRadio}
-                label="Open"
+                label="Live"
                 value="open"
                 checked={form.status === 'open'}
                 onClick={this.props.updateStatus} />

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import { connect } from 'react-redux';
 import {Link} from 'react-router';
@@ -21,6 +21,10 @@ class SeeAllSearches extends React.Component {
   constructor(props) {
     super(props);
     this.state = { deleteModalOpen: false };
+  }
+
+  static contextTypes = {
+    router: PropTypes.object.isRequired
   }
 
   componentWillMount() {

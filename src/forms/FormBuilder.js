@@ -81,6 +81,7 @@ export default class FormBuilder extends Component {
     this.markAsUnsaved();
     this.props.dispatch(appendWidget({
       title: data.title,
+      description: data.description,
       friendlyType: data.friendlyType,
       type: 'field',
       component: data.type,

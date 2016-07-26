@@ -217,7 +217,10 @@ const styles = {
     width: 35,
     height: 35,
     backgroundColor: '#fff',
-    border: '1px solid #ccc',
+    borderTop: '1px solid #ccc',
+    borderRight: '1px solid #ccc',
+    borderBottom: '1px solid #ccc',
+    borderLeft: '1px solid #ccc',
     display: 'inline-block',
     color: 'rgb(94,94,94)',
     cursor: 'pointer'
@@ -237,7 +240,9 @@ const styles = {
   },
   searchContainer: {
     display: 'flex',
-    margin: 10,
+    marginRight: 10,
+    marginBottom: 10,
+    marginLeft: 10,
     marginTop: 0
   }
 };

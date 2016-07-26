@@ -31,7 +31,7 @@ export default class GalleryAnswer extends React.Component {
     const selectedIndexes = answer.answer.answer.options.map(o => o.index);
     const options = answer.answer.props.options.map((option, key) => {
       const selected = selectedIndexes.indexOf(key) !== -1;
-      return <li style={[styles.multiple.option, selected && styles.multiple.selected]} key={key}>{key}. {option.title}</li>;
+      return <li style={[styles.multiple.option, selected && styles.multiple.selected]} key={key}>{key + 1}. {option.title}</li>;
     });
 
     // check for Other answer
@@ -57,8 +57,15 @@ export default class GalleryAnswer extends React.Component {
       multipleChoice = this.renderMultipleChoice(answer);
     }
 
-    const text = answer.answer.edited ? answer.answer.edited : answer.answer.answer.text;
+    let unedited = answer.answer.answer.value ? answer.answer.answer.value : answer.answer.answer.text;
+    let text = answer.answer.edited ? answer.answer.edited : unedited;
     const statusFlag = answer.answer.edited ? 'edited' : 'new';
+
+    // render as a formatted Date if possible
+    const possibleDateValue = new Date(text);
+    if (_.isString(answer.answer.answer.value) && _.isDate(possibleDateValue) && !isNaN(possibleDateValue)) {
+      text = moment(possibleDateValue).format('D MMM YYYY');
+    }
 
     if (!gallery) {
       return <p>Loading gallery...</p>;

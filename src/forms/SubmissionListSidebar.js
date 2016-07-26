@@ -89,10 +89,10 @@ export default class Sidebar extends Component {
     });
   }
 
-  paginate(requestedPage) {
+  paginate(requestedPage, total) {
     const { form } = this.props;
 
-    if (requestedPage >= 0 && requestedPage <= Math.floor(form.stats.responses / 10)) {
+    if (requestedPage >= 0 && requestedPage <= Math.floor(total / 10)) {
       this.props.dispatch(fetchSubmissions(form.id, requestedPage)).then(() => {
         this.setState({subPageOffset: requestedPage});
       });
@@ -103,11 +103,18 @@ export default class Sidebar extends Component {
     const { submissions, activeSubmission, onSelect, filterBy, order, form, formCounts } = this.props;
     const { filterByOpen, orderOpen, search, subPageOffset } = this.state;
 
+    let count; // probably a better way to to this.
+    if (filterBy === 'default') {
+      count = formCounts['totalSearch'];
+    } else {
+      count = formCounts[filterBy.replace('-', '')];
+    }
+
     return (
       <div style={styles}>
         <div style={styles.container}>
           <div style={styles.countContainer}>
-            <p style={styles.count}>{formCounts.totalSearch} of {formCounts.totalSubmissions} Submission{formCounts.totalSubmissions === 1 ? '' : 's'}</p>
+            <p style={styles.count}>{count} of {formCounts.totalSubmissions} Submission{formCounts.totalSubmissions === 1 ? '' : 's'}</p>
           </div>
           <div style={styles.searchContainer}>
             <input style={styles.search} type='text' value={search}
@@ -133,8 +140,8 @@ export default class Sidebar extends Component {
         </div>
         <div>{this.listSubmissions(submissions, activeSubmission, onSelect)}</div>
         { form ? <Pagination current={subPageOffset}
-          total={Math.ceil(formCounts.totalSearch / 10)}
-          onChange={this.paginate.bind(this)} /> : null }
+          total={Math.ceil(count / 10)}
+          onChange={this.paginate.bind(this, count)} /> : null }
       </div>
     );
   }

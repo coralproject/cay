@@ -203,7 +203,7 @@ export default class FormComponent extends Component {
                 <input
                   onChange={ this.onTitleChange.bind(this) }
                   style={ styles.fieldTitle }
-                  defaultValue={ this.props.field.title }
+                  defaultValue={ field.title }
                   type="text"
                   placeholder={ `Ask readers a question (${ field.friendlyType })` } />
                 <input

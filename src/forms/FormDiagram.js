@@ -150,6 +150,7 @@ export default class FormDiagram extends Component {
     this.props.markAsUnsaved();
     this.props.dispatch(appendWidget({
       title: field.title,
+      description: field.description,
       type: 'field',
       component: field.type,
       identity: false,

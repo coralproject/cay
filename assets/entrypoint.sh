@@ -13,9 +13,9 @@ if [[ -z "$ELKHORN_URL" ]]; then
 fi
 
 if [[ -z "$AUTH_TOKEN" ]]; then
-    export DO_AUTH=false,
+    export DO_AUTH=false
 else
-    export DO_AUTH=true,
+    export DO_AUTH=true
 fi
 
 if [[ -z "$TRUST" ]]; then

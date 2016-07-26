@@ -70,7 +70,7 @@ export default class Sidebar extends Component {
             styles.submissionContainer,
             submission.id === activeSubmission && styles.activeSubmission
           ]} key={key}>
-          <span style={{fontWeight: 'bold'}}>{key + 1}</span>
+          <span style={{fontWeight: 'bold'}}>{submission.number || ''}</span>
           <span>{moment(submission.date_created).format('L LT')}</span>
           <div>
             <span key={`${key}-0`} style={[styles.iconContainer(hasFlag(submission, 'flagged'),
@@ -133,7 +133,7 @@ export default class Sidebar extends Component {
         </div>
         <div>{this.listSubmissions(submissions, activeSubmission, onSelect)}</div>
         { form ? <Pagination current={subPageOffset}
-          total={Math.ceil(form.stats.responses / 10)}
+          total={Math.ceil(formCounts.totalSearch / 10)}
           onChange={this.paginate.bind(this)} /> : null }
       </div>
     );

@@ -147,7 +147,7 @@ const forms = (state = initial, action) => {
 
   case types.FORMS_REQUEST_SUCCESS:
 
-    const formList = action.forms.map(form => form.id);
+    const formList = action.forms.reverse().map(form => form.id);
     const forms = action.forms.reduce((accum, form) => {
       accum[form.id] = form;
       return accum;

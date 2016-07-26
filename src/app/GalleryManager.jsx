@@ -222,7 +222,7 @@ export default class SubmissionGallery extends Component {
     const form = forms[forms.activeForm];
     const gallery = forms[forms.activeGallery] || {
       headline: '', description: '',
-      config: { placement: 'above', identifiableIds: [] },
+      config: { placement: 'below', identifiableIds: [] },
       answers: []
     };
 
@@ -238,6 +238,9 @@ export default class SubmissionGallery extends Component {
       {label: 'Above the submission', value: 'above'},
       {label: 'Below the submission', value: 'below'}
     ];
+
+    console.log('GalleryManager.render', gallery.config.placement);
+
     return (
       <Page>
         <FormChrome
@@ -276,7 +279,7 @@ export default class SubmissionGallery extends Component {
                 <p style={styles.includeLabel}>Placement</p>
                 <Select
                   style={styles.placementOpts}
-                  value={gallery.config.placement || 'above'}
+                  value={gallery.config.placement}
                   options={placementOpts}
                   clearable={false}
                   onChange={this.updatePlacement.bind(this)} />

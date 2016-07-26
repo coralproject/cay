@@ -319,7 +319,6 @@ const forms = (state = initial, action) => {
 
   case types.UPDATE_READER_INFO_PLACEMENT:
     const gal = state[state.activeGallery];
-    console.log(types.UPDATE_READER_INFO_PLACEMENT, gal);
     return {...state, [state.activeGallery]: {...gal, config: {...gal.config, placement: action.placement}}};
 
   case types.UPDATE_GALLERY_ORIENTATION:

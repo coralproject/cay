@@ -13,7 +13,7 @@ export default class Pagination extends React.Component {
     const paginationStyle = {
       position: 'absolute',
       width: '100%',
-      bottom: -30,
+      bottom: 0,
       backgroundColor: bgColorBase,
       display: total > 1 ? 'flex' : 'none',
       justifyContent: 'space-between'

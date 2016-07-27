@@ -25,7 +25,8 @@ export default class FormChrome extends React.Component {
     activeTab: PropTypes.oneOf(['builder', 'submissions', 'gallery']).isRequired,
     form: PropTypes.object,
     gallery: PropTypes.object,
-    updateStatus: PropTypes.func.isRequired
+    updateStatus: PropTypes.func.isRequired,
+    updateInactive: PropTypes.func.isRequired
   }
 
   static contextTypes = {

@@ -6,6 +6,7 @@ import {
   fetchGallery,
   fetchSubmissions,
   removeFromGallery,
+  updateForm,
   updateFormStatus,
   updateEditableAnswer,
   updateGalleryOrientation,
@@ -203,6 +204,10 @@ export default class SubmissionGallery extends Component {
     this.props.dispatch(updateReaderInfoPlacement(option.value));
   }
 
+  updateInactive(value) {
+    this.props.dispatch(updateForm({ settings: { inactiveMessage: value } }));
+  }
+
   openPublishModal() {
     this.props.dispatch(publishGallery(this.props.forms.activeForm)).then(() => {
       this.setState({publishModalOpen: true});
@@ -283,6 +288,7 @@ export default class SubmissionGallery extends Component {
         <FormChrome
           activeTab="gallery"
           updateStatus={this.updateFormStatus.bind(this)}
+          updateInactive={this.updateInactive.bind(this)}
           form={form}
           submissions={submissions}
           gallery={gallery} />

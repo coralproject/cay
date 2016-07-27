@@ -12,6 +12,7 @@ import {
   removeFromGallery,
   updateFormStatus,
   fetchForm,
+  updateForm,
   updateOrder,
   updateSearch,
   updateFilterBy,
@@ -53,6 +54,10 @@ export default class SubmissionList extends Component {
     this.props.dispatch(updateFormStatus(this.props.forms.activeForm, value));
   }
 
+  updateInactive(value) {
+    this.props.dispatch(updateForm({ settings: { inactiveMessage: value } }));
+  }
+
   onOrderChange(order) {
     this.props.dispatch(updateOrder(order));
     this.props.dispatch(fetchSubmissions(this.props.params.id));
@@ -83,6 +88,7 @@ export default class SubmissionList extends Component {
           <FormChrome
             activeTab="submissions"
             updateStatus={this.updateFormStatus.bind(this)}
+            updateInactive={this.updateInactive.bind(this)}
             gallery={gallery}
             submissions={submissions}
             form={form}/>

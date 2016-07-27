@@ -41,7 +41,7 @@ export class OrderDropdown extends Component {
 
 const FilterByOptions = {
   'default': 'All submissions',
-  '-flagged': 'Flagged submssions hidden',
+  '-flagged': 'Flagged submissions hidden',
   'bookmarked': 'Bookmarked',
   'flagged': 'Flagged'
 };

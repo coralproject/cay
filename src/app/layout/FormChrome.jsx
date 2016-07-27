@@ -15,7 +15,7 @@ import RadioButton from 'components/forms/RadioButton';
 
 import settings from 'settings';
 
-@connect()
+@connect(({ forms }) => ({ forms }))
 @onClickOutside
 @Radium
 export default class FormChrome extends React.Component {
@@ -34,7 +34,7 @@ export default class FormChrome extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {statusDropdownOpen: false, updatingInactiveMessage: false};
+    this.state = {statusDropdownOpen: false};
   }
 
   buildForm() { // navigate to the form builder or editor
@@ -61,11 +61,12 @@ export default class FormChrome extends React.Component {
   }
 
   galleryBadge() {
-    return this.props.gallery ? <Badge style={styles.badge} count={this.props.gallery.answers.length} /> : '';
+    return this.props.gallery && this.props.gallery.answers ?
+      <Badge style={styles.badge} count={this.props.gallery.answers.length} /> : '';
   }
 
   submissionBadge() {
-    return this.props.form ? <Badge style={styles.badge} count={this.props.form.stats.responses} /> : '';
+    return this.props.form && this.props.form.stats ? <Badge style={styles.badge} count={this.props.form.stats.responses} /> : '';
   }
 
   toggleDropdown() {
@@ -94,7 +95,7 @@ export default class FormChrome extends React.Component {
       borderRadius: 5,
       cursor: 'pointer',
       userSelect: 'none',
-      backgroundColor: this.state.statusDropdownOpen ? '#d8d8d8' : '#fff'
+      backgroundColor: this.state.statusDropdownOpen ? '#fff' : '#d8d8d8'
     };
   }
 
@@ -102,19 +103,11 @@ export default class FormChrome extends React.Component {
     return this.state.statusDropdownOpen ? <AngleUpIcon /> : <AngleDownIcon />;
   }
 
-  setInactiveMessage(e) { // onBlur handler for the message textarea
-    this.setState({inactiveMessageDraft: e.target.value});
+  setInactiveMessage(e) {
+    this.props.updateInactive(e.target.value);
   }
 
-  updateInactiveMessage() {
-    this.setState({updatingInactiveMessage: true})
-    this.props.dispatch(updateInactiveMessage(this.state.inactiveMessageDraft, this.props.form))
-      .then(() => {
-        this.setState({statusDropdownOpen: false, updatingInactiveMessage: false});
-      });
-  }
-
-  handleClickOutside(evt) {
+  handleClickOutside() {
     this.setState({statusDropdownOpen: false});
   }
 
@@ -146,14 +139,12 @@ export default class FormChrome extends React.Component {
   }
 
   render() {
-    let name = _.has(this.props, 'form.header.title') ? this.props.form.header.title :
-      this.props.create ? 'Untitled Form' : '';
+    const { form, create, activeTab } = this.props;
+    let name = _.has(this.props, 'form.header.title') ? form.header.title : '';
 
     if (name.length > 15) {
       name = name.split(' ').slice(0, 4).join(' ') + '…'; // use ellipsis character
     }
-
-    const {form} = this.props;
 
     return (
       <div style={styles.base}>
@@ -169,15 +160,15 @@ export default class FormChrome extends React.Component {
           </div>
           <div key="dewey" style={[
             styles.option,
-            this.props.activeTab === 'submissions' && styles.active,
-            this.props.create && styles.disabled]}
+            activeTab === 'submissions' && styles.active,
+            create && styles.disabled]}
             onClick={this.reviewSubmissions.bind(this)}>
             Submissions {this.submissionBadge()}
           </div>
           <div key="louie" style={[
             styles.option,
-            this.props.activeTab === 'gallery' && styles.active,
-            this.props.create && styles.disabled]}
+            activeTab === 'gallery' && styles.active,
+            create && styles.disabled]}
             onClick={this.manageGallery.bind(this)}>
             Gallery {this.galleryBadge()}
           </div>
@@ -186,7 +177,7 @@ export default class FormChrome extends React.Component {
         {
           form ?
             <div style={this.getStatusSelectStyle()} onClick={this.toggleDropdown.bind(this)}>
-              <span style={{fontWeight: 'bold'}}>Form Status:</span> {form.status} {this.getAngleBtn()}
+              <span style={{fontWeight: 'bold'}}>Form Status:</span> {form.status==='open' ? 'Live' : 'Closed'} {this.getAngleBtn()}
             </div> :
             null
         }
@@ -198,7 +189,7 @@ export default class FormChrome extends React.Component {
               <div style={styles.tab}></div>
               <RadioButton
                 style={styles.openRadio}
-                label="Open"
+                label="Live"
                 value="open"
                 checked={form.status === 'open'}
                 onClick={this.props.updateStatus} />
@@ -210,13 +201,9 @@ export default class FormChrome extends React.Component {
                   checked={form.status === 'closed'}
                   onClick={this.props.updateStatus} />
                 <textarea
-                  onBlur={this.setInactiveMessage.bind(this)}
-                  style={styles.statusMessage}></textarea>
-                <Button
-                  style={{float: 'left', marginRight: 10}}
-                  category={this.state.updatingInactiveMessage ? 'disabled' : 'success'}
-                  onClick={this.updateInactiveMessage.bind(this)}
-                  >Save <SaveIcon /></Button>
+                  onChange={this.setInactiveMessage.bind(this)}
+                  style={styles.statusMessage}
+                  defaultValue={form.settings.inactiveMessage}></textarea>
                 <p>The message will appear to readers when you close the form and are no longer collecting submissions.</p>
                 <div style={this.getLoaderStyles(this, true)}></div>
                 <div style={this.getLoaderStyles()}></div>

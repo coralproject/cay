@@ -1,14 +1,15 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import Radium from 'radium';
 import { connect } from 'react-redux';
 
-import { createEmpty } from 'forms/FormActions';
-import Page from 'app/layout/Page';
+import { createEmpty, updateForm } from 'forms/FormActions';
+import { showFlashMessage } from 'flashmessages/FlashMessagesActions';
 
+import Page from 'app/layout/Page';
 import FormBuilder from 'forms/FormBuilder.js';
 import FormChrome from 'app/layout/FormChrome';
 
-@connect(({ forms }) => ({ forms }))
+@connect(({ app, forms }) => ({ app, forms }))
 @Radium
 export default class FormCreate extends Component {
 
@@ -21,15 +22,30 @@ export default class FormCreate extends Component {
     this.props.dispatch(createEmpty());
   }
 
+  updateFormStatus(status) {
+    this.props.dispatch(updateForm({ status, settings: { isActive: status === 'open' } }));
+  }
+
+  updateInactive(value) {
+    this.props.dispatch(updateForm({ settings: { inactiveMessage: value } }));
+  }
+
   render() {
-    const {preview} = this.state;
+    const { preview } = this.state;
+    const { forms } = this.props;
     return (
       <Page style={styles.page}>
-        <FormChrome create={true} activeTab="builder" />
+        <FormChrome form={forms.form}
+          create={true}
+          updateStatus={this.updateFormStatus.bind(this)}
+          updateInactive={this.updateInactive.bind(this)}
+          activeTab="builder" />
         <div style={styles.formBuilderContainer}>
           <FormBuilder
             onClosePreview={this.onClosePreview.bind(this)}
             onOpenPreview={ this.showPreview.bind(this) }
+            route={ this.props.route }
+            create={true}
             preview={preview} />
         </div>
       </Page>
@@ -43,9 +59,25 @@ export default class FormCreate extends Component {
   }
 
   showPreview() {
-    this.setState({
-      preview: true
+
+    // First test the form is reachable
+    const form = this.props.activeForm ? this.props.forms[this.props.activeForm] : this.props.forms.form;
+    const previewForm = {...form};
+    previewForm.steps[0].widgets = this.props.forms.widgets;
+    const url = `${this.props.app.elkhornHost}/preview.js?props=${encodeURIComponent(JSON.stringify(previewForm))}`;
+
+    let formCreate = this;
+
+    fetch(url, {
+      method: 'HEAD'
+    }).then(() => {
+      formCreate.setState({
+        preview: true
+      });
+    }).catch(() => {
+      formCreate.props.dispatch(showFlashMessage('Uh-oh, we can\'t preview your form. Try again or report the error to your technical team', 'warning'));
     });
+
   }
 
 }
@@ -73,8 +105,7 @@ const styles = {
     justifyContent: 'space-between',
     flexWrap: 'wrap',
     paddingBottom: 20,
-    borderBottom: '1px solid #E9E9E9',
-    marginTop: 40
+    borderBottom: '1px solid #E9E9E9'
   },
   textField: {
     marginRight: 20

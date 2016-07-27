@@ -65,6 +65,7 @@ export default class NumberFieldEditor extends Component {
         <div style={ styles.bottomOptions }>
 
           <div style={ styles.bottomOptionsLeft }>
+            {/*
             <label style={ styles.bottomCheck }>
               <input type="checkbox" checked={ this.state.minValueEnabled } onChange={ this.onMinValueCheckChange.bind(this) } />
               <span style={ [ this.state.minValueEnabled ? '' : styles.disabled ] }>Min. value</span>
@@ -86,6 +87,7 @@ export default class NumberFieldEditor extends Component {
                 disabled={ !this.state.maxValueEnabled }
                 style={ [ styles.bottomCheckTextInput, !this.state.maxValueEnabled ? styles.disabled : '' ] }></input>
             </label>
+            */}
           </div>
 
           <CommonFieldOptions {...this.props} />

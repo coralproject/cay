@@ -22,10 +22,15 @@ const initial = {
   formCreationError: null,
   activeForm: null, // might be able to combine this with {form} above in the future
   activeGallery: null, // this is an ObjectId string
+  identifiableIds: [],
   widgets: [],
   loadingAnswerEdit: false,
+  loadingGallery: false,
+  galleryUrl: '',
+  galleryCode: '',
   answerBeingEdited: null, // ObjectId string
   editableAnswer: '',
+  editablePii: [],
   activeSubmission: null // ObjectId string
 };
 
@@ -37,7 +42,7 @@ const emptyForm = {
     headerIntroText: '#444444',
     formBackground: '#FFFFFF',
     footerBackground: '#FFFFFF',
-    requiredAsterisk: '#DDDDDD',
+    requiredAsterisk: '#939393',
     inputBackground: '#FFFFFF',
     inputText: '#222222',
     footerText: '#222222',
@@ -56,11 +61,12 @@ const emptyForm = {
     inactiveMessage: 'We are not currently accepting submissions. Thank you.'
   },
   header: {
-    title: 'Share your story',
-    description: 'This is a sample ask!'
+    title: '',
+    description: '',
+    heading: ''
   },
   footer: {
-    conditions: 'This is a conditions field'
+    conditions: ''
   },
   finishedScreen: {
     title: 'Thanks.',
@@ -69,7 +75,8 @@ const emptyForm = {
   steps: [{
     id: '1',
     name: 'first_page'
-  }]
+  }],
+  status: 'closed'
 };
 
 const forms = (state = initial, action) => {
@@ -121,13 +128,10 @@ const forms = (state = initial, action) => {
 
     var position = action.position;
 
-    var widgetsCopy = state.widgets.slice();
-    var widgetCopy = Object.assign({}, widgetsCopy[position]);
-    widgetCopy.id = uuid.v4();
+    var widgetsCopy = [...state.widgets];
+    var widgetCopy = {...widgetsCopy[position], id: uuid.v4()};
 
-    var fieldsBefore = widgetsCopy.slice(0, position);
-    var fieldsAfter = widgetsCopy.slice(position);
-    widgetsCopy = fieldsBefore.concat(widgetCopy).concat(fieldsAfter);
+    widgetsCopy.splice(position, 0, widgetCopy);
 
     return Object.assign({}, state, { widgets: widgetsCopy, tempWidgets: widgetsCopy });
 
@@ -136,17 +140,15 @@ const forms = (state = initial, action) => {
     var widget = action.widget;
 
     var targetPosition = action.targetPosition || state.widgets.length;
-    var widgetsCopy = state.widgets.slice();
+    var widgetsCopy = [...state.widgets];
 
-    var fieldsBefore = widgetsCopy.slice(0, targetPosition);
-    var fieldsAfter = widgetsCopy.slice(targetPosition);
-    widgetsCopy = fieldsBefore.concat(widget).concat(fieldsAfter);
+    widgetsCopy.splice(targetPosition, 0, widget);
 
-    return Object.assign({}, state, { widgets: widgetsCopy, tempWidgets: widgetsCopy });
+    return {...state, widgets: widgetsCopy, tempWidgets: widgetsCopy };
 
   case types.FORMS_REQUEST_SUCCESS:
 
-    const formList = action.forms.map(form => form.id);
+    const formList = action.forms.reverse().map(form => form.id);
     const forms = action.forms.reduce((accum, form) => {
       accum[form.id] = form;
       return accum;
@@ -174,20 +176,16 @@ const forms = (state = initial, action) => {
   case types.WIDGET_MOVE:
 
     // First we make a copy removing the dragged element
-    var widgetsCopy = state.widgets.slice();
-    var removed = widgetsCopy.splice(action.from, 1);
+    var newWidgets = [...state.widgets];
+    var removed = newWidgets.splice(action.from, 1)[0];
+    newWidgets.splice(action.to, 0, removed);
 
-    // Then we insert the dragged element into the desired position
-    var fieldsBefore = widgetsCopy.slice(0, action.to);
-    var fieldsAfter = widgetsCopy.slice(action.to);
-    var newWidgets = fieldsBefore.concat(removed).concat(fieldsAfter);
-
-    return Object.assign({}, state, { tempWidgets: newWidgets, widgets: newWidgets });
+    return {...state, tempWidgets: newWidgets, widgets: newWidgets };
 
   case types.FORM_DELETE_WIDGET:
-    var widgetsCopy = state.widgets.slice();
+    var widgetsCopy = [...state.widgets];
     widgetsCopy.splice(action.widgetPosition, 1);
-    return Object.assign({}, state, { widgets: widgetsCopy, tempWidgets: widgetsCopy });
+    return {...state, widgets: widgetsCopy, tempWidgets: widgetsCopy };
 
   case types.FORM_CREATE_INIT:
     return {...state, savingForm: true, formCreationError: null, savedForm: null};
@@ -244,6 +242,13 @@ const forms = (state = initial, action) => {
       return accum;
     }, {});
 
+    action.gallery.config = action.gallery.config || {};
+
+    if (!action.gallery.config.placement) {
+      // default for sending to Elkhorn
+      action.gallery.config.placement = 'below';
+    }
+
     return {
       ...state,
       loadingGallery: false,
@@ -257,7 +262,9 @@ const forms = (state = initial, action) => {
     return {...state, loadingGallery: false, activeGallery: null, galleryError: action.error};
 
   case types.FORM_STATUS_UPDATED:
-    return {...state, activeForm: action.form.id, [action.form.id]: action.form};
+    return {...state, activeForm: action.form.id, [action.form.id]: Object.assign({},
+      action.form, {status: action.status, settings: Object.assign({},
+      action.form.settings, { isActive: action.status === 'open' })})};
 
   case types.FORM_ANSWER_SENT_TO_GALLERY:
     return {...state, [action.gallery.id]: action.gallery};
@@ -267,12 +274,12 @@ const forms = (state = initial, action) => {
 
   // editing Gallery submissions
   case types.ANSWER_EDIT_BEGIN: // user clicked on button to start editing an answer
-    const answerKey = `${action.submissionId}|${action.answerId}`;
     return {
       ...state,
       // if you can think of a better way to store this, I'm all ears
-      answerBeingEdited: answerKey,
-      editableAnswer: state[answerKey].answer.answer.text
+      answerBeingEdited: action.answerKey,
+      editableAnswer: action.editableAnswer,
+      editablePii: action.editablePii
     };
 
   case types.ANSWER_EDIT_UPDATE: // user is typing into the field
@@ -283,6 +290,12 @@ const forms = (state = initial, action) => {
 
   case types.ANSWER_EDIT_REQUEST: // submit Answer edit to server
     return {...state, loadingAnswerEdit: true};
+
+  case types.RESET_EDITABLE_TEXT:
+    return {...state, editableAnswer: action.text};
+
+  case types.UPDATE_EDITABLE_PII:
+    return {...state, editablePii: action.editablePii};
 
   case types.ANSWER_EDIT_SUCCESS: // server successfully updated submission
     // don't update the answers in state here.
@@ -298,6 +311,37 @@ const forms = (state = initial, action) => {
   case types.ANSWER_EDIT_FAILED: // server was unable to update the answer
     return {...state, loadingAnswerEdit: false, answerBeingEdited: null};
 
+  case types.UPDATE_GALLERY_TITLE:
+    return {...state, [state.activeGallery]: {...state[state.activeGallery], headline: action.title}};
+
+  case types.UPDATE_GALLERY_DESCRIPTION:
+    return {...state, [state.activeGallery]: {...state[state.activeGallery], description: action.description}};
+
+  case types.UPDATE_READER_INFO_PLACEMENT:
+    const gal = state[state.activeGallery];
+    return {...state, [state.activeGallery]: {...gal, config: {...gal.config, placement: action.placement}}};
+
+  case types.UPDATE_GALLERY_ORIENTATION:
+    return {...state, galleryOrientation: action.orientation};
+
+  case types.GALLERY_ENABLE_IDENTIFIABLE:
+    const gallery = state[state.activeGallery];
+    return {...state, [state.activeGallery]: {...gallery, config: {...gallery.config, identifiableIds: action.ids}}};
+
+  case types.PUBLISH_GALLERY_INIT:
+    return {...state, loadingGallery: true, galleryUrl: '', galleryCode: ''};
+
+  case types.PUBLISH_GALLERY_SUCCESS:
+    return {
+      ...state,
+      loadingGallery: false,
+      galleryUrl: action.gallery.url,
+      galleryCode: action.gallery.build.code
+    };
+
+  case types.PUBLISH_GALLERY_FAILURE:
+    return {...state, loadingGallery: true, galleryUrl: '', galleryCode: ''};
+
   case types.UPDATE_FILTER_BY:
     return {...state, submissionFilterBy: action.value};
 
@@ -311,6 +355,15 @@ const forms = (state = initial, action) => {
     return {...state, submissionFilterBy: 'default', submissionOrder: 'dsc', submissionSearch: '',
             formCounts: {...initial.formCounts} };
 
+  // TODO implement!
+  case types.FORM_ANSWER_REINSERT:
+    const newAnswers = [...state[action.galleryId].answers];
+    const aux = newAnswers[action.key];
+    let newPos = (action.key + action.position) % newAnswers.length;
+    newPos = newPos === -1 ? newAnswers.length - 1 : newPos;
+    newAnswers[action.key] = newAnswers[newPos];
+    newAnswers[newPos] = aux;
+    return { ...state, [action.galleryId]: {...state[action.galleryId], answers: newAnswers}};
   default:
     return state;
   }

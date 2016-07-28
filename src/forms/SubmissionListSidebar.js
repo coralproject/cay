@@ -42,7 +42,9 @@ export default class Sidebar extends Component {
         onSelect(subIds[activeIndex - 1]);
       } else if (e.code === 'KeyF') {
         onFlag(!hasFlag(submissions[subIds.indexOf(activeSubmission)], 'flagged'));
-      }
+      } else if (e.code === 'KeyB') {
+        onFlag(!hasFlag(submissions[subIds.indexOf(activeSubmission)], 'bookmarked'));
+      } 
     };
 
     this.onKeyPress = keyPress.bind(this);

@@ -37,7 +37,7 @@
 /******/ 	__webpack_require__.p = "/dist/";
 /******/
 /******/ 	// __webpack_hash__
-/******/ 	__webpack_require__.h = "c86266a05cb6ad080d58";
+/******/ 	__webpack_require__.h = "7bfe66380017b7321e47";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
@@ -67852,10 +67852,21 @@
 	        return (0, _moment2['default'])(possibleDateValue).format('D MMM YYYY');
 	      }
 	
+	      var optionsCopy = reply.props.options.slice();
+	
+	      // Add "Other" as the last option if allowed
+	      if (reply.props.otherAllowed) {
+	        optionsCopy.push({ isOther: true, title: 'Other' });
+	      }
+	
 	      if (reply.answer.options) {
+	        var answersByIndex;
+	
 	        var _ret = (function () {
+	          answersByIndex = [];
 	
 	          var selectedIndexes = reply.answer.options.map(function (o) {
+	            answersByIndex[o.index] = o.title;
 	            return o.index;
 	          });
 	
@@ -67863,8 +67874,9 @@
 	            v: _react2['default'].createElement(
 	              'ul',
 	              null,
-	              reply.props.options.map(function (option, key) {
+	              optionsCopy.map(function (option, key) {
 	                var selected = selectedIndexes.indexOf(key) !== -1;
+	                var title = answersByIndex[key] ? answersByIndex[key] : option.title;
 	
 	                return _react2['default'].createElement(
 	                  'li',
@@ -67873,7 +67885,7 @@
 	                    key: key },
 	                  key + 1,
 	                  '. ',
-	                  option.title
+	                  title
 	                );
 	              })
 	            )

@@ -98,14 +98,14 @@ export default class SubmissionDetail extends Component {
       return moment(possibleDateValue).format('D MMM YYYY');
     }
 
-    const optionsCopy = reply.props.options.slice();
-
-    // Add "Other" as the last option if allowed
-    if (reply.props.otherAllowed) {
-      optionsCopy.push({ isOther: true, title: 'Other' });
-    }
-
     if (reply.answer.options) {
+
+      const optionsCopy = reply.props.options.slice();
+
+      // Add "Other" as the last option if allowed
+      if (reply.props.otherAllowed) {
+        optionsCopy.push({ isOther: true, title: 'Other' });
+      }
 
       var answersByIndex = [];
       const selectedIndexes = reply.answer.options.map(o => {

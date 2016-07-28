@@ -30,7 +30,7 @@ export default class Sidebar extends Component {
 
     const keyPress = (e) => {
 
-      const {activeSubmission, submissions, onSelect, onFlag} = this.props;
+      const {activeSubmission, submissions, onSelect, onFlag, onBookmark} = this.props;
 
       const subIds = submissions.map(s => s.id);
       const activeIndex = subIds.indexOf(activeSubmission);
@@ -42,6 +42,8 @@ export default class Sidebar extends Component {
         onSelect(subIds[activeIndex - 1]);
       } else if (e.code === 'KeyF') {
         onFlag(!hasFlag(submissions[subIds.indexOf(activeSubmission)], 'flagged'));
+      } else if (e.code === 'KeyB') {
+        onBookmark(!hasFlag(submissions[subIds.indexOf(activeSubmission)], 'bookmarked'));
       }
     };
 
@@ -89,8 +91,11 @@ export default class Sidebar extends Component {
     });
   }
 
-  paginate(requestedPage, total) {
+  paginate(total, requestedPage) {
     const { form } = this.props;
+    console.log(requestedPage)
+    console.log(Math.floor(total / 10))
+    console.log(total)
 
     if (requestedPage >= 0 && requestedPage <= Math.floor(total / 10)) {
       this.props.dispatch(fetchSubmissions(form.id, requestedPage)).then(() => {

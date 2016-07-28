@@ -37,7 +37,7 @@
 /******/ 	__webpack_require__.p = "/dist/";
 /******/
 /******/ 	// __webpack_hash__
-/******/ 	__webpack_require__.h = "8ef8f57cbe6ee2222868";
+/******/ 	__webpack_require__.h = "6beafd9341dd50695a7a";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
@@ -67852,17 +67852,18 @@
 	        return (0, _moment2['default'])(possibleDateValue).format('D MMM YYYY');
 	      }
 	
-	      var optionsCopy = reply.props.options.slice();
-	
-	      // Add "Other" as the last option if allowed
-	      if (reply.props.otherAllowed) {
-	        optionsCopy.push({ isOther: true, title: 'Other' });
-	      }
-	
 	      if (reply.answer.options) {
 	        var answersByIndex;
 	
 	        var _ret = (function () {
+	
+	          var optionsCopy = reply.props.options.slice();
+	
+	          // Add "Other" as the last option if allowed
+	          if (reply.props.otherAllowed) {
+	            optionsCopy.push({ isOther: true, title: 'Other' });
+	          }
+	
 	          answersByIndex = [];
 	
 	          var selectedIndexes = reply.answer.options.map(function (o) {

@@ -37,7 +37,7 @@
 /******/ 	__webpack_require__.p = "/dist/";
 /******/
 /******/ 	// __webpack_hash__
-/******/ 	__webpack_require__.h = "66b4529f57701b14701d";
+/******/ 	__webpack_require__.h = "4b1490609173c709635f";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
@@ -68400,6 +68400,7 @@
 	      var submissions = _props.submissions;
 	      var onSelect = _props.onSelect;
 	      var onFlag = _props.onFlag;
+	      var onBookmark = _props.onBookmark;
 	
 	      var subIds = submissions.map(function (s) {
 	        return s.id;
@@ -68413,6 +68414,8 @@
 	        onSelect(subIds[activeIndex - 1]);
 	      } else if (e.code === 'KeyF') {
 	        onFlag(!(0, _formsFormActions.hasFlag)(submissions[subIds.indexOf(activeSubmission)], 'flagged'));
+	      } else if (e.code === 'KeyB') {
+	        onBookmark(!(0, _formsFormActions.hasFlag)(submissions[subIds.indexOf(activeSubmission)], 'bookmarked'));
 	      }
 	    };
 	
@@ -68483,10 +68486,14 @@
 	    }
 	  }, {
 	    key: 'paginate',
-	    value: function paginate(requestedPage, total) {
+	    value: function paginate(total, requestedPage) {
 	      var _this3 = this;
 	
 	      var form = this.props.form;
+	
+	      console.log(requestedPage);
+	      console.log(Math.floor(total / 10));
+	      console.log(total);
 	
 	      if (requestedPage >= 0 && requestedPage <= Math.floor(total / 10)) {
 	        this.props.dispatch((0, _formsFormActions.fetchSubmissions)(form.id, requestedPage)).then(function () {

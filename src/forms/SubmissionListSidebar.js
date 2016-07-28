@@ -93,9 +93,6 @@ export default class Sidebar extends Component {
 
   paginate(total, requestedPage) {
     const { form } = this.props;
-    console.log(requestedPage)
-    console.log(Math.floor(total / 10))
-    console.log(total)
 
     if (requestedPage >= 0 && requestedPage <= Math.floor(total / 10)) {
       this.props.dispatch(fetchSubmissions(form.id, requestedPage)).then(() => {

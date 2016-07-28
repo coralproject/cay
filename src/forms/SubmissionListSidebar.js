@@ -106,6 +106,8 @@ export default class Sidebar extends Component {
     let count; // probably a better way to to this.
     if (filterBy === 'default') {
       count = formCounts['totalSearch'];
+    } else if (filterBy === '-flagged') {
+      count = formCounts['totalSearch'] - formCounts[filterBy.replace('-', '')];
     } else {
       count = formCounts[filterBy.replace('-', '')];
     }

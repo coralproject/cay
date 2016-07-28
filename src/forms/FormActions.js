@@ -315,6 +315,7 @@ export const saveForm = (form, widgets) => {
   return (dispatch, getState) => {
 
     const {app} = getState();
+    data.settings.saveDestination =  `${app.pillarHost}/api/form_submission/`;
 
     dispatch({type: FORM_CREATE_INIT, data});
     return fetch(`${app.elkhornHost}/create`, {

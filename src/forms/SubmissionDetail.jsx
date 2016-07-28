@@ -100,17 +100,30 @@ export default class SubmissionDetail extends Component {
 
     if (reply.answer.options) {
 
-      const selectedIndexes = reply.answer.options.map(o => o.index);
+      const optionsCopy = reply.props.options.slice();
+
+      // Add "Other" as the last option if allowed
+      if (reply.props.otherAllowed) {
+        optionsCopy.push({ isOther: true, title: 'Other' });
+      }
+
+      var answersByIndex = [];
+      const selectedIndexes = reply.answer.options.map(o => {
+        answersByIndex[o.index] = o.title;
+        return o.index;
+      });
 
       return (
         <ul>
-          {reply.props.options.map((option, key) => {
+          {optionsCopy.map((option, key) => {
             const selected = selectedIndexes.indexOf(key) !== -1;
+            const title = answersByIndex[key] ? answersByIndex[key] : option.title;
 
             return <li
               style={[styles.multiple, selected && styles.multiple.selected]}
-              key={key}>{key + 1}. {option.title}</li>;
+              key={key}>{key + 1}. { title }</li>;
           })}
+
         </ul>
       );
     }

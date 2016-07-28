@@ -30,7 +30,7 @@ export default class Sidebar extends Component {
 
     const keyPress = (e) => {
 
-      const {activeSubmission, submissions, onSelect, onFlag} = this.props;
+      const {activeSubmission, submissions, onSelect, onFlag, onBookmark} = this.props;
 
       const subIds = submissions.map(s => s.id);
       const activeIndex = subIds.indexOf(activeSubmission);
@@ -42,6 +42,8 @@ export default class Sidebar extends Component {
         onSelect(subIds[activeIndex - 1]);
       } else if (e.code === 'KeyF') {
         onFlag(!hasFlag(submissions[subIds.indexOf(activeSubmission)], 'flagged'));
+      } else if (e.code === 'KeyB') {
+        onBookmark(!hasFlag(submissions[subIds.indexOf(activeSubmission)], 'bookmarked'));
       }
     };
 
@@ -89,7 +91,7 @@ export default class Sidebar extends Component {
     });
   }
 
-  paginate(requestedPage, total) {
+  paginate(total, requestedPage) {
     const { form } = this.props;
 
     if (requestedPage >= 0 && requestedPage <= Math.floor(total / 10)) {
@@ -106,6 +108,8 @@ export default class Sidebar extends Component {
     let count; // probably a better way to to this.
     if (filterBy === 'default') {
       count = formCounts['totalSearch'];
+    } else if (filterBy === '-flagged') {
+      count = formCounts['totalSearch'] - formCounts[filterBy.replace('-', '')];
     } else {
       count = formCounts[filterBy.replace('-', '')];
     }

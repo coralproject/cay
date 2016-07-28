@@ -23,11 +23,13 @@ export default class FormCreate extends Component {
   }
 
   updateFormStatus(status) {
-    this.props.dispatch(updateForm({ status, settings: { isActive: status === 'open' } }));
+    const { forms } = this.props;
+    this.props.dispatch(updateForm({ status, settings: { ...forms.form.settings, isActive: status === 'open' } }));
   }
 
   updateInactive(value) {
-    this.props.dispatch(updateForm({ settings: { inactiveMessage: value } }));
+    const { forms } = this.props;
+    this.props.dispatch(updateForm({ settings: { ...forms.form.settings, inactiveMessage: value } }));
   }
 
   render() {

@@ -121,7 +121,7 @@ const forms = (state = initial, action) => {
 
   case types.FORM_CREATE_EMPTY:
     const form = Object.assign({}, emptyForm, { steps: [{ id: uuid.v4(), name: 'first_step', createdAt: Date.now() }] });
-    form.settings.saveDestination = action.saveDestination;
+    //form.settings.saveDestination = action.saveDestination;
     return Object.assign({}, state, {activeForm: null, form: form, widgets: [], savingForm: false, savedForm: null });
 
   case types.FORM_DUPLICATE_WIDGET:

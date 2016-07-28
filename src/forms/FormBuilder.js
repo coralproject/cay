@@ -122,8 +122,7 @@ export default class FormBuilder extends Component {
     let { form } = this.props.forms;
     var newSettings = Object.assign({}, form.settings, { inactiveMessage: e.target.value });
     this.props.dispatch(updateForm({
-      settings: newSettings,
-      id: uuid.v4()
+      settings: newSettings
     }));
   }
 

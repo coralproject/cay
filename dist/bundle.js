@@ -37,7 +37,7 @@
 /******/ 	__webpack_require__.p = "/dist/";
 /******/
 /******/ 	// __webpack_hash__
-/******/ 	__webpack_require__.h = "7bfe66380017b7321e47";
+/******/ 	__webpack_require__.h = "8ef8f57cbe6ee2222868";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
@@ -5452,7 +5452,7 @@
 	
 	    var app = _getState.app;
 	
-	    data.saveDestination = app.pillarHost + '/api/form_submission/';
+	    data.settings.saveDestination = app.pillarHost + '/api/form_submission/';
 	
 	    dispatch({ type: FORM_CREATE_INIT, data: data });
 	    return fetch(app.elkhornHost + '/create', {

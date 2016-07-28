@@ -37,7 +37,7 @@
 /******/ 	__webpack_require__.p = "/dist/";
 /******/
 /******/ 	// __webpack_hash__
-/******/ 	__webpack_require__.h = "4b1490609173c709635f";
+/******/ 	__webpack_require__.h = "c86266a05cb6ad080d58";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
@@ -68490,10 +68490,6 @@
 	      var _this3 = this;
 	
 	      var form = this.props.form;
-	
-	      console.log(requestedPage);
-	      console.log(Math.floor(total / 10));
-	      console.log(total);
 	
 	      if (requestedPage >= 0 && requestedPage <= Math.floor(total / 10)) {
 	        this.props.dispatch((0, _formsFormActions.fetchSubmissions)(form.id, requestedPage)).then(function () {

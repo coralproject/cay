@@ -1,3 +1,8 @@
+
+/**
+ * Module dependencies
+ */
+
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
@@ -23,15 +28,20 @@ import SubmissionDetail from 'forms/SubmissionDetail';
 import FormChrome from 'app/layout/FormChrome';
 import Page from 'app/layout/Page';
 
+/**
+ * Export submission list component
+ */
+
 @connect(({ forms }) => ({ forms }))
 @Radium
 export default class SubmissionList extends Component {
   constructor(props) {
+    const { dispatch, params } = props;
     super(props);
-    props.dispatch(cleanSubmissionFilters());
-    props.dispatch(fetchForm(props.params.id));
-    props.dispatch(fetchGallery(props.params.id));
-    props.dispatch(fetchSubmissions(props.params.id));
+    dispatch(cleanSubmissionFilters());
+    dispatch(fetchForm(params.id));
+    dispatch(fetchGallery(params.id));
+    dispatch(fetchSubmissions(params.id));
   }
 
   sendToGallery(galleryId, subId, key) {

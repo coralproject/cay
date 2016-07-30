@@ -1,11 +1,26 @@
 
+/**
+ * Module dependencies
+ */
+
 import React, { Component } from 'react';
 import Radium from 'radium';
-import settings from 'settings';
-import Menu from 'app/layout/sidebar/Menu';
+import { connect } from 'react-redux';
+
+import { bgColorBase } from 'settings';
+import Menu from 'app/layout/Sidebar/Menu';
+
+/**
+ * Module scope variables
+ */
 
 let initState = null;
 
+/**
+ * Sidebar component
+ */
+
+@connect(({ app }) => ({ features: app.features }))
 @Radium
 export default class Sidebar extends Component {
   constructor(props) {
@@ -45,18 +60,22 @@ export default class Sidebar extends Component {
 
   render() {
     const { open } = this.state;
+    const { children, features } = this.props;
+
     return (
       <div style={[styles.wrapper, this.props.styles]}>
         <div style={[styles.sidebar(open), this.props.styles.sidebar]}>
-          <Menu onToggleSidebar={this.toggleSidebar.bind(this)} open={open} />
+          <Menu features={features} open={open} onToggleSidebar={this.toggleSidebar.bind(this)} />
         </div>
-        <div style={styles.main}>
-          {this.props.children}
-        </div>
+        <div style={styles.main}>{children}</div>
       </div>
     );
   }
 }
+
+/**
+ * Module styles
+ */
 
 const styles = {
   wrapper: {
@@ -68,7 +87,7 @@ const styles = {
     flex: 1,
     position: 'relative',
     minHeight: '100vh',
-    backgroundColor: settings.bgColorBase
+    backgroundColor: bgColorBase
   },
   sidebar(open) {
     return {

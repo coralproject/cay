@@ -1,4 +1,9 @@
-import React from 'react';
+
+/**
+ * Module dependencies
+ */
+
+import React, { Component } from 'react';
 import Radium from 'radium';
 import { connect } from 'react-redux';
 
@@ -17,37 +22,20 @@ import {fetchCommentsByUser} from 'comments/CommentsActions';
 import Button from 'components/Button';
 import Page from 'app/layout/Page';
 import ContentHeader from 'components/ContentHeader';
-// import SearchFilters from 'search/SearchFilters';
 import UserFilters from 'filters/UserFilters';
 import FaFloopyO from 'react-icons/lib/fa/floppy-o';
 import UserList from 'users/UserList';
 import TextField from 'components/forms/TextField';
 import Clauses from 'search/Clauses';
 
-const mapStateToProps = state => {
-  return {
-    searches: state.searches,
-    filters: state.filters,
-    comments: state.comments,
-    users: state.users,
-    auth: state.auth
-  };
-};
-
-@connect(mapStateToProps)
+@connect(({ searches, filters, comments, users }) =>
+({ searches, filters, comments, users }))
 @Radium
-export default class SearchEditor extends React.Component {
+export default class SearchEditor extends Component {
 
   componentWillMount() {
     const {dispatch, params} = this.props;
 
-/*
-    // redirect user to /login if they're not logged in
-    if (this.props.app.requireLogin && !this.props.auth.authorized) {
-      let {router} = this.context;
-      return router.push('/login');
-    }
-*/
     dispatch(clearUserList());
     dispatch(userSelected(null));
     dispatch(clearEditableFilters()); // clear filters out from previous viewing of Saved Search
@@ -59,8 +47,6 @@ export default class SearchEditor extends React.Component {
   confirmSave() {
     if (this.props.searches.editableSearch) {
       this.props.dispatch(updateSearch(this.props.searches.editableSearch));
-    } else {
-      // show an error or something
     }
   }
 
@@ -87,12 +73,12 @@ export default class SearchEditor extends React.Component {
   }
 
   render() {
+    const { searches } = this.props;
     return (
       <Page style={styles.pageBase}>
         {
-          this.props.searches.editableSearchLoading || !this.props.searches.editableSearch ?
+          searches.editableSearchLoading || !searches.editableSearch ?
           <p>Loading Saved Search...</p> :
-
           <div style={styles.base}>
             <div style={styles.topSection}>
               <ContentHeader title={ window.L.t('Search Editor') } />
@@ -141,6 +127,10 @@ export default class SearchEditor extends React.Component {
     );
   }
 }
+
+/**
+ * Module styles
+ */
 
 const styles = {
   pageBase: {

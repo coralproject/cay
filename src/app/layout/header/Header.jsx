@@ -1,10 +1,13 @@
+
+/**
+ * Module dpedendencies
+ */
+
 import React from 'react';
 import Radium from 'radium';
-import settings from 'settings';
+import { bgColorTopNav } from 'settings';
 
-export default Radium(() => (
-  <nav style={styles.nav}></nav>
-));
+export default Radium(() => <nav style={styles.nav}></nav>);
 
 const styles = {
   nav: {
@@ -12,6 +15,6 @@ const styles = {
     border: 'none',
     minHeight: 50,
     borderRadius: 0,
-    backgroundColor: settings.bgColorTopNav
+    backgroundColor: bgColorTopNav
   }
 };

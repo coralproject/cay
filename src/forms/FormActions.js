@@ -1,6 +1,6 @@
 'use strict';
 
-import _ from 'lodash';
+import cloneDeep from 'lodash/lang/cloneDeep';
 
 export const SUBMISSIONS_REQUEST_STARTED = 'SUBMISSIONS_REQUEST_STARTED';
 export const SUBMISSIONS_REQUEST_SUCCESS = 'SUBMISSIONS_REQUEST_SUCCESS';
@@ -504,7 +504,7 @@ export const beginEdit = (galleryId, submissionId, answerId) => {
     const reply = forms[answerKey];
     const editableAnswer = reply.answer.edited ? reply.answer.edited : reply.answer.answer.text;
     // deep clone on the array
-    const editablePii = reply.identity_answers ? reply.identity_answers.map(a => _.cloneDeep(a)) : [];
+    const editablePii = reply.identity_answers ? reply.identity_answers.map(a => cloneDeep(a)) : [];
 
     dispatch({
       type: ANSWER_EDIT_BEGIN,

@@ -1,4 +1,16 @@
-import _ from 'lodash';
+import reduce from 'lodash/collection/reduce';
+import find from 'lodash/collection/find';
+import pick from 'lodash/object/pick';
+import has from 'lodash/object/has';
+import template from 'lodash/string/template';
+import isDate from 'lodash/lang/isDate';
+import cloneDeep from 'lodash/lang/cloneDeep';
+import compact from 'lodash/array/compact';
+import map from 'lodash/collection/map';
+import debounce from 'lodash/function/debounce';
+import delay from 'lodash/function/delay';
+import indexOf from 'lodash/array/indexOf';
+
 import {clamp} from 'components/utils/math';
 import {xenia} from 'app/AppActions';
 import { populateDistributionStore } from 'filters/FiltersActions';
@@ -130,12 +142,12 @@ export const fetchSavedSearchForEdit = id => {
 
         const {breakdown, specificBreakdown, values} = search.filters;
 
-        const updatedFilters = _.reduce(filters.editFilterList, (accum, key) => {
+        const updatedFilters = reduce(filters.editFilterList, (accum, key) => {
           const oldFilter = filters[key];
-          const savedFilter = _.find(values, {name: oldFilter.name});
+          const savedFilter = find(values, {name: oldFilter.name});
           if (savedFilter) {
             // this could probably be more succinct with destructuring, but I was in a hurry
-            accum[key] = _.assign({}, oldFilter, _.pick(savedFilter, ['userMin', 'userMax', 'min', 'max']));
+            accum[key] = Object.assign({}, oldFilter, pick(savedFilter, ['userMin', 'userMax', 'min', 'max']));
           }
           return accum;
         }, {});
@@ -189,7 +201,7 @@ export const requestQuerysetFailure = (err) => {
 };
 
 export const receiveQueryset = (data, replace) => {
-  const userCount = _.has(data, 'results.1.Docs.0.count') ? data.results[1].Docs[0].count : 0;
+  const userCount = has(data, 'results.1.Docs.0.count') ? data.results[1].Docs[0].count : 0;
 
   return {
     type: QUERYSET_RECEIVED,
@@ -260,9 +272,9 @@ export const makeQueryFromState = (type, page = 0, replace = false, editMode = f
         let dbField;
         // get the name of the mongo db field we want to $match on.
         if (breakdown !== 'all' && specificBreakdown !== '') {
-          dbField = _.template(filter.template)({dimension: `${breakdown}.${specificBreakdown}`});
+          dbField = template(filter.template)({dimension: `${breakdown}.${specificBreakdown}`});
         } else { // all
-          dbField = _.template(filter.template)({dimension: 'all'});
+          dbField = template(filter.template)({dimension: 'all'});
         }
 
         // Only create match statements for non-defaults
@@ -276,7 +288,7 @@ export const makeQueryFromState = (type, page = 0, replace = false, editMode = f
         // this will break if a string literal is ever a filter value since NaN !== NaN
         if (+filter.min !== +clampedUserMin) {
           let searchMin;
-          if (_.isDate(clampedUserMin)) {
+          if (isDate(clampedUserMin)) {
             searchMin = `#date:${clampedUserMin.toISOString()}`;
           } else if (filter.type === 'intDateProximity') {
             searchMin = `#time:${-clampedUserMin*24}h`;
@@ -289,7 +301,7 @@ export const makeQueryFromState = (type, page = 0, replace = false, editMode = f
 
         if (+filter.max !== +clampedUserMax) {
           let searchMax;
-          if (_.isDate(clampedUserMax)) {
+          if (isDate(clampedUserMax)) {
             searchMax = `#date:${clampedUserMax.toISOString()}`;
           } else {
             searchMax = clampedUserMax;
@@ -321,7 +333,7 @@ export const makeQueryFromState = (type, page = 0, replace = false, editMode = f
       const breakdown = editMode ? fs.breakdownEdit : fs.breakdown;
       const specificBreakdown = editMode ? fs.specificBreakdownEdit : fs.specificBreakdown;
       const { sortBy } = fs;
-      const field = _.template(sortBy[0])
+      const field = template(sortBy[0])
         ({dimension: `${breakdown}${specificBreakdown ? `.${specificBreakdown}` : ''}`});
       x.sort([field, sortBy[1]]);
     } else {
@@ -357,7 +369,7 @@ export const saveQueryFromState = (queryName, desc, tag) => {
 
 // prepare the active query to be saved to xenia
 const createQueryForSave = (query, name, desc) => {
-  const q = _.cloneDeep(query);
+  const q = cloneDeep(query);
 
 
   // set params, descriptions, defaults
@@ -411,7 +423,7 @@ const createQueryForSave = (query, name, desc) => {
 // create the body of request to save a Search to Pillar
 const prepSearchForPillar = (filters, query, name, desc, tag, breakdown, specificBreakdown) => {
 
-  let values = _.compact(_.map(filters, f => {
+  let values = compact(map(filters, f => {
     // this will return the ENTIRE filter if only the min OR max was changed.
     // is this the behavior we want?
     if (f.min !== f.userMin || f.max !== f.userMax) {
@@ -486,7 +498,7 @@ const saveSearchToPillar = (dispatch, state, name, desc, tag) => {
 };
 
 /* xenia_package */
-const doMakeQueryFromStateAsync = _.debounce((query, dispatch, app, replace) => {
+const doMakeQueryFromStateAsync = debounce((query, dispatch, app, replace) => {
   dispatch(requestQueryset());
 
   dispatch(createQuery(query._data));
@@ -531,7 +543,7 @@ export const updateSearch = staleSearch => {
         // update search in xenia
         xenia(query).saveQuery().then(() => {
 
-          _.delay(() => dispatch({type: PILLAR_SEARCH_UPDATE_STALE}), 3000);
+          delay(() => dispatch({type: PILLAR_SEARCH_UPDATE_STALE}), 3000);
 
           dispatch({type: QUERYSET_SAVE_SUCCESS, name: query.name});
         });
@@ -555,7 +567,7 @@ export const deleteSearch = search => {
       console.info('search deleted from pillar', resp);
       const newSearches = searches.searches.concat();
       // splice out deleted search
-      newSearches.splice(_.indexOf(_.map(newSearches, 'id'), search.id), 1);
+      newSearches.splice(indexOf(map(newSearches, 'id'), search.id), 1);
 
       dispatch({type: PILLAR_SEARCH_DELETED, search, newSearches});
     })

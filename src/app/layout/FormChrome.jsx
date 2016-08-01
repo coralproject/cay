@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import _ from 'lodash';
+import has from 'lodash/object/has';
 import {connect} from 'react-redux';
 import {updateInactiveMessage} from 'forms/FormActions';
 import Badge from 'components/Badge';
@@ -141,7 +141,7 @@ export default class FormChrome extends React.Component {
 
   render() {
     const { form, create, activeTab } = this.props;
-    let name = _.has(this.props, 'form.header.title') ? form.header.title : '';
+    let name = has(this.props, 'form.header.title') ? form.header.title : '';
 
     if (name.length > 15) {
       name = name.split(' ').slice(0, 4).join(' ') + '…'; // use ellipsis character

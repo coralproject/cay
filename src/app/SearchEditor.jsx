@@ -18,6 +18,7 @@ import {
 import {userSelected} from 'users/UsersActions';
 import {clearEditableFilters, filterChanged, getFilterRanges} from 'filters/FiltersActions';
 import {fetchCommentsByUser} from 'comments/CommentsActions';
+import L from 'i18n';
 
 import Button from 'components/Button';
 import Page from 'app/layout/Page';
@@ -81,7 +82,7 @@ export default class SearchEditor extends Component {
           <p>Loading Saved Search...</p> :
           <div style={styles.base}>
             <div style={styles.topSection}>
-              <ContentHeader title={ window.L.t('Search Editor') } />
+              <ContentHeader title={ L.t('Search Editor') } />
               <div style={styles.metaControl}>
                 <TextField
                   style={styles.editMeta}

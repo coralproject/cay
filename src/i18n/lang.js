@@ -1,6 +1,7 @@
 import Polyglot from 'node-polyglot';
 import moment from 'moment';
 import React from 'react';
+import L from 'i18n';
 
 /*
   This is currently using two anti-patterns on purpose,
@@ -81,16 +82,16 @@ export var Lang = ComposedComponent => class extends React.Component {
     // native React's isMounted is discouraged as anti-pattern,
     // the reasoning behind this implementation is in: https://github.com/coralproject/cay/issues/9
     this._langIsMounted = false;
-    this.state = { currentLocale: window.L.locale || 'en' };
+    this.state = { currentLocale: L.locale || 'en' };
   }
 
   componentWillUnmount() {
-    window.L.unqueue(this);
+    L.unqueue(this);
     this._langIsMounted = false;
   }
 
   componentDidMount() {
-    window.L.enqueue(this);
+    L.enqueue(this);
     this._langIsMounted = true;
   }
 

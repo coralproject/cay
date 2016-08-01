@@ -1,18 +1,14 @@
 import React, { Component, PropTypes } from 'react';
-import ReactDOM from 'react-dom';
 import {connect} from 'react-redux';
 
 import { DropTarget } from 'react-dnd';
 
+import { grey } from 'settings';
+
 import DropPlaceHolder from 'forms/DropPlaceHolder';
 
-import { appendWidget, moveWidget, replaceWidgets, deleteWidget, duplicateWidget, updateForm, saveForm } from 'forms/FormActions';
-import FormComponent, {styles as askComponentStyles} from 'forms/FormComponent';
-
-import FaUserPlus from 'react-icons/lib/fa/user-plus';
-import FaFloppyO from 'react-icons/lib/fa/floppy-o';
-import FaEye from 'react-icons/lib/fa/eye';
-import Spinner from 'components/Spinner';
+import { appendWidget, moveWidget, replaceWidgets, deleteWidget, duplicateWidget, updateForm } from 'forms/FormActions';
+import FormComponent from 'forms/FormComponent';
 
 @connect(({ forms, app }) => ({ forms, app }))
 export default class FormDiagram extends Component {
@@ -49,6 +45,7 @@ export default class FormDiagram extends Component {
 
   onFormHeadingChange(e) {
     let form = this.getForm();
+    this.props.markAsUnsaved();
     this.props.dispatch(updateForm({
       header: {
         ...form.header,
@@ -59,6 +56,7 @@ export default class FormDiagram extends Component {
 
   onFormDescriptionChange(e) {
     let form = this.getForm();
+    this.props.markAsUnsaved();
     this.props.dispatch(updateForm({
       header: {
         ...form.header,
@@ -69,6 +67,7 @@ export default class FormDiagram extends Component {
 
   onThankYouDescriptionChange(e) {
     let form = this.getForm();
+    this.props.markAsUnsaved();
     this.props.dispatch(updateForm({
       finishedScreen: {
         title: form.finishedScreen.title,
@@ -90,6 +89,15 @@ export default class FormDiagram extends Component {
     this._timeout = false;
   }
 
+  onConditionsChange(e) {
+    this.props.markAsUnsaved();
+    this.props.dispatch(updateForm({
+      footer: {
+        conditions: e.target.value
+      }
+    }));
+  }
+
   render() {
     const { onFieldSelect, forms } = this.props;
     const form = this.props.activeForm ? forms[this.props.activeForm] : forms.form;
@@ -102,7 +110,7 @@ export default class FormDiagram extends Component {
           :
             null
         }
-        <textarea onChange={ this.onFormDescriptionChange.bind(this) } style={ styles.description } placeholder={ "Add instructions or a description" } defaultValue={ form.header.description } />
+        <textarea onChange={ this.onFormDescriptionChange.bind(this) } style={ styles.description } placeholder={ "Write instructions and a description for the form below" } defaultValue={ form.header.description } />
         <div style={styles.formDiagram}>
           { this.state.tempWidgets.map((field, i) => (
             <DropPlaceHolder beingDragged={ i == this.state.itemBeingDragged } key={i} formDiagram={ this } position={ i } dropped={ field.dropped }>
@@ -122,6 +130,7 @@ export default class FormDiagram extends Component {
                    />
             </DropPlaceHolder>
           ))}
+
           {
             !this.state.isHovering || this.state.tempWidgets.length === 0
             ? <DropPlaceHolder formDiagram={ this } position={ this.state.tempWidgets.length } key={ this.state.tempWidgets.length } />
@@ -130,11 +139,17 @@ export default class FormDiagram extends Component {
 
         </div>
         <div style={ styles.extraFields }>
-          <h3 style={ styles.thankYouMessageTitle }>Thank you message</h3>
+          <h3 style={ styles.extraFieldTitle }>Thank you message (optional)</h3>
           <textarea
             defaultValue={ form.finishedScreen.description }
-            style={ styles.customThankYouMessage }
+            style={ styles.extraFieldTextArea }
             onChange={ this.onThankYouDescriptionChange.bind(this) }></textarea>
+
+          <h3 style={ styles.extraFieldTitle }>Include Privacy Policy</h3>
+          <textarea
+            defaultValue={ form.footer.conditions }
+            style={ styles.extraFieldTextArea }
+            onChange={ this.onConditionsChange.bind(this) }></textarea>
         </div>
       </div>
     );
@@ -142,26 +157,32 @@ export default class FormDiagram extends Component {
 
   onDelete(position, e) {
     e.stopPropagation();
+    this.props.markAsUnsaved();
     this.props.dispatch(deleteWidget(position));
   }
 
   onDuplicate(position, e) {
     e.stopPropagation();
+    this.props.markAsUnsaved();
     this.props.dispatch(duplicateWidget(position));
   }
 
   onMove(direction, position, e) {
     e.stopPropagation();
+    this.props.markAsUnsaved();
     this.props.dispatch(moveWidget(position, position + (direction === 'up' ? -1 : 1)));
   }
 
   moveWidget(origin, target) {
+    this.props.markAsUnsaved();
     this.props.dispatch(moveWidget(origin, target));
   }
 
   appendWidget(field, targetPosition) {
+    this.props.markAsUnsaved();
     this.props.dispatch(appendWidget({
       title: field.title,
+      description: field.description,
       type: 'field',
       component: field.type,
       identity: false,
@@ -174,19 +195,28 @@ export default class FormDiagram extends Component {
   persist(fields) {
     this.props.dispatch(replaceWidgets(fields));
   }
-
 }
 
-
 const styles = {
+  blankContainer: {
+    background: '#fff',
+    border: '1px dashed #ccc',
+    width: '100%'
+  },
+  blankTitle: {
+    textAlign: 'center',
+    padding: 20,
+    fontSize: '1em'
+  },
   formDiagram: {
     height: 'auto',
-    minHeight: '300px',
+    minHeight: 130,
+    minWidth: 350,
     position: 'relative'
   },
   formDiagramContainer: {
     flex: 1,
-    padding: 20,
+    paddingLeft: 10,
     color: '#5d5d5d'
   },
   typeList: {
@@ -205,28 +235,32 @@ const styles = {
     paddingLeft: 5
   },
   headLine: {
-    fontSize: '20pt',
+    fontSize: '1.25em',
     width: '100%',
     display: 'block',
     border: 'none',
-    background: 'none'
+    background: 'none',
+    fontWeight: 'normal',
+    color: 'black'
   },
   description: {
-    fontSize: '14pt',
+    fontSize: '1em',
     marginBottom: '20px',
     width: '100%',
     display: 'block',
     border: 'none',
-    background: 'none'
+    background: 'none',
+    resize: 'none'
   },
-  customThankYouMessage: {
+  extraFieldTextArea: {
     display: 'block',
     width: '100%',
     padding: '10px',
-    fontSize: '12pt'
+    fontSize: '12pt',
+    border: '1px solid #ddd'
   },
-  thankYouMessageTitle: {
-    fontSize: '14pt',
+  extraFieldTitle: {
+    fontSize: '1em',
     fontWeight: 'bold',
     margin: '30px 0 20px 0'
   }

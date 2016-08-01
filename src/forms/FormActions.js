@@ -1,5 +1,7 @@
 'use strict';
 
+import _ from 'lodash';
+
 export const SUBMISSIONS_REQUEST_STARTED = 'SUBMISSIONS_REQUEST_STARTED';
 export const SUBMISSIONS_REQUEST_SUCCESS = 'SUBMISSIONS_REQUEST_SUCCESS';
 export const SUBMISSIONS_REQUEST_FAILED = 'SUBMISSIONS_REQUEST_FAILED';
@@ -41,6 +43,8 @@ export const FORM_STATUS_UPDATE_ERROR = 'FORM_STATUS_UPDATE_ERROR';
 export const FORM_ANSWER_SENT_TO_GALLERY = 'FORM_ANSWER_SENT_TO_GALLERY';
 export const FORM_ANSWER_REMOVED_FROM_GALLERY = 'FORM_ANSWER_REMOVED_FROM_GALLERY';
 
+export const FORM_ANSWER_REINSERT = 'FORM_ANSWER_REINSERT';
+
 export const FORM_DELETED = 'FORM_DELETED';
 
 export const FORM_CREATE_EMPTY= 'FORM_CREATE_EMPTY';
@@ -63,6 +67,25 @@ export const UPDATE_FORM_INACTIVE_MESSAGE_SUCCESS = 'UPDATE_FORM_INACTIVE_MESSAG
 export const UPDATE_FORM_INACTIVE_MESSAGE_FAILURE = 'UPDATE_FORM_INACTIVE_MESSAGE_FAILURE';
 
 export const FORM_DRAG_ENDED = 'FORM_DRAG_ENDED';
+
+export const PUBLISH_GALLERY_INIT = 'PUBLISH_GALLERY_INIT';
+export const PUBLISH_GALLERY_SUCCESS = 'PUBLISH_GALLERY_SUCCESS';
+export const PUBLISH_GALLERY_FAILURE = 'PUBLISH_GALLERY_FAILURE';
+
+export const UPDATE_GALLERY_TITLE = 'UPDATE_GALLERY_TITLE';
+export const UPDATE_GALLERY_DESCRIPTION = 'UPDATE_GALLERY_DESCRIPTION';
+export const UPDATE_READER_INFO_PLACEMENT = 'UPDATE_READER_INFO_PLACEMENT';
+export const UPDATE_GALLERY_ORIENTATION = 'UPDATE_GALLERY_ORIENTATION';
+
+export const UPDATE_FILTER_BY = 'UPDATE_FILTER_BY';
+export const UPDATE_ORDER = 'UPDATE_ORDER';
+export const UPDATE_SEARCH = 'UPDATE_SEARCH';
+export const CLEAN_SUBMISSION_FILTERS = 'CLEAN_SUBMISSION_FILTERS';
+
+export const GALLERY_ENABLE_IDENTIFIABLE = 'GALLERY_ENABLE_IDENTIFIABLE';
+
+export const UPDATE_EDITABLE_PII = 'UPDATE_EDITABLE_PII';
+export const RESET_EDITABLE_TEXT = 'RESET_EDITABLE_TEXT';
 
 const getInit = (body, method) => {
 
@@ -193,11 +216,13 @@ export const leavingEdit = formId => {
   };
 };
 
-export const createEmpty = () => {
-  return {
-    type: FORM_CREATE_EMPTY
-  };
-};
+export const createEmpty = () => (dispatch, getState) =>
+dispatch(createEmptyAction(`${getState().app.pillarHost}/api/form_submission/`));
+
+const createEmptyAction = saveDestination => ({
+  type: FORM_CREATE_EMPTY,
+  saveDestination
+});
 
 export const replaceWidgets = fields => {
   return {
@@ -251,9 +276,10 @@ export const updateForm = (data) => {
   };
 };
 
-export const submissionsFetched = submissions => ({
+export const submissionsFetched = (counts, submissions) => ({
   type: SUBMISSIONS_REQUEST_SUCCESS,
-  submissions
+  submissions,
+  counts
 });
 
 export const submissionsFetchError = error => {
@@ -291,6 +317,7 @@ export const saveForm = (form, widgets) => {
   return (dispatch, getState) => {
 
     const {app} = getState();
+    data.settings.saveDestination =  `${app.pillarHost}/api/form_submission/`;
 
     dispatch({type: FORM_CREATE_INIT, data});
     return fetch(`${app.elkhornHost}/create`, {
@@ -309,6 +336,7 @@ export const saveForm = (form, widgets) => {
     .catch(error => {
       dispatch(formCreationFailure(error));
     });
+
   };
 
 };
@@ -354,11 +382,13 @@ export const updateInactiveMessage = (message, form) => {
 
 export const fetchSubmissions = (formId, page = 0) => {
   return (dispatch, getState) => {
-    const {app} = getState();
+    const { app, forms } = getState();
+    const { submissionOrder, submissionFilterBy, submissionSearch } = forms;
+    const filterBy = submissionFilterBy === 'default' ? '' : submissionFilterBy;
     const skip = page * 10;
-    return fetch(`${app.pillarHost}/api/form_submissions/${formId}?skip=${skip}&limit=10`)
+    return fetch(`${app.pillarHost}/api/form_submissions/${formId}?skip=${skip}&limit=10&orderby=${submissionOrder}&filterby=${filterBy}&search=${submissionSearch}`)
       .then(res => res.json())
-      .then(data => dispatch(submissionsFetched(data.submissions)))
+      .then(data => dispatch(submissionsFetched(data.counts, data.submissions || [])))
       .catch(error => dispatch(submissionsFetchError(error)));
   };
 };
@@ -462,14 +492,31 @@ export const updateFormStatus = (formId, status) => {
 
     fetch(`${app.pillarHost}/api/form/${formId}/status/${status}`, options)
       .then(res => res.json())
-      .then(form => dispatch({type: FORM_STATUS_UPDATED, form}))
+      .then(form => dispatch({type: FORM_STATUS_UPDATED, form, status}))
       .catch(error => dispatch({type: FORM_STATUS_UPDATE_ERROR, error}));
   };
 };
 
 // user opens the Edit Answer modal
 export const beginEdit = (galleryId, submissionId, answerId) => {
-  return {type: ANSWER_EDIT_BEGIN, answerId, submissionId};
+  return (dispatch, getState) => {
+
+    const {forms} = getState();
+    const answerKey = `${submissionId}|${answerId}`;
+    const reply = forms[answerKey];
+    const editableAnswer = reply.answer.edited ? reply.answer.edited : reply.answer.answer.text;
+    // deep clone on the array
+    const editablePii = reply.identity_answers ? reply.identity_answers.map(a => _.cloneDeep(a)) : [];
+
+    dispatch({
+      type: ANSWER_EDIT_BEGIN,
+      answerId,
+      submissionId,
+      editableAnswer,
+      editablePii,
+      answerKey
+    });
+  };
 };
 
 // user starts typing and changing the Answer
@@ -481,14 +528,41 @@ export const cancelEdit = () => {
   return {type: ANSWER_EDIT_CANCEL};
 };
 
+// this just resets the editable text to the original
+// it does NOT remove the edit on the data object.
+export const resetEditableTextToOriginal = (answer) => {
+  return {type: RESET_EDITABLE_TEXT, text: answer.answer.answer.text};
+};
+
+export const updateEditablePii = (reply, idAnswer, value) => {
+  return (dispatch, getState) => {
+
+    const {forms: {editablePii: editablePii}} = getState();
+
+    console.log('updateEditablePii', reply, idAnswer, value, editablePii);
+
+    // set the new value to the edited field in the editablePII array
+    const newEditablePii = editablePii.map(entry => {
+      if (entry.widget_id === idAnswer.widget_id) {
+        return {...entry, edited: value};
+      } else {
+        return {...entry};
+      }
+    });
+
+    dispatch({type: UPDATE_EDITABLE_PII, editablePii: newEditablePii});
+  };
+};
+
 // post updates to the server
-export const editAnswer = (edited, answer, formId) => {
+// answer_id is the same as widget_id if updating PII
+export const editAnswer = (edited, submission_id, answer_id, formId) => {
   return (dispatch, getState) => {
     dispatch({type: ANSWER_EDIT_REQUEST});
 
     const {app} = getState();
 
-    fetch(`${app.pillarHost}/api/form_submission/${answer.submission_id}/${answer.answer_id}`, {
+    fetch(`${app.pillarHost}/api/form_submission/${submission_id}/${answer_id}`, {
       method: 'PUT',
       mode: 'cors',
       body: JSON.stringify({edited})
@@ -503,6 +577,91 @@ export const editAnswer = (edited, answer, formId) => {
   };
 };
 
+export const updateGalleryTitle = title => {
+  return {type: UPDATE_GALLERY_TITLE, title};
+};
+
+export const updateGalleryDesc = description => {
+  return {type: UPDATE_GALLERY_DESCRIPTION, description};
+};
+
+export const updateReaderInfoPlacement = placement => {
+  return {type: UPDATE_READER_INFO_PLACEMENT, placement};
+};
+
+export const updateGalleryOrientation = orientation => {
+  return {type: UPDATE_GALLERY_ORIENTATION, orientation};
+};
+
+/*
+
+{id} is the id of a widget in a form
+{add} is a boolean indicating whether the id should be added or removed
+
+*/
+export const toggleIdentifiable = (id, add) => {
+  return (dispatch, getState) => {
+    const { forms } = getState();
+    const oldIds = forms[forms.activeGallery].config.identifiableIds || [];
+
+    let ids;
+
+    if (add) { // add the new id
+      ids = [id, ...oldIds];
+    } else { // splice out the old one
+      ids = [...oldIds];
+      ids.splice(ids.indexOf(id), 1);
+    }
+
+    dispatch({type: GALLERY_ENABLE_IDENTIFIABLE, ids});
+  };
+};
+
+export const publishGallery = () => {
+  return (dispatch, getState) => {
+    const {app, forms} = getState();
+    const { activeGallery } = forms;
+    const gallery = forms[activeGallery];
+    /*const {
+      identifiableIds
+    } = forms;*/
+    dispatch({type: PUBLISH_GALLERY_INIT});
+
+
+    return fetch(`${app.elkhornHost}/gallery/${gallery.id}/publish`, {
+      method: 'POST',
+      headers: new Headers({'Content-Type': 'application/json'}),
+      body: JSON.stringify(gallery)
+    })
+    .then(res => res.json())
+    .then(gallery => {
+      console.log(gallery);
+      dispatch({type: PUBLISH_GALLERY_SUCCESS, gallery});
+      return gallery;
+    })
+    .catch(error => dispatch({type: PUBLISH_GALLERY_FAILURE, error}));
+  };
+};
+
+export const updateFilterBy = filterBy => ({
+  type: UPDATE_FILTER_BY,
+  value: filterBy
+});
+
+export const updateOrder = order => ({
+  type: UPDATE_ORDER,
+  value: order
+});
+
+export const updateSearch = search => ({
+  type: UPDATE_SEARCH,
+  value: search
+});
+
+export const cleanSubmissionFilters = () => ({
+  type: CLEAN_SUBMISSION_FILTERS
+});
+
 export const hasFlag = (submission, flag) => -1 !== submission.flags.indexOf(flag);
 
 export const formDragEnded = () => {
@@ -510,3 +669,10 @@ export const formDragEnded = () => {
     type: FORM_DRAG_ENDED
   };
 };
+
+export const reinsertGalleryAnswer = (galleryId, key, position) => ({
+  type: FORM_ANSWER_REINSERT,
+  galleryId,
+  key,
+  position
+});

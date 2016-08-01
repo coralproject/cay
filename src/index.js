@@ -26,7 +26,7 @@ import SearchEditor from 'app/SearchEditor';
 import NoMatch from 'app/NoMatch';
 import About from 'app/About';
 import SubmissionList from 'app/SubmissionList';
-import SubmissionGallery from 'app/SubmissionGallery';
+import GalleryManager from 'app/GalleryManager';
 
 // Utils
 //import registerServiceWorker from 'serviceworker!./sw.js';
@@ -45,6 +45,7 @@ window.L.setLocale(window.L.locale);
 
 require('reset.css');
 require('global.css');
+require('ask-gallery-preview.css');
 
 require('react-select.css');
 require('react-datepicker.min.css');
@@ -111,7 +112,7 @@ class Root extends React.Component {
             <Route path="forms/create" component={FormCreate}/>
             <Route path="forms/:id" component={FormEdit}/>
             <Route path="forms/:id/submissions" component={SubmissionList}/>
-            <Route path="forms/:id/gallery" component={SubmissionGallery}/>
+            <Route path="forms/:id/gallery" component={GalleryManager}/>
           </div>
         ) : null}
         <Route path="*" component={NoMatch} />
@@ -151,6 +152,9 @@ Promise.all([loadConfig('/config.json'), loadConfig('/data_config.json')])
     const message = `missing required keys on config.json. Must define ${requiredKeys.join('|')}`;
     throw new Error(message);
   }
+
+  // redefine elkhornStaticHost if not set
+  app.elkhornStaticHost = app.elkhornStaticHost || app.elkhornHost + '/widgets';
 
   // load config into initialState so it's ALWAYS available
   store = configureStore({app});

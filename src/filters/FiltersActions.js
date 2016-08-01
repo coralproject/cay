@@ -28,6 +28,8 @@ export const SET_SPECIFIC_BREAKDOWN_EDIT = 'SET_SPECIFIC_BREAKDOWN_EDIT';
 export const RESET_FILTERS = 'RESET_FILTERS';
 export const RESET_FILTER = 'RESET_FILTER';
 
+export const CLEAR_EDITABLE_FILTERS = 'CLEAR_EDITABLE_FILTERS';
+
 export const SORT = 'SORT';
 
 // export const REQUEST_FILTER_RANGES = 'REQUEST_FILTER_RANGES';
@@ -373,4 +375,34 @@ const resetFilterAction = (name) => {
 
     dispatch({type: RESET_FILTER, filter: {[name]: resetFilter}});
   };
+};
+
+export const clearEditableFilters = () => {
+
+  return (dispatch, getState) => {
+    const {filters} = getState();
+    // loop over the editable filters and re-initialize them.
+    // ranges are being loaded from the server while this is happening.
+    const defaults = filters.editFilterList.reduce((accum, key) => {
+
+      let filter = filters[key];
+      const min = _.isUndefined(filter.minRange) ? null : filter.minRange;
+      const max = _.isUndefined(filter.maxRange) ? null : filter.maxRange;
+      const userMin = _.isNull(min) ? null : filter.minRange;
+      const userMax = _.isNull(max) ? null : filter.maxRange;
+
+      filter = {...filter, min, max, userMin, userMax};
+
+      if (filter.type === 'intDateProximity') {
+        filter = {...filter, min: 0, userMin: 0, max: 10000, userMax: 10000};
+      }
+
+      accum[key] = filter;
+
+      return accum;
+    }, {});
+
+    dispatch({type: CLEAR_EDITABLE_FILTERS, filters: defaults});
+  };
+
 };

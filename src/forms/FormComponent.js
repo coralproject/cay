@@ -212,9 +212,9 @@ export default class FormComponent extends Component {
                 <input
                   onChange={ this.onTitleChange.bind(this) }
                   style={ styles.fieldTitle }
-                  defaultValue={ this.props.field.title }
+                  defaultValue={ field.title }
                   type="text"
-                  placeholder={ `Type your question here (${ field.friendlyType })` } />
+                  placeholder={ `Ask readers a question (${ field.friendlyType })` } />
                 <input
                   onChange={ this.onDescriptionChange.bind(this) }
                   defaultValue={ field.description }
@@ -263,7 +263,7 @@ export const styles = {
   askComponent: function(isDragging) {
     return {
       opacity: isDragging ? 0.75 : 1,
-      marginBottom: 10,
+      margin: 5,
       shadowOffset: { height: 1, width: 0},
       boxShadow: '0 1px 3px #9B9B9B',
       lineHeight: '40px',
@@ -272,9 +272,9 @@ export const styles = {
       height: 40,
       backgroundColor: '#fff',
       borderRadius: 3,
-      width: '48%',
+      width: 150,
       textAlign: 'left',
-      margin: '1%',
+      boxSizing: 'border-box',
       display: 'flex',
       alignItems: 'center'
     };
@@ -292,7 +292,7 @@ export const styles = {
       height: isExpanded ? '60px' : 'auto',
       lineHeight: '20px',
       cursor: 'pointer'
-    }
+    };
   },
   editBody: {
     flex: 1,
@@ -381,7 +381,6 @@ export const styles = {
     textAlign: 'center',
     cursor: 'pointer',
     padding: '0 20px',
-    lineHeight: '40px',
     marginLeft: '10px'
   },
   label: {

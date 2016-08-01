@@ -49,7 +49,6 @@ const tags = (state = initialState, action) => {
 
   // there's probably a better way to do this
   case types.LOGIN_SUCCESS:
-    // console.log('\n\nTag Reducer LOGIN_SUCCESS\n\n');
     return {...state, authorized: true};
 
   case types.LOGGED_OUT:

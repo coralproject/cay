@@ -1,18 +1,18 @@
-import React from 'react';
+import React, { Component } from 'react';
 import Radium from 'radium';
 import moment from 'moment';
 import BBookmark from 'react-icons/lib/fa/bookmark';
 import PaperPlaneIcon from 'react-icons/lib/fa/paper-plane';
-import TagsIcon from 'react-icons/lib/fa/tags';
 import FlagIcon from 'react-icons/lib/fa/flag';
 import TrashIcon from 'react-icons/lib/fa/trash';
+import _ from 'lodash';
 
 import settings from 'settings';
 import Button from 'components/Button';
 import { hasFlag } from 'forms/FormActions';
 
 @Radium
-export default class SubmissionDetail extends React.Component {
+export default class SubmissionDetail extends Component {
   render() {
     const { submission } = this.props;
 
@@ -60,11 +60,10 @@ export default class SubmissionDetail extends React.Component {
           });
 
           const modAnswer = inGallery ? this.props.removeFromGallery : this.props.sendToGallery;
-
           return (
             <div style={styles.answer} key={key}>
               <h2 style={styles.question}>{reply.question}</h2>
-              {this.renderAnswer(reply.answer)}
+              {this.renderAnswer(reply)}
               {/*<p>galleryId: {gallery ? gallery.id : 'loading gallery'}</p>
               <p>submissionId: {submission.id}</p>
               <p>widget id: {reply.widget_id}</p>*/}
@@ -86,59 +85,91 @@ export default class SubmissionDetail extends React.Component {
     );
   }
 
-  renderAnswer(answer = {}) {
-    if (answer === null) {
+  renderAnswer(reply) {
+    if (reply.answer === null) {
       return (<span>No response</span>);
     }
 
-    if (answer.options) {
+    // wow, this is a gross hack, and it WILL break soon
+    const possibleDateValue = new Date(reply.answer.value);
+
+    // render a Date answer
+    if (_.isString(reply.answer.value) && _.isDate(possibleDateValue) && !isNaN(possibleDateValue)) {
+      return moment(possibleDateValue).format('D MMM YYYY');
+    }
+
+    if (reply.answer.options) {
+
+      const optionsCopy = reply.props.options.slice();
+
+      // Add "Other" as the last option if allowed
+      if (reply.props.otherAllowed) {
+        optionsCopy.push({ isOther: true, title: 'Other' });
+      }
+
+      var answersByIndex = [];
+      const selectedIndexes = reply.answer.options.map(o => {
+        answersByIndex[o.index] = o.title;
+        return o.index;
+      });
+
       return (
         <ul>
-          {answer.options.map((option, key) => (
-            <li key={key}>- {option.title}</li>
-          ))}
+          {optionsCopy.map((option, key) => {
+            const selected = selectedIndexes.indexOf(key) !== -1;
+            const title = answersByIndex[key] ? answersByIndex[key] : option.title;
+
+            return <li
+              style={[styles.multiple, selected && styles.multiple.selected]}
+              key={key}>{key + 1}. { title }</li>;
+          })}
+
         </ul>
       );
     }
 
-    if (answer.text) {
-      return answer.text;
+    // if the date was invalid, just show whatever they entered.
+    if ('value' in reply.answer) {
+      return reply.answer.value;
     }
 
-    return answer;
+    if ('text' in reply.answer) {
+      return reply.answer.text;
+    }
+
+    return '';
   }
 
   renderAuthorDetail() {
     const { submission, onFlag, onBookmark } = this.props;
-
-    var authorDetails = submission.replies.filter(reply => {
-      return reply.identity === true;
-    }).map(reply => {
-      return {label: reply.question, answer: this.renderAnswer(reply.answer)};
-    });
+    const authorDetails = submission.replies
+      .filter(({ identity }) => identity === true)
+      .map(reply => ({
+        label: reply.question,
+        answer: this.renderAnswer(reply)
+      }));
 
     const [flagged, bookmarked] = [hasFlag(submission, 'flagged'), hasFlag(submission, 'bookmarked')];
     return (
       <div>
-        <div style={styles.headerButtons}>
-          <Button
-            style={styles.headerButton}
-            category="primary">Add Tags <TagsIcon /></Button>
-          <Button
-            style={styles.headerButton}
-            onClick={() => onFlag(!flagged)}
-            category={flagged ? 'danger' : ''}>
-              Flag{flagged ? 'ged' : ''} <FlagIcon style={styles.headerButtonIcon(flagged, 'rgb(217, 83, 79)')} />
+        <div style={styles.authorHeaderContainer}>
+          <div style={styles.authorHeaderInfo}>
+            <span style={styles.subNum}>{submission.number || ''}</span> {moment(submission.date_created).format('L LT')}
+          </div>
+          <div style={styles.headerButtons}>
+            <Button
+              style={styles.headerButton}
+              onClick={() => onFlag(!flagged)}
+              category={flagged ? 'danger' : ''}>
+                Flag{flagged ? 'ged' : ''} <FlagIcon style={styles.headerButtonIcon(flagged, 'rgb(217, 83, 79)')} />
+              </Button>
+            <Button
+              style={styles.headerButton}
+              onClick={() => onBookmark(!bookmarked)}
+              category={bookmarked ? 'success' : ''}>
+              Bookmark{bookmarked ? 'ed' : ''} <BBookmark  style={styles.headerButtonIcon(bookmarked, 'rgb(46, 151, 102)')} />
             </Button>
-          <Button
-            style={styles.headerButton}
-            onClick={() => onBookmark(!bookmarked)}
-            category={bookmarked ? 'success' : ''}>
-            Bookmark{bookmarked ? 'ed' : ''} <BBookmark  style={styles.headerButtonIcon(bookmarked, 'rgb(46, 151, 102)')} />
-          </Button>
-        </div>
-        <div style={styles.headerContainer}>
-          <span style={styles.subNum}>37</span> {moment(submission.date_updated).format('L LT')}
+          </div>
         </div>
         <div style={styles.submissionContainer}>
           <div style={styles.authorContainer}>
@@ -182,6 +213,11 @@ const styles = {
   answer: {
     clear: 'both'
   },
+  authorHeaderContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
   authorDetailsContainer: {
     display: 'flex',
     paddingTop: 10
@@ -200,14 +236,9 @@ const styles = {
   },
   headerContainer: {
     display: 'inline-block',
-    paddingBottom: 8,
-    borderBottom: '1px solid ' + settings.mediumGrey,
     position: 'relative'
   },
   headerButtons: {
-    position: 'absolute',
-    top: 10,
-    right: 10
   },
   headerButton: {
     marginLeft: 10
@@ -217,11 +248,29 @@ const styles = {
       color: !show ? color : '#fff'
     };
   },
-  authorContainer: {
-
+  authorHeaderInfo: {
+    flex: 1,
+    paddingBottom: 15,
+    borderBottom: '1px solid ' + settings.mediumGrey,
+    marginRight: 20
   },
   subNum: {
-    fontSize: '2.2em',
+    fontSize: '1.5em',
+    marginRight: 10,
     fontWeight: 'bold'
+  },
+  multiple: {
+    border: '1px solid ' + settings.mediumGrey,
+    padding: 10,
+    display: 'inline-block',
+    width: '49%',
+    marginRight: '1%',
+    marginBottom: 8,
+    borderRadius: 4,
+    backgroundColor: 'white',
+    selected: {
+      backgroundColor: settings.darkerGrey,
+      color: 'white'
+    }
   }
 };

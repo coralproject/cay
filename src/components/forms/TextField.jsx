@@ -12,6 +12,7 @@ export default class TextField extends React.Component {
 
   static propTypes = {
     onChange: PropTypes.func,
+    onBlur: PropTypes.func,
     value: PropTypes.string,
     label: PropTypes.string,
     error: PropTypes.string
@@ -30,6 +31,9 @@ export default class TextField extends React.Component {
 
   handleBlur(event) {
     this.setState({focused: false});
+    if (typeof this.props.onBlur === 'function') {
+      this.props.onBlur(event.target.value);
+    }
   }
 
   render() {

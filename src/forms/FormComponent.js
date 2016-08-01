@@ -1,7 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 import { connect } from 'react-redux';
 import { DragSource } from 'react-dnd';
-import { updateWidget } from 'forms/FormActions';
+import { updateWidget, formDragEnded } from 'forms/FormActions';
 
 import FaTrash from 'react-icons/lib/fa/trash';
 import FaClose from 'react-icons/lib/fa/close';
@@ -79,9 +79,9 @@ const askSource = {
     };
   },
   endDrag(props, monitor, component) {
-    // console.log("enddrag");
-    console.log(monitor.didDrop());
-    props.formDiagram.resetForm();
+    // dispatchProps should be merged with props but looks like it's not inside this call
+    if (component && component.dispatchProps) component.dispatchProps.dispatch(formDragEnded());
+    if (props.formDiagram) props.formDiagram.setState({ isHovering: false });
   }
 };
 

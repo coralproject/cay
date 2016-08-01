@@ -23,7 +23,7 @@ export default class FormDiagram extends Component {
 
   constructor(props, context) {
     super(props, context);
-    this.state = { widgets: [], isHovering: false, tempWidgets: [], showTitleIsRequired: false, itemBeingDragged: -1 };
+    this.state = { widgets: [], isHovering: false, tempWidgets: [], showTitleIsRequired: false, itemBeingDragged: -1, canDrop: false };
     this.stateBeforeDrag = []; // a copy of state.fields
     this.previousHover = null;
   }
@@ -77,6 +77,19 @@ export default class FormDiagram extends Component {
     }));
   }
 
+  enqueueReset() {
+    // Ensure we are not setting the timeout over and over
+    this.previousHover = -1;
+    if (!this._timeout) {
+      this._timeout = window.setTimeout(() => this.resetForm(), 10);
+    }
+  }
+
+  cancelReset() {
+    window.clearTimeout(this._timeout);
+    this._timeout = false;
+  }
+
   render() {
     const { onFieldSelect, forms } = this.props;
     const form = this.props.activeForm ? forms[this.props.activeForm] : forms.form;
@@ -102,14 +115,19 @@ export default class FormDiagram extends Component {
                   onFieldSelect={ onFieldSelect }
                   onList={ true }
                   beingDragged={ i == this.state.itemBeingDragged }
-                  isLast={ i === this.props.forms.widgets.length - 1 }
+                  isLast={ i === this.state.tempWidgets.length - 1 }
                   onMove={ this.onMove.bind(this) }
                   onDuplicate={ this.onDuplicate.bind(this) }
                   onDelete={ this.onDelete.bind(this) }
                    />
             </DropPlaceHolder>
           ))}
-          <DropPlaceHolder formDiagram={ this } position={ this.state.tempWidgets.length } key={ this.state.tempWidgets.length } />
+          {
+            !this.state.isHovering || this.state.tempWidgets.length === 0
+            ? <DropPlaceHolder formDiagram={ this } position={ this.state.tempWidgets.length } key={ this.state.tempWidgets.length } />
+            : null
+          }
+
         </div>
         <div style={ styles.extraFields }>
           <h3 style={ styles.thankYouMessageTitle }>Thank you message</h3>

@@ -283,6 +283,9 @@ const forms = (state = initial, action) => {
   case types.ANSWER_EDIT_FAILED: // server was unable to update the answer
     return {...state, loadingAnswerEdit: false, answerBeingEdited: null};
 
+  case types.FORM_DRAG_ENDED:
+    return {...state, isHovering: false};
+
   default:
     return state;
   }

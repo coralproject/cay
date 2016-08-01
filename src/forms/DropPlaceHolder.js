@@ -5,26 +5,14 @@ import { DropTarget } from 'react-dnd';
 
 import { appendWidget, moveWidget } from 'forms/FormActions';
 
-const askTarget = {
+const DropHelper = {
 
-  // Hover changes the component's internal state
-  hover(props, monitor, component) {
-
-    let formDiagram = component.props.formDiagram;
-    let targetPosition = component.props.position;
-
-    // Hover is fired a gazillion times, this is to prevent
-    // unnecessary re-renders
-    if (targetPosition != formDiagram.previousHover) {
-      formDiagram.previousHover = targetPosition;
-    } else {
-      return; // hovering the same as before? early return, do nothing.
-    }
+  showDropCandidate(draggedItem, formDiagram, targetPosition, component) {
 
     let tempWidgets = formDiagram.stateBeforeDrag.slice();
-    var draggedItem = monitor.getItem();
 
-    if (draggedItem.component.props.formDiagram) {
+    // If item was present on the list
+    if (draggedItem.onList) {
 
       // First we make a copy removing the dragged element
       let fieldsCopy = tempWidgets.slice();
@@ -50,13 +38,38 @@ const askTarget = {
 
     formDiagram.setState({ tempWidgets: tempWidgets });
 
+  }
+}
+
+const askTarget = {
+
+  // Hover changes the component's internal state
+  hover(props, monitor, component) {
+
+    let formDiagram = component.props.formDiagram;
+    let targetPosition = component.props.position;
+    formDiagram.cancelReset();
+
+    // Hover is fired a gazillion times, this is to prevent
+    // unnecessary re-renders
+    if (targetPosition != formDiagram.previousHover) {
+      formDiagram.previousHover = targetPosition;
+    } else {
+      return; // hovering the same as before? early return, do nothing.
+    }
+
+    formDiagram.setState({ isHovering: true });
+
+    let draggedItem = monitor.getItem();
+
+    DropHelper.showDropCandidate(draggedItem, formDiagram, targetPosition, component);
+
   },
 
   // persist state only on drop
   drop(props, monitor, component) {
 
     let formDiagram = component.props.formDiagram;
-    let fields = formDiagram.stateBeforeDrag.slice();
     let targetPosition = component.props.position;
 
     var draggedItem = monitor.getItem();
@@ -82,9 +95,9 @@ const askTarget = {
 export default class DropPlaceHolder extends Component {
 
   componentWillReceiveProps(nextProps) {
-    // This acts as an onLeave handler 
+    // This acts as an onLeave handler
     if (this.props.isOver && !nextProps.isOver) {
-      this.props.formDiagram.resetForm();
+      this.props.formDiagram.enqueueReset();
     }
   }
 

@@ -62,6 +62,8 @@ export const UPDATE_FORM_INACTIVE_MESSAGE_INIT = 'UPDATE_FORM_INACTIVE_MESSAGE_I
 export const UPDATE_FORM_INACTIVE_MESSAGE_SUCCESS = 'UPDATE_FORM_INACTIVE_MESSAGE_SUCCESS';
 export const UPDATE_FORM_INACTIVE_MESSAGE_FAILURE = 'UPDATE_FORM_INACTIVE_MESSAGE_FAILURE';
 
+export const FORM_DRAG_ENDED = 'FORM_DRAG_ENDED';
+
 const getInit = (body, method) => {
 
   var headers = new Headers({ 'Accept': 'application/json', 'Content-Type': 'application/json' });
@@ -502,3 +504,9 @@ export const editAnswer = (edited, answer, formId) => {
 };
 
 export const hasFlag = (submission, flag) => -1 !== submission.flags.indexOf(flag);
+
+export const formDragEnded = () => {
+  return {
+    type: FORM_DRAG_ENDED
+  };
+};

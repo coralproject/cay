@@ -1,24 +1,16 @@
-import React from 'react';
+import React, { Component } from 'react';
 import Radium from 'radium';
-import {connect} from 'react-redux';
-import {fetchQueryset, fetchSearch} from 'search/SearchActions';
+import { connect } from 'react-redux';
+import { fetchQueryset, fetchSearch } from 'search/SearchActions';
 
 import Page from 'app/layout/Page';
 import ContentHeader from 'components/ContentHeader';
 import UserList from 'users/UserList';
 import { clearUserList } from 'search/SearchActions';
 
-const mapStateToProps = state => {
-  return {
-    searches: state.searches,
-    users: state.users,
-    comments: state.comments
-  };
-};
-
-@connect(mapStateToProps)
+@connect(({ searches, users, comments }) => ({ searches, users, comments }))
 @Radium
-export default class SearchDetail extends React.Component {
+export default class SearchDetail extends Component {
 
   constructor (props) {
     super(props);
@@ -26,34 +18,31 @@ export default class SearchDetail extends React.Component {
   }
 
   componentWillMount() {
-    this.props.dispatch(clearUserList());
-    console.log('about to look up search', this.props.params.id);
-    this.props.dispatch(fetchSearch(this.props.params.id));
-    // this.fetchUsers();
+    const { dispatch, params } = this.props;
+    dispatch(clearUserList());
+    dispatch(fetchSearch(params.id));
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (!this.state.usersFetchedOnce && nextProps.searches.activeSavedSearch) {
-      this.setState({usersFetchedOnce: true});
-      this.props.dispatch(fetchQueryset(nextProps.searches.activeSavedSearch.query));
+  componentWillReceiveProps({ searches }) {
+    const { usersFetchedOnce } = this.state;
+    if (!usersFetchedOnce && searches.activeSavedSearch) {
+      this.setState({ usersFetchedOnce: true });
+      this.props.dispatch(fetchQueryset(searches.activeSavedSearch.query));
     }
   }
 
   onPagination(page = 0) {
-    this.props.dispatch(fetchQueryset(this.props.searches.activeSavedSearch.query, page));
+    const { disaptch, searches } = this.props;
+    dispatch(fetchQueryset(searches.activeSavedSearch.query, page));
   }
 
   render() {
-
-    const search = this.props.searches.activeSavedSearch;
+    const { searches } = this.props;
+    const search = searches.activeSavedSearch;
 
     return (
       <Page>
-        {
-          this.props.searches.loadingSavedSearch ?
-            <p>Loading Saved Search...</p> :
-            null
-        }
+        {searches.loadingSavedSearch ? <p>Loading Saved Search...</p> : null}
         {
           search ?
           <div>
@@ -72,11 +61,14 @@ export default class SearchDetail extends React.Component {
           </div> :
           null
         }
-
       </Page>
     );
   }
 }
+
+/**
+ * Module styles
+ */
 
 const styles = {
   base: {

@@ -6,10 +6,9 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 import { Link } from 'react-router';
+
 import { userSelected } from 'users/UsersActions';
-
 import { mediumGrey } from 'settings';
-
 import {
   saveQueryFromState,
   makeQueryFromState,
@@ -18,7 +17,6 @@ import {
   clearRecentSavedSearch
 } from 'search/SearchActions';
 import { filterChanged, getFilterRanges } from 'filters/FiltersActions';
-
 import Page from 'app/layout/Page';
 import ContentHeader from 'components/ContentHeader';
 import UserList from 'users/UserList';
@@ -35,19 +33,13 @@ import Clauses from 'search/Clauses';
  * Contains the UI for creating user searches
  */
 
-@connect(state => ({
-  searches: state.searches,
-  comments: state.comments,
-  users: state.users,
-  filters: state.filters,
-  app: state.app,
-  auth: state.auth
-}))
+@connect(({ searches, comments, users, filters, app, auth }) =>
+({ searches, comments, users, filters, app, auth }))
 @Radium
 export default class SearchCreator extends Component {
   constructor(props) {
     super(props);
-    this.state = {saveModalOpen: false};
+    this.state = { saveModalOpen: false };
   }
 
   static contextTypes = {
@@ -175,16 +167,9 @@ export default class SearchCreator extends Component {
   }
 }
 
-
-// <UserDetail
-//   breakdown={this.props.filters.breakdown}
-//   specificBreakdown={this.props.filters.specificBreakdown}
-//   commentsLoading={this.props.comments.loading}
-//   user={this.props.users.selectedUser}
-//   comments={this.props.comments.items}
-//   style={styles.userDetail} />
-
-
+/**
+ * Module styles
+ */
 
 const styles = {
   pageBase: {

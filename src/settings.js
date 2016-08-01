@@ -1,4 +1,9 @@
-const settings = {
+
+/**
+ * Brand settings. This can be override for styling purposes for every install
+ */
+
+export default {
   brandColor: 'rgb(246,125,111)',
   textColor: '#3e3e3e',
   linkColor: '#777777',
@@ -40,5 +45,3 @@ const settings = {
   warningColor: 'rgb(240, 173, 78)',
   dangerColor: '#d9534f'
 };
-
-export default settings;

@@ -1,21 +1,28 @@
+
+/**
+ * Module dependencies
+ */
+
 import React, { Component } from 'react';
 import Radium from 'radium';
 import { connect } from 'react-redux';
 
 import { createEmpty, updateForm } from 'forms/FormActions';
 import { showFlashMessage } from 'flashmessages/FlashMessagesActions';
-
 import Page from 'app/layout/Page';
 import FormBuilder from 'forms/FormBuilder.js';
 import FormChrome from 'app/layout/FormChrome';
 
-@connect(({ app, forms }) => ({ app, forms }))
+@connect(({ app, forms }) => ({
+  elkhornHost: app.elkhornHost,
+  forms
+}))
 @Radium
 export default class FormCreate extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {preview: false};
+    this.state = { preview: false };
   }
 
   componentWillMount() {
@@ -59,28 +66,26 @@ export default class FormCreate extends Component {
   }
 
   showPreview() {
-
+    const { activeForm, forms, elkhornHost } = this.props;
     // First test the form is reachable
-    const form = this.props.activeForm ? this.props.forms[this.props.activeForm] : this.props.forms.form;
-    const previewForm = {...form};
-    previewForm.steps[0].widgets = this.props.forms.widgets;
-    const url = `${this.props.app.elkhornHost}/preview.js?props=${encodeURIComponent(JSON.stringify(previewForm))}`;
+    const form = activeForm ? forms[activeForm] : forms.form;
+    const previewForm = { ...form };
+    previewForm.steps[0].widgets = forms.widgets;
+    const url = `${elkhornHost}/preview.js?props=${encodeURIComponent(JSON.stringify(previewForm))}`;
 
     let formCreate = this;
-
     fetch(url, {
       method: 'HEAD'
-    }).then(() => {
-      formCreate.setState({
-        preview: true
-      });
-    }).catch(() => {
-      formCreate.props.dispatch(showFlashMessage('Uh-oh, we can\'t preview your form. Try again or report the error to your technical team', 'warning'));
-    });
-
+    })
+    .then(() => formCreate.setState({ preview: true }))
+    .catch(() => formCreate.props
+      .dispatch(showFlashMessage('Uh-oh, we can\'t preview your form. Try again or report the error to your technical team', 'warning')));
   }
-
 }
+
+/**
+ * Module styles
+ */
 
 const styles = {
   page: {

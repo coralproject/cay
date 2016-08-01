@@ -1,8 +1,15 @@
+
+/**
+ * Module dependencies
+ */
+
 import React from 'react';
 import Radium from 'radium';
-import {Link} from 'react-router';
+import { Link } from 'react-router';
 
-var RadiumLink = Radium(Link);
+/**
+ * Expose Menu Item module
+ */
 
 export default Radium(({ target, icon, name, onClick }) => (
   <li style={styles.base}>
@@ -14,6 +21,15 @@ export default Radium(({ target, icon, name, onClick }) => (
   </li>
 ));
 
+/**
+ * Radium enhanced links
+ */
+
+const RadiumLink = Radium(Link);
+
+/**
+ * Module styles
+ */
 
 const styles = {
   base: {

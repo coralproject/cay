@@ -1,31 +1,32 @@
+
+/**
+ * Module dependencies
+ */
+
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import createHistory from 'history/lib/createBrowserHistory';
 import createDebounce from 'redux-debounce';
-
 import rootReducer from 'app/MainReducer';
 
-const debounceConfig = {
-  userMangerFilters: 500
-};
+/**
+ * Store middlewares
+ */
 
-const debouncer = createDebounce(debounceConfig);
-
+const debouncer = createDebounce({ userMangerFilters: 500 });
 const middleware = [thunk, debouncer];
+const devTools = window.devToolsExtension ? window.devToolsExtension() : f => f;
 
-let finalCreateStore;
+/**
+ * Store creator based on environment
+ */
 
-if (process.env.NODE_ENV === 'production') {
-  finalCreateStore = applyMiddleware(...middleware)(createStore);
-} else {
-  finalCreateStore = compose(
-    applyMiddleware(...middleware),
-    window.devToolsExtension ? window.devToolsExtension() : f => f
-  )(createStore);
-}
+const envCreateStore = process.env.NODE_ENV === 'production'
+  ? applyMiddleware(...middleware)(createStore)
+  : compose(applyMiddleware(...middleware), devTools)(createStore);
 
-const configureStore = function (initialState) {
-  return finalCreateStore(rootReducer, initialState);
-};
+/**
+ * Expose final store creator
+ */
 
-export default configureStore;
+export default initialState => envCreateStore(rootReducer, initialState);

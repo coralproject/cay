@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import _ from 'lodash';
+import has from 'lodash/object/has';
 
 @Radium
 class Icon extends React.Component {
@@ -26,7 +26,7 @@ class Icon extends React.Component {
         this.props.size === 'small' && styles.small,
         this.props.size === 'medium' && styles.medium,
         this.props.size === 'large' && styles.large,
-        this.getColorProps(this.props.color, this.props.inverse || !_.has(this, 'props.name'))
+        this.getColorProps(this.props.color, this.props.inverse || !has(this, 'props.name'))
       ]}>{this.props.children}</div>
     );
   }

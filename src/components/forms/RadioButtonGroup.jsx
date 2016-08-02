@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import _ from 'lodash';
+import findIndex from 'lodash/array/findIndex';
 
 @Radium
 export default class RadioButtonGroup extends React.Component {
@@ -9,7 +9,7 @@ export default class RadioButtonGroup extends React.Component {
     super(props);
 
     const children = React.Children.toArray(this.props.children);
-    let selectedIndex = _.findIndex(children, child => {
+    let selectedIndex = findIndex(children, child => {
       return child.props.checked === 'checked'
     });
     let initialValue = (selectedIndex !== -1) ? children[selectedIndex].props.value : undefined;

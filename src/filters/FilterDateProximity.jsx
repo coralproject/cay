@@ -41,14 +41,17 @@ const styles = {
     fontWeight: 500,
     marginBottom: 10,
     color: 'rgb(130,130,130)',
-    fontSize: 16
+    fontSize: 14
   },
   minMaxInputs: {
     padding: '7px 3px',
     marginLeft: 10,
     marginRight: 10,
     border: '1px solid lightgrey',
-    width: 50,
-    borderRadius: 3
+    width: 60,
+    borderRadius: 3,
+    fontSize: 16,
+    padding: '10px',
+    textAlign: 'center'
   }
 };

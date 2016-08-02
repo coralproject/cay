@@ -236,7 +236,7 @@ const styles = {
   },
   saveButton: {
     position: 'absolute',
-    top: 10,
-    right: 10
+    top: 20,
+    right: 20
   }
 };

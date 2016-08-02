@@ -67,7 +67,7 @@ export default class UserDetail extends Component {
     return (
       <div>
         <div style={styles.topPart}>
-          <Heading size="medium">{this.props.user.name}</Heading>
+          <Heading size="medium" fontWeight='700'>{this.props.user.name}</Heading>
         </div>
         { isBreakdown ?
           <h4 style={styles.breakdownContainer}>Activity for {breakdown + ' '}
@@ -130,7 +130,10 @@ const styles = {
     height: 75
   },
   statsContainer: {
-    marginBottom: 20,
+    marginTop: 30,
+    marginBottom: 0,
+    borderBottom: '1px solid #ddd',
+    paddingBottom: 20,
     display: 'flex',
     flexWrap: 'wrap',
     justifyContent: 'flex-start'
@@ -148,8 +151,8 @@ const styles = {
   },
   close: {
     position: 'absolute',
-    top: 10,
-    right: 10,
+    top: 15,
+    right: 20,
     cursor: 'pointer'
   },
   controls: {

@@ -46,3 +46,11 @@ p {
 .datepicker__tether-element {
   z-index: 3;
 }
+
+.react-datepicker__input-container input {
+  padding: 10px;
+  border: 1px solid lightgrey;
+  border-radius: 3px;
+  font-size: 16px;
+  width: 90%;
+}

@@ -88,7 +88,7 @@ export default class FormEdit extends Component {
           gallery={gallery}
           submissions={submissions}
           form={form}/>
-        <div style={styles.base}>
+        <div>
           {
             form ?
               <FormBuilder

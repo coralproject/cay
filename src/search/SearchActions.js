@@ -13,7 +13,6 @@ import indexOf from 'lodash/array/indexOf';
 
 import {clamp} from 'components/utils/math';
 import {xenia} from 'app/AppActions';
-import { populateDistributionStore } from 'filters/FiltersActions';
 import { fetchSections, fetchAuthors } from 'filters/FiltersActions';
 
 export const QUERYSET_SELECTED = 'QUERYSET_SELECTED';
@@ -583,7 +582,6 @@ export const fetchInitialData = (editMode = false) => dispatch => {
   // Get initial data for the filters
   dispatch(fetchSections());
   dispatch(fetchAuthors());
-  dispatch(populateDistributionStore());
 
   // Get user list
   dispatch(makeQueryFromState('user', 0, true, editMode));

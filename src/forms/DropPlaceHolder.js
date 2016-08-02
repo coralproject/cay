@@ -36,7 +36,7 @@ const DropHelper = {
       }
     }
 
-    formDiagram.setState({ tempWidgets: tempWidgets });
+    formDiagram.setState({ tempWidgets });
 
   }
 }
@@ -81,7 +81,6 @@ const askTarget = {
       formDiagram.moveWidget(draggedItem.position, targetPosition);
     } else {
       formDiagram.appendWidget(draggedItem.field, targetPosition);
-      //formDiagram.setState({ isHovering: false });
     }
 
   }

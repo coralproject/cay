@@ -664,11 +664,7 @@ export const cleanSubmissionFilters = () => ({
 
 export const hasFlag = (submission, flag) => -1 !== submission.flags.indexOf(flag);
 
-export const formDragEnded = () => {
-  return {
-    type: FORM_DRAG_ENDED
-  };
-};
+export const formDragEnded = () => ({ type: FORM_DRAG_ENDED });
 
 export const reinsertGalleryAnswer = (galleryId, key, position) => ({
   type: FORM_ANSWER_REINSERT,

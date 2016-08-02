@@ -80,12 +80,12 @@ export default class FormDiagram extends Component {
     // Ensure we are not setting the timeout over and over
     this.previousHover = -1;
     if (!this._timeout) {
-      this._timeout = window.setTimeout(() => this.resetForm(), 10);
+      this._timeout = setTimeout(() => this.resetForm(), 10);
     }
   }
 
   cancelReset() {
-    window.clearTimeout(this._timeout);
+    clearTimeout(this._timeout);
     this._timeout = false;
   }
 

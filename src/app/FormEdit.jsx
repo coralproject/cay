@@ -68,7 +68,8 @@ export default class FormEdit extends Component {
   }
 
   updateInactive(value) {
-    this.props.dispatch(updateForm({ settings: { inactiveMessage: value } }));
+    var activeForm = this.props.forms.activeForm;
+    this.props.dispatch(updateForm({ settings: { ...this.props.forms[activeForm].settings, inactiveMessage: value } }));
   }
 
   render() {

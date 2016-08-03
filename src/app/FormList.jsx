@@ -21,6 +21,7 @@ import TableBody from 'components/tables/TableBody';
 import TableRow from 'components/tables/TableRow';
 import TableCell from 'components/tables/TableCell';
 import ButtonGroup from 'components/ButtonGroup';
+import L from 'i18n';
 
 // Forms, Widgets, Submissions
 @connect(({ forms }) => ({ forms }))
@@ -111,9 +112,9 @@ const FormTable = ({ loadingTags, forms, onRowClick, confirmDeletion }) => (
     hasActions={ true } isLoading={ loadingTags }
     loadingMessage="Loading...">
     <TableHead>
-      <TableHeader>{ window.L.t('Name') }</TableHeader>
-      <TableHeader>{ window.L.t('Description') }</TableHeader>
-      <TableHeader>{ window.L.t('Submissions') }</TableHeader>
+      <TableHeader>{ L.t('Name') }</TableHeader>
+      <TableHeader>{ L.t('Description') }</TableHeader>
+      <TableHeader>{ L.t('Submissions') }</TableHeader>
     </TableHead>
     <TableBody>
       {forms.map((form, i) => <FormTableRow header={form.header} key={i}

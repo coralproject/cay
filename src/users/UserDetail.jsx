@@ -9,9 +9,6 @@ import FAClose from 'react-icons/lib/fa/close';
 import FAArrowRight from 'react-icons/lib/fa/arrow-right';
 import FAArrowLeft from 'react-icons/lib/fa/arrow-left';
 
-import { Lang } from 'i18n/lang';
-
-@Lang
 @Radium
 export default class UserDetail extends Component {
   static propTypes = {

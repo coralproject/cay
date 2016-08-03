@@ -35,7 +35,7 @@ export default class Sidebar extends Component {
   }
 
   componentWillMount() {
-    const mql = this.mql = window.matchMedia('(min-width: 800px)');
+    const mql = this.mql = matchMedia('(min-width: 800px)');
     this._mqlChanged = this.mediaQueryChanged.bind(this);
     mql.addListener(this._mqlChanged);
 

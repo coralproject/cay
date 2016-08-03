@@ -1,4 +1,10 @@
-import _ from 'lodash';
+import reduce from 'lodash/collection/reduce';
+import has from 'lodash/object/has';
+import isString from 'lodash/lang/isString';
+import isDate from 'lodash/lang/isDate';
+import isUndefined from 'lodash/lang/isUndefined';
+import isNull from 'lodash/lang/isNull';
+import template from 'lodash/string/template';
 import {clamp} from 'components/utils/math';
 import {xenia} from 'app/AppActions';
 import {makeQueryFromState} from 'search/SearchActions';
@@ -105,14 +111,14 @@ export const setSpecificBreakdown = (specificBreakdown, editMode) => {
 };
 
 const parseFilterRanges = (ranges, filterState) => {
-  const newFilters = _.reduce(ranges, (accum, value, aggKey) => {
+  const newFilters = reduce(ranges, (accum, value, aggKey) => {
     let [key, field] = aggKey.split('_');
 
     if (field === 'id' || value === null) return accum;
 
     // we might have already updated the old filter with the min value
     // retrieve it from the accumulator in progress instead of the state
-    let newFilter = _.has(accum, key) ? accum[key] : {};
+    let newFilter = has(accum, key) ? accum[key] : {};
     const oldFilter = filterState[key];
     const clampedUserMin = clamp(oldFilter.userMin, oldFilter.min, oldFilter.max);
     const clampedUserMax = clamp(oldFilter.userMax, oldFilter.min, oldFilter.max);
@@ -120,22 +126,22 @@ const parseFilterRanges = (ranges, filterState) => {
     const possibleDateValue = new Date(value);
     // if it's a Date, change the type
     // console.log('parsed value', aggKey, value, possibleDateValue);
-    if (_.isString(value) && _.isDate(possibleDateValue) && !isNaN(possibleDateValue)) {
+    if (isString(value) && isDate(possibleDateValue) && !isNaN(possibleDateValue)) {
       value = possibleDateValue;
     }
 
     // do not override the min that has been set if a minRange|maxRange has been set in data_config.json
-    if ((_.isUndefined(oldFilter.minRange) && field === 'min') ||
-      (_.isUndefined(oldFilter.maxRange) && field === 'max')) {
+    if ((isUndefined(oldFilter.minRange) && field === 'min') ||
+      (isUndefined(oldFilter.maxRange) && field === 'max')) {
       newFilter[field] = value; // where field is {min|max}
     }
     accum[key] = newFilter;
 
     // on the first pass, go ahead and force a change on userMin and userMax
     // but only if the userMin and userMax are defaults.
-    if (field === 'min' && +oldFilter.min === +clampedUserMin && _.isUndefined(oldFilter.minRange)) {
+    if (field === 'min' && +oldFilter.min === +clampedUserMin && isUndefined(oldFilter.minRange)) {
       newFilter.userMin = value;
-    } else if (field === 'max' && +oldFilter.max === +clampedUserMax && _.isUndefined(oldFilter.maxRange)) {
+    } else if (field === 'max' && +oldFilter.max === +clampedUserMax && isUndefined(oldFilter.maxRange)) {
       newFilter.userMax = value;
     }
 
@@ -169,7 +175,7 @@ export const getFilterRanges = (editMode = false) => {
       // if you change this naming convention "<somefilter>_max"
       // you must update the RECEIVE_FILTER_RANGES in reducers/filters.js
 
-      const field = '$' + _.template(f.template)({dimension});
+      const field = '$' + template(f.template)({dimension});
       if (f.type === 'intDateProximity') {
         return accum; // do not get ranges for "ago" filter (for now).
       } else {
@@ -386,10 +392,10 @@ export const clearEditableFilters = () => {
     const defaults = filters.editFilterList.reduce((accum, key) => {
 
       let filter = filters[key];
-      const min = _.isUndefined(filter.minRange) ? null : filter.minRange;
-      const max = _.isUndefined(filter.maxRange) ? null : filter.maxRange;
-      const userMin = _.isNull(min) ? null : filter.minRange;
-      const userMax = _.isNull(max) ? null : filter.maxRange;
+      const min = isUndefined(filter.minRange) ? null : filter.minRange;
+      const max = isUndefined(filter.maxRange) ? null : filter.maxRange;
+      const userMin = isNull(min) ? null : filter.minRange;
+      const userMax = isNull(max) ? null : filter.maxRange;
 
       filter = {...filter, min, max, userMin, userMax};
 

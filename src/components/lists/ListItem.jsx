@@ -1,4 +1,5 @@
-import _ from 'lodash';
+import extend from 'lodash/object/extend';
+import isFunction from 'lodash/lang/isFunction';
 import React from 'react';
 import Radium from 'radium';
 
@@ -8,7 +9,7 @@ import settings from 'settings';
 export default class ListItem extends React.Component {
 
   handleClick(e) {
-    if (_.isFunction(this.props.onClick)) {
+    if (isFunction(this.props.onClick)) {
       this.props.onClick(e);
     }
   }
@@ -18,10 +19,10 @@ export default class ListItem extends React.Component {
     let left;
     let right;
     if (this.props.leftAvatar) {
-      left = React.cloneElement(this.props.leftAvatar, {style: _.extend({}, styles.avatars, styles.leftAvatar)});
+      left = React.cloneElement(this.props.leftAvatar, {style: extend({}, styles.avatars, styles.leftAvatar)});
     }
     if (this.props.rightAvatar) {
-      right = React.cloneElement(this.props.rightAvatar, {style: _.extend({}, styles.avatars, styles.rightAvatar)});
+      right = React.cloneElement(this.props.rightAvatar, {style: extend({}, styles.avatars, styles.rightAvatar)});
     }
 
     return (

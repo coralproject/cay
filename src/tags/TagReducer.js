@@ -5,6 +5,7 @@
 
 import * as tagsActions from 'tags/TagActions';
 import * as authActions from 'auth/AuthActions';
+import L from 'i18n';
 
 const types = Object.assign({}, tagsActions, authActions);
 
@@ -57,7 +58,7 @@ export default (state = initialState, action) => {
       ...state,
       loadingTags: false,
       hasErrors: true,
-      errorMsg: `${window.L.t('Tag action failed')}: ${action.err}`
+      errorMsg: `${L.t('Tag action failed')}: ${action.err}`
     };
 
   // there's probably a better way to do this

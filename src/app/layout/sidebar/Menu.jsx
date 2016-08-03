@@ -15,7 +15,7 @@ import FaCog from 'react-icons/lib/fa/cog';
 import FaAngleDoubleLeft from 'react-icons/lib/fa/angle-double-left';
 import FaAngleDoubleRight from 'react-icons/lib/fa/angle-double-right';
 import MdBuild from 'react-icons/lib/md/build';
-import { Lang } from 'i18n/lang';
+import L from 'i18n';
 import { bgColorLogo } from 'settings';
 
 /**
@@ -41,8 +41,8 @@ export default Radium(({ open, features, onToggleSidebar }) => (
 
 const TopMenu = ({ features }) => (
   <ul>
-    { features.trust === false ? null : <MenuItem name={ window.L.t('Create Search') } target="/search-creator" icon={<FaGroup />} />}
-    { features.trust === false ? null : <MenuItem name={ window.L.t('Saved Searches') } target="/saved-searches" icon={<FaDashboard />} />}
+    { features.trust === false ? null : <MenuItem name={ L.t('Create Search') } target="/search-creator" icon={<FaGroup />} />}
+    { features.trust === false ? null : <MenuItem name={ L.t('Saved Searches') } target="/saved-searches" icon={<FaDashboard />} />}
     { features.ask ? <MenuItem open={open} name="Create Form" target="/forms/create" icon={<MdBuild />} /> : null }
     { features.ask ? <MenuItem open={open} name="View Forms" target="/forms" icon={<FaListAlt />}/> : null }
   </ul>

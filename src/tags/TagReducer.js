@@ -1,16 +1,29 @@
+
+/**
+ * Import action names
+ */
+
 import * as tagsActions from 'tags/TagActions';
 import * as authActions from 'auth/AuthActions';
 
 const types = Object.assign({}, tagsActions, authActions);
 
+/**
+ * Initial state
+ */
+
 const initialState = {
   loading: false,
   loadingTags: false,
-  authorized: window.localStorage.authorized || false,
+  authorized: localStorage.authorized || false,
   items: []
 };
 
-const tags = (state = initialState, action) => {
+/**
+ * Reducer
+ */
+
+export default (state = initialState, action) => {
 
   switch (action.type) {
 
@@ -65,5 +78,3 @@ const tags = (state = initialState, action) => {
     return state;
   }
 };
-
-export default tags;

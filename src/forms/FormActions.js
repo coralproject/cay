@@ -1,41 +1,48 @@
-'use strict';
+
+/**
+ * Module dependencies
+ */
 
 import cloneDeep from 'lodash/lang/cloneDeep';
 
-export const SUBMISSIONS_REQUEST_STARTED = 'SUBMISSIONS_REQUEST_STARTED';
-export const SUBMISSIONS_REQUEST_SUCCESS = 'SUBMISSIONS_REQUEST_SUCCESS';
-export const SUBMISSIONS_REQUEST_FAILED = 'SUBMISSIONS_REQUEST_FAILED';
+/**
+ * Action names
+ */
+
+export const FETCH_SUBMISSIONS_REQUEST = 'FETCH_SUBMISSIONS_REQUEST';
+export const FETCH_SUBMISSIONS_SUCCESS = 'FETCH_SUBMISSIONS_SUCCESS';
+export const FETCH_SUBMISSIONS_FAILED = 'FETCH_SUBMISSIONS_FAILED';
 
 export const SET_ACTIVE_SUBMISSION = 'SET_ACTIVE_SUBMISSION';
 export const UPDATE_ACTIVE_SUBMISSION = 'UPDATE_ACTIVE_SUBMISSION';
 
-export const WIDGET_UPDATE = 'WIDGET_UPDATE';
-export const WIDGET_MOVE = 'WIDGET_MOVE';
+export const UPDATE_WIDGET = 'UPDATE_WIDGET';
+export const MOVE_WIDGET = 'MOVE_WIDGET';
 
-export const FORM_REQUEST_STARTED = 'FORM_REQUEST_STARTED';
-export const FORM_REQUEST_SUCCESS = 'FORM_REQUEST_SUCCESS';
-export const FORM_REQUEST_FAILURE = 'FORM_REQUEST_FAILURE';
-export const FORM_APPEND_WIDGET = 'FORM_APPEND_WIDGET';
-export const FORM_DELETE_WIDGET = 'FORM_DELETE_WIDGET';
-export const FORM_DUPLICATE_WIDGET = 'FORM_DUPLICATE_WIDGET';
+export const FETCH_FORM_REQUEST = 'FETCH_FORM_REQUEST';
+export const FETCH_FORM_SUCCESS = 'FETCH_FORM_SUCCESS';
+export const FETCH_FORM_FAILURE = 'FETCH_FORM_FAILURE';
+export const APPEND_FORM_WIDGET = 'APPEND_FORM_WIDGET';
+export const DELETE_FORM_WIDGET = 'DELETE_FORM_WIDGET';
+export const DUPLICATE_FORM_WIDGET = 'DUPLICATE_FORM_WIDGET';
 
-export const FORM_CREATE_INIT = 'FORM_CREATE_INIT';
+export const CREATE_INIT_FORM = 'CREATE_INIT_form';
 export const FORM_CREATED = 'FORM_CREATED';
 export const FORM_CREATION_FAILURE = 'FORM_CREATION_FAILURE';
-export const FORM_UPDATE = 'FORM_UPDATE';
+export const UPDATE_FORM = 'UPDATE_FORM';
 
-export const FORMS_REQUEST_STARTED = 'FORMS_REQUEST_STARTED';
-export const FORMS_REQUEST_SUCCESS = 'FORMS_REQUEST_SUCCESS';
-export const FORMS_REQUEST_FAILURE = 'FORMS_REQUEST_FAILURE';
+export const FETCH_FORMS_REQUEST = 'FETCH_FORMS_REQUEST';
+export const FETCH_FORMS_SUCCESS = 'FETCH_FORMS_SUCCESS';
+export const FETCH_FORMS_FAILURE = 'FETCH_FORMS_FAILURE';
 
-export const FORM_REQUEST_EDIT_ACCESS = 'FORM_REQUEST_EDIT_ACCESS';
-export const FORM_EDIT_ACCEPTED = 'FORM_EDIT_ACCEPTED';
-export const FORM_EDIT_DENIED = 'FORM_EDIT_ACCEPTED';
-export const FORM_EDIT_LEAVE = 'FORM_EDIT_LEAVE';
+export const REQUEST_EDIT_FORM_ACCESS = 'REQUEST_EDIT_FORM_ACCESS';
+export const EDIT_FORM_ACCEPTED = 'FORM_EDIT_FORM_ACCEPTED';
+export const EDIT_FORM_DENIED = 'EDIT_FORM_ACCEPTED';
+export const EDIT_FORM_LEAVE = 'EDIT_FORM_LEAVE';
 
-export const FORM_GALLERY_REQUEST = 'FORM_GALLERY_REQUEST';
-export const FORM_GALLERY_SUCCESS = 'FORM_GALLERY_SUCCESS';
-export const FORM_GALLERY_ERROR = 'FORM_GALLERY_ERROR';
+export const FETCH_FORM_GALLERY_REQUEST = 'FETCH_FORM_GALLERY_REQUEST';
+export const FETCH_FORM_GALLERY_SUCCESS = 'FETCH_FORM_GALLERY_SUCCESS';
+export const FETCH_FORM_GALLERY_FAILURE = 'FETCH_FORM_GALLERY_FAILURE';
 
 export const FORM_STATUS_UPDATED = 'FORM_STATUS_UPDATED';
 export const FORM_STATUS_UPDATE_ERROR = 'FORM_STATUS_UPDATE_ERROR';
@@ -47,26 +54,26 @@ export const FORM_ANSWER_REINSERT = 'FORM_ANSWER_REINSERT';
 
 export const FORM_DELETED = 'FORM_DELETED';
 
-export const FORM_CREATE_EMPTY= 'FORM_CREATE_EMPTY';
+export const CREATE_EMPTY_FORM= 'CREATE_EMPTY_FORM';
 
-export const FORM_REPLACE_WIDGETS = 'FORM_REPLACE_WIDGETS';
+export const REPLACE_FORM_WIDGETS = 'REPLACE_FORM_WIDGETS';
 
-export const ANSWER_EDIT_BEGIN = 'ANSWER_EDIT_BEGIN';
-export const ANSWER_EDIT_UPDATE = 'ANSWER_EDIT_UPDATE';
-export const ANSWER_EDIT_CANCEL = 'ANSWER_EDIT_CANCEL';
-export const ANSWER_EDIT_REQUEST = 'ANSWER_EDIT_REQUEST';
-export const ANSWER_EDIT_SUCCESS = 'ANSWER_EDIT_SUCCESS';
-export const ANSWER_EDIT_FAILED = 'ANSWER_EDIT_FAILED';
+export const EDIT_ANSWER_BEGIN = 'EDIT_ANSWER_BEGIN';
+export const EDIT_ANSWER_UPDATE = 'EDIT_ANSWER_UPDATE';
+export const EDIT_ANSWER_CANCEL = 'EDIT_ANSWER_CANCEL';
+export const EDIT_ANSWER_REQUEST = 'EDIT_ANSWER_REQUEST';
+export const EDIT_ANSWER_SUCCESS = 'EDIT_ANSWER_SUCCESS';
+export const EDIT_ANSWER_FAILED = 'EDIT_ANSWER_FAILED';
 
-export const FORM_EDIT_INIT = 'FORM_EDIT_INIT';
-export const FORM_EDIT_SUCCESS = 'FORM_EDIT_SUCCESS';
-export const FORM_EDIT_FAILURE = 'FORM_EDIT_FAILURE';
+export const EDIT_FORM_REQUEST = 'EDIT_FORM_REQUEST';
+export const EDIT_FORM_SUCCESS = 'EDIT_FORM_SUCCESS';
+export const EDIT_FORM_FAILURE = 'EDIT_FORM_FAILURE';
 
-export const UPDATE_FORM_INACTIVE_MESSAGE_INIT = 'UPDATE_FORM_INACTIVE_MESSAGE_INIT';
+export const UPDATE_FORM_INACTIVE_MESSAGE_REQUEST = 'UPDATE_FORM_INACTIVE_MESSAGE_REQUEST';
 export const UPDATE_FORM_INACTIVE_MESSAGE_SUCCESS = 'UPDATE_FORM_INACTIVE_MESSAGE_SUCCESS';
 export const UPDATE_FORM_INACTIVE_MESSAGE_FAILURE = 'UPDATE_FORM_INACTIVE_MESSAGE_FAILURE';
 
-export const PUBLISH_GALLERY_INIT = 'PUBLISH_GALLERY_INIT';
+export const PUBLISH_GALLERY_REQUEST = 'PUBLISH_GALLERY_REQUEST';
 export const PUBLISH_GALLERY_SUCCESS = 'PUBLISH_GALLERY_SUCCESS';
 export const PUBLISH_GALLERY_FAILURE = 'PUBLISH_GALLERY_FAILURE';
 
@@ -85,207 +92,129 @@ export const GALLERY_ENABLE_IDENTIFIABLE = 'GALLERY_ENABLE_IDENTIFIABLE';
 export const UPDATE_EDITABLE_PII = 'UPDATE_EDITABLE_PII';
 export const RESET_EDITABLE_TEXT = 'RESET_EDITABLE_TEXT';
 
-const getInit = (body, method) => {
+/**
+ * Utils
+ */
 
-  var headers = new Headers({ 'Accept': 'application/json', 'Content-Type': 'application/json' });
-  var init = {
-    method: method || 'POST',
-    headers: headers,
-    mode: 'cors'
-  };
+const getInit = (body, method) => ({
+  method: method || 'POST',
+  headers: new Headers({ 'Accept': 'application/json', 'Content-Type': 'application/json' }),
+  mode: 'cors',
+  body: body ? JSON.stringify(body) : undefined
+});
 
-  if (body) {
-    init.body = JSON.stringify(body);
-  }
+/**
+ * Action creators
+ */
 
-  return init;
-};
+const formRequestStarted = id => ({ type: FETCH_FORM_REQUEST, id });
+const formRequestSuccess = form => ({ type: FETCH_FORM_SUCCESS, form });
+const formRequestFailure = err => ({ type: FETCH_FORM_FAILURE, err });
 
-export const formRequestStarted = id => {
-  return {
-    type: FORM_REQUEST_STARTED,
-    id
-  };
-};
+const formsRequestStarted = () => ({ type: FETCH_FORMS_REQUEST });
+const formsRequestSuccess = forms => ({ type: FETCH_FORMS_SUCCESS, forms });
+const formsRequestFailure = err => ({ type: FETCH_FORMS_SUCCESS, err });
 
-export const formRequestSuccess = form => {
-  return {
-    type: FORM_REQUEST_SUCCESS,
-    form
-  };
-};
+const deleteSuccessful = id => ({ type: FORM_DELETED, id });
 
-export const formRequestFailure = (err) => {
-  return {
-    type: FORM_REQUEST_FAILURE,
-    err
-  };
-};
+const formRequestEditAccess = formId => ({
+  type: REQUEST_EDIT_FORM_ACCESS,
+  formId,
+  publish: true
+});
 
-export const formsRequestStarted = () => {
-  return {
-    type: FORMS_REQUEST_STARTED
-  };
-};
-
-export const formsRequestSuccess = forms => {
-  return {
-    type: FORMS_REQUEST_SUCCESS,
-    forms
-  };
-};
-
-export const formsRequestFailure = err => {
-  return {
-    type: FORMS_REQUEST_FAILURE,
-    err
-  };
-};
-
-
-export const deleteSuccessful = (id) => {
-  return {
-    type: FORM_DELETED,
-    id
-  };
-};
-
-export const formRequestEditAccess = formId => {
-  return {
-    type: FORM_REQUEST_EDIT_ACCESS,
-    formId,
-    publish: true
-  };
-};
-
-export const formLeaveEdit = formId => {
-  return {
-    type: FORM_EDIT_LEAVE,
-    formId,
-    publish: true
-  };
-};
-
-export const fetchForms = () => {
-  return (dispatch, getState) => {
-    dispatch(formsRequestStarted());
-
-    fetch(`${getState().app.pillarHost}/api/forms`)
-      .then(res => res.json())
-      .then(forms => dispatch(formsRequestSuccess(forms)))
-      .catch(error => dispatch(formsRequestFailure(error)));
-  };
-};
-
-export const fetchForm = id => {
-  return (dispatch, getState) => {
-    dispatch(formRequestStarted(id));
-
-    fetch(`${getState().app.pillarHost}/api/form/${id}`)
-      .then(res => res.json())
-      .then(form => dispatch(formRequestSuccess(form)))
-      .catch(error => dispatch(formRequestFailure(error)));
-  };
-};
-
-export const deleteForm = (name, description, id) => {
-  return (dispatch, getState) => {
-    dispatch(formRequestStarted(id));
-    fetch(`${getState().app.pillarHost}/api/form/${id}`, getInit({ name, description }, 'DELETE'))
-      .then(res => res.json())
-      .then(deletedForm => {
-        dispatch(deleteSuccessful(id));
-        // FIXME: Pillar returns 'null' for deleted forms.
-        //dispatch(formRequestSuccess(deletedForm, 'delete'));
-      })
-      .catch(error => dispatch(formRequestFailure(error)));
-  };
-};
-
-export const requestEditAccess = formId => {
-  return dispatch => {
-    dispatch(formRequestEditAccess(formId));
-  };
-};
-
-export const leavingEdit = formId => {
-  return dispatch => {
-    dispatch(formLeaveEdit(formId));
-  };
-};
-
-export const createEmpty = () => (dispatch, getState) =>
-dispatch(createEmptyAction(`${getState().app.pillarHost}/api/form_submission/`));
+const formLeaveEdit = formId => ({ type: EDIT_FORM_LEAVE, formId, publish: true });
 
 const createEmptyAction = saveDestination => ({
-  type: FORM_CREATE_EMPTY,
+  type: CREATE_EMPTY_FORM,
   saveDestination
 });
 
-export const replaceWidgets = fields => {
-  return {
-    type: FORM_REPLACE_WIDGETS,
-    widgets: fields
-  };
-};
-
-export const appendWidget = (type, targetPosition) => {
-  return {
-    type: FORM_APPEND_WIDGET,
-    widget: type,
-    targetPosition: targetPosition
-  };
-};
-
-export const duplicateWidget = (position) => {
-  return {
-    type: FORM_DUPLICATE_WIDGET,
-    position
-  };
-};
-
-export const deleteWidget = (widgetPosition) => {
-  return {
-    type: FORM_DELETE_WIDGET,
-    widgetPosition
-  };
-};
-
-export const updateWidget = (id, data) => {
-  return {
-    type: WIDGET_UPDATE,
-    data,
-    id
-  };
-};
-
-export const moveWidget = (from, to) => {
-  return {
-    type: WIDGET_MOVE,
-    from,
-    to
-  };
-};
-
-export const updateForm = (data) => {
-  return {
-    type: FORM_UPDATE,
-    data
-  };
-};
-
-export const submissionsFetched = (counts, submissions) => ({
-  type: SUBMISSIONS_REQUEST_SUCCESS,
+const submissionsFetched = (counts, submissions) => ({
+  type: FETCH_SUBMISSIONS_SUCCESS,
   submissions,
   counts
 });
 
-export const submissionsFetchError = error => {
-  return {
-    type: SUBMISSIONS_REQUEST_FAILED,
-    error
-  };
+const submissionsFetchError = error => ({ type: FETCH_SUBMISSIONS_FAILED, error });
+
+const formCreated = form => ({ type: FORM_CREATED, form });
+const formCreationFailure = error => ({ type: FORM_CREATION_FAILURE, error });
+
+const requestGallery = () => ({ type: FETCH_FORM_GALLERY_REQUEST });
+const receivedGallery = gallery => ({ type: FETCH_FORM_GALLERY_SUCCESS, gallery });
+const galleryRequestError = error => ({ type: FETCH_FORM_GALLERY_FAILED, error });
+
+const answerRemovedFromGallery = gallery => ({
+  type: FORM_ANSWER_REMOVED_FROM_GALLERY,
+  gallery
+});
+
+/**
+ * Actions API
+ */
+
+export const fetchForms = () => (dispatch, getState) => {
+  dispatch(formsRequestStarted());
+
+  return fetch(`${getState().app.pillarHost}/api/forms`)
+    .then(res => res.json())
+    .then(forms => dispatch(formsRequestSuccess(forms)))
+    .catch(error => dispatch(formsRequestFailure(error)));
 };
+
+export const fetchForm = id => (dispatch, getState) => {
+  dispatch(formRequestStarted(id));
+
+  return fetch(`${getState().app.pillarHost}/api/form/${id}`)
+    .then(res => res.json())
+    .then(form => dispatch(formRequestSuccess(form)))
+    .catch(error => dispatch(formRequestFailure(error)));
+};
+
+export const deleteForm = (name, description, id) => (dispatch, getState) => {
+  dispatch(formRequestStarted(id));
+  return fetch(`${getState().app.pillarHost}/api/form/${id}`, getInit({ name, description }, 'DELETE'))
+    .then(res => res.json())
+    .then(deletedForm => {
+      dispatch(deleteSuccessful(id));
+      // FIXME: Pillar returns 'null' for deleted forms.
+      //dispatch(formRequestSuccess(deletedForm, 'delete'));
+    })
+    .catch(error => dispatch(formRequestFailure(error)));
+};
+
+export const requestEditAccess = formId => dispatch =>
+dispatch(formRequestEditAccess(formId));
+
+export const leavingEdit = formId => dispatch =>
+dispatch(formLeaveEdit(formId));
+
+export const createEmpty = () => (dispatch, getState) =>
+dispatch(createEmptyAction(`${getState().app.pillarHost}/api/form_submission/`));
+
+export const replaceWidgets = fields => ({ type: REPLACE_FORM_WIDGETS, widgets: fields });
+
+export const appendWidget = (type, targetPosition) => ({
+  type: APPEND_FORM_WIDGET,
+  widget: type,
+  targetPosition: targetPosition
+});
+
+export const duplicateWidget = position => ({
+  type: DUPLICATE_FORM_WIDGET,
+  position
+});
+
+export const deleteWidget = widgetPosition => ({
+  type: DELETE_FORM_WIDGET,
+  widgetPosition
+});
+
+export const updateWidget = (id, data) => ({ type: UPDATE_WIDGET, data, id });
+export const moveWidget = (from, to) => ({ type: MOVE_WIDGET, from, to });
+
+export const updateForm = data => ({ type: UPDATE_FORM, data });
 
 export const setActiveSubmission = submissionId => ({
   type: SET_ACTIVE_SUBMISSION,
@@ -296,14 +225,6 @@ export const updateActiveSubmission = props => ({
   type: UPDATE_ACTIVE_SUBMISSION,
   props
 });
-
-const formCreated = form => {
-  return {type: FORM_CREATED, form};
-};
-
-const formCreationFailure = error => {
-  return {type: FORM_CREATION_FAILURE, error};
-};
 
 export const saveForm = (form, widgets) => {
   const data = Object.assign({}, form);
@@ -317,7 +238,7 @@ export const saveForm = (form, widgets) => {
     const {app} = getState();
     data.settings.saveDestination =  `${app.pillarHost}/api/form_submission/`;
 
-    dispatch({type: FORM_CREATE_INIT, data});
+    dispatch({ type: CREATE_INIT_FORM, data });
     return fetch(`${app.elkhornHost}/create`, {
       method: 'POST',
       mode: 'cors',
@@ -331,64 +252,51 @@ export const saveForm = (form, widgets) => {
       dispatch(formCreated(json));
       return json;
     })
-    .catch(error => {
-      dispatch(formCreationFailure(error));
-    });
-
+    .catch(error => dispatch(formCreationFailure(error)));
   };
-
 };
 
-export const editForm = (form) => {
+export const editForm = form => (dispatch, getState) => {
   const data = {...form};
+  const {app} = getState();
 
-  return (dispatch, getState) => {
-    const {app} = getState();
-
-    dispatch({type: FORM_EDIT_INIT, data});
-    return fetch(`${app.elkhornHost}/create`, getInit(data, 'POST'))
-    .then(res => res.json())
-    .then(json => {
-      dispatch({type: FORM_EDIT_SUCCESS, data: json});
-      return json;
-    })
-    .catch(error => {
-      dispatch({type: FORM_EDIT_FAILURE, error});
-    });
-  };
+  dispatch({type: EDIT_FORM_REQUEST, data});
+  return fetch(`${app.elkhornHost}/create`, getInit(data, 'POST'))
+  .then(res => res.json())
+  .then(json => {
+    dispatch({type: EDIT_FORM_SUCCESS, data: json});
+    return json;
+  })
+  .catch(error => dispatch({type: EDIT_FORM_FAILURE, error}));
 };
 
-export const updateInactiveMessage = (message, form) => {
+export const updateInactiveMessage = (message, form) => (dispatch, getState) => {
   const formData = {...form};
   formData.settings.inactiveMessage = message;
 
-  return (dispatch, getState) => {
-    const {app} = getState();
+  const { app } = getState();
 
-    dispatch({type: UPDATE_FORM_INACTIVE_MESSAGE_INIT});
-    return fetch(`${app.elkhornHost}/create`, getInit(formData, 'POST'))
-    .then(res => res.json())
-    .then(json => {
-      dispatch({type: UPDATE_FORM_INACTIVE_MESSAGE_SUCCESS, data: json});
-      return json;
-    })
-    .catch(error => {
-      dispatch({type: UPDATE_FORM_INACTIVE_MESSAGE_FAILURE, error});
-    });
-  };
+  dispatch({ type: UPDATE_FORM_INACTIVE_MESSAGE_REQUEST });
+  return fetch(`${app.elkhornHost}/create`, getInit(formData, 'POST'))
+  .then(res => res.json())
+  .then(json => {
+    dispatch({type: UPDATE_FORM_INACTIVE_MESSAGE_SUCCESS, data: json});
+    return json;
+  })
+  .catch(error => {
+    dispatch({type: UPDATE_FORM_INACTIVE_MESSAGE_FAILURE, error});
+  });
 };
 
-export const fetchSubmissions = (formId, page = 0) => {
-  return (dispatch, getState) => {
-    const { app, forms } = getState();
-    const { submissionOrder, submissionFilterBy, submissionSearch } = forms;
-    const filterBy = submissionFilterBy === 'default' ? '' : submissionFilterBy;
-    const skip = page * 10;
-    return fetch(`${app.pillarHost}/api/form_submissions/${formId}?skip=${skip}&limit=10&orderby=${submissionOrder}&filterby=${filterBy}&search=${submissionSearch}`)
-      .then(res => res.json())
-      .then(data => dispatch(submissionsFetched(data.counts, data.submissions || [])))
-      .catch(error => dispatch(submissionsFetchError(error)));
-  };
+export const fetchSubmissions = (formId, page = 0) => (dispatch, getState) => {
+  const { app, forms } = getState();
+  const { submissionOrder, submissionFilterBy, submissionSearch } = forms;
+  const filterBy = submissionFilterBy === 'default' ? '' : submissionFilterBy;
+  const skip = page * 10;
+  return fetch(`${app.pillarHost}/api/form_submissions/${formId}?skip=${skip}&limit=10&orderby=${submissionOrder}&filterby=${filterBy}&search=${submissionSearch}`)
+    .then(res => res.json())
+    .then(data => dispatch(submissionsFetched(data.counts, data.submissions || [])))
+    .catch(error => dispatch(submissionsFetchError(error)));
 };
 
 // Receives an object of <string>, <bool> elements like {flagged: true, bookmarked: false}
@@ -418,30 +326,15 @@ export const updateSubmissionFlags = props => (dispatch, getState) => {
   ));
 };
 
-const requestGallery = () => {
-  console.log(FORM_GALLERY_REQUEST);
-  return {type: FORM_GALLERY_REQUEST};
-};
+export const fetchGallery = formId => (dispatch, getState) => {
+  dispatch(requestGallery(formId));
 
-const receivedGallery = gallery => {
-  return {type: FORM_GALLERY_SUCCESS, gallery};
-};
+  const {app} = getState();
 
-const galleryRequestError = error => {
-  return {type: FORM_GALLERY_ERROR, error};
-};
-
-export const fetchGallery = formId => {
-  return (dispatch, getState) => {
-    dispatch(requestGallery(formId));
-
-    const {app} = getState();
-
-    fetch(`${app.pillarHost}/api/form_galleries/${formId}`)
-      .then(res => res.json())
-      .then(galleries => dispatch(receivedGallery(galleries[0])))
-      .catch(error => dispatch(galleryRequestError(error)));
-  };
+  fetch(`${app.pillarHost}/api/form_galleries/${formId}`)
+    .then(res => res.json())
+    .then(galleries => dispatch(receivedGallery(galleries[0])))
+    .catch(error => dispatch(galleryRequestError(error)));
 };
 
 export const sendToGallery = (galleryId, subId, answerId) => {
@@ -456,22 +349,13 @@ export const sendToGallery = (galleryId, subId, answerId) => {
       .then(gallery => {
         dispatch({type: FORM_ANSWER_SENT_TO_GALLERY, gallery});
       })
-      .catch(error => {
-        console.log(error);
-      });
-  };
-};
-
-const answerRemovedFromGallery = gallery => {
-  return {
-    type: FORM_ANSWER_REMOVED_FROM_GALLERY,
-    gallery
+      .catch(error => { console.log(error); });
   };
 };
 
 export const removeFromGallery = (galleryId, subId, answerId) => {
   return (dispatch, getState) => {
-    const {app} = getState();
+    const { app } = getState();
     const options = {method: 'DELETE', mode: 'cors'};
 
     fetch(`${app.pillarHost}/api/form_gallery/${galleryId}/remove/${subId}/${answerId}`, options)
@@ -483,16 +367,14 @@ export const removeFromGallery = (galleryId, subId, answerId) => {
   };
 };
 
-export const updateFormStatus = (formId, status) => {
-  return (dispatch, getState) => {
-    const {app} = getState();
-    const options = {method: 'PUT', mode: 'cors'};
+export const updateFormStatus = (formId, status) => (dispatch, getState) => {
+  const {app} = getState();
+  const options = {method: 'PUT', mode: 'cors'};
 
-    fetch(`${app.pillarHost}/api/form/${formId}/status/${status}`, options)
-      .then(res => res.json())
-      .then(form => dispatch({type: FORM_STATUS_UPDATED, form, status}))
-      .catch(error => dispatch({type: FORM_STATUS_UPDATE_ERROR, error}));
-  };
+  fetch(`${app.pillarHost}/api/form/${formId}/status/${status}`, options)
+    .then(res => res.json())
+    .then(form => dispatch({type: FORM_STATUS_UPDATED, form, status}))
+    .catch(error => dispatch({type: FORM_STATUS_UPDATE_ERROR, error}));
 };
 
 // user opens the Edit Answer modal
@@ -507,7 +389,7 @@ export const beginEdit = (galleryId, submissionId, answerId) => {
     const editablePii = reply.identity_answers ? reply.identity_answers.map(a => cloneDeep(a)) : [];
 
     dispatch({
-      type: ANSWER_EDIT_BEGIN,
+      type: EDIT_ANSWER_BEGIN,
       answerId,
       submissionId,
       editableAnswer,
@@ -517,27 +399,22 @@ export const beginEdit = (galleryId, submissionId, answerId) => {
   };
 };
 
-// user starts typing and changing the Answer
-export const updateEditableAnswer = text => {
-  return {type: ANSWER_EDIT_UPDATE, text};
-};
 
-export const cancelEdit = () => {
-  return {type: ANSWER_EDIT_CANCEL};
-};
+// user starts typing and changing the Answer
+export const updateEditableAnswer = text => ({type: EDIT_ANSWER_UPDATE, text });
+export const cancelEdit = () => ({ type: ANSWER_EDIT_CANCEL });
 
 // this just resets the editable text to the original
 // it does NOT remove the edit on the data object.
-export const resetEditableTextToOriginal = (answer) => {
-  return {type: RESET_EDITABLE_TEXT, text: answer.answer.answer.text};
-};
+export const resetEditableTextToOriginal = answer => ({
+  type: RESET_EDITABLE_TEXT,
+  text: answer.answer.answer.text
+});
 
 export const updateEditablePii = (reply, idAnswer, value) => {
   return (dispatch, getState) => {
 
     const {forms: {editablePii: editablePii}} = getState();
-
-    console.log('updateEditablePii', reply, idAnswer, value, editablePii);
 
     // set the new value to the edited field in the editablePII array
     const newEditablePii = editablePii.map(entry => {
@@ -556,7 +433,7 @@ export const updateEditablePii = (reply, idAnswer, value) => {
 // answer_id is the same as widget_id if updating PII
 export const editAnswer = (edited, submission_id, answer_id, formId) => {
   return (dispatch, getState) => {
-    dispatch({type: ANSWER_EDIT_REQUEST});
+    dispatch({type: EDIT_ANSWER_REQUEST});
 
     const {app} = getState();
 
@@ -567,78 +444,73 @@ export const editAnswer = (edited, submission_id, answer_id, formId) => {
     })
       .then(res => res.json())
       .then(submission => {
-        dispatch({type: ANSWER_EDIT_SUCCESS, submission});
+        dispatch({type: EDIT_ANSWER_SUCCESS, submission});
         // just re-fetch the gallery instead of trying to munge the state
         dispatch(fetchGallery(formId));
       })
-      .catch(error => dispatch({type: ANSWER_EDIT_FAILED, error}));
+      .catch(error => dispatch({type: EDIT_ANSWER_FAILED, error}));
   };
 };
 
-export const updateGalleryTitle = title => {
-  return {type: UPDATE_GALLERY_TITLE, title};
+export const updateGalleryTitle = title => ({ type: UPDATE_GALLERY_TITLE, title });
+
+export const updateGalleryDesc = description => ({
+  type: UPDATE_GALLERY_DESCRIPTION,
+  description
+});
+
+export const updateReaderInfoPlacement = placement => ({
+  type: UPDATE_READER_INFO_PLACEMENT,
+  placement
+});
+
+export const updateGalleryOrientation = orientation => ({
+  type: UPDATE_GALLERY_ORIENTATION,
+  orientation
+});
+
+/**
+ * {id} is the id of a widget in a form
+ * {add} is a boolean indicating whether the id should be added or removed
+ */
+export const toggleIdentifiable = (id, add) => (dispatch, getState) => {
+  const { forms } = getState();
+  const oldIds = forms[forms.activeGallery].config.identifiableIds || [];
+
+  let ids;
+
+  if (add) { // add the new id
+    ids = [id, ...oldIds];
+  } else { // splice out the old one
+    ids = [...oldIds];
+    ids.splice(ids.indexOf(id), 1);
+  }
+
+  dispatch({type: GALLERY_ENABLE_IDENTIFIABLE, ids});
 };
 
-export const updateGalleryDesc = description => {
-  return {type: UPDATE_GALLERY_DESCRIPTION, description};
-};
-
-export const updateReaderInfoPlacement = placement => {
-  return {type: UPDATE_READER_INFO_PLACEMENT, placement};
-};
-
-export const updateGalleryOrientation = orientation => {
-  return {type: UPDATE_GALLERY_ORIENTATION, orientation};
-};
-
-/*
-
-{id} is the id of a widget in a form
-{add} is a boolean indicating whether the id should be added or removed
-
-*/
-export const toggleIdentifiable = (id, add) => {
-  return (dispatch, getState) => {
-    const { forms } = getState();
-    const oldIds = forms[forms.activeGallery].config.identifiableIds || [];
-
-    let ids;
-
-    if (add) { // add the new id
-      ids = [id, ...oldIds];
-    } else { // splice out the old one
-      ids = [...oldIds];
-      ids.splice(ids.indexOf(id), 1);
-    }
-
-    dispatch({type: GALLERY_ENABLE_IDENTIFIABLE, ids});
-  };
-};
-
-export const publishGallery = () => {
-  return (dispatch, getState) => {
-    const {app, forms} = getState();
-    const { activeGallery } = forms;
-    const gallery = forms[activeGallery];
-    /*const {
-      identifiableIds
-    } = forms;*/
-    dispatch({type: PUBLISH_GALLERY_INIT});
+export const publishGallery = () => (dispatch, getState) => {
+  const {app, forms} = getState();
+  const { activeGallery } = forms;
+  const gallery = forms[activeGallery];
+  /*const {
+    identifiableIds
+  } = forms;*/
+  dispatch({type: PUBLISH_GALLERY_REQUEST});
 
 
-    return fetch(`${app.elkhornHost}/gallery/${gallery.id}/publish`, {
-      method: 'POST',
-      headers: new Headers({'Content-Type': 'application/json'}),
-      body: JSON.stringify(gallery)
-    })
-    .then(res => res.json())
-    .then(gallery => {
-      console.log(gallery);
-      dispatch({type: PUBLISH_GALLERY_SUCCESS, gallery});
-      return gallery;
-    })
-    .catch(error => dispatch({type: PUBLISH_GALLERY_FAILURE, error}));
-  };
+  return fetch(`${app.elkhornHost}/gallery/${gallery.id}/publish`, {
+    method: 'POST',
+    headers: new Headers({'Content-Type': 'application/json'}),
+    body: JSON.stringify(gallery)
+  })
+  .then(res => res.json())
+  .then(gallery => {
+    console.log(gallery);
+    dispatch({type: PUBLISH_GALLERY_SUCCESS, gallery});
+    return gallery;
+  })
+  .catch(error => dispatch({type: PUBLISH_GALLERY_FAILURE, error}));
 };
 
 export const updateFilterBy = filterBy => ({
@@ -656,11 +528,7 @@ export const updateSearch = search => ({
   value: search
 });
 
-export const cleanSubmissionFilters = () => ({
-  type: CLEAN_SUBMISSION_FILTERS
-});
-
-export const hasFlag = (submission, flag) => -1 !== submission.flags.indexOf(flag);
+export const cleanSubmissionFilters = () => ({ type: CLEAN_SUBMISSION_FILTERS });
 
 export const reinsertGalleryAnswer = (galleryId, key, position) => ({
   type: FORM_ANSWER_REINSERT,
@@ -668,3 +536,7 @@ export const reinsertGalleryAnswer = (galleryId, key, position) => ({
   key,
   position
 });
+
+export const hasFlag = (submission, flag) => -1 !== submission.flags.indexOf(flag);
+
+

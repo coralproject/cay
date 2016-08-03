@@ -4,6 +4,7 @@
  */
 
 import reduce from 'lodash/collection/reduce';
+import { getFiltersFromConfig } from 'filters/utils';
 
 /**
  * Import action names

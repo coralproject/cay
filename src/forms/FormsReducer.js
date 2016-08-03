@@ -329,6 +329,9 @@ export default (state = initial, action) => {
   case types.EDIT_ANSWER_FAILED: // server was unable to update the answer
     return {...state, loadingAnswerEdit: false, answerBeingEdited: null};
 
+  case types.FORM_DRAG_ENDED:
+    return {...state, isHovering: false};
+
   case types.UPDATE_GALLERY_TITLE:
     return {...state, [state.activeGallery]: {...state[state.activeGallery], headline: action.title}};
 
@@ -382,6 +385,7 @@ export default (state = initial, action) => {
     newAnswers[action.key] = newAnswers[newPos];
     newAnswers[newPos] = aux;
     return { ...state, [action.galleryId]: {...state[action.galleryId], answers: newAnswers}};
+
   default:
     return state;
   }

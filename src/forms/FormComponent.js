@@ -1,7 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 import { connect } from 'react-redux';
 import { DragSource } from 'react-dnd';
-import { updateWidget } from 'forms/FormActions';
+import { updateWidget, formDragEnded } from 'forms/FormActions';
 
 import FaTrash from 'react-icons/lib/fa/trash';
 import FaClose from 'react-icons/lib/fa/close';
@@ -43,7 +43,7 @@ const renderSettings = {
   EmailField(field, props) {
     return (
       <EmailFieldEditor field={ field } { ...props } />
-    )
+    );
   },
 
   TextArea(field, props) {
@@ -55,27 +55,33 @@ const renderSettings = {
   MultipleChoice(field, props) {
     return (
       <MultipleChoiceEditor field={ field } { ...props } />
-    )
+    );
   },
 
   PhoneNumber(field, props) {
     return (
       <PhoneNumberEditor field={ field } { ...props } />
-    )
+    );
   }
 };
 
 const askSource = {
-  beginDrag(props) {
+  beginDrag(props, monitor, component) {
+    if (component.props.formDiagram) {
+      component.props.formDiagram.setState({ itemBeingDragged: component.props.position });
+    }
     return {
       field: props.field,
       id: props.id,
       onList: props.onList,
-      position: props.position
+      position: props.position,
+      component: component
     };
   },
   endDrag(props, monitor, component) {
-    // console.log("enddrag");
+    // dispatchProps should be merged with props but looks like it's not inside this call
+    if (component && component.dispatchProps) component.dispatchProps.dispatch(formDragEnded());
+    if (props.formDiagram) props.formDiagram.setState({ isHovering: false });
   }
 };
 
@@ -105,15 +111,17 @@ export default class FormComponent extends Component {
   }
 
   render() {
-    const { onList } = this.props;
-    return onList ?
-      this.renderEdit()
-      : this.renderType();
+    const { onList, connectDragSource } = this.props;
+    return this.props.connectDragSource(
+      onList ?
+        this.renderEdit()
+        : this.renderType()
+    );
   }
 
   toggleExpanded() {
     if (this.props.onList) {
-      this.setState({ expanded: !this.state.expanded })
+      this.setState({ expanded: !this.state.expanded });
     }
   }
 
@@ -122,7 +130,7 @@ export default class FormComponent extends Component {
     return (
       <div onClick={this.onClick.bind(this)} style={styles.askComponent(isDragging)}>
         <field.icon style={styles.icon} />
-        <span style={styles.title}>{ field.friendlyType }</span>
+        <span style={styles.title}>{ field.type }</span>
       </div>
     );
   }
@@ -159,6 +167,7 @@ export default class FormComponent extends Component {
   renderEdit() {
     const { id, onMove, isLast, position, onDelete, onDuplicate } = this.props;
     const { field } = this.state;
+
     return (
       <div>
         {
@@ -169,7 +178,7 @@ export default class FormComponent extends Component {
                 <div style={ styles.fieldAndPosition }>
                   <div style={ styles.fieldPosition }>{ position + 1 }.</div>
                   <h4 style={styles.editBody}>
-                    { field.title ? field.title : field.friendlyType }
+                    { !!field.title ? field.title : field.component }
                     {
                       field.wrapper && field.wrapper.required ?
                         <span style={ styles.requiredAsterisk }>*</span>

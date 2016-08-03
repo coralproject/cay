@@ -1,7 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import {connect} from 'react-redux';
 
+import { DropTarget } from 'react-dnd';
+
 import { grey } from 'settings';
+
 import DropPlaceHolder from 'forms/DropPlaceHolder';
 
 import { appendWidget, moveWidget, replaceWidgets, deleteWidget, duplicateWidget, updateForm } from 'forms/FormActions';
@@ -16,14 +19,22 @@ export default class FormDiagram extends Component {
 
   constructor(props, context) {
     super(props, context);
-    this.state = { widgets: [], isHovering: false, tempWidgets: [], showTitleIsRequired: false };
-    this.previousState = []; // a copy of state.fields
-    this.previousHover = null; // cache the element previously hovered
+    this.state = { widgets: [], isHovering: false, tempWidgets: [], showTitleIsRequired: false, itemBeingDragged: -1, canDrop: false };
+    this.stateBeforeDrag = []; // a copy of state.fields
+    this.previousHover = null;
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({ widgets: nextProps.forms.widgets, tempWidgets: nextProps.forms.widgets, isHovering: false });
-    this.previousState = nextProps.forms.widgets;
+    this.stateBeforeDrag = nextProps.forms.widgets;
+  }
+
+  resetForm() {
+    this.setState({ widgets: this.stateBeforeDrag.slice(), tempWidgets: this.stateBeforeDrag.slice() });
+  }
+
+  saveState() {
+    this.stateBeforeDrag = this.state.widgets.slice();
   }
 
   getForm() {
@@ -65,6 +76,19 @@ export default class FormDiagram extends Component {
     }));
   }
 
+  enqueueReset() {
+    // Ensure we are not setting the timeout over and over
+    this.previousHover = -1;
+    if (!this._timeout) {
+      this._timeout = setTimeout(() => this.resetForm(), 10);
+    }
+  }
+
+  cancelReset() {
+    clearTimeout(this._timeout);
+    this._timeout = false;
+  }
+
   onConditionsChange(e) {
     this.props.markAsUnsaved();
     this.props.dispatch(updateForm({
@@ -88,23 +112,31 @@ export default class FormDiagram extends Component {
         }
         <textarea onChange={ this.onFormDescriptionChange.bind(this) } style={ styles.description } placeholder={ "Write instructions and a description for the form below" } defaultValue={ form.header.description } />
         <div style={styles.formDiagram}>
-          { this.props.forms.widgets.map((field, i) => (
-            <DropPlaceHolder key={i} formDiagram={ this } position={ i } dropped={ field.dropped }>
-              <FormComponent
-                id={ field.id }
-                key={ i }
-                field={ field }
-                position={ i }
-                onFieldSelect={ onFieldSelect }
-                onList={ true }
-                isLast={ i === this.props.forms.widgets.length - 1 }
-                onMove={ this.onMove.bind(this) }
-                onDuplicate={ this.onDuplicate.bind(this) }
-                onDelete={ this.onDelete.bind(this) }
-                 />
+          { this.state.tempWidgets.map((field, i) => (
+            <DropPlaceHolder beingDragged={ i == this.state.itemBeingDragged } key={i} formDiagram={ this } position={ i } dropped={ field.dropped }>
+                <FormComponent
+                  id={ field.id }
+                  key={ i }
+                  field={ field }
+                  formDiagram={ this }
+                  position={ i }
+                  onFieldSelect={ onFieldSelect }
+                  onList={ true }
+                  beingDragged={ i == this.state.itemBeingDragged }
+                  isLast={ i === this.state.tempWidgets.length - 1 }
+                  onMove={ this.onMove.bind(this) }
+                  onDuplicate={ this.onDuplicate.bind(this) }
+                  onDelete={ this.onDelete.bind(this) }
+                   />
             </DropPlaceHolder>
           ))}
-          { !this.props.forms.widgets.length ? <BlankState /> : null }
+
+          {
+            !this.state.isHovering || this.state.tempWidgets.length === 0
+            ? <DropPlaceHolder formDiagram={ this } position={ this.state.tempWidgets.length } key={ this.state.tempWidgets.length } />
+            : null
+          }
+
         </div>
         <div style={ styles.extraFields }>
           <h3 style={ styles.extraFieldTitle }>Thank you message (optional)</h3>
@@ -164,13 +196,6 @@ export default class FormDiagram extends Component {
     this.props.dispatch(replaceWidgets(fields));
   }
 }
-
-const BlankState = () => (
-  <div style={styles.blankContainer}>
-    <h1 style={styles.blankTitle}>Select Question Fields in the left panel to build a form.</h1>
-  </div>
-);
-
 
 const styles = {
   blankContainer: {

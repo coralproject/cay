@@ -1,6 +1,9 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import _ from 'lodash';
+import last from 'lodash/array/last';
+import has from 'lodash/object/has';
+import isString from 'lodash/lang/isString';
+import isDate from 'lodash/lang/isDate';
 import moment from 'moment';
 import Trash from 'react-icons/lib/fa/trash';
 import Edit from 'react-icons/lib/fa/pencil-square';
@@ -35,12 +38,12 @@ export default class GalleryAnswer extends React.Component {
     });
 
     // check for Other answer
-    if (_.last(selectedIndexes) >= answer.answer.props.options.length) {
+    if (last(selectedIndexes) >= answer.answer.props.options.length) {
       options.push(
         <li
           style={[styles.multiple.option, styles.multiple.other]}
-          key={_.last(selectedIndexes)}>
-          Other: {_.last(answer.answer.answer.options).title}
+          key={last(selectedIndexes)}>
+          Other: {last(answer.answer.answer.options).title}
         </li>
       );
     }
@@ -53,7 +56,7 @@ export default class GalleryAnswer extends React.Component {
     const { answer, gallery, identifiableIds, onMoveAnswerUp, onMoveAnswerDown, key } = this.props;
     let multipleChoice;
 
-    if (_.has(answer, 'answer.props.multipleChoice') && answer.answer.props.multipleChoice) {
+    if (has(answer, 'answer.props.multipleChoice') && answer.answer.props.multipleChoice) {
       multipleChoice = this.renderMultipleChoice(answer);
     }
 
@@ -63,7 +66,7 @@ export default class GalleryAnswer extends React.Component {
 
     // render as a formatted Date if possible
     const possibleDateValue = new Date(text);
-    if (_.isString(answer.answer.answer.value) && _.isDate(possibleDateValue) && !isNaN(possibleDateValue)) {
+    if (isString(answer.answer.answer.value) && isDate(possibleDateValue) && !isNaN(possibleDateValue)) {
       text = moment(possibleDateValue).format('D MMM YYYY');
     }
 

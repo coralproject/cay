@@ -5,7 +5,8 @@ import BBookmark from 'react-icons/lib/fa/bookmark';
 import PaperPlaneIcon from 'react-icons/lib/fa/paper-plane';
 import FlagIcon from 'react-icons/lib/fa/flag';
 import TrashIcon from 'react-icons/lib/fa/trash';
-import _ from 'lodash';
+import isString from 'lodash/lang/isString';
+import isDate from 'lodash/lang/isDate';
 
 import settings from 'settings';
 import Button from 'components/Button';
@@ -94,7 +95,7 @@ export default class SubmissionDetail extends Component {
     const possibleDateValue = new Date(reply.answer.value);
 
     // render a Date answer
-    if (_.isString(reply.answer.value) && _.isDate(possibleDateValue) && !isNaN(possibleDateValue)) {
+    if (isString(reply.answer.value) && isDate(possibleDateValue) && !isNaN(possibleDateValue)) {
       return moment(possibleDateValue).format('D MMM YYYY');
     }
 

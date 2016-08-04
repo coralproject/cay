@@ -13,6 +13,7 @@ import Card from 'components/cards/Card';
 import ContentHeader from 'components/ContentHeader';
 import Button from 'components/Button';
 import Modal from 'components/modal/Modal';
+import L from 'i18n';
 
 const RadiumLink = Radium(Link);
 
@@ -64,7 +65,7 @@ export default class SeeAllSearches extends Component {
           styles.base,
           this.props.style
         ]}>
-          <ContentHeader title={ window.L.t('Saved Searches') } />
+          <ContentHeader title={ L.t('Saved Searches') } />
           <div>
             {searches.map((search, key) =>
               <Search key={key} search={search}
@@ -76,12 +77,12 @@ export default class SeeAllSearches extends Component {
           this.state.pendingDeleteSearch ?
           (
             <Modal
-              title={window.L.t('Really delete saved search?')}
+              title={L.t('Really delete saved search?')}
               isOpen={this.state.deleteModalOpen}
               confirmAction={this.confirmDelete.bind(this, this.state.pendingDeleteSearch)}
               cancelAction={this.cancelDelete.bind(this, this.state.pendingDeleteSearch)}>
-              <p>{window.L.t('Search Name')} {this.state.pendingDeleteSearch.name}</p>
-              <p>{window.L.t('Description')}: {this.state.pendingDeleteSearch.description}</p>
+              <p>{L.t('Search Name')} {this.state.pendingDeleteSearch.name}</p>
+              <p>{L.t('Description')}: {this.state.pendingDeleteSearch.description}</p>
             </Modal>
           )
           : null
@@ -98,13 +99,13 @@ const Search = Radium(({ key, search, openDeleteModal }) => (
       <div style={styles.actionsContainer}>
         <RadiumLink
           style={styles.button}
-          to={`/edit-search/${search.id}`}>{window.L.t('Edit')}
+          to={`/edit-search/${search.id}`}>{L.t('Edit')}
         </RadiumLink>
         <Button
           category='danger'
           style={styles.deleteButton}
           onClick={openDeleteModal}>
-          {window.L.t('Delete')}
+          {L.t('Delete')}
         </Button>
       </div>
     </div>

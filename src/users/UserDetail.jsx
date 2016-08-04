@@ -1,6 +1,6 @@
 import React, {PropTypes, Component} from 'react';
 import Radium from 'radium';
-import _ from 'lodash';
+import has from 'lodash/object/has';
 
 import Stat from 'components/stats/Stat';
 import Heading from 'components/Heading';
@@ -9,9 +9,6 @@ import FAClose from 'react-icons/lib/fa/close';
 import FAArrowRight from 'react-icons/lib/fa/arrow-right';
 import FAArrowLeft from 'react-icons/lib/fa/arrow-left';
 
-import { Lang } from 'i18n/lang';
-
-@Lang
 @Radium
 export default class UserDetail extends Component {
   static propTypes = {
@@ -50,7 +47,7 @@ export default class UserDetail extends Component {
         <Stat term="% comments that are replies" description={Math.floor(dimension.reply_ratio * 100) + '%'} />
       ]);
 
-      if (specificBreakdown === 'all' && _.has(this.props, 'user.statistics.comments.all.CommunityFlagged')) {
+      if (specificBreakdown === 'all' && has(this.props, 'user.statistics.comments.all.CommunityFlagged')) {
         statsList.push(<Stat term="Community flagged"
           description={this.props.user.statistics.comments.all.CommunityFlagged.count}
         />);

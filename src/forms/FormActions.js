@@ -1,6 +1,6 @@
 'use strict';
 
-import _ from 'lodash';
+import cloneDeep from 'lodash/lang/cloneDeep';
 
 export const SUBMISSIONS_REQUEST_STARTED = 'SUBMISSIONS_REQUEST_STARTED';
 export const SUBMISSIONS_REQUEST_SUCCESS = 'SUBMISSIONS_REQUEST_SUCCESS';
@@ -65,6 +65,8 @@ export const FORM_EDIT_FAILURE = 'FORM_EDIT_FAILURE';
 export const UPDATE_FORM_INACTIVE_MESSAGE_INIT = 'UPDATE_FORM_INACTIVE_MESSAGE_INIT';
 export const UPDATE_FORM_INACTIVE_MESSAGE_SUCCESS = 'UPDATE_FORM_INACTIVE_MESSAGE_SUCCESS';
 export const UPDATE_FORM_INACTIVE_MESSAGE_FAILURE = 'UPDATE_FORM_INACTIVE_MESSAGE_FAILURE';
+
+export const FORM_DRAG_ENDED = 'FORM_DRAG_ENDED';
 
 export const PUBLISH_GALLERY_INIT = 'PUBLISH_GALLERY_INIT';
 export const PUBLISH_GALLERY_SUCCESS = 'PUBLISH_GALLERY_SUCCESS';
@@ -504,7 +506,7 @@ export const beginEdit = (galleryId, submissionId, answerId) => {
     const reply = forms[answerKey];
     const editableAnswer = reply.answer.edited ? reply.answer.edited : reply.answer.answer.text;
     // deep clone on the array
-    const editablePii = reply.identity_answers ? reply.identity_answers.map(a => _.cloneDeep(a)) : [];
+    const editablePii = reply.identity_answers ? reply.identity_answers.map(a => cloneDeep(a)) : [];
 
     dispatch({
       type: ANSWER_EDIT_BEGIN,
@@ -661,6 +663,8 @@ export const cleanSubmissionFilters = () => ({
 });
 
 export const hasFlag = (submission, flag) => -1 !== submission.flags.indexOf(flag);
+
+export const formDragEnded = () => ({ type: FORM_DRAG_ENDED });
 
 export const reinsertGalleryAnswer = (galleryId, key, position) => ({
   type: FORM_ANSWER_REINSERT,

@@ -1,4 +1,8 @@
-import _ from 'lodash';
+
+import isUndefined from 'lodash/lang/isUndefined';
+import isNull from 'lodash/lang/isNull';
+import reduce from 'lodash/collection/reduce';
+
 import * as filterTypes from 'filters/FiltersActions';
 import * as searchTypes from 'search/SearchActions';
 
@@ -39,10 +43,10 @@ const filters = (state = initialState, action) => {
       const key = `filter${i}`;
       const editableKey = `${key}Editable`;
 
-      const min = _.isUndefined(filter.minRange) ? null : filter.minRange;
-      const max = _.isUndefined(filter.maxRange) ? null : filter.maxRange;
-      const userMin = _.isNull(min) ? null : filter.minRange;
-      const userMax = _.isNull(max) ? null : filter.maxRange;
+      const min = isUndefined(filter.minRange) ? null : filter.minRange;
+      const max = isUndefined(filter.maxRange) ? null : filter.maxRange;
+      const userMin = isNull(min) ? null : filter.minRange;
+      const userMax = isNull(max) ? null : filter.maxRange;
 
       accum[key] = {...filter, min, max, userMin, userMax, key};
       accum[editableKey] = {...accum[key], key: editableKey};
@@ -114,8 +118,8 @@ const filters = (state = initialState, action) => {
 
   case types.RECEIVE_FILTER_RANGES:
 
-    const newFilters = _.reduce(action.data, (accum, filter, key) => {
-      accum[key] = _.assign({}, state[key], action.data[key]);
+    const newFilters = reduce(action.data, (accum, filter, key) => {
+      accum[key] = Object.assign({}, state[key], action.data[key]);
       return accum;
     }, {});
 

@@ -27,6 +27,7 @@ import Modal from 'components/modal/Modal';
 import TextField from 'components/forms/TextField';
 import StatusBar from 'components/StatusBar';
 import Clauses from 'search/Clauses';
+import L from 'i18n';
 
 /**
  * Search creator page
@@ -119,7 +120,7 @@ export default class SearchCreator extends Component {
       <Page style={styles.pageBase}>
         <div style={styles.base}>
           <div style={styles.topSection}>
-            <ContentHeader title={ window.L.t('Create a Search') } />
+            <ContentHeader title={ L.t('Create a Search') } />
             <Button
               onClick={this.openModal.bind(this)}
               category="info"

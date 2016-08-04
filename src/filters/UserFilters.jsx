@@ -1,8 +1,8 @@
 import React from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
-import _ from 'lodash';
 import settings from 'settings';
+import capitalize from 'lodash/string/capitalize';
 
 import { userSelected } from 'users/UsersActions';
 import { makeQueryFromState, clearUserList } from 'search/SearchActions';
@@ -112,8 +112,9 @@ export default class UserFilters extends React.Component {
     return userFilters.map((f,i) => {
       let filterComponent;
       const fmtDesc = f.description.charAt(0).toUpperCase() + f.description.slice(1, f.description.length);
-      const inTitleCase = _.map(f.description.split(' '), _.capitalize).join(' ');
+      const inTitleCase = f.description.split(' ').map(capitalize).join(' ');
       const filterStyle = Object.assign({}, styles.filterBase, {backgroundColor: i % 2 ? 'transparent' : '#f5f5f5'});
+
       if (f.type === 'percentRange') {
         filterComponent = (
           <FilterNumberPercent

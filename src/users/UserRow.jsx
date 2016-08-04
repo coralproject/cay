@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import _ from 'lodash';
+import template from 'lodash/string/template';
+import get from 'lodash/object/get';
 import ListItem from 'components/lists/ListItem';
 import moment from 'moment';
 
@@ -64,8 +65,8 @@ export default class UserRow extends React.Component {
           );
         }
 
-        let dimension = _.template(this.props.filters[filterName].template)({ dimension: `${breakdown}.${specificBreakdown}` });
-        dimension = _.get(user, dimension);
+        let dimension = template(this.props.filters[filterName].template)({ dimension: `${breakdown}.${specificBreakdown}` });
+        dimension = get(user, dimension);
         let num = parseInt(dimension, 10);
         if (isNaN(num)) {
           num = parseFloat(dimension).toFixed(2);

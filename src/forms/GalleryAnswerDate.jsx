@@ -8,6 +8,12 @@ export default class GalleryAnswerDate extends React.Component {
   }
 
   render() {
+    const {answer} = this.props;
 
+    console.log('GalleryAnswerDate', answer);
+
+    return (
+      <div>Date</div>
+    );
   }
 }

@@ -38,11 +38,6 @@ export default class GalleryAnswer extends React.Component {
     this.props.removeSubmission(gallery.id, answer.submission_id, answer.answer_id);
   }
 
-  renderMultipleChoice(answer) {
-
-    return <GalleryAnswerMulti answer={answer} />;
-  }
-
   render() {
 
     const { answer, gallery, identifiableIds, onMoveAnswerUp, onMoveAnswerDown, position } = this.props;
@@ -51,7 +46,7 @@ export default class GalleryAnswer extends React.Component {
     console.log('GalleryAnswer answer', answer);
 
     if (has(answer, 'answer.props.options') && Array.isArray(answer.answer.props.options)) {
-      multipleChoice = this.renderMultipleChoice(answer.answer);
+      multipleChoice = <GalleryAnswerMulti answer={answer.answer} />;
     }
 
     let unedited = answer.answer.answer.value ? answer.answer.answer.value : answer.answer.answer.text;
@@ -110,7 +105,6 @@ export default class GalleryAnswer extends React.Component {
           <div
             className='editButton'
             style={styles.editButton}
-            category="info"
             size="small"
             onClick={this.editAnswer.bind(this)}>
             <Edit style={styles.icon} /> Edit

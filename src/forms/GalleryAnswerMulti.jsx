@@ -7,7 +7,12 @@ import settings from 'settings';
 @Radium
 export default class GalleryAnswerMulti extends React.Component {
   static propTypes = {
-    answer: PropTypes.shape().isRequired
+    answer: PropTypes.shape({
+      answer: PropTypes.shape({
+        options: PropTypes.arrayOf(PropTypes.object)
+      }).isRequired,
+      props: PropTypes.object
+    }).isRequired
   }
 
   render() {

@@ -15,7 +15,7 @@ import rootReducer from 'app/MainReducer';
 
 const debouncer = createDebounce({ userMangerFilters: 500 });
 const middleware = [thunk, debouncer];
-const devTools = devToolsExtension ? devToolsExtension() : f => f;
+const devTools = typeof devToolsExtension !== 'undefined' ? devToolsExtension() : f => f;
 
 /**
  * Store creator based on environment

@@ -338,7 +338,7 @@ const forms = (state = initial, action) => {
     return {
       ...state,
       loadingGallery: false,
-      galleryUrl: action.gallery.url,
+      galleryUrl: action.gallery.urls.bundle,
       galleryCode: action.gallery.build.code
     };
 

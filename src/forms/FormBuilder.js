@@ -97,11 +97,11 @@ export default class FormBuilder extends Component {
     const { forms, dispatch, activeForm } = this.props;
     const { form, widgets } = forms;
     dispatch(saveForm(activeForm ? forms[activeForm] : form, widgets))
-      .then(data => {
-        if (data && data.id) {
+      .then(response => {
+        if (response.data && response.data.id) {
           this.saved = true;
           this.props.dispatch(showFlashMessage('Your form saved.', 'success'));
-          return !activeForm && router.push(`/forms/${data.id}`);
+          return !activeForm && router.push(`/forms/${response.data.id}`);
         } else {
           this.props.dispatch(showFlashMessage('Uh-oh, we can\'t save your form. Try again or report the error to your technical team', 'warning'));
         }

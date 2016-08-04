@@ -8,9 +8,11 @@ import { Lang } from 'i18n/lang';
 import messages from 'i18n/messages';
 import LangSugar from 'i18n/lang';
 
-window.L = new LangSugar();
+const L = new LangSugar();
 
-window.L.addTranslations(messages['en'], 'en');
-window.L.addTranslations(messages['de'], 'de');
-window.L.addTranslations(messages['es'], 'es');
-window.L.setLocale(window.L.locale);
+L.addTranslations(messages['en'], 'en');
+L.addTranslations(messages['de'], 'de');
+L.addTranslations(messages['es'], 'es');
+L.setLocale(L.locale);
+
+export default L;

@@ -1,12 +1,13 @@
 import * as tagsActions from 'tags/TagActions';
 import * as authActions from 'auth/AuthActions';
+import L from 'i18n';
 
 const types = Object.assign({}, tagsActions, authActions);
 
 const initialState = {
   loading: false,
   loadingTags: false,
-  authorized: window.localStorage.authorized || false,
+  authorized: localStorage.authorized || false,
   items: []
 };
 
@@ -44,7 +45,7 @@ const tags = (state = initialState, action) => {
       ...state,
       loadingTags: false,
       hasErrors: true,
-      errorMsg: `${window.L.t('Tag action failed')}: ${action.err}`
+      errorMsg: `${L.t('Tag action failed')}: ${action.err}`
     };
 
   // there's probably a better way to do this

@@ -13,11 +13,10 @@ import { userSelected } from 'users/UsersActions';
 import { fetchCommentsByUser } from 'comments/CommentsActions';
 import UserDetail from 'users/UserDetail';
 
-import { Lang } from 'i18n/lang';
+import L from 'i18n';
 
 @connect(({filters, users, comments}) =>
   ({filters, user: users.selectedUser, comments}))
-@Lang
 @Radium
 export default class UserList extends React.Component {
 
@@ -170,7 +169,7 @@ export default class UserList extends React.Component {
               <Spinner />
             </div> :
             <Heading size='medium'>
-              <span style={styles.groupHeader}>{ window.L.t('results') }</span> ({this.props.total} {this.props.total !== 1 ? window.L.t('users') : window.L.t('user')})
+              <span style={styles.groupHeader}>{ L.t('results') }</span> ({this.props.total} {this.props.total !== 1 ? L.t('users') : L.t('user')})
             </Heading>
           }
           <div style={styles.sort}>

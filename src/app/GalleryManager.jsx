@@ -413,21 +413,21 @@ export default class SubmissionGallery extends Component {
           cancelAction={this.closePublishModal.bind(this)}>
           <div>
             <p>Embed code</p>
-            <textarea style={styles.embedTextarea} value={`<script src="${forms.galleryUrl}"></script><div id="ask-gallery" />`}></textarea>
+            <textarea style={styles.embedTextarea} value={`<script src="${forms.galleryUrls.bundle}"></script><div id="ask-gallery" />`}></textarea>
             {/*<Button
               style={styles.copyButton}
               onClick={this.copyEmbedToClipboard.bind(this)}>
               Copy <Clipboard />
             </Button>*/}
             <p style={{clear: 'both'}}>Embed code (with iframe)</p>
-            <textarea style={styles.embedTextarea} value={`<iframe width="100%" height="580" src="${app.elkhornHost}/iframe-gallery/${forms.activeGallery}"></iframe>`}></textarea>
+            <textarea style={styles.embedTextarea} value={`<iframe width="100%" height="580" src="${forms.galleryUrls.iframe}"></iframe>`}></textarea>
             {/*<Button
               style={styles.copyButton}
               onClick={this.copyEmbedToClipboard.bind(this, 'iframe')}>
               Copy <Clipboard />
             </Button>*/}
             <p style={{clear: 'both'}}>Standalone link</p>
-            <input type="text" value={`${app.elkhornHost}/iframe-gallery/${forms.activeGallery}`} style={styles.standalone} />
+            <input type="text" value={`${forms.galleryUrls.iframe}`} style={styles.standalone} />
           </div>
         </Modal>
 

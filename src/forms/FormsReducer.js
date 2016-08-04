@@ -26,12 +26,13 @@ const initial = {
   widgets: [],
   loadingAnswerEdit: false,
   loadingGallery: false,
-  galleryUrl: '',
+  galleryUrls: [],
   galleryCode: '',
   answerBeingEdited: null, // ObjectId string
   editableAnswer: '',
   editablePii: [],
-  activeSubmission: null // ObjectId string
+  activeSubmission: null, // ObjectId string
+  formUrls: []
 };
 
 const emptyForm = {
@@ -84,19 +85,20 @@ const forms = (state = initial, action) => {
   switch (action.type) {
 
   case types.FORM_REQUEST_STARTED:
-    return {...state, activeForm: null, formLoading: true};
+    return {...state, activeForm: null, formLoading: true, formUrls: []};
 
   case types.FORM_REQUEST_SUCCESS:
     return {  ...state,
               activeForm: action.form.id,
               [action.form.id]: action.form,
+              formUrls: action.form.urls,
               formLoading: false,
               widgets: action.form.steps[0].widgets,
               tempWidgets: action.form.steps[0].widgets
           };
 
   case types.FORM_REQUEST_FAILURE:
-    return {...state, activeForm: null, formLoading: false};
+    return {...state, activeForm: null, formLoading: false, formUrls: []};
 
   case types.FORM_DELETED:
     // FIXME: Pillar is returning 'null' for deleted forms. See: FormActions/deleteForm.
@@ -194,13 +196,14 @@ const forms = (state = initial, action) => {
     return {
       ...state,
       savingForm: false,
-      savedForm: action.form.id,
-      formList: [...state.formList, action.form.id],
-      [action.form.id]: action.form
+      formUrls: action.form.urls,
+      savedForm: action.form.data.id,
+      formList: [...state.formList, action.form.data.id],
+      [action.form.data.id]: action.form.data
     };
 
   case types.FORM_CREATION_FAILURE:
-    return {...state, savingForm: false, formCreationError: action.error, savedForm: null};
+    return {...state, savingForm: false, formCreationError: action.error, savedForm: null, formUrls: []};
 
   case types.SUBMISSIONS_REQUEST_SUCCESS:
 
@@ -332,18 +335,18 @@ const forms = (state = initial, action) => {
     return {...state, [state.activeGallery]: {...gallery, config: {...gallery.config, identifiableIds: action.ids}}};
 
   case types.PUBLISH_GALLERY_INIT:
-    return {...state, loadingGallery: true, galleryUrl: '', galleryCode: ''};
+    return {...state, loadingGallery: true, galleryUrls: [], galleryCode: ''};
 
   case types.PUBLISH_GALLERY_SUCCESS:
     return {
       ...state,
       loadingGallery: false,
-      galleryUrl: action.gallery.urls.bundle,
+      galleryUrls: action.gallery.urls,
       galleryCode: action.gallery.build.code
     };
 
   case types.PUBLISH_GALLERY_FAILURE:
-    return {...state, loadingGallery: true, galleryUrl: '', galleryCode: ''};
+    return {...state, loadingGallery: true, galleryUrls: [], galleryCode: ''};
 
   case types.UPDATE_FILTER_BY:
     return {...state, submissionFilterBy: action.value};

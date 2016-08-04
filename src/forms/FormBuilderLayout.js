@@ -31,7 +31,7 @@ export const Header = ({ onTitleChange, form, forms, onSaveClick, onOpenPreview 
   </div>
 );
 
-export const Sidebar = ({ addToBottom, app, activeForm }) => (
+export const Sidebar = ({ addToBottom, app, activeForm, formUrls }) => (
   <div style={styles.leftPan}>
     <div style={styles.leftContainer}>
       <h4 style={styles.leftContainerTitle}>Question Fields</h4>
@@ -44,10 +44,10 @@ export const Sidebar = ({ addToBottom, app, activeForm }) => (
         <div style={styles.embedContainer}>
           <h4 style={styles.leftContainerTitle}>Embed codes</h4>
           <p>Embed code</p>
-          <textarea style={styles.embedCode} value={`<div id="ask-form"></div><script src="${app.elkhornStaticHost}/${activeForm}.js"></script>`}/>
+          <textarea style={styles.embedCode} value={`<div id="ask-form"></div><script src="${formUrls.bundle}"></script>`}/>
           <p>Embed code (iframe)</p>
-          <textarea style={styles.embedCode} value={`<iframe width="100%" height="580" src="${app.elkhornHost}/iframe/${activeForm}"></iframe>`}/>
-          <a href={ `${app.elkhornHost}/iframe/${activeForm}` } target="_blank" style={ styles.formSettingsAction }>
+          <textarea style={styles.embedCode} value={`<iframe width="100%" height="580" src="${formUrls.iframe}"></iframe>`}/>
+          <a href={ `${formUrls.iframe}` } target="_blank" style={ styles.formSettingsAction }>
             <FaExternalLink /> Standalone Form
           </a>
         </div>

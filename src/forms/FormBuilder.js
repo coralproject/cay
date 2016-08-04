@@ -56,6 +56,7 @@ export default class FormBuilder extends Component {
           onSaveClick={this.onSaveClick.bind(this)} />
         <div style={styles.builderContainer}>
           <Sidebar form={form}
+            formUrls={forms.formUrls}
             create={!activeForm}
             onFormStatusChange={this.onFormStatusChange.bind(this)}
             addToBottom={this.addToBottom.bind(this)}

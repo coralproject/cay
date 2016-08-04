@@ -53,30 +53,6 @@ export const login = (email, password) => (dispatch, getState) => {
 /**
  * Logout
  */
-export const login = (email, password) => {
-  return (dispatch, getState) => {
-
-    if (getState().loading) {
-      return;
-    }
-
-    dispatch(loginInit(email, password));
-    /* xenia_package */
-    fetch(`./auth.php?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`)
-      .then(response => response.json())
-      .then(json => {
-        if (json.valid === 1) {
-          localStorage.authorized = true;
-          dispatch(loginSuccess());
-        } else {
-          dispatch(loginFailure('unauthorized'));
-        }
-      })
-      .catch(err => {
-        dispatch(loginFailure(err));
-      });
-  };
-};
 
 export const logout = () => {
   localStorage.removeItem('authorized');

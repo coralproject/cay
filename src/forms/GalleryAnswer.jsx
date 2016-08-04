@@ -1,6 +1,5 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import last from 'lodash/array/last';
 import has from 'lodash/object/has';
 import isString from 'lodash/lang/isString';
 import isDate from 'lodash/lang/isDate';
@@ -11,13 +10,22 @@ import FaArrowCircleUp from 'react-icons/lib/fa/arrow-circle-up';
 import FaArrowCircleDown from 'react-icons/lib/fa/arrow-circle-down';
 
 import settings from 'settings';
+import GalleryAnswerMulti from 'forms/GalleryAnswerMulti';
 
 @Radium
 export default class GalleryAnswer extends React.Component {
 
   static propTypes = {
+    position: PropTypes.number.isRequired,
     editAnswer: PropTypes.func.isRequired,
-    removeSubmission: PropTypes.func.isRequired
+    removeSubmission: PropTypes.func.isRequired,
+    answer: PropTypes.shape({
+      answer: PropTypes.shape({
+        props: PropTypes.object.isRequired
+      })
+    }).isRequired,
+    onMoveAnswerUp: PropTypes.func.isRequired,
+    onMoveAnswerDown: PropTypes.func.isRequired
   }
 
   editAnswer() {
@@ -31,33 +39,19 @@ export default class GalleryAnswer extends React.Component {
   }
 
   renderMultipleChoice(answer) {
-    const selectedIndexes = answer.answer.answer.options.map(o => o.index);
-    const options = answer.answer.props.options.map((option, key) => {
-      const selected = selectedIndexes.indexOf(key) !== -1;
-      return <li style={[styles.multiple.option, selected && styles.multiple.selected]} key={key}>{key + 1}. {option.title}</li>;
-    });
 
-    // check for Other answer
-    if (last(selectedIndexes) >= answer.answer.props.options.length) {
-      options.push(
-        <li
-          style={[styles.multiple.option, styles.multiple.other]}
-          key={last(selectedIndexes)}>
-          Other: {last(answer.answer.answer.options).title}
-        </li>
-      );
-    }
-
-    return <ul style={styles.multiple}>{options}</ul>;
+    return <GalleryAnswerMulti answer={answer} />;
   }
 
   render() {
 
-    const { answer, gallery, identifiableIds, onMoveAnswerUp, onMoveAnswerDown, key } = this.props;
+    const { answer, gallery, identifiableIds, onMoveAnswerUp, onMoveAnswerDown, position } = this.props;
     let multipleChoice;
 
-    if (has(answer, 'answer.props.multipleChoice') && answer.answer.props.multipleChoice) {
-      multipleChoice = this.renderMultipleChoice(answer);
+    console.log('GalleryAnswer answer', answer);
+
+    if (has(answer, 'answer.props.options') && Array.isArray(answer.answer.props.options)) {
+      multipleChoice = this.renderMultipleChoice(answer.answer);
     }
 
     let unedited = answer.answer.answer.value ? answer.answer.answer.value : answer.answer.answer.text;
@@ -97,22 +91,24 @@ export default class GalleryAnswer extends React.Component {
         <div style={styles.rightColumn}>
           <div style={styles.modButtons}>
             <div
+              className='trashButton'
               onClick={this.removeSubmission.bind(this)}
               style={styles.iconHolder}
               key="foo">
               <Trash style={styles.icon} />
             </div>
-            <div onClick={() => onMoveAnswerUp(key)}
+            <div onClick={() => onMoveAnswerUp(position)}
               style={styles.iconHolder} key="bar">
               <FaArrowCircleUp style={styles.icon} />
             </div>
             <div
-              onClick={() => onMoveAnswerDown(key)}
+              onClick={() => onMoveAnswerDown(position)}
               style={styles.iconHolder} key="baz">
               <FaArrowCircleDown style={styles.icon} />
             </div>
           </div>
           <div
+            className='editButton'
             style={styles.editButton}
             category="info"
             size="small"
@@ -202,26 +198,5 @@ const styles = {
   modButtons: {
     textAlign: 'right',
     marginBottom: 10
-  },
-  multiple: {
-    option: {
-      width: '49%',
-      marginRight: '1%',
-      padding: 10,
-      display: 'inline-block',
-      marginBottom: 8,
-      borderRadius: 4,
-      backgroundColor: 'white',
-      border: '1px solid ' + settings.mediumGrey
-    },
-    selected: {
-      backgroundColor: settings.darkerGrey,
-      color: 'white'
-    },
-    other: {
-      width: '99%',
-      backgroundColor: settings.darkerGrey,
-      color: 'white'
-    }
   }
 };

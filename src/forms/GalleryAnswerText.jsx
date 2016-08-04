@@ -8,6 +8,11 @@ export default class GalleryAnswerText extends React.Component {
   }
 
   render() {
+    const {answer} = this.props;
+    const text = answer.edited ? answer.edited : answer.answer.text;
 
+    return (
+      <div>{text}</div>
+    );
   }
 }

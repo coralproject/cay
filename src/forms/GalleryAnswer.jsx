@@ -11,11 +11,17 @@ import FaArrowCircleDown from 'react-icons/lib/fa/arrow-circle-down';
 
 import settings from 'settings';
 import GalleryAnswerMulti from 'forms/GalleryAnswerMulti';
+import GalleryAnswerDate from 'forms/GalleryAnswerDate';
+import GalleryAnswerNumber from 'forms/GalleryAnswerNumber';
+import GalleryAnswerText from 'forms/GalleryAnswerText';
 
 @Radium
 export default class GalleryAnswer extends React.Component {
 
   static propTypes = {
+    gallery: PropTypes.shape({
+      id: PropTypes.string.isRequired
+    }).isRequired,
     position: PropTypes.number.isRequired,
     editAnswer: PropTypes.func.isRequired,
     removeSubmission: PropTypes.func.isRequired,
@@ -41,23 +47,28 @@ export default class GalleryAnswer extends React.Component {
   render() {
 
     const { answer, gallery, identifiableIds, onMoveAnswerUp, onMoveAnswerDown, position } = this.props;
-    let multipleChoice;
+    let answerComponent;
 
     console.log('GalleryAnswer answer', answer);
-
-    if (has(answer, 'answer.props.options') && Array.isArray(answer.answer.props.options)) {
-      multipleChoice = <GalleryAnswerMulti answer={answer.answer} />;
-    }
-
-    let unedited = answer.answer.answer.value ? answer.answer.answer.value : answer.answer.answer.text;
-    let text = answer.answer.edited ? answer.answer.edited : unedited;
     const statusFlag = answer.answer.edited ? 'edited' : 'new';
 
-    // render as a formatted Date if possible
-    const possibleDateValue = new Date(text);
-    if (isString(answer.answer.answer.value) && isDate(possibleDateValue) && !isNaN(possibleDateValue)) {
-      text = moment(possibleDateValue).format('D MMM YYYY');
+    if (has(answer, 'answer.props.options') && Array.isArray(answer.answer.props.options)) {
+      answerComponent = <GalleryAnswerMulti answer={answer.answer} />;
+    } else if (typeof answer.answer.answer.value !== 'undefined') {
+
+      const possibleDateValue = new Date(answer.answer.answer.value);
+      if (isString(answer.answer.answer.value) && isDate(possibleDateValue) && !isNaN(possibleDateValue)) {
+        answerComponent = <GalleryAnswerDate answer={answer.answer} />;
+      } else {
+        // this could render something crazy if the user entered some wonky values for Date
+        answerComponent = <GalleryAnswerNumber answer={answer.answer} />;
+      }
+
+    } else {
+      answerComponent = <GalleryAnswerText answer={answer.answer} />;
     }
+
+
 
     if (!gallery) {
       return <p>Loading gallery...</p>;
@@ -77,11 +88,7 @@ export default class GalleryAnswer extends React.Component {
               </p>
             )
           }
-          {
-            multipleChoice
-            ? multipleChoice
-            : <p style={styles.answerText}>{text}</p>
-          }
+          {answerComponent}
         </div>
         <div style={styles.rightColumn}>
           <div style={styles.modButtons}>

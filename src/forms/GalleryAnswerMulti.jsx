@@ -18,8 +18,6 @@ export default class GalleryAnswerMulti extends React.Component {
   render() {
     const {answer} = this.props;
 
-    console.log('mulitple choice answer', answer);
-
     const selectedIndexes = answer.answer.options.map(o => o.index);
     const options = answer.props.options.map((option, key) => {
       const selected = selectedIndexes.indexOf(key) !== -1;

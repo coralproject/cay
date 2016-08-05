@@ -13,7 +13,7 @@ const DragHandler = {
   endDrag(props, monitor, component) {
     // dispatchProps should be merged with props but looks like it's not inside this call
     if (component && component.dispatchProps) component.dispatchProps.dispatch(formDragEnded());
-    if (props.formDiagram) props.formDiagram.setState({ isHovering: false });
+    if (props.container) props.container.setState({ isHovering: false });
   }
 };
 

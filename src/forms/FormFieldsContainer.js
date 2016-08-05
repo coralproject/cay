@@ -135,7 +135,7 @@ export default class FormFieldsContainer extends Component {
     const { onFieldSelect, forms } = this.props;
     const form = this.props.activeForm ? forms[this.props.activeForm] : forms.form;
     return (
-      <div style={styles.formDiagramContainer}>
+      <div style={ styles.fieldsListContainer }>
         <input onChange={ this.onFormHeadingChange.bind(this) } style={ styles.headLine } type="text" placeholder={ "Write a headline" } defaultValue={ form.header.heading } />
         {
           this.state.showTitleIsRequired ?
@@ -144,15 +144,19 @@ export default class FormFieldsContainer extends Component {
             null
         }
         <textarea onChange={ this.onFormDescriptionChange.bind(this) } style={ styles.description } placeholder={ "Write instructions and a description for the form below" } defaultValue={ form.header.description } />
-        <div style={styles.formDiagram}>
-          { this.state.currentFields.map((field, i) => (
-            <FormFieldPlaceHolder key={i} formDiagram={ this } position={ i } dropped={ field.dropped }>
+
+        <div style={ styles.fieldsList }>
+
+          {
+            // Render form fields
+            this.state.currentFields.map((field, i) => (
+              <FormFieldPlaceHolder key={i} container={ this } position={ i } dropped={ field.dropped }>
                 <FormField
                   id={ field.id }
                   key={ i }
                   field={ field }
-                  formDiagram={ this }
-                  expanded={true}
+                  container={ this }
+                  expanded={ true }
                   position={ i }
                   onFieldSelect={ onFieldSelect }
                   onList={ true }
@@ -161,16 +165,18 @@ export default class FormFieldsContainer extends Component {
                   onDuplicate={ this.onDuplicate.bind(this) }
                   onDelete={ this.onDelete.bind(this) }
                    />
-            </FormFieldPlaceHolder>
+              </FormFieldPlaceHolder>
           ))}
 
           {
+            // Render last placeholder
             !this.state.isHovering || this.state.currentFields.length === 0
-            ? <FormFieldPlaceHolder formDiagram={ this } position={ this.state.currentFields.length } key={ this.state.currentFields.length } />
+            ? <FormFieldPlaceHolder container={ this } position={ this.state.currentFields.length } key={ this.state.currentFields.length } />
             : null
           }
 
         </div>
+
         <div style={ styles.extraFields }>
           <h3 style={ styles.extraFieldTitle }>Thank you message (optional)</h3>
           <textarea
@@ -184,6 +190,7 @@ export default class FormFieldsContainer extends Component {
             style={ styles.extraFieldTextArea }
             onChange={ this.onConditionsChange.bind(this) }></textarea>
         </div>
+
       </div>
     );
   }
@@ -201,13 +208,13 @@ const styles = {
     padding: 20,
     fontSize: '1em'
   },
-  formDiagram: {
+  fieldsList: {
     height: 'auto',
     minHeight: 130,
     minWidth: 350,
     position: 'relative'
   },
-  formDiagramContainer: {
+  fieldsListContainer: {
     flex: 1,
     paddingLeft: 10,
     color: '#5d5d5d'

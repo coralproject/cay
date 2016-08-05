@@ -7,9 +7,9 @@ import { appendWidget, moveWidget } from 'forms/FormActions';
 
 const DropHelper = {
 
-  showDropCandidate(draggedItem, formDiagram, targetPosition, component) {
+  showDropCandidate(draggedItem, container, targetPosition, component) {
 
-    let currentFields = formDiagram.stateBeforeDrag.slice();
+    let currentFields = container.stateBeforeDrag.slice();
 
     // If item was present on the list
     if (draggedItem.onList) {
@@ -36,7 +36,7 @@ const DropHelper = {
       }
     }
 
-    formDiagram.setState({ currentFields });
+    container.setState({ currentFields });
 
   }
 };
@@ -46,30 +46,30 @@ const askTarget = {
   // Hover changes the component's internal state
   hover(props, monitor, component) {
 
-    let formDiagram = component.props.formDiagram;
+    let container = component.props.container;
     let targetPosition = component.props.position;
-    formDiagram.cancelReset();
+    container.cancelReset();
 
     // Hover is fired a gazillion times, this is to prevent
     // unnecessary re-renders
-    if (targetPosition != formDiagram.previousHover) {
-      formDiagram.previousHover = targetPosition;
+    if (targetPosition != container.previousHover) {
+      container.previousHover = targetPosition;
     } else {
       return; // hovering the same as before? early return, do nothing.
     }
 
-    formDiagram.setState({ isHovering: true });
+    container.setState({ isHovering: true });
 
     let draggedItem = monitor.getItem();
 
-    DropHelper.showDropCandidate(draggedItem, formDiagram, targetPosition, component);
+    DropHelper.showDropCandidate(draggedItem, container, targetPosition, component);
 
   },
 
   // persist state only on drop
   drop(props, monitor, component) {
 
-    let formDiagram = component.props.formDiagram;
+    let container = component.props.container;
     let targetPosition = component.props.position;
 
     console.log('drop', component.props);
@@ -80,9 +80,9 @@ const askTarget = {
 
     // If we are dragging an item already on the form
     if (draggedItem.onList) {
-      formDiagram.moveWidget(draggedItem.position, targetPosition);
+      container.moveWidget(draggedItem.position, targetPosition);
     } else {
-      formDiagram.appendWidget(draggedItem.field, targetPosition);
+      container.appendWidget(draggedItem.field, targetPosition);
     }
 
   }
@@ -98,7 +98,7 @@ export default class FormFieldPlaceHolder extends Component {
   componentWillReceiveProps(nextProps) {
     // This acts as an onLeave handler
     if (this.props.isOver && !nextProps.isOver) {
-      this.props.formDiagram.enqueueReset();
+      this.props.container.enqueueReset();
     }
   }
 

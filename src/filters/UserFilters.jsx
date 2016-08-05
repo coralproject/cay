@@ -5,6 +5,7 @@ import settings from 'settings';
 import capitalize from 'lodash/string/capitalize';
 
 import { userSelected } from 'users/UsersActions';
+import TagsFilter from 'filters/TagsFilter';
 import { makeQueryFromState, clearUserList } from 'search/SearchActions';
 import {
   setBreakdown,
@@ -20,8 +21,9 @@ import FilterDateProximity from 'filters/FilterDateProximity';
 import Heading from 'components/Heading';
 
 import {logOnce} from 'components/utils/logHelpers';
+import { toggleTagVisibility, showAllTags, showSpecificTag } from 'tags/TagActions';
 
-@connect(state => state.filters)
+@connect(({ filters, tags }) => ({ ...filters, tags }))
 @Radium
 export default class UserFilters extends React.Component {
 
@@ -102,6 +104,18 @@ export default class UserFilters extends React.Component {
     if (newValue === 'all') {
       this.props.dispatch(getFilterRanges(this.props.editMode));
     }
+  }
+  
+  onTagClick(tagName, checked) {
+    this.props.dispatch(toggleTagVisibility(tagName, checked));
+  }
+
+  onShowAllTags() {
+    this.props.dispatch(showAllTags());
+  }
+  
+  onShowSpecificTag(index) {
+    this.props.dispatch(showSpecificTag(index));
   }
 
   getActiveFiltersFromConfig() {
@@ -188,7 +202,6 @@ export default class UserFilters extends React.Component {
 
   render() {
     const breakdown = this.props.editMode ? this.props.breakdownEdit : this.props.breakdown;
-
     return (
       <div style={[styles.base, this.props.styles]}>
         <Heading size="medium">
@@ -209,6 +222,12 @@ export default class UserFilters extends React.Component {
 
           {this.getSpecific()}
           {this.getActiveFiltersFromConfig()}
+          
+          <TagsFilter showNoTags={this.props.tags.showNoTags}
+            tags={this.props.tags.items}
+            onTagClick={this.onTagClick.bind(this)}
+            onShowAll={this.onShowAllTags.bind(this)}
+            onShowOnly={this.onShowSpecificTag.bind(this)} />
         </div>
       </div>
     );

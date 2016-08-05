@@ -9,6 +9,9 @@ export const TAG_REQUEST_FAILURE = 'TAG_REQUEST_FAILURE';
 export const REQUEST_ALL_TAGS = 'REQUEST_ALL_TAGS';
 export const RECEIVE_ALL_TAGS = 'RECEIVE_ALL_TAGS';
 export const ALL_TAGS_REQUEST_ERROR = 'ALL_TAGS_REQUEST_ERROR';
+export const TOGGLE_TAG_VISIBILITY = 'TOGGLE_TAG_VISIBILITY';
+export const SHOW_SPECIFIC_TAG = 'SHOW_SPECIFIC_TAG';
+export const SHOW_ALL_TAGS = 'SHOW_ALL_TAGS';
 
 var getInit = (body, method) => {
 
@@ -135,3 +138,12 @@ export const fetchAllTags = () => {
   };
 
 };
+
+export const toggleTagVisibility = (index, visible) => ({
+  type: TOGGLE_TAG_VISIBILITY,
+  index,
+  visible
+});
+
+export const showAllTags = () => ({ type: SHOW_ALL_TAGS });
+export const showSpecificTag = index => ({ type: SHOW_SPECIFIC_TAG, index });

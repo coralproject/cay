@@ -15,6 +15,7 @@ import {clamp} from 'components/utils/math';
 import {xenia} from 'app/AppActions';
 import { populateDistributionStore } from 'filters/FiltersActions';
 import { fetchSections, fetchAuthors } from 'filters/FiltersActions';
+import { fetchAllTags } from 'tags/TagActions';
 
 export const QUERYSET_SELECTED = 'QUERYSET_SELECTED';
 export const QUERYSET_REQUEST = 'QUERYSET_REQUEST'; // request data for a single queryset
@@ -583,7 +584,7 @@ export const fetchInitialData = (editMode = false) => dispatch => {
   // Get initial data for the filters
   dispatch(fetchSections());
   dispatch(fetchAuthors());
-  dispatch(populateDistributionStore());
+  dispatch(fetchAllTags());
 
   // Get user list
   dispatch(makeQueryFromState('user', 0, true, editMode));

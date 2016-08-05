@@ -67,8 +67,10 @@ const renderSettings = {
 
 const askSource = {
   beginDrag(props, monitor, component) {
+    // This means you are grabbing an element already on the list
     if (component.props.formDiagram) {
-      component.props.formDiagram.setState({ itemBeingDragged: component.props.position });
+      component.isMoving = true;
+      //component.props.formDiagram.setState({ itemBeingDragged: component.props.position });
     }
     return {
       field: props.field,
@@ -104,6 +106,13 @@ export default class FormComponent extends Component {
     super(props, context);
     // originalField is used to restore params when clicking X
     this.state = { 'expanded': false, field: props.field, originalField: props.field };
+  }
+
+  componentWillMount() {
+    // This acts as a "onFirstLoad" mechanism,
+    // checking [props.id] to ensure the widget has been updated by a reducer action
+    console.log('will mount', this.props)
+    //if (this.props.id && this.props.onList) this.setState({ expanded: true });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -171,41 +180,39 @@ export default class FormComponent extends Component {
     return (
       <div>
         {
-          !this.state.expanded ?
-          <div>
-            {
-              <div style={ styles.editContainer(this.state.expanded) } key={ id } onClick={ this.toggleExpanded.bind(this) }>
-                <div style={ styles.fieldAndPosition }>
-                  <div style={ styles.fieldPosition }>{ position + 1 }.</div>
-                  <h4 style={styles.editBody}>
-                    { !!field.title ? field.title : field.component }
-                    {
-                      field.wrapper && field.wrapper.required ?
-                        <span style={ styles.requiredAsterisk }>*</span>
-                      :
-                        null
-                    }
-                    {
-                      field.identity ?
-                        <span style={ styles.identityLabel }><FaUser/></span>
-                      :
-                        null
-                    }
-                  </h4>
+          !this.state.expanded
+          ?
+            <div>
+              {
+                <div style={ styles.editContainer(this.state.expanded) } key={ id } onClick={ this.toggleExpanded.bind(this) }>
+                  <div style={ styles.fieldAndPosition }>
+                    <div style={ styles.fieldPosition }>{ position + 1 }.</div>
+                    <h4 style={styles.editBody}>
+                      { !!field.title ? field.title : field.component }
+                      {
+                        field.wrapper && field.wrapper.required ?
+                          <span style={ styles.requiredAsterisk }>*</span>
+                        :
+                          null
+                      }
+                      {
+                        field.identity ?
+                          <span style={ styles.identityLabel }><FaUser/></span>
+                        :
+                          null
+                      }
+                    </h4>
+                  </div>
+                  <div style={styles.arrowContainer}>
+                    <button style={styles.copy} onClick={ onDuplicate.bind(this, position) }><FaCopy /></button>
+                    <button style={styles.delete} onClick={ onDelete.bind(this, position) }><FaTrash /></button>
+                    <button onClick={ position !== 0 ? onMove.bind(this, 'up', position) : null } style={styles.arrow} disabled={position === 0}><FaArrowUp /></button>
+                    <button onClick={ !isLast ? onMove.bind(this, 'down', position) : null } style={styles.arrow} disabled={!!isLast}><FaArrowDown /></button>
+                  </div>
                 </div>
-                <div style={styles.arrowContainer}>
-                  <button style={styles.copy} onClick={ onDuplicate.bind(this, position) }><FaCopy /></button>
-                  <button style={styles.delete} onClick={ onDelete.bind(this, position) }><FaTrash /></button>
-                  <button onClick={ position !== 0 ? onMove.bind(this, 'up', position) : null } style={styles.arrow} disabled={position === 0}><FaArrowUp /></button>
-                  <button onClick={ !isLast ? onMove.bind(this, 'down', position) : null } style={styles.arrow} disabled={!!isLast}><FaArrowDown /></button>
-                </div>
+              }
               </div>
-            }
-            </div>
-          : null
-        }
-        {
-          this.state.expanded ?
+          :
             <div style={ styles.editSettingsPanel }>
 
               <div style={ styles.titleAndDescription }>
@@ -231,8 +238,6 @@ export default class FormComponent extends Component {
               </div>
 
             </div>
-          :
-            null
         }
       </div>
     );

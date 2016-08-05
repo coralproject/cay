@@ -113,16 +113,16 @@ export default class FormDiagram extends Component {
         <textarea onChange={ this.onFormDescriptionChange.bind(this) } style={ styles.description } placeholder={ "Write instructions and a description for the form below" } defaultValue={ form.header.description } />
         <div style={styles.formDiagram}>
           { this.state.tempWidgets.map((field, i) => (
-            <DropPlaceHolder beingDragged={ i == this.state.itemBeingDragged } key={i} formDiagram={ this } position={ i } dropped={ field.dropped }>
+            <DropPlaceHolder key={i} formDiagram={ this } position={ i } dropped={ field.dropped }>
                 <FormComponent
                   id={ field.id }
                   key={ i }
                   field={ field }
                   formDiagram={ this }
+                  expanded={true}
                   position={ i }
                   onFieldSelect={ onFieldSelect }
                   onList={ true }
-                  beingDragged={ i == this.state.itemBeingDragged }
                   isLast={ i === this.state.tempWidgets.length - 1 }
                   onMove={ this.onMove.bind(this) }
                   onDuplicate={ this.onDuplicate.bind(this) }

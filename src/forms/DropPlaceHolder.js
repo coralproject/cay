@@ -39,7 +39,7 @@ const DropHelper = {
     formDiagram.setState({ tempWidgets });
 
   }
-}
+};
 
 const askTarget = {
 
@@ -71,6 +71,8 @@ const askTarget = {
 
     let formDiagram = component.props.formDiagram;
     let targetPosition = component.props.position;
+
+    console.log('drop', component.props);
 
     var draggedItem = monitor.getItem();
 
@@ -146,7 +148,7 @@ const styles = {
     border: '1px dashed #111'
   },
   padder: {
-    height: '80px',
+    minHeight: '80px',
     paddingBottom: '10px'
   }
 };

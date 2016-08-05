@@ -1,6 +1,6 @@
 
 import React from 'react';
-import FormComponent from 'forms/FormComponent';
+import FieldTypeButton from 'forms/FieldTypeButton';
 import FaFloppyO from 'react-icons/lib/fa/floppy-o';
 import FaEye from 'react-icons/lib/fa/eye';
 import FaExternalLink from 'react-icons/lib/fa/external-link';
@@ -37,7 +37,7 @@ export const Sidebar = ({ addToBottom, app, activeForm }) => (
       <h4 style={styles.leftContainerTitle}>Question Fields</h4>
       <div style={styles.typeList}>
         {askTypes.map((type, i) => (
-          <FormComponent key={i} field={type} onClick={() => addToBottom(type)} />
+          <FieldTypeButton key={ i } field={ type } />
         ))}
       </div>
       {activeForm ? (

@@ -16,9 +16,12 @@ export default class GalleryAnswerDate extends React.Component {
   render() {
     const {answer} = this.props;
     const text = answer.edited ? answer.edited : answer.answer.value;
+    const possibleDate = new Date(text);
 
-    return (
-      <div>{moment(new Date(text)).format('D MMM YYYY')}</div>
-    );
+    if (isNaN(possibleDate)) {
+      return <div>{text}</div>;
+    } else {
+      return <div>{moment(new Date(text)).format('D MMM YYYY')}</div>;
+    }
   }
 }

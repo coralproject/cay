@@ -36,5 +36,6 @@ describe('<GalleryAnswerText/>', function () {
   it('should have (required) props for text', function () {
     const wrapper = mount(this.instance);
     expect(wrapper.props().answer.answer.text).to.not.be.undefined;
+    expect(wrapper.props().answer.edited).to.not.be.undefined;
   });
 });

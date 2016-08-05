@@ -8,7 +8,7 @@ import { grey } from 'settings';
 import DropPlaceHolder from 'forms/DropPlaceHolder';
 
 import { appendWidget, moveWidget, replaceWidgets, deleteWidget, duplicateWidget, updateForm } from 'forms/FormActions';
-import FormComponent from 'forms/FormComponent';
+import FormField from 'forms/FormField';
 
 @connect(({ forms, app }) => ({ forms, app }))
 export default class FormDiagram extends Component {
@@ -114,7 +114,7 @@ export default class FormDiagram extends Component {
         <div style={styles.formDiagram}>
           { this.state.tempWidgets.map((field, i) => (
             <DropPlaceHolder key={i} formDiagram={ this } position={ i } dropped={ field.dropped }>
-                <FormComponent
+                <FormField
                   id={ field.id }
                   key={ i }
                   field={ field }

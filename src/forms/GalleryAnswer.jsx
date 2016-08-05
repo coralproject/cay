@@ -53,18 +53,22 @@ export default class GalleryAnswer extends React.Component {
     const statusFlag = answer.answer.edited ? 'edited' : 'new';
 
     if (has(answer, 'answer.props.options') && Array.isArray(answer.answer.props.options)) {
+      console.log('mulitple choice');
       answerComponent = <GalleryAnswerMulti answer={answer.answer} />;
     } else if (typeof answer.answer.answer.value !== 'undefined') {
 
       const possibleDateValue = new Date(answer.answer.answer.value);
       if (isString(answer.answer.answer.value) && isDate(possibleDateValue) && !isNaN(possibleDateValue)) {
+        console.log('date');
         answerComponent = <GalleryAnswerDate answer={answer.answer} />;
       } else {
         // this could render something crazy if the user entered some wonky values for Date
+        console.log('number');
         answerComponent = <GalleryAnswerNumber answer={answer.answer} />;
       }
 
     } else {
+      console.log('text');
       answerComponent = <GalleryAnswerText answer={answer.answer} />;
     }
 

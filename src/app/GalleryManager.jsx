@@ -95,6 +95,7 @@ export default class GalleryManager extends Component {
         </div>
         {gallery.answers.map((answer, i) => (
           <GalleryAnswer
+            key={i}
             removeSubmission={this.removeSubmission.bind(this)}
             editAnswer={this.beginEditAnswer.bind(this)}
             answer={answer}

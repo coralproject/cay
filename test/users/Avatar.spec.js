@@ -11,7 +11,7 @@ describe('<Avatar/>', function () {
     expect(wrapper.props().src).to.not.be.undefined;
   });
 
-  it('should have an image to display the gravatar', function () {
+  it('should have an image to display the avatar', function () {
     const wrapper = shallow(<Avatar src='http://placehold.it/350x150'/>);
     expect(wrapper.find('img')).to.have.length(1);
     expect(wrapper.find('.avatar')).to.have.length(1);

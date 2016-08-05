@@ -1,8 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 import { connect } from 'react-redux';
-import { DragSource } from 'react-dnd';
-import { updateWidget, formDragEnded } from 'forms/FormActions';
 
+// Icons
 import FaTrash from 'react-icons/lib/fa/trash';
 import FaClose from 'react-icons/lib/fa/close';
 import FaFloppyO from 'react-icons/lib/fa/floppy-o';
@@ -11,83 +10,17 @@ import FaArrowDown from 'react-icons/lib/fa/arrow-down';
 import FaUser from 'react-icons/lib/fa/user';
 import FaCopy from 'react-icons/lib/fa/copy';
 
-import TextFieldEditor from 'forms/editors/TextFieldEditor';
-import TextAreaEditor from 'forms/editors/TextAreaEditor';
-import MultipleChoiceEditor from 'forms/editors/MultipleChoiceEditor';
-import DateFieldEditor from 'forms/editors/DateFieldEditor';
-import NumberFieldEditor from 'forms/editors/NumberFieldEditor';
-import EmailFieldEditor from 'forms/editors/EmailFieldEditor';
-import PhoneNumberEditor from 'forms/editors/PhoneNumberEditor';
+// DnD dependencies
+import { DragSource } from 'react-dnd';
+import DragHandler from 'forms/DragHandler';
 
-// TODO: Generalize this into dynamically generated components
-const renderSettings = {
+// Actions
+import { updateWidget, formDragEnded } from 'forms/FormActions';
 
-  DateField(field, props) {
-    return (
-      <DateFieldEditor field={ field } { ...props } />
-    );
-  },
+// Field Editors
+import EditorFactory from 'forms/EditorFactory';
 
-  NumberField(field, props) {
-    return (
-      <NumberFieldEditor field={ field } { ...props } />
-    );
-  },
-
-  TextField(field, props) {
-    return (
-      <TextFieldEditor field={ field } { ...props } />
-    );
-  },
-
-  EmailField(field, props) {
-    return (
-      <EmailFieldEditor field={ field } { ...props } />
-    );
-  },
-
-  TextArea(field, props) {
-    return (
-      <TextAreaEditor field={ field } { ...props } />
-    );
-  },
-
-  MultipleChoice(field, props) {
-    return (
-      <MultipleChoiceEditor field={ field } { ...props } />
-    );
-  },
-
-  PhoneNumber(field, props) {
-    return (
-      <PhoneNumberEditor field={ field } { ...props } />
-    );
-  }
-};
-
-const askSource = {
-  beginDrag(props, monitor, component) {
-    // This means you are grabbing an element already on the list
-    if (component.props.formDiagram) {
-      component.isMoving = true;
-      //component.props.formDiagram.setState({ itemBeingDragged: component.props.position });
-    }
-    return {
-      field: props.field,
-      id: props.id,
-      onList: props.onList,
-      position: props.position,
-      component: component
-    };
-  },
-  endDrag(props, monitor, component) {
-    // dispatchProps should be merged with props but looks like it's not inside this call
-    if (component && component.dispatchProps) component.dispatchProps.dispatch(formDragEnded());
-    if (props.formDiagram) props.formDiagram.setState({ isHovering: false });
-  }
-};
-
-@DragSource('form_component', askSource, (connect, monitor) => ({
+@DragSource('form_component', DragHandler, (connect, monitor) => ({
   connectDragSource: connect.dragSource(),
   isDragging: monitor.isDragging()
 }))
@@ -252,7 +185,7 @@ export default class FormComponent extends Component {
     const { field } = this.state;
     // Passing listeners down from this class to the editors
     var localProps = { onEditorChange: this.onEditorChange.bind(this) };
-    return renderSettings[field.component] ? renderSettings[field.component](field, localProps) : renderSettings['TextField'](field, localProps);
+    return EditorFactory[field.component] ? EditorFactory[field.component](field, localProps) : EditorFactory['TextField'](field, localProps);
   }
 
   onClick() {

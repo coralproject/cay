@@ -62,7 +62,6 @@ export default class GalleryAnswer extends React.Component {
         console.log('date');
         answerComponent = <GalleryAnswerDate answer={answer.answer} />;
       } else {
-        // this could render something crazy if the user entered some wonky values for Date
         console.log('number');
         answerComponent = <GalleryAnswerNumber answer={answer.answer} />;
       }

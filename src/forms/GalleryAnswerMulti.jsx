@@ -9,9 +9,18 @@ export default class GalleryAnswerMulti extends React.Component {
   static propTypes = {
     answer: PropTypes.shape({
       answer: PropTypes.shape({
-        options: PropTypes.arrayOf(PropTypes.object)
+        options: PropTypes.arrayOf(PropTypes.shape({
+          index: PropTypes.number.isRequired,
+          title: PropTypes.string.isRequired
+        }))
       }).isRequired,
-      props: PropTypes.object
+      props: PropTypes.shape({
+        multipleChoice: PropTypes.bool.isRequired,
+        otherAllowed: PropTypes.bool.isRequired,
+        options: PropTypes.arrayOf(PropTypes.shape({
+          title: PropTypes.string.isRequired
+        }))
+      })
     }).isRequired
   }
 
@@ -50,6 +59,7 @@ const styles = {
     marginBottom: 8,
     borderRadius: 4,
     backgroundColor: 'white',
+    color: settings.darkerGrey,
     border: '1px solid ' + settings.mediumGrey
   },
   selected: {

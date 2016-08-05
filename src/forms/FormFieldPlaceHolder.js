@@ -9,34 +9,34 @@ const DropHelper = {
 
   showDropCandidate(draggedItem, formDiagram, targetPosition, component) {
 
-    let tempWidgets = formDiagram.stateBeforeDrag.slice();
+    let currentFields = formDiagram.stateBeforeDrag.slice();
 
     // If item was present on the list
     if (draggedItem.onList) {
 
       // First we make a copy removing the dragged element
-      let fieldsCopy = tempWidgets.slice();
+      let fieldsCopy = currentFields.slice();
       fieldsCopy.splice(draggedItem.position, 1);
 
       let fieldsBefore = fieldsCopy.slice(0, targetPosition);
       let fieldsAfter = fieldsCopy.slice(targetPosition);
-      tempWidgets = fieldsBefore.concat(draggedItem.field).concat(fieldsAfter);
+      currentFields = fieldsBefore.concat(draggedItem.field).concat(fieldsAfter);
 
     } else {
 
       draggedItem.field.dropped = true;
       // If hovering over the default empty placeholder (the bottom one)
       if (component.props.empty) {
-        tempWidgets[targetPosition] = draggedItem.field;
+        currentFields[targetPosition] = draggedItem.field;
       } else {
         // if hovering over an existing field
-        let fieldsBefore = tempWidgets.slice(0, targetPosition);
-        let fieldsAfter = tempWidgets.slice(targetPosition);
-        tempWidgets = fieldsBefore.concat(draggedItem.field).concat(fieldsAfter);
+        let fieldsBefore = currentFields.slice(0, targetPosition);
+        let fieldsAfter = currentFields.slice(targetPosition);
+        currentFields = fieldsBefore.concat(draggedItem.field).concat(fieldsAfter);
       }
     }
 
-    formDiagram.setState({ tempWidgets });
+    formDiagram.setState({ currentFields });
 
   }
 };
@@ -93,7 +93,7 @@ const askTarget = {
   isOver: monitor.isOver()
 }))
 @connect(({ app, forms }) => ({ app, forms }))
-export default class DropPlaceHolder extends Component {
+export default class FormFieldPlaceHolder extends Component {
 
   componentWillReceiveProps(nextProps) {
     // This acts as an onLeave handler

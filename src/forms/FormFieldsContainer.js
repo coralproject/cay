@@ -1,17 +1,13 @@
 import React, { Component, PropTypes } from 'react';
 import {connect} from 'react-redux';
+import { appendWidget, moveWidget, deleteWidget, duplicateWidget, updateForm } from 'forms/FormActions';
 
-import { DropTarget } from 'react-dnd';
-
-import { grey } from 'settings';
-
-import DropPlaceHolder from 'forms/DropPlaceHolder';
-
-import { appendWidget, moveWidget, replaceWidgets, deleteWidget, duplicateWidget, updateForm } from 'forms/FormActions';
+// Components
+import FormFieldPlaceHolder from 'forms/FormFieldPlaceHolder';
 import FormField from 'forms/FormField';
 
 @connect(({ forms, app }) => ({ forms, app }))
-export default class FormDiagram extends Component {
+export default class FormFieldsContainer extends Component {
 
   static contextTypes = {
     router: PropTypes.object.isRequired
@@ -19,18 +15,18 @@ export default class FormDiagram extends Component {
 
   constructor(props, context) {
     super(props, context);
-    this.state = { widgets: [], isHovering: false, tempWidgets: [], showTitleIsRequired: false, itemBeingDragged: -1, canDrop: false };
+    this.state = { widgets: [], isHovering: false, currentFields: [], showTitleIsRequired: false, itemBeingDragged: -1, canDrop: false };
     this.stateBeforeDrag = []; // a copy of state.fields
     this.previousHover = null;
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({ widgets: nextProps.forms.widgets, tempWidgets: nextProps.forms.widgets, isHovering: false });
+    this.setState({ widgets: nextProps.forms.widgets, currentFields: nextProps.forms.widgets, isHovering: false });
     this.stateBeforeDrag = nextProps.forms.widgets;
   }
 
   resetForm() {
-    this.setState({ widgets: this.stateBeforeDrag.slice(), tempWidgets: this.stateBeforeDrag.slice() });
+    this.setState({ widgets: this.stateBeforeDrag.slice(), currentFields: this.stateBeforeDrag.slice() });
   }
 
   saveState() {
@@ -98,63 +94,6 @@ export default class FormDiagram extends Component {
     }));
   }
 
-  render() {
-    const { onFieldSelect, forms } = this.props;
-    const form = this.props.activeForm ? forms[this.props.activeForm] : forms.form;
-    return (
-      <div style={styles.formDiagramContainer}>
-        <input onChange={ this.onFormHeadingChange.bind(this) } style={ styles.headLine } type="text" placeholder={ "Write a headline" } defaultValue={ form.header.heading } />
-        {
-          this.state.showTitleIsRequired ?
-            <p style={ styles.titleIsRequired }>Title is required</p>
-          :
-            null
-        }
-        <textarea onChange={ this.onFormDescriptionChange.bind(this) } style={ styles.description } placeholder={ "Write instructions and a description for the form below" } defaultValue={ form.header.description } />
-        <div style={styles.formDiagram}>
-          { this.state.tempWidgets.map((field, i) => (
-            <DropPlaceHolder key={i} formDiagram={ this } position={ i } dropped={ field.dropped }>
-                <FormField
-                  id={ field.id }
-                  key={ i }
-                  field={ field }
-                  formDiagram={ this }
-                  expanded={true}
-                  position={ i }
-                  onFieldSelect={ onFieldSelect }
-                  onList={ true }
-                  isLast={ i === this.state.tempWidgets.length - 1 }
-                  onMove={ this.onMove.bind(this) }
-                  onDuplicate={ this.onDuplicate.bind(this) }
-                  onDelete={ this.onDelete.bind(this) }
-                   />
-            </DropPlaceHolder>
-          ))}
-
-          {
-            !this.state.isHovering || this.state.tempWidgets.length === 0
-            ? <DropPlaceHolder formDiagram={ this } position={ this.state.tempWidgets.length } key={ this.state.tempWidgets.length } />
-            : null
-          }
-
-        </div>
-        <div style={ styles.extraFields }>
-          <h3 style={ styles.extraFieldTitle }>Thank you message (optional)</h3>
-          <textarea
-            defaultValue={ form.finishedScreen.description }
-            style={ styles.extraFieldTextArea }
-            onChange={ this.onThankYouDescriptionChange.bind(this) }></textarea>
-
-          <h3 style={ styles.extraFieldTitle }>Include Privacy Policy</h3>
-          <textarea
-            defaultValue={ form.footer.conditions }
-            style={ styles.extraFieldTextArea }
-            onChange={ this.onConditionsChange.bind(this) }></textarea>
-        </div>
-      </div>
-    );
-  }
-
   onDelete(position, e) {
     e.stopPropagation();
     this.props.markAsUnsaved();
@@ -192,9 +131,63 @@ export default class FormDiagram extends Component {
     }, targetPosition));
   }
 
-  persist(fields) {
-    this.props.dispatch(replaceWidgets(fields));
+  render() {
+    const { onFieldSelect, forms } = this.props;
+    const form = this.props.activeForm ? forms[this.props.activeForm] : forms.form;
+    return (
+      <div style={styles.formDiagramContainer}>
+        <input onChange={ this.onFormHeadingChange.bind(this) } style={ styles.headLine } type="text" placeholder={ "Write a headline" } defaultValue={ form.header.heading } />
+        {
+          this.state.showTitleIsRequired ?
+            <p style={ styles.titleIsRequired }>Title is required</p>
+          :
+            null
+        }
+        <textarea onChange={ this.onFormDescriptionChange.bind(this) } style={ styles.description } placeholder={ "Write instructions and a description for the form below" } defaultValue={ form.header.description } />
+        <div style={styles.formDiagram}>
+          { this.state.currentFields.map((field, i) => (
+            <FormFieldPlaceHolder key={i} formDiagram={ this } position={ i } dropped={ field.dropped }>
+                <FormField
+                  id={ field.id }
+                  key={ i }
+                  field={ field }
+                  formDiagram={ this }
+                  expanded={true}
+                  position={ i }
+                  onFieldSelect={ onFieldSelect }
+                  onList={ true }
+                  isLast={ i === this.state.currentFields.length - 1 }
+                  onMove={ this.onMove.bind(this) }
+                  onDuplicate={ this.onDuplicate.bind(this) }
+                  onDelete={ this.onDelete.bind(this) }
+                   />
+            </FormFieldPlaceHolder>
+          ))}
+
+          {
+            !this.state.isHovering || this.state.currentFields.length === 0
+            ? <FormFieldPlaceHolder formDiagram={ this } position={ this.state.currentFields.length } key={ this.state.currentFields.length } />
+            : null
+          }
+
+        </div>
+        <div style={ styles.extraFields }>
+          <h3 style={ styles.extraFieldTitle }>Thank you message (optional)</h3>
+          <textarea
+            defaultValue={ form.finishedScreen.description }
+            style={ styles.extraFieldTextArea }
+            onChange={ this.onThankYouDescriptionChange.bind(this) }></textarea>
+
+          <h3 style={ styles.extraFieldTitle }>Include Privacy Policy</h3>
+          <textarea
+            defaultValue={ form.footer.conditions }
+            style={ styles.extraFieldTextArea }
+            onChange={ this.onConditionsChange.bind(this) }></textarea>
+        </div>
+      </div>
+    );
   }
+
 }
 
 const styles = {

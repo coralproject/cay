@@ -92,7 +92,7 @@ const forms = (state = initial, action) => {
               [action.form.id]: action.form,
               formLoading: false,
               widgets: action.form.steps[0].widgets,
-              tempWidgets: action.form.steps[0].widgets
+              currentFields: action.form.steps[0].widgets
           };
 
   case types.FORM_REQUEST_FAILURE:
@@ -133,7 +133,7 @@ const forms = (state = initial, action) => {
 
     widgetsCopy.splice(position, 0, widgetCopy);
 
-    return Object.assign({}, state, { widgets: widgetsCopy, tempWidgets: widgetsCopy });
+    return Object.assign({}, state, { widgets: widgetsCopy, currentFields: widgetsCopy });
 
   case types.FORM_APPEND_WIDGET:
 
@@ -144,7 +144,7 @@ const forms = (state = initial, action) => {
 
     widgetsCopy.splice(targetPosition, 0, widget);
 
-    return {...state, widgets: widgetsCopy, tempWidgets: widgetsCopy };
+    return {...state, widgets: widgetsCopy, currentFields: widgetsCopy };
 
   case types.FORMS_REQUEST_SUCCESS:
 
@@ -180,12 +180,12 @@ const forms = (state = initial, action) => {
     var removed = newWidgets.splice(action.from, 1)[0];
     newWidgets.splice(action.to, 0, removed);
 
-    return {...state, tempWidgets: newWidgets, widgets: newWidgets };
+    return {...state, currentFields: newWidgets, widgets: newWidgets };
 
   case types.FORM_DELETE_WIDGET:
     var widgetsCopy = [...state.widgets];
     widgetsCopy.splice(action.widgetPosition, 1);
-    return {...state, widgets: widgetsCopy, tempWidgets: widgetsCopy };
+    return {...state, widgets: widgetsCopy, currentFields: widgetsCopy };
 
   case types.FORM_CREATE_INIT:
     return {...state, savingForm: true, formCreationError: null, savedForm: null};

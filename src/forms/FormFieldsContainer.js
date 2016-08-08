@@ -15,22 +15,22 @@ export default class FormFieldsContainer extends Component {
 
   constructor(props, context) {
     super(props, context);
-    this.state = { widgets: [], isHovering: false, currentFields: [], showTitleIsRequired: false, itemBeingDragged: -1, canDrop: false };
+    this.state = { savedFields: [], isHovering: false, currentFields: [], showTitleIsRequired: false, itemBeingDragged: -1, canDrop: false };
     this.stateBeforeDrag = []; // a copy of state.fields
     this.previousHover = null;
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({ widgets: nextProps.forms.widgets, currentFields: nextProps.forms.widgets, isHovering: false });
+    this.setState({ savedFields: nextProps.forms.widgets, currentFields: nextProps.forms.widgets, isHovering: false });
     this.stateBeforeDrag = nextProps.forms.widgets;
   }
 
   resetForm() {
-    this.setState({ widgets: this.stateBeforeDrag.slice(), currentFields: this.stateBeforeDrag.slice() });
+    this.setState({ savedFields: this.stateBeforeDrag.slice(), currentFields: this.stateBeforeDrag.slice() });
   }
 
   saveState() {
-    this.stateBeforeDrag = this.state.widgets.slice();
+    this.stateBeforeDrag = this.state.savedFields.slice();
   }
 
   getForm() {

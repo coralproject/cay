@@ -5,7 +5,7 @@ import { appendWidget } from 'forms/FormActions';
 import DragHandler from 'forms/DragHandler';
 import uuid from 'node-uuid';
 
-@DragSource('form_component', DragHandler, (connect, monitor) => ({
+@DragSource('DraggableFormField', DragHandler, (connect, monitor) => ({
   connectDragSource: connect.dragSource(),
   isDragging: monitor.isDragging()
 }))

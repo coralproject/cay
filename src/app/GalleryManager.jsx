@@ -418,18 +418,32 @@ export default class GalleryManager extends Component {
           isOpen={this.state.publishModalOpen}
           confirmAction={this.closePublishModal.bind(this)}
           cancelAction={this.closePublishModal.bind(this)}>
+            <div style={[
+              styles.successfulCopy,
+              {opacity: this.state.copied ? 1 : 0}
+            ]}>Copied!</div>
           {
             forms.publishGalleryError
             ? <div style={styles.publishGalleryError}>Error publishing gallery to Elkhorn.<br/>Is Elkhorn running?</div>
-            : <div>
+          : <div>
               <p>Embed code</p>
               <textarea style={styles.embedTextarea} value={this.createEmbed('script-tag')}></textarea>
-              <CopyToClipboard text={this.createEmbed('script-tag')}>
+              <CopyToClipboard
+                text={this.createEmbed('script-tag')}
+                onCopy={() => {
+                  this.setState({copied: true});
+                  setTimeout(() => this.setState({copied: false}), 5000);
+                }}>
                 <Button style={styles.copyButton}> Copy <Clipboard /> </Button>
               </CopyToClipboard>
               <p style={{clear: 'both'}}>Embed code (with iframe)</p>
               <textarea style={styles.embedTextarea} value={this.createEmbed('iframe')}></textarea>
-              <CopyToClipboard text={this.createEmbed('iframe')}>
+              <CopyToClipboard
+                text={this.createEmbed('iframe')}
+                onCopy={() => {
+                  this.setState({copied: true});
+                  setTimeout(() => this.setState({copied: false}), 5000);
+                }}>
                 <Button style={styles.copyButton}> Copy <Clipboard /> </Button>
               </CopyToClipboard>
               <p style={{clear: 'both'}}>Standalone link</p>
@@ -437,11 +451,16 @@ export default class GalleryManager extends Component {
                 type="text"
                 value={this.createEmbed('standalone')}
                 style={styles.standalone} />
-              <CopyToClipboard text={this.createEmbed('standalone')}>
+              <CopyToClipboard
+                text={this.createEmbed('standalone')}
+                onCopy={() => {
+                  this.setState({copied: true});
+                  setTimeout(() => this.setState({copied: false}), 5000);
+                }}>
                 <Button style={styles.copyButton}> Copy <Clipboard /> </Button>
               </CopyToClipboard>
             </div>
-        }
+          }
 
         </Modal>
 
@@ -463,6 +482,17 @@ const styles = {
     modalContainer: {
       minWidth: 400
     }
+  },
+  successfulCopy: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    backgroundColor: settings.successColor,
+    color: 'white',
+    padding: 10,
+    pointerEvents: 'none',
+    transition: 'opacity .3s'
   },
   embedTextarea: {
     fontFamily: 'monospace',

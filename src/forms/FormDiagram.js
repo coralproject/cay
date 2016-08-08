@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import {connect} from 'react-redux';
 
 import { DropTarget } from 'react-dnd';
+import Tooltip from 'react-tooltip';
 
 import { grey } from 'settings';
 
@@ -9,6 +10,7 @@ import DropPlaceHolder from 'forms/DropPlaceHolder';
 
 import { appendWidget, moveWidget, replaceWidgets, deleteWidget, duplicateWidget, updateForm } from 'forms/FormActions';
 import FormComponent from 'forms/FormComponent';
+import FaQuestionCircle from 'react-icons/lib/fa/question-circle';
 
 @connect(({ forms, app }) => ({ forms, app }))
 export default class FormDiagram extends Component {
@@ -145,7 +147,13 @@ export default class FormDiagram extends Component {
             style={ styles.extraFieldTextArea }
             onChange={ this.onThankYouDescriptionChange.bind(this) }></textarea>
 
-          <h3 style={ styles.extraFieldTitle }>Include Privacy Policy</h3>
+          <h3 style={ styles.extraFieldTitle }>
+            Include Privacy Policy
+            <FaQuestionCircle data-tip data-for="privacyPolicy" />
+            <Tooltip class="cayTooltip" id="privacyPolicy" place="bottom" effect="solid" type="light">
+              <p>To enter a link, use this format: [This is a link](http://www.link.com)</p>
+            </Tooltip>
+          </h3>
           <textarea
             defaultValue={ form.footer.conditions }
             style={ styles.extraFieldTextArea }

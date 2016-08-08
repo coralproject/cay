@@ -273,5 +273,8 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'flex-start',
     marginTop: -40
+  },
+  sort: {
+    marginTop: -5 
   }
 };

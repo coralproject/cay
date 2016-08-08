@@ -175,9 +175,11 @@
 }
 
 .react-datepicker__input-container input {
-  padding: 7px 10px;
+  padding: 10px;
   border: 1px solid lightgrey;
   border-radius: 3px;
+  font-size: 16px;
+  width: 90%;
 }
 
 .react-datepicker__year-read-view {

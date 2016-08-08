@@ -26,11 +26,16 @@ const styles = {
   base: {
     marginBottom: 15,
     marginRight: 20,
-    width: '40%'
+    width: '45%',
+    color: '#aaa'
   },
   number: {
     marginRight: 10,
-    fontWeight: 500,
+    fontWeight: 800,
+    textAlign: 'right',
+    width: 70,
+    display: 'inline-block',
+    color: 'black'
   },
   title: {
 

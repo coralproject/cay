@@ -35,7 +35,7 @@ export default class FieldTypeButton extends Component {
     return connectDragSource(
       <div onClick={ this.onClick.bind(this, field) } style={ styles.baseStyles(isDragging) }>
         <field.icon style={ styles.icon } />
-        <span style={ styles.title }>{ field.type }</span>
+        <span style={ styles.title }>{ field.friendlyType }</span>
       </div>
     );
   }

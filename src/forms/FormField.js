@@ -122,7 +122,7 @@ export default class FormField extends Component {
             <div style={ styles.fieldAndPosition }>
               <div style={ styles.fieldPosition }>{ position + 1 }.</div>
               <h4 style={styles.editBody}>
-                { field.title ? field.title : field.component }
+                { field.title ? field.title : field.friendlyType }
                 {
                   field.wrapper && field.wrapper.required ?
                     <span style={ styles.requiredAsterisk }>*</span>

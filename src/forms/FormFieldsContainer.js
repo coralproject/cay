@@ -122,6 +122,7 @@ export default class FormFieldsContainer extends Component {
     this.props.dispatch(appendWidget({
       title: field.title,
       description: field.description,
+      friendlyType: field.friendlyType,
       type: 'field',
       component: field.type,
       identity: false,

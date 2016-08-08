@@ -31,6 +31,7 @@ import FloppyO from 'react-icons/lib/fa/floppy-o';
 import Times from 'react-icons/lib/fa/times-circle';
 import Clipboard from 'react-icons/lib/fa/clipboard';
 import Select from 'react-select';
+import CopyToClipboard from 'react-copy-to-clipboard';
 
 import settings from 'settings';
 import Page from 'app/layout/Page';
@@ -174,7 +175,6 @@ export default class GalleryManager extends Component {
   // this updates the state, but does not save to the server.
   // confirmEdit saves PII stuff to the server
   updatePiiInfo(reply, idAnswer, updatedInfo) {
-    // console.log('updatePiiInfo', idAnswer, updatedInfo);
     this.props.dispatch(updateEditablePii(reply, idAnswer, updatedInfo));
   }
 
@@ -183,7 +183,6 @@ export default class GalleryManager extends Component {
 
     // where identityAnswers is the cloned state object,
     // not saved on the submission from the server
-    // console.log('renderIdentityAnswers', identityAnswers);
 
     return identityAnswers.map(idAnswer => {
       const text = idAnswer.edited ? idAnswer.edited : idAnswer.answer.text;
@@ -234,10 +233,6 @@ export default class GalleryManager extends Component {
     }
   }
 
-  copyEmbedToClipboard(type) {
-    if (!document.queryCommandSupported('copy')) return;
-  }
-
   setHeadline(title) {
     this.props.dispatch(updateGalleryTitle(title));
   }
@@ -273,7 +268,7 @@ export default class GalleryManager extends Component {
 
   render() {
 
-    const {forms, app} = this.props;
+    const {forms} = this.props;
 
     const form = forms[forms.activeForm];
     const gallery = forms[forms.activeGallery] || {
@@ -429,28 +424,22 @@ export default class GalleryManager extends Component {
             : <div>
               <p>Embed code</p>
               <textarea style={styles.embedTextarea} value={this.createEmbed('script-tag')}></textarea>
-              <Button
-                style={styles.copyButton}
-                onClick={this.copyEmbedToClipboard.bind(this, 'script-tag')}>
-                Copy <Clipboard />
-              </Button>
+              <CopyToClipboard text={this.createEmbed('script-tag')}>
+                <Button style={styles.copyButton}> Copy <Clipboard /> </Button>
+              </CopyToClipboard>
               <p style={{clear: 'both'}}>Embed code (with iframe)</p>
               <textarea style={styles.embedTextarea} value={this.createEmbed('iframe')}></textarea>
-              <Button
-                style={styles.copyButton}
-                onClick={this.copyEmbedToClipboard.bind(this, 'iframe')}>
-                Copy <Clipboard />
-              </Button>
+              <CopyToClipboard text={this.createEmbed('iframe')}>
+                <Button style={styles.copyButton}> Copy <Clipboard /> </Button>
+              </CopyToClipboard>
               <p style={{clear: 'both'}}>Standalone link</p>
               <input
                 type="text"
                 value={this.createEmbed('standalone')}
                 style={styles.standalone} />
-              <Button
-                style={styles.copyButton}
-                onClick={this.copyEmbedToClipboard.bind(this, 'standalone')}>
-                Copy <Clipboard />
-              </Button>
+              <CopyToClipboard text={this.createEmbed('standalone')}>
+                <Button style={styles.copyButton}> Copy <Clipboard /> </Button>
+              </CopyToClipboard>
             </div>
         }
 

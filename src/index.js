@@ -13,6 +13,7 @@ import 'i18n';
 import { init as analyticsInit, logPageView } from 'services/analytics';
 import 'services/styles';
 import { loadConfig } from 'services/config';
+import { FILTERS_CONFIG_LOADED } from 'filters/FiltersActions';
 
 /**
  *  Load config and launch app
@@ -23,7 +24,7 @@ loadConfig()
   const store = configureStore({ app });
 
   store.dispatch(configXenia());
-  store.dispatch({type: 'DATA_CONFIG_LOADED', config: filters});
+  store.dispatch({type: FILTERS_CONFIG_LOADED, config: filters});
 
   analyticsInit(app.googleAnalyticsId);
 

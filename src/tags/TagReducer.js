@@ -1,18 +1,30 @@
+
+/**
+ * Import action names
+ */
+
 import * as tagsActions from 'tags/TagActions';
 import * as authActions from 'auth/AuthActions';
 import L from 'i18n';
 
 const types = Object.assign({}, tagsActions, authActions);
 
+/**
+ * Initial state
+ */
+
 const initialState = {
   loading: false,
   loadingTags: false,
   authorized: localStorage.authorized || false,
-  items: [],
-  showNoTags: true
+  items: []
 };
 
-const tags = (state = initialState, action) => {
+/**
+ * Reducer
+ */
+
+export default (state = initialState, action) => {
 
   switch (action.type) {
 
@@ -62,28 +74,8 @@ const tags = (state = initialState, action) => {
   case types.RECEIVE_ALL_TAGS:
     return {...state, loadingTags: false, items: action.tags};
     
-  case types.TOGGLE_TAG_VISIBILITY:
-    if (action.index !== state.items.length) {
-      const newItems = [...state.items];
-      newItems[action.index].excluded = !action.visible;
-      return {...state, items: newItems};
-    } else {
-      
-      return {...state, showNoTags: action.visible};
-    }
-    
-  case types.SHOW_SPECIFIC_TAG:
-    const newItems = state.items.map((item, key) => ({...item, excluded: key !== action.index}));
-    return {...state, showNoTags: action.index === state.items.length, items: newItems};
-  
-  case types.SHOW_ALL_TAGS:
-    return{...state, items: state.items.map(item => ({...item, excluded: false})), showNoTags: true};
-
-
   default:
     // console.log('no reducer matches:', action.type);
     return state;
   }
 };
-
-export default tags;

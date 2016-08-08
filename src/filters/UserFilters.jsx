@@ -21,9 +21,9 @@ import FilterDateProximity from 'filters/FilterDateProximity';
 import Heading from 'components/Heading';
 
 import {logOnce} from 'components/utils/logHelpers';
-import { toggleTagVisibility, showAllTags, showSpecificTag } from 'tags/TagActions';
+import { toggleTagVisibility, showAllTags, showSpecificTag } from 'search/SearchActions';
 
-@connect(({ filters, tags }) => ({ ...filters, tags }))
+@connect(({ filters, searches, tags }) => ({ ...filters, excludedTags: searches.excluded_tags, tags: tags.items }))
 @Radium
 export default class UserFilters extends React.Component {
 
@@ -106,16 +106,16 @@ export default class UserFilters extends React.Component {
     }
   }
   
-  onTagClick(tagName, checked) {
-    this.props.dispatch(toggleTagVisibility(tagName, checked));
+  onTagClick(tagName) {
+    this.props.dispatch(toggleTagVisibility(tagName));
   }
 
   onShowAllTags() {
     this.props.dispatch(showAllTags());
   }
   
-  onShowSpecificTag(index) {
-    this.props.dispatch(showSpecificTag(index));
+  onShowSpecificTag(tags, tag) {
+    this.props.dispatch(showSpecificTag(tags, tag));
   }
 
   getActiveFiltersFromConfig() {
@@ -223,8 +223,8 @@ export default class UserFilters extends React.Component {
           {this.getSpecific()}
           {this.getActiveFiltersFromConfig()}
           
-          <TagsFilter showNoTags={this.props.tags.showNoTags}
-            tags={this.props.tags.items}
+          <TagsFilter excludedTags={this.props.excludedTags}
+            tags={this.props.tags}
             onTagClick={this.onTagClick.bind(this)}
             onShowAll={this.onShowAllTags.bind(this)}
             onShowOnly={this.onShowSpecificTag.bind(this)} />

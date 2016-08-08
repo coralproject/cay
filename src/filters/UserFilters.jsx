@@ -130,7 +130,6 @@ export default class UserFilters extends React.Component {
             type={f.type}/>
         );
       } else if (f.type === 'intRange' || f.type === 'floatRange') {
-        // capitalize first letter of description
         filterComponent = (
           <FilterNumbers
             style={filterStyle}

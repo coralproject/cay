@@ -29,6 +29,7 @@ import Eye from 'react-icons/lib/fa/eye';
 import Refresh from 'react-icons/lib/fa/refresh';
 import FloppyO from 'react-icons/lib/fa/floppy-o';
 import Times from 'react-icons/lib/fa/times-circle';
+import Clipboard from 'react-icons/lib/fa/clipboard';
 import Select from 'react-select';
 
 import settings from 'settings';
@@ -414,20 +415,28 @@ export default class SubmissionGallery extends Component {
           <div>
             <p>Embed code</p>
             <textarea style={styles.embedTextarea} value={`<script src="${forms.galleryUrl}"></script><div id="ask-gallery" />`}></textarea>
-            {/*<Button
+            <Button
               style={styles.copyButton}
               onClick={this.copyEmbedToClipboard.bind(this)}>
               Copy <Clipboard />
-            </Button>*/}
+            </Button>
             <p style={{clear: 'both'}}>Embed code (with iframe)</p>
             <textarea style={styles.embedTextarea} value={`<iframe width="100%" height="580" src="${app.elkhornHost}/iframe-gallery/${forms.activeGallery}"></iframe>`}></textarea>
-            {/*<Button
+            <Button
               style={styles.copyButton}
               onClick={this.copyEmbedToClipboard.bind(this, 'iframe')}>
               Copy <Clipboard />
-            </Button>*/}
+            </Button>
             <p style={{clear: 'both'}}>Standalone link</p>
-            <input type="text" value={`${app.elkhornHost}/iframe-gallery/${forms.activeGallery}`} style={styles.standalone} />
+            <input
+              type="text"
+              value={`${app.elkhornHost}/iframe-gallery/${forms.activeGallery}`}
+              style={styles.standalone} />
+            <Button
+              style={styles.copyButton}
+              onClick={this.copyEmbedToClipboard.bind(this, 'standalone')}>
+              Copy <Clipboard />
+          </Button>
           </div>
         </Modal>
 
@@ -529,7 +538,8 @@ const styles = {
   standalone: {
     fontFamily: 'monospace',
     fontSize: 14,
-    width: '100%'
+    width: '100%',
+    marginBottom: 10
   },
 
   replyModal: {

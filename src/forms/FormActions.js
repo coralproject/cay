@@ -145,7 +145,7 @@ const formCreationFailure = error => ({ type: FORM_CREATION_FAILURE, error });
 
 const requestGallery = () => ({ type: FETCH_FORM_GALLERY_REQUEST });
 const receivedGallery = gallery => ({ type: FETCH_FORM_GALLERY_SUCCESS, gallery });
-const galleryRequestError = error => ({ type: FETCH_FORM_GALLERY_FAILED, error });
+const galleryRequestError = error => ({ type: FETCH_FORM_GALLERY_FAILURE, error });
 
 const answerRemovedFromGallery = gallery => ({
   type: FORM_ANSWER_REMOVED_FROM_GALLERY,
@@ -404,7 +404,7 @@ export const beginEdit = (galleryId, submissionId, answerId) => {
 
 // user starts typing and changing the Answer
 export const updateEditableAnswer = text => ({type: EDIT_ANSWER_UPDATE, text });
-export const cancelEdit = () => ({ type: ANSWER_EDIT_CANCEL });
+export const cancelEdit = () => ({ type: EDIT_ANSWER_CANCEL });
 
 // this just resets the editable text to the original
 // it does NOT remove the edit on the data object.
@@ -542,5 +542,3 @@ export const reinsertGalleryAnswer = (galleryId, key, position) => ({
 });
 
 export const hasFlag = (submission, flag) => -1 !== submission.flags.indexOf(flag);
-
-

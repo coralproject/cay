@@ -21,7 +21,7 @@ export default class CommentDetail extends React.Component {
         <p
           style={styles.commentContent}
           dangerouslySetInnerHTML={{__html: this.props.comment.body}} />
-        <p>
+        <p style={styles.date}>
           {"Created "}
           <span
             style={styles.innerDate}>
@@ -36,10 +36,8 @@ export default class CommentDetail extends React.Component {
 
 const styles = {
   base: {
-    borderLeft: "3px solid rgb(130,130,130)",
-    marginBottom: 20,
-    paddingLeft: 20,
-    paddingRight: 20
+    padding: 20,
+    borderBottom: '1px solid #ddd'
   },
   commentContent: {
     color: 'black',
@@ -48,5 +46,9 @@ const styles = {
   },
   date: {
     marginBottom: 10,
+    color: '#bbb'
   },
+  innerDate: {
+    color: 'black'
+  }
 };

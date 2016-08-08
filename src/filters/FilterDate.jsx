@@ -60,7 +60,7 @@ const styles = {
     fontWeight: 500,
     marginBottom: 10,
     color: 'rgb(130,130,130)',
-    fontSize: 16
+    fontSize: 14
   },
   row: {
     display: 'flex'

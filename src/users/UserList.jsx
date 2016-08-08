@@ -141,14 +141,13 @@ export default class UserList extends React.Component {
   }
 
   render() {
-    const { user, users, comments } = this.props;
+    const { user, users, comments, filters } = this.props;
 
     var noUsersMessage = (<p style={ styles.noUsers }>
       Zero users found...<br />Please widen your search.
     </p>);
 
-    const {filters} = this.props;
-    const userListContent = this.props.users.length ? this.getUserList(this.props.users) : noUsersMessage;
+    const userListContent = users.length ? this.getUserList(this.props.users) : noUsersMessage;
 
     // get a list of only the sortable filters
     const sortableFilters = filters.filterList
@@ -188,7 +187,7 @@ export default class UserList extends React.Component {
               {!user ? userListContent : ''}
             </div>
             <div style={[styles.cardFace, styles.cardBack]}>
-              {user ? <UserDetail onClose={this.onCloseDetail.bind(this)}
+              {user && users && users.length ? <UserDetail onClose={this.onCloseDetail.bind(this)}
                 comments={comments.items}
                 commentsLoading={comments.loading}
                 onPrevUser={this.onPrevUser.bind(this)}
@@ -275,6 +274,6 @@ const styles = {
     marginTop: -40
   },
   sort: {
-    marginTop: -5 
+    marginTop: -5
   }
 };

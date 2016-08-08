@@ -95,12 +95,14 @@ const styles = {
     fontWeight: 500,
     marginBottom: 10,
     color: 'rgb(130,130,130)',
-    fontSize: 16
+    fontSize: 14
   },
   minMaxInputs: {
-    padding: '7px 10px',
+    padding: '10px',
+    width: '40%',
     border: '1px solid lightgrey',
-    borderRadius: 3
+    borderRadius: 3,
+    fontSize: 16
   },
 
 };

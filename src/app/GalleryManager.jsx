@@ -47,7 +47,7 @@ import GalleryAnswer from 'forms/GalleryAnswer';
 
 @connect(({app, forms}) => ({app, forms}))
 @Radium
-export default class SubmissionGallery extends Component {
+export default class GalleryManager extends Component {
 
   constructor(props) {
     super(props);
@@ -95,6 +95,7 @@ export default class SubmissionGallery extends Component {
         </div>
         {gallery.answers.map((answer, i) => (
           <GalleryAnswer
+            key={i}
             removeSubmission={this.removeSubmission.bind(this)}
             editAnswer={this.beginEditAnswer.bind(this)}
             answer={answer}
@@ -102,7 +103,7 @@ export default class SubmissionGallery extends Component {
             identifiableIds={gallery.config.identifiableIds || []}
             onMoveAnswerDown={this.onMoveAnswerDown.bind(this, gallery.id, i)}
             onMoveAnswerUp={this.onMoveAnswerUp.bind(this, gallery.id, i)}
-            key={i} />
+            position={i} />
         ))}
       </div>
     );

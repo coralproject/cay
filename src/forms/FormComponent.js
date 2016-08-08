@@ -130,7 +130,7 @@ export default class FormComponent extends Component {
     return (
       <div onClick={this.onClick.bind(this)} style={styles.askComponent(isDragging)}>
         <field.icon style={styles.icon} />
-        <span style={styles.title}>{ field.type }</span>
+        <span style={styles.title}>{ field.friendlyType }</span>
       </div>
     );
   }
@@ -178,7 +178,7 @@ export default class FormComponent extends Component {
                 <div style={ styles.fieldAndPosition }>
                   <div style={ styles.fieldPosition }>{ position + 1 }.</div>
                   <h4 style={styles.editBody}>
-                    { !!field.title ? field.title : field.component }
+                    { field.title ? field.title : field.friendlyType }
                     {
                       field.wrapper && field.wrapper.required ?
                         <span style={ styles.requiredAsterisk }>*</span>

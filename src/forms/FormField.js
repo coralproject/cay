@@ -25,6 +25,7 @@ import EditorFactory from 'forms/EditorFactory';
   isDragging: monitor.isDragging()
 }))
 @connect(({ forms }) => ({
+  isDragging: forms.isDragging,
   widgets: forms.widgets
 }))
 export default class FormField extends Component {
@@ -117,7 +118,7 @@ export default class FormField extends Component {
     return this.props.connectDragSource(
       <div>
         {
-          this.state.expanded
+          !this.props.isDragging && this.state.expanded
           ? this.renderExpanded()
           : this.renderCollapsed()
         }
@@ -132,7 +133,7 @@ export default class FormField extends Component {
     return (
       <div>
         {
-          <div style={ styles.fieldContainer(this.state.expanded) } key={ id } onClick={ this.toggleExpanded.bind(this) }>
+          <div style={ styles.fieldContainer(!this.props.isDragging && this.state.expanded) } key={ id } onClick={ this.toggleExpanded.bind(this) }>
             <div style={ styles.fieldAndPosition }>
               <div style={ styles.fieldPosition }>{ position + 1 }.</div>
               <h4 style={styles.editBody}>

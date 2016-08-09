@@ -323,8 +323,11 @@ export default (state = initial, action) => {
   case types.EDIT_ANSWER_FAILED: // server was unable to update the answer
     return {...state, loadingAnswerEdit: false, answerBeingEdited: null};
 
+  case types.FORM_DRAG_STARTED:
+    return {...state, autoExpand: -1, isDragging: true };
+
   case types.FORM_DRAG_ENDED:
-    return {...state, isHovering: false};
+    return {...state, isHovering: false, isDragging: false };
 
   case types.UPDATE_GALLERY_TITLE:
     return {...state, [state.activeGallery]: {...state[state.activeGallery], headline: action.title}};

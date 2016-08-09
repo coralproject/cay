@@ -70,13 +70,15 @@ export default class FormField extends Component {
     this.setState({ field: field });
   }
 
-  onSaveClick() {
+  onSaveClick(e) {
+    if (e) e.stopPropagation();
     this.toggleExpanded();
     this.setState({ fieldBackup: this.state.field });
     this.props.dispatch(updateWidget(this.props.id, this.state.field));
   }
 
-  onCancelClick() {
+  onCancelClick(e) {
+    if (e) e.stopPropagation();
     this.setState({ field: this.state.fieldBackup });
     this.toggleExpanded();
   }
@@ -90,6 +92,17 @@ export default class FormField extends Component {
     const {onList, field, onClick } = this.props;
     if (!onList) {
       onClick(field);
+    }
+  }
+
+  onKeyUp(e) {
+    switch (e.keyCode) {
+    case 13: // ENTER
+      this.onSaveClick();
+      break;
+    case 27: // ESCAPE
+      this.onCancelClick();
+      break;
     }
   }
 
@@ -154,7 +167,7 @@ export default class FormField extends Component {
     const { field } = this.state;
 
     return  (
-      <div style={ styles.editSettingsPanel }>
+      <div style={ styles.editSettingsPanel } onKeyUp={ this.onKeyUp.bind(this) }>
 
         <div style={ styles.titleAndDescription }>
           <input
@@ -162,7 +175,8 @@ export default class FormField extends Component {
             style={ styles.fieldTitle }
             defaultValue={ field.title }
             type="text"
-            placeholder={ `Ask readers a question (${ field.friendlyType })` } />
+            placeholder={ `Ask readers a question (${ field.friendlyType })` }
+            autoFocus={ true } />
           <input
             onChange={ this.onDescriptionChange.bind(this) }
             defaultValue={ field.description }

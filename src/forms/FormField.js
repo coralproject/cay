@@ -20,9 +20,8 @@ import { updateWidget } from 'forms/FormActions';
 // Field Editors
 import EditorFactory from 'forms/EditorFactory';
 
-@DragSource('DraggableFormField', DragHandler, (connect, monitor) => ({
-  connectDragSource: connect.dragSource(),
-  isDragging: monitor.isDragging()
+@DragSource('DraggableFormField', DragHandler, (connect) => ({
+  connectDragSource: connect.dragSource()
 }))
 @connect(({ forms }) => ({
   isDragging: forms.isDragging,

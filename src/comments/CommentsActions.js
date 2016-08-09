@@ -20,7 +20,7 @@ export const EMPTY_COMMENTS = 'EMPTY_COMMENTS';
 
 const requestComments = () => ({ type: FETCH_COMMENTS_REQUEST });
 
-const receiveComments = data => ({ type: FETCH_COMMENTS_SUCCESS, data });
+const receiveComments = items => ({ type: FETCH_COMMENTS_SUCCESS, items });
 
 const receiveCommentsFailure = err => ({ type: FETCH_COMMENTS_FAILURE, err });
 
@@ -47,4 +47,3 @@ export const fetchCommentsByUser = userId => dispatch => {
     .then(data => dispatch(receiveComments(data.results[0].Docs)))
     .catch(err => dispatch(receiveCommentsFailure(err)));
 };
-

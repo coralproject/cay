@@ -5,6 +5,11 @@
 
 import isUndefined from 'lodash/lang/isUndefined';
 import isNull from 'lodash/lang/isNull';
+import reduce from 'lodash/collection/reduce';
+import has from 'lodash/object/has';
+import isString from 'lodash/lang/isString';
+import isDate from 'lodash/lang/isDate';
+import { clamp } from 'components/utils/math';
 
 // TODO: refactor this function. It's large and hard to understand
 export const parseFilterRanges = (ranges, filterState) =>

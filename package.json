@@ -57,6 +57,7 @@
     "node-uuid": "^1.4.7",
     "radium": "^0.17.1",
     "react": "^15.3.0",
+    "react-copy-to-clipboard": "^4.2.2",
     "react-datepicker": "^0.27.0",
     "react-dnd": "^2.1.4",
     "react-dnd-html5-backend": "^2.1.2",

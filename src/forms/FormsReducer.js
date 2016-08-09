@@ -350,18 +350,25 @@ export default (state = initial, action) => {
     return {...state, [state.activeGallery]: {...gallery, config: {...gallery.config, identifiableIds: action.ids}}};
 
   case types.PUBLISH_GALLERY_REQUEST:
-    return {...state, loadingGallery: true, galleryUrl: '', galleryCode: ''};
+    return {...state, loadingGallery: true, galleryUrl: '', galleryCode: '', publishGalleryError: null};
 
   case types.PUBLISH_GALLERY_SUCCESS:
     return {
       ...state,
       loadingGallery: false,
       galleryUrl: action.gallery.url,
-      galleryCode: action.gallery.build.code
+      galleryCode: action.gallery.build.code,
+      publishGalleryError: null
     };
 
   case types.PUBLISH_GALLERY_FAILURE:
-    return {...state, loadingGallery: true, galleryUrl: '', galleryCode: ''};
+    return {
+      ...state,
+      loadingGallery: false,
+      galleryUrl: '',
+      galleryCode: '',
+      publishGalleryError: action.error
+    };
 
   case types.UPDATE_FILTER_BY:
     return {...state, submissionFilterBy: action.value};

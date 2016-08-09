@@ -29,7 +29,9 @@ import Eye from 'react-icons/lib/fa/eye';
 import Refresh from 'react-icons/lib/fa/refresh';
 import FloppyO from 'react-icons/lib/fa/floppy-o';
 import Times from 'react-icons/lib/fa/times-circle';
+import Clipboard from 'react-icons/lib/fa/clipboard';
 import Select from 'react-select';
+import CopyToClipboard from 'react-copy-to-clipboard';
 
 import settings from 'settings';
 import Page from 'app/layout/Page';
@@ -173,7 +175,6 @@ export default class GalleryManager extends Component {
   // this updates the state, but does not save to the server.
   // confirmEdit saves PII stuff to the server
   updatePiiInfo(reply, idAnswer, updatedInfo) {
-    // console.log('updatePiiInfo', idAnswer, updatedInfo);
     this.props.dispatch(updateEditablePii(reply, idAnswer, updatedInfo));
   }
 
@@ -182,7 +183,6 @@ export default class GalleryManager extends Component {
 
     // where identityAnswers is the cloned state object,
     // not saved on the submission from the server
-    // console.log('renderIdentityAnswers', identityAnswers);
 
     return identityAnswers.map(idAnswer => {
       const text = idAnswer.edited ? idAnswer.edited : idAnswer.answer.text;
@@ -219,9 +219,17 @@ export default class GalleryManager extends Component {
     this.setState({publishModalOpen: false});
   }
 
-  copyEmbedToClipboard(iframe) {
-    if (iframe) {
-
+  createEmbed(type) {
+    const {app, forms} = this.props;
+    switch (type) {
+    case 'script-tag':
+      return `<script src="${forms.galleryUrl}"></script><div id="ask-gallery" />`;
+    case 'iframe':
+      return `<iframe width="100%" height="580" src="${app.elkhornHost}/iframe-gallery/${forms.activeGallery}"></iframe>`;
+    case 'standalone':
+      return `${app.elkhornHost}/iframe-gallery/${forms.activeGallery}`;
+    default:
+      // nothing
     }
   }
 
@@ -260,7 +268,7 @@ export default class GalleryManager extends Component {
 
   render() {
 
-    const {forms, app} = this.props;
+    const {forms} = this.props;
 
     const form = forms[forms.activeForm];
     const gallery = forms[forms.activeGallery] || {
@@ -281,8 +289,6 @@ export default class GalleryManager extends Component {
       {label: 'Above the submission', value: 'above'},
       {label: 'Below the submission', value: 'below'}
     ];
-
-    console.log('GalleryManager.render', gallery.config.placement);
 
     return (
       <Page>
@@ -335,7 +341,7 @@ export default class GalleryManager extends Component {
               {attributionFields.map((field, i) => {
                 const isChecked = gallery.config.identifiableIds && gallery.config.identifiableIds.indexOf(field.id) !== -1;
                 return (
-                  <label style={styles.idLabel}>
+                  <label style={styles.idLabel} key={i}>
                     <input
                       onChange={this.updateIdentifiable.bind(this, field.id, !isChecked)}
                       type="checkbox"
@@ -412,24 +418,50 @@ export default class GalleryManager extends Component {
           isOpen={this.state.publishModalOpen}
           confirmAction={this.closePublishModal.bind(this)}
           cancelAction={this.closePublishModal.bind(this)}>
-          <div>
-            <p>Embed code</p>
-            <textarea style={styles.embedTextarea} value={`<script src="${forms.galleryUrl}"></script><div id="ask-gallery" />`}></textarea>
-            {/*<Button
-              style={styles.copyButton}
-              onClick={this.copyEmbedToClipboard.bind(this)}>
-              Copy <Clipboard />
-            </Button>*/}
-            <p style={{clear: 'both'}}>Embed code (with iframe)</p>
-            <textarea style={styles.embedTextarea} value={`<iframe width="100%" height="580" src="${app.elkhornHost}/iframe-gallery/${forms.activeGallery}"></iframe>`}></textarea>
-            {/*<Button
-              style={styles.copyButton}
-              onClick={this.copyEmbedToClipboard.bind(this, 'iframe')}>
-              Copy <Clipboard />
-            </Button>*/}
-            <p style={{clear: 'both'}}>Standalone link</p>
-            <input type="text" value={`${app.elkhornHost}/iframe-gallery/${forms.activeGallery}`} style={styles.standalone} />
-          </div>
+            <div style={[
+              styles.successfulCopy,
+              {opacity: this.state.copied ? 1 : 0}
+            ]}>Copied!</div>
+          {
+            forms.publishGalleryError
+            ? <div style={styles.publishGalleryError}>Error publishing gallery to Elkhorn.<br/>Is Elkhorn running?</div>
+          : <div>
+              <p>Embed code</p>
+              <textarea style={styles.embedTextarea} value={this.createEmbed('script-tag')}></textarea>
+              <CopyToClipboard
+                text={this.createEmbed('script-tag')}
+                onCopy={() => {
+                  this.setState({copied: true});
+                  setTimeout(() => this.setState({copied: false}), 5000);
+                }}>
+                <Button style={styles.copyButton}> Copy <Clipboard /> </Button>
+              </CopyToClipboard>
+              <p style={{clear: 'both'}}>Embed code (with iframe)</p>
+              <textarea style={styles.embedTextarea} value={this.createEmbed('iframe')}></textarea>
+              <CopyToClipboard
+                text={this.createEmbed('iframe')}
+                onCopy={() => {
+                  this.setState({copied: true});
+                  setTimeout(() => this.setState({copied: false}), 5000);
+                }}>
+                <Button style={styles.copyButton}> Copy <Clipboard /> </Button>
+              </CopyToClipboard>
+              <p style={{clear: 'both'}}>Standalone link</p>
+              <input
+                type="text"
+                value={this.createEmbed('standalone')}
+                style={styles.standalone} />
+              <CopyToClipboard
+                text={this.createEmbed('standalone')}
+                onCopy={() => {
+                  this.setState({copied: true});
+                  setTimeout(() => this.setState({copied: false}), 5000);
+                }}>
+                <Button style={styles.copyButton}> Copy <Clipboard /> </Button>
+              </CopyToClipboard>
+            </div>
+          }
+
         </Modal>
 
         <GalleryPreview
@@ -450,6 +482,17 @@ const styles = {
     modalContainer: {
       minWidth: 400
     }
+  },
+  successfulCopy: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    backgroundColor: settings.successColor,
+    color: 'white',
+    padding: 10,
+    pointerEvents: 'none',
+    transition: 'opacity .3s'
   },
   embedTextarea: {
     fontFamily: 'monospace',
@@ -530,7 +573,15 @@ const styles = {
   standalone: {
     fontFamily: 'monospace',
     fontSize: 14,
-    width: '100%'
+    width: '100%',
+    marginBottom: 10
+  },
+
+  publishGalleryError: {
+    backgroundColor: settings.dangerColor,
+    lineHeight: '1.3em',
+    color: 'white',
+    padding: 10
   },
 
   replyModal: {

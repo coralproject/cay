@@ -4,7 +4,7 @@ const DropHelper = {
   // invariant violation on ReactDnD (see: http://gaearon.github.io/react-dnd/docs-drop-target.html)
   showDropCandidate(draggedItem, container, targetPosition, component) {
 
-    let currentFields = container.stateBeforeDrag.slice();
+    let currentFields = container.state.savedFields.slice();
 
     // If item was present on the list
     if (draggedItem.onList) {

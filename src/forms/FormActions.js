@@ -56,8 +56,6 @@ export const FORM_DELETED = 'FORM_DELETED';
 
 export const CREATE_EMPTY_FORM= 'CREATE_EMPTY_FORM';
 
-export const REPLACE_FORM_WIDGETS = 'REPLACE_FORM_WIDGETS';
-
 export const EDIT_ANSWER_BEGIN = 'EDIT_ANSWER_BEGIN';
 export const EDIT_ANSWER_UPDATE = 'EDIT_ANSWER_UPDATE';
 export const EDIT_ANSWER_CANCEL = 'EDIT_ANSWER_CANCEL';
@@ -194,8 +192,6 @@ dispatch(formLeaveEdit(formId));
 
 export const createEmpty = () => (dispatch, getState) =>
 dispatch(createEmptyAction(`${getState().app.pillarHost}/api/form_submission/`));
-
-export const replaceWidgets = fields => ({ type: REPLACE_FORM_WIDGETS, widgets: fields });
 
 export const appendWidget = (type, targetPosition) => ({
   type: APPEND_FORM_WIDGET,
@@ -542,5 +538,3 @@ export const reinsertGalleryAnswer = (galleryId, key, position) => ({
 });
 
 export const hasFlag = (submission, flag) => -1 !== submission.flags.indexOf(flag);
-
-

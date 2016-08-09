@@ -9,13 +9,10 @@ const DropHelper = {
     // If item was present on the list
     if (draggedItem.onList) {
 
-      // First we make a copy removing the dragged element
-      let fieldsCopy = currentFields.slice();
-      fieldsCopy.splice(draggedItem.position, 1);
-
-      let fieldsBefore = fieldsCopy.slice(0, targetPosition);
-      let fieldsAfter = fieldsCopy.slice(targetPosition);
-      currentFields = fieldsBefore.concat(draggedItem.field).concat(fieldsAfter);
+      // Remove the element being dragged from the saved positions
+      currentFields.splice(draggedItem.position, 1);
+      // Add it to the new position
+      currentFields.splice(targetPosition, 0, draggedItem.field);
 
     } else {
 
@@ -24,9 +21,7 @@ const DropHelper = {
         currentFields[targetPosition] = draggedItem.field;
       } else {
         // if hovering over an existing field
-        let fieldsBefore = currentFields.slice(0, targetPosition);
-        let fieldsAfter = currentFields.slice(targetPosition);
-        currentFields = fieldsBefore.concat(draggedItem.field).concat(fieldsAfter);
+        currentFields.splice(targetPosition, 0, draggedItem.field);
       }
     }
 

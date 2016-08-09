@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import {connect} from 'react-redux';
 import { appendWidget, moveWidget, deleteWidget, duplicateWidget, updateForm } from 'forms/FormActions';
+import uuid from 'node-uuid';
 
 // Components
 import FormFieldPlaceHolder from 'forms/FormFieldPlaceHolder';
@@ -15,7 +16,13 @@ export default class FormFieldsContainer extends Component {
 
   constructor(props, context) {
     super(props, context);
-    this.state = { savedFields: [], isHovering: false, currentFields: [], showTitleIsRequired: false, itemBeingDragged: -1, canDrop: false };
+    this.state = {
+      savedFields: [],
+      isHovering: false,
+      currentFields: [],
+      showTitleIsRequired: false,
+      autoExpand: -1
+    };
     this.previousHover = null;
   }
 
@@ -112,6 +119,7 @@ export default class FormFieldsContainer extends Component {
   }
 
   appendWidget(field, targetPosition) {
+    this.setState({ autoExpand: targetPosition });
     this.props.markAsUnsaved();
     this.props.dispatch(appendWidget({
       title: field.title,
@@ -122,7 +130,7 @@ export default class FormFieldsContainer extends Component {
       identity: false,
       wrapper: {},
       props: { ...field.props },
-      id: Math.floor(Math.random() * 99999) + ''
+      id: uuid.v4()
     }, targetPosition));
   }
 
@@ -145,16 +153,16 @@ export default class FormFieldsContainer extends Component {
           {
             // Render form fields
             this.state.currentFields.map((field, i) => (
-              <FormFieldPlaceHolder key={i} container={ this } position={ i } dropped={ field.dropped }>
+              <FormFieldPlaceHolder key={i} container={ this } position={ i }>
                 <FormField
                   id={ field.id }
                   key={ i }
                   field={ field }
                   container={ this }
-                  expanded={ true }
                   position={ i }
                   onFieldSelect={ onFieldSelect }
                   onList={ true }
+                  autoExpand={ i === this.state.autoExpand }
                   isLast={ i === this.state.currentFields.length - 1 }
                   onMove={ this.onMove.bind(this) }
                   onDuplicate={ this.onDuplicate.bind(this) }

@@ -38,7 +38,7 @@ export default class FormField extends Component {
   constructor(props, context) {
     super(props, context);
     // fieldBackup is used to restore params when clicking Cancel
-    this.state = { 'expanded': false, field: props.field, fieldBackup: props.field };
+    this.state = { 'expanded': props.autoExpand, field: props.field, fieldBackup: props.field };
   }
 
   componentWillReceiveProps(nextProps) {
@@ -46,6 +46,7 @@ export default class FormField extends Component {
   }
 
   toggleExpanded() {
+    this.props.container.setState({ autoExpand: -1 });
     if (this.props.onList) {
       this.setState({ expanded: !this.state.expanded });
     }
@@ -212,7 +213,7 @@ export const styles = {
   arrow: {
     width: '25px',
     height: '30px',
-    padding: '0',
+    padding: 0,
     lineHeight: '20px',
     border: 'none',
     background: 'none',
@@ -223,14 +224,14 @@ export const styles = {
   arrowPlaceHolder: {
     width: '25px',
     height: '30px',
-    padding: '0',
+    padding: 0,
     marginLeft: '5px',
     display: 'inline-block'
   },
   delete: {
     width: '25px',
     height: '30px',
-    padding: '0',
+    padding: 0,
     lineHeight: '20px',
     border: 'none',
     background: 'none',
@@ -241,7 +242,7 @@ export const styles = {
   copy: {
     width: '25px',
     height: '30px',
-    padding: '0',
+    padding: 0,
     lineHeight: '20px',
     border: 'none',
     background: 'none',

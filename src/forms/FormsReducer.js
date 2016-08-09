@@ -174,12 +174,6 @@ export default (state = initial, action) => {
 
     return {...state, formList, ...forms };
 
-  case types.REPLACE_FORM_WIDGETS:
-    var updatedWidgets = action.widgets.map((field) =>
-      console.log("Field", field)
-    );
-    return Object.assign({}, state);
-
   case types.UPDATE_WIDGET:
     var updatedWidgets = state.widgets.map((widget, id) => {
       return widget.id === action.id ? Object.assign({}, widget, action.data) : widget;

@@ -19,7 +19,6 @@ const DropHelper = {
 
     } else {
 
-      draggedItem.field.dropped = true;
       // If hovering over the default empty placeholder (the bottom one)
       if (component.props.empty) {
         currentFields[targetPosition] = draggedItem.field;
@@ -68,8 +67,6 @@ const DropHandler = {
     let targetPosition = component.props.position;
 
     var draggedItem = monitor.getItem();
-
-    draggedItem.field.dropped = true;
 
     // If we are dragging an item already on the form
     if (draggedItem.onList) {

@@ -16,18 +16,16 @@ export default class FieldTypeButton extends Component {
   static propTypes = {
     field: PropTypes.object.isRequired,
     connectDragSource: PropTypes.func.isRequired,
-    isDragging: PropTypes.bool.isRequired,
-    id: PropTypes.string
+    isDragging: PropTypes.bool.isRequired
   };
 
   constructor(props, context) {
     super(props, context);
-    // originalField is used to restore params when clicking X
-    this.state = { 'expanded': false, field: props.field, originalField: props.field };
+    this.state = { field: props.field };
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({ field: nextProps.field, originalField: nextProps.field });
+    this.setState({ field: nextProps.field });
   }
 
   render() {

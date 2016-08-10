@@ -8,7 +8,7 @@ import FlagIcon from 'react-icons/lib/fa/flag';
 import TrashIcon from 'react-icons/lib/fa/trash';
 import isString from 'lodash/lang/isString';
 import isDate from 'lodash/lang/isDate';
-import FaClose from 'react-icons/lib/fa/close';
+import SubmissionTagsManager from 'forms/SubmissionTagsManager';
 
 import settings from 'settings';
 import Button from 'components/Button';
@@ -88,17 +88,9 @@ export default class SubmissionDetail extends Component {
             );
           })}
         </div>
-        <div style={styles.tags}>
-          <h4 style={styles.tagTitle}>Tag submission</h4>
-          <p style={styles.tagDescription}>Press 'enter' to add tag</p>
-          <input style={styles.tagInput} onKeyPress={this.onAddTagKeyPress.bind(this)} />
-          <div style={styles.submissionTagsContainer}>
-            {submission.flags ? submission.flags.filter(tag => -1 === ['flagged', 'bookmarked'].indexOf(tag))
-              .map(tag => (
-                <div key={tag} style={styles.submissionTag}>{tag} <FaClose style={styles.submissionTagRemove} onClick={this.onRemoveTag.bind(this, tag)} /></div>
-              )) : null}
-          </div>
-        </div>
+        <SubmissionTagsManager tags={submission.flags}
+          onRemoveTag={this.onRemoveTag.bind(this)}
+          onAddTagKeyPress={this.onAddTagKeyPress.bind(this)} />
       </div>
     );
   }
@@ -238,27 +230,6 @@ const styles = {
   answers: {
     flex: 1
   },
-  tags: {
-    width: 200,
-    paddingLeft: 30
-  },
-  tagTitle: {
-    fontWeight: 'bold',
-    color: settings.darkGrey
-  },
-  tagDescription: {
-    color: settings.grey,
-    marginTop: 5
-  },
-  tagInput: {
-    marginTop: 5,
-    height: 40,
-    borderRadius: 8,
-    width: 140,
-    border: '1px solid #ccc',
-    padding: 10,
-    fontSize: 16
-  },
   question: {
     fontWeight: 'bold',
     fontSize: '1.2em',
@@ -325,25 +296,5 @@ const styles = {
   hr: {
     borderBottom: '1px solid ' + settings.mediumGrey,
     marginTop: 8
-  },
-  submissionTag: {
-    background: '#fff',
-    padding: 10,
-    borderRadius: 4,
-    border: '1px solid ' + settings.mediumGrey,
-    marginRight: 5,
-    display: 'flex',
-    marginTop: 5
-  },
-  submissionTagRemove: {
-    marginLeft: 5,
-    cursor: 'pointer'
-  },
-  submissionTagsContainer: {
-    display: 'flex',
-    justifyContent: 'flex-start',
-    marginTop: 10,
-    width: 140,
-    flexWrap: 'wrap'
   }
 };

@@ -31,7 +31,6 @@ export default class FormField extends Component {
   static propTypes = {
     field: PropTypes.object.isRequired,
     connectDragSource: PropTypes.func.isRequired,
-    isDragging: PropTypes.bool.isRequired,
     id: PropTypes.string
   };
 

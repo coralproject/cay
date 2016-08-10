@@ -1,11 +1,8 @@
-import * as TagActions from '../../src/tags/TagActions';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import {expect} from 'chai';
 // import fetch from 'node-fetch';
-import fetch from 'fetch-mock';
-
-global fetch=fetch
+import * as TagActions from '../../src/tags/TagActions';
 
 const middlewares = [thunk]; // add your middlewares like `redux-thunk` 
 const mockStore = configureStore(middlewares);
@@ -17,7 +14,6 @@ describe('TagActions', () => {
 
       const store = mockStore(getState);
       TagActions.getTags()(store.dispatch, getState);
-      console.log(store.getActions())
       expect(store.getActions()).to.have.property('type').and.to.equal(TagActions.TAG_REQUEST_STARTED);
     });
 

@@ -9,7 +9,7 @@
     "build": "npm run clean && npm run build:webpack && ./post-build.sh",
     "start": "node dev-server.js",
     "lint": "eslint src",
-    "test": "NODE_PATH=./src NODE_ENV=production ./node_modules/.bin/mocha --compilers js:babel-core/register test/helpers/browser.js test/**/*.spec.js --recursive"
+    "test": "NODE_PATH=./src NODE_ENV=production ./node_modules/.bin/mocha --compilers js:babel-core/register test/helpers/*.js test/**/*.spec.js --recursive"
   },
   "author": "Riley Davis",
   "license": "MIT",

@@ -160,6 +160,9 @@ export const fetchSearchesIfNotFetched = () => (dispatch, getState) => {
   }
 };
 
+export const requestQuerysetFailure = error => {
+  return {type: QUERYSET_REQUEST_FAILURE, error};
+};
 
 // execute a saved query_set
 export const fetchQueryset = (querysetName, page = 0, replace = false) =>
@@ -304,19 +307,19 @@ const createQueryForSave = (query, name, desc) => {
   // set params, descriptions, defaults
   q.params = [
     {
-      name: "limit",
-      desc: "Limits the number of records returned.",
-      default: "1000"
+      name: 'limit',
+      desc: 'Limits the number of records returned.',
+      default: '1000'
     },
     {
-      name: "skip",
-      desc: "Skips a number of records before returning.",
-      default: "0"
+      name: 'skip',
+      desc: 'Skips a number of records before returning.',
+      default: '0'
     },
     {
-      name: "sort",
-      desc: "Sort field.",
-      default: "statistics.comments.all.all.count"
+      name: 'sort',
+      desc: 'Sort field.',
+      default: 'statistics.comments.all.all.count'
     }
   ];
 
@@ -343,8 +346,6 @@ const createQueryForSave = (query, name, desc) => {
 
   q.name = name;
   q.desc = desc;
-
-  console.log("Query", q);
 
   return q;
 };

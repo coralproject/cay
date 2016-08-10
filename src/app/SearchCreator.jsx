@@ -5,7 +5,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
-import { Link } from 'react-router';
 
 import { userSelected } from 'users/UsersActions';
 import { mediumGrey } from 'settings';
@@ -16,7 +15,7 @@ import {
   clearUserList,
   clearRecentSavedSearch
 } from 'search/SearchActions';
-import { filterChanged, getFilterRanges } from 'filters/FiltersActions';
+import { filterChanged, clearFilters, getFilterRanges } from 'filters/FiltersActions';
 import Page from 'app/layout/Page';
 import ContentHeader from 'components/ContentHeader';
 import UserList from 'users/UserList';
@@ -69,6 +68,7 @@ export default class SearchCreator extends Component {
     // set up the initial default / unfiltered view
     // this was previously in UserFilters
     dispatch(clearRecentSavedSearch());
+    dispatch(clearFilters());
     dispatch(clearUserList());
     dispatch(fetchInitialData());
     dispatch(getFilterRanges(false)); // editmode => false

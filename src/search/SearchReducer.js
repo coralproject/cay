@@ -30,7 +30,7 @@ const searches = (state = initialState, action) => {
     return {
       ...state,
       loadingQueryset: false,
-      showTheError: `failed to load ${action.querysetName}`
+      showTheError: `failed to load query_set ${JSON.stringify(action.error)}`
     };
 
   case types.SEARCH_REQUEST:

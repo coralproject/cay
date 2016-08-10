@@ -76,12 +76,14 @@ const resetFilterAction = name => (dispatch, getState) => {
  * Actions API
  */
 
-export const clearEditableFilters = () => (dispatch, getState) => {
+export const clearFilters = (editable = false) => (dispatch, getState) => {
   const { filters } = getState();
 
   // loop over the editable filters and re-initialize them.
   // ranges are being loaded from the server while this is happening.
-  const defaults = filters.editFilterList.reduce((accum, key) => {
+  const filterList = editable ? filters.editFilterList : filters.filterList;
+
+  const defaults = filterList.reduce((accum, key) => {
     let filter = filters[key];
     const min = isUndefined(filter.minRange) ? null : filter.minRange;
     const max = isUndefined(filter.maxRange) ? null : filter.maxRange;

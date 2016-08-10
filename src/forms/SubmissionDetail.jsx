@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import Radium from 'radium';
 import moment from 'moment';
 import BBookmark from 'react-icons/lib/fa/bookmark';
@@ -7,12 +8,14 @@ import FlagIcon from 'react-icons/lib/fa/flag';
 import TrashIcon from 'react-icons/lib/fa/trash';
 import isString from 'lodash/lang/isString';
 import isDate from 'lodash/lang/isDate';
+import FaClose from 'react-icons/lib/fa/close';
 
 import settings from 'settings';
 import Button from 'components/Button';
-import { hasFlag } from 'forms/FormActions';
+import { hasFlag, updateSubmissionFlags } from 'forms/FormActions';
 
 @Radium
+@connect(({}) => ({}))
 export default class SubmissionDetail extends Component {
   render() {
     const { submission } = this.props;
@@ -24,6 +27,7 @@ export default class SubmissionDetail extends Component {
     return (
       <div style={styles.container}>
         {this.renderAuthorDetail()}
+        <div style={styles.hr}></div>
         {this.renderAnswers()}
       </div>
     );
@@ -42,48 +46,72 @@ export default class SubmissionDetail extends Component {
 
     return (
       <div style={styles.answersContainer}>
-        {submission.replies.map((reply, key) => {
+        <div style={styles.answers}>
+          {submission.replies.map((reply, key) => {
 
-          // identity fields are shown above, not as part of
-          //   the reply list
-          if (reply.identity === true) {
-            return (<span></span>);
-          }
+            // identity fields are shown above, not as part of
+            //   the reply list
+            if (reply.identity === true) {
+              return (<span></span>);
+            }
 
 
-          // determine whether or not the answers is already
-          //  in the gallery
-          //  we need to find if BOTH
-          //   this submission id matches
-          //   and the answer has come form the widget
-          const inGallery = gallery.answers.some(ans => {
-            return ans.answer_id === reply.widget_id && ans.submission_id === submission.id;
-          });
+            // determine whether or not the answers is already
+            //  in the gallery
+            //  we need to find if BOTH
+            //   this submission id matches
+            //   and the answer has come form the widget
+            const inGallery = gallery.answers.some(ans => {
+              return ans.answer_id === reply.widget_id && ans.submission_id === submission.id;
+            });
 
-          const modAnswer = inGallery ? this.props.removeFromGallery : this.props.sendToGallery;
-          return (
-            <div style={styles.answer} key={key}>
-              <h2 style={styles.question}>{reply.question}</h2>
-              {this.renderAnswer(reply)}
-              {/*<p>galleryId: {gallery ? gallery.id : 'loading gallery'}</p>
-              <p>submissionId: {submission.id}</p>
-              <p>widget id: {reply.widget_id}</p>*/}
-              <Button
-                style={styles.galleryButton}
-                category={inGallery ? 'success' : 'default'}
-                onClick={modAnswer.bind(this, gallery.id, submission.id, reply.widget_id)}>
-                {
-                  inGallery ?
-                    <span>Remove from Gallery <TrashIcon /></span> :
-                    <span>Send to gallery <PaperPlaneIcon /></span>
-                }
-              </Button>
+            const modAnswer = inGallery ? this.props.removeFromGallery : this.props.sendToGallery;
+            return (
+              <div style={styles.answer} key={key}>
+                <h2 style={styles.question}>{reply.question}</h2>
+                {this.renderAnswer(reply)}
+                {/*<p>galleryId: {gallery ? gallery.id : 'loading gallery'}</p>
+                <p>submissionId: {submission.id}</p>
+                <p>widget id: {reply.widget_id}</p>*/}
+                <Button
+                  style={styles.galleryButton}
+                  category={inGallery ? 'success' : 'default'}
+                  onClick={modAnswer.bind(this, gallery.id, submission.id, reply.widget_id)}>
+                  {
+                    inGallery ?
+                      <span>Remove from Gallery <TrashIcon /></span> :
+                      <span>Send to gallery <PaperPlaneIcon /></span>
+                  }
+                </Button>
 
-            </div>
-          );
-        })}
+              </div>
+            );
+          })}
+        </div>
+        <div style={styles.tags}>
+          <h4 style={styles.tagTitle}>Tag submission</h4>
+          <p style={styles.tagDescription}>Press 'enter' to add tag</p>
+          <input style={styles.tagInput} onKeyPress={this.onAddTagKeyPress.bind(this)} />
+          <div style={styles.submissionTagsContainer}>
+            {submission.flags ? submission.flags.filter(tag => -1 === ['flagged', 'bookmarked'].indexOf(tag))
+              .map(tag => (
+                <div key={tag} style={styles.submissionTag}>{tag} <FaClose style={styles.submissionTagRemove} onClick={this.onRemoveTag.bind(this, tag)} /></div>
+              )) : null}
+          </div>
+        </div>
       </div>
     );
+  }
+
+  onRemoveTag(tag) {
+    this.props.dispatch(updateSubmissionFlags({ [tag]: false }));
+  }
+
+  onAddTagKeyPress(e) {
+    if (e.key === 'Enter') {
+      this.props.dispatch(updateSubmissionFlags({ [e.target.value.trim()]: true }));
+      e.target.value = '';
+    }
   }
 
   renderAnswer(reply) {
@@ -204,7 +232,32 @@ const styles = {
     marginBottom: 20
   },
   answersContainer: {
-    padding: '0 50px 50px 50px'
+    padding: '20px 15px 15px 15px',
+    display: 'flex'
+  },
+  answers: {
+    flex: 1
+  },
+  tags: {
+    width: 200,
+    paddingLeft: 30
+  },
+  tagTitle: {
+    fontWeight: 'bold',
+    color: settings.darkGrey
+  },
+  tagDescription: {
+    color: settings.grey,
+    marginTop: 5
+  },
+  tagInput: {
+    marginTop: 5,
+    height: 40,
+    borderRadius: 8,
+    width: 140,
+    border: '1px solid #ccc',
+    padding: 10,
+    fontSize: 16
   },
   question: {
     fontWeight: 'bold',
@@ -232,9 +285,6 @@ const styles = {
     flexDirection: 'column',
     margin: '0 30px 30px 30px'
   },
-  submissionContainer: {
-    padding: 50
-  },
   headerContainer: {
     display: 'inline-block',
     position: 'relative'
@@ -251,8 +301,6 @@ const styles = {
   },
   authorHeaderInfo: {
     flex: 1,
-    paddingBottom: 15,
-    borderBottom: '1px solid ' + settings.mediumGrey,
     marginRight: 20
   },
   subNum: {
@@ -273,5 +321,29 @@ const styles = {
       backgroundColor: settings.darkerGrey,
       color: 'white'
     }
+  },
+  hr: {
+    borderBottom: '1px solid ' + settings.mediumGrey,
+    marginTop: 8
+  },
+  submissionTag: {
+    background: '#fff',
+    padding: 10,
+    borderRadius: 4,
+    border: '1px solid ' + settings.mediumGrey,
+    marginRight: 5,
+    display: 'flex',
+    marginTop: 5
+  },
+  submissionTagRemove: {
+    marginLeft: 5,
+    cursor: 'pointer'
+  },
+  submissionTagsContainer: {
+    display: 'flex',
+    justifyContent: 'flex-start',
+    marginTop: 10,
+    width: 140,
+    flexWrap: 'wrap'
   }
 };

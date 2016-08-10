@@ -25,11 +25,15 @@ export class OrderDropdown extends Component {
     return (
       <div style={styles.order.container(open)}>
         <p style={styles.filterBy.current}>{OrderOptions[order]}</p>
-        {Object.keys(OrderOptions).map(value => (
-          <RadioButton style={styles.filterBy.radio}
-            checked={value === order ? 'checked' : null}
-            label={OrderOptions[value]} value={value} onClick={() => onChange(value)} />
-        ))}
+        {Object.keys(OrderOptions).map((value, i) => {
+          return (
+            <RadioButton
+              key={`order-${i}`}
+              style={styles.filterBy.radio}
+              checked={value === order ? 'checked' : null}
+              label={OrderOptions[value]} value={value} onClick={() => onChange(value)} />
+          );
+        })}
       </div>
     );
   }
@@ -71,12 +75,16 @@ export class FilterDropdown extends Component {
     return (
       <div style={styles.filterBy.container(open)}>
         <p style={styles.filterBy.current}>{FilterByOptions[filterBy]}</p>
-        {Object.keys(FilterByOptions).map(value => (
-          <RadioButton style={styles.filterBy.radio}
-            checked={filterBy === value ? 'checked' : null}
-            label={`${FilterByOptions[value]} (${this.getCount(value)})`} value={value}
-            onClick={() => onChange(value)} />
-        ))}
+        {Object.keys(FilterByOptions).map((value, i) => {
+          return (
+            <RadioButton
+              key={`filter-${i}`}
+              style={styles.filterBy.radio}
+              checked={filterBy === value ? 'checked' : null}
+              label={`${FilterByOptions[value]} (${this.getCount(value)})`} value={value}
+              onClick={() => onChange(value)} />
+          );
+        })}
       </div>
     );
   }

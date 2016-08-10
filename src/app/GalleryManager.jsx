@@ -427,7 +427,7 @@ export default class GalleryManager extends Component {
             ? <div style={styles.publishGalleryError}>Error publishing gallery to Elkhorn.<br/>Is Elkhorn running?</div>
           : <div>
               <p>Embed code</p>
-              <textarea style={styles.embedTextarea} value={this.createEmbed('script-tag')}></textarea>
+              <textarea readOnly style={styles.embedTextarea} value={this.createEmbed('script-tag')}></textarea>
               <CopyToClipboard
                 text={this.createEmbed('script-tag')}
                 onCopy={() => {
@@ -437,7 +437,7 @@ export default class GalleryManager extends Component {
                 <Button style={styles.copyButton}> Copy <Clipboard /> </Button>
               </CopyToClipboard>
               <p style={{clear: 'both'}}>Embed code (with iframe)</p>
-              <textarea style={styles.embedTextarea} value={this.createEmbed('iframe')}></textarea>
+              <textarea style={styles.embedTextarea} value={this.createEmbed('iframe')} readOnly></textarea>
               <CopyToClipboard
                 text={this.createEmbed('iframe')}
                 onCopy={() => {
@@ -450,6 +450,7 @@ export default class GalleryManager extends Component {
               <input
                 type="text"
                 value={this.createEmbed('standalone')}
+                readOnly
                 style={styles.standalone} />
               <CopyToClipboard
                 text={this.createEmbed('standalone')}

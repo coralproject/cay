@@ -54,6 +54,7 @@ const styles = {
     width: '0%',
     minWidth: 800,
     marginTop: 30,
+    position: 'relative',
     marginBottom: 50
   },
   isClosed: {

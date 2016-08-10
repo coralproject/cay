@@ -1,11 +1,24 @@
+
+/**
+ * Import action types
+ */
+
 import * as types from 'auth/AuthActions';
+
+/**
+ * Initial state
+ */
 
 const initialState = {
   loading: false,
-  authorized: window.localStorage.getItem('authorized') === 'true'
+  authorized: localStorage.getItem('authorized') === 'true'
 };
 
-const auth = (state = initialState, action) => {
+/**
+ * Reducer
+ */
+
+export default (state = initialState, action) => {
   switch (action.type) {
   case types.LOGIN_INIT:
     return {...state, loading: true};
@@ -16,12 +29,10 @@ const auth = (state = initialState, action) => {
   case types.LOGIN_FAILURE:
     return {...state, authorized: false, loading: false};
 
-  case types.LOGGED_OUT:
+  case types.LOG_OUT:
     return {...state, authorized: false};
 
   default:
     return state;
   }
 };
-
-export default auth;

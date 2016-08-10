@@ -1,70 +1,49 @@
-import {xenia} from 'app/AppActions';
 
-export const COMMENT_CLICK = 'COMMENT_CLICK';
-export const COMMENTS_REQUEST = 'COMMENTS_REQUEST';
-export const COMMENTS_SUCCESS = 'COMMENTS_SUCCESS';
-export const COMMENTS_FAIL = 'COMMENTS_FAIL';
-export const STORE_COMMENTS = 'STORE_COMMENTS';
-export const CLEAR_COMMENT_ITEMS = 'CLEAR_COMMENT_ITEMS';
+/**
+ * Module dependencies
+ */
 
+import { xenia } from 'app/AppActions';
 
-export const requestComments = () => {
-  return {
-    type: COMMENTS_REQUEST
-  };
-};
+/**
+ * Action names
+ */
 
-export const receiveComments = (data) => {
-  return {
-    type: COMMENTS_SUCCESS,
-    data
-  };
-};
+export const FETCH_COMMENTS_REQUEST = 'FETCH_COMMENTS_REQUEST';
+export const FETCH_COMMENTS_SUCCESS = 'FETCH_COMMENTS_SUCCESS';
+export const FETCH_COMMENTS_FAILURE = 'FETCH_COMMENTS_FAILURE';
+export const EMPTY_COMMENTS = 'EMPTY_COMMENTS';
 
-export const receiveCommentsFailure = (err) => {
-  return {
-    type: COMMENTS_FAIL,
-    err
-  };
-};
+/**
+ * Action creators
+ */
 
-/* xenia_package */
-export const fetchCommentsByUser = (user_id) => {
-  // we should figure out how to paginate this at some point.
-  return (dispatch) => {
-    dispatch(clearCommentItems());
-    dispatch(requestComments());
+const requestComments = () => ({ type: FETCH_COMMENTS_REQUEST });
 
-    xenia({
-      name: 'comments_by_userid',
-      desc: 'get a reverse chron list of comments'
-    }).addQuery().collection('comments')
-      .match({user_id: `#objid:${user_id}`})
-      .sort(['date_created', -1])
-      .skip(0)
-      .limit(50)
-      // there's a bunch of good stuff here.
-      // we need to do another pass to make the comment list more interesting
-      .include(['body', 'date_created', 'date_updated'])
-      .exec()
-      .then(data => {
-        dispatch(receiveComments(data));
-        dispatch(storeComments(data));
-      })
-      .catch(err => dispatch(receiveCommentsFailure(err)));
-  };
-};
+const receiveComments = items => ({ type: FETCH_COMMENTS_SUCCESS, items });
 
+const receiveCommentsFailure = err => ({ type: FETCH_COMMENTS_FAILURE, err });
 
-export const clearCommentItems = () => {
-  return {
-    type: CLEAR_COMMENT_ITEMS
-  };
-};
+const emptyComments = () => ({ type: EMPTY_COMMENTS });
 
-export const storeComments = (data) => {
-  return {
-    type: STORE_COMMENTS,
-    data
-  };
+/**
+ * Actions API
+ */
+
+// TODO: we should figure out how to paginate this at some point.
+export const fetchCommentsByUser = userId => dispatch => {
+  dispatch(emptyComments());
+  dispatch(requestComments());
+
+  xenia({
+    name: 'comments_by_userid',
+    desc: 'get a reverse chron list of comments'
+  }).addQuery().collection('comments')
+    .match({user_id: `#objid:${userId}`})
+    .sort(['date_created', -1])
+    .skip(0).limit(50)
+    .include(['body', 'date_created', 'date_updated'])
+    .exec()
+    .then(data => dispatch(receiveComments(data.results[0].Docs)))
+    .catch(err => dispatch(receiveCommentsFailure(err)));
 };

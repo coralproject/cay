@@ -4,10 +4,8 @@ import Radium from 'radium';
 import MdLanguage from 'react-icons/lib/md/language';
 import MdArrowDropDown from 'react-icons/lib/md/arrow-drop-down';
 import MdCheck from 'react-icons/lib/md/check';
+import L from 'i18n';
 
-import { Lang } from 'i18n/lang';
-
-@Lang
 @Radium
 class LanguageSwitcher extends React.Component {
 
@@ -24,8 +22,8 @@ class LanguageSwitcher extends React.Component {
 
   switchLanguage(locale, event) {
     event.stopPropagation();
-    window.L.setLocale(locale);
-    window.L.processQueue();
+    L.setLocale(locale);
+    L.processQueue();
   }
 
   onClickOutside(event) {
@@ -82,7 +80,7 @@ class LanguageSwitcher extends React.Component {
       <div style={ styles.languageSwitcher }>
         <button onClick={ this.onTogglerClick.bind(this) } style={ styles.toggler }>
           <MdLanguage />
-            <span style={ styles.togglerText }>{ window.L.t('Language') }</span>
+            <span style={ styles.togglerText }>{ L.t('Language') }</span>
           <MdArrowDropDown />
         </button>
         { dropdown }

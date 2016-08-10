@@ -1,5 +1,19 @@
-import * as types from 'forms/FormActions';
+
+/**
+ * Module dependencies
+ */
+
 import uuid from 'node-uuid';
+
+/**
+ * Import action names
+ */
+
+import * as types from 'forms/FormActions';
+
+/**
+ * Initial state
+ */
 
 const initial = {
   formList: [],
@@ -34,6 +48,10 @@ const initial = {
   activeSubmission: null, // ObjectId string
   formUrls: []
 };
+
+/**
+ * Empty default form
+ */
 
 const emptyForm = {
   target: '#ask-form',
@@ -80,14 +98,14 @@ const emptyForm = {
   status: 'closed'
 };
 
-const forms = (state = initial, action) => {
+export default (state = initial, action) => {
 
   switch (action.type) {
 
-  case types.FORM_REQUEST_STARTED:
+  case types.FETCH_FORM_REQUEST:
     return {...state, activeForm: null, formLoading: true, formUrls: []};
 
-  case types.FORM_REQUEST_SUCCESS:
+  case types.FETCH_FORM_SUCCESS:
     return {  ...state,
               activeForm: action.form.id,
               [action.form.id]: action.form,
@@ -97,7 +115,7 @@ const forms = (state = initial, action) => {
               tempWidgets: action.form.steps[0].widgets
           };
 
-  case types.FORM_REQUEST_FAILURE:
+  case types.FETCH_FORM_FAILURE:
     return {...state, activeForm: null, formLoading: false, formUrls: []};
 
   case types.FORM_DELETED:
@@ -108,25 +126,25 @@ const forms = (state = initial, action) => {
     delete newState.formList[formListIndex];
     return newState;
 
-  case types.FORM_EDIT_ACCEPTED:
+  case types.EDIT_FORM_ACCEPTED:
     var newState = Object.assign({}, state);
     newState.editAccess[action.formId] = true;
     return newState;
 
-  case types.FORM_EDIT_DENIED:
+  case types.EDIT_FORM_DENIED:
     var newState = Object.assign({}, state);
     delete newState.editAccess[action.formId];
     return newState;
 
-  case types.FORM_EDIT_SUCCESS:
+  case types.EDIT_FORM_SUCCESS:
     return { ...state, form: action.data };
 
-  case types.FORM_CREATE_EMPTY:
+  case types.CREATE_EMPTY_FORM:
     const form = Object.assign({}, emptyForm, { steps: [{ id: uuid.v4(), name: 'first_step', createdAt: Date.now() }] });
     form.settings.saveDestination = action.saveDestination;
     return Object.assign({}, state, {activeForm: null, form: form, widgets: [], savingForm: false, savedForm: null });
 
-  case types.FORM_DUPLICATE_WIDGET:
+  case types.DUPLICATE_FORM_WIDGET:
 
     var position = action.position;
 
@@ -137,7 +155,7 @@ const forms = (state = initial, action) => {
 
     return Object.assign({}, state, { widgets: widgetsCopy, tempWidgets: widgetsCopy });
 
-  case types.FORM_APPEND_WIDGET:
+  case types.APPEND_FORM_WIDGET:
 
     var widget = action.widget;
 
@@ -148,7 +166,7 @@ const forms = (state = initial, action) => {
 
     return {...state, widgets: widgetsCopy, tempWidgets: widgetsCopy };
 
-  case types.FORMS_REQUEST_SUCCESS:
+  case types.FETCH_FORMS_SUCCESS:
 
     const formList = action.forms.reverse().map(form => form.id);
     const forms = action.forms.reduce((accum, form) => {
@@ -158,24 +176,24 @@ const forms = (state = initial, action) => {
 
     return {...state, formList, ...forms };
 
-  case types.FORM_REPLACE_WIDGETS:
+  case types.REPLACE_FORM_WIDGETS:
     var updatedWidgets = action.widgets.map((field) =>
       console.log("Field", field)
     );
     return Object.assign({}, state);
 
-  case types.WIDGET_UPDATE:
+  case types.UPDATE_WIDGET:
     var updatedWidgets = state.widgets.map((widget, id) => {
       return widget.id === action.id ? Object.assign({}, widget, action.data) : widget;
     });
     return Object.assign({}, state, { widgets: updatedWidgets });
 
-  case types.FORM_UPDATE:
+  case types.UPDATE_FORM:
     const formProp = state.activeForm ? state.activeForm : 'form';
     var updatedForm = Object.assign({}, state[formProp], action.data);
     return Object.assign({}, state, { [formProp]: updatedForm });
 
-  case types.WIDGET_MOVE:
+  case types.MOVE_WIDGET:
 
     // First we make a copy removing the dragged element
     var newWidgets = [...state.widgets];
@@ -184,12 +202,12 @@ const forms = (state = initial, action) => {
 
     return {...state, tempWidgets: newWidgets, widgets: newWidgets };
 
-  case types.FORM_DELETE_WIDGET:
+  case types.DELETE_FORM_WIDGET:
     var widgetsCopy = [...state.widgets];
     widgetsCopy.splice(action.widgetPosition, 1);
     return {...state, widgets: widgetsCopy, tempWidgets: widgetsCopy };
 
-  case types.FORM_CREATE_INIT:
+  case types.CREATE_INIT_FORM:
     return {...state, savingForm: true, formCreationError: null, savedForm: null};
 
   case types.FORM_CREATED:
@@ -205,7 +223,7 @@ const forms = (state = initial, action) => {
   case types.FORM_CREATION_FAILURE:
     return {...state, savingForm: false, formCreationError: action.error, savedForm: null, formUrls: []};
 
-  case types.SUBMISSIONS_REQUEST_SUCCESS:
+  case types.FETCH_SUBMISSIONS_SUCCESS:
 
     const submissionList = action.submissions.map(sub => sub.id);
     const submissions = action.submissions.reduce((accum, sub) => {
@@ -230,10 +248,10 @@ const forms = (state = initial, action) => {
   case types.UPDATE_ACTIVE_SUBMISSION:
     return Object.assign({}, state, { [state.activeSubmission]: { ...state[state.activeSubmission], ...action.props } });
 
-  case types.FORM_GALLERY_REQUEST:
+  case types.FETCH_FORM_GALLERY_REQUEST:
     return {...state, loadingGallery: true, activeGallery: null};
 
-  case types.FORM_GALLERY_SUCCESS:
+  case types.FETCH_FORM_GALLERY_SUCCESS:
     // action gallery might be more than one gallery in the future
 
     const answers = action.gallery.answers.reduce((accum, ans) => {
@@ -261,7 +279,7 @@ const forms = (state = initial, action) => {
       answerList: Object.keys(answers)
     };
 
-  case types.FORM_GALLERY_ERROR:
+  case types.FETCH_FORM_GALLERY_FAILURE:
     return {...state, loadingGallery: false, activeGallery: null, galleryError: action.error};
 
   case types.FORM_STATUS_UPDATED:
@@ -276,7 +294,7 @@ const forms = (state = initial, action) => {
     return {...state, [action.gallery.id]: action.gallery};
 
   // editing Gallery submissions
-  case types.ANSWER_EDIT_BEGIN: // user clicked on button to start editing an answer
+  case types.EDIT_ANSWER_BEGIN: // user clicked on button to start editing an answer
     return {
       ...state,
       // if you can think of a better way to store this, I'm all ears
@@ -285,13 +303,13 @@ const forms = (state = initial, action) => {
       editablePii: action.editablePii
     };
 
-  case types.ANSWER_EDIT_UPDATE: // user is typing into the field
+  case types.EDIT_ANSWER_UPDATE: // user is typing into the field
     return {...state, editableAnswer: action.text};
 
-  case types.ANSWER_EDIT_CANCEL: // user closed the edit Answer modal or something
+  case types.EDIT_ANSWER_CANCEL: // user closed the edit Answer modal or something
     return {...state, answerBeingEdited: null};
 
-  case types.ANSWER_EDIT_REQUEST: // submit Answer edit to server
+  case types.EDIT_ANSWER_REQUEST: // submit Answer edit to server
     return {...state, loadingAnswerEdit: true};
 
   case types.RESET_EDITABLE_TEXT:
@@ -300,7 +318,7 @@ const forms = (state = initial, action) => {
   case types.UPDATE_EDITABLE_PII:
     return {...state, editablePii: action.editablePii};
 
-  case types.ANSWER_EDIT_SUCCESS: // server successfully updated submission
+  case types.EDIT_ANSWER_SUCCESS: // server successfully updated submission
     // don't update the answers in state here.
     // the Answer and Reply objects are different, so instead of doing some horrible
     // update in place, I'm just going to reload the entire gallery from the server
@@ -311,7 +329,7 @@ const forms = (state = initial, action) => {
       answerBeingEdited: null
     };
 
-  case types.ANSWER_EDIT_FAILED: // server was unable to update the answer
+  case types.EDIT_ANSWER_FAILED: // server was unable to update the answer
     return {...state, loadingAnswerEdit: false, answerBeingEdited: null};
 
   case types.FORM_DRAG_ENDED:
@@ -334,19 +352,26 @@ const forms = (state = initial, action) => {
     const gallery = state[state.activeGallery];
     return {...state, [state.activeGallery]: {...gallery, config: {...gallery.config, identifiableIds: action.ids}}};
 
-  case types.PUBLISH_GALLERY_INIT:
-    return {...state, loadingGallery: true, galleryUrls: [], galleryCode: ''};
+  case types.PUBLISH_GALLERY_REQUEST:
+    return {...state, loadingGallery: true, galleryUrls: [], galleryCode: '', publishGalleryError: null};
 
   case types.PUBLISH_GALLERY_SUCCESS:
     return {
       ...state,
       loadingGallery: false,
       galleryUrls: action.gallery.urls,
-      galleryCode: action.gallery.build.code
+      galleryCode: action.gallery.build.code,
+      publishGalleryError: null
     };
 
   case types.PUBLISH_GALLERY_FAILURE:
-    return {...state, loadingGallery: true, galleryUrls: [], galleryCode: ''};
+    return {
+      ...state,
+      loadingGallery: false,
+      galleryUrls: [],
+      galleryCode: '',
+      publishGalleryError: action.error
+    };
 
   case types.UPDATE_FILTER_BY:
     return {...state, submissionFilterBy: action.value};
@@ -375,5 +400,3 @@ const forms = (state = initial, action) => {
     return state;
   }
 };
-
-export default forms;

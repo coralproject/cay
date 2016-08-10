@@ -1,16 +1,30 @@
+
+/**
+ * Import action names
+ */
+
 import * as tagsActions from 'tags/TagActions';
 import * as authActions from 'auth/AuthActions';
+import L from 'i18n';
 
 const types = Object.assign({}, tagsActions, authActions);
+
+/**
+ * Initial state
+ */
 
 const initialState = {
   loading: false,
   loadingTags: false,
-  authorized: window.localStorage.authorized || false,
+  authorized: localStorage.authorized || false,
   items: []
 };
 
-const tags = (state = initialState, action) => {
+/**
+ * Reducer
+ */
+
+export default (state = initialState, action) => {
 
   switch (action.type) {
 
@@ -44,7 +58,7 @@ const tags = (state = initialState, action) => {
       ...state,
       loadingTags: false,
       hasErrors: true,
-      errorMsg: `${window.L.t('Tag action failed')}: ${action.err}`
+      errorMsg: `${L.t('Tag action failed')}: ${action.err}`
     };
 
   // there's probably a better way to do this
@@ -65,5 +79,3 @@ const tags = (state = initialState, action) => {
     return state;
   }
 };
-
-export default tags;

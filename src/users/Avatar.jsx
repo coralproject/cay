@@ -10,30 +10,21 @@ class Avatar extends React.Component {
 
   getStyles(size) {
     let s = {};
+    let edge;
 
     if (size === 'small') {
-      s = {
-        width: 38,
-        height: 38
-      };
+      edge = 38;
     } else if (size === 'medium') {
-      s = {
-        width: 48,
-        height: 48
-      };
+      edge = 48;
     } else if (size === 'large') {
-      s = {
-        width: 78,
-        height: 78
-      };
+      edge = 78;
     }
 
     if (Number.isInteger(size)) {
-      s = {
-        width: size - 2,
-        height: size - 2
-      };
+      edge = size - 2;
     }
+
+    s = {width: edge, height: edge};
 
     if (this.props.roundCorners) {
       s = Object.assign({}, s, {borderRadius: s.width / 2 + 1});
@@ -49,13 +40,13 @@ class Avatar extends React.Component {
         this.getStyles(this.props.size),
         this.props.style
       ]}>
-        <img style={styles.image} src={this.props.src} />
+        <img className='avatar' style={styles.image} src={this.props.src} />
       </div>
     );
   }
 }
 
-export default Radium(Avatar);
+export default Avatar;
 
 const styles = {
   base: {

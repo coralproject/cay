@@ -73,13 +73,13 @@ export default class FilterNumbers extends React.Component {
             onChange={event => this.props.onChange(this.props.fieldName, 'userMin', +event.target.value)}
             style={styles.minMaxInputs}
             type='number'
-            value={this.props.userMin}/>
+            value={this.props.userMin === null ? '' : this.props.userMin}/>
           {` - `}
           <input
             onChange={event => this.props.onChange(this.props.fieldName, 'userMax', +event.target.value)}
             style={styles.minMaxInputs}
             type='number'
-            value={this.props.userMax}/>
+            value={this.props.userMax === null ? '' : this.props.userMax}/>
         </div>
         <p style={{marginTop: 10, color: 'red'}}>{this.renderHelpText()}</p>
         </div>
@@ -95,12 +95,13 @@ const styles = {
     fontWeight: 500,
     marginBottom: 10,
     color: 'rgb(130,130,130)',
-    fontSize: 16
+    fontSize: 14
   },
   minMaxInputs: {
-    padding: '7px 10px',
+    padding: '10px',
+    width: '40%',
     border: '1px solid lightgrey',
-    borderRadius: 3
-  },
-
+    borderRadius: 3,
+    fontSize: 16
+  }
 };

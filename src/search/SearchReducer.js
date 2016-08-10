@@ -33,7 +33,7 @@ const searches = (state = initialState, action) => {
       showTheError: `failed to load ${action.querysetName}`
     };
 
-  case types.PILLAR_SEARCH_REQUEST:
+  case types.SEARCH_REQUEST:
     return {
       ...state,
       loadingSavedSearch: true,
@@ -41,10 +41,10 @@ const searches = (state = initialState, action) => {
       savedSearchError: ''
     };
 
-  case types.PILLAR_SEARCH_SUCCESS:
+  case types.SEARCH_SUCCESS:
     return {...state, loadingSavedSearch: false, activeSavedSearch: action.search};
 
-  case types.PILLAR_SEARCH_FAILED:
+  case types.SEARCH_FAILED:
     return {
       ...state,
       loadingSavedSearch: false,
@@ -66,20 +66,20 @@ const searches = (state = initialState, action) => {
     const users =  action.replace ? [...action.data.results[0].Docs] : [...state.users, ...action.data.results[0].Docs];
     return {...state, loadingQueryset: false, users, userCount: action.userCount};
 
-  case types.PILLAR_SEARCHLIST_REQUEST:
+  case types.SEARCHLIST_REQUEST:
     return {...state, loadingSearches: true};
 
   // list of all saved searches fetched from Pillar
-  case types.PILLAR_SEARCHLIST_SUCCESS:
+  case types.SEARCHLIST_SUCCESS:
     return {...state, searches: action.searches, loadingSearches: false};
 
-  case types.PILLAR_SEARCHLIST_FAILED:
+  case types.SEARCHLIST_FAILED:
     return {...state, loadingSearches: false, searchListError: action.error};
 
-  case types.PILLAR_SEARCH_SAVE_INIT:
+  case types.SEARCH_SAVE_INIT:
     return {...state, savingSearch: true};
 
-  case types.PILLAR_SEARCH_SAVE_SUCCESS:
+  case types.SEARCH_SAVE_SUCCESS:
     // mark the search as recent so the mod can view its details
     // push it onto the array of saved searches
     return {
@@ -89,27 +89,27 @@ const searches = (state = initialState, action) => {
       searches: state.searches.concat(action.search)
     };
 
-  case types.PILLAR_SEARCH_SAVE_FAILED:
+  case types.SEARCH_SAVE_FAILED:
     return {...state, savingSearch: false};
 
-  case types.PILLAR_SEARCH_DELETE_INIT:
+  case types.SEARCH_DELETE_INIT:
     return {...state, pendingDeleteSearch: action.search};
 
-  case types.PILLAR_SEARCH_DELETED:
+  case types.SEARCH_DELETED:
     // slice the deleted search out by id?
     return {...state, pendingDeleteSearch: null, searches: action.newSearches};
 
-  case types.PILLAR_SEARCH_DELETE_FAILURE:
+  case types.SEARCH_DELETE_FAILURE:
     return {...state, pendingDeleteSearch: null};
 
   case types.UPDATE_EDITABLE_SEARCH_META:
     return {...state, [`editMeta_${action.field}`]: action.value};
 
-  case types.PILLAR_SAVED_SEARCH_EDIT_REQUEST:
+  case types.SAVED_SEARCH_EDIT_REQUEST:
     return {...state, editableSearchLoading: true};
 
   // saved search loaded from pillar to be edited
-  case types.PILLAR_EDIT_SEARCH_SUCCESS:
+  case types.EDIT_SEARCH_SUCCESS:
 
     return {
       ...state,
@@ -120,19 +120,19 @@ const searches = (state = initialState, action) => {
       editMeta_tag: action.search.tag
     };
 
-  case types.PILLAR_EDIT_SEARCH_FAILED:
+  case types.EDIT_SEARCH_FAILED:
     return {...state, editableSearch: null, editableSearchLoading: false};
 
-  case types.PILLAR_SAVED_SEARCH_UPDATE: // begin search update
+  case types.SAVED_SEARCH_UPDATE: // begin search update
     return {...state, updatingSearch: true, searchUpdatedSuccessfully: false};
 
-  case types.PILLAR_SEARCH_UPDATE_SUCCESS: // search has been successfully updated
+  case types.SEARCH_UPDATE_SUCCESS: // search has been successfully updated
     return {...state, editableSearch: action.search, updatingSearch: false, searchUpdatedSuccessfully: true};
 
-  case types.PILLAR_SEARCH_UPDATE_FAILED:
+  case types.SEARCH_UPDATE_FAILED:
     return {...state, updatingSearch: false, error: action.error, searchUpdatedSuccessfully: false};
 
-  case types.PILLAR_SEARCH_UPDATE_STALE: // just clearing out some UI elements after updating a serach
+  case types.SEARCH_UPDATE_STALE: // just clearing out some UI elements after updating a serach
     return {...state, searchUpdatedSuccessfully: false};
 
   case types.CLEAR_USER_LIST:

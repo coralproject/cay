@@ -7,19 +7,11 @@ import React, { PropTypes, Component } from 'react';
 import Radium from 'radium';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import FaTrash from 'react-icons/lib/fa/trash';
-import MdBuild from 'react-icons/lib/md/build';
 import { deleteForm, fetchForms } from 'forms/FormActions';
 import { mediumGrey, lightGrey, brandColor } from 'settings';
 import Page from 'app/layout/Page';
-import Button from 'components/Button';
+import { Button, IconButton, DataTable, TableHeader } from 'react-mdl';
 import ContentHeader from 'components/ContentHeader';
-import Table from 'components/tables/Table';
-import TableHead from 'components/tables/TableHead';
-import TableHeader from 'components/tables/TableHeader';
-import TableBody from 'components/tables/TableBody';
-import TableRow from 'components/tables/TableRow';
-import TableCell from 'components/tables/TableCell';
 import ButtonGroup from 'components/ButtonGroup';
 import L from 'i18n';
 
@@ -70,19 +62,20 @@ export default class FormList extends Component {
   render() {
     const forms = this.props.forms.formList.map(id => this.props.forms[id]);
     const visibleForms = forms.filter(form => form.status === this.state.displayMode);
+    const { displayMode } = this.state;
 
     return (
       <Page>
         <ContentHeader title="View Forms" style={styles.header} subhead="Create, edit and view forms">
           <Link to="forms/create" style={styles.createButton}>
-            <Button category="info">Create <MdBuild /></Button>
+            <Button raised colored>Create</Button>
           </Link>
         </ContentHeader>
 
-        <ButtonGroup initialActiveIndex={0} behavior="radio">
-          <Button onClick={this.setDisplayMode.bind(this, 'open')}>Open</Button>
-          <Button onClick={this.setDisplayMode.bind(this, 'closed')}>Closed</Button>
-        </ButtonGroup>
+        <Button accent colored raised={displayMode === 'open'}
+          onClick={this.setDisplayMode.bind(this, 'open')}>Open</Button>
+        <Button accent colored raised={displayMode === 'closed'}
+          onClick={this.setDisplayMode.bind(this, 'closed')}>Closed</Button>
 
         <FormTable forms={visibleForms} onRowClick={this.onRowClick.bind(this)}
           confirmDeletion={this.confirmDeletion.bind(this)}/>
@@ -107,33 +100,18 @@ const ConfirmDialog = ({ show, formName, onConfirmClick, onCloseClick }) => show
   </div>
 ) : null;
 
-const FormTable = ({ loadingTags, forms, onRowClick, confirmDeletion }) => (
-  <Table style={styles.list} striped={true} multiSelect={false}
-    hasActions={ true } isLoading={ loadingTags }
-    loadingMessage="Loading...">
-    <TableHead>
-      <TableHeader>{ L.t('Name') }</TableHeader>
-      <TableHeader>{ L.t('Description') }</TableHeader>
-      <TableHeader>{ L.t('Submissions') }</TableHeader>
-    </TableHead>
-    <TableBody>
-      {forms.map((form, i) => <FormTableRow header={form.header} key={i}
-        index={i} form={form} onRowClick={onRowClick} confirmDeletion={confirmDeletion} />)}
-    </TableBody>
-  </Table>
-);
+const formatForm = ({ header, stats, id }, index) =>
+({ name: header.title, description: header.description, submissions: stats.responses, remove: index });
 
-const FormTableRow = ({ index, form, onRowClick, confirmDeletion, header }) => (
-  <TableRow onClick={() => onRowClick(form.id)} style={styles.row} key={index}>
-    <TableCell>{header.title}</TableCell>
-    <TableCell style={{maxWidth: 400}}>{header.description}</TableCell>
-    <TableCell>{form.stats.responses}</TableCell>
-    <TableCell>
-      <div style={styles.trashButton} onClick={() => confirmDeletion(header.title, header.description, form.id) }>
-        <FaTrash style={styles.trashIcon} key={index} />
-      </div>
-    </TableCell>
-  </TableRow>
+const FormTable = ({ loadingTags, forms, onRowClick, confirmDeletion }) => (
+  <DataTable style={styles.table} sortable rows={forms.map(formatForm)}>
+    <TableHeader cellFormatter={(n, r, i) => <span style={styles.name}  onClick={() => onRowClick(forms[i].id)}>{n}</span>} name="name">{ L.t('Name') }</TableHeader>
+    <TableHeader name="description">{ L.t('Description') }</TableHeader>
+    <TableHeader cellFormatter={n => <span style={styles.submission}>{n}</span>} numeric name="submissions">{ L.t('Submissions') }</TableHeader>
+    <TableHeader nosort  style={styles.rowActions} name="remove"
+      cellFormatter={i => <IconButton name='delete'
+      onClick={e => confirmDeletion(forms[i].header.title, forms[i].header.description, forms[i].id, e)} />}>...</TableHeader>
+  </DataTable>
 );
 
 const styles = {
@@ -143,21 +121,6 @@ const styles = {
     flexWrap: 'wrap',
     borderBottom: `1px solid ${mediumGrey}`,
     marginBottom: 10
-  },
-  list: {
-    width: '100%',
-    border: 'none'
-  },
-  row: {
-    cursor: 'pointer',
-    borderBottom: `5px solid ${lightGrey}`,
-    backgroundColor: 'white',
-    ':hover': {
-      backgroundColor: lightGrey
-    }
-  },
-  createButton: {
-    marginTop: 10
   },
   confirmOverlay: {
     background: 'rgba(0,0,0,.7)',
@@ -197,21 +160,17 @@ const styles = {
     left: '30px',
     bottom: '30px'
   },
-  trashButton: {
-    backgroundColor: lightGrey,
-    width: 30,
-    height: 30,
-    marginTop: 5,
-    borderRadius: 3,
-    position: 'relative',
-    ':hover': {
-      backgroundColor: mediumGrey
-    }
+  table: {
+    marginTop: 25
   },
-  trashIcon: {
-    display: 'block',
-    position: 'absolute',
-    top: 7,
-    left: 7
+  submission: {
+    textAlign: 'center'
+  },
+  rowActions: {
+    width: 65,
+    textAlign: 'right'
+  },
+  name: {
+    cursor: 'pointer'
   }
 };

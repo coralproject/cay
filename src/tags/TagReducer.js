@@ -73,7 +73,7 @@ export default (state = initialState, action) => {
 
   case types.RECEIVE_ALL_TAGS:
     return {...state, loadingTags: false, items: action.tags};
-
+    
   default:
     // console.log('no reducer matches:', action.type);
     return state;

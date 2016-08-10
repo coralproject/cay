@@ -1,5 +1,6 @@
 
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import Radium from 'radium';
 import { connect } from 'react-redux';
 import moment from 'moment';
@@ -31,6 +32,9 @@ export default class Sidebar extends Component {
     const keyPress = (e) => {
 
       const {activeSubmission, submissions, onSelect, onFlag, onBookmark} = this.props;
+
+      // if the search input has focus, don't do anything.
+      if (document.activeElement === ReactDOM.findDOMNode(this.refs.searchInput)) return;
 
       const subIds = submissions.map(s => s.id);
       const activeIndex = subIds.indexOf(activeSubmission);
@@ -121,7 +125,11 @@ export default class Sidebar extends Component {
             <p style={styles.count}>{count} of {formCounts.totalSubmissions} Submission{formCounts.totalSubmissions === 1 ? '' : 's'}</p>
           </div>
           <div style={styles.searchContainer}>
-            <input style={styles.search} type='text' value={search}
+            <input
+              ref='searchInput'
+              style={styles.search}
+              type='text'
+              value={search}
               onChange={evt => this.setState({ search: evt.target.value })}
               placeholder='Search' />
             <button onClick={() => this.props.onSearchChange(search)}

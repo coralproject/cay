@@ -13,11 +13,12 @@ export default class GalleryPreview extends React.Component {
 
   render() {
 
-    if (this.props.galleryUrl) {
+    if (this.props[this.props.activeGallery].config.baseUrl) {
       var script = document.createElement('script');
+      var url = `${this.props[this.props.activeGallery].config.baseUrl}${this.props.activeGallery}.js`;
       script.type = 'application/javascript';
       // the id of the gallery is always the same. send a param to prevent caching
-      script.src = `${this.props.galleryUrl}?t=${Date.now()}`;
+      script.src = `${url}?t=${Date.now()}`;
       document.getElementsByTagName('head')[0].appendChild(script);
     }
 

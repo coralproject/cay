@@ -347,13 +347,12 @@ export default (state = initial, action) => {
     return {...state, [state.activeGallery]: {...gallery, config: {...gallery.config, identifiableIds: action.ids}}};
 
   case types.PUBLISH_GALLERY_REQUEST:
-    return {...state, loadingGallery: true, galleryUrls: [], galleryCode: '', publishGalleryError: null};
+    return {...state, loadingGallery: true, galleryCode: '', publishGalleryError: null};
 
   case types.PUBLISH_GALLERY_SUCCESS:
     return {
       ...state,
       loadingGallery: false,
-      galleryUrls: action.gallery.urls,
       galleryCode: action.gallery.build.code,
       publishGalleryError: null
     };

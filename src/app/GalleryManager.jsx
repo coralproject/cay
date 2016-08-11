@@ -221,13 +221,14 @@ export default class GalleryManager extends Component {
 
   createEmbed(type) {
     const {forms} = this.props;
+    const gallery = forms[forms.activeGallery];
     switch (type) {
     case 'script-tag':
-      return `<script src="${forms.galleryUrls.bundle}"></script><div id="ask-gallery" />`;
+      return `<script src="${gallery.config.baseUrl}${forms.activeGallery}.js"></script><div id="ask-gallery" />`;
     case 'iframe':
-      return `<iframe width="100%" height="580" src="${forms.galleryUrls.iframe}"></iframe>`;
+      return `<iframe width="100%" height="580" src="${gallery.config.baseUrl}${forms.activeGallery}.html"></iframe>`;
     case 'standalone':
-      return `${forms.galleryUrls.iframe}`;
+      return `${gallery.config.baseUrl}${forms.activeGallery}.html`;
     default:
       // nothing
     }
@@ -427,7 +428,7 @@ export default class GalleryManager extends Component {
             ? <div style={styles.publishGalleryError}>Error publishing gallery to Elkhorn.<br/>Is Elkhorn running?</div>
           : <div>
               <p>Embed code</p>
-              <textarea readOnly style={styles.embedTextarea} value={this.createEmbed('script-tag')}></textarea>
+              <textarea style={styles.embedTextarea} value={this.createEmbed('script-tag')}></textarea>
               <CopyToClipboard
                 text={this.createEmbed('script-tag')}
                 onCopy={() => {
@@ -437,7 +438,7 @@ export default class GalleryManager extends Component {
                 <Button style={styles.copyButton}> Copy <Clipboard /> </Button>
               </CopyToClipboard>
               <p style={{clear: 'both'}}>Embed code (with iframe)</p>
-              <textarea style={styles.embedTextarea} value={this.createEmbed('iframe')} readOnly></textarea>
+              <textarea style={styles.embedTextarea} value={this.createEmbed('iframe')}></textarea>
               <CopyToClipboard
                 text={this.createEmbed('iframe')}
                 onCopy={() => {
@@ -450,7 +451,6 @@ export default class GalleryManager extends Component {
               <input
                 type="text"
                 value={this.createEmbed('standalone')}
-                readOnly
                 style={styles.standalone} />
               <CopyToClipboard
                 text={this.createEmbed('standalone')}

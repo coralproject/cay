@@ -227,7 +227,7 @@ export default class GalleryManager extends Component {
     case 'iframe':
       return `<iframe width="100%" height="580" src="${forms.galleryUrls.iframe}"></iframe>`;
     case 'standalone':
-      return `${forms.galleryUrls}`;
+      return `${forms.galleryUrls.iframe}`;
     default:
       // nothing
     }

@@ -16,3 +16,7 @@ global.navigator = {
 }
 
 global.documentRef = document
+
+global.Headers = function(headers) {
+	return headers
+}

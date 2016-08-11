@@ -3,14 +3,9 @@
  * Module dependencies
  */
 
-import reduce from 'lodash/collection/reduce';
-import has from 'lodash/object/has';
-import isString from 'lodash/lang/isString';
-import isDate from 'lodash/lang/isDate';
 import isUndefined from 'lodash/lang/isUndefined';
 import isNull from 'lodash/lang/isNull';
 import template from 'lodash/string/template';
-import { clamp } from 'components/utils/math';
 import { xenia } from 'app/AppActions';
 import { makeQueryFromState } from 'search/SearchActions';
 import { parseFilterRanges, distributionForInput } from 'filters/utils';

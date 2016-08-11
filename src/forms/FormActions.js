@@ -56,8 +56,6 @@ export const FORM_DELETED = 'FORM_DELETED';
 
 export const CREATE_EMPTY_FORM= 'CREATE_EMPTY_FORM';
 
-export const REPLACE_FORM_WIDGETS = 'REPLACE_FORM_WIDGETS';
-
 export const EDIT_ANSWER_BEGIN = 'EDIT_ANSWER_BEGIN';
 export const EDIT_ANSWER_UPDATE = 'EDIT_ANSWER_UPDATE';
 export const EDIT_ANSWER_CANCEL = 'EDIT_ANSWER_CANCEL';
@@ -74,6 +72,7 @@ export const UPDATE_FORM_INACTIVE_MESSAGE_SUCCESS = 'UPDATE_FORM_INACTIVE_MESSAG
 export const UPDATE_FORM_INACTIVE_MESSAGE_FAILURE = 'UPDATE_FORM_INACTIVE_MESSAGE_FAILURE';
 
 export const FORM_DRAG_ENDED = 'FORM_DRAG_ENDED';
+export const FORM_DRAG_STARTED = 'FORM_DRAG_STARTED';
 
 export const PUBLISH_GALLERY_REQUEST = 'PUBLISH_GALLERY_REQUEST';
 export const PUBLISH_GALLERY_SUCCESS = 'PUBLISH_GALLERY_SUCCESS';
@@ -145,7 +144,7 @@ const formCreationFailure = error => ({ type: FORM_CREATION_FAILURE, error });
 
 const requestGallery = () => ({ type: FETCH_FORM_GALLERY_REQUEST });
 const receivedGallery = gallery => ({ type: FETCH_FORM_GALLERY_SUCCESS, gallery });
-const galleryRequestError = error => ({ type: FETCH_FORM_GALLERY_FAILED, error });
+const galleryRequestError = error => ({ type: FETCH_FORM_GALLERY_FAILURE, error });
 
 const answerRemovedFromGallery = gallery => ({
   type: FORM_ANSWER_REMOVED_FROM_GALLERY,
@@ -194,8 +193,6 @@ dispatch(formLeaveEdit(formId));
 
 export const createEmpty = () => (dispatch, getState) =>
 dispatch(createEmptyAction(`${getState().app.pillarHost}/api/form_submission/`));
-
-export const replaceWidgets = fields => ({ type: REPLACE_FORM_WIDGETS, widgets: fields });
 
 export const appendWidget = (type, targetPosition) => ({
   type: APPEND_FORM_WIDGET,
@@ -404,7 +401,7 @@ export const beginEdit = (galleryId, submissionId, answerId) => {
 
 // user starts typing and changing the Answer
 export const updateEditableAnswer = text => ({type: EDIT_ANSWER_UPDATE, text });
-export const cancelEdit = () => ({ type: ANSWER_EDIT_CANCEL });
+export const cancelEdit = () => ({ type: EDIT_ANSWER_CANCEL });
 
 // this just resets the editable text to the original
 // it does NOT remove the edit on the data object.
@@ -532,6 +529,7 @@ export const updateSearch = search => ({
 
 export const cleanSubmissionFilters = () => ({ type: CLEAN_SUBMISSION_FILTERS });
 
+export const formDragStarted = () => ({ type: FORM_DRAG_STARTED });
 export const formDragEnded = () => ({ type: FORM_DRAG_ENDED });
 
 export const reinsertGalleryAnswer = (galleryId, key, position) => ({
@@ -542,5 +540,3 @@ export const reinsertGalleryAnswer = (galleryId, key, position) => ({
 });
 
 export const hasFlag = (submission, flag) => -1 !== submission.flags.indexOf(flag);
-
-

@@ -110,7 +110,7 @@ export default (state = initial, action) => {
               [action.form.id]: action.form,
               formLoading: false,
               widgets: action.form.steps[0].widgets,
-              tempWidgets: action.form.steps[0].widgets
+              currentFields: action.form.steps[0].widgets
           };
 
   case types.FETCH_FORM_FAILURE:
@@ -151,7 +151,7 @@ export default (state = initial, action) => {
 
     widgetsCopy.splice(position, 0, widgetCopy);
 
-    return Object.assign({}, state, { widgets: widgetsCopy, tempWidgets: widgetsCopy });
+    return Object.assign({}, state, { widgets: widgetsCopy, currentFields: widgetsCopy });
 
   case types.APPEND_FORM_WIDGET:
 
@@ -162,7 +162,7 @@ export default (state = initial, action) => {
 
     widgetsCopy.splice(targetPosition, 0, widget);
 
-    return {...state, widgets: widgetsCopy, tempWidgets: widgetsCopy };
+    return {...state, widgets: widgetsCopy, currentFields: widgetsCopy };
 
   case types.FETCH_FORMS_SUCCESS:
 
@@ -173,12 +173,6 @@ export default (state = initial, action) => {
     }, {});
 
     return {...state, formList, ...forms };
-
-  case types.REPLACE_FORM_WIDGETS:
-    var updatedWidgets = action.widgets.map((field) =>
-      console.log("Field", field)
-    );
-    return Object.assign({}, state);
 
   case types.UPDATE_WIDGET:
     var updatedWidgets = state.widgets.map((widget, id) => {
@@ -198,12 +192,12 @@ export default (state = initial, action) => {
     var removed = newWidgets.splice(action.from, 1)[0];
     newWidgets.splice(action.to, 0, removed);
 
-    return {...state, tempWidgets: newWidgets, widgets: newWidgets };
+    return {...state, currentFields: newWidgets, widgets: newWidgets };
 
   case types.DELETE_FORM_WIDGET:
     var widgetsCopy = [...state.widgets];
     widgetsCopy.splice(action.widgetPosition, 1);
-    return {...state, widgets: widgetsCopy, tempWidgets: widgetsCopy };
+    return {...state, widgets: widgetsCopy, currentFields: widgetsCopy };
 
   case types.CREATE_INIT_FORM:
     return {...state, savingForm: true, formCreationError: null, savedForm: null};
@@ -329,8 +323,11 @@ export default (state = initial, action) => {
   case types.EDIT_ANSWER_FAILED: // server was unable to update the answer
     return {...state, loadingAnswerEdit: false, answerBeingEdited: null};
 
+  case types.FORM_DRAG_STARTED:
+    return {...state, autoExpand: -1, isDragging: true };
+
   case types.FORM_DRAG_ENDED:
-    return {...state, isHovering: false};
+    return {...state, isHovering: false, isDragging: false };
 
   case types.UPDATE_GALLERY_TITLE:
     return {...state, [state.activeGallery]: {...state[state.activeGallery], headline: action.title}};
@@ -350,18 +347,25 @@ export default (state = initial, action) => {
     return {...state, [state.activeGallery]: {...gallery, config: {...gallery.config, identifiableIds: action.ids}}};
 
   case types.PUBLISH_GALLERY_REQUEST:
-    return {...state, loadingGallery: true, galleryUrl: '', galleryCode: ''};
+    return {...state, loadingGallery: true, galleryUrl: '', galleryCode: '', publishGalleryError: null};
 
   case types.PUBLISH_GALLERY_SUCCESS:
     return {
       ...state,
       loadingGallery: false,
       galleryUrl: action.gallery.url,
-      galleryCode: action.gallery.build.code
+      galleryCode: action.gallery.build.code,
+      publishGalleryError: null
     };
 
   case types.PUBLISH_GALLERY_FAILURE:
-    return {...state, loadingGallery: true, galleryUrl: '', galleryCode: ''};
+    return {
+      ...state,
+      loadingGallery: false,
+      galleryUrl: '',
+      galleryCode: '',
+      publishGalleryError: action.error
+    };
 
   case types.UPDATE_FILTER_BY:
     return {...state, submissionFilterBy: action.value};

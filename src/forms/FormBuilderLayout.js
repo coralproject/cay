@@ -1,6 +1,6 @@
 
 import React from 'react';
-import FormComponent from 'forms/FormComponent';
+import FieldTypeButton from 'forms/FieldTypeButton';
 import FaFloppyO from 'react-icons/lib/fa/floppy-o';
 import FaEye from 'react-icons/lib/fa/eye';
 import FaExternalLink from 'react-icons/lib/fa/external-link';
@@ -37,16 +37,16 @@ export const Sidebar = ({ addToBottom, app, activeForm }) => (
       <h4 style={styles.leftContainerTitle}>Question Fields</h4>
       <div style={styles.typeList}>
         {askTypes.map((type, i) => (
-          <FormComponent key={i} field={type} onClick={() => addToBottom(type)} />
+          <FieldTypeButton key={ i } field={ type } />
         ))}
       </div>
       {activeForm ? (
         <div style={styles.embedContainer}>
           <h4 style={styles.leftContainerTitle}>Embed codes</h4>
           <p>Embed code</p>
-          <textarea style={styles.embedCode} value={`<div id="ask-form"></div><script src="${app.elkhornStaticHost}/${activeForm}.js"></script>`}/>
+          <textarea readOnly style={styles.embedCode} value={`<div id="ask-form"></div><script src="${app.elkhornStaticHost}/${activeForm}.js"></script>`}/>
           <p>Embed code (iframe)</p>
-          <textarea style={styles.embedCode} value={`<iframe width="100%" height="580" src="${app.elkhornHost}/iframe/${activeForm}"></iframe>`}/>
+          <textarea readOnly style={styles.embedCode} value={`<iframe width="100%" height="580" src="${app.elkhornHost}/iframe/${activeForm}"></iframe>`}/>
           <a href={ `${app.elkhornHost}/iframe/${activeForm}` } target="_blank" style={ styles.formSettingsAction }>
             <FaExternalLink /> Standalone Form
           </a>

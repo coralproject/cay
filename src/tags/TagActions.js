@@ -55,11 +55,15 @@ const allTagsRequestError = err => ({ type: ALL_TAGS_REQUEST_ERROR, err });
 
 export const getTags = () => (dispatch, getState) => {
   dispatch(tagRequestStarted());
-  fetch(getState().app.pillarHost + API_PREFIX + 'tags', getInit(null, 'GET'))
+  return fetch(getState().app.pillarHost + API_PREFIX + 'tags', getInit(null, 'GET'))
     .then(
-      response => response.json()
+      response => {
+        return response.ok ? response.json() : Promise.reject(response.status + ' ' + response.statusText);
+      }
     )
-    .then(tags => dispatch(tagRequestSuccess(tags, null, 'list')))
+    .then(tags => {
+      return dispatch(tagRequestSuccess(tags, null, 'list'));
+    })
     .catch(error => dispatch(tagRequestFailure(error)));
 };
 

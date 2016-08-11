@@ -121,7 +121,7 @@ export default (state = initial, action) => {
     var newState = Object.assign({}, state);
     delete newState[action.id];
     var formListIndex = newState.formList.indexOf(action.id);
-    delete newState.formList[formListIndex];
+    newState.formList.splice(formListIndex,1);
     return newState;
 
   case types.EDIT_FORM_ACCEPTED:

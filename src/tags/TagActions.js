@@ -74,15 +74,17 @@ export const storeTag = (tagName, tagDescription, index, oldValue) => (dispatch,
   if (typeof oldValue != 'undefined') {
     preparedTag['old_name'] = oldValue;
   }
-  fetch(getState().app.pillarHost + API_PREFIX + 'tag', getInit(preparedTag))
-    .then(response => response.text())
+  return fetch(getState().app.pillarHost + API_PREFIX + 'tag', getInit(preparedTag))
+    .then(response => {
+        return response.ok ? response.text() : Promise.reject(response.status + ' ' + response.statusText);
+      })
     .then(responseText => {
       // Temporary fix, errors from pillar are not in JSON notation.
       try {
         var responseJson = JSON.parse(responseText);
         dispatch(tagRequestSuccess(responseJson, index, 'create'));
       } catch(e) {
-        dispatch(tagRequestFailure(responseText));
+        dispatch(tagRequestFailure('Error from pillar: ' + responseText));
       }
     })
     .catch(error => dispatch(tagRequestFailure(error)));
@@ -90,8 +92,10 @@ export const storeTag = (tagName, tagDescription, index, oldValue) => (dispatch,
 
 export const deleteTag = (tagName, tagDescription, index) => (dispatch, getState) => {
   dispatch(tagRequestStarted());
-  fetch(getState().app.pillarHost + API_PREFIX + 'tag', getInit({ 'name': tagName, 'description': tagDescription }, 'DELETE'))
-    .then(response => response)
+  return fetch(getState().app.pillarHost + API_PREFIX + 'tag', getInit({ 'name': tagName, 'description': tagDescription }, 'DELETE'))
+    .then(response => {
+        return response.ok ? response : Promise.reject(response.status + ' ' + response.statusText);
+      })
     .then(deletedTag => dispatch(tagRequestSuccess(deletedTag, index, 'delete')))
     .catch(error => dispatch(tagRequestFailure(error)));
 };

@@ -45,8 +45,7 @@ const initial = {
   answerBeingEdited: null, // ObjectId string
   editableAnswer: '',
   editablePii: [],
-  activeSubmission: null, // ObjectId string
-  formUrls: []
+  activeSubmission: null // ObjectId string
 };
 
 /**
@@ -103,20 +102,19 @@ export default (state = initial, action) => {
   switch (action.type) {
 
   case types.FETCH_FORM_REQUEST:
-    return {...state, activeForm: null, formLoading: true, formUrls: []};
+    return {...state, activeForm: null, formLoading: true};
 
   case types.FETCH_FORM_SUCCESS:
     return {  ...state,
               activeForm: action.form.id,
               [action.form.id]: action.form,
-              formUrls: action.form.urls,
               formLoading: false,
               widgets: action.form.steps[0].widgets,
               tempWidgets: action.form.steps[0].widgets
           };
 
   case types.FETCH_FORM_FAILURE:
-    return {...state, activeForm: null, formLoading: false, formUrls: []};
+    return {...state, activeForm: null, formLoading: false};
 
   case types.FORM_DELETED:
     // FIXME: Pillar is returning 'null' for deleted forms. See: FormActions/deleteForm.
@@ -176,12 +174,6 @@ export default (state = initial, action) => {
 
     return {...state, formList, ...forms };
 
-  case types.REPLACE_FORM_WIDGETS:
-    var updatedWidgets = action.widgets.map((field) =>
-      console.log("Field", field)
-    );
-    return Object.assign({}, state);
-
   case types.UPDATE_WIDGET:
     var updatedWidgets = state.widgets.map((widget, id) => {
       return widget.id === action.id ? Object.assign({}, widget, action.data) : widget;
@@ -214,14 +206,13 @@ export default (state = initial, action) => {
     return {
       ...state,
       savingForm: false,
-      formUrls: action.form.urls,
       savedForm: action.form.data.id,
       formList: [...state.formList, action.form.data.id],
       [action.form.data.id]: action.form.data
     };
 
   case types.FORM_CREATION_FAILURE:
-    return {...state, savingForm: false, formCreationError: action.error, savedForm: null, formUrls: []};
+    return {...state, savingForm: false, formCreationError: action.error, savedForm: null};
 
   case types.FETCH_SUBMISSIONS_SUCCESS:
 

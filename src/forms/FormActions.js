@@ -72,6 +72,7 @@ export const UPDATE_FORM_INACTIVE_MESSAGE_SUCCESS = 'UPDATE_FORM_INACTIVE_MESSAG
 export const UPDATE_FORM_INACTIVE_MESSAGE_FAILURE = 'UPDATE_FORM_INACTIVE_MESSAGE_FAILURE';
 
 export const FORM_DRAG_ENDED = 'FORM_DRAG_ENDED';
+export const FORM_DRAG_STARTED = 'FORM_DRAG_STARTED';
 
 export const PUBLISH_GALLERY_REQUEST = 'PUBLISH_GALLERY_REQUEST';
 export const PUBLISH_GALLERY_SUCCESS = 'PUBLISH_GALLERY_SUCCESS';
@@ -528,6 +529,7 @@ export const updateSearch = search => ({
 
 export const cleanSubmissionFilters = () => ({ type: CLEAN_SUBMISSION_FILTERS });
 
+export const formDragStarted = () => ({ type: FORM_DRAG_STARTED });
 export const formDragEnded = () => ({ type: FORM_DRAG_ENDED });
 
 export const reinsertGalleryAnswer = (galleryId, key, position) => ({

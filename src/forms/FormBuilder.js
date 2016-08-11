@@ -9,10 +9,12 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import { saveForm, appendWidget, updateForm } from 'forms/FormActions';
 import { showFlashMessage } from 'flashmessages/FlashMessagesActions';
 
+// Icons
 import Spinner from 'components/Spinner';
 import FaClose from 'react-icons/lib/fa/close';
 
-import FormDiagram from 'forms/FormDiagram';
+// Components
+import FormFieldsContainer from 'forms/FormFieldsContainer';
 import { Header, Sidebar } from 'forms/FormBuilderLayout';
 
 
@@ -56,13 +58,12 @@ export default class FormBuilder extends Component {
           onSaveClick={this.onSaveClick.bind(this)} />
         <div style={styles.builderContainer}>
           <Sidebar form={form}
-            formUrls={forms.formUrls}
             create={!activeForm}
             onFormStatusChange={this.onFormStatusChange.bind(this)}
             addToBottom={this.addToBottom.bind(this)}
             activeForm={activeForm}
             app={app} />
-          <FormDiagram activeForm={ this.props.activeForm } markAsUnsaved={this.markAsUnsaved.bind(this)} />
+          <FormFieldsContainer activeForm={ this.props.activeForm } markAsUnsaved={this.markAsUnsaved.bind(this)} />
           { preview
             ? <div>
                 <div style={ styles.previewOverlay }></div>

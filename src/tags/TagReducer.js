@@ -25,7 +25,6 @@ const initialState = {
  */
 
 export default (state = initialState, action) => {
-
   switch (action.type) {
 
   case types.TAG_REQUEST_STARTED:
@@ -50,8 +49,11 @@ export default (state = initialState, action) => {
       return {...state, loading: false, hasErrors: false, tags: tagsCopy };
     case 'list':
       return {...state, loading: false, loadingTags: false, hasErrors: false, tags: action.payload };
+    default:
+      return state;
     }
     break;
+
 
   case types.TAG_REQUEST_FAILURE:
     return {

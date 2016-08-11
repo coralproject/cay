@@ -104,14 +104,16 @@ export const fetchAllTags = () => (dispatch, getState) => {
   if (!getState().loadingTags) {
     dispatch(requestAllTags());
 
-    fetch(getState().app.pillarHost + '/api/tags')
+    return fetch(getState().app.pillarHost + '/api/tags')
       .then(res => {
-        return res.json();
+        return res.ok ? res.json() : Promise.reject(res.status + ' ' + response.statusText);
       })
       .then(json => {
         dispatch(receiveAllTags(json));
       }).catch(err => {
         dispatch(allTagsRequestError(err));
       });
+  } else {
+    return false;
   }
 };

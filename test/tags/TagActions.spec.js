@@ -7,13 +7,28 @@ const middlewares = [thunk]; // add your middlewares like `redux-thunk`
 const mockStore = configureStore(middlewares);
 
 describe('TagActions', () => {
-
+    let store;
     const mocktag = {
       name: 'test_tag',
       description: 'test tag description',
       old_name: 'old_tag_name',
       index: 123
     };
+    const mocktag2 = {
+      name: 'another_test_tag',
+      description: 'yet another test tag description',
+      old_name: 'super_old_tag_name',
+      index: 124
+    }
+
+    beforeEach(() => {
+      // Set the initial state of the store 
+      store = mockStore({
+        app:{
+          pillarHost:'pillarhost'
+        }
+      });
+    })
 
   afterEach(() => {
     //Reset mock server after each test
@@ -21,19 +36,8 @@ describe('TagActions', () => {
   });
 
   describe('getTags', () => {
-    let getState;
-    let store;
 
     beforeEach(() => {
-      // Set the initial state of the store 
-      getState = {
-        app:{
-          pillarHost:'pillarhost'
-        }
-      };
-
-      store = mockStore(getState);
-
       // Mock a server response
       fetchMock.mock('pillarhost/api/tags', '{"tags":["tag1","tag2"]}');
 
@@ -76,19 +80,8 @@ describe('TagActions', () => {
   });
 
   describe('deleteTag', () => {
-    let getState;
-    let store;
 
     beforeEach(() => {
-      // Set the initial state of the store 
-      getState = {
-        app:{
-          pillarHost:'pillarhost'
-        }
-      };
-
-      store = mockStore(getState);
-
       // Mock a server response
       fetchMock.mock((url, opts) => {
         if (url === 'pillarhost/api/tag' && opts.method === 'DELETE') {
@@ -154,20 +147,8 @@ describe('TagActions', () => {
   });
 
   describe('storeTag', () => {
-    let getState;
-    let store;
-
 
     beforeEach(() => {
-      // Set the initial state of the store 
-      getState = {
-        app:{
-          pillarHost:'pillarhost'
-        }
-      };
-
-      store = mockStore(getState);
-
       // Mock a server response
       fetchMock.mock((url, opts) => {
         if (url === 'pillarhost/api/tag' && opts.method === 'POST') {
@@ -259,5 +240,57 @@ describe('TagActions', () => {
         });
     });
 
+  });
+
+  describe('fetchAllTags', () => {
+    beforeEach(()=> {
+      fetchMock.mock('pillarhost/api/tags',JSON.stringify([mocktag,mocktag2]));
+    });
+
+    it('should disptach a REQUEST_ALL_TAGS action', (done) => {
+      TagActions.fetchAllTags()(store.dispatch, store.getState)
+        .then(() => {
+          expect(store.getActions()[0]).to.have.property('type')
+            .and.to.equal(TagActions.REQUEST_ALL_TAGS);
+          done();
+        });
+    });
+
+    it('should return false if currently loading tags', () => {
+      // Set the initial state of the store 
+      store = mockStore({
+        app:{
+          pillarHost:'pillarhost'
+        },
+        loadingTags:true
+      });
+      expect(TagActions.fetchAllTags()(store.dispatch, store.getState)).to.be.false;
+    });
+
+    it('should dispatch a RECEIVE_ALL_TAGS action with tags on success', (done) => {
+      TagActions.fetchAllTags()(store.dispatch, store.getState)
+        .then(() => {
+          let action = store.getActions()[1];
+          expect(action).to.have.property('type')
+            .and.to.equal(TagActions.RECEIVE_ALL_TAGS);
+          expect(action).to.have.property('tags')
+            .and.to.deep.equal([mocktag,mocktag2]);
+          done();
+        });
+    });
+
+    it('should dispatch an ALL_TAGS_REQUEST_ERROR action on failure', () => {
+      fetchMock.restore();
+      fetchMock.mock('pillarhost/api/tags',{status:404});
+      TagActions.fetchAllTags()(store.dispatch, store.getState)
+        .then(() => {
+          let action = store.getActions()[1];
+          expect(action).to.have.property('type')
+            .and.to.equal(TagActions.ALL_TAGS_REQUEST_ERROR);
+          expect(action).to.have.property('err')
+            .and.to.deep.equal('404 Not Found');
+          done();
+        });
+    });
   });
 });

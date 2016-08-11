@@ -111,7 +111,7 @@ export default (state = initialState, action) => {
     return {...state, ...action.filter};
 
   // a Saved Search was loaded from Pillar to be edited
-  case types.PILLAR_EDIT_SEARCH_SUCCESS:
+  case types.EDIT_SEARCH_SUCCESS:
     return {
       ...state,
       ...action.filters,

@@ -7,7 +7,7 @@ import React, { PropTypes, Component } from 'react';
 import Radium from 'radium';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import { saveForm, deleteForm, fetchForms } from 'forms/FormActions';
+import { copyForm, deleteForm, fetchForms } from 'forms/FormActions';
 import { mediumGrey, lightGrey, brandColor } from 'settings';
 import Page from 'app/layout/Page';
 import { Button, IconButton, DataTable, TableHeader } from 'react-mdl';
@@ -61,17 +61,9 @@ export default class FormList extends Component {
 
   onCopyFormClick(form, event) {
       event.stopPropagation();
-      console.log(form);
-      const formCopy = {...form};
-      delete formCopy.id;
-      formCopy.settings.isActive = false;
-      formCopy.header.title = formCopy.header.title + ' (Copy)';
-      formCopy.date_created = new Date().toISOString();
-      let widgets = formCopy.steps[0].widgets;
-      console.log(formCopy)
-      this.props.dispatch(saveForm(formCopy, widgets))
+      this.props.dispatch(copyForm(form))
         .then((form) => {
-          
+          this.context.router.push(`/forms/${form.id}`);
         });
   }
   render() {

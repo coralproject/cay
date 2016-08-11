@@ -225,6 +225,20 @@ export const updateActiveSubmission = props => ({
   props
 });
 
+export const copyForm = (form) => {
+  let headerCopy = Object.assign({},form.header,{title:form.header.title + ' (Copy)'});
+  let settingsCopy = Object.assign({},form.settings,{isActive:false});
+  let data = Object.assign({}, form, 
+      {
+        header:headerCopy, 
+        settings:settingsCopy, 
+        date_created: new Date().toISOString(),
+        id:null
+      });
+  let widgets = data.steps[0].widgets;
+  return saveForm(data, widgets);
+};
+
 export const saveForm = (form, widgets) => {
   const data = Object.assign({}, form);
   data.steps[0].widgets = widgets;
@@ -235,7 +249,7 @@ export const saveForm = (form, widgets) => {
   return (dispatch, getState) => {
 
     const {app} = getState();
-    data.settings.saveDestination =  `${app.pillarHost}/api/form_submission/`;
+    data.settings.saveDestination =  `${app.pillarHost}/api/form_submission/`; 
 
     dispatch({ type: CREATE_INIT_FORM, data });
     return fetch(`${app.elkhornHost}/create`, {
@@ -246,7 +260,9 @@ export const saveForm = (form, widgets) => {
       }),
       body: JSON.stringify(data)
     })
-    .then(res => res.json())
+    .then(res => {
+      return res.ok ? res.json() : Promise.reject(res.status);
+    })
     .then(json => {
       dispatch(formCreated(json));
       return json;

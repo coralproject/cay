@@ -106,7 +106,7 @@ export const fetchAllTags = () => (dispatch, getState) => {
 
     return fetch(getState().app.pillarHost + '/api/tags')
       .then(res => {
-        return res.ok ? res.json() : Promise.reject(res.status + ' ' + response.statusText);
+        return res.ok ? res.json() : Promise.reject(res.status + ' ' + res.statusText);
       })
       .then(json => {
         dispatch(receiveAllTags(json));

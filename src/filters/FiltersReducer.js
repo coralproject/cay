@@ -115,8 +115,8 @@ export default (state = initialState, action) => {
     return {
       ...state,
       ...action.filters,
-      breakdown: action.breakdown,
-      specificBreakdown: action.specificBreakdown
+      breakdownEdit: action.breakdown,
+      specificBreakdownEdit: action.specificBreakdown
     };
 
   case types.SORT:
@@ -125,7 +125,7 @@ export default (state = initialState, action) => {
 
   case types.CLEAR_EDITABLE_FILTERS:
     // reset editable filters to their default state while a Saved Search is loading
-    return {...state, ...action.filters, breakdownEdit: 'all', specificBreakdownEdit: ''};
+    return {...state, ...action.filters, ...action.breakdowns};
 
   default:
     return state;

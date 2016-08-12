@@ -101,7 +101,11 @@ export const clearFilters = (editable = false) => (dispatch, getState) => {
     return accum;
   }, {});
 
-  dispatch({type: CLEAR_EDITABLE_FILTERS, filters: defaults});
+  const breakdowns = editable
+    ? {breakdownEdit: 'all', specificBreakdownEdit: ''}
+    : {breakdown: 'all', specificBreakdown: ''};
+
+  dispatch({type: CLEAR_EDITABLE_FILTERS, filters: defaults, breakdowns});
 };
 
 export const fetchSections = () => dispatch => {

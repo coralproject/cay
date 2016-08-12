@@ -144,18 +144,20 @@ const searches = (state = initialState, action) => {
     return {...state, recentSavedSearch: null, excluded_tags: []};
 
   case types.TOGGLE_TAG_VISIBILITY:
-    const idx = state.excluded_tags.indexOf(action.tag)
+    const idx = state.excluded_tags.indexOf(action.tag);
+    let newState;
     if (idx !== -1) {
-      return {...state, excluded_tags: [...state.excluded_tags.slice(0, idx),...state.excluded_tags.slice(idx + 1)]};
+      newState = {...state, excluded_tags: [...state.excluded_tags.slice(0, idx),...state.excluded_tags.slice(idx + 1)]};
     } else {
-      return {...state, excluded_tags: [...state.excluded_tags, action.tag]};
+      newState = {...state, excluded_tags: [...state.excluded_tags, action.tag]};
     }
-    
+    return newState;
+
   case types.SHOW_SPECIFIC_TAG:
     const tags = action.tags.map(t => t.name).concat('No tags');
     tags.splice(tags.indexOf(action.tag), 1);
     return {...state, excluded_tags: tags};
-  
+
   case types.SHOW_ALL_TAGS:
     return{...state, excluded_tags: []};
 

@@ -64,28 +64,8 @@ export default class FormList extends Component {
 
   onCopyFormClick(form, event) {
       event.stopPropagation();
-      this.setState((prevState) => {
-        prevState.copying[form.id]=true;
-        return prevState;
-      });
-      this.props.dispatch(copyForm(form))
-        .then((newForm) => {
-          this.setState((prevState) => {
-            delete prevState.copying[form.id];
-            return prevState;
-          });
-          this.context.router.push(`/forms/${newForm.id}`);
-        });
+      this.context.router.push(`/forms/create?copying=${form.id}`);
   }
-
-  copyCellFormatter(i, forms, copying) {
-    if(copying[forms[i].id]) {
-      return <Spinner singleColor />;
-    } else {
-      return <IconButton name='content_copy' onClick={e => this.onCopyFormClick(forms[i], e)}/>;
-    }
-  }
-
 
   render() {
     const forms = this.props.forms.formList.map(id => this.props.forms[id]);
@@ -106,7 +86,7 @@ export default class FormList extends Component {
           onClick={this.setDisplayMode.bind(this, 'closed')}>Closed</Button>
 
         <FormTable forms={visibleForms} onRowClick={this.onRowClick.bind(this)}
-          confirmDeletion={this.confirmDeletion.bind(this)} copyCellFormatter={this.copyCellFormatter.bind(this)}
+          confirmDeletion={this.confirmDeletion.bind(this)} onCopyFormClick={this.onCopyFormClick.bind(this)}
           copying={this.state.copying}/>
 
         <ConfirmDialog show={this.state.showConfirmDialog}
@@ -132,12 +112,12 @@ const ConfirmDialog = ({ show, formName, onConfirmClick, onCloseClick }) => show
 const formatForm = ({ header, stats, id }, index) =>
 ({ name: header.title, description: header.description, submissions: stats.responses, copy: index, remove: index });
 
-const FormTable = ({ loadingTags, forms, onRowClick, confirmDeletion, copyCellFormatter, copying }) => (
+const FormTable = ({ loadingTags, forms, onRowClick, confirmDeletion, onCopyFormClick }) => (
   <DataTable style={styles.table} sortable rows={forms.map(formatForm)}>
     <TableHeader cellFormatter={(n, r, i) => <span style={styles.name}  onClick={() => onRowClick(forms[i].id)}>{n}</span>} name="name">{ L.t('Name') }</TableHeader>
     <TableHeader name="description">{ L.t('Description') }</TableHeader>
     <TableHeader cellFormatter={n => <span style={styles.submission}>{n}</span>} numeric name="submissions">{ L.t('Submissions') }</TableHeader>
-    <TableHeader nosort name="copy" style={styles.rowActions} cellFormatter={i => copyCellFormatter(i, forms, copying)}></TableHeader>
+    <TableHeader nosort name="copy" style={styles.rowActions} cellFormatter={i => <IconButton name='content_copy' onClick={e => onCopyFormClick(forms[i], e)}/>}></TableHeader>
     <TableHeader nosort style={styles.rowActions} name="remove"
       cellFormatter={i => <IconButton name='delete'
       onClick={e => confirmDeletion(forms[i].header.title, forms[i].header.description, forms[i].id, e)} />}></TableHeader>

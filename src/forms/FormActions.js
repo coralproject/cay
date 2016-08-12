@@ -93,6 +93,8 @@ export const GALLERY_ENABLE_IDENTIFIABLE = 'GALLERY_ENABLE_IDENTIFIABLE';
 export const UPDATE_EDITABLE_PII = 'UPDATE_EDITABLE_PII';
 export const RESET_EDITABLE_TEXT = 'RESET_EDITABLE_TEXT';
 
+export const COPY_FORM = 'COPY_FORM';
+
 /**
  * Utils
  */
@@ -173,6 +175,10 @@ export const fetchForm = id => (dispatch, getState) => {
     .catch(error => dispatch(formRequestFailure(error)));
 };
 
+export const copyForm = (id) => (dispatch) => {
+  dispatch({type: COPY_FORM, id});
+};
+
 export const deleteForm = (name, description, id) => (dispatch, getState) => {
   dispatch(formRequestStarted(id));
   return fetch(`${getState().app.pillarHost}/api/form/${id}`, getInit({ name, description }, 'DELETE'))
@@ -224,20 +230,6 @@ export const updateActiveSubmission = props => ({
   type: UPDATE_ACTIVE_SUBMISSION,
   props
 });
-
-export const copyForm = (form) => {
-  let headerCopy = Object.assign({},form.header,{title:form.header.title + ' (Copy)'});
-  let settingsCopy = Object.assign({},form.settings,{isActive:false});
-  let data = Object.assign({}, form, 
-      {
-        header:headerCopy, 
-        settings:settingsCopy, 
-        date_created: new Date().toISOString(),
-        id:null
-      });
-  let widgets = data.steps[0].widgets;
-  return saveForm(data, widgets);
-};
 
 export const saveForm = (form, widgets) => {
   const data = Object.assign({}, form);

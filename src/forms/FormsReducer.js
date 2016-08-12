@@ -142,6 +142,19 @@ export default (state = initial, action) => {
     form.settings.saveDestination = action.saveDestination;
     return Object.assign({}, state, {activeForm: null, form: form, widgets: [], savingForm: false, savedForm: null });
 
+  case types.COPY_FORM:
+    let formToCopy = Object.assign({}, state[action.id]);
+    let headerCopy = Object.assign({},formToCopy.header,{title:formToCopy.header.title + ' (Copy)'});
+    let settingsCopy = Object.assign({},formToCopy.settings,{isActive:false});
+    let copiedForm = Object.assign({}, formToCopy, 
+        {
+          header:headerCopy, 
+          settings: settingsCopy,
+          date_created: new Date().toISOString(),
+          id:null
+        });
+    return Object.assign({}, state, {form:copiedForm, widgets:copiedForm.steps[0].widgets});
+
   case types.DUPLICATE_FORM_WIDGET:
 
     var position = action.position;

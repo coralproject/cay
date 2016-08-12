@@ -88,8 +88,13 @@ const receivedSearch = search => ({ type: SEARCH_SUCCESS, search });
 const searchFailed = error => ({ type: SEARCH_FAILED, error });
 
 const requestSavedSearchForEdit = () => ({ type: SAVED_SEARCH_EDIT_REQUEST });
-const receivedEditSearch = (search, filters, breakdown, specificBreakdown) =>
-({ type: EDIT_SEARCH_SUCCESS, search, filters, breakdown, specificBreakdown });
+const receivedEditSearch = (search, filters, breakdown, specificBreakdown) => {
+  if (!Array.isArray(search.excluded_tags)) {
+    search.excluded_tags = []; // old searches in the db might not have this field
+  }
+
+  return { type: EDIT_SEARCH_SUCCESS, search, filters, breakdown, specificBreakdown };
+};
 
 const searchEditFetchFailed = error => ({ type: EDIT_SEARCH_FAILED, error });
 

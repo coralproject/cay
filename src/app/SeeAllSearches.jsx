@@ -112,7 +112,7 @@ const Search = Radium(({ key, search, openDeleteModal }) => (
 
     <p style={styles.searchDescription}>{search.description}</p>
     <ul style={styles.filterList}>
-      {search.filters.values.map((filter, i) => <SearchFilter key={key} filter={filter} />)}
+      {search.filters.values.map((filter, i) => <SearchFilter key={i} filter={filter} />)}
     </ul>
   </Card>
 ));

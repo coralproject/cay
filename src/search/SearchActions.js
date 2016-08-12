@@ -88,8 +88,13 @@ const receivedSearch = search => ({ type: SEARCH_SUCCESS, search });
 const searchFailed = error => ({ type: SEARCH_FAILED, error });
 
 const requestSavedSearchForEdit = () => ({ type: SAVED_SEARCH_EDIT_REQUEST });
-const receivedEditSearch = (search, filters, breakdown, specificBreakdown) =>
-({ type: EDIT_SEARCH_SUCCESS, search, filters, breakdown, specificBreakdown });
+const receivedEditSearch = (search, filters, breakdown, specificBreakdown) => {
+  if (!Array.isArray(search.excluded_tags)) {
+    search.excluded_tags = []; // old searches in the db might not have this field
+  }
+
+  return { type: EDIT_SEARCH_SUCCESS, search, filters, breakdown, specificBreakdown };
+};
 
 const searchEditFetchFailed = error => ({ type: EDIT_SEARCH_FAILED, error });
 
@@ -165,6 +170,9 @@ export const fetchSearchesIfNotFetched = () => (dispatch, getState) => {
   }
 };
 
+export const requestQuerysetFailure = error => {
+  return {type: QUERYSET_REQUEST_FAILURE, error};
+};
 
 // execute a saved query_set
 export const fetchQueryset = (querysetName, page = 0, replace = false) =>
@@ -317,19 +325,19 @@ const createQueryForSave = (query, name, desc) => {
   // set params, descriptions, defaults
   q.params = [
     {
-      name: "limit",
-      desc: "Limits the number of records returned.",
-      default: "1000"
+      name: 'limit',
+      desc: 'Limits the number of records returned.',
+      default: '1000'
     },
     {
-      name: "skip",
-      desc: "Skips a number of records before returning.",
-      default: "0"
+      name: 'skip',
+      desc: 'Skips a number of records before returning.',
+      default: '0'
     },
     {
-      name: "sort",
-      desc: "Sort field.",
-      default: "statistics.comments.all.all.count"
+      name: 'sort',
+      desc: 'Sort field.',
+      default: 'statistics.comments.all.all.count'
     }
   ];
 
@@ -356,8 +364,6 @@ const createQueryForSave = (query, name, desc) => {
 
   q.name = name;
   q.desc = desc;
-
-  console.log("Query", q);
 
   return q;
 };

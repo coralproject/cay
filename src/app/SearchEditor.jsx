@@ -16,7 +16,7 @@ import {
   updateEditableSearchMeta
 } from 'search/SearchActions';
 import {userSelected} from 'users/UsersActions';
-import {clearEditableFilters, filterChanged, getFilterRanges} from 'filters/FiltersActions';
+import {clearFilters, filterChanged, getFilterRanges} from 'filters/FiltersActions';
 import {fetchCommentsByUser} from 'comments/CommentsActions';
 import L from 'i18n';
 
@@ -39,7 +39,7 @@ export default class SearchEditor extends Component {
 
     dispatch(clearUserList());
     dispatch(userSelected(null));
-    dispatch(clearEditableFilters()); // clear filters out from previous viewing of Saved Search
+    dispatch(clearFilters(true)); // clear filters out from previous viewing of Saved Search {true > editable}
     dispatch(getFilterRanges(true)); // editMode => true
     dispatch(fetchSavedSearchForEdit(params.id))
     .then(() => dispatch(fetchInitialData(true))); // dispatch after getting search

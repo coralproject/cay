@@ -175,8 +175,13 @@ export const fetchForm = id => (dispatch, getState) => {
     .catch(error => dispatch(formRequestFailure(error)));
 };
 
-export const copyForm = (id) => (dispatch) => {
-  dispatch({type: COPY_FORM, id});
+export const copyForm = (id) => (dispatch, getState) => {
+  if (getState().forms[id]) {
+    dispatch({type: COPY_FORM, id});
+  } else {
+    dispatch(fetchForm(id))
+      .then(() => dispatch({type: COPY_FORM, id}));
+  }
 };
 
 export const deleteForm = (name, description, id) => (dispatch, getState) => {

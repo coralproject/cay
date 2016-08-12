@@ -3,6 +3,13 @@ import {connect} from 'react-redux';
 import { appendWidget, moveWidget, deleteWidget, duplicateWidget, updateForm } from 'forms/FormActions';
 import uuid from 'node-uuid';
 
+import { DropTarget } from 'react-dnd';
+import Tooltip from 'react-tooltip';
+
+import { grey } from 'settings';
+
+import FaQuestionCircle from 'react-icons/lib/fa/question-circle';
+
 // Components
 import FormFieldPlaceHolder from 'forms/FormFieldPlaceHolder';
 import FormField from 'forms/FormField';
@@ -187,7 +194,13 @@ export default class FormFieldsContainer extends Component {
             style={ styles.extraFieldTextArea }
             onChange={ this.onThankYouDescriptionChange.bind(this) }></textarea>
 
-          <h3 style={ styles.extraFieldTitle }>Include Privacy Policy</h3>
+          <h3 style={ styles.extraFieldTitle }>
+            Include Privacy Policy
+            <FaQuestionCircle data-tip data-for="privacyPolicy" />
+            <Tooltip class="cayTooltip" id="privacyPolicy" place="bottom" effect="solid" type="light">
+              <p>To enter a link, use this format: [This is a link](http://www.link.com)</p>
+            </Tooltip>
+          </h3>
           <textarea
             defaultValue={ form.footer.conditions }
             style={ styles.extraFieldTextArea }

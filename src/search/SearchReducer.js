@@ -19,7 +19,8 @@ const initialState = {
   users: [],
   searches: [],
   savingSearch: false,
-  userCount: 0
+  userCount: 0,
+  excluded_tags: []
 };
 
 const searches = (state = initialState, action) => {
@@ -117,7 +118,8 @@ const searches = (state = initialState, action) => {
       editableSearchLoading: false,
       editMeta_name: action.search.name,
       editMeta_description: action.search.description,
-      editMeta_tag: action.search.tag
+      editMeta_tag: action.search.tag,
+      excluded_tags: action.search.excluded_tags
     };
 
   case types.EDIT_SEARCH_FAILED:
@@ -139,7 +141,23 @@ const searches = (state = initialState, action) => {
     return {...state, users: []};
 
   case types.CLEAR_RECENT_SAVED_SEARCH:
-    return {...state, recentSavedSearch: null};
+    return {...state, recentSavedSearch: null, excluded_tags: []};
+
+  case types.TOGGLE_TAG_VISIBILITY:
+    const idx = state.excluded_tags.indexOf(action.tag)
+    if (idx !== -1) {
+      return {...state, excluded_tags: [...state.excluded_tags.slice(0, idx),...state.excluded_tags.slice(idx + 1)]};
+    } else {
+      return {...state, excluded_tags: [...state.excluded_tags, action.tag]};
+    }
+    
+  case types.SHOW_SPECIFIC_TAG:
+    const tags = action.tags.map(t => t.name).concat('No tags');
+    tags.splice(tags.indexOf(action.tag), 1);
+    return {...state, excluded_tags: tags};
+  
+  case types.SHOW_ALL_TAGS:
+    return{...state, excluded_tags: []};
 
   default:
     // console.log('no reducer matches:', action.type);

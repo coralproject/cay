@@ -18,6 +18,7 @@ import indexOf from 'lodash/array/indexOf';
 import {clamp} from 'components/utils/math';
 import {xenia} from 'app/AppActions';
 import { fetchSections, fetchAuthors } from 'filters/FiltersActions';
+import { fetchAllTags } from 'tags/TagActions';
 
 /**
  * Action names
@@ -69,6 +70,10 @@ export const SEARCH_UPDATE_STALE = 'SEARCH_UPDATE_STALE';
 export const CLEAR_USER_LIST = 'CLEAR_USER_LIST';
 export const CLEAR_USER = 'CLEAR_USER';
 export const CLEAR_RECENT_SAVED_SEARCH = 'CLEAR_RECENT_SAVED_SEARCH';
+
+export const TOGGLE_TAG_VISIBILITY = 'TOGGLE_TAG_VISIBILITY';
+export const SHOW_SPECIFIC_TAG = 'SHOW_SPECIFIC_TAG';
+export const SHOW_ALL_TAGS = 'SHOW_ALL_TAGS';
 
 /**
  * Action creators
@@ -184,10 +189,12 @@ export const makeQueryFromState = (type, page = 0, replace = false, editMode = f
 
     const fs = getState().filters;
     const app = getState().app;
+    const searches = getState().searches;
     const filterList = editMode ? fs.editFilterList : fs.filterList;
     const filters = filterList.map(key => fs[key]);
     let breakdown = editMode ? fs.breakdownEdit : fs.breakdown;
     let specificBreakdown = editMode ? fs.specificBreakdownEdit : fs.specificBreakdown;
+    const excludedTags = searches.excluded_tags;
 
     const x = xenia({
       name: 'user_search_' + Math.random().toString().slice(-10),
@@ -201,6 +208,12 @@ export const makeQueryFromState = (type, page = 0, replace = false, editMode = f
         breakdown = 'all';
       } else {
         x.match({[`statistics.comments.${breakdown}.${specificBreakdown}`]: { $exists: true }});
+      }
+
+      // Filter excluded tags
+      excludedTags.filter(t => t !== 'No tags').forEach(tag => x.match({ tags: { $nin: [tag] } }));
+      if (-1 !== excludedTags.indexOf('No tags')) {
+        x.match({ tags: { $exists: true, $not: { $size: 0 } } });
       }
 
       return filters.map(filter => {
@@ -351,7 +364,7 @@ const createQueryForSave = (query, name, desc) => {
 };
 
 // create the body of request to save a Search to Pillar
-const prepSearchForPillar = (filters, query, name, desc, tag, breakdown, specificBreakdown) => {
+const prepSearchForPillar = (filters, query, name, desc, tag, breakdown, specificBreakdown, excluded_tags) => {
 
   let values = compact(map(filters, f => {
     // this will return the ENTIRE filter if only the min OR max was changed.
@@ -368,6 +381,7 @@ const prepSearchForPillar = (filters, query, name, desc, tag, breakdown, specifi
     description: desc, // user-entered string
     querySet: query, // the full xenia queryset (without the name)
     tag, // unique name of live-tag
+    excluded_tags, // excluded tags array
     filters: {
       values,
       breakdown,
@@ -412,8 +426,9 @@ const saveSearchToPillar = (dispatch, state, name, desc, tag) => {
   const {breakdown, specificBreakdown} = state.filters;
   const query = createQueryForSave(state.searches.activeQuery, name, desc);
   const filters = state.filters.filterList.map(key => state.filters[key]);
+  const excludedTags = state.searches.excluded_tags;
 
-  const body = prepSearchForPillar(filters, query, name, desc, tag, breakdown, specificBreakdown);
+  const body = prepSearchForPillar(filters, query, name, desc, tag, breakdown, specificBreakdown, excludedTags);
 
   fetch(`${state.app.pillarHost}/api/search`, {method: 'POST', body: JSON.stringify(body)})
     .then(resp => resp.json())
@@ -444,7 +459,7 @@ export const updateSearch = staleSearch => {
 
     // build query from state
     const {app, searches, filters} = getState();
-    const {editMeta_name: name, editMeta_tag: tag, editMeta_description: description} = searches;
+    const {editMeta_name: name, editMeta_tag: tag, editMeta_description: description, excluded_tags} = searches;
     const {id, query: xeniaQueryName} = staleSearch;
     const {breakdownEdit, specificBreakdownEdit} = filters;
 
@@ -458,7 +473,7 @@ export const updateSearch = staleSearch => {
     dispatch({type: SAVED_SEARCH_UPDATE, query});
 
     // update search in pillar
-    const body = prepSearchForPillar(editFilters, query, name, description, tag, breakdownEdit, specificBreakdownEdit);
+    const body = prepSearchForPillar(editFilters, query, name, description, tag, breakdownEdit, specificBreakdownEdit, excluded_tags);
 
     // append the id for update mode
     body.id = id;
@@ -513,6 +528,7 @@ export const fetchInitialData = (editMode = false) => dispatch => {
   // Get initial data for the filters
   dispatch(fetchSections());
   dispatch(fetchAuthors());
+  dispatch(fetchAllTags());
 
   // Get user list
   dispatch(makeQueryFromState('user', 0, true, editMode));
@@ -521,3 +537,18 @@ export const fetchInitialData = (editMode = false) => dispatch => {
 export const clearUserList = () => ({ type: CLEAR_USER_LIST });
 
 export const clearRecentSavedSearch = () => ({ type: CLEAR_RECENT_SAVED_SEARCH });
+
+export const toggleTagVisibility = (tag, visible) => dispatch => {
+  dispatch({ type: TOGGLE_TAG_VISIBILITY, tag });
+  dispatch(makeQueryFromState('user', 0, true, false));
+};
+
+export const showAllTags = () => dispatch => {
+  dispatch({ type: SHOW_ALL_TAGS });
+  dispatch(makeQueryFromState('user', 0, true, false));
+};
+
+export const showSpecificTag = (tags, tag) => dispatch => {
+  dispatch({ type: SHOW_SPECIFIC_TAG, tags, tag });
+  dispatch(makeQueryFromState('user', 0, true, false));
+};

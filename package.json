@@ -66,6 +66,7 @@
     "react-icon-base": "^2.0.3",
     "react-icons": "^2.2.1",
     "react-infinite": "^0.9.2",
+    "react-mdl": "^1.6.1",
     "react-onclickoutside": "^5.3.2",
     "react-redux": "^4.4.5",
     "react-router": "^2.6.1",

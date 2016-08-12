@@ -137,10 +137,10 @@ const FormTable = ({ loadingTags, forms, onRowClick, confirmDeletion, copyCellFo
     <TableHeader cellFormatter={(n, r, i) => <span style={styles.name}  onClick={() => onRowClick(forms[i].id)}>{n}</span>} name="name">{ L.t('Name') }</TableHeader>
     <TableHeader name="description">{ L.t('Description') }</TableHeader>
     <TableHeader cellFormatter={n => <span style={styles.submission}>{n}</span>} numeric name="submissions">{ L.t('Submissions') }</TableHeader>
-    <TableHeader nosort name="copy" style={styles.rowActions} cellFormatter={i => copyCellFormatter(i, forms, copying)}>...</TableHeader>
+    <TableHeader nosort name="copy" style={styles.rowActions} cellFormatter={i => copyCellFormatter(i, forms, copying)}></TableHeader>
     <TableHeader nosort style={styles.rowActions} name="remove"
       cellFormatter={i => <IconButton name='delete'
-      onClick={e => confirmDeletion(forms[i].header.title, forms[i].header.description, forms[i].id, e)} />}>...</TableHeader>
+      onClick={e => confirmDeletion(forms[i].header.title, forms[i].header.description, forms[i].id, e)} />}></TableHeader>
   </DataTable>
 );
 

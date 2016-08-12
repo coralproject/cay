@@ -7,10 +7,10 @@ import React, { PropTypes, Component } from 'react';
 import Radium from 'radium';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import { deleteForm, fetchForms } from 'forms/FormActions';
+import { copyForm, deleteForm, fetchForms } from 'forms/FormActions';
 import { mediumGrey, lightGrey, brandColor } from 'settings';
 import Page from 'app/layout/Page';
-import { Button, IconButton, DataTable, TableHeader } from 'react-mdl';
+import { Spinner, Button, IconButton, DataTable, TableHeader } from 'react-mdl';
 import ContentHeader from 'components/ContentHeader';
 import ButtonGroup from 'components/ButtonGroup';
 import L from 'i18n';
@@ -21,7 +21,10 @@ import L from 'i18n';
 export default class FormList extends Component {
   constructor(props) {
     super(props);
-    this.state = { displayMode: 'open' };
+    this.state = { 
+      displayMode: 'open',
+      copying:{}
+    };
   }
 
   static contextTypes = {
@@ -59,6 +62,11 @@ export default class FormList extends Component {
     this.setState({ displayMode });
   }
 
+  onCopyFormClick(form, event) {
+      event.stopPropagation();
+      this.context.router.push(`/forms/create?copying=${form.id}`);
+  }
+
   render() {
     const forms = this.props.forms.formList.map(id => this.props.forms[id]);
     const visibleForms = forms.filter(form => form.status === this.state.displayMode);
@@ -78,7 +86,8 @@ export default class FormList extends Component {
           onClick={this.setDisplayMode.bind(this, 'closed')}>Closed</Button>
 
         <FormTable forms={visibleForms} onRowClick={this.onRowClick.bind(this)}
-          confirmDeletion={this.confirmDeletion.bind(this)}/>
+          confirmDeletion={this.confirmDeletion.bind(this)} onCopyFormClick={this.onCopyFormClick.bind(this)}
+          copying={this.state.copying}/>
 
         <ConfirmDialog show={this.state.showConfirmDialog}
           formName={this.state.confirmFormName}
@@ -101,16 +110,17 @@ const ConfirmDialog = ({ show, formName, onConfirmClick, onCloseClick }) => show
 ) : null;
 
 const formatForm = ({ header, stats, id }, index) =>
-({ name: header.title, description: header.description, submissions: stats.responses, remove: index });
+({ name: header.title, description: header.description, submissions: stats.responses, copy: index, remove: index });
 
-const FormTable = ({ loadingTags, forms, onRowClick, confirmDeletion }) => (
+const FormTable = ({ loadingTags, forms, onRowClick, confirmDeletion, onCopyFormClick }) => (
   <DataTable style={styles.table} sortable rows={forms.map(formatForm)}>
     <TableHeader cellFormatter={(n, r, i) => <span style={styles.name}  onClick={() => onRowClick(forms[i].id)}>{n}</span>} name="name">{ L.t('Name') }</TableHeader>
     <TableHeader name="description">{ L.t('Description') }</TableHeader>
     <TableHeader cellFormatter={n => <span style={styles.submission}>{n}</span>} numeric name="submissions">{ L.t('Submissions') }</TableHeader>
-    <TableHeader nosort  style={styles.rowActions} name="remove"
+    <TableHeader nosort name="copy" style={styles.rowActions} cellFormatter={i => <IconButton name='content_copy' onClick={e => onCopyFormClick(forms[i], e)}/>}></TableHeader>
+    <TableHeader nosort style={styles.rowActions} name="remove"
       cellFormatter={i => <IconButton name='delete'
-      onClick={e => confirmDeletion(forms[i].header.title, forms[i].header.description, forms[i].id, e)} />}>...</TableHeader>
+      onClick={e => confirmDeletion(forms[i].header.title, forms[i].header.description, forms[i].id, e)} />}></TableHeader>
   </DataTable>
 );
 

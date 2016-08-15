@@ -117,6 +117,7 @@ export default class SubmissionList extends Component {
             onBookmark={this.onBookmark.bind(this)}
             onSelect={this.onSubmissionSelect.bind(this)} />
           <SubmissionDetail
+            dispatch={this.props.dispatch}
             submission={submission}
             removeFromGallery={this.removeFromGallery.bind(this)}
             sendToGallery={this.sendToGallery.bind(this)}

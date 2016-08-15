@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import Radium from 'radium';
 import moment from 'moment';
 import BBookmark from 'react-icons/lib/fa/bookmark';
@@ -15,7 +14,6 @@ import Button from 'components/Button';
 import { hasFlag, updateSubmissionFlags } from 'forms/FormActions';
 
 @Radium
-@connect(({}) => ({}))
 export default class SubmissionDetail extends Component {
   render() {
     const { submission } = this.props;

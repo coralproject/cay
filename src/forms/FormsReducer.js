@@ -121,7 +121,7 @@ export default (state = initial, action) => {
     var newState = Object.assign({}, state);
     delete newState[action.id];
     var formListIndex = newState.formList.indexOf(action.id);
-    delete newState.formList[formListIndex];
+    newState.formList.splice(formListIndex,1);
     return newState;
 
   case types.EDIT_FORM_ACCEPTED:
@@ -141,6 +141,19 @@ export default (state = initial, action) => {
     const form = Object.assign({}, emptyForm, { steps: [{ id: uuid.v4(), name: 'first_step', createdAt: Date.now() }] });
     form.settings.saveDestination = action.saveDestination;
     return Object.assign({}, state, {activeForm: null, form: form, widgets: [], savingForm: false, savedForm: null });
+
+  case types.COPY_FORM:
+    let formToCopy = Object.assign({}, state[action.id]);
+    let headerCopy = Object.assign({},formToCopy.header,{title:formToCopy.header.title + ' (Copy)'});
+    let settingsCopy = Object.assign({},formToCopy.settings,{isActive:false});
+    let copiedForm = Object.assign({}, formToCopy, 
+        {
+          header:headerCopy, 
+          settings: settingsCopy,
+          date_created: new Date().toISOString(),
+          id:null
+        });
+    return Object.assign({}, state, {form:copiedForm, widgets:copiedForm.steps[0].widgets});
 
   case types.DUPLICATE_FORM_WIDGET:
 

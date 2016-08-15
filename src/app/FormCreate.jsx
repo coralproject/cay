@@ -7,7 +7,7 @@ import React, { Component } from 'react';
 import Radium from 'radium';
 import { connect } from 'react-redux';
 
-import { createEmpty, updateForm } from 'forms/FormActions';
+import { copyForm, createEmpty, updateForm } from 'forms/FormActions';
 import { showFlashMessage } from 'flashmessages/FlashMessagesActions';
 import Page from 'app/layout/Page';
 import FormBuilder from 'forms/FormBuilder.js';
@@ -27,6 +27,10 @@ export default class FormCreate extends Component {
 
   componentWillMount() {
     this.props.dispatch(createEmpty());
+    let copying = /\?copying=(.+)/.exec(window.location.search);
+    if (copying) {
+      this.props.dispatch(copyForm(copying[1]));
+    }
   }
 
   updateFormStatus(status) {

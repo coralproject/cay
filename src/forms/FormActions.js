@@ -26,7 +26,7 @@ export const APPEND_FORM_WIDGET = 'APPEND_FORM_WIDGET';
 export const DELETE_FORM_WIDGET = 'DELETE_FORM_WIDGET';
 export const DUPLICATE_FORM_WIDGET = 'DUPLICATE_FORM_WIDGET';
 
-export const CREATE_INIT_FORM = 'CREATE_INIT_form';
+export const CREATE_INIT_FORM = 'CREATE_INIT_FORM';
 export const FORM_CREATED = 'FORM_CREATED';
 export const FORM_CREATION_FAILURE = 'FORM_CREATION_FAILURE';
 export const UPDATE_FORM = 'UPDATE_FORM';
@@ -92,6 +92,8 @@ export const GALLERY_ENABLE_IDENTIFIABLE = 'GALLERY_ENABLE_IDENTIFIABLE';
 
 export const UPDATE_EDITABLE_PII = 'UPDATE_EDITABLE_PII';
 export const RESET_EDITABLE_TEXT = 'RESET_EDITABLE_TEXT';
+
+export const COPY_FORM = 'COPY_FORM';
 
 /**
  * Utils
@@ -173,6 +175,15 @@ export const fetchForm = id => (dispatch, getState) => {
     .catch(error => dispatch(formRequestFailure(error)));
 };
 
+export const copyForm = (id) => (dispatch, getState) => {
+  if (getState().forms[id]) {
+    dispatch({type: COPY_FORM, id});
+  } else {
+    dispatch(fetchForm(id))
+      .then(() => dispatch({type: COPY_FORM, id}));
+  }
+};
+
 export const deleteForm = (name, description, id) => (dispatch, getState) => {
   dispatch(formRequestStarted(id));
   return fetch(`${getState().app.pillarHost}/api/form/${id}`, getInit({ name, description }, 'DELETE'))
@@ -235,7 +246,7 @@ export const saveForm = (form, widgets) => {
   return (dispatch, getState) => {
 
     const {app} = getState();
-    data.settings.saveDestination =  `${app.pillarHost}/api/form_submission/`;
+    data.settings.saveDestination =  `${app.pillarHost}/api/form_submission/`; 
 
     dispatch({ type: CREATE_INIT_FORM, data });
     return fetch(`${app.elkhornHost}/create`, {
@@ -246,7 +257,9 @@ export const saveForm = (form, widgets) => {
       }),
       body: JSON.stringify(data)
     })
-    .then(res => res.json())
+    .then(res => {
+      return res.ok ? res.json() : Promise.reject(res.status);
+    })
     .then(json => {
       dispatch(formCreated(json));
       return json;

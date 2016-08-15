@@ -33,6 +33,12 @@ export default class FormFieldsContainer extends Component {
     this.previousHover = null;
   }
 
+  componentWillMount() {
+    if (this.props.forms) {
+      this.setState({ savedFields: this.props.forms.widgets, currentFields: this.props.forms.widgets, isHovering: false });
+    }
+  }
+
   componentWillReceiveProps(nextProps) {
     this.setState({ savedFields: nextProps.forms.widgets, currentFields: nextProps.forms.widgets, isHovering: false });
   }

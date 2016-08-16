@@ -16,3 +16,8 @@ global.navigator = {
 }
 
 global.documentRef = document
+global.localStorage = {}
+
+global.Headers = function(headers) {
+	return headers
+}

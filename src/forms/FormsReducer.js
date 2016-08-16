@@ -40,7 +40,7 @@ const initial = {
   widgets: [],
   loadingAnswerEdit: false,
   loadingGallery: false,
-  galleryUrl: '',
+  galleryUrls: [],
   galleryCode: '',
   answerBeingEdited: null, // ObjectId string
   editableAnswer: '',
@@ -219,9 +219,9 @@ export default (state = initial, action) => {
     return {
       ...state,
       savingForm: false,
-      savedForm: action.form.id,
-      formList: [...state.formList, action.form.id],
-      [action.form.id]: action.form
+      savedForm: action.form.data.id,
+      formList: [...state.formList, action.form.data.id],
+      [action.form.data.id]: action.form.data
     };
 
   case types.FORM_CREATION_FAILURE:
@@ -360,13 +360,12 @@ export default (state = initial, action) => {
     return {...state, [state.activeGallery]: {...gallery, config: {...gallery.config, identifiableIds: action.ids}}};
 
   case types.PUBLISH_GALLERY_REQUEST:
-    return {...state, loadingGallery: true, galleryUrl: '', galleryCode: '', publishGalleryError: null};
+    return {...state, loadingGallery: true, galleryCode: '', publishGalleryError: null};
 
   case types.PUBLISH_GALLERY_SUCCESS:
     return {
       ...state,
       loadingGallery: false,
-      galleryUrl: action.gallery.url,
       galleryCode: action.gallery.build.code,
       publishGalleryError: null
     };
@@ -375,7 +374,7 @@ export default (state = initial, action) => {
     return {
       ...state,
       loadingGallery: false,
-      galleryUrl: '',
+      galleryUrls: [],
       galleryCode: '',
       publishGalleryError: action.error
     };

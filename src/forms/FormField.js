@@ -166,7 +166,7 @@ export default class FormField extends Component {
     const { field } = this.state;
 
     return  (
-      <div style={ styles.editSettingsPanel } onKeyUp={ this.onKeyUp.bind(this) }>
+      <div className="widget-expanded" style={ styles.editSettingsPanel } onKeyUp={ this.onKeyUp.bind(this) }>
 
         <div style={ styles.titleAndDescription }>
           <input
@@ -188,7 +188,7 @@ export default class FormField extends Component {
 
         <div style={ styles.bottomButtons }>
           <button style={ styles.cancelButton } onClick={ this.onCancelClick.bind(this) }><FaClose /> Cancel</button>
-          <button style={ styles.saveButton } onClick={ this.onSaveClick.bind(this) }><FaFloppyO /> Save</button>
+          <button className="save-button" style={ styles.saveButton } onClick={ this.onSaveClick.bind(this) }><FaFloppyO /> Save</button>
         </div>
 
       </div>

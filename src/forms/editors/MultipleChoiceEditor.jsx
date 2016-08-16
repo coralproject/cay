@@ -154,7 +154,7 @@ export default class MultipleChoiceEditor extends Component {
 
           <div style={ styles.optionRow }>
             <div style={ styles.optionRowText }>
-              <button style={ styles.addOption } onClick={ this.addOption.bind(this) }><FaPlusCircle /> Add another option</button>
+              <button style={ styles.addOption } onClick={ this.addOption.bind(this) } className="add-option"><FaPlusCircle /> Add another option</button>
             </div>
             <div style={ styles.optionRowButtons }>
               &nbsp;

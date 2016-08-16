@@ -34,3 +34,9 @@ npm-debug.log
 public/config.json
 dist/config.json
 public/auth.php
+
+# Test reports
+reports/*
+!reports/.gitkeep
+bin
+selenium-debug.log

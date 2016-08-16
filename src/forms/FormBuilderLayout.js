@@ -14,7 +14,7 @@ export const Header = ({ onTitleChange, form, forms, onSaveClick, onOpenPreview 
       <input onChange={onTitleChange} style={styles.headLine} type="text"
         placeholder={ "Write a title" } defaultValue={ form.header.title } />
     </div>
-    <div style={ styles.formActions }>
+    <div style={ styles.formActions } className="form-actions">
       <Button
         onClick={onOpenPreview}
         category="brand"
@@ -42,7 +42,7 @@ export const Sidebar = ({ app, form, activeForm }) => {
           ))}
         </div>
         {activeForm ? (
-          <div style={styles.embedContainer}>
+          <div style={styles.embedContainer} className="embed-codes">
             <h4 style={styles.leftContainerTitle}>Embed codes</h4>
             <p>Embed code</p>
             <textarea readOnly style={styles.embedCode} value={`<div id="ask-form"></div><script src="${form.settings.baseUrl}${activeForm}.js"></script>`}/>

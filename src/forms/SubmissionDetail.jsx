@@ -1,16 +1,12 @@
 import React, { Component } from 'react';
 import Radium from 'radium';
 import moment from 'moment';
-import BBookmark from 'react-icons/lib/fa/bookmark';
-import PaperPlaneIcon from 'react-icons/lib/fa/paper-plane';
-import FlagIcon from 'react-icons/lib/fa/flag';
-import TrashIcon from 'react-icons/lib/fa/trash';
 import isString from 'lodash/lang/isString';
 import isDate from 'lodash/lang/isDate';
 import SubmissionTagsManager from 'forms/SubmissionTagsManager';
 
 import settings from 'settings';
-import Button from 'components/Button';
+import { Button, Icon, Card, CardTitle, CardActions, CardText } from 'react-mdl';
 import { hasFlag, updateSubmissionFlags } from 'forms/FormActions';
 
 @Radium
@@ -50,7 +46,7 @@ export default class SubmissionDetail extends Component {
             // identity fields are shown above, not as part of
             //   the reply list
             if (reply.identity === true) {
-              return (<span></span>);
+              return (<span key={key}></span>);
             }
 
 
@@ -65,24 +61,18 @@ export default class SubmissionDetail extends Component {
 
             const modAnswer = inGallery ? this.props.removeFromGallery : this.props.sendToGallery;
             return (
-              <div style={styles.answer} key={key}>
-                <h2 style={styles.question}>{reply.question}</h2>
-                {this.renderAnswer(reply)}
-                {/*<p>galleryId: {gallery ? gallery.id : 'loading gallery'}</p>
-                <p>submissionId: {submission.id}</p>
-                <p>widget id: {reply.widget_id}</p>*/}
-                <Button
-                  style={styles.galleryButton}
-                  category={inGallery ? 'success' : 'default'}
-                  onClick={modAnswer.bind(this, gallery.id, submission.id, reply.widget_id)}>
-                  {
-                    inGallery ?
-                      <span>Remove from Gallery <TrashIcon /></span> :
-                      <span>Send to gallery <PaperPlaneIcon /></span>
-                  }
-                </Button>
-
-              </div>
+              <Card style={styles.answerCard} key={key}>
+                <CardTitle>{reply.question}</CardTitle>
+                <CardText>{this.renderAnswer(reply)}</CardText>
+                <CardActions border>
+                  <Button colored onClick={modAnswer.bind(this, gallery.id, submission.id, reply.widget_id)}>
+                    { inGallery ?
+                        <span>Remove from Gallery <Icon name='delete' /></span> :
+                        <span>Send to gallery <Icon name='send' /></span>
+                    }
+                  </Button>
+                </CardActions>
+              </Card>
             );
           })}
         </div>
@@ -133,7 +123,7 @@ export default class SubmissionDetail extends Component {
       });
 
       return (
-        <ul>
+        <ul style={styles.multipleContainer}>
           {optionsCopy.map((option, key) => {
             const selected = selectedIndexes.indexOf(key) !== -1;
             const title = answersByIndex[key] ? answersByIndex[key] : option.title;
@@ -176,17 +166,11 @@ export default class SubmissionDetail extends Component {
             <span style={styles.subNum}>{submission.number || ''}</span> {moment(submission.date_created).format('L LT')}
           </div>
           <div style={styles.headerButtons}>
-            <Button
-              style={styles.headerButton}
-              onClick={() => onFlag(!flagged)}
-              category={flagged ? 'danger' : ''}>
-                Flag{flagged ? 'ged' : ''} <FlagIcon style={styles.headerButtonIcon(flagged, 'rgb(217, 83, 79)')} />
-              </Button>
-            <Button
-              style={styles.headerButton}
-              onClick={() => onBookmark(!bookmarked)}
-              category={bookmarked ? 'success' : ''}>
-              Bookmark{bookmarked ? 'ed' : ''} <BBookmark  style={styles.headerButtonIcon(bookmarked, 'rgb(46, 151, 102)')} />
+            <Button raised onClick={() => onFlag(!flagged)} style={styles.headButton(flagged, 'rgb(217, 83, 79)')}>
+              Flag{flagged ? 'ged' : ''} <Icon name='flag' style={styles.headIcon(flagged, 'rgb(217, 83, 79)')} />
+            </Button>
+            <Button raised onClick={() => onBookmark(!bookmarked)} style={styles.headButton(bookmarked, 'rgb(46, 151, 102)')}>
+              Bookmark{bookmarked ? 'ed' : ''} <Icon name='bookmark' style={styles.headIcon(bookmarked, 'rgb(46, 151, 102)')} />
             </Button>
           </div>
         </div>
@@ -216,25 +200,12 @@ const styles = {
       fontWeight: 'bold'
     }
   },
-  galleryButton: {
-    float: 'right',
-    marginTop: 10,
-    marginBottom: 20
-  },
   answersContainer: {
     padding: '20px 15px 15px 15px',
     display: 'flex'
   },
   answers: {
     flex: 1
-  },
-  question: {
-    fontWeight: 'bold',
-    fontSize: '1.2em',
-    marginBottom: 10
-  },
-  answer: {
-    clear: 'both'
   },
   authorHeaderContainer: {
     display: 'flex',
@@ -258,16 +229,6 @@ const styles = {
     display: 'inline-block',
     position: 'relative'
   },
-  headerButtons: {
-  },
-  headerButton: {
-    marginLeft: 10
-  },
-  headerButtonIcon(show, color) {
-    return {
-      color: !show ? color : '#fff'
-    };
-  },
   authorHeaderInfo: {
     flex: 1,
     marginRight: 20
@@ -277,9 +238,14 @@ const styles = {
     marginRight: 10,
     fontWeight: 'bold'
   },
+  multipleContainer: {
+    display: 'flex',
+    flexWrap: 'wrap'
+  },
   multiple: {
     border: '1px solid ' + settings.mediumGrey,
     padding: 10,
+    minWidth: 150,
     display: 'inline-block',
     width: '49%',
     marginRight: '1%',
@@ -287,12 +253,28 @@ const styles = {
     borderRadius: 4,
     backgroundColor: 'white',
     selected: {
-      backgroundColor: settings.darkerGrey,
+      backgroundColor: settings.grey,
       color: 'white'
     }
   },
   hr: {
     borderBottom: '1px solid ' + settings.mediumGrey,
     marginTop: 8
+  },
+  answerCard: {
+    width: '100%',
+    marginBottom: 20,
+    borderRadius: 4,
+    border: '1px solid ' + settings.mediumGrey
+  },
+  headIcon(flagged, color) {
+    return { color: flagged ? '#fff': color };
+  },
+  headButton(flagged, color) {
+    return {
+      background: flagged ? color : '#fff',
+      marginLeft: 20,
+      color: flagged ? '#fff' : '#000'
+    };
   }
 };

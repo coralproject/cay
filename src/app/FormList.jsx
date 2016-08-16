@@ -14,6 +14,7 @@ import { Spinner, Button, IconButton, DataTable, TableHeader } from 'react-mdl';
 import ContentHeader from 'components/ContentHeader';
 import ButtonGroup from 'components/ButtonGroup';
 import L from 'i18n';
+import moment from 'moment';
 
 // Forms, Widgets, Submissions
 @connect(({ forms }) => ({ forms }))
@@ -21,7 +22,7 @@ import L from 'i18n';
 export default class FormList extends Component {
   constructor(props) {
     super(props);
-    this.state = { 
+    this.state = {
       displayMode: 'open',
       copying:{}
     };
@@ -109,14 +110,15 @@ const ConfirmDialog = ({ show, formName, onConfirmClick, onCloseClick }) => show
   </div>
 ) : null;
 
-const formatForm = ({ header, stats, id }, index) =>
-({ name: header.title, description: header.description, submissions: stats.responses, copy: index, remove: index });
+const formatForm = ({ header, stats, id, date_created }, index) =>
+({ name: header.title, description: header.description, submissions: stats.responses, date_created: date_created, copy: index, remove: index });
 
 const FormTable = ({ loadingTags, forms, onRowClick, confirmDeletion, onCopyFormClick }) => (
   <DataTable style={styles.table} sortable rows={forms.map(formatForm)}>
     <TableHeader cellFormatter={(n, r, i) => <span style={styles.name}  onClick={() => onRowClick(forms[i].id)}>{n}</span>} name="name">{ L.t('Name') }</TableHeader>
     <TableHeader name="description">{ L.t('Description') }</TableHeader>
     <TableHeader cellFormatter={n => <span style={styles.submission}>{n}</span>} numeric name="submissions">{ L.t('Submissions') }</TableHeader>
+    <TableHeader cellFormatter={date => moment(date).format('L')} name="date_created">{ L.t('Creation date') }</TableHeader>
     <TableHeader nosort name="copy" style={styles.rowActions} cellFormatter={i => <IconButton name='content_copy' onClick={e => onCopyFormClick(forms[i], e)}/>}></TableHeader>
     <TableHeader nosort style={styles.rowActions} name="remove"
       cellFormatter={i => <IconButton name='delete'

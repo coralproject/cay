@@ -18,17 +18,17 @@ module.exports = {
       .click('.form-status-dropdown div:nth-of-type(3) span span')
 
       // Add a short answer
-      .click('div[draggable=true]:first-of-type')
+      .click('.field-types .TextField')
       .click('.widget:first-of-type')
-      .setValue('.widget-expanded input:first-child', 'This is my first question')
-      .setValue('.widget-expanded input:nth-child(2)', 'This is the description for the first question :)')
+      .setValue('.widget-expanded .field-title', 'This is my first question')
+      .setValue('.widget-expanded .field-description', 'This is the description for the first question :)')
       .click('.widget-expanded .save-button')
 
       // Add a multiple choice
-      .click('div[draggable=true]:nth-of-type(4)')
+      .click('.field-types .MultipleChoice')
       .click('.widget:nth-of-type(2)')
-      .setValue('.widget-expanded input:first-child', 'This is my second question')
-      .setValue('.widget-expanded input:nth-child(2)', 'This is the description for the second question :O')
+      .setValue('.widget-expanded .field-title', 'This is my second question')
+      .setValue('.widget-expanded .field-description)', 'This is the description for the second question :O')
       .setValue('input[value="Option 1"]', ': Former')
       .click('.widget-expanded .add-option')
       .setValue('input[value="Option 2"]', ': Latter')

@@ -17,19 +17,19 @@ export const Header = ({ onTitleChange, form, forms, onSaveClick, onOpenPreview 
     </div>
     <div style={ styles.formActions } className="form-actions">
       <Button
+        className="form-preview"
         onClick={onOpenPreview}
         category="brand"
-        style={styles.topButton}
-        className="form-preview">
+        style={styles.topButton}>
   
         <FaEye style={styles.topButtonicon} />{` Preview `}
  
       </Button>
       <Button
+        className="form-save-button"
         onClick={onSaveClick}
         category="success"
-        style={styles.topButton}
-        className="form-save">
+        style={styles.topButton} >
  
         { forms.savingForm ? <Spinner/> : <FaFloppyO /> }{` Save `}
  

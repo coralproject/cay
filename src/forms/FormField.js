@@ -167,7 +167,7 @@ export default class FormField extends Component {
     const { id } = this.props;
 
     return  (
-      <div className={"widget-expanded " + field.component + " " + id} style={ styles.editSettingsPanel } onKeyUp={ this.onKeyUp.bind(this) }>
+      <div className="widget-expanded" style={ styles.editSettingsPanel } onKeyUp={ this.onKeyUp.bind(this) }>
 
         <div style={ styles.titleAndDescription }>
           <input

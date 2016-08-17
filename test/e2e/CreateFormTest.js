@@ -7,10 +7,10 @@ module.exports = {
     browser
       .resizeWindow(1200, 800)
       .url(`${config.baseUrl}forms/create`)
-      .waitForElementVisible('div[draggable=true]', 1000)
-      .setValue('input[type=text]', 'E2E created form (test)')
-      .setValue('input[placeholder="Write a headline"]', 'My e2e form')
-      .setValue('textarea', 'This is a sample description :)')
+      .waitForElementVisible('body', 1000)
+      .setValue('.form-title', 'E2E created form (test)')
+      .setValue('.form-headline', 'My e2e form')
+      .setValue('.form-description', 'This is a sample description :)')
 
 
       // make it live 
@@ -27,15 +27,16 @@ module.exports = {
       // Add a multiple choice
       .click('.field-types .MultipleChoice')
       .click('.widget:nth-of-type(2)')
+      .waitForElementVisible('body', 1000)
       .setValue('.widget-expanded .field-title', 'This is my second question')
-      .setValue('.widget-expanded .field-description)', 'This is the description for the second question :O')
+      .setValue('.widget-expanded .field-description', 'This is the description for the second question :O')
       .setValue('input[value="Option 1"]', ': Former')
       .click('.widget-expanded .add-option')
       .setValue('input[value="Option 2"]', ': Latter')
       .click('.widget-expanded .save-button')
 
       // Save the form
-      .click('.form-actions button:nth-of-type(2)')
+      .click('.form-actions .form-save-button')
 
       // Get embed code
       .waitForElementPresent('.embed-codes', 8000)

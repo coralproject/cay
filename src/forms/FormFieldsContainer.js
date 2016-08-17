@@ -161,7 +161,7 @@ export default class FormFieldsContainer extends Component {
         }
         <textarea onChange={ this.onFormDescriptionChange.bind(this) } style={ styles.description } placeholder={ "Write instructions and a description for the form below" } defaultValue={ form.header.description } />
 
-        <div style={ styles.fieldsList }>
+        <div style={ styles.fieldsList } className="widgets-container">
 
           {
             // Render form fields

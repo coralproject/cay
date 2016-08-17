@@ -166,11 +166,11 @@ export default class SubmissionDetail extends Component {
             <span style={styles.subNum}>{submission.number || ''}</span> {moment(submission.date_created).format('L LT')}
           </div>
           <div style={styles.headerButtons}>
-            <Button raised onClick={() => onFlag(!flagged)} style={styles.headButton(flagged, 'rgb(217, 83, 79)')}>
-              Flag{flagged ? 'ged' : ''} <Icon name='flag' style={styles.headIcon(flagged, 'rgb(217, 83, 79)')} />
+            <Button raised onClick={() => onFlag(!flagged)} style={styles.headButton(flagged, settings.flaggedColor)}>
+              Flag{flagged ? 'ged' : ''} <Icon name='flag' style={styles.headIcon(flagged, settings.flaggedColor)} />
             </Button>
-            <Button raised onClick={() => onBookmark(!bookmarked)} style={styles.headButton(bookmarked, 'rgb(46, 151, 102)')}>
-              Bookmark{bookmarked ? 'ed' : ''} <Icon name='bookmark' style={styles.headIcon(bookmarked, 'rgb(46, 151, 102)')} />
+            <Button raised onClick={() => onBookmark(!bookmarked)} style={styles.headButton(bookmarked, settings.bookmarkedColor)}>
+              Bookmark{bookmarked ? 'ed' : ''} <Icon name='bookmark' style={styles.headIcon(bookmarked, settings.bookmarkedColor)} />
             </Button>
           </div>
         </div>

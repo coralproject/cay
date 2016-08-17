@@ -43,5 +43,8 @@ export default {
   successColor: '#2E9766',
   infoColor: '#5bc0de',
   warningColor: 'rgb(240, 173, 78)',
-  dangerColor: '#d9534f'
+  dangerColor: '#d9534f',
+
+  flaggedColor: 'rgb(217, 83, 79)',
+  bookmarkedColor: 'rgb(46, 151, 102)'
 };

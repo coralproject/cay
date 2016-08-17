@@ -2,25 +2,26 @@ var path = require('path');
 var express = require('express');
 var http = require('http');
 var webpack = require('webpack');
-var sio = require('socket.io');
-var sockets = require('./sockets');
 var config = require('./webpack.config.dev');
+var Dashboard = require('webpack-dashboard');
+var DashboardPlugin = require('webpack-dashboard/plugin');
 
 var app = express();
 var server = http.Server(app);
-var io = sio(server);
-
-sockets(io);
 
 var compiler = webpack(config);
+var dashboard = new Dashboard();
+compiler.apply(new DashboardPlugin(dashboard.setData));
+
 app.use(express.static('public'));
 
 app.use(require('webpack-dev-middleware')(compiler, {
   noInfo: true,
+  quiet: true,
   publicPath: config.output.publicPath
 }));
 
-app.use(require('webpack-hot-middleware')(compiler));
+app.use(require('webpack-hot-middleware')(compiler, {log: () => {}}));
 
 app.get('*', function(req, res) {
   res.sendFile(path.join(__dirname, 'index.html'));

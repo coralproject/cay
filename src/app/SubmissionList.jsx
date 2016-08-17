@@ -18,6 +18,7 @@ import {
   updateFormStatus,
   fetchForm,
   updateForm,
+  updateFormSettings,
   updateOrder,
   updateSearch,
   updateFilterBy,
@@ -65,7 +66,7 @@ export default class SubmissionList extends Component {
   }
 
   updateInactive(value) {
-    this.props.dispatch(updateForm({ settings: { inactiveMessage: value } }));
+    this.props.dispatch(updateFormSettings({ inactiveMessage: value }));
   }
 
   onOrderChange(order) {

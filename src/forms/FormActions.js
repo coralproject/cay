@@ -30,6 +30,10 @@ export const CREATE_INIT_FORM = 'CREATE_INIT_FORM';
 export const FORM_CREATED = 'FORM_CREATED';
 export const FORM_CREATION_FAILURE = 'FORM_CREATION_FAILURE';
 export const UPDATE_FORM = 'UPDATE_FORM';
+export const UPDATE_FORM_SETTINGS = 'UPDATE_FORM_SETTINGS';
+export const UPDATE_FORM_HEADER = 'UPDATE_FORM_HEADER';
+export const UPDATE_FORM_FOOTER = 'UPDATE_FORM_FOOTER';
+export const UPDATE_FORM_FINISHED_SCREEN = 'UPDATE_FORM_FINISHED_SCREEN';
 
 export const FETCH_FORMS_REQUEST = 'FETCH_FORMS_REQUEST';
 export const FETCH_FORMS_SUCCESS = 'FETCH_FORMS_SUCCESS';
@@ -224,7 +228,14 @@ export const deleteWidget = widgetPosition => ({
 export const updateWidget = (id, data) => ({ type: UPDATE_WIDGET, data, id });
 export const moveWidget = (from, to) => ({ type: MOVE_WIDGET, from, to });
 
+// updateForm should ONLY be used to update top-level properties
+// the following actions should be used to update nested properties like header and footer
+// hopefully we can update so the form is roughly flat and we won't have to do all this.
 export const updateForm = data => ({ type: UPDATE_FORM, data });
+export const updateFormSettings = settings => ({type: UPDATE_FORM_SETTINGS, settings});
+export const updateFormHeader = header => ({type: UPDATE_FORM_HEADER, header});
+export const updateFormFooter = footer => ({type: UPDATE_FORM_FOOTER, footer});
+export const updateFormFinishedScreen = finishedScreen => ({type: UPDATE_FORM_FINISHED_SCREEN, finishedScreen});
 
 export const setActiveSubmission = submissionId => ({
   type: SET_ACTIVE_SUBMISSION,
@@ -240,13 +251,10 @@ export const saveForm = (form, widgets) => {
   const data = Object.assign({}, form);
   data.steps[0].widgets = widgets;
 
-  // FIXME: remove this hotfix
-  data.status = form.settings.isActive ? 'open' : 'closed';
-
   return (dispatch, getState) => {
 
     const {app} = getState();
-    data.settings.saveDestination =  `${app.pillarHost}/api/form_submission/`; 
+    data.settings.saveDestination =  `${app.pillarHost}/api/form_submission/`;
 
     dispatch({ type: CREATE_INIT_FORM, data });
     return fetch(`${app.elkhornHost}/create`, {

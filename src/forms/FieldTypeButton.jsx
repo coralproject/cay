@@ -30,7 +30,7 @@ export default class FieldTypeButton extends Component {
 
   render() {
     const { isDragging, connectDragSource, field } = this.props;
-    console.log(this.props);
+
     return connectDragSource(
       <div className={field.type} onClick={ this.onClick.bind(this, field) } style={ styles.baseStyles(isDragging) }>
         <field.icon style={ styles.icon } />

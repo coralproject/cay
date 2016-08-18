@@ -1,34 +1,36 @@
+/*global fetchMock */
+
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import {expect} from 'chai';
 import * as TagActions from '../../src/tags/TagActions';
 
-const middlewares = [thunk]; // add your middlewares like `redux-thunk` 
+const middlewares = [thunk]; // add your middlewares like `redux-thunk`
 const mockStore = configureStore(middlewares);
 
 describe('TagActions', () => {
-    let store;
-    const mocktag = {
-      name: 'test_tag',
-      description: 'test tag description',
-      old_name: 'old_tag_name',
-      index: 123
-    };
-    const mocktag2 = {
-      name: 'another_test_tag',
-      description: 'yet another test tag description',
-      old_name: 'super_old_tag_name',
-      index: 124
-    }
+  let store;
+  const mocktag = {
+    name: 'test_tag',
+    description: 'test tag description',
+    old_name: 'old_tag_name',
+    index: 123
+  };
+  const mocktag2 = {
+    name: 'another_test_tag',
+    description: 'yet another test tag description',
+    old_name: 'super_old_tag_name',
+    index: 124
+  };
 
-    beforeEach(() => {
-      // Set the initial state of the store 
-      store = mockStore({
-        app:{
-          pillarHost:'pillarhost'
-        }
-      });
-    })
+  beforeEach(() => {
+    // Set the initial state of the store
+    store = mockStore({
+      app:{
+        pillarHost:'pillarhost'
+      }
+    });
+  });
 
   afterEach(() => {
     //Reset mock server after each test
@@ -257,7 +259,7 @@ describe('TagActions', () => {
     });
 
     it('should return false if currently loading tags', () => {
-      // Set the initial state of the store 
+      // Set the initial state of the store
       store = mockStore({
         app:{
           pillarHost:'pillarhost'

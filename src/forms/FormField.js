@@ -131,7 +131,7 @@ export default class FormField extends Component {
     return (
       <div>
         {
-          <div style={ styles.fieldContainer(!this.props.isDragging && this.state.expanded) } key={ id } onClick={ this.toggleExpanded.bind(this) }>
+          <div className={field.component + " " + id} style={ styles.fieldContainer(!this.props.isDragging && this.state.expanded) } key={ id } onClick={ this.toggleExpanded.bind(this) }>
             <div style={ styles.fieldAndPosition }>
               <div style={ styles.fieldPosition }>{ position + 1 }.</div>
               <h4 style={styles.editBody}>
@@ -164,12 +164,14 @@ export default class FormField extends Component {
 
   renderExpanded() {
     const { field } = this.state;
+    const { id } = this.props;
 
     return  (
-      <div style={ styles.editSettingsPanel } onKeyUp={ this.onKeyUp.bind(this) }>
+      <div className="widget-expanded" style={ styles.editSettingsPanel } onKeyUp={ this.onKeyUp.bind(this) }>
 
         <div style={ styles.titleAndDescription }>
           <input
+            className="field-title"
             onChange={ this.onTitleChange.bind(this) }
             style={ styles.fieldTitle }
             defaultValue={ field.title }
@@ -177,6 +179,7 @@ export default class FormField extends Component {
             placeholder={ `Ask readers a question (${ field.friendlyType })` }
             autoFocus={ true } />
           <input
+            className="field-description"
             onChange={ this.onDescriptionChange.bind(this) }
             defaultValue={ field.description }
             style={ styles.fieldDescription }
@@ -187,8 +190,8 @@ export default class FormField extends Component {
         { this.getFieldEditor() }
 
         <div style={ styles.bottomButtons }>
-          <button style={ styles.cancelButton } onClick={ this.onCancelClick.bind(this) }><FaClose /> Cancel</button>
-          <button style={ styles.saveButton } onClick={ this.onSaveClick.bind(this) }><FaFloppyO /> Save</button>
+          <button className="field-close-button" style={ styles.cancelButton } onClick={ this.onCancelClick.bind(this) }><FaClose /> Cancel</button>
+          <button className="field-close-button save-button" style={ styles.saveButton } onClick={ this.onSaveClick.bind(this) }><FaFloppyO /> Save</button>
         </div>
 
       </div>

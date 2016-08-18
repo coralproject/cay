@@ -21,7 +21,7 @@ export default class FormFieldPlaceHolder extends Component {
   render() {
     return (
       this.props.connectDropTarget(
-        <div style={ styles.padder }>
+        <div style={ styles.padder } className="widget">
           {
             this.props.isOver
               ? <div style={ styles.dropPlaceHolderActive }></div>

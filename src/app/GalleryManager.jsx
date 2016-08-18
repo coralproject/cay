@@ -223,6 +223,8 @@ export default class GalleryManager extends Component {
   createEmbed(type) {
     const {forms} = this.props;
     const gallery = forms[forms.activeGallery];
+    if (!gallery) return;
+
     switch (type) {
     case 'script-tag':
       return `<script src="${gallery.config.baseUrl}${forms.activeGallery}.js"></script><div id="ask-gallery" />`;

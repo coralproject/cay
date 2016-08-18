@@ -12,20 +12,27 @@ export const Header = ({ onTitleChange, form, forms, onSaveClick, onOpenPreview 
   <div style={ styles.formHeader }>
     <div style={ styles.titleAndMeta }>
       <input onChange={onTitleChange} style={styles.headLine} type="text"
-        placeholder={ "Write a title" } defaultValue={ form.header.title } />
+        placeholder={ "Write a title" } defaultValue={ form.header.title } 
+        className="form-title" />
     </div>
-    <div style={ styles.formActions }>
+    <div style={ styles.formActions } className="form-actions">
       <Button
+        className="form-preview"
         onClick={onOpenPreview}
         category="brand"
         style={styles.topButton}>
+  
         <FaEye style={styles.topButtonicon} />{` Preview `}
+ 
       </Button>
       <Button
+        className="form-save-button"
         onClick={onSaveClick}
         category="success"
-        style={styles.topButton}>
+        style={styles.topButton} >
+ 
         { forms.savingForm ? <Spinner/> : <FaFloppyO /> }{` Save `}
+ 
       </Button>
     </div>
   </div>
@@ -36,19 +43,19 @@ export const Sidebar = ({ app, form, activeForm }) => {
     <div style={styles.leftPan}>
       <div style={styles.leftContainer}>
         <h4 style={styles.leftContainerTitle}>Question Fields</h4>
-        <div style={styles.typeList}>
+        <div className="field-types" style={styles.typeList}>
           {askTypes.map((type, i) => (
             <FieldTypeButton key={ i } field={ type } />
           ))}
         </div>
         {activeForm ? (
-          <div style={styles.embedContainer}>
+          <div style={styles.embedContainer} className="embed-codes">
             <h4 style={styles.leftContainerTitle}>Embed codes</h4>
             <p>Embed code</p>
-            <textarea readOnly style={styles.embedCode} value={`<div id="ask-form"></div><script src="${form.settings.baseUrl}${activeForm}.js"></script>`}/>
+            <textarea className="embed-code" readOnly style={styles.embedCode} value={`<div id="ask-form"></div><script src="${form.settings.baseUrl}${activeForm}.js"></script>`}/>
             <p>Embed code (iframe)</p>
-            <textarea readOnly style={styles.embedCode} value={`<iframe width="100%" height="580" src="${form.settings.baseUrl}${activeForm}.html"></iframe>`}/>
-            <a href={ `${form.settings.baseUrl}${activeForm}.html` } target="_blank" style={ styles.formSettingsAction }>
+            <textarea className="embed-code-iframe" readOnly style={styles.embedCode} value={`<iframe width="100%" height="580" src="${form.settings.baseUrl}${activeForm}.html"></iframe>`}/>
+            <a className="standalone-form" href={ `${form.settings.baseUrl}${activeForm}.html` } target="_blank" style={ styles.formSettingsAction }>
               <FaExternalLink /> Standalone Form
             </a>
           </div>

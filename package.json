@@ -10,7 +10,8 @@
     "start": "node dev-server.js",
     "lint": "eslint src",
     "test": "NODE_PATH=./src NODE_ENV=production ./node_modules/.bin/mocha --compilers js:babel-core/register test/helpers/*.js test/**/*.spec.js --recursive",
-    "test-dev": "npm test -- -w"
+    "test-dev": "npm test -- -w",
+    "e2e": "./node_modules/.bin/nightwatch"
   },
   "author": "Riley Davis",
   "license": "MIT",
@@ -21,6 +22,7 @@
     "babel-plugin-react-transform": "^1.1.1",
     "chai": "^3.4.1",
     "enzyme": "^2.4.1",
+    "nightwatch": "^0.9.7",
     "eslint": "^1.6.0",
     "eslint-config-defaults": "^7.0.1",
     "eslint-plugin-filenames": "^0.1.2",

@@ -40,19 +40,48 @@ describe('FormReducer', () => {
     expect(state.widgets).to.deep.equal([]);
   });
 
-  it('should update the form settings', () => {
+  it('should update the form settings when a form is being created', () => {
+    let state = FormsReducer(undefined, {
+      type: types.UPDATE_FORM_SETTINGS,
+      settings: {inactiveMessage: 'an inactive message'}
+    });
+    // check that savedDestination exists
+    // check that active form is null?
+    // check that inactiveMessage exists
+  });
+
+  it('should update the form settings when a form is being edited', () => {
+    let state = FormsReducer(undefined, {
+      type: types.UPDATE_FORM_SETTINGS,
+      settings: {inactiveMessage: 'some other inactive message'}
+    });
+
+    // check that saveDestination exists
+    // check that active form is not null
+    // chec that inactiveMessage matches
+  });
+
+  it('should update the form header when a form is being created', () => {
 
   });
 
-  it('should update the form header', () => {
+  it('should update the form header when a form is being edited', () => {
 
   });
 
-  it('should update the form footer', () => {
+  it('should update the form footer when a form is being created', () => {
 
   });
 
-  it('should update the form finished screen', () => {
+  it('should update the form footer when a form is being edited', () => {
+
+  });
+
+  it('should update the form finished screen when a form is being created', () => {
+
+  });
+
+  it('should update the form finished screen when a form is being edited', () => {
 
   });
 });

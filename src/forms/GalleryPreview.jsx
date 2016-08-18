@@ -13,7 +13,7 @@ export default class GalleryPreview extends React.Component {
 
   render() {
     const gallery = this.props[this.props.activeGallery];
-    if(!gallery) return null;
+    if (!gallery) return null;
 
     if (gallery.config.baseUrl) {
       var script = document.createElement('script');

@@ -23,6 +23,7 @@ class Button extends React.Component {
 
     return (
       <button
+        className={this.props.className}
         onClick={this.handleClick.bind(this)}
         type="button"
         {...attrs}

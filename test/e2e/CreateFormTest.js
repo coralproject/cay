@@ -7,10 +7,10 @@ module.exports = {
     browser
       .resizeWindow(1200, 800)
       .url(`${config.baseUrl}forms/create`)
-      .waitForElementVisible('div[draggable=true]', 1000)
-      .setValue('input[type=text]', 'E2E created form (test)')
-      .setValue('input[placeholder="Write a headline"]', 'My e2e form')
-      .setValue('textarea', 'This is a sample description :)')
+      .waitForElementVisible('body', 1000)
+      .setValue('.form-title', 'E2E created form (test)')
+      .setValue('.form-headline', 'My e2e form')
+      .setValue('.form-description', 'This is a sample description :)')
 
 
       // make it live 
@@ -18,24 +18,25 @@ module.exports = {
       .click('.form-status-dropdown div:nth-of-type(3) span span')
 
       // Add a short answer
-      .click('div[draggable=true]:first-of-type')
+      .click('.field-types .TextField')
       .click('.widget:first-of-type')
-      .setValue('.widget-expanded input:first-child', 'This is my first question')
-      .setValue('.widget-expanded input:nth-child(2)', 'This is the description for the first question :)')
+      .setValue('.widget-expanded .field-title', 'This is my first question')
+      .setValue('.widget-expanded .field-description', 'This is the description for the first question :)')
       .click('.widget-expanded .save-button')
 
       // Add a multiple choice
-      .click('div[draggable=true]:nth-of-type(4)')
+      .click('.field-types .MultipleChoice')
       .click('.widget:nth-of-type(2)')
-      .setValue('.widget-expanded input:first-child', 'This is my second question')
-      .setValue('.widget-expanded input:nth-child(2)', 'This is the description for the second question :O')
+      .waitForElementVisible('body', 1000)
+      .setValue('.widget-expanded .field-title', 'This is my second question')
+      .setValue('.widget-expanded .field-description', 'This is the description for the second question :O')
       .setValue('input[value="Option 1"]', ': Former')
       .click('.widget-expanded .add-option')
       .setValue('input[value="Option 2"]', ': Latter')
       .click('.widget-expanded .save-button')
 
       // Save the form
-      .click('.form-actions button:nth-of-type(2)')
+      .click('.form-actions .form-save-button')
 
       // Get embed code
       .waitForElementPresent('.embed-codes', 8000)

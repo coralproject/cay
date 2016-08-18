@@ -152,14 +152,14 @@ export default class FormFieldsContainer extends Component {
     const form = this.props.activeForm ? forms[this.props.activeForm] : forms.form;
     return (
       <div style={ styles.fieldsListContainer }>
-        <input onChange={ this.onFormHeadingChange.bind(this) } style={ styles.headLine } type="text" placeholder={ "Write a headline" } defaultValue={ form.header.heading } />
+        <input className="form-headline" onChange={ this.onFormHeadingChange.bind(this) } style={ styles.headLine } type="text" placeholder={ "Write a headline" } defaultValue={ form.header.heading } />
         {
           this.state.showTitleIsRequired ?
             <p style={ styles.titleIsRequired }>Title is required</p>
           :
             null
         }
-        <textarea onChange={ this.onFormDescriptionChange.bind(this) } style={ styles.description } placeholder={ "Write instructions and a description for the form below" } defaultValue={ form.header.description } />
+        <textarea className="form-description" onChange={ this.onFormDescriptionChange.bind(this) } style={ styles.description } placeholder={ "Write instructions and a description for the form below" } defaultValue={ form.header.description } />
 
         <div style={ styles.fieldsList } className="widgets-container">
 

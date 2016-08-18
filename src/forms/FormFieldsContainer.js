@@ -201,8 +201,8 @@ export default class FormFieldsContainer extends Component {
         </div>
 
         <div style={ styles.extraFields }>
-          <Checkbox checked={form.settings.recaptcha} label="Include reCAPTCHA"
-            ripple onChange={this.onRecaptchaChange.bind(this)} />
+        { this.props.app.recaptcha ? <Checkbox checked={form.settings.recaptcha} label="Include reCAPTCHA"
+            ripple onChange={this.onRecaptchaChange.bind(this)} /> : null }
           <h3 style={ styles.extraFieldTitle }>Thank you message (optional)</h3>
           <textarea
             defaultValue={ form.finishedScreen.description }

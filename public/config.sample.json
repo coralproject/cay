@@ -11,5 +11,6 @@
   "features": {
     "trust": true,
     "ask": true
-  }
+  },
+  "recaptcha": false
 }

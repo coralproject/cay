@@ -16,36 +16,36 @@ import * as types from 'forms/FormActions';
  */
 
 const initial = {
+  activeForm: null, // might be able to combine this with {form} above in the future
+  activeGallery: null, // this is an ObjectId string
+  activeSubmission: null, // ObjectId string
+  answerBeingEdited: null, // ObjectId string
+  answerList: [],
+  editableAnswer: '',
+  editablePii: [],
+  editAccess: {},
+  form: null,
+  formCreationError: null,
   formList: [],
-  galleryList: [],
-  submissionList: [],
   formCounts: {
     totalSearch: 0,
     totalSubmissions: 0,
     bookmarked: 0,
     flagged: 0
   },
-  answerList: [],
-  editAccess: {},
-  form: null,
-  savingForm: false,
-  submissionFilterBy: 'default',
-  submissionOrder: 'dsc',
-  submissionSearch: '',
-  savedForm: null, // this is the Objectid of the created form returned from Elkhorn.
-  formCreationError: null,
-  activeForm: null, // might be able to combine this with {form} above in the future
-  activeGallery: null, // this is an ObjectId string
+  galleryCode: '',
+  galleryList: [],
+  galleryUrls: [],
   identifiableIds: [],
-  widgets: [],
   loadingAnswerEdit: false,
   loadingGallery: false,
-  galleryUrls: [],
-  galleryCode: '',
-  answerBeingEdited: null, // ObjectId string
-  editableAnswer: '',
-  editablePii: [],
-  activeSubmission: null // ObjectId string
+  savedForm: null, // this is the Objectid of the created form returned from Elkhorn.
+  savingForm: false,
+  submissionFilterBy: 'default',
+  submissionList: [],
+  submissionOrder: 'dsc',
+  submissionSearch: '',
+  widgets: []
 };
 
 /**

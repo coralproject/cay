@@ -91,6 +91,13 @@ export default class MultipleChoiceEditor extends Component {
     this.props.onEditorChange(updatedField);
   }
 
+  onOtherTextChange(e) {
+    let { field } = this.props;
+    let updatedProps = Object.assign({}, field.props, { otherText: e.target.value });
+    let updatedField = Object.assign({}, field, { props: updatedProps });
+    this.props.onEditorChange(updatedField);
+  }
+
   getOptions() {
     return this.state.options.map((option, i) => {
       return (
@@ -143,7 +150,7 @@ export default class MultipleChoiceEditor extends Component {
             field.props.otherAllowed ?
               <div style={ styles.optionRow }>
                 <div style={ styles.optionRowText }>
-                  <span style={ styles.otherSample }>Other</span>
+                  <input style={ styles.optionInput } type="text" defaultValue="Other:" value={ field.props.otherText } onChange={ this.onOtherTextChange.bind(this) } />
                 </div>
                 <div style={ styles.optionRowButtons }>
                   &nbsp;

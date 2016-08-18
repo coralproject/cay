@@ -152,28 +152,26 @@ export default class FormChrome extends React.Component {
 
         <p style={styles.formName}>{name}</p>
 
-        <div style={styles.formControls}>
-          <div key="huey" style={[
-            styles.option,
-            this.props.activeTab === 'builder' && styles.active]}
-            onClick={this.buildForm.bind(this)}>
-            {this.props.create ? 'Build Form' : 'Edit Form'}
-          </div>
-          <div key="dewey" style={[
-            styles.option,
-            activeTab === 'submissions' && styles.active,
-            create && styles.disabled]}
-            onClick={this.reviewSubmissions.bind(this)}>
-            Submissions {this.submissionBadge()}
-          </div>
-          <div key="louie" style={[
-            styles.option,
-            activeTab === 'gallery' && styles.active,
-            create && styles.disabled]}
-            onClick={this.manageGallery.bind(this)}>
-            Gallery {this.galleryBadge()}
-          </div>
-        </div>
+        {!create ?
+          <div style={styles.formControls}>
+            <div key="huey" style={[
+              styles.option,
+              this.props.activeTab === 'builder' && styles.active]}
+              onClick={this.buildForm.bind(this)}> Edit Form
+            </div>
+            <div key="dewey" style={[
+              styles.option,
+              activeTab === 'submissions' && styles.active]}
+              onClick={this.reviewSubmissions.bind(this)}>
+              Submissions {this.submissionBadge()}
+            </div>
+            <div key="louie" style={[
+              styles.option,
+              activeTab === 'gallery' && styles.active]}
+              onClick={this.manageGallery.bind(this)}>
+              Gallery {this.galleryBadge()}
+            </div>
+          </div> : null }
 
         {
           form ?

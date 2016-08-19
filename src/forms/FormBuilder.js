@@ -6,7 +6,13 @@ import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 
 // Actions
-import { saveForm, appendWidget, updateForm } from 'forms/FormActions';
+import {
+  saveForm,
+  appendWidget,
+  updateFormSettings,
+  updateFormHeader,
+  updateFormFooter
+ } from 'forms/FormActions';
 import { showFlashMessage } from 'flashmessages/FlashMessagesActions';
 
 // Icons
@@ -112,33 +118,12 @@ export default class FormBuilder extends Component {
 
   onFormStatusChange(e) {
     this.markAsUnsaved();
-    let { form } = this.props.forms;
-    var newSettings = Object.assign({}, form.settings, { isActive: e.target.checked });
-    this.props.dispatch(updateForm({
-      settings: newSettings
-    }));
-  }
-
-  onInactiveMessageChange(e) {
-    this.markAsUnsaved();
-    let { form } = this.props.forms;
-    var newSettings = Object.assign({}, form.settings, { inactiveMessage: e.target.value });
-    this.props.dispatch(updateForm({
-      settings: newSettings,
-      id: uuid.v4()
-    }));
+    this.props.dispatch(updateFormSettings({isActive: e.target.checked}));
   }
 
   onFormTitleChange(e) {
     this.markAsUnsaved();
-    const { form, activeForm } = this.props.forms;
-    const header = activeForm ? this.props.forms[activeForm].header : form.header;
-    this.props.dispatch(updateForm({
-      header: {
-        ...header,
-        title: e.target.value
-      }
-    }));
+    this.props.dispatch(updateFormHeader({title: e.target.value}));
   }
 
   renderPreview() {

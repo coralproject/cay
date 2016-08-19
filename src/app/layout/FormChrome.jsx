@@ -199,12 +199,11 @@ export default class FormChrome extends React.Component {
                   style={styles.closeRadio}
                   checked={form.status === 'closed'}
                   onClick={this.props.updateStatus} />
-                {/*
                 <textarea
                   onChange={this.setInactiveMessage.bind(this)}
                   style={styles.statusMessage}
                   defaultValue={form.settings.inactiveMessage}></textarea>
-                <p>The message will appear to readers when you close the form and are no longer collecting submissions.</p>*/}
+                <p>The message will appear to readers when you close the form and are no longer collecting submissions.</p>
                 <div style={this.getLoaderStyles(this, true)}></div>
                 <div style={this.getLoaderStyles()}></div>
               </div>

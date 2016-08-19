@@ -13,7 +13,7 @@ import {
   updateFormStatus,
   requestEditAccess,
   leavingEdit,
-  updateForm,
+  updateFormSettings,
   fetchForm } from 'forms/FormActions';
 
 import Page from 'app/layout/Page';
@@ -68,7 +68,7 @@ export default class FormEdit extends Component {
   }
 
   updateInactive(value) {
-    this.props.dispatch(updateForm({ settings: { inactiveMessage: value } }));
+    this.props.dispatch(updateFormSettings({ inactiveMessage: value }));
   }
 
   render() {

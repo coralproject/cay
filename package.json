@@ -10,6 +10,7 @@
     "start": "node dev-server.js",
     "lint": "eslint src",
     "test": "NODE_PATH=./src NODE_ENV=production ./node_modules/.bin/mocha --compilers js:babel-core/register test/helpers/*.js test/**/*.spec.js --recursive",
+    "test-dev": "npm test -- -w",
     "e2e": "./node_modules/.bin/nightwatch"
   },
   "author": "Riley Davis",

@@ -7,6 +7,7 @@ import {
   fetchSubmissions,
   removeFromGallery,
   updateForm,
+  updateFormSettings,
   updateFormStatus,
   updateEditableAnswer,
   updateGalleryOrientation,
@@ -206,7 +207,7 @@ export default class GalleryManager extends Component {
   }
 
   updateInactive(value) {
-    this.props.dispatch(updateForm({ settings: { inactiveMessage: value } }));
+    this.props.dispatch(updateFormSettings({ inactiveMessage: value }));
   }
 
   openPublishModal() {

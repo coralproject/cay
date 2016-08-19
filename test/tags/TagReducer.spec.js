@@ -33,11 +33,11 @@ describe('TagReducer', () => {
     let state;
 
     beforeEach(() => {
-        state = {
-          loading:true,
-          hasErrors:true,
-          tags:['dinosaur','eagle', 'bear']
-        };
+      state = {
+        loading:true,
+        hasErrors:true,
+        tags:['dinosaur','eagle', 'bear']
+      };
     });
 
     it('should not morph state', () => {
@@ -49,9 +49,9 @@ describe('TagReducer', () => {
 
     it ('should have no effect if requestType is not valid', () => {
       let action= {
-          type:types.TAG_REQUEST_SUCCESS,
-          requestType:'notvalid'
-      }
+        type:types.TAG_REQUEST_SUCCESS,
+        requestType:'notvalid'
+      };
       let newState = TagReducer(state, action);
       expect(newState).to.deep.equal(state);
     });
@@ -138,7 +138,7 @@ describe('TagReducer', () => {
         expect(newState).to.have.property('loading')
           .and.to.be.false;
         expect(newState).to.have.property('hasErrors')
-          .and.to.be.false;     
+          .and.to.be.false;
       });
     });
   });

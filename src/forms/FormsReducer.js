@@ -16,36 +16,36 @@ import * as types from 'forms/FormActions';
  */
 
 const initial = {
+  activeForm: null, // might be able to combine this with {form} above in the future
+  activeGallery: null, // this is an ObjectId string
+  activeSubmission: null, // ObjectId string
+  answerBeingEdited: null, // ObjectId string
+  answerList: [],
+  editableAnswer: '',
+  editablePii: [],
+  editAccess: {},
+  form: null,
+  formCreationError: null,
   formList: [],
-  galleryList: [],
-  submissionList: [],
   formCounts: {
     totalSearch: 0,
     totalSubmissions: 0,
     bookmarked: 0,
     flagged: 0
   },
-  answerList: [],
-  editAccess: {},
-  form: null,
-  savingForm: false,
-  submissionFilterBy: 'default',
-  submissionOrder: 'dsc',
-  submissionSearch: '',
-  savedForm: null, // this is the Objectid of the created form returned from Elkhorn.
-  formCreationError: null,
-  activeForm: null, // might be able to combine this with {form} above in the future
-  activeGallery: null, // this is an ObjectId string
+  galleryCode: '',
+  galleryList: [],
+  galleryUrls: [],
   identifiableIds: [],
-  widgets: [],
   loadingAnswerEdit: false,
   loadingGallery: false,
-  galleryUrls: [],
-  galleryCode: '',
-  answerBeingEdited: null, // ObjectId string
-  editableAnswer: '',
-  editablePii: [],
-  activeSubmission: null // ObjectId string
+  savedForm: null, // this is the Objectid of the created form returned from Elkhorn.
+  savingForm: false,
+  submissionFilterBy: 'default',
+  submissionList: [],
+  submissionOrder: 'dsc',
+  submissionSearch: '',
+  widgets: []
 };
 
 /**
@@ -146,13 +146,13 @@ export default (state = initial, action) => {
     let formToCopy = Object.assign({}, state[action.id]);
     let headerCopy = Object.assign({},formToCopy.header,{title:formToCopy.header.title + ' (Copy)'});
     let settingsCopy = Object.assign({},formToCopy.settings,{isActive:false});
-    let copiedForm = Object.assign({}, formToCopy, 
-        {
-          header:headerCopy, 
-          settings: settingsCopy,
-          date_created: new Date().toISOString(),
-          id:null
-        });
+    let copiedForm = Object.assign({}, formToCopy,
+      {
+        header: headerCopy,
+        settings: settingsCopy,
+        date_created: new Date().toISOString(),
+        id: null
+      });
     return Object.assign({}, state, {form:copiedForm, widgets:copiedForm.steps[0].widgets});
 
   case types.DUPLICATE_FORM_WIDGET:
@@ -195,8 +195,35 @@ export default (state = initial, action) => {
 
   case types.UPDATE_FORM:
     const formProp = state.activeForm ? state.activeForm : 'form';
-    var updatedForm = Object.assign({}, state[formProp], action.data);
+    const updatedForm = Object.assign({}, state[formProp], action.data);
     return Object.assign({}, state, { [formProp]: updatedForm });
+
+  case types.UPDATE_FORM_SETTINGS:
+    const activeForm = state.activeForm ? state.activeForm : 'form';
+    const formWithNewSettings = {...state[activeForm], settings: {...state[activeForm].settings, ...action.settings}};
+    return {...state, [activeForm]: formWithNewSettings};
+
+  case types.UPDATE_FORM_HEADER:
+    const currentForm = state.activeForm ? state.activeForm : 'form';
+    // this is gross. we need to do a refactor to make the forms flat. (at least in the state)
+    const formWithNewHeader = {...state[currentForm], header: {...state[currentForm].header, ...action.header}};
+    return {...state, [currentForm]: formWithNewHeader};
+
+  case types.UPDATE_FORM_FOOTER:
+    const theForm = state.activeForm ? state.activeForm : 'form';
+    const formWithNewFooter = {...state[theForm], footer: {...state[theForm].footer, ...action.footer}};
+    return {...state, [theForm]: formWithNewFooter};
+
+  case types.UPDATE_FORM_FINISHED_SCREEN:
+    const ourForm = state.activeForm ? state.activeForm : 'form';
+    const formWithNewFinishedScreen = {
+      ...state[ourForm],
+      finishedScreen: {
+        ...state[ourForm].finishedScreen,
+        ...action.finishedScreen
+      }
+    };
+    return {...state, [ourForm]: formWithNewFinishedScreen};
 
   case types.MOVE_WIDGET:
 

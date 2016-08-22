@@ -268,10 +268,10 @@ export const styles = {
   arrowContainer: {
     position: 'absolute',
     top: '8px',
-    right: '10px'
+    right: '20px'
   },
   arrow: {
-    width: '25px',
+    width: '30px',
     height: '30px',
     padding: 0,
     lineHeight: '20px',
@@ -282,7 +282,7 @@ export const styles = {
     cursor: 'pointer'
   },
   arrowPlaceHolder: {
-    width: '25px',
+    width: '30px',
     height: '30px',
     padding: 0,
     marginLeft: '5px',

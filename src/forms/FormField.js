@@ -20,6 +20,9 @@ import { updateWidget } from 'forms/FormActions';
 // Field Editors
 import EditorFactory from 'forms/EditorFactory';
 
+// Field types
+import askTypes from 'forms/WidgetTypes';
+
 @DragSource('DraggableFormField', DragHandler, (connect) => ({
   connectDragSource: connect.dragSource()
 }))
@@ -52,6 +55,7 @@ export default class FormField extends Component {
   }
 
   onIdentityClick(e) {
+    if (e) e.stopPropagation();
     var field = Object.assign({}, this.state.field);
     field.identity = e.target.checked;
     this.setState({ field: field });
@@ -115,50 +119,54 @@ export default class FormField extends Component {
   render() {
     return this.props.connectDragSource(
       <div>
-        {
-          !this.props.isDragging && this.state.expanded
-          ? this.renderExpanded()
-          : this.renderCollapsed()
-        }
+        { this.renderContainer() }
       </div>
     );
   }
 
-  renderCollapsed() {
+  getIcon(fieldType) {
+    return askTypes.find(type => type.friendlyType === fieldType).icon;
+  }
+
+  renderContainer() {
     const { id, onMove, isLast, position, onDelete, onDuplicate } = this.props;
     const { field } = this.state;
+    const FieldIcon = this.getIcon(field.friendlyType);
+    const fieldTitle = field.title ? field.title : 'Ask readers a question';
+    const requiredMark = field.wrapper && field.wrapper.required ? <span style={ styles.requiredAsterisk }>*</span> : null;
+    const identityMark = field.identity ? <span style={ styles.identityLabel }><FaUser/></span> : null;
 
     return (
-      <div>
-        {
-          <div className={field.component + " " + id} style={ styles.fieldContainer(!this.props.isDragging && this.state.expanded) } key={ id } onClick={ this.toggleExpanded.bind(this) }>
-            <div style={ styles.fieldAndPosition }>
-              <div style={ styles.fieldPosition }>{ position + 1 }.</div>
-              <h4 style={styles.editBody}>
-                { field.title ? field.title : field.friendlyType }
-                {
-                  field.wrapper && field.wrapper.required ?
-                    <span style={ styles.requiredAsterisk }>*</span>
-                  :
-                    null
-                }
-                {
-                  field.identity ?
-                    <span style={ styles.identityLabel }><FaUser/></span>
-                  :
-                    null
-                }
-              </h4>
-            </div>
-            <div style={styles.arrowContainer}>
-              <button style={styles.copy} onClick={ onDuplicate.bind(this, position) }><FaCopy /></button>
-              <button style={styles.delete} onClick={ onDelete.bind(this, position) }><FaTrash /></button>
-              <button onClick={ position !== 0 ? onMove.bind(this, 'up', position) : null } style={styles.arrow} disabled={position === 0}><FaArrowUp /></button>
-              <button onClick={ !isLast ? onMove.bind(this, 'down', position) : null } style={styles.arrow} disabled={!!isLast}><FaArrowDown /></button>
-            </div>
+      <div className={field.component + ' ' + id} style={ styles.fieldContainer(!this.props.isDragging && this.state.expanded) } key={ id }>
+        <div style={ styles.fieldPosition }>{ position + 1 }</div>
+        <div style={ styles.fieldIcon }><FieldIcon /></div>
+        <div style={ styles.fieldContents }>
+
+          {
+            !this.state.expanded
+            ? <h4 style={ styles.fieldTitleHeader }  onClick={ this.toggleExpanded.bind(this) }>
+              { fieldTitle }
+              { requiredMark }
+              { identityMark }
+            </h4>
+            : null
+          }
+
+          {
+            !this.props.isDragging && this.state.expanded
+            ? this.renderExpanded()
+            : null
+          }
+
+          <div style={styles.arrowContainer}>
+            <button style={styles.copy} onClick={ onDuplicate.bind(this, position) }><FaCopy /></button>
+            <button style={styles.delete} onClick={ onDelete.bind(this, position) }><FaTrash /></button>
+            <button onClick={ position !== 0 ? onMove.bind(this, 'up', position) : null } style={styles.arrow} disabled={position === 0}><FaArrowUp /></button>
+            <button onClick={ !isLast ? onMove.bind(this, 'down', position) : null } style={styles.arrow} disabled={!!isLast}><FaArrowDown /></button>
           </div>
-        }
+
         </div>
+      </div>
     );
   }
 
@@ -176,7 +184,7 @@ export default class FormField extends Component {
             style={ styles.fieldTitle }
             defaultValue={ field.title }
             type="text"
-            placeholder={ `Ask readers a question (${ field.friendlyType })` }
+            placeholder={ `Ask readers a question` }
             autoFocus={ true } />
           <input
             className="field-description"
@@ -205,29 +213,52 @@ export const styles = {
     return {
       display: 'flex',
       justifyContent: 'flex-start',
-      alignItems: 'center',
+      alignItems: 'top',
       backgroundColor: '#fff',
-      padding: '20px',
       width: '100%',
       boxShadow: '0 1px 3px #9B9B9B',
       borderRadius: 4,
-      height: isExpanded ? '60px' : 'auto',
-      lineHeight: '20px',
-      cursor: 'pointer'
+      height: !isExpanded ? '50px' : 'auto',
+      lineHeight: '1',
+      cursor: 'pointer',
+      flexDirection: 'row',
+      position: 'relative'
     };
+  },
+  fieldHeader: {
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    width: '100%'
+  },
+  fieldContents: {
+    flexGrow: 2
+  },
+  fieldIcon: {
+    width: '40px',
+    padding: '14px 10px',
+    display: 'inline-block',
+    textAlign: 'center',
+    'float': 'left',
+    marginLeft: '40px'
+  },
+  fieldTitleHeader: {
+    flex: 1,
+    alignSelf: 'flex-start',
+    padding: '15px 10px 15px 0'
   },
   editBody: {
     flex: 1,
-    marginLeft: 10,
-    alignSelf: 'flex-start'
+    alignSelf: 'flex-start',
+    padding: '15px 10px'
   },
   arrowContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between'
+    position: 'absolute',
+    top: '8px',
+    right: '20px'
   },
   arrow: {
-    width: '25px',
+    width: '30px',
     height: '30px',
     padding: 0,
     lineHeight: '20px',
@@ -238,7 +269,7 @@ export const styles = {
     cursor: 'pointer'
   },
   arrowPlaceHolder: {
-    width: '25px',
+    width: '30px',
     height: '30px',
     padding: 0,
     marginLeft: '5px',
@@ -272,9 +303,8 @@ export const styles = {
     left: '0px',
     width: '100%',
     height: 'auto',
-    padding: '20px',
-    backgroundColor: 'white',
-    boxShadow: '0px 1px 2px #444'
+    padding: '10px 20px 20px 0px',
+    backgroundColor: 'white'
   },
   saveButton: {
     display: 'inline-block',
@@ -311,7 +341,7 @@ export const styles = {
     marginBottom: '10px'
   },
   fieldTitle: {
-    fontSize: '14pt',
+    fontSize: '12pt',
     padding: '5px 0',
     width: '75%',
     display: 'block',
@@ -329,7 +359,12 @@ export const styles = {
   },
   fieldPosition: {
     alignSelf: 'flex-start',
-    fontWeight: 'bold'
+    fontWeight: 'normal',
+    padding: '15px 15px',
+    textAlign: 'center',
+    borderRight: '1px solid #ddd',
+    height: '100%',
+    position: 'absolute'
   },
   fieldAndPosition: {
     display: 'flex',

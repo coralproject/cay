@@ -206,7 +206,7 @@ const styles = {
   },
   bottomCheck: {
     display: 'inline-block',
-    padding: '10px',
+    padding: '10px 10px 10px 0',
     cursor: 'pointer'
   },
   optionButton: {
@@ -253,7 +253,8 @@ const styles = {
     width: '100%'
   },
   bottomOptionsLeft: {
-    flexGrow: '1'
+    flexGrow: '1',
+    lineHeight: '30px'
   },
   otherSample: {
     display: 'block',

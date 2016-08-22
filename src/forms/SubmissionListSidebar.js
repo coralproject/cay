@@ -139,7 +139,11 @@ export default class Sidebar extends Component {
             <p style={styles.count}>{count} of {formCounts.totalSubmissions} Submission{formCounts.totalSubmissions === 1 ? '' : 's'}</p>
           </div>
           <div style={styles.searchContainer}>
-            <input style={styles.search} type='text' value={search}
+            <input
+              style={styles.search}
+              type='text'
+              value={search}
+              onKeyUp={e => { if (e.key === 'Enter') this.props.onSearchChange(search); }}
               onChange={evt => this.setState({ search: evt.target.value })}
               placeholder='Search' />
             <button onClick={() => this.props.onSearchChange(search)}
@@ -161,9 +165,13 @@ export default class Sidebar extends Component {
             onChange={this.props.onOrderChange} />
         </div>
         <div>{this.listSubmissions(submissions, activeSubmission, onSelect)}</div>
-        { form ? <Pagination current={subPageOffset}
-          total={Math.ceil(count / 10)}
-          onChange={this.paginate.bind(this, count)} /> : null }
+        {
+          form
+          ? <Pagination current={subPageOffset}
+              total={Math.ceil(count / 10)}
+              onChange={this.paginate.bind(this, count)} />
+          : null
+        }
       </div>
     );
   }

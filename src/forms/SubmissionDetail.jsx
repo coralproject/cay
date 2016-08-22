@@ -31,11 +31,11 @@ export default class SubmissionDetail extends Component {
     const { submission, gallery } = this.props;
 
     if (!submission) {
-      return (<p>loading submission...</p>);
+      return (<p key="loading-submission">loading submission...</p>);
     }
 
     if (!gallery) {
-      return (<p>Loading gallery...</p>);
+      return (<p key="loading-gallery">Loading gallery...</p>);
     }
 
     return (

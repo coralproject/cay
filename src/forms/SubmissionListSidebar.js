@@ -14,6 +14,8 @@ import Pagination from 'components/lists/Pagination';
 import { fetchSubmissions, hasFlag } from 'forms/FormActions';
 import { darkGrey, grey } from 'settings';
 
+import key from 'keymaster';
+
 @connect()
 @Radium
 export default class Sidebar extends Component {
@@ -28,28 +30,40 @@ export default class Sidebar extends Component {
       subPageOffset: 0
     };
 
-    const keyPress = (e) => {
-
-      const {activeSubmission, submissions, onSelect, onFlag, onBookmark} = this.props;
+    const handleNav = () => {
+      const {activeSubmission, submissions, onSelect} = this.props;
 
       const subIds = submissions.map(s => s.id);
       const activeIndex = subIds.indexOf(activeSubmission);
 
-      // e.code here since {e} is a synthetic React event
-      if (e.code === 'KeyJ' && subIds[activeIndex + 1]) {
+      if (key.isPressed('J') && subIds[activeIndex + 1]) {
         onSelect(subIds[activeIndex + 1]);
-      } else if (e.code === 'KeyK' && subIds[activeIndex - 1] && activeIndex !== 0) {
+      } else if (key.isPressed('K') && subIds[activeIndex - 1] && activeIndex !== 0) {
         onSelect(subIds[activeIndex - 1]);
-      } else if (e.code === 'KeyF') {
-        onFlag(!hasFlag(submissions[subIds.indexOf(activeSubmission)], 'flagged'));
-      } else if (e.code === 'KeyB') {
-        onBookmark(!hasFlag(submissions[subIds.indexOf(activeSubmission)], 'bookmarked'));
       }
     };
 
-    this.onKeyPress = keyPress.bind(this);
-    // if the listener is bound on the next line, removeEventListener doesn't work
-    document.addEventListener('keypress', this.onKeyPress, true);
+    const handleBookmark = () => {
+      const {activeSubmission, submissions, onBookmark} = this.props;
+      const subIds = submissions.map(s => s.id);
+
+      onBookmark(!hasFlag(submissions[subIds.indexOf(activeSubmission)], 'bookmarked'));
+    };
+
+    const handleFlag = () => {
+      const {activeSubmission, submissions, onFlag} = this.props;
+      const subIds = submissions.map(s => s.id);
+
+      onFlag(!hasFlag(submissions[subIds.indexOf(activeSubmission)], 'flagged'));
+    };
+
+    this.handleNav = handleNav.bind(this);
+    this.handleBookmark = handleBookmark.bind(this);
+    this.handleFlag = handleFlag.bind(this);
+
+    key('j, k', this.handleNav);
+    key('b', this.handleBookmark);
+    key('f', this.handleFlag);
   }
 
   onFilterByToggle(filterByOpen) {
@@ -61,7 +75,11 @@ export default class Sidebar extends Component {
   }
 
   componentWillUnmount() {
-    document.removeEventListener('keypress', this.onKeyPress, true);
+    // can't call these all in one function because of a bug in keymaster?
+    key.unbind('j');
+    key.unbind('k');
+    key.unbind('f');
+    key.unbind('b');
   }
 
   listSubmissions(submissions, activeSubmission, onSelect) {

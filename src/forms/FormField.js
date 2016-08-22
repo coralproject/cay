@@ -120,25 +120,22 @@ export default class FormField extends Component {
     return this.props.connectDragSource(
       <div>
         { this.renderContainer() }
-        {
-          /*!this.props.isDragging && this.state.expanded
-          ? this.renderExpanded()
-          : this.renderCollapsed()*/
-        }
       </div>
     );
   }
 
   getIcon(fieldType) {
-    for (var i in askTypes) {
-      if (askTypes[i].friendlyType == fieldType) return askTypes[i].icon;
-    }
+    return askTypes.find(type => type.friendlyType === fieldType).icon;
   }
 
   renderContainer() {
     const { id, onMove, isLast, position, onDelete, onDuplicate } = this.props;
     const { field } = this.state;
     const FieldIcon = this.getIcon(field.friendlyType);
+    const fieldTitle = field.title ? field.title : 'Ask readers a question';
+    const requiredMark = field.wrapper && field.wrapper.required ? <span style={ styles.requiredAsterisk }>*</span> : null;
+    const identityMark = field.identity ? <span style={ styles.identityLabel }><FaUser/></span> : null;
+
     return (
       <div className={field.component + ' ' + id} style={ styles.fieldContainer(!this.props.isDragging && this.state.expanded) } key={ id }>
         <div style={ styles.fieldPosition }>{ position + 1 }</div>
@@ -148,19 +145,9 @@ export default class FormField extends Component {
           {
             !this.state.expanded
             ? <h4 style={ styles.fieldTitleHeader }  onClick={ this.toggleExpanded.bind(this) }>
-              { field.title ? field.title : 'Ask readers a question' }
-              {
-                field.wrapper && field.wrapper.required ?
-                  <span style={ styles.requiredAsterisk }>*</span>
-                :
-                  null
-              }
-              {
-                field.identity ?
-                  <span style={ styles.identityLabel }><FaUser/></span>
-                :
-                  null
-              }
+              { fieldTitle }
+              { requiredMark }
+              { identityMark }
             </h4>
             : null
           }

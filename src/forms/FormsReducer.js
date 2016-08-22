@@ -175,7 +175,7 @@ export default (state = initial, action) => {
 
     widgetsCopy.splice(targetPosition, 0, widget);
 
-    return {...state, widgets: widgetsCopy, currentFields: widgetsCopy };
+    return {...state, widgets: widgetsCopy, currentFields: widgetsCopy, isDragging: false };
 
   case types.FETCH_FORMS_SUCCESS:
 
@@ -232,7 +232,7 @@ export default (state = initial, action) => {
     var removed = newWidgets.splice(action.from, 1)[0];
     newWidgets.splice(action.to, 0, removed);
 
-    return {...state, currentFields: newWidgets, widgets: newWidgets };
+    return {...state, currentFields: newWidgets, widgets: newWidgets, isDragging: false };
 
   case types.DELETE_FORM_WIDGET:
     var widgetsCopy = [...state.widgets];

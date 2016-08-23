@@ -124,14 +124,14 @@ export default class FormField extends Component {
     );
   }
 
-  getIcon(fieldType) {
-    return askTypes.find(type => type.friendlyType === fieldType).icon;
+  getIcon(component) {
+    return askTypes.find(type => type.type === component).icon;
   }
 
   renderContainer() {
     const { id, onMove, isLast, position, onDelete, onDuplicate } = this.props;
     const { field } = this.state;
-    const FieldIcon = this.getIcon(field.friendlyType);
+    const FieldIcon = this.getIcon(field.component);
     const fieldTitle = field.title ? field.title : 'Ask readers a question';
     const requiredMark = field.wrapper && field.wrapper.required ? <span style={ styles.requiredAsterisk }>*</span> : null;
     const identityMark = field.identity ? <span style={ styles.identityLabel }><FaUser/></span> : null;

@@ -1,4 +1,3 @@
-
 /**
  * Module dependencies
  */
@@ -7,14 +6,21 @@ import React, { PropTypes, Component } from 'react';
 import Radium from 'radium';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import { copyForm, deleteForm, fetchForms } from 'forms/FormActions';
+import { Spinner, Button, IconButton, DataTable, TableHeader, Textfield, Dialog, DialogContent, DialogTitle, DialogActions } from 'react-mdl';
+import moment from 'moment';
+
+import L from 'i18n';
+
+import { createEmpty, copyForm, deleteForm, fetchForms, saveForm } from 'forms/FormActions';
 import { mediumGrey, lightGrey, brandColor } from 'settings';
+
 import Page from 'app/layout/Page';
-import { Spinner, Button, IconButton, DataTable, TableHeader } from 'react-mdl';
 import ContentHeader from 'components/ContentHeader';
 import ButtonGroup from 'components/ButtonGroup';
-import L from 'i18n';
-import moment from 'moment';
+
+import CreateFormDialog from 'forms/CreateFormDialog'
+
+import { showFlashMessage } from 'flashmessages/FlashMessagesActions';
 
 // Forms, Widgets, Submissions
 @connect(({ forms }) => ({ forms }))
@@ -34,6 +40,7 @@ export default class FormList extends Component {
 
   componentWillMount() {
     this.props.dispatch(fetchForms());
+    this.props.dispatch(createEmpty());
   }
 
   confirmDeletion(name, description, index, event) {
@@ -64,8 +71,16 @@ export default class FormList extends Component {
   }
 
   onCopyFormClick(form, event) {
-      event.stopPropagation();
-      this.context.router.push(`/forms/create?copying=${form.id}`);
+    event.stopPropagation();
+    this.context.router.push(`/forms/create?copying=${form.id}`);
+  }
+
+  openCreateFormDialog() {
+    this.setState({ createFormDialogIsOpen: true });
+  }
+
+  onCancelClick() {
+    this.setState({ createFormDialogIsOpen: false });
   }
 
   render() {
@@ -76,9 +91,7 @@ export default class FormList extends Component {
     return (
       <Page>
         <ContentHeader title="View Forms" style={styles.header} subhead="Create, edit and view forms">
-          <Link to="forms/create" style={styles.createButton}>
-            <Button raised colored>Create</Button>
-          </Link>
+          <Button onClick={ this.openCreateFormDialog.bind(this) } raised colored>Create</Button>
         </ContentHeader>
 
         <Button accent colored raised={displayMode === 'open'}
@@ -94,6 +107,9 @@ export default class FormList extends Component {
           formName={this.state.confirmFormName}
           onConfirmClick={this.onConfirmClick.bind(this)}
           onCloseClick={this.closeDialog.bind(this)} />
+
+        <CreateFormDialog open={ this.state.createFormDialogIsOpen } onCancelClick={ this.onCancelClick.bind(this) } />
+
       </Page>
     );
   }
@@ -184,5 +200,8 @@ const styles = {
   },
   name: {
     cursor: 'pointer'
+  },
+  dialogFieldTitle: {
+    margin: 0
   }
 };

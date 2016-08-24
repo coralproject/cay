@@ -43,7 +43,6 @@ const TopMenu = ({ features }) => (
   <ul>
     { features.trust === false ? null : <MenuItem name={ L.t('Create Search') } target="/search-creator" icon={<FaGroup />} />}
     { features.trust === false ? null : <MenuItem name={ L.t('Saved Searches') } target="/saved-searches" icon={<FaDashboard />} />}
-    { features.ask ? <MenuItem open={open} name="Create Form" target="/forms/create" icon={<MdBuild />} /> : null }
     { features.ask ? <MenuItem open={open} name="View Forms" target="/forms" icon={<FaListAlt />}/> : null }
   </ul>
 );

@@ -11,13 +11,19 @@ import { Link } from 'react-router';
  * Expose Menu Item module
  */
 
-export default Radium(({ target, icon, name, onClick }) => (
+export default Radium(({ target, icon, name, onClick, externalLink }) => (
   <li style={styles.base}>
-    <RadiumLink style={styles.link} onClick={onClick}
-      to={target} activeStyle={styles.activeLink}>
-      <span style={ styles.icon }>{icon}</span>
-      <span style={styles.text}>{name}</span>
-    </RadiumLink>
+    { externalLink
+      ? <a style={ styles.link } href={target} target="_blank">
+          <span style={ styles.icon }>{icon}</span>
+          <span style={styles.text}>{name}</span>
+        </a>
+      : <RadiumLink style={styles.link} onClick={onClick}
+        to={target} activeStyle={styles.activeLink}>
+        <span style={ styles.icon }>{icon}</span>
+        <span style={styles.text}>{name}</span>
+      </RadiumLink>
+    }
   </li>
 ));
 
@@ -34,10 +40,11 @@ const RadiumLink = Radium(Link);
 const styles = {
   base: {
     transition: 'all .4s',
-    backgroundColor: 'transparent'
+    backgroundColor: 'transparent',
+    position: 'relative'
   },
   link: {
-    padding: 10,
+    padding: '12px 10px 10px 50px',
     cursor: 'pointer',
     display: 'block',
     textDecoration: 'none',
@@ -46,6 +53,8 @@ const styles = {
     fontSize: 14,
     margin: 10,
     borderRadius: 5,
+    minHeight: 47,
+    lineHeight: 1.5,
     ':hover': {
       color: '#4a4a4a'
     }
@@ -57,9 +66,9 @@ const styles = {
   icon: {
     textAlign: 'center',
     display: 'inline-block',
-    fontSize: 24
-  },
-  text: {
-    marginLeft: 20
+    fontSize: 24,
+    position: 'absolute',
+    left: 24,
+    top: 3
   }
 };

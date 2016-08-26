@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { Spinner, IconButton, Button, Dialog, DialogContent, DialogTitle, DialogActions, Tabs, Tab, RadioGroup, Radio, Textfield } from 'react-mdl';
+import { Spinner, IconButton, Button, Dialog, DialogContent, DialogTitle, Tabs, Tab, RadioGroup, Radio, Textfield } from 'react-mdl';
 
 import CopyToClipboard from 'react-copy-to-clipboard';
 
@@ -138,16 +138,33 @@ export default class FormBuilderSidebar extends Component {
                           <CopyToClipboard
                             text={this.createEmbed('script-tag')}
                             onCopy={() => {
-                              this.setState({copied: true});
-                              setTimeout(() => this.setState({copied: false}), 5000);
+                              this.setState({embedCopied: true});
+                              setTimeout(() => this.setState({embedCopied: false}), 5000);
                             }}>
                             <Button raised>Copy</Button>
                           </CopyToClipboard>
+                          {
+                            this.state.embedCopied
+                            ? <span style={ styles.copied }>Copied!</span>
+                            : null
+                          }
                         </div>
                       :
                         <div>
                           <textarea className="embed-code-iframe" readOnly style={styles.embedCode} value={this.createEmbed('iframe')}/>
-                          <Button raised>Copy</Button>
+                          <CopyToClipboard
+                            text={this.createEmbed('iframe')}
+                            onCopy={() => {
+                              this.setState({embedCopied: true});
+                              setTimeout(() => this.setState({embedCopied: false}), 5000);
+                            }}>
+                            <Button raised>Copy</Button>
+                          </CopyToClipboard>
+                          {
+                            this.state.embedCopied
+                            ? <span style={ styles.copied }>Copied!</span>
+                            : null
+                          }
                         </div>
                     }
                   </section>
@@ -156,7 +173,19 @@ export default class FormBuilderSidebar extends Component {
                 <div>
                   <h4 style={ styles.dialogSubTitle }>Standalone Form URL</h4>
                   <textarea className="standalone-form-url" readOnly style={styles.embedCode} value={this.createEmbed('standalone')}/>
-                  <Button raised>Copy</Button>
+                    <CopyToClipboard
+                      text={this.createEmbed('iframe')}
+                      onCopy={() => {
+                        this.setState({standaloneCopied: true});
+                        setTimeout(() => this.setState({standaloneCopied: false}), 5000);
+                      }}>
+                      <Button raised>Copy</Button>
+                    </CopyToClipboard>
+                    {
+                      this.state.standaloneCopied
+                      ? <span style={ styles.copied }>Copied!</span>
+                      : null
+                    }
                 </div>
 
                 <IconButton style={ styles.closeButton } name="clear" onClick={this.onPublishOptions.bind(this)} />
@@ -220,5 +249,9 @@ const styles = {
     position: 'absolute',
     top: 30,
     right: 30
+  },
+  copied: {
+    paddingLeft: '15px',
+    color: '#0a0'
   }
 };

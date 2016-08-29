@@ -110,6 +110,7 @@ export default class FormBuilderSidebar extends Component {
               <div style={ styles.dialogContent }>
 
                 <div>
+                  <h4 style={ styles.dialogSubTitle }>Set form status</h4>
                   <RadioGroup
                     onChange={ this.onFormStatusChange.bind(this) }
                     childContainer="div"
@@ -132,6 +133,7 @@ export default class FormBuilderSidebar extends Component {
                   }
                   <Button
                     raised ripple
+                    style={{ marginTop: 20 }}
                     onClick={onSaveClick}>
                     { forms.savingForm ? <Spinner/> : null } Apply
                   </Button>
@@ -229,7 +231,8 @@ const styles = {
   typeList: {
     display: 'flex',
     flexWrap: 'wrap',
-    marginLeft: -8
+    marginTop: '10px',
+    marginBottom: '20px'
   },
   leftContainerTitle: {
     fontWeight: 'bold',
@@ -253,7 +256,7 @@ const styles = {
     resize: 'none'
   },
   dialogSubTitle: {
-    marginTop: 10,
+    margin: '15px 0',
     fontWeight: 'bold'
   },
   closeButton: {

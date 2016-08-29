@@ -58,7 +58,8 @@ export const styles = {
   baseStyles: function(isDragging) {
     return {
       opacity: isDragging ? 0.75 : 1,
-      margin: 5,
+      marginRight: '10px',
+      marginBottom: '10px',
       shadowOffset: { height: 1, width: 0},
       boxShadow: '0 1px 3px #9B9B9B',
       lineHeight: '40px',

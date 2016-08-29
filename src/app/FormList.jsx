@@ -110,8 +110,18 @@ const ConfirmDialog = ({ show, formName, onConfirmClick, onCloseClick }) => show
   </div>
 ) : null;
 
-const formatForm = ({ header, stats, id, date_created }, index) =>
-({ id: id, name: header.title, description: header.description, submissions: stats.responses, date_created: date_created, copy: index, remove: index });
+const formatForm = ({ header, stats, id, date_created }, index) => {
+  return {
+    id,
+    name: header.title,
+    description: header.description,
+    submissions: stats.responses,
+    date_created,
+    copy: index,
+    remove: index
+  };
+};
+
 
 const FormTable = ({ loadingTags, forms, onRowClick, confirmDeletion, onCopyFormClick }) => (
   <DataTable style={styles.table} sortable rows={forms.map(formatForm)}>

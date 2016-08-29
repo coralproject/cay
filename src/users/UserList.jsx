@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import Infinite from 'react-infinite';
 import Select from 'react-select';
-import _ from 'lodash';
+import find from 'lodash/collection/find';
 
 import UserRow from 'users/UserRow';
 import Heading from 'components/Heading';
@@ -13,11 +13,10 @@ import { userSelected } from 'users/UsersActions';
 import { fetchCommentsByUser } from 'comments/CommentsActions';
 import UserDetail from 'users/UserDetail';
 
-import { Lang } from 'i18n/lang';
+import L from 'i18n';
 
 @connect(({filters, users, comments}) =>
   ({filters, user: users.selectedUser, comments}))
-@Lang
 @Radium
 export default class UserList extends React.Component {
 
@@ -79,7 +78,7 @@ export default class UserList extends React.Component {
     const { specificBreakdown, breakdown } = this.props.filters;
     if (!specificBreakdown && specificBreakdown === 'all') return;
     const bdown = this.props.filters[`${breakdown}s`];
-    const obj = _.find(bdown, {_id: specificBreakdown});
+    const obj = find(bdown, {_id: specificBreakdown});
     return obj && (obj.name || obj.description);
   }
 
@@ -142,14 +141,13 @@ export default class UserList extends React.Component {
   }
 
   render() {
-    const { user, users, comments } = this.props;
+    const { user, users, comments, filters } = this.props;
 
     var noUsersMessage = (<p style={ styles.noUsers }>
       Zero users found...<br />Please widen your search.
     </p>);
 
-    const {filters} = this.props;
-    const userListContent = this.props.users.length ? this.getUserList(this.props.users) : noUsersMessage;
+    const userListContent = users.length ? this.getUserList(this.props.users) : noUsersMessage;
 
     // get a list of only the sortable filters
     const sortableFilters = filters.filterList
@@ -170,7 +168,7 @@ export default class UserList extends React.Component {
               <Spinner />
             </div> :
             <Heading size='medium'>
-              <span style={styles.groupHeader}>{ window.L.t('results') }</span> ({this.props.total} {this.props.total !== 1 ? window.L.t('users') : window.L.t('user')})
+              <span style={styles.groupHeader}>{ L.t('results') }</span> ({this.props.total} {this.props.total !== 1 ? L.t('users') : L.t('user')})
             </Heading>
           }
           <div style={styles.sort}>
@@ -189,7 +187,7 @@ export default class UserList extends React.Component {
               {!user ? userListContent : ''}
             </div>
             <div style={[styles.cardFace, styles.cardBack]}>
-              {user ? <UserDetail onClose={this.onCloseDetail.bind(this)}
+              {user && users && users.length ? <UserDetail onClose={this.onCloseDetail.bind(this)}
                 comments={comments.items}
                 commentsLoading={comments.loading}
                 onPrevUser={this.onPrevUser.bind(this)}
@@ -274,5 +272,8 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'flex-start',
     marginTop: -40
+  },
+  sort: {
+    marginTop: -5
   }
 };

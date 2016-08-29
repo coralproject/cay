@@ -174,12 +174,6 @@
   display: inline-block;
 }
 
-.react-datepicker__input-container input {
-  padding: 7px 10px;
-  border: 1px solid lightgrey;
-  border-radius: 3px;
-}
-
 .react-datepicker__year-read-view {
   width: 50%;
   left: 25%;

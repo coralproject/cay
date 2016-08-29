@@ -8,10 +8,9 @@ import ModalFooter from './ModalFooter';
 @Radium
 export default class Modal extends React.Component {
   static propTypes = {
-    cancelAction: PropTypes.func.isRequired,
-    confirmAction: PropTypes.func.isRequired,
     isOpen: PropTypes.bool.isRequired,
-    title: PropTypes.string.isRequired
+    title: PropTypes.string.isRequired,
+    cancelAction: PropTypes.func.isRequired
   }
 
   render() {
@@ -27,10 +26,14 @@ export default class Modal extends React.Component {
         ]}>
           <ModalHeader title={this.props.title} cancelAction={this.props.cancelAction} />
           {this.props.children}
-          <ModalFooter
-            confirmText={this.props.confirmText}
-            cancelAction={this.props.cancelAction}
-            confirmAction={this.props.confirmAction} />
+          {
+            this.props.noFooter
+            ? null
+            : <ModalFooter
+              confirmText={this.props.confirmText}
+              cancelAction={this.props.cancelAction}
+              confirmAction={this.props.confirmAction} />
+          }
         </Card>
       </div>
     );
@@ -54,6 +57,7 @@ const styles = {
     width: '0%',
     minWidth: 800,
     marginTop: 30,
+    position: 'relative',
     marginBottom: 50
   },
   isClosed: {

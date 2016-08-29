@@ -91,6 +91,13 @@ export default class MultipleChoiceEditor extends Component {
     this.props.onEditorChange(updatedField);
   }
 
+  onOtherTextChange(e) {
+    let { field } = this.props;
+    let updatedProps = Object.assign({}, field.props, { otherText: e.target.value });
+    let updatedField = Object.assign({}, field, { props: updatedProps });
+    this.props.onEditorChange(updatedField);
+  }
+
   getOptions() {
     return this.state.options.map((option, i) => {
       return (
@@ -143,7 +150,7 @@ export default class MultipleChoiceEditor extends Component {
             field.props.otherAllowed ?
               <div style={ styles.optionRow }>
                 <div style={ styles.optionRowText }>
-                  <span style={ styles.otherSample }>Other</span>
+                  <input style={ styles.optionInput } type="text" defaultValue="Other:" value={ field.props.otherText } onChange={ this.onOtherTextChange.bind(this) } />
                 </div>
                 <div style={ styles.optionRowButtons }>
                   &nbsp;
@@ -154,7 +161,7 @@ export default class MultipleChoiceEditor extends Component {
 
           <div style={ styles.optionRow }>
             <div style={ styles.optionRowText }>
-              <button style={ styles.addOption } onClick={ this.addOption.bind(this) }><FaPlusCircle /> Add another option</button>
+              <button style={ styles.addOption } onClick={ this.addOption.bind(this) } className="add-option"><FaPlusCircle /> Add another option</button>
             </div>
             <div style={ styles.optionRowButtons }>
               &nbsp;
@@ -199,7 +206,7 @@ const styles = {
   },
   bottomCheck: {
     display: 'inline-block',
-    padding: '10px',
+    padding: '10px 10px 10px 0',
     cursor: 'pointer'
   },
   optionButton: {
@@ -246,7 +253,8 @@ const styles = {
     width: '100%'
   },
   bottomOptionsLeft: {
-    flexGrow: '1'
+    flexGrow: '1',
+    lineHeight: '30px'
   },
   otherSample: {
     display: 'block',

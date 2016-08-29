@@ -1,22 +1,21 @@
 import React from 'react';
 import Radium from 'radium';
-import settings from 'settings';
+import { brandColor } from 'settings';
 import Page from 'app/layout/Page';
 
-@Radium
-export default class NoMatch extends React.Component {
-  render() {
-    return (
-      <Page style={styles.base}>
-        <div style={styles.container}>
-          <p style={styles.notFound}>Not Found!</p>
-          <p style={styles.pun}>It was just here, right here!</p>
-          <p>wow, embarassing. Let us know that something <a style={styles.ghLink} target="_blank" href="https://github.com/coralproject/cay/issues">broke</a>.</p>
-        </div>
-      </Page>
-    );
-  }
-}
+export default Radium(() => (
+  <Page style={styles.base}>
+    <div style={styles.container}>
+      <p style={styles.notFound}>Not Found!</p>
+      <p style={styles.pun}>It was just here, right here!</p>
+      <p>wow, embarassing. Let us know that something <a style={styles.ghLink} target="_blank" href="https://github.com/coralproject/cay/issues">broke</a>.</p>
+    </div>
+  </Page>
+));
+
+/**
+ * Module styles
+ */
 
 const styles = {
   base: {
@@ -33,7 +32,7 @@ const styles = {
     height: '100%',
     justifyContent: 'center',
     textAlign: 'center',
-    backgroundColor: settings.brandColor,
+    backgroundColor: brandColor,
     color: 'white'
   },
   notFound: {

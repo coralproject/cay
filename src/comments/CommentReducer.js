@@ -1,31 +1,39 @@
+
+/**
+ * Action types
+ */
+
 import * as types from 'comments/CommentsActions';
+
+/**
+ * Initial state
+ */
 
 const initialState = {
   loading: false,
-  items: [] // eventually this will be multiple arrays for multiple displayed lists
+  items: []
 };
 
-const comments = (state = initialState, action) => {
+/**
+ * Reducer
+ */
+
+export default (state = initialState, action) => {
   switch (action.type) {
 
-  case types.CLEAR_COMMENT_ITEMS:
+  case types.EMPTY_COMMENTS:
     return {...state, items: []};
 
-  case types.COMMENT_CLICK:
-    return state;
-
-  case types.COMMENTS_REQUEST:
+  case types.FETCH_COMMENTS_REQUEST:
     return {...state, loading: true};
 
-  case types.COMMENTS_SUCCESS:
-    return {...state, loading: false, items: action.data.results[0].Docs};
+  case types.FETCH_COMMENTS_SUCCESS:
+    return {...state, loading: false, items: action.items };
 
-  case types.COMMENTS_FAIL:
+  case types.FETCH_COMMENTS_FAILURE:
     return {...state, items: []};
 
   default:
     return state;
   }
 };
-
-export default comments;

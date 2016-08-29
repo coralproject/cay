@@ -6,7 +6,7 @@ and all the other smart components (containers)
 */
 import React from 'react';
 import Radium from 'radium';
-import Sidebar from 'app/layout/sidebar/Sidebar';
+import Sidebar from 'app/layout/Sidebar';
 
 import Header from 'app/layout/header/Header';
 import FlashMessages from 'flashmessages/FlashMessages';

@@ -5,11 +5,9 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
-import { Link } from 'react-router';
+
 import { userSelected } from 'users/UsersActions';
-
 import { mediumGrey } from 'settings';
-
 import {
   saveQueryFromState,
   makeQueryFromState,
@@ -17,8 +15,7 @@ import {
   clearUserList,
   clearRecentSavedSearch
 } from 'search/SearchActions';
-import { filterChanged, getFilterRanges } from 'filters/FiltersActions';
-
+import { filterChanged, clearFilters, getFilterRanges } from 'filters/FiltersActions';
 import Page from 'app/layout/Page';
 import ContentHeader from 'components/ContentHeader';
 import UserList from 'users/UserList';
@@ -29,25 +26,20 @@ import Modal from 'components/modal/Modal';
 import TextField from 'components/forms/TextField';
 import StatusBar from 'components/StatusBar';
 import Clauses from 'search/Clauses';
+import L from 'i18n';
 
 /**
  * Search creator page
  * Contains the UI for creating user searches
  */
 
-@connect(state => ({
-  searches: state.searches,
-  comments: state.comments,
-  users: state.users,
-  filters: state.filters,
-  app: state.app,
-  auth: state.auth
-}))
+@connect(({ searches, comments, users, filters, app, auth }) =>
+({ searches, comments, users, filters, app, auth }))
 @Radium
 export default class SearchCreator extends Component {
   constructor(props) {
     super(props);
-    this.state = {saveModalOpen: false};
+    this.state = { saveModalOpen: false };
   }
 
   static contextTypes = {
@@ -76,6 +68,7 @@ export default class SearchCreator extends Component {
     // set up the initial default / unfiltered view
     // this was previously in UserFilters
     dispatch(clearRecentSavedSearch());
+    dispatch(clearFilters());
     dispatch(clearUserList());
     dispatch(fetchInitialData());
     dispatch(getFilterRanges(false)); // editmode => false
@@ -127,7 +120,7 @@ export default class SearchCreator extends Component {
       <Page style={styles.pageBase}>
         <div style={styles.base}>
           <div style={styles.topSection}>
-            <ContentHeader title={ window.L.t('Create a Search') } />
+            <ContentHeader title={ L.t('Create a Search') } />
             <Button
               onClick={this.openModal.bind(this)}
               category="info"
@@ -175,16 +168,9 @@ export default class SearchCreator extends Component {
   }
 }
 
-
-// <UserDetail
-//   breakdown={this.props.filters.breakdown}
-//   specificBreakdown={this.props.filters.specificBreakdown}
-//   commentsLoading={this.props.comments.loading}
-//   user={this.props.users.selectedUser}
-//   comments={this.props.comments.items}
-//   style={styles.userDetail} />
-
-
+/**
+ * Module styles
+ */
 
 const styles = {
   pageBase: {
@@ -251,7 +237,7 @@ const styles = {
   },
   saveButton: {
     position: 'absolute',
-    top: 10,
-    right: 10
+    top: 20,
+    right: 20
   }
 };

@@ -1,8 +1,13 @@
-import React, {PropTypes} from 'react';
+
+/**
+ * Module dependencies
+ */
+
+import React, { PropTypes, Component } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
 
-import settings from 'settings';
+import { brandColor } from 'settings';
 import color from 'color';
 
 import {login} from 'auth/AuthActions';
@@ -10,34 +15,32 @@ import {login} from 'auth/AuthActions';
 import Button from 'components/Button';
 import TextField from 'components/forms/TextField';
 
-const mapStateToProps = state => {
-  return {
-    auth: state.auth,
-    app: state.app
-  };
-};
+/**
+ * Expose login component
+ */
 
-@connect(mapStateToProps)
+@connect(({ auth, app }) => ({ auth, app }))
 @Radium
-class Login extends React.Component {
+export default class Login extends React.Component {
 
   static contextTypes = {
     router: PropTypes.object.isRequired
   }
 
   componentWillMount() {
-    // use react-router to push state?
-    if (!this.props.app.requireLogin || this.props.auth.authorized) {
-      let {router} = this.context;
-      router.push('/');
+    if (this.isAuth()) {
+      this.context.router.push('/');
     }
   }
 
   componentWillUpdate() {
-    if (!this.props.app.requireLogin || this.props.auth.authorized) {
-      let {router} = this.context;
-      router.push('/');
+    if (this.isAuth()) {
+      this.context.router.push('/');
     }
+  }
+
+  isAuth() {
+    return !this.props.app.requireLogin || this.props.auth.authorized;
   }
 
   loginUser() {
@@ -45,15 +48,15 @@ class Login extends React.Component {
   }
 
   updateEmail(email) {
-    this.setState({email});
+    this.setState({ email });
   }
 
   updatePass(password) {
-    this.setState({password});
+    this.setState({ password });
   }
 
   render() {
-
+    const { auth } = this.props;
     return (
       <div style={styles.base}>
         <div style={styles.loginModal}>
@@ -62,7 +65,6 @@ class Login extends React.Component {
           <p style={styles.projectName}>The Coral Project</p>
           <div style={styles.container}>
             <p style={styles.cta}>Help us test the beta site</p>
-
             <TextField
               ref="email"
               style={styles.textInput}
@@ -74,13 +76,9 @@ class Login extends React.Component {
               style={styles.textInput}
               onChange={this.updatePass.bind(this)}
               label="password" />
-
-            {
-              this.props.auth.authorized === false ?
-                <p style={ styles.unauthorizedMessage }>Invalid username or password.</p>
-              :
-                null
-            }
+            {auth.authorized === false
+              ? <p style={ styles.unauthorizedMessage }>Invalid username or password.</p>
+              : null}
 
             <Button
               size="large"
@@ -98,11 +96,15 @@ class Login extends React.Component {
   }
 }
 
+/**
+ * Module styles
+ */
+
 const styles = {
   base: {
     display: 'flex',
     height: window.innerHeight,
-    backgroundColor: settings.brandColor
+    backgroundColor: brandColor
   },
   loginModal: {
     margin: 'auto',
@@ -117,14 +119,14 @@ const styles = {
   welcome: {
     color: 'white',
     fontSize: '2em',
-    textShadow: '1px 1px 2px ' + color(settings.brandColor).darken(0.3).hexString()
+    textShadow: `1px 1px 2px ${color(brandColor).darken(0.3).hexString()}`
   },
   projectName: {
     color: 'white',
     fontWeight: 'bold',
     fontSize: '4em',
     marginTop: -10,
-    textShadow: '1px 1px 2px ' + color(settings.brandColor).darken(0.3).hexString()
+    textShadow: `1px 1px 2px ${color(brandColor).darken(0.3).hexString()}`
   },
   container: {
     clear: 'both',
@@ -169,5 +171,3 @@ const styles = {
     color: 'white'
   }
 };
-
-export default Login;

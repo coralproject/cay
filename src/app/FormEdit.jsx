@@ -1,3 +1,8 @@
+
+/**
+ * Module dependencies
+ */
+
 import React, { Component } from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
@@ -8,12 +13,16 @@ import {
   updateFormStatus,
   requestEditAccess,
   leavingEdit,
-  updateForm,
+  updateFormSettings,
   fetchForm } from 'forms/FormActions';
 
 import Page from 'app/layout/Page';
 import FormChrome from 'app/layout/FormChrome';
 import FormBuilder from 'forms/FormBuilder.js';
+
+/**
+ * Expose Form Edit page component
+ */
 
 @connect(({ forms }) => ({ forms }))
 @Radium
@@ -21,11 +30,11 @@ export default class FormEdit extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {preview: false};
-    console.log('form id', props.params.id);
-    props.dispatch(fetchForm(props.params.id));
-    props.dispatch(fetchGallery(props.params.id));
-    props.dispatch(fetchSubmissions(props.params.id));
+    this.state = { preview: false };
+    const { id } = props.params;
+    props.dispatch(fetchForm(id));
+    props.dispatch(fetchGallery(id));
+    props.dispatch(fetchSubmissions(id));
   }
 
   componentWillMount() {
@@ -59,18 +68,16 @@ export default class FormEdit extends Component {
   }
 
   updateInactive(value) {
-    this.props.dispatch(updateForm({ settings: { inactiveMessage: value } }));
+    this.props.dispatch(updateFormSettings({ inactiveMessage: value }));
   }
 
   render() {
-    const canEdit = this.props.forms.editAccess[this.props.params.id];
-    const {preview} = this.state;
-    const { forms } = this.props;
-    const { submissionList, activeSubmission, activeForm, activeGallery } = this.props.forms;
-    const submissions = submissionList.map(id => this.props.forms[id]);
-    const submission = this.props.forms[activeSubmission];
-    const form = this.props.forms[activeForm];
-    const gallery = this.props.forms[activeGallery];
+    const { forms, route } = this.props;
+    const { submissionList, activeSubmission, activeForm, activeGallery } = forms;
+    const submissions = submissionList.map(id => forms[id]);
+    const submission = forms[activeSubmission];
+    const form = forms[activeForm];
+    const gallery = forms[activeGallery];
 
     return (
       <Page>
@@ -81,15 +88,15 @@ export default class FormEdit extends Component {
           gallery={gallery}
           submissions={submissions}
           form={form}/>
-        <div style={styles.base}>
+        <div>
           {
             form ?
               <FormBuilder
-                activeForm={ this.props.forms.activeForm }
+                activeForm={ forms.activeForm }
                 onClosePreview={this.onClosePreview.bind(this)}
                 onOpenPreview={ this.showPreview.bind(this) }
-                route={ this.props.route }
-                preview={preview} />
+                route={ route }
+                preview={this.state.preview} />
             : null
           }
         </div>
@@ -97,8 +104,3 @@ export default class FormEdit extends Component {
     );
   }
 }
-
-const styles = {
-  base: {
-  }
-};

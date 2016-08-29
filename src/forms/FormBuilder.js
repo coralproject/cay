@@ -6,14 +6,23 @@ import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 
 // Actions
-import { saveForm, appendWidget, updateForm } from 'forms/FormActions';
+import {
+  saveForm,
+  appendWidget,
+  updateFormSettings,
+  updateFormHeader,
+  updateFormFooter
+ } from 'forms/FormActions';
 import { showFlashMessage } from 'flashmessages/FlashMessagesActions';
 
+// Icons
 import Spinner from 'components/Spinner';
 import FaClose from 'react-icons/lib/fa/close';
 
-import FormDiagram from 'forms/FormDiagram';
-import { Header, Sidebar } from 'forms/FormBuilderLayout';
+// Components
+import FormFieldsContainer from 'forms/FormFieldsContainer';
+import FormBuilderSidebar from 'forms/FormBuilderSidebar';
+import { Header } from 'forms/FormBuilderLayout';
 
 
 @connect(({ app, forms }) => ({ app, forms }))
@@ -27,6 +36,7 @@ export default class FormBuilder extends Component {
     super(props);
     // An empty form with no changes is valid as 'saved'
     this.saved = true;
+    this.state = { openDialog: false }
   }
 
   markAsUnsaved() {
@@ -51,17 +61,21 @@ export default class FormBuilder extends Component {
     return (
       <div>
         <Header form={form} forms={forms} activeForm={activeForm}
-          onOpenPreview={onOpenPreview}
           onTitleChange={this.onFormTitleChange.bind(this)}
           onSaveClick={this.onSaveClick.bind(this)} />
         <div style={styles.builderContainer}>
-          <Sidebar form={form}
+          <FormBuilderSidebar
             create={!activeForm}
+            onOpenPreview={onOpenPreview}
+            onPublishOptions={this.onPublishOptions.bind(this)}
+            onSaveClick={this.onSaveClick.bind(this)}
             onFormStatusChange={this.onFormStatusChange.bind(this)}
             addToBottom={this.addToBottom.bind(this)}
             activeForm={activeForm}
-            app={app} />
-          <FormDiagram activeForm={ this.props.activeForm } markAsUnsaved={this.markAsUnsaved.bind(this)} />
+            openDialog={this.state.openDialog}
+            app={app}
+            />
+          <FormFieldsContainer activeForm={ this.props.activeForm } markAsUnsaved={this.markAsUnsaved.bind(this)} />
           { preview
             ? <div>
                 <div style={ styles.previewOverlay }></div>
@@ -97,46 +111,29 @@ export default class FormBuilder extends Component {
     const { forms, dispatch, activeForm } = this.props;
     const { form, widgets } = forms;
     dispatch(saveForm(activeForm ? forms[activeForm] : form, widgets))
-      .then(data => {
-        if (data && data.id) {
+      .then(response => {
+        if (response.data && response.data.id) {
           this.saved = true;
           this.props.dispatch(showFlashMessage('Your form saved.', 'success'));
-          return !activeForm && router.push(`/forms/${data.id}`);
+          return !activeForm && router.push(`/forms/${response.data.id}`);
         } else {
-          this.props.dispatch(showFlashMessage('Uh-oh, we can\'t save your form. Try again or report the error to your technical team', 'warning'));
+          this.props.dispatch(showFlashMessage('Uh-oh, we can\'t save your form. Try again or report the error to your technical team', 'warning', false));
         }
       });
   }
 
-  onFormStatusChange(e) {
-    this.markAsUnsaved();
-    let { form } = this.props.forms;
-    var newSettings = Object.assign({}, form.settings, { isActive: e.target.checked });
-    this.props.dispatch(updateForm({
-      settings: newSettings
-    }));
+  onPublishOptions() {
+    this.setState({ openDialog: !this.state.openDialog });
   }
 
-  onInactiveMessageChange(e) {
+  onFormStatusChange(e) {
     this.markAsUnsaved();
-    let { form } = this.props.forms;
-    var newSettings = Object.assign({}, form.settings, { inactiveMessage: e.target.value });
-    this.props.dispatch(updateForm({
-      settings: newSettings,
-      id: uuid.v4()
-    }));
+    this.props.dispatch(updateFormSettings({isActive: e.target.checked}));
   }
 
   onFormTitleChange(e) {
     this.markAsUnsaved();
-    const { form, activeForm } = this.props.forms;
-    const header = activeForm ? this.props.forms[activeForm].header : form.header;
-    this.props.dispatch(updateForm({
-      header: {
-        ...header,
-        title: e.target.value
-      }
-    }));
+    this.props.dispatch(updateFormHeader({title: e.target.value}));
   }
 
   renderPreview() {

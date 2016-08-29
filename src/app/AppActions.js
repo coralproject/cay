@@ -1,32 +1,34 @@
-export const CONFIG_ERROR = 'CONFIG_ERROR';
+
+/**
+ * Module dependencies
+ */
 
 import XeniaDriver from 'xenia-driver';
 
-/* xenia_package */
-export const authXenia = (method = 'GET') => {
-  // what? window? this is only being used for DataExplorerActions, which needs a refactor
-  const headers = new Headers({'Authorization': window.basicAuthorization});
+/**
+ * Module scope constants
+ */
 
-  const init = {
-    method: method,
-    headers: headers,
-    mode: 'cors',
-    cache: 'default'
-  };
+export const CONFIG_ERROR = 'CONFIG_ERROR';
 
-  return init;
-};
 
-/* Xenia driver instance */
+/**
+ * Module scope variables
+ */
+
 export let xenia;
 
-export const configXenia = () => {
-  return (dispatch, getState) => {
-    const app = getState().app;
-    xenia = XeniaDriver(app.xeniaHost + '/1.0', app.basicAuthorization);
-  };
+/**
+ * Configure xenia action
+ */
+
+export const configXenia = () => (dispatch, getState) => {
+  const { app } = getState();
+  xenia = XeniaDriver(`${app.xeniaHost}/1.0`, app.basicAuthorization);
 };
 
-export const configError = (message) => {
-  return {type: CONFIG_ERROR, message};
-};
+/**
+ * Configuration error action
+ */
+
+export const configError = message => ({ type: CONFIG_ERROR, message });

@@ -1,10 +1,11 @@
 import React from 'react';
 import Radium from 'radium';
 import {connect} from 'react-redux';
-import _ from 'lodash';
 import settings from 'settings';
+import capitalize from 'lodash/string/capitalize';
 
 import { userSelected } from 'users/UsersActions';
+import TagsFilter from 'filters/TagsFilter';
 import { makeQueryFromState, clearUserList } from 'search/SearchActions';
 import {
   setBreakdown,
@@ -20,8 +21,9 @@ import FilterDateProximity from 'filters/FilterDateProximity';
 import Heading from 'components/Heading';
 
 import {logOnce} from 'components/utils/logHelpers';
+import { toggleTagVisibility, showAllTags, showSpecificTag } from 'search/SearchActions';
 
-@connect(state => state.filters)
+@connect(({ filters, searches, tags }) => ({ ...filters, excludedTags: searches.excluded_tags, tags: tags.items }))
 @Radium
 export default class UserFilters extends React.Component {
 
@@ -103,6 +105,18 @@ export default class UserFilters extends React.Component {
       this.props.dispatch(getFilterRanges(this.props.editMode));
     }
   }
+  
+  onTagClick(tagName) {
+    this.props.dispatch(toggleTagVisibility(tagName));
+  }
+
+  onShowAllTags() {
+    this.props.dispatch(showAllTags());
+  }
+  
+  onShowSpecificTag(tags, tag) {
+    this.props.dispatch(showSpecificTag(tags, tag));
+  }
 
   getActiveFiltersFromConfig() {
 
@@ -112,12 +126,13 @@ export default class UserFilters extends React.Component {
     return userFilters.map((f,i) => {
       let filterComponent;
       const fmtDesc = f.description.charAt(0).toUpperCase() + f.description.slice(1, f.description.length);
-      const inTitleCase = _.map(f.description.split(' '), _.capitalize).join(' ');
-      const bkd = {backgroundColor: i % 2 ? 'transparent' : '#f0f0f0'};
+      const inTitleCase = f.description.split(' ').map(capitalize).join(' ');
+      const filterStyle = Object.assign({}, styles.filterBase, {backgroundColor: i % 2 ? 'transparent' : '#f5f5f5'});
+
       if (f.type === 'percentRange') {
         filterComponent = (
           <FilterNumberPercent
-            style={bkd}
+            style={filterStyle}
             onChange={this.props.onChange}
             key={i}
             min={f.min}
@@ -129,10 +144,9 @@ export default class UserFilters extends React.Component {
             type={f.type}/>
         );
       } else if (f.type === 'intRange' || f.type === 'floatRange') {
-        // capitalize first letter of description
         filterComponent = (
           <FilterNumbers
-            style={bkd}
+            style={filterStyle}
             onChange={this.props.onChange}
             key={i}
             min={f.min}
@@ -146,7 +160,7 @@ export default class UserFilters extends React.Component {
       } else if (f.type === 'dateRange') {
         filterComponent = (
           <FilterDate
-            style={bkd}
+            style={filterStyle}
             onChange={this.props.onChange}
             key={i}
             min={f.min}
@@ -160,7 +174,7 @@ export default class UserFilters extends React.Component {
       } else if (f.type === 'intDateProximity') {
         filterComponent = (
           <FilterDateProximity
-            style={bkd}
+            style={filterStyle}
             onChange={this.props.onChange}
             key={i}
             min={f.min}
@@ -187,7 +201,6 @@ export default class UserFilters extends React.Component {
 
   render() {
     const breakdown = this.props.editMode ? this.props.breakdownEdit : this.props.breakdown;
-
     return (
       <div style={[styles.base, this.props.styles]}>
         <Heading size="medium">
@@ -208,6 +221,12 @@ export default class UserFilters extends React.Component {
 
           {this.getSpecific()}
           {this.getActiveFiltersFromConfig()}
+          
+          <TagsFilter excludedTags={this.props.excludedTags}
+            tags={this.props.tags}
+            onTagClick={this.onTagClick.bind(this)}
+            onShowAll={this.onShowAllTags.bind(this)}
+            onShowOnly={this.onShowSpecificTag.bind(this)} />
         </div>
       </div>
     );
@@ -216,8 +235,8 @@ export default class UserFilters extends React.Component {
 
 const styles = {
   base: {
-    flex: '0 0 360px',
-    marginRight: 10
+    flex: '0 0 380px',
+    marginRight: 0
   },
   filters: {
     clear: 'both',
@@ -228,9 +247,13 @@ const styles = {
     // does not update on window.resize, but this is the best I could do
     // before running out of patience
   },
+  filterBase: {
+    padding: 20,
+    borderBottom: '1px solid #ddd'
+  },
   legend: {
-    padding: '10px 0',
-    fontSize: '12pt'
+    padding: '0',
+    fontSize: '11pt'
   },
   filterDropdown: {
     margin: '10px 0 10px 10px',

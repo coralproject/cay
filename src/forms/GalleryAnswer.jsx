@@ -1,6 +1,8 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import _ from 'lodash';
+import has from 'lodash/object/has';
+import isString from 'lodash/lang/isString';
+import isDate from 'lodash/lang/isDate';
 import moment from 'moment';
 import Trash from 'react-icons/lib/fa/trash';
 import Edit from 'react-icons/lib/fa/pencil-square';
@@ -8,13 +10,28 @@ import FaArrowCircleUp from 'react-icons/lib/fa/arrow-circle-up';
 import FaArrowCircleDown from 'react-icons/lib/fa/arrow-circle-down';
 
 import settings from 'settings';
+import GalleryAnswerMulti from 'forms/GalleryAnswerMulti';
+import GalleryAnswerDate from 'forms/GalleryAnswerDate';
+import GalleryAnswerNumber from 'forms/GalleryAnswerNumber';
+import GalleryAnswerText from 'forms/GalleryAnswerText';
 
 @Radium
 export default class GalleryAnswer extends React.Component {
 
   static propTypes = {
+    gallery: PropTypes.shape({
+      id: PropTypes.string.isRequired
+    }).isRequired,
+    position: PropTypes.number.isRequired,
     editAnswer: PropTypes.func.isRequired,
-    removeSubmission: PropTypes.func.isRequired
+    removeSubmission: PropTypes.func.isRequired,
+    answer: PropTypes.shape({
+      answer: PropTypes.shape({
+        props: PropTypes.object.isRequired
+      })
+    }).isRequired,
+    onMoveAnswerUp: PropTypes.func.isRequired,
+    onMoveAnswerDown: PropTypes.func.isRequired
   }
 
   editAnswer() {
@@ -27,45 +44,29 @@ export default class GalleryAnswer extends React.Component {
     this.props.removeSubmission(gallery.id, answer.submission_id, answer.answer_id);
   }
 
-  renderMultipleChoice(answer) {
-    const selectedIndexes = answer.answer.answer.options.map(o => o.index);
-    const options = answer.answer.props.options.map((option, key) => {
-      const selected = selectedIndexes.indexOf(key) !== -1;
-      return <li style={[styles.multiple.option, selected && styles.multiple.selected]} key={key}>{key + 1}. {option.title}</li>;
-    });
-
-    // check for Other answer
-    if (_.last(selectedIndexes) >= answer.answer.props.options.length) {
-      options.push(
-        <li
-          style={[styles.multiple.option, styles.multiple.other]}
-          key={_.last(selectedIndexes)}>
-          Other: {_.last(answer.answer.answer.options).title}
-        </li>
-      );
-    }
-
-    return <ul style={styles.multiple}>{options}</ul>;
-  }
-
   render() {
 
-    const { answer, gallery, identifiableIds, onMoveAnswerUp, onMoveAnswerDown, key } = this.props;
-    let multipleChoice;
+    const { answer, gallery, identifiableIds, onMoveAnswerUp, onMoveAnswerDown, position } = this.props;
+    let answerComponent;
 
-    if (_.has(answer, 'answer.props.multipleChoice') && answer.answer.props.multipleChoice) {
-      multipleChoice = this.renderMultipleChoice(answer);
-    }
-
-    let unedited = answer.answer.answer.value ? answer.answer.answer.value : answer.answer.answer.text;
-    let text = answer.answer.edited ? answer.answer.edited : unedited;
     const statusFlag = answer.answer.edited ? 'edited' : 'new';
 
-    // render as a formatted Date if possible
-    const possibleDateValue = new Date(text);
-    if (_.isString(answer.answer.answer.value) && _.isDate(possibleDateValue) && !isNaN(possibleDateValue)) {
-      text = moment(possibleDateValue).format('D MMM YYYY');
+    if (has(answer, 'answer.props.options') && Array.isArray(answer.answer.props.options)) {
+      answerComponent = <GalleryAnswerMulti answer={answer.answer} />;
+    } else if (typeof answer.answer.answer.value !== 'undefined') {
+
+      const possibleDateValue = new Date(answer.answer.answer.value);
+      if (isString(answer.answer.answer.value) && isDate(possibleDateValue) && !isNaN(possibleDateValue)) {
+        answerComponent = <GalleryAnswerDate answer={answer.answer} />;
+      } else {
+        answerComponent = <GalleryAnswerNumber answer={answer.answer} />;
+      }
+
+    } else {
+      answerComponent = <GalleryAnswerText answer={answer.answer} />;
     }
+
+
 
     if (!gallery) {
       return <p>Loading gallery...</p>;
@@ -85,33 +86,30 @@ export default class GalleryAnswer extends React.Component {
               </p>
             )
           }
-          {
-            multipleChoice
-            ? multipleChoice
-            : <p style={styles.answerText}>{text}</p>
-          }
+          {answerComponent}
         </div>
         <div style={styles.rightColumn}>
           <div style={styles.modButtons}>
             <div
+              className='trashButton'
               onClick={this.removeSubmission.bind(this)}
               style={styles.iconHolder}
               key="foo">
               <Trash style={styles.icon} />
             </div>
-            <div onClick={() => onMoveAnswerUp(key)}
+            <div onClick={() => onMoveAnswerUp(position)}
               style={styles.iconHolder} key="bar">
               <FaArrowCircleUp style={styles.icon} />
             </div>
             <div
-              onClick={() => onMoveAnswerDown(key)}
+              onClick={() => onMoveAnswerDown(position)}
               style={styles.iconHolder} key="baz">
               <FaArrowCircleDown style={styles.icon} />
             </div>
           </div>
           <div
+            className='editButton'
             style={styles.editButton}
-            category="info"
             size="small"
             onClick={this.editAnswer.bind(this)}>
             <Edit style={styles.icon} /> Edit
@@ -199,26 +197,5 @@ const styles = {
   modButtons: {
     textAlign: 'right',
     marginBottom: 10
-  },
-  multiple: {
-    option: {
-      width: '49%',
-      marginRight: '1%',
-      padding: 10,
-      display: 'inline-block',
-      marginBottom: 8,
-      borderRadius: 4,
-      backgroundColor: 'white',
-      border: '1px solid ' + settings.mediumGrey
-    },
-    selected: {
-      backgroundColor: settings.darkerGrey,
-      color: 'white'
-    },
-    other: {
-      width: '99%',
-      backgroundColor: settings.darkerGrey,
-      color: 'white'
-    }
   }
 };

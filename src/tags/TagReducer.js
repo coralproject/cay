@@ -1,17 +1,30 @@
+
+/**
+ * Import action names
+ */
+
 import * as tagsActions from 'tags/TagActions';
 import * as authActions from 'auth/AuthActions';
+import L from 'i18n';
 
 const types = Object.assign({}, tagsActions, authActions);
+
+/**
+ * Initial state
+ */
 
 const initialState = {
   loading: false,
   loadingTags: false,
-  authorized: window.localStorage.authorized || false,
+  authorized: localStorage.authorized || false,
   items: []
 };
 
-const tags = (state = initialState, action) => {
+/**
+ * Reducer
+ */
 
+export default (state = initialState, action) => {
   switch (action.type) {
 
   case types.TAG_REQUEST_STARTED:
@@ -36,15 +49,18 @@ const tags = (state = initialState, action) => {
       return {...state, loading: false, hasErrors: false, tags: tagsCopy };
     case 'list':
       return {...state, loading: false, loadingTags: false, hasErrors: false, tags: action.payload };
+    default:
+      return state;
     }
     break;
+
 
   case types.TAG_REQUEST_FAILURE:
     return {
       ...state,
       loadingTags: false,
       hasErrors: true,
-      errorMsg: `${window.L.t('Tag action failed')}: ${action.err}`
+      errorMsg: `${L.t('Tag action failed')}: ${action.err}`
     };
 
   // there's probably a better way to do this
@@ -59,11 +75,9 @@ const tags = (state = initialState, action) => {
 
   case types.RECEIVE_ALL_TAGS:
     return {...state, loadingTags: false, items: action.tags};
-
+    
   default:
     // console.log('no reducer matches:', action.type);
     return state;
   }
 };
-
-export default tags;

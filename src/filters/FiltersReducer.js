@@ -1,8 +1,22 @@
-import _ from 'lodash';
+
+/**
+ * Module dependencies
+ */
+
+import reduce from 'lodash/collection/reduce';
+import { getFiltersFromConfig } from 'filters/utils';
+
+/**
+ * Import action names
+ */
+
 import * as filterTypes from 'filters/FiltersActions';
 import * as searchTypes from 'search/SearchActions';
-
 const types = {...filterTypes, ...searchTypes};
+
+/**
+ * Initial state
+ */
 
 let initialState = {
   configLoaded: false,
@@ -11,8 +25,6 @@ let initialState = {
   sections: [],
   filterList: [],
   editFilterList: [],
-  editableSearchFilters: [],
-  loadingFilters: false,
   loadingUserList: false,
   loadingAuthors: false,
   loadingSections: false,
@@ -26,48 +38,18 @@ let initialState = {
   sortBy: null
 };
 
-const filters = (state = initialState, action) => {
+/**
+ * Reducer
+ */
+
+export default (state = initialState, action) => {
   switch (action.type) {
 
-  // this should run before any ReactDOM stuff happens
-  case types.DATA_CONFIG_LOADED:
-
-    const filterList = [];
-    const editFilterList = [];
-    const filters = action.config.filters.reduce((accum, filter, i) => {
-
-      const key = `filter${i}`;
-      const editableKey = `${key}Editable`;
-
-      const min = _.isUndefined(filter.minRange) ? null : filter.minRange;
-      const max = _.isUndefined(filter.maxRange) ? null : filter.maxRange;
-      const userMin = _.isNull(min) ? null : filter.minRange;
-      const userMax = _.isNull(max) ? null : filter.maxRange;
-
-      accum[key] = {...filter, min, max, userMin, userMax, key};
-      accum[editableKey] = {...accum[key], key: editableKey};
-
-      if (filter.type === 'intDateProximity') {
-        // "ago" filter does not load ranges from xenia yet.
-        accum[key] = {...filter, min: 0, userMin: 0, max: 10000, userMax: 10000, key};
-      }
-
-      filterList.push(key);
-      editFilterList.push(editableKey);
-
-      return accum;
-    }, {});
-
-    return {
-      ...state,
-      ...filters,
-      filterList,
-      editFilterList,
-      configLoaded: true
-    };
+  case types.FILTERS_CONFIG_LOADED:
+    const [filters, filterList, editFilterList ] = getFiltersFromConfig(action.config.filters);
+    return {...state, ...filters, filterList, editFilterList, configLoaded: true};
 
   case types.FILTER_CHANGED:
-
     const oldFilter = state[action.fieldName];
     const newFilter = {...oldFilter, ...action.data};
 
@@ -82,16 +64,16 @@ const filters = (state = initialState, action) => {
   case types.ALL_TAGS_REQUEST_ERROR:
     return {...state, loadingTags: false, tagError: `Failed to load tags ${action.err}`};
 
-  case types.REQUEST_SECTIONS:
+  case types.FETCH_SECTIONS_REQUEST:
     return {...state, loadingSections: true};
 
-  case types.RECEIVE_SECTIONS:
+  case types.FETCH_SECTIONS_SUCCESS:
     return {...state, sections: action.data.results[0].Docs };
 
-  case types.REQUEST_AUTHORS:
+  case types.FETCH_AUTHORS_REQUEST:
     return {...state, loadingAuthors: true};
 
-  case types.RECEIVE_AUTHORS:
+  case types.FETCH_AUTHORS_SUCCESS:
     return {...state, loadingAuthors: false, authors: action.data.results[0].Docs };
 
   case types.QUERYSET_RECEIVED:
@@ -103,19 +85,19 @@ const filters = (state = initialState, action) => {
   case types.SET_BREAKDOWN_EDIT:
     return {...state, breakdownEdit: action.breakdown};
 
-  case types.FETCH_DISTRIBUTIONS_SUCCESS:
-    return {...state, distributions: action.distros};
-
   case types.SET_SPECIFIC_BREAKDOWN:
     return {...state, specificBreakdown: action.specificBreakdown};
 
   case types.SET_SPECIFIC_BREAKDOWN_EDIT:
     return {...state, specificBreakdownEdit: action.specificBreakdown};
 
-  case types.RECEIVE_FILTER_RANGES:
 
-    const newFilters = _.reduce(action.data, (accum, filter, key) => {
-      accum[key] = _.assign({}, state[key], action.data[key]);
+  case types.FETCH_DISTRIBUTIONS_SUCCESS:
+    return {...state, distributions: action.distros};
+
+  case types.FETCH_FILTER_RANGES_SUCCESS:
+    const newFilters = reduce(action.data, (accum, filter, key) => {
+      accum[key] = Object.assign({}, state[key], action.data[key]);
       return accum;
     }, {});
 
@@ -129,12 +111,12 @@ const filters = (state = initialState, action) => {
     return {...state, ...action.filter};
 
   // a Saved Search was loaded from Pillar to be edited
-  case types.PILLAR_EDIT_SEARCH_SUCCESS:
+  case types.EDIT_SEARCH_SUCCESS:
     return {
       ...state,
       ...action.filters,
-      breakdown: action.breakdown,
-      specificBreakdown: action.specificBreakdown
+      breakdownEdit: action.breakdown,
+      specificBreakdownEdit: action.specificBreakdown
     };
 
   case types.SORT:
@@ -143,11 +125,9 @@ const filters = (state = initialState, action) => {
 
   case types.CLEAR_EDITABLE_FILTERS:
     // reset editable filters to their default state while a Saved Search is loading
-    return {...state, ...action.filters, breakdownEdit: 'all', specificBreakdownEdit: ''};
+    return {...state, ...action.filters, ...action.breakdowns};
 
   default:
     return state;
   }
 };
-
-export default filters;

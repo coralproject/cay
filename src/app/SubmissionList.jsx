@@ -1,3 +1,8 @@
+
+/**
+ * Module dependencies
+ */
+
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
@@ -13,6 +18,7 @@ import {
   updateFormStatus,
   fetchForm,
   updateForm,
+  updateFormSettings,
   updateOrder,
   updateSearch,
   updateFilterBy,
@@ -23,15 +29,20 @@ import SubmissionDetail from 'forms/SubmissionDetail';
 import FormChrome from 'app/layout/FormChrome';
 import Page from 'app/layout/Page';
 
+/**
+ * Export submission list component
+ */
+
 @connect(({ forms }) => ({ forms }))
 @Radium
 export default class SubmissionList extends Component {
   constructor(props) {
+    const { dispatch, params } = props;
     super(props);
-    props.dispatch(cleanSubmissionFilters());
-    props.dispatch(fetchForm(props.params.id));
-    props.dispatch(fetchGallery(props.params.id));
-    props.dispatch(fetchSubmissions(props.params.id));
+    dispatch(cleanSubmissionFilters());
+    dispatch(fetchForm(params.id));
+    dispatch(fetchGallery(params.id));
+    dispatch(fetchSubmissions(params.id));
   }
 
   sendToGallery(galleryId, subId, key) {
@@ -55,7 +66,7 @@ export default class SubmissionList extends Component {
   }
 
   updateInactive(value) {
-    this.props.dispatch(updateForm({ settings: { inactiveMessage: value } }));
+    this.props.dispatch(updateFormSettings({ inactiveMessage: value }));
   }
 
   onOrderChange(order) {
@@ -107,6 +118,7 @@ export default class SubmissionList extends Component {
             onBookmark={this.onBookmark.bind(this)}
             onSelect={this.onSubmissionSelect.bind(this)} />
           <SubmissionDetail
+            dispatch={this.props.dispatch}
             submission={submission}
             removeFromGallery={this.removeFromGallery.bind(this)}
             sendToGallery={this.sendToGallery.bind(this)}

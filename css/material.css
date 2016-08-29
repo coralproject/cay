@@ -22,3 +22,7 @@
 .mdl-button--accent.mdl-button--accent {
   color: rgb(246, 125, 111);
 }
+
+.mdl-dialog__title {
+  font-size: 1.2em;
+}

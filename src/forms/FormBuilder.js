@@ -21,7 +21,8 @@ import FaClose from 'react-icons/lib/fa/close';
 
 // Components
 import FormFieldsContainer from 'forms/FormFieldsContainer';
-import { Header, Sidebar } from 'forms/FormBuilderLayout';
+import FormBuilderSidebar from 'forms/FormBuilderSidebar';
+import { Header } from 'forms/FormBuilderLayout';
 
 
 @connect(({ app, forms }) => ({ app, forms }))
@@ -35,6 +36,7 @@ export default class FormBuilder extends Component {
     super(props);
     // An empty form with no changes is valid as 'saved'
     this.saved = true;
+    this.state = { openDialog: false }
   }
 
   markAsUnsaved() {
@@ -59,16 +61,20 @@ export default class FormBuilder extends Component {
     return (
       <div>
         <Header form={form} forms={forms} activeForm={activeForm}
-          onOpenPreview={onOpenPreview}
           onTitleChange={this.onFormTitleChange.bind(this)}
           onSaveClick={this.onSaveClick.bind(this)} />
         <div style={styles.builderContainer}>
-          <Sidebar form={form}
+          <FormBuilderSidebar
             create={!activeForm}
+            onOpenPreview={onOpenPreview}
+            onPublishOptions={this.onPublishOptions.bind(this)}
+            onSaveClick={this.onSaveClick.bind(this)}
             onFormStatusChange={this.onFormStatusChange.bind(this)}
             addToBottom={this.addToBottom.bind(this)}
             activeForm={activeForm}
-            app={app} />
+            openDialog={this.state.openDialog}
+            app={app}
+            />
           <FormFieldsContainer activeForm={ this.props.activeForm } markAsUnsaved={this.markAsUnsaved.bind(this)} />
           { preview
             ? <div>
@@ -114,6 +120,10 @@ export default class FormBuilder extends Component {
           this.props.dispatch(showFlashMessage('Uh-oh, we can\'t save your form. Try again or report the error to your technical team', 'warning', false));
         }
       });
+  }
+
+  onPublishOptions() {
+    this.setState({ openDialog: !this.state.openDialog });
   }
 
   onFormStatusChange(e) {

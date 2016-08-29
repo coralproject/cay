@@ -110,12 +110,22 @@ const ConfirmDialog = ({ show, formName, onConfirmClick, onCloseClick }) => show
   </div>
 ) : null;
 
-const formatForm = ({ header, stats, id, date_created }, index) =>
-({ name: header.title, description: header.description, submissions: stats.responses, date_created: date_created, copy: index, remove: index });
+const formatForm = ({ header, stats, id, date_created }, index) => {
+  return {
+    id,
+    name: header.title,
+    description: header.description,
+    submissions: stats.responses,
+    date_created,
+    copy: index,
+    remove: index
+  };
+};
+
 
 const FormTable = ({ loadingTags, forms, onRowClick, confirmDeletion, onCopyFormClick }) => (
   <DataTable style={styles.table} sortable rows={forms.map(formatForm)}>
-    <TableHeader cellFormatter={(n, r, i) => <span style={styles.name}  onClick={() => onRowClick(forms[i].id)}>{n}</span>} name="name">{ L.t('Name') }</TableHeader>
+    <TableHeader cellFormatter={(n, r, i) => <span style={styles.name} onClick={() => onRowClick(r.id)}>{n}</span>} name="name">{ L.t('Name') }</TableHeader>
     <TableHeader name="description">{ L.t('Description') }</TableHeader>
     <TableHeader sortFn={(a, b, asc) => asc ? b - a : a - b} cellFormatter={n => <span style={styles.submission}>{n}</span>} numeric name="submissions">{ L.t('Submissions') }</TableHeader>
     <TableHeader cellFormatter={date => moment(date).format('L')} name="date_created">{ L.t('Creation date') }</TableHeader>

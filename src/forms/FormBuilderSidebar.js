@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Spinner, IconButton, Button, Dialog, DialogContent, DialogTitle, Tabs, Tab, RadioGroup, Radio, Textfield } from 'react-mdl';
 
 import CopyToClipboard from 'react-copy-to-clipboard';
+import copy from 'copy-to-clipboard';
 
 import {
   updateForm,
@@ -12,6 +13,8 @@ import {
 
 import FieldTypeButton from 'forms/FieldTypeButton';
 import askTypes from 'forms/WidgetTypes';
+
+import Modal from 'components/modal/Modal';
 
 @connect(({ app, forms }) => ({ app, forms }))
 export default class FormBuilderSidebar extends Component {
@@ -97,9 +100,14 @@ export default class FormBuilderSidebar extends Component {
           </div>
 
           {activeForm ? (
-            <Dialog open={this.state.openDialog} style={{ width: 600 }}>
-              <DialogTitle>Publish Options</DialogTitle>
-              <DialogContent style={ styles.dialogContent }>
+            <Modal
+              noFooter
+              style={styles.publishModal}
+              title="Publish Options"
+              cancelAction={this.onPublishOptions.bind(this)}
+              isOpen={this.state.openDialog}>
+
+              <div style={ styles.dialogContent }>
 
                 <div>
                   <RadioGroup
@@ -174,7 +182,7 @@ export default class FormBuilderSidebar extends Component {
                   <h4 style={ styles.dialogSubTitle }>Standalone Form URL</h4>
                   <textarea className="standalone-form-url" readOnly style={styles.embedCode} value={this.createEmbed('standalone')}/>
                     <CopyToClipboard
-                      text={this.createEmbed('iframe')}
+                      text={this.createEmbed('standalone')}
                       onCopy={() => {
                         this.setState({standaloneCopied: true});
                         setTimeout(() => this.setState({standaloneCopied: false}), 5000);
@@ -188,10 +196,8 @@ export default class FormBuilderSidebar extends Component {
                     }
                 </div>
 
-                <IconButton style={ styles.closeButton } name="clear" onClick={this.onPublishOptions.bind(this)} />
-
-              </DialogContent>
-            </Dialog>
+              </div>
+            </Modal>
           ): null }
 
         </div>
@@ -253,5 +259,8 @@ const styles = {
   copied: {
     paddingLeft: '15px',
     color: '#0a0'
+  },
+  dialogContent: {
+    padding: 15
   }
 };

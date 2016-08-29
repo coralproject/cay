@@ -1,10 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { Spinner, IconButton, Button, Dialog, DialogContent, DialogTitle, Tabs, Tab, RadioGroup, Radio, Textfield } from 'react-mdl';
+import { Button, Tabs, Tab, RadioGroup, Radio, Textfield } from 'react-mdl';
+
+import Spinner from 'components/Spinner';
 
 import CopyToClipboard from 'react-copy-to-clipboard';
-import copy from 'copy-to-clipboard';
 
 import {
   updateForm,
@@ -82,7 +83,7 @@ export default class FormBuilderSidebar extends Component {
               style={{ width: 150 }}
               raised ripple accent
               onClick={onSaveClick}>
-              Save
+              { forms.savingForm ? <Spinner/> : null } Save
             </Button>
 
             {
@@ -96,7 +97,6 @@ export default class FormBuilderSidebar extends Component {
               : null
             }
 
-            { forms.savingForm ? <Spinner/> : null }
           </div>
 
           {activeForm ? (
@@ -130,6 +130,11 @@ export default class FormBuilderSidebar extends Component {
                       </div>
                     : null
                   }
+                  <Button
+                    raised ripple
+                    onClick={onSaveClick}>
+                    { forms.savingForm ? <Spinner/> : null } Apply
+                  </Button>
                 </div>
 
                 <div>

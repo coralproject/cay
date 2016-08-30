@@ -47,6 +47,9 @@ import Button from 'components/Button';
 import Modal from 'components/modal/Modal';
 
 import GalleryAnswer from 'forms/GalleryAnswer';
+import PublishOptions from 'forms/PublishOptions';
+
+import { showFlashMessage } from 'flashmessages/FlashMessagesActions';
 
 @connect(({app, forms}) => ({app, forms}))
 @Radium
@@ -270,6 +273,16 @@ export default class GalleryManager extends Component {
     this.props.dispatch(resetEditableTextToOriginal(ans));
   }
 
+  onSaveClick() {
+    this.props.dispatch(publishGallery(this.props.forms.activeForm)).then(() => {
+      if (this.props.forms.publishGalleryError) {
+        this.props.dispatch(showFlashMessage('Error publishing gallery to Elkhorn. Is Elkhorn running?', 'warning'));
+      } else {
+        this.props.dispatch(showFlashMessage('Your gallery saved.', 'success'));
+      }
+    });
+  }
+
   render() {
 
     const {forms} = this.props;
@@ -315,6 +328,7 @@ export default class GalleryManager extends Component {
                 value={forms.galleryOrientation}
                 onChange={this.updateOrientation.bind(this)} />
             </div>*/}
+            {/*
             <Button
               style={styles.modButton}
               onClick={this.togglePreview.bind(this)}
@@ -323,6 +337,7 @@ export default class GalleryManager extends Component {
               onClick={this.openPublishModal.bind(this)}
               style={styles.modButton}
               category="success"><Refresh /> Publish</Button>
+              */}
           </div>
           <hr style={styles.rule} />
           <div style={styles.container}>
@@ -357,9 +372,18 @@ export default class GalleryManager extends Component {
               })}
 
               </Card>
-              <div
-                style={styles.embedCodes}
-                onClick={this.openPublishModal.bind(this)}><Refresh /> Get embed codes</div>
+
+              <PublishOptions
+                 form={form}
+                 forms={forms}
+                 activeForm={forms.activeForm}
+                 onOpenPreview={this.togglePreview.bind(this)}
+                 onSaveClick={this.onSaveClick.bind(this)}
+                 scriptCode={this.createEmbed('script-tag')}
+                 iframeCode={this.createEmbed('iframe')}
+                 standaloneCode={this.createEmbed('standalone')}
+                />
+
             </div>
             <div style={styles.gallery}>
               {
@@ -414,59 +438,6 @@ export default class GalleryManager extends Component {
             : null
         }
 
-        {/* this is the Embed Code modal */}
-
-        <Modal
-          style={styles.publishModal}
-          title="Get embed codes"
-          isOpen={this.state.publishModalOpen}
-          confirmAction={this.closePublishModal.bind(this)}
-          cancelAction={this.closePublishModal.bind(this)}>
-            <div style={[
-              styles.successfulCopy,
-              {opacity: this.state.copied ? 1 : 0}
-            ]}>Copied!</div>
-          {
-            forms.publishGalleryError
-            ? <div style={styles.publishGalleryError}>Error publishing gallery to Elkhorn.<br/>Is Elkhorn running?</div>
-          : <div>
-              <p>Embed code</p>
-              <textarea style={styles.embedTextarea} value={this.createEmbed('script-tag')}></textarea>
-              <CopyToClipboard
-                text={this.createEmbed('script-tag')}
-                onCopy={() => {
-                  this.setState({copied: true});
-                  setTimeout(() => this.setState({copied: false}), 5000);
-                }}>
-                <Button style={styles.copyButton}> Copy <Clipboard /> </Button>
-              </CopyToClipboard>
-              <p style={{clear: 'both'}}>Embed code (with iframe)</p>
-              <textarea style={styles.embedTextarea} value={this.createEmbed('iframe')}></textarea>
-              <CopyToClipboard
-                text={this.createEmbed('iframe')}
-                onCopy={() => {
-                  this.setState({copied: true});
-                  setTimeout(() => this.setState({copied: false}), 5000);
-                }}>
-                <Button style={styles.copyButton}> Copy <Clipboard /> </Button>
-              </CopyToClipboard>
-              <p style={{clear: 'both'}}>Standalone link</p>
-              <input
-                type="text"
-                value={this.createEmbed('standalone')}
-                style={styles.standalone} />
-              <CopyToClipboard
-                text={this.createEmbed('standalone')}
-                onCopy={() => {
-                  this.setState({copied: true});
-                  setTimeout(() => this.setState({copied: false}), 5000);
-                }}>
-                <Button style={styles.copyButton}> Copy <Clipboard /> </Button>
-              </CopyToClipboard>
-            </div>
-          }
-        </Modal>
-
         <GalleryPreview
           {...forms}
           closePreview={this.closePreview.bind(this)}
@@ -518,7 +489,8 @@ const styles = {
   },
   sidebar: {
     flex: 1,
-    marginRight: 20
+    marginRight: 20,
+    width: 310
   },
   gallery: {
     flex: 3

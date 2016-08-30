@@ -123,8 +123,8 @@ export default class PublishOptions extends Component {
 
                 <div>
                   <h4 style={ styles.dialogSubTitle }>Embed options</h4>
-                  <Tabs activeTab={this.state.activeTab} onChange={(tabId) => this.setState({ activeTab: tabId })}>
-                    <Tab>With iframe</Tab>
+                  <Tabs tabBarProps={ { style: { justifyContent: 'flex-start' } } } activeTab={this.state.activeTab} onChange={(tabId) => this.setState({ activeTab: tabId })}>
+                    <Tab style={ { 'float': 'left' } }>With iframe</Tab>
                     <Tab>Without iframe</Tab>
                   </Tabs>
                   <section>
@@ -250,6 +250,6 @@ const styles = {
     color: '#0a0'
   },
   dialogContent: {
-    padding: 15
+    padding: 10
   }
 };

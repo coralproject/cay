@@ -11,8 +11,16 @@ import editWidgetStyles from 'forms/editors/editWidgetStyles';
 export default class TextFieldEditor extends Component {
 
   constructor(props) {
-    super(props);
-    this.state = { field: props.field, minLengthEnabled: props.field.props.minLength > 0, maxLengthEnabled: props.field.props.maxLength > 0 }
+    super(props)
+
+    this.state = {
+      field: props.field,
+      minLengthEnabled: props.field.props.minLength > 0,
+      maxLengthEnabled: props.field.props.maxLength > 0
+    }
+
+    this.onMinLengthChange = this.onMinLengthChange.bind(this)
+    this.onMinCharsChange = this.onMinCharsChange.bind(this)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -21,29 +29,11 @@ export default class TextFieldEditor extends Component {
     this.setState({ field: updatedField });
   }
 
-  onMinCharsChange(e) {
-    let { field } = this.state;
-    let updatedProps = Object.assign({}, field.props, { minLength: e.target.value });
-    let updatedField = Object.assign({}, field, { props: updatedProps });
-    this.props.onEditorChange(updatedField);
-  }
-
   onMaxCharsChange(e) {
     let { field } = this.state;
     let updatedProps = Object.assign({}, field.props, { maxLength: e.target.value });
     let updatedField = Object.assign({}, field, { props: updatedProps });
     this.props.onEditorChange(updatedField);
-  }
-
-  onMinLengthChange(e) {
-    this.setState({ minLengthEnabled: e.target.checked });
-    // Set to 0 if disabled
-    if (!e.target.checked) {
-      let { field } = this.state;
-      let updatedProps = Object.assign({}, field.props, { minLength: 0 });
-      let updatedField = Object.assign({}, field, { props: updatedProps });
-      this.props.onEditorChange(updatedField);
-    }
   }
 
   onMaxLengthChange(e) {
@@ -57,14 +47,64 @@ export default class TextFieldEditor extends Component {
     }
   }
 
+  onMinLengthChange(e) {
+    this.setState({
+      minLengthEnabled: e.target.checked
+    })
+
+    if (!e.target.checked) {
+      const { field } = this.state
+      const { onEditorChange } = this.props
+
+      onEditorChange({
+        ...field,
+        props: {
+          ...field.props,
+          minLength: 0
+        }
+      })
+    }
+  }
+
+  onMinCharsChange(e) {
+    const { field } = this.state
+    const { onEditorChange } = this.props
+
+    onEditorChange({
+      ...field,
+      props: {
+        ...field.props,
+        minLength: e.target.value
+      }
+    })
+  }
+
   render() {
-    let { field } = this.state;
+    let { field, minLengthEnabled } = this.state;
     return (
       <div>
-
         <div style={ styles.bottomOptions }>
-
           <div style={ styles.bottomOptionsLeft }>
+            <label style={ styles.bottomCheck }>
+              <input
+                type="checkbox"
+                checked={minLengthEnabled}
+                onChange={this.onMinLengthChange} />
+              <span
+                style={ [ styles.bottomLabelText, minLengthEnabled ? '' : styles.disabled ] } >
+                Min. chars
+              </span>
+              <input
+                onChange={this.onMinCharsChange}
+                defaultValue={ field.props.minLength || 0 }
+                type="number"
+                min="0"
+                step="1"
+                disabled={ !minLengthEnabled }
+                style={ [ styles.bottomCheckTextInput, !minLengthEnabled ? styles.disabled : '' ] } />
+            </label>
+
+
             {/*
             <label style={ styles.bottomCheck }>
               <input type="checkbox" checked={ this.state.minLengthEnabled } onChange={ this.onMinLengthChange.bind(this) } />

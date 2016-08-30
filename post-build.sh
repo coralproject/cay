@@ -7,3 +7,5 @@ cp ./public/favicon.ico ./dist/favicon.ico
 cp ./public/browserconfig.xml ./dist/browserconfig.xml
 cp ./public/manifest.json ./dist/manifest.json
 cp ./public/data_config.json ./dist/data_config.json
+cp ./public/material.min.js ./dist/material.min.js
+cp ./public/material.min.css ./dist/material.min.css

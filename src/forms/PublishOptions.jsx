@@ -64,12 +64,14 @@ export default class PublishOptions extends Component {
               </div>
             : null
           }
-          <Button
-            raised ripple
-            style={{ marginTop: 20 }}
-            onClick={onSaveClick}>
-            { forms.savingForm ? <Spinner/> : null } Apply
-          </Button>
+          <div style={ styles.rightAlignButtons }>
+            <Button
+              raised ripple
+              style={{ marginTop: 20 }}
+              onClick={onSaveClick}>
+              { forms.savingForm ? <Spinner/> : null } Apply
+            </Button>
+          </div>
         </div>
       : null
     );
@@ -84,14 +86,14 @@ export default class PublishOptions extends Component {
 
           <div>
             <Button
-              raised ripple
+              raised ripple primary
               onClick={onOpenPreview}
-              style={{ width: 150, marginRight: 10 }}>
+              style={{ width: 150, marginRight: 10, backgroundColor: '#4565A1' }}>
               Preview
             </Button>
             <Button
-              style={{ width: 150 }}
-              raised ripple accent
+              style={{ width: 150, backgroundColor: '#358D66' }}
+              raised ripple colored
               onClick={onSaveClick}>
               { forms.savingForm || forms.loadingGallery ? <Spinner/> : null } Save
             </Button>
@@ -99,7 +101,7 @@ export default class PublishOptions extends Component {
             {
               activeForm
               ? <Button
-                  style={{ width: 310, marginTop: 10 }}
+                  style={{ width: 310, marginTop: 10, backgroundColor: '#353B43' }}
                   raised ripple accent
                   onClick={this.togglePublishModal.bind(this)}>
                   Publish options
@@ -132,14 +134,16 @@ export default class PublishOptions extends Component {
                       this.state.activeTab == 0 ?
                         <div>
                           <textarea className="embed-code" readOnly style={styles.embedCode} value={iframeCode}/>
-                          <CopyToClipboard
-                            text={iframeCode}
-                            onCopy={() => {
-                              this.setState({embedCopied: true});
-                              setTimeout(() => this.setState({embedCopied: false}), 5000);
-                            }}>
-                            <Button raised>Copy</Button>
-                          </CopyToClipboard>
+                          <div style={ styles.rightAlignButtons }>
+                            <CopyToClipboard
+                              text={iframeCode}
+                              onCopy={() => {
+                                this.setState({embedCopied: true});
+                                setTimeout(() => this.setState({embedCopied: false}), 5000);
+                              }}>
+                              <Button raised>Copy</Button>
+                            </CopyToClipboard>
+                          </div>
                           {
                             this.state.embedCopied
                             ? <span style={ styles.copied }>Copied!</span>
@@ -149,14 +153,16 @@ export default class PublishOptions extends Component {
                       :
                         <div>
                           <textarea className="embed-code-iframe" readOnly style={styles.embedCode} value={scriptCode}/>
-                          <CopyToClipboard
-                            text={scriptCode}
-                            onCopy={() => {
-                              this.setState({embedCopied: true});
-                              setTimeout(() => this.setState({embedCopied: false}), 5000);
-                            }}>
-                            <Button raised>Copy</Button>
-                          </CopyToClipboard>
+                          <div style={ styles.rightAlignButtons }>
+                            <CopyToClipboard
+                              text={scriptCode}
+                              onCopy={() => {
+                                this.setState({embedCopied: true});
+                                setTimeout(() => this.setState({embedCopied: false}), 5000);
+                              }}>
+                              <Button raised>Copy</Button>
+                            </CopyToClipboard>
+                          </div>
                           {
                             this.state.embedCopied
                             ? <span style={ styles.copied }>Copied!</span>
@@ -170,14 +176,16 @@ export default class PublishOptions extends Component {
                 <div>
                   <h4 style={ styles.dialogSubTitle }>Standalone Form URL</h4>
                   <textarea className="standalone-form-url" readOnly style={styles.embedCode} value={standaloneCode}/>
-                    <CopyToClipboard
-                      text={standaloneCode}
-                      onCopy={() => {
-                        this.setState({standaloneCopied: true});
-                        setTimeout(() => this.setState({standaloneCopied: false}), 5000);
-                      }}>
-                      <Button raised>Copy</Button>
-                    </CopyToClipboard>
+                    <div style={ styles.rightAlignButtons }>
+                      <CopyToClipboard
+                        text={standaloneCode}
+                        onCopy={() => {
+                          this.setState({standaloneCopied: true});
+                          setTimeout(() => this.setState({standaloneCopied: false}), 5000);
+                        }}>
+                        <Button raised>Copy</Button>
+                      </CopyToClipboard>
+                    </div>
                     {
                       this.state.standaloneCopied
                       ? <span style={ styles.copied }>Copied!</span>
@@ -237,7 +245,7 @@ const styles = {
     resize: 'none'
   },
   dialogSubTitle: {
-    margin: '15px 0',
+    margin: '10px 0',
     fontWeight: 'bold'
   },
   closeButton: {
@@ -251,5 +259,8 @@ const styles = {
   },
   dialogContent: {
     padding: 10
+  },
+  rightAlignButtons: {
+    textAlign: 'right'
   }
 };

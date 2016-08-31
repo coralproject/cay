@@ -21,79 +21,19 @@ export default class TextAreaEditor extends Component {
     this.setState({ field: updatedField, minLengthEnabled: nextProps.field.props.minLength > 0, maxLengthEnabled: nextProps.field.props.maxLength > 0 });
   }
 
-  onMinCharsChange(e) {
-    let { field } = this.state;
-    let updatedProps = Object.assign({}, field.props, { minLength: e.target.value });
-    let updatedField = Object.assign({}, field, { props: updatedProps });
-    this.props.onEditorChange(updatedField);
-  }
 
-  onMaxCharsChange(e) {
-    let { field } = this.state;
-    let updatedProps = Object.assign({}, field.props, { maxLength: e.target.value });
-    let updatedField = Object.assign({}, field, { props: updatedProps });
-    this.props.onEditorChange(updatedField);
-  }
-
-  onMinLengthChange(e) {
-    this.setState({ minLengthEnabled: e.target.checked });
-    // Set to 0 if disabled
-    if (!e.target.checked) {
-      let { field } = this.state;
-      let updatedProps = Object.assign({}, field.props, { minLength: 0 });
-      let updatedField = Object.assign({}, field, { props: updatedProps });
-      this.props.onEditorChange(updatedField);
-    }
-  }
-
-  onMaxLengthChange(e) {
-    this.setState({ maxLengthEnabled: e.target.checked });
-    // Set to 0 if disabled
-    if (!e.target.checked) {
-      let { field } = this.state;
-      let updatedProps = Object.assign({}, field.props, { maxLength: 0 });
-      let updatedField = Object.assign({}, field, { props: updatedProps });
-      this.props.onEditorChange(updatedField);
-    }
-  }
 
   render() {
     let { field } = this.state;
     return (
       <div>
-
         <div style={ styles.bottomOptions }>
-
           <div style={ styles.bottomOptionsLeft }>
-            {/*
-            <label style={ styles.bottomCheck }>
-              <input type="checkbox" checked={ this.state.minLengthEnabled } onChange={ this.onMinLengthChange.bind(this) } />
-              <span style={ [ this.state.minLengthEnabled ? '' : styles.disabled ] }>Min. chars</span>
-              <input
-                onChange={ this.onMinCharsChange.bind(this) }
-                defaultValue={ field.props.minLength || 0 }
-                type="number"
-                disabled={ !this.state.minLengthEnabled }
-                style={ [ styles.bottomCheckTextInput, !this.state.minLengthEnabled ? styles.disabled : '' ] }></input>
-            </label>
-
-            <label style={ styles.bottomCheck }>
-              <input type="checkbox" checked={ this.state.maxLengthEnabled } onChange={ this.onMaxLengthChange.bind(this) } />
-              <span style={ [ this.state.maxLengthEnabled ? '' : styles.disabled ] }>Max. chars</span>
-              <input
-                onChange={ this.onMaxCharsChange.bind(this) }
-                defaultValue={ field.props.maxLength || 0 }
-                type="number"
-                disabled={ !this.state.maxLengthEnabled }
-                style={ [ styles.bottomCheckTextInput, !this.state.maxLengthEnabled ? styles.disabled : '' ] }></input>
-            </label>
-            */}
           </div>
-
-          <CommonFieldOptions {...this.props} />
-
+          <CommonFieldOptions
+            {...this.props}
+          />
         </div>
-
       </div>
     );
   }

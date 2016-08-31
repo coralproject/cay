@@ -199,7 +199,15 @@ export default class FormField extends Component {
 
         <div style={ styles.bottomButtons }>
           <button className="field-close-button" style={ styles.cancelButton } onClick={ this.onCancelClick.bind(this) }><FaClose /> Cancel</button>
-          <button className="field-close-button save-button" style={ styles.saveButton } onClick={ this.onSaveClick.bind(this) }><FaFloppyO /> Save</button>
+          <button
+            className="field-close-button save-button"
+            style={ styles.saveButton }
+            onClick={ this.onSaveClick.bind(this) }
+            disabled={ field.error }
+          >
+            <FaFloppyO />
+            Save
+          </button>
         </div>
 
       </div>

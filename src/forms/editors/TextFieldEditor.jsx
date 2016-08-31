@@ -77,7 +77,7 @@ export default class TextFieldEditor extends Component {
     }
   }
   render() {
-    let { field, minLengthEnabled, maxLengthEnabled } = this.state;
+    let { field, minLengthEnabled, maxLengthEnabled } = this.state
     return (
       <div>
         {

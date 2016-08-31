@@ -53,14 +53,14 @@ export default class TextFieldEditor extends Component {
     delete field.props[prop]
   }
   handleInputChange(e, prop) {
-    let append = {};
-    append[prop] = Number(e.target.value);
-    this.extendFieldProps(append)
+    this.extendFieldProps({
+      [prop]: Number(e.target.value)
+    })
   }
   handleCheckboxChange(e, prop) {
-    let extendState = {}
-    extendState[prop + `Enabled`] = e.target.checked
-    this.setState(extendState)
+    this.setState({
+      [`${prop}Enabled`]: e.target.checked
+    })
 
     if (!e.target.checked) {
       this.deleteFieldProp(prop)
@@ -80,6 +80,11 @@ export default class TextFieldEditor extends Component {
     let { field, minLengthEnabled, maxLengthEnabled } = this.state;
     return (
       <div>
+        {
+          field.props.minLength > field.props.maxLength
+            ? <span style={ [styles.error] }> {`Min Length can't be greater than Max Length`} </span>
+            : null
+        }
         <div style={styles.bottomOptions}>
           <div style={styles.bottomOptionsLeft}>
             <CheckInput
@@ -88,8 +93,6 @@ export default class TextFieldEditor extends Component {
               handleCheckbox={ (e) => this.handleCheckboxChange(e, 'minLength') }
               handleInput={ (e) => this.handleInputChange(e, 'minLength') }
               defaultValue={field.props.minLength}
-              error={field.props.minLength > field.props.maxLength}
-              errorMsg="Min Length can't be greater than Max Length"
             />
             <CheckInput
               label={'Max. Chars'}
@@ -109,6 +112,11 @@ export default class TextFieldEditor extends Component {
 }
 
 const styles = {
+  error: {
+    color: 'red',
+    display: 'block',
+    fontSize: '12px'
+  },
   page: {
     backgroundColor: '#F7F7F7'
   },

@@ -7,7 +7,12 @@ import React, { Component } from 'react';
 import Radium from 'radium';
 import { connect } from 'react-redux';
 
-import { copyForm, createEmpty, updateForm } from 'forms/FormActions';
+import {
+  copyForm,
+  createEmpty,
+  updateForm,
+  updateFormSettings
+ } from 'forms/FormActions';
 import { showFlashMessage } from 'flashmessages/FlashMessagesActions';
 import Page from 'app/layout/Page';
 import FormBuilder from 'forms/FormBuilder.js';
@@ -34,11 +39,12 @@ export default class FormCreate extends Component {
   }
 
   updateFormStatus(status) {
-    this.props.dispatch(updateForm({ status, settings: { isActive: status === 'open' } }));
+    this.props.dispatch(updateForm({status}));
+    this.props.dispatch(updateFormSettings({ isActive: status === 'open' }));
   }
 
   updateInactive(value) {
-    this.props.dispatch(updateForm({ settings: { inactiveMessage: value } }));
+    this.props.dispatch(updateFormSettings({ inactiveMessage: value }));
   }
 
   render() {
@@ -83,7 +89,7 @@ export default class FormCreate extends Component {
     })
     .then(() => formCreate.setState({ preview: true }))
     .catch(() => formCreate.props
-      .dispatch(showFlashMessage('Uh-oh, we can\'t preview your form. Try again or report the error to your technical team', 'warning')));
+      .dispatch(showFlashMessage('Uh-oh, we can\'t preview your form. Try again or report the error to your technical team', 'warning', false)));
   }
 }
 

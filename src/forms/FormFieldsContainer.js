@@ -1,13 +1,19 @@
 import React, { Component, PropTypes } from 'react';
 import {connect} from 'react-redux';
-import { appendWidget, moveWidget, deleteWidget, duplicateWidget, updateForm } from 'forms/FormActions';
+import {
+  appendWidget,
+  moveWidget,
+  deleteWidget,
+  duplicateWidget,
+  updateFormHeader,
+  updateFormFooter,
+  updateFormFinishedScreen
+} from 'forms/FormActions';
 import uuid from 'node-uuid';
 import { Checkbox } from 'react-mdl';
 
 import { DropTarget } from 'react-dnd';
 import Tooltip from 'react-tooltip';
-
-import { grey } from 'settings';
 
 import FaQuestionCircle from 'react-icons/lib/fa/question-circle';
 
@@ -55,35 +61,21 @@ export default class FormFieldsContainer extends Component {
   // TODO: Refactor: All this methods look very similar, maybe generalize into one?
 
   onFormHeadingChange(e) {
-    let form = this.getForm();
     this.props.markAsUnsaved();
-    this.props.dispatch(updateForm({
-      header: {
-        ...form.header,
-        heading: e.target.value
-      }
-    }));
+    this.props.dispatch(updateFormHeader({ heading: e.target.value }));
   }
 
   onFormDescriptionChange(e) {
-    let form = this.getForm();
     this.props.markAsUnsaved();
-    this.props.dispatch(updateForm({
-      header: {
-        ...form.header,
-        description: e.target.value
-      }
-    }));
+    this.props.dispatch(updateFormHeader({ description: e.target.value }));
   }
 
   onThankYouDescriptionChange(e) {
     let form = this.getForm();
     this.props.markAsUnsaved();
-    this.props.dispatch(updateForm({
-      finishedScreen: {
-        title: form.finishedScreen.title,
-        description: e.target.value
-      }
+    this.props.dispatch(updateFormFinishedScreen({
+      title: form.finishedScreen.title,
+      description: e.target.value
     }));
   }
 
@@ -102,11 +94,7 @@ export default class FormFieldsContainer extends Component {
 
   onConditionsChange(e) {
     this.props.markAsUnsaved();
-    this.props.dispatch(updateForm({
-      footer: {
-        conditions: e.target.value
-      }
-    }));
+    this.props.dispatch(updateFormFooter({ conditions: e.target.value }));
   }
 
   onDelete(position, e) {
@@ -159,16 +147,16 @@ export default class FormFieldsContainer extends Component {
     const form = this.props.activeForm ? forms[this.props.activeForm] : forms.form;
     return (
       <div style={ styles.fieldsListContainer }>
-        <input onChange={ this.onFormHeadingChange.bind(this) } style={ styles.headLine } type="text" placeholder={ "Write a headline" } defaultValue={ form.header.heading } />
+        <input className="form-headline" onChange={ this.onFormHeadingChange.bind(this) } style={ styles.headLine } type="text" placeholder={ "Write a headline" } defaultValue={ form.header.heading } />
         {
           this.state.showTitleIsRequired ?
             <p style={ styles.titleIsRequired }>Title is required</p>
           :
             null
         }
-        <textarea onChange={ this.onFormDescriptionChange.bind(this) } style={ styles.description } placeholder={ "Write instructions and a description for the form below" } defaultValue={ form.header.description } />
+        <textarea className="form-description" onChange={ this.onFormDescriptionChange.bind(this) } style={ styles.description } placeholder={ "Write instructions and a description for the form below" } defaultValue={ form.header.description } />
 
-        <div style={ styles.fieldsList }>
+        <div style={ styles.fieldsList } className="widgets-container">
 
           {
             // Render form fields

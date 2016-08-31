@@ -1,62 +1,17 @@
 
 import React from 'react';
-import FieldTypeButton from 'forms/FieldTypeButton';
-import FaFloppyO from 'react-icons/lib/fa/floppy-o';
-import FaEye from 'react-icons/lib/fa/eye';
-import FaExternalLink from 'react-icons/lib/fa/external-link';
-import askTypes from 'forms/WidgetTypes';
-import Spinner from 'components/Spinner';
-import Button from 'components/Button';
 
 export const Header = ({ onTitleChange, form, forms, onSaveClick, onOpenPreview }) => (
   <div style={ styles.formHeader }>
     <div style={ styles.titleAndMeta }>
       <input onChange={onTitleChange} style={styles.headLine} type="text"
-        placeholder={ "Write a title" } defaultValue={ form.header.title } />
+        placeholder={ "Write a title" } defaultValue={ form.header.title }
+        className="form-title" />
     </div>
-    <div style={ styles.formActions }>
-      <Button
-        onClick={onOpenPreview}
-        category="brand"
-        style={styles.topButton}>
-        <FaEye style={styles.topButtonicon} />{` Preview `}
-      </Button>
-      <Button
-        onClick={onSaveClick}
-        category="success"
-        style={styles.topButton}>
-        { forms.savingForm ? <Spinner/> : <FaFloppyO /> }{` Save `}
-      </Button>
+    <div style={ styles.formActions } className="form-actions">
     </div>
   </div>
 );
-
-export const Sidebar = ({ app, form, activeForm }) => {
-  return (
-    <div style={styles.leftPan}>
-      <div style={styles.leftContainer}>
-        <h4 style={styles.leftContainerTitle}>Question Fields</h4>
-        <div style={styles.typeList}>
-          {askTypes.map((type, i) => (
-            <FieldTypeButton key={ i } field={ type } />
-          ))}
-        </div>
-        {activeForm ? (
-          <div style={styles.embedContainer}>
-            <h4 style={styles.leftContainerTitle}>Embed codes</h4>
-            <p>Embed code</p>
-            <textarea readOnly style={styles.embedCode} value={`<div id="ask-form"></div><script src="${form.settings.baseUrl}${activeForm}.js"></script>`}/>
-            <p>Embed code (iframe)</p>
-            <textarea readOnly style={styles.embedCode} value={`<iframe width="100%" height="580" src="${form.settings.baseUrl}${activeForm}.html"></iframe>`}/>
-            <a href={ `${form.settings.baseUrl}${activeForm}.html` } target="_blank" style={ styles.formSettingsAction }>
-              <FaExternalLink /> Standalone Form
-            </a>
-          </div>
-        ): null }
-      </div>
-    </div>
-  );
-};
 
 const styles = {
   leftPan: {

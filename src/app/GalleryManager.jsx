@@ -7,6 +7,7 @@ import {
   fetchSubmissions,
   removeFromGallery,
   updateForm,
+  updateFormSettings,
   updateFormStatus,
   updateEditableAnswer,
   updateGalleryOrientation,
@@ -206,7 +207,7 @@ export default class GalleryManager extends Component {
   }
 
   updateInactive(value) {
-    this.props.dispatch(updateForm({ settings: { inactiveMessage: value } }));
+    this.props.dispatch(updateFormSettings({ inactiveMessage: value }));
   }
 
   openPublishModal() {
@@ -222,6 +223,8 @@ export default class GalleryManager extends Component {
   createEmbed(type) {
     const {forms} = this.props;
     const gallery = forms[forms.activeGallery];
+    if (!gallery) return;
+
     switch (type) {
     case 'script-tag':
       return `<script src="${gallery.config.baseUrl}${forms.activeGallery}.js"></script><div id="ask-gallery" />`;

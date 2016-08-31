@@ -21,7 +21,7 @@ export default class FormFieldPlaceHolder extends Component {
   render() {
     return (
       this.props.connectDropTarget(
-        <div style={ styles.padder }>
+        <div style={ styles.padder } className="widget">
           {
             this.props.isOver
               ? <div style={ styles.dropPlaceHolderActive }></div>
@@ -42,16 +42,16 @@ export default class FormFieldPlaceHolder extends Component {
 
 const styles = {
   dropPlaceHolder: {
-    minHeight: '70px',
+    minHeight: '50px',
     background: '#eee',
     borderRadius: '4px',
     transition: 'background .3s'
   },
   dropPlaceHolderActive: {
     border: '1px dashed #111',
-    minHeight: '70px',
+    minHeight: '50px',
     background: '#aaccbb',
-    padding: '30px',
+    padding: '25px',
     borderRadius: '4px',
     transition: 'background .3s'
   },
@@ -62,7 +62,7 @@ const styles = {
     border: '1px dashed #111'
   },
   padder: {
-    minHeight: '80px',
+    minHeight: '50px',
     paddingBottom: '10px'
   }
 };

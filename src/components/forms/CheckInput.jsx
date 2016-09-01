@@ -1,16 +1,17 @@
 import React, { PropTypes } from 'react'
 import Radium from 'radium'
-import { Checkbox } from 'react-mdl';
 
 const CheckInput = ({ label, enabled, handleCheckbox, handleInput, defaultValue }) => (
-  <label style={styles.bottomCheck}>
-    <Checkbox
-      label={label}
-      ripple
+  <label style={styles.bottomCheck} >
+    <input
+      type="checkbox"
       checked={enabled}
       onChange={handleCheckbox}
       defaultValue={enabled}
     />
+    <span style={ [ styles.bottomLabelText, enabled ? '' : styles.disabled ] }>
+      {label}
+    </span>
     <input
       onChange={handleInput}
       defaultValue={defaultValue}
@@ -41,10 +42,11 @@ const styles = {
     backgroundColor: '#F7F7F7'
   },
   bottomCheck: {
-    display: 'block',
-    padding: '10px 10px 10px 0',
+    display: 'inline-block',
+    padding: '10px 0',
     cursor: 'pointer',
-    lineHeight: '30px'
+    lineHeight: '30px',
+    fontSize: '13px'
   },
   bottomOptions: {
     display: 'flex',
@@ -58,7 +60,7 @@ const styles = {
     flexGrow: '1'
   },
   bottomCheckTextInput: {
-    display: 'inline-block',
+    display: 'inline',
     borderTop: 'none',
     borderLeft: 'none',
     borderRight: 'none',

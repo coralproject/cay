@@ -76,7 +76,8 @@ const styles = {
     display: 'inline-block',
     padding: '10px 0 10px 10px',
     cursor: 'pointer',
-    lineHeight: '30px'
+    lineHeight: '30px',
+    fontSize: '13px'
   },
   bottomOptionsRight: {
     textAlign: 'right',

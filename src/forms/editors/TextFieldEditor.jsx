@@ -85,7 +85,7 @@ export default class TextFieldEditor extends Component {
     }
   }
   render() {
-    const { handleMinInput, handleMaxInput, props, state } = this;
+    const { handleMinInput, handleMaxInput, props, state } = this
     const { field } = props
     const { minLengthEnabled, maxLengthEnabled, error } = state
 

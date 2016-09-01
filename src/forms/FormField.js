@@ -1,5 +1,6 @@
-import React, {Component, PropTypes} from 'react';
-import { connect } from 'react-redux';
+import React, {Component, PropTypes} from 'react'
+import { connect } from 'react-redux'
+import Radium from 'radium'
 
 // Icons
 import FaTrash from 'react-icons/lib/fa/trash';
@@ -30,6 +31,7 @@ import askTypes from 'forms/WidgetTypes';
   isDragging: forms.isDragging,
   widgets: forms.widgets
 }))
+@Radium
 export default class FormField extends Component {
   static propTypes = {
     field: PropTypes.object.isRequired,
@@ -199,7 +201,15 @@ export default class FormField extends Component {
 
         <div style={ styles.bottomButtons }>
           <button className="field-close-button" style={ styles.cancelButton } onClick={ this.onCancelClick.bind(this) }><FaClose /> Cancel</button>
-          <button className="field-close-button save-button" style={ styles.saveButton } onClick={ this.onSaveClick.bind(this) }><FaFloppyO /> Save</button>
+          <button
+            className="field-close-button save-button"
+            style={ [ styles.saveButton, field.error ? styles.saveButton.disabled : null ] }
+            onClick={ this.onSaveClick.bind(this) }
+            disabled={ field.error ? 'disabled' : '' }
+          >
+            <FaFloppyO />
+            Save
+          </button>
         </div>
 
       </div>
@@ -319,7 +329,10 @@ export const styles = {
     textAlign: 'center',
     cursor: 'pointer',
     padding: '0 20px',
-    marginLeft: '10px'
+    marginLeft: '10px',
+    disabled: {
+      background: 'grey'
+    }
   },
   cancelButton: {
     fontSize: '11pt',

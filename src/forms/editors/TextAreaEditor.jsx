@@ -16,27 +16,22 @@ export default class TextAreaEditor extends Component {
     this.state = {
       field: props.field,
       minLengthEnabled: props.field.props.minLength > 0,
-      maxLengthEnabled: props.field.props.maxLength > 0
+      maxLengthEnabled: props.field.props.maxLength > 0,
+      error: false
     }
+
+    this.handleCheckboxChange = this.handleCheckboxChange.bind(this)
+    this.handleInputChange = this.handleInputChange.bind(this)
+    this.handleMaxInput = this.handleMaxInput.bind(this)
+    this.handleMinInput = this.handleMinInput.bind(this)
   }
   componentWillReceiveProps(nextProps) {
     let { field } = this.state;
     let updatedField = Object.assign({}, field, nextProps.field);
     this.setState({ field: updatedField, minLengthEnabled: nextProps.field.props.minLength > 0, maxLengthEnabled: nextProps.field.props.maxLength > 0 });
   }
-  extendField(attrs){
-    const { field } = this.state
-    const { onEditorChange } = this.props
-
-    onEditorChange({
-      ...field,
-      ...attrs
-    })
-  }
   extendFieldProps(attrs){
-    const { field } = this.state
-    const { onEditorChange } = this.props
-
+    const { field, onEditorChange } = this.props
     onEditorChange({
       ...field,
       props: {
@@ -46,12 +41,44 @@ export default class TextAreaEditor extends Component {
     })
   }
   deleteFieldProp(prop) {
-    const { field } = this.state
-    delete field.props[prop]
+    const { field, onEditorChange } = this.props
+    const { [prop]:v, ...props } = field.props
+    onEditorChange({
+      ...field,
+      props
+    })
   }
-  handleInputChange(e, prop) {
+  handleInputChange(value, prop) {
     this.extendFieldProps({
-      [prop]: Number(e.target.value)
+      [prop]: Number(value)
+    })
+  }
+  handleMaxInput(e) {
+    const maxValue = e.target.value;
+    const { minLength } = this.props.field.props
+    const { minLengthEnabled, maxLengthEnabled } = this.state
+    const error = minLengthEnabled && maxLengthEnabled && maxValue < minLength
+
+    if (!error) {
+      this.handleInputChange(maxValue, 'maxLength')
+    }
+
+    this.setState({
+      error: error
+    })
+  }
+  handleMinInput(e) {
+    const minValue = e.target.value;
+    const { maxLength } = this.props.field.props
+    const { minLengthEnabled, maxLengthEnabled } = this.state
+    const error = minLengthEnabled && maxLengthEnabled && minValue > maxLength
+
+    if (!error) {
+      this.handleInputChange(minValue, 'minLength')
+    }
+
+    this.setState({
+      error: error
     })
   }
   handleCheckboxChange(e, prop) {
@@ -63,39 +90,32 @@ export default class TextAreaEditor extends Component {
       this.deleteFieldProp(prop)
     }
   }
-  handleError(error) {
-    const { field } = this.state
-    if (error) {
-      this.extendField({
-        error: true
-      })
-    } else {
-      delete field.error
-    }
-  }
   render() {
-    let { field, minLengthEnabled, maxLengthEnabled } = this.state;
+    const { handleMinInput, handleMaxInput, props, state } = this;
+    const { field } = props
+    const { minLengthEnabled, maxLengthEnabled, error } = state
+
     return (
       <div>
         {
-          field.props.minLength > field.props.maxLength
-            ? <span style={ [styles.error] }> {`Min Length can't be greater than Max Length`} </span>
+          error
+            ? <span style={ [styles.error] }> {`Min. Chars can't be greater than Max. Chars`} </span>
             : null
         }
-        <div style={ styles.bottomOptions }>
+        <div style={styles.bottomOptions}>
           <div style={styles.bottomOptionsLeft}>
             <CheckInput
               label={'Min. Chars'}
               enabled={minLengthEnabled}
               handleCheckbox={ (e) => this.handleCheckboxChange(e, 'minLength') }
-              handleInput={ (e) => this.handleInputChange(e, 'minLength') }
+              handleInput={handleMinInput}
               defaultValue={field.props.minLength}
             />
             <CheckInput
               label={'Max. Chars'}
               enabled={maxLengthEnabled}
               handleCheckbox={ (e) => this.handleCheckboxChange(e, 'maxLength') }
-              handleInput={ (e) => this.handleInputChange(e, 'maxLength')}
+              handleInput={handleMaxInput}
               defaultValue={field.props.maxLength}
             />
           </div>
@@ -110,6 +130,11 @@ export default class TextAreaEditor extends Component {
 }
 
 const styles = {
+  error: {
+    color: 'red',
+    display: 'block',
+    fontSize: '12px'
+  },
   page: {
     backgroundColor: '#F7F7F7'
   },

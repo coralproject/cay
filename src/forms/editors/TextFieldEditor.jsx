@@ -24,13 +24,6 @@ export default class TextFieldEditor extends Component {
     this.handleMaxInput = this.handleMaxInput.bind(this)
     this.handleMinInput = this.handleMinInput.bind(this)
   }
-  extendField(attrs){
-    const { field, onEditorChange } = this.props
-    onEditorChange({
-      ...field,
-      ...attrs
-    })
-  }
   extendFieldProps(attrs){
     const { field, onEditorChange } = this.props
     onEditorChange({

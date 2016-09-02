@@ -265,6 +265,8 @@ export const styles = {
   arrowContainer: {
     position: 'absolute',
     top: '8px',
+    paddingLeft: 15,
+    background: 'linear-gradient(to right, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 10%,rgba(255,255,255,1) 100%)',
     right: '20px'
   },
   arrow: {

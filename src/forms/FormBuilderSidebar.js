@@ -21,12 +21,21 @@ import Modal from 'components/modal/Modal';
 export default class FormBuilderSidebar extends Component {
 
   constructor(props) {
-    super(props);
-    this.state = { openDialog: false, formStatus: 'closed' };
+    super(props)
+
+    this.state = {
+      openDialog: false,
+      formStatus: 'closed',
+      activeTab: 0
+    }
+
+    this.setActiveTab = this.setActiveTab.bind(this)
   }
 
   onPublishOptions() {
-    this.setState({ openDialog: !this.state.openDialog });
+    this.setState({
+      openDialog: !this.state.openDialog
+    })
   }
 
   onFormStatusChange(e) {
@@ -57,10 +66,17 @@ export default class FormBuilderSidebar extends Component {
     }
   }
 
+  setActiveTab(tab) {
+    this.setState({
+      activeTab: tab
+    })
+  }
+
   render() {
 
     const { preview, onClosePreview, onOpenPreview, forms, activeForm, app, onSaveClick } = this.props;
     const form = activeForm ? forms[activeForm] : forms.form;
+    const { activeTab } = this.state;
 
     return (
       <div style={styles.leftPan}>
@@ -99,16 +115,16 @@ export default class FormBuilderSidebar extends Component {
 
           </div>
 
-          {activeForm ? (
+          {
+            activeForm ? (
             <Modal
               noFooter
               style={styles.publishModal}
               title="Publish Options"
               cancelAction={this.onPublishOptions.bind(this)}
-              isOpen={this.state.openDialog}>
-
+              isOpen={this.state.openDialog}
+            >
               <div style={ styles.dialogContent }>
-
                 <div>
                   <h4 style={ styles.dialogSubTitle }>Set form status</h4>
                   <RadioGroup
@@ -141,13 +157,37 @@ export default class FormBuilderSidebar extends Component {
 
                 <div>
                   <h4 style={ styles.dialogSubTitle }>Embed options</h4>
-                  <Tabs activeTab={this.state.activeTab} onChange={(tabId) => this.setState({ activeTab: tabId })}>
+                  <Tabs
+                    activeTab={activeTab}
+                    onChange={this.setActiveTab}
+                  >
                     <Tab>With iframe</Tab>
                     <Tab>Without iframe</Tab>
                   </Tabs>
                   <section>
                     {
-                      this.state.activeTab == 0 ?
+                      activeTab === 0 ?
+                        <div>
+                          <textarea className="embed-code-iframe" readOnly style={styles.embedCode} value={this.createEmbed('iframe')}/>
+                          <CopyToClipboard
+                            text={this.createEmbed('iframe')}
+                            onCopy={() => {
+                              this.setState({embedCopied: true});
+                              setTimeout(() => this.setState({embedCopied: false}), 5000);
+                            }}>
+                            <Button raised>Copy</Button>
+                          </CopyToClipboard>
+                          {
+                            this.state.embedCopied
+                              ? <span style={ styles.copied }>Copied!</span>
+                              : null
+                          }
+                        </div>
+                        : null
+                    }
+
+                    {
+                      activeTab === 1 ?
                         <div>
                           <textarea className="embed-code" readOnly style={styles.embedCode} value={this.createEmbed('script-tag')}/>
                           <CopyToClipboard
@@ -164,23 +204,7 @@ export default class FormBuilderSidebar extends Component {
                             : null
                           }
                         </div>
-                      :
-                        <div>
-                          <textarea className="embed-code-iframe" readOnly style={styles.embedCode} value={this.createEmbed('iframe')}/>
-                          <CopyToClipboard
-                            text={this.createEmbed('iframe')}
-                            onCopy={() => {
-                              this.setState({embedCopied: true});
-                              setTimeout(() => this.setState({embedCopied: false}), 5000);
-                            }}>
-                            <Button raised>Copy</Button>
-                          </CopyToClipboard>
-                          {
-                            this.state.embedCopied
-                            ? <span style={ styles.copied }>Copied!</span>
-                            : null
-                          }
-                        </div>
+                      : null
                     }
                   </section>
                 </div>
@@ -202,11 +226,9 @@ export default class FormBuilderSidebar extends Component {
                       : null
                     }
                 </div>
-
               </div>
             </Modal>
           ): null }
-
         </div>
       </div>
     );

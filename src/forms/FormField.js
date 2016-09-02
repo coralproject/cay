@@ -1,6 +1,7 @@
-import React, {Component, PropTypes} from 'react'
-import { connect } from 'react-redux'
-import Radium from 'radium'
+import React, {Component, PropTypes} from 'react';
+import { connect } from 'react-redux';
+import Radium from 'radium';
+import cloneDeep from 'lodash/lang/cloneDeep';
 
 // Icons
 import FaTrash from 'react-icons/lib/fa/trash';
@@ -42,11 +43,7 @@ export default class FormField extends Component {
   constructor(props, context) {
     super(props, context);
     // fieldBackup is used to restore params when clicking Cancel
-    this.state = { 'expanded': props.autoExpand, field: props.field, fieldBackup: props.field };
-  }
-
-  componentWillReceiveProps(nextProps) {
-    this.setState({ field: nextProps.field, fieldBackup: nextProps.field });
+    this.state = { 'expanded': props.autoExpand, field: cloneDeep(props.field), fieldBackup: cloneDeep(props.field) };
   }
 
   toggleExpanded() {
@@ -139,7 +136,7 @@ export default class FormField extends Component {
     const identityMark = field.identity ? <span style={ styles.identityLabel }><FaUser/></span> : null;
 
     return (
-      <div className={field.component + ' ' + id} style={ styles.fieldContainer(!this.props.isDragging && this.state.expanded) } key={ id }>
+      <div className={`${field.component} ${id}`} style={ styles.fieldContainer(!this.props.isDragging && this.state.expanded) } key={ id }>
         <div style={ styles.fieldPosition }>{ position + 1 }</div>
         <div style={ styles.fieldIcon }><FieldIcon /></div>
         <div style={ styles.fieldContents }>
@@ -174,7 +171,6 @@ export default class FormField extends Component {
 
   renderExpanded() {
     const { field } = this.state;
-    const { id } = this.props;
 
     return  (
       <div className="widget-expanded" style={ styles.editSettingsPanel } onKeyUp={ this.onKeyUp.bind(this) }>

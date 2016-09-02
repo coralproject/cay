@@ -149,7 +149,12 @@ const formCreated = form => ({ type: FORM_CREATED, form });
 const formCreationFailure = error => ({ type: FORM_CREATION_FAILURE, error });
 
 const requestGallery = () => ({ type: FETCH_FORM_GALLERY_REQUEST });
-const receivedGallery = gallery => ({ type: FETCH_FORM_GALLERY_SUCCESS, gallery });
+const receivedGallery = gallery => {
+  if (!Array.isArray(gallery.config.identifiableIds)) {
+    gallery.config.identifiableIds = [];
+  }
+  return { type: FETCH_FORM_GALLERY_SUCCESS, gallery };
+};
 const galleryRequestError = error => ({ type: FETCH_FORM_GALLERY_FAILURE, error });
 
 const answerRemovedFromGallery = gallery => ({

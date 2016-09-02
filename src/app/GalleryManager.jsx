@@ -84,17 +84,18 @@ export default class GalleryManager extends Component {
     return (
       <div>
         <div style={styles.galleryTitle}>
-          <TextField
+          <input
+            style={styles.galleryTitles}
+            type="text"
             value={gallery.headline}
-            onChange={this.setHeadline.bind(this)}
-            style={styles.galleryTitles}
-            label="Write a headline (optional)" />
+            placeholder="Headline"
+            onChange={this.setHeadline.bind(this)} />
           <br />
-          <TextField
-            value={gallery.description}
-            onChange={this.setDescription.bind(this)}
+          <input
             style={styles.galleryTitles}
-            label="Write description for the gallery (optional)" />
+            type="text"
+            placeholder="Description"
+            onChange={this.setDescription.bind(this)} />
         </div>
         {gallery.answers.map((answer, i) => (
           <GalleryAnswer
@@ -237,12 +238,12 @@ export default class GalleryManager extends Component {
     }
   }
 
-  setHeadline(title) {
-    this.props.dispatch(updateGalleryTitle(title));
+  setHeadline(e) {
+    this.props.dispatch(updateGalleryTitle(e.target.value));
   }
 
-  setDescription(description) {
-    this.props.dispatch(updateGalleryDesc(description));
+  setDescription(e) {
+    this.props.dispatch(updateGalleryDesc(e.target.value));
   }
 
   togglePreview() {
@@ -527,7 +528,7 @@ const styles = {
     marginLeft: 10
   },
   galleryTitle: {
-
+    marginBottom: 15
   },
   rule: {
     borderTop: 'none',
@@ -542,9 +543,13 @@ const styles = {
     right: 20
   },
   galleryTitles: {
+    borderRadius: 4,
+    border: '1px solid ' + settings.mediumGrey,
     width: '75%',
-    marginBottom: 15,
-    marginTop: -25
+    padding: 10,
+    height: '100%',
+    fontSize: '18px',
+    display: 'block'
   },
   orientationOpts: {
     display: 'inline-block',

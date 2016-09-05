@@ -115,7 +115,7 @@ export default class MultipleChoiceEditor extends Component {
                   }
                 }
               }
-              style={ styles.optionInput } type="text" value={ option.title } onChange={ this.updateOption.bind(this, i) } />
+              style={ styles.optionInput } type="text" placeholder={ option.title } onChange={ this.updateOption.bind(this, i) } />
           </div>
 
           {/* Action buttons for an option */}

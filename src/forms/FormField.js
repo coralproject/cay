@@ -52,6 +52,7 @@ export default class FormField extends Component {
     this.onDescriptionChange = this.onDescriptionChange.bind(this)
     this.onCancelClick = this.onCancelClick.bind(this)
     this.onSaveClick = this.onSaveClick.bind(this)
+    this.onKeyUp = this.onKeyUp.bind(this)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -110,13 +111,8 @@ export default class FormField extends Component {
   }
 
   onKeyUp(e) {
-    switch (e.keyCode) {
-    case 13: // ENTER
-      this.onSaveClick();
-      break;
-    case 27: // ESCAPE
+    if (e.keyCode === 27) {
       this.onCancelClick();
-      break;
     }
   }
 
@@ -185,9 +181,9 @@ export default class FormField extends Component {
     const { field } = this.state;
     const { id } = this.props;
 
-    const { onTitleChange, onDescriptionChange, onCancelClick, onSaveClick } = this
+    const { onTitleChange, onDescriptionChange, onCancelClick, onSaveClick, onKeyUp } = this
     return  (
-      <div className="widget-expanded" style={ styles.editSettingsPanel } onKeyUp={ this.onKeyUp.bind(this) }>
+      <div className="widget-expanded" style={ styles.editSettingsPanel } onKeyUp={onKeyUp}>
 
         <div style={ styles.titleAndDescription }>
           <input

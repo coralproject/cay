@@ -5,7 +5,7 @@ export const Header = ({ onTitleChange, form, forms, onSaveClick, onOpenPreview 
   <div style={ styles.formHeader }>
     <div style={ styles.titleAndMeta }>
       <input onChange={onTitleChange} style={styles.headLine} type="text"
-        placeholder={ "Write a title" } defaultValue={ form.header.title }
+        placeholder={ "Write a form name for internal use" } defaultValue={ form.header.title }
         className="form-title" />
     </div>
     <div style={ styles.formActions } className="form-actions">

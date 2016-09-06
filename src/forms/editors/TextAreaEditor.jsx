@@ -14,9 +14,8 @@ export default class TextAreaEditor extends Component {
     super(props)
 
     this.state = {
-      field: props.field,
-      minLengthEnabled: props.field.props.minLength > 0,
-      maxLengthEnabled: props.field.props.maxLength > 0,
+      minLengthEnabled: props.field.props.minLength >= 0,
+      maxLengthEnabled: props.field.props.maxLength >= 0,
       error: false
     }
 
@@ -24,11 +23,6 @@ export default class TextAreaEditor extends Component {
     this.handleInputChange = this.handleInputChange.bind(this)
     this.handleMaxInput = this.handleMaxInput.bind(this)
     this.handleMinInput = this.handleMinInput.bind(this)
-  }
-  componentWillReceiveProps(nextProps) {
-    let { field } = this.state;
-    let updatedField = Object.assign({}, field, nextProps.field);
-    this.setState({ field: updatedField, minLengthEnabled: nextProps.field.props.minLength > 0, maxLengthEnabled: nextProps.field.props.maxLength > 0 });
   }
   extendFieldProps(attrs){
     const { field, onEditorChange } = this.props
@@ -88,6 +82,8 @@ export default class TextAreaEditor extends Component {
 
     if (!e.target.checked) {
       this.deleteFieldProp(prop)
+    } else {
+      this.handleInputChange(0, prop)
     }
   }
   render() {

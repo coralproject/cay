@@ -176,8 +176,8 @@ export default class FormField extends Component {
 
   renderExpanded() {
     const { field } = this.state;
-
     const { onTitleChange, onDescriptionChange, onCancelClick, onSaveClick, onKeyUp } = this;
+
     return  (
       <div className="widget-expanded" style={ styles.editSettingsPanel } onKeyUp={onKeyUp}>
 

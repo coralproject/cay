@@ -6,7 +6,6 @@ import {
   fetchGallery,
   fetchSubmissions,
   removeFromGallery,
-  updateForm,
   updateFormSettings,
   updateFormStatus,
   updateEditableAnswer,
@@ -55,6 +54,19 @@ export default class GalleryManager extends Component {
   constructor(props) {
     super(props);
     this.state = {publishModalOpen: false, previewOpen: false};
+    this.setHeadline = this.setHeadline.bind(this);
+    this.setDescription = this.setDescription.bind(this);
+    this.removeSubmission = this.removeSubmission.bind(this);
+    this.beginEditAnswer = this.beginEditAnswer.bind(this);
+    this.updateFormStatus = this.updateFormStatus.bind(this);
+    this.updateInactive = this.updateInactive.bind(this);
+    this.togglePreview = this.togglePreview.bind(this);
+    this.openPublishModal = this.openPublishModal.bind(this);
+    this.updatePlacement = this.updatePlacement.bind(this);
+    this.cancelEdit = this.cancelEdit.bind(this);
+    this.updateEditableAnswer = this.updateEditableAnswer.bind(this);
+    this.closePublishModal = this.closePublishModal.bind(this);
+    this.closePreview = this.closePreview.bind(this);
   }
 
   componentWillMount() {
@@ -84,23 +96,24 @@ export default class GalleryManager extends Component {
     return (
       <div>
         <div style={styles.galleryTitle}>
-          <TextField
+          <input
+            style={styles.galleryTitles}
+            type="text"
             value={gallery.headline}
-            onChange={this.setHeadline.bind(this)}
-            style={styles.galleryTitles}
-            label="Write a headline (optional)" />
+            placeholder="Headline"
+            onChange={this.setHeadline} />
           <br />
-          <TextField
-            value={gallery.description}
-            onChange={this.setDescription.bind(this)}
+          <input
             style={styles.galleryTitles}
-            label="Write description for the gallery (optional)" />
+            type="text"
+            placeholder="Description"
+            onChange={this.setDescription} />
         </div>
         {gallery.answers.map((answer, i) => (
           <GalleryAnswer
             key={i}
-            removeSubmission={this.removeSubmission.bind(this)}
-            editAnswer={this.beginEditAnswer.bind(this)}
+            removeSubmission={this.removeSubmission}
+            editAnswer={this.beginEditAnswer}
             answer={answer}
             gallery={gallery}
             identifiableIds={gallery.config.identifiableIds || []}
@@ -237,12 +250,12 @@ export default class GalleryManager extends Component {
     }
   }
 
-  setHeadline(title) {
-    this.props.dispatch(updateGalleryTitle(title));
+  setHeadline(e) {
+    this.props.dispatch(updateGalleryTitle(e.target.value));
   }
 
-  setDescription(description) {
-    this.props.dispatch(updateGalleryDesc(description));
+  setDescription(e) {
+    this.props.dispatch(updateGalleryDesc(e.target.value));
   }
 
   togglePreview() {
@@ -298,8 +311,8 @@ export default class GalleryManager extends Component {
       <Page>
         <FormChrome
           activeTab="gallery"
-          updateStatus={this.updateFormStatus.bind(this)}
-          updateInactive={this.updateInactive.bind(this)}
+          updateStatus={this.updateFormStatus}
+          updateInactive={this.updateInactive}
           form={form}
           submissions={submissions}
           gallery={gallery} />
@@ -317,10 +330,10 @@ export default class GalleryManager extends Component {
             </div>*/}
             <Button
               style={styles.modButton}
-              onClick={this.togglePreview.bind(this)}
+              onClick={this.togglePreview}
               category="brand"><Eye /> Preview</Button>
             <Button
-              onClick={this.openPublishModal.bind(this)}
+              onClick={this.openPublishModal}
               style={styles.modButton}
               category="success"><Refresh /> Publish</Button>
           </div>
@@ -336,7 +349,7 @@ export default class GalleryManager extends Component {
                   value={gallery.config.placement}
                   options={placementOpts}
                   clearable={false}
-                  onChange={this.updatePlacement.bind(this)} />
+                  onChange={this.updatePlacement} />
 
                 <p style={[
                   styles.includeLabel,
@@ -359,7 +372,7 @@ export default class GalleryManager extends Component {
               </Card>
               <div
                 style={styles.embedCodes}
-                onClick={this.openPublishModal.bind(this)}><Refresh /> Get embed codes</div>
+                onClick={this.openPublishModal}><Refresh /> Get embed codes</div>
             </div>
             <div style={styles.gallery}>
               {
@@ -378,7 +391,7 @@ export default class GalleryManager extends Component {
             ? <div style={styles.replyModal}>
               <div style={styles.replyModal.container}>
                 <div
-                  onClick={this.cancelEdit.bind(this)}
+                  onClick={this.cancelEdit}
                   key="closebutton"
                   style={styles.replyModal.close}>×</div>
                 <p style={styles.replyModal.heading}>Edit Submission</p>
@@ -391,7 +404,7 @@ export default class GalleryManager extends Component {
                   <div style={styles.replyModal.rightPanel}>
                     <p style={styles.replyModal.subhead}>Edit</p>
                     <textarea
-                      onChange={this.updateEditableAnswer.bind(this)}
+                      onChange={this.updateEditableAnswer}
                       style={styles.replyModal.editText}
                       value={forms.editableAnswer}></textarea>
                     {this.renderIdentityAnswers(ans, forms.editablePii)}
@@ -400,7 +413,7 @@ export default class GalleryManager extends Component {
                         key="resetButton"
                         onClick={this.resetText.bind(this, ans)}
                         style={styles.replyModal.resetButton}>Reset Changes</p>
-                      <Button onClick={this.cancelEdit.bind(this)}><Times /> Cancel</Button>
+                      <Button onClick={this.cancelEdit}><Times /> Cancel</Button>
                       <Button
                         onClick={this.confirmEdit.bind(this, ans)}
                         category="success"
@@ -420,8 +433,8 @@ export default class GalleryManager extends Component {
           style={styles.publishModal}
           title="Get embed codes"
           isOpen={this.state.publishModalOpen}
-          confirmAction={this.closePublishModal.bind(this)}
-          cancelAction={this.closePublishModal.bind(this)}>
+          confirmAction={this.closePublishModal}
+          cancelAction={this.closePublishModal}>
             <div style={[
               styles.successfulCopy,
               {opacity: this.state.copied ? 1 : 0}
@@ -469,7 +482,7 @@ export default class GalleryManager extends Component {
 
         <GalleryPreview
           {...forms}
-          closePreview={this.closePreview.bind(this)}
+          closePreview={this.closePreview}
           open={this.state.previewOpen} />
 
       </Page>
@@ -527,7 +540,7 @@ const styles = {
     marginLeft: 10
   },
   galleryTitle: {
-
+    marginBottom: 15
   },
   rule: {
     borderTop: 'none',
@@ -542,9 +555,13 @@ const styles = {
     right: 20
   },
   galleryTitles: {
+    borderRadius: 4,
+    border: '1px solid ' + settings.mediumGrey,
     width: '75%',
-    marginBottom: 15,
-    marginTop: -25
+    padding: 10,
+    height: '100%',
+    fontSize: '18px',
+    display: 'block'
   },
   orientationOpts: {
     display: 'inline-block',

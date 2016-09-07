@@ -43,7 +43,17 @@ export default class FormField extends Component {
   constructor(props, context) {
     super(props, context);
     // fieldBackup is used to restore params when clicking Cancel
-    this.state = { 'expanded': props.autoExpand, field: cloneDeep(props.field), fieldBackup: cloneDeep(props.field) };
+    this.state = {
+      expanded: props.autoExpand,
+      field: cloneDeep(props.field),
+      fieldBackup: cloneDeep(props.field)
+    };
+
+    this.onTitleChange = this.onTitleChange.bind(this);
+    this.onDescriptionChange = this.onDescriptionChange.bind(this);
+    this.onCancelClick = this.onCancelClick.bind(this);
+    this.onSaveClick = this.onSaveClick.bind(this);
+    this.onKeyUp = this.onKeyUp.bind(this);
   }
 
   toggleExpanded() {
@@ -98,13 +108,8 @@ export default class FormField extends Component {
   }
 
   onKeyUp(e) {
-    switch (e.keyCode) {
-    case 13: // ENTER
-      this.onSaveClick();
-      break;
-    case 27: // ESCAPE
+    if (e.keyCode === 27) {
       this.onCancelClick();
-      break;
     }
   }
 
@@ -172,13 +177,14 @@ export default class FormField extends Component {
   renderExpanded() {
     const { field } = this.state;
 
+    const { onTitleChange, onDescriptionChange, onCancelClick, onSaveClick, onKeyUp } = this;
     return  (
-      <div className="widget-expanded" style={ styles.editSettingsPanel } onKeyUp={ this.onKeyUp.bind(this) }>
+      <div className="widget-expanded" style={ styles.editSettingsPanel } onKeyUp={onKeyUp}>
 
         <div style={ styles.titleAndDescription }>
           <input
             className="field-title"
-            onChange={ this.onTitleChange.bind(this) }
+            onChange={onTitleChange}
             style={ styles.fieldTitle }
             defaultValue={ field.title }
             type="text"
@@ -186,7 +192,7 @@ export default class FormField extends Component {
             autoFocus={ true } />
           <input
             className="field-description"
-            onChange={ this.onDescriptionChange.bind(this) }
+            onChange={onDescriptionChange}
             defaultValue={ field.description }
             style={ styles.fieldDescription }
             type="text"
@@ -196,11 +202,11 @@ export default class FormField extends Component {
         { this.getFieldEditor() }
 
         <div style={ styles.bottomButtons }>
-          <button className="field-close-button" style={ styles.cancelButton } onClick={ this.onCancelClick.bind(this) }><FaClose /> Cancel</button>
+          <button className="field-close-button" style={ styles.cancelButton } onClick={onCancelClick}><FaClose /> Cancel</button>
           <button
             className="field-close-button save-button"
             style={ [ styles.saveButton, field.error ? styles.saveButton.disabled : null ] }
-            onClick={ this.onSaveClick.bind(this) }
+            onClick={onSaveClick}
             disabled={ field.error ? 'disabled' : '' }
           >
             <FaFloppyO />

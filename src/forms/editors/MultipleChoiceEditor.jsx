@@ -150,7 +150,7 @@ export default class MultipleChoiceEditor extends Component {
             field.props.otherAllowed ?
               <div style={ styles.optionRow }>
                 <div style={ styles.optionRowText }>
-                  <input style={ styles.optionInput } type="text" defaultValue="Other:" value={ field.props.otherText } onChange={ this.onOtherTextChange.bind(this) } />
+                  <input style={ styles.optionInput } type="text" placeholder="Other:" value={ field.props.otherText } onChange={ this.onOtherTextChange.bind(this) } />
                 </div>
                 <div style={ styles.optionRowButtons }>
                   &nbsp;

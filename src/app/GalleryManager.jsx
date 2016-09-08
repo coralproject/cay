@@ -451,62 +451,6 @@ export default class GalleryManager extends Component {
             : null
         }
 
-<<<<<<< HEAD
-=======
-        {/* this is the Embed Code modal */}
-
-        <Modal
-          style={styles.publishModal}
-          title="Get embed codes"
-          isOpen={this.state.publishModalOpen}
-          confirmAction={this.closePublishModal}
-          cancelAction={this.closePublishModal}>
-            <div style={[
-              styles.successfulCopy,
-              {opacity: this.state.copied ? 1 : 0}
-            ]}>Copied!</div>
-          {
-            forms.publishGalleryError
-            ? <div style={styles.publishGalleryError}>Error publishing gallery to Elkhorn.<br/>Is Elkhorn running?</div>
-          : <div>
-              <p>Embed code</p>
-              <textarea style={styles.embedTextarea} value={this.createEmbed('script-tag')}></textarea>
-              <CopyToClipboard
-                text={this.createEmbed('script-tag')}
-                onCopy={() => {
-                  this.setState({copied: true});
-                  setTimeout(() => this.setState({copied: false}), 5000);
-                }}>
-                <Button style={styles.copyButton}> Copy <Clipboard /> </Button>
-              </CopyToClipboard>
-              <p style={{clear: 'both'}}>Embed code (with iframe)</p>
-              <textarea style={styles.embedTextarea} value={this.createEmbed('iframe')}></textarea>
-              <CopyToClipboard
-                text={this.createEmbed('iframe')}
-                onCopy={() => {
-                  this.setState({copied: true});
-                  setTimeout(() => this.setState({copied: false}), 5000);
-                }}>
-                <Button style={styles.copyButton}> Copy <Clipboard /> </Button>
-              </CopyToClipboard>
-              <p style={{clear: 'both'}}>Standalone link</p>
-              <input
-                type="text"
-                value={this.createEmbed('standalone')}
-                style={styles.standalone} />
-              <CopyToClipboard
-                text={this.createEmbed('standalone')}
-                onCopy={() => {
-                  this.setState({copied: true});
-                  setTimeout(() => this.setState({copied: false}), 5000);
-                }}>
-                <Button style={styles.copyButton}> Copy <Clipboard /> </Button>
-              </CopyToClipboard>
-            </div>
-          }
-        </Modal>
-
->>>>>>> master
         <GalleryPreview
           {...forms}
           closePreview={this.closePreview}

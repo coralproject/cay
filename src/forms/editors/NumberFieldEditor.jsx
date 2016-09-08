@@ -6,94 +6,119 @@ import CommonFieldOptions from 'forms/CommonFieldOptions';
 
 import editWidgetStyles from 'forms/editors/editWidgetStyles';
 
+import CheckInput from '../../components/forms/CheckInput'
+
 @connect(({ forms, app }) => ({ forms, app }))
 @Radium
 export default class NumberFieldEditor extends Component {
-
   constructor(props) {
     super(props);
-    this.state = { field: props.field, minValueEnabled: props.field.props.minValue > 0, maxValueEnabled: props.field.props.maxValue > 0 }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    let { field } = this.state;
-    let updatedField = Object.assign({}, field, nextProps.field);
-    this.setState({ field: updatedField });
-  }
-
-  onMinValueChange(e) {
-    let { field } = this.state;
-    let updatedProps = Object.assign({}, field.props, { minValue: e.target.value });
-    let updatedField = Object.assign({}, field, { props: updatedProps });
-    this.props.onEditorChange(updatedField);
-  }
-
-  onMaxValueChange(e) {
-    let { field } = this.state;
-    let updatedProps = Object.assign({}, field.props, { maxValue: e.target.value });
-    let updatedField = Object.assign({}, field, { props: updatedProps });
-    this.props.onEditorChange(updatedField);
-  }
-
-  onMinValueCheckChange(e) {
-    this.setState({ minValueEnabled: e.target.checked });
-    // Set to 0 if disabled
-    if (!e.target.checked) {
-      let { field } = this.state;
-      let updatedProps = Object.assign({}, field.props, { minValue: 0 });
-      let updatedField = Object.assign({}, field, { props: updatedProps });
-      this.props.onEditorChange(updatedField);
+    this.state = {
+      field: props.field,
+      minValueEnabled: props.field.props.minValue > 0,
+      maxValueEnabled: props.field.props.maxValue > 0,
+      error: false
     }
-  }
 
-  onMaxValueCheckChange(e) {
-    this.setState({ maxValueEnabled: e.target.checked });
-    // Set to 0 if disabled
+    this.handleCheckboxChange = this.handleCheckboxChange.bind(this)
+    this.handleInputChange = this.handleInputChange.bind(this)
+    this.handleMaxInput = this.handleMaxInput.bind(this)
+    this.handleMinInput = this.handleMinInput.bind(this)
+  }
+  extendFieldProps(attrs){
+    const { field, onEditorChange } = this.props
+    onEditorChange({
+      ...field,
+      props: {
+        ...field.props,
+        ...attrs
+      }
+    })
+  }
+  deleteFieldProp(prop) {
+    const { field, onEditorChange } = this.props
+    const { [prop]:v, ...props } = field.props
+    onEditorChange({
+      ...field,
+      props
+    })
+  }
+  handleInputChange(value, prop) {
+    this.extendFieldProps({
+      [prop]: Number(value)
+    })
+  }
+  handleMaxInput(e) {
+    const maxValue = e.target.value;
+    const { minValue } = this.props.field.props
+    const { minValueEnabled, maxValueEnabled } = this.state
+    const error = minValueEnabled && maxValueEnabled && maxValue < minValue
+
+    if (!error) {
+      this.handleInputChange(maxValue, 'maxValue')
+    }
+
+    this.setState({
+      error: error
+    })
+  }
+  handleMinInput(e) {
+    const minValue = e.target.value;
+    const { maxValue } = this.props.field.props
+    const { minValueEnabled, maxValueEnabled } = this.state
+    const error = minValueEnabled && maxValueEnabled && minValue > maxValue
+
+    if (!error) {
+      this.handleInputChange(minValue, 'minValue')
+    }
+
+    this.setState({
+      error: error
+    })
+  }
+  handleCheckboxChange(e, prop) {
+    this.setState({
+      [`${prop}Enabled`]: e.target.checked
+    })
+
     if (!e.target.checked) {
-      let { field } = this.state;
-      let updatedProps = Object.assign({}, field.props, { maxValue: 0 });
-      let updatedField = Object.assign({}, field, { props: updatedProps });
-      this.props.onEditorChange(updatedField);
+      this.deleteFieldProp(prop)
     }
   }
 
   render() {
-    let { field } = this.state;
+    const { handleMinInput, handleMaxInput, props, state } = this
+    const { field } = props
+    const { minValueEnabled, maxValueEnabled, error } = state
+
     return (
       <div>
-
+        {
+          error
+            ? <span style={ [styles.error] }> {`Min. Value can't be greater than Max. Value`} </span>
+            : null
+        }
         <div style={ styles.bottomOptions }>
-
-          <div style={ styles.bottomOptionsLeft }>
-            {/*
-            <label style={ styles.bottomCheck }>
-              <input type="checkbox" checked={ this.state.minValueEnabled } onChange={ this.onMinValueCheckChange.bind(this) } />
-              <span style={ [ this.state.minValueEnabled ? '' : styles.disabled ] }>Min. value</span>
-              <input
-                onChange={ this.onMinValueChange.bind(this) }
-                defaultValue={ field.props.minValue || 0 }
-                type="number"
-                disabled={ !this.state.minValueEnabled }
-                style={ [ styles.bottomCheckTextInput, !this.state.minValueEnabled ? styles.disabled : '' ] }></input>
-            </label>
-
-            <label style={ styles.bottomCheck }>
-              <input type="checkbox" checked={ this.state.maxValueEnabled } onChange={ this.onMaxValueCheckChange.bind(this) } />
-              <span style={ [ this.state.maxValueEnabled ? '' : styles.disabled ] }>Max. value</span>
-              <input
-                onChange={ this.onMaxValueChange.bind(this) }
-                defaultValue={ field.props.maxValue || 0 }
-                type="number"
-                disabled={ !this.state.maxValueEnabled }
-                style={ [ styles.bottomCheckTextInput, !this.state.maxValueEnabled ? styles.disabled : '' ] }></input>
-            </label>
-            */}
+          <div style={styles.bottomOptionsLeft}>
+            <CheckInput
+              label={'Min. Value'}
+              enabled={minValueEnabled}
+              handleCheckbox={ (e) => this.handleCheckboxChange(e, 'minValue') }
+              handleInput={handleMinInput}
+              defaultValue={field.props.minValue}
+            />
+            <CheckInput
+              label={'Max. Value'}
+              enabled={maxValueEnabled}
+              handleCheckbox={ (e) => this.handleCheckboxChange(e, 'maxValue') }
+              handleInput={handleMaxInput}
+              defaultValue={field.props.maxValue}
+            />
           </div>
-
-          <CommonFieldOptions {...this.props} />
-
+          <CommonFieldOptions
+            {...this.props}
+          />
         </div>
-
       </div>
     );
   }
@@ -101,6 +126,11 @@ export default class NumberFieldEditor extends Component {
 }
 
 const styles = {
+  error: {
+    color: 'red',
+    display: 'block',
+    fontSize: '12px'
+  },
   page: {
     backgroundColor: '#F7F7F7'
   },

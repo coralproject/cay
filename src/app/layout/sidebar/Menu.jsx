@@ -55,7 +55,7 @@ const TopMenu = ({ features }) => (
 
 const BottomMenu = ({ open, onToggleSidebar }) => (
   <ul>
-    <MenuItem name="Report bug / Give Feedback" externalLink={true} target="https://thecoralproject.net/contribute.html#other-ideas-and-bug-reports"
+    <MenuItem name="Report bug / Give Feedback" externalLink={true} target="https://coralproject.net/contribute.html#other-ideas-and-bug-reports"
       icon={<FaBug />} />
     <MenuItem name="Collapse menu" target='#' onClick={stopAndBubble(onToggleSidebar)}
       icon={open ? <FaAngleDoubleLeft /> : <FaAngleDoubleRight />} />

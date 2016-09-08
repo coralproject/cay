@@ -22,12 +22,21 @@ import PublishOptions from 'forms/PublishOptions';
 export default class FormBuilderSidebar extends Component {
 
   constructor(props) {
-    super(props);
-    this.state = { openDialog: false, formStatus: 'closed' };
+    super(props)
+
+    this.state = {
+      openDialog: false,
+      formStatus: 'closed',
+      activeTab: 0
+    }
+
+    this.setActiveTab = this.setActiveTab.bind(this)
   }
 
   onPublishOptions() {
-    this.setState({ openDialog: !this.state.openDialog });
+    this.setState({
+      openDialog: !this.state.openDialog
+    })
   }
 
   onFormStatusChange(e) {
@@ -58,10 +67,17 @@ export default class FormBuilderSidebar extends Component {
     }
   }
 
+  setActiveTab(tab) {
+    this.setState({
+      activeTab: tab
+    })
+  }
+
   render() {
 
     const { preview, onClosePreview, onOpenPreview, forms, activeForm, app, onSaveClick } = this.props;
     const form = activeForm ? forms[activeForm] : forms.form;
+    const { activeTab } = this.state;
 
     return (
       <div style={styles.leftPan}>

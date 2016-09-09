@@ -49,7 +49,7 @@ const styles = {
     display: 'block',
     textDecoration: 'none',
     color: '#9b9b9b',
-    fontWeight: 'bold',
+    fontWeight: '400',
     fontSize: 14,
     margin: 10,
     borderRadius: 5,

@@ -364,6 +364,7 @@ export default class GalleryManager extends Component {
                   value={gallery.config.placement}
                   options={placementOpts}
                   clearable={false}
+                  searchable={false}
                   onChange={this.updatePlacement} />
 
                 <p style={[

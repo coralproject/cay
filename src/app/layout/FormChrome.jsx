@@ -114,8 +114,8 @@ export default class FormChrome extends React.Component {
   }
 
   onApplyClick() {
-    const { forms, dispatch, activeForm } = this.props;
-    const { form, widgets } = forms;
+    const { forms, dispatch } = this.props;
+    const { form, widgets, activeForm } = forms;
 
     dispatch(saveForm(activeForm ? forms[activeForm] : form, widgets))
       .then(response => {
@@ -128,7 +128,7 @@ export default class FormChrome extends React.Component {
       })
       .catch(err => {
         this.setState({statusDropdownOpen: false});
-        this.props.dispatch(showFlashMessage('Uh-oh, we can\'t save your form. Try again or report the error to your technical team', 'warning', false));                
+        this.props.dispatch(showFlashMessage('Uh-oh, we can\'t save your form. Try again or report the error to your technical team', 'warning', false));
       });
   }
 

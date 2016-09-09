@@ -82,7 +82,7 @@ export default class FormList extends Component {
         </ContentHeader>
 
         <Button accent colored raised={displayMode === 'open'}
-          onClick={this.setDisplayMode.bind(this, 'open')}>Open</Button>
+          onClick={this.setDisplayMode.bind(this, 'open')}>Live</Button>
         <Button accent colored raised={displayMode === 'closed'}
           onClick={this.setDisplayMode.bind(this, 'closed')}>Closed</Button>
 

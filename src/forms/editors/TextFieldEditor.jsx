@@ -14,8 +14,8 @@ export default class TextFieldEditor extends Component {
     super(props)
 
     this.state = {
-      minLengthEnabled: props.field.props.minLength > 0,
-      maxLengthEnabled: props.field.props.maxLength > 0,
+      minLengthEnabled: props.field.props.minLength >= 0,
+      maxLengthEnabled: props.field.props.maxLength >= 0,
       error: false
     }
 
@@ -82,6 +82,8 @@ export default class TextFieldEditor extends Component {
 
     if (!e.target.checked) {
       this.deleteFieldProp(prop)
+    } else {
+      this.handleInputChange(0, prop)
     }
   }
   render() {

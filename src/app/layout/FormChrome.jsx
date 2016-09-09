@@ -116,7 +116,7 @@ export default class FormChrome extends React.Component {
   onApplyClick() {
     const { forms, dispatch, activeForm } = this.props;
     const { form, widgets } = forms;
-    console.log('apply click')
+
     dispatch(saveForm(activeForm ? forms[activeForm] : form, widgets))
       .then(response => {
         this.setState({statusDropdownOpen: false});

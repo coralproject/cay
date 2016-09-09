@@ -76,7 +76,8 @@ const emptyForm = {
     saveDestination: 'https://pillar_stg.coralproject.net/api/form_submission/',
     showFieldNumbers: true,
     isActive: false,
-    inactiveMessage: 'We are not currently accepting submissions. Thank you.'
+    inactiveMessage: 'We are not currently accepting submissions. Thank you.',
+    recaptcha: false
   },
   header: {
     title: '',

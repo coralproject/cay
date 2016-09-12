@@ -8,14 +8,10 @@ import Radium from 'radium';
 import { Link } from 'react-router';
 
 import MenuItem from 'app/layout/Sidebar/MenuItem';
-import FaGroup from 'react-icons/lib/fa/group';
-import FaDashboard from 'react-icons/lib/fa/dashboard';
-import FaListAlt from 'react-icons/lib/fa/list-alt';
 import FaCog from 'react-icons/lib/fa/cog';
 import FaBug from 'react-icons/lib/fa/bug';
 import FaAngleDoubleLeft from 'react-icons/lib/fa/angle-double-left';
 import FaAngleDoubleRight from 'react-icons/lib/fa/angle-double-right';
-import MdBuild from 'react-icons/lib/md/build';
 import L from 'i18n';
 import { bgColorLogo } from 'settings';
 

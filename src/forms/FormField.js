@@ -56,6 +56,10 @@ export default class FormField extends Component {
     this.onKeyUp = this.onKeyUp.bind(this);
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.setState({ field: nextProps.field, fieldBackup: nextProps.field });
+  }
+
   toggleExpanded() {
     this.props.container.setState({ autoExpand: -1 });
     if (this.props.onList) {

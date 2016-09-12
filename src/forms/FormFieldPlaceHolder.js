@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import {connect} from 'react-redux';
 import { DropTarget } from 'react-dnd';
 
 import DropHandler from 'forms/DropHandler';
@@ -8,7 +7,6 @@ import DropHandler from 'forms/DropHandler';
   connectDropTarget: connect.dropTarget(),
   isOver: monitor.isOver()
 }))
-@connect(({ app, forms }) => ({ app, forms }))
 export default class FormFieldPlaceHolder extends Component {
 
   componentWillReceiveProps(nextProps) {
@@ -27,10 +25,9 @@ export default class FormFieldPlaceHolder extends Component {
               ? <div style={ styles.dropPlaceHolderActive }></div>
               : <div style={ styles.dropPlaceHolder }>
                   {
-                    this.props.children ?
-                      this.props.children
-                    :
-                      <p style={ styles.emptyPlaceholderText }>Drag and drop fields here to add a question</p>
+                    this.props.children
+                    ? this.props.children
+                    : <p style={ styles.emptyPlaceholderText }>Drag and drop fields here to add a question</p>
                   }
                 </div>
           }

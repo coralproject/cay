@@ -11,6 +11,7 @@ import FaArrowUp from 'react-icons/lib/fa/arrow-up';
 import FaArrowDown from 'react-icons/lib/fa/arrow-down';
 import FaUser from 'react-icons/lib/fa/user';
 import FaCopy from 'react-icons/lib/fa/copy';
+import FaCompress from 'react-icons/lib/fa/compress';
 
 // DnD dependencies
 import { DragSource } from 'react-dnd';
@@ -54,6 +55,8 @@ export default class FormField extends Component {
     this.onCancelClick = this.onCancelClick.bind(this);
     this.onSaveClick = this.onSaveClick.bind(this);
     this.onKeyUp = this.onKeyUp.bind(this);
+    this.toggleExpanded = this.toggleExpanded.bind(this);
+    this.onEditorChange = this.onEditorChange.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -89,13 +92,11 @@ export default class FormField extends Component {
   onSaveClick(e) {
     if (e) e.stopPropagation();
     this.toggleExpanded();
-    this.setState({ fieldBackup: this.state.field });
     this.props.dispatch(updateWidget(this.props.id, this.state.field));
   }
 
   onCancelClick(e) {
     if (e) e.stopPropagation();
-    this.setState({ field: this.state.fieldBackup });
     this.toggleExpanded();
   }
 
@@ -112,7 +113,7 @@ export default class FormField extends Component {
   }
 
   onKeyUp(e) {
-    if (e.keyCode === 27) {
+    if (e.keyCode === 27) { // the Esc key
       this.onCancelClick();
     }
   }
@@ -120,7 +121,7 @@ export default class FormField extends Component {
   getFieldEditor() {
     const { field } = this.state;
     // Passing listeners down from this class to the editors
-    var localProps = { onEditorChange: this.onEditorChange.bind(this) };
+    var localProps = { onEditorChange: this.onEditorChange };
     return EditorFactory[field.component] ? EditorFactory[field.component](field, localProps) : EditorFactory['TextField'](field, localProps);
   }
 
@@ -151,13 +152,13 @@ export default class FormField extends Component {
         <div style={ styles.fieldContents }>
 
           {
-            !this.state.expanded
-            ? <h4 style={ styles.fieldTitleHeader }  onClick={ this.toggleExpanded.bind(this) }>
+            this.state.expanded
+            ? null
+            : <h4 style={ styles.fieldTitleHeader }  onClick={ this.toggleExpanded }>
               { fieldTitle }
               { requiredMark }
               { identityMark }
             </h4>
-            : null
           }
 
           {
@@ -180,7 +181,7 @@ export default class FormField extends Component {
 
   renderExpanded() {
     const { field } = this.state;
-    const { onTitleChange, onDescriptionChange, onCancelClick, onSaveClick, onKeyUp } = this;
+    const { onTitleChange, onDescriptionChange, onCancelClick, onKeyUp } = this;
 
     return  (
       <div className="widget-expanded" style={ styles.editSettingsPanel } onKeyUp={onKeyUp}>
@@ -206,16 +207,7 @@ export default class FormField extends Component {
         { this.getFieldEditor() }
 
         <div style={ styles.bottomButtons }>
-          <button className="field-close-button" style={ styles.cancelButton } onClick={onCancelClick}><FaClose /> Cancel</button>
-          <button
-            className="field-close-button save-button"
-            style={ [ styles.saveButton, field.error ? styles.saveButton.disabled : null ] }
-            onClick={onSaveClick}
-            disabled={ field.error ? 'disabled' : '' }
-          >
-            <FaFloppyO />
-            Save
-          </button>
+          <button className="field-close-button" style={ styles.cancelButton } onClick={onCancelClick}><FaCompress /> Collapse</button>
         </div>
 
       </div>

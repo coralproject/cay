@@ -37,6 +37,8 @@ export default class FormBuilder extends Component {
     // An empty form with no changes is valid as 'saved'
     this.saved = true;
     this.state = { openDialog: false }
+
+    this.markAsUnsaved = this.markAsUnsaved.bind(this);
   }
 
   markAsUnsaved() {
@@ -75,7 +77,10 @@ export default class FormBuilder extends Component {
             openDialog={this.state.openDialog}
             app={app}
             />
-          <FormFieldsContainer activeForm={ this.props.activeForm } markAsUnsaved={this.markAsUnsaved.bind(this)} />
+          <FormFieldsContainer
+            activeForm={ this.props.activeForm }
+            forms={forms}
+            markAsUnsaved={this.markAsUnsaved} />
           { preview
             ? <div>
                 <div style={ styles.previewOverlay }></div>

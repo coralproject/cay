@@ -33,26 +33,31 @@ export default class FormFieldsContainer extends Component {
     this.state = {
       savedFields: [],
       isHovering: false,
-      currentFields: [],
       showTitleIsRequired: false,
       autoExpand: -1
     };
     this.previousHover = null;
+
+    this.onFormHeadingChange = this.onFormHeadingChange.bind(this);
+    this.onFormDescriptionChange = this.onFormDescriptionChange.bind(this);
+    this.onMove = this.onMove.bind(this);
+    this.onDuplicate = this.onDuplicate.bind(this);
+    this.onDelete = this.onDelete.bind(this);
   }
 
-  componentWillMount() {
-    if (this.props.forms) {
-      this.setState({ savedFields: this.props.forms.widgets, currentFields: this.props.forms.widgets, isHovering: false });
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    this.setState({ savedFields: nextProps.forms.widgets, currentFields: nextProps.forms.widgets, isHovering: false });
-  }
-
-  resetForm() {
-    this.setState({ currentFields: this.state.savedFields.slice() });
-  }
+  // componentWillMount() {
+  //   if (this.props.forms) {
+  //     this.setState({ savedFields: this.props.forms.widgets, currentFields: this.props.forms.widgets, isHovering: false });
+  //   }
+  // }
+  //
+  // componentWillReceiveProps(nextProps) {
+  //   this.setState({ savedFields: nextProps.forms.widgets, currentFields: nextProps.forms.widgets, isHovering: false });
+  // }
+  //
+  // resetForm() {
+  //   this.setState({ currentFields: this.state.savedFields.slice() });
+  // }
 
   getForm() {
     return this.props.activeForm ? this.props.forms[this.props.activeForm] : this.props.forms.form;
@@ -145,44 +150,44 @@ export default class FormFieldsContainer extends Component {
   render() {
     const { onFieldSelect, forms } = this.props;
     const form = this.props.activeForm ? forms[this.props.activeForm] : forms.form;
+    console.log('FormFieldsContainer.form', form);
     return (
       <div style={ styles.fieldsListContainer }>
-        <input className="form-headline" onChange={ this.onFormHeadingChange.bind(this) } style={ styles.headLine } type="text" placeholder={ "Write a headline" } defaultValue={ form.header.heading } />
+        <input className="form-headline" onChange={ this.onFormHeadingChange } style={ styles.headLine } type="text" placeholder={ "Write a headline" } defaultValue={ form.header.heading } />
         {
-          this.state.showTitleIsRequired ?
-            <p style={ styles.titleIsRequired }>Title is required</p>
-          :
-            null
+          this.state.showTitleIsRequired
+          ? <p style={ styles.titleIsRequired }>Title is required</p>
+          : null
         }
-        <textarea className="form-description" onChange={ this.onFormDescriptionChange.bind(this) } style={ styles.description } placeholder={ "Write instructions and a description for the form below" } defaultValue={ form.header.description } />
+        <textarea className="form-description" onChange={ this.onFormDescriptionChange } style={ styles.description } placeholder={ "Write instructions and a description for the form below" } defaultValue={ form.header.description } />
 
         <div style={ styles.fieldsList } className="widgets-container">
 
           {
-            // Render form fields
-            this.state.currentFields.map((field, i) => (
-              <FormFieldPlaceHolder key={i} container={ this } position={ i }>
-                <FormField
-                  id={ field.id }
-                  key={ i }
-                  field={ field }
-                  container={ this }
-                  position={ i }
-                  onFieldSelect={ onFieldSelect }
-                  onList={ true }
-                  autoExpand={ i === this.state.autoExpand }
-                  isLast={ i === this.state.currentFields.length - 1 }
-                  onMove={ this.onMove.bind(this) }
-                  onDuplicate={ this.onDuplicate.bind(this) }
-                  onDelete={ this.onDelete.bind(this) }
-                   />
-              </FormFieldPlaceHolder>
-          ))}
+            forms.widgets && forms.widgets.map((id, i) => {
+              return (
+                <FormFieldPlaceHolder key={id} container={this}>
+                  <FormField
+                    id={id}
+                    field={forms[id]}
+                    container={this}
+                    position={i}
+                    onFieldSelect={onFieldSelect}
+                    onList={true}
+                    autoExpand={i === this.state.autoExpand}
+                    isLast={i === forms.widgets.length - 1}
+                    onMove={this.onMove}
+                    onDuplicate={this.onDuplicate}
+                    onDelete={this.onDelete} />
+                </FormFieldPlaceHolder>
+              );
+            })
+          }
 
           {
             // Render last placeholder
-            !this.state.isHovering || this.state.currentFields.length === 0
-            ? <FormFieldPlaceHolder container={ this } position={ this.state.currentFields.length } key={ this.state.currentFields.length } />
+            !this.state.isHovering || forms.widgets.length === 0
+            ? <FormFieldPlaceHolder container={ this } position={ forms.widgets.length } key={ forms.widgets.length } />
             : null
           }
 

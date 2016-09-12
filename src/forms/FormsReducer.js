@@ -106,12 +106,20 @@ export default (state = initial, action) => {
     return {...state, activeForm: null, formLoading: true};
 
   case types.FETCH_FORM_SUCCESS:
+
+    // make the widgets top-level so there's not all this copying mayhem any more
+    const widgets = action.form.steps[0].widgets.reduce((accum, widget) => {
+      accum[widget.id] = widget;
+      return accum;
+    }, {});
+
     return {  ...state,
               activeForm: action.form.id,
               [action.form.id]: action.form,
               formLoading: false,
-              widgets: action.form.steps[0].widgets,
-              currentFields: action.form.steps[0].widgets
+              widgets: action.form.steps[0].widgets.map(widget => widget.id),
+              currentFields: action.form.steps[0].widgets,
+              ...widgets
           };
 
   case types.FETCH_FORM_FAILURE:
@@ -189,10 +197,10 @@ export default (state = initial, action) => {
     return {...state, formList, ...forms };
 
   case types.UPDATE_WIDGET:
-    var updatedWidgets = state.widgets.map((widget, id) => {
-      return widget.id === action.id ? Object.assign({}, widget, action.data) : widget;
+    var updatedWidgets = state.widgets.map(widget => {
+      return widget.id === action.id ? {...widget, ...action.data} : {...widget};
     });
-    return Object.assign({}, state, { widgets: updatedWidgets });
+    return {...state, widgets: updatedWidgets};
 
   case types.UPDATE_FORM:
     const formProp = state.activeForm ? state.activeForm : 'form';

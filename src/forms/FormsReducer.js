@@ -197,10 +197,7 @@ export default (state = initial, action) => {
     return {...state, formList, ...forms };
 
   case types.UPDATE_WIDGET:
-    var updatedWidgets = state.widgets.map(widget => {
-      return widget.id === action.id ? {...widget, ...action.data} : {...widget};
-    });
-    return {...state, widgets: updatedWidgets};
+    return {...state, [action.id]: action.data};
 
   case types.UPDATE_FORM:
     const formProp = state.activeForm ? state.activeForm : 'form';

@@ -44,11 +44,7 @@ export default class FormField extends Component {
   constructor(props, context) {
     super(props, context);
     // fieldBackup is used to restore params when clicking Cancel
-    this.state = {
-      expanded: props.autoExpand,
-      field: cloneDeep(props.field),
-      fieldBackup: cloneDeep(props.field)
-    };
+    this.state = { expanded: props.autoExpand };
 
     this.onTitleChange = this.onTitleChange.bind(this);
     this.onDescriptionChange = this.onDescriptionChange.bind(this);
@@ -78,15 +74,19 @@ export default class FormField extends Component {
   }
 
   onDescriptionChange(e) {
-    var field = Object.assign({}, this.state.field);
-    field.description = e.target.value;
-    this.setState({ field: field });
+    // var field = Object.assign({}, this.state.field);
+    // field.description = e.target.value;
+    // this.setState({ field: field });
+    const {dispatch, id, field} = this.props;
+    dispatch(updateWidget(id, {...field, description: e.target.value}));
   }
 
   onTitleChange(e) {
-    var field = Object.assign({}, this.state.field);
-    field.title = e.target.value;
-    this.setState({ field: field });
+    // var field = Object.assign({}, this.state.field);
+    // field.title = e.target.value;
+    // this.setState({ field: field });
+    const {dispatch, id, field} = this.props;
+    dispatch(updateWidget(id, {...field, title: e.target.value}));
   }
 
   onSaveClick(e) {
@@ -138,8 +138,7 @@ export default class FormField extends Component {
   }
 
   renderContainer() {
-    const { id, onMove, isLast, position, onDelete, onDuplicate } = this.props;
-    const { field } = this.state;
+    const { id, onMove, isLast, position, onDelete, onDuplicate, field } = this.props;
     const FieldIcon = this.getIcon(field);
     const fieldTitle = field.title ? field.title : 'Ask readers a question';
     const requiredMark = field.wrapper && field.wrapper.required ? <span style={ styles.requiredAsterisk }>*</span> : null;

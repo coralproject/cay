@@ -115,7 +115,8 @@ export default class FormBuilder extends Component {
     const { router } = this.context;
     const { forms, dispatch, activeForm } = this.props;
     const { form, widgets } = forms;
-    dispatch(saveForm(activeForm ? forms[activeForm] : form, widgets))
+    const hydratedWidgets = widgets.map(id => forms[id]);
+    dispatch(saveForm(activeForm ? forms[activeForm] : form, hydratedWidgets))
       .then(response => {
         if (response.data && response.data.id) {
           this.saved = true;

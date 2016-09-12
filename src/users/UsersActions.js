@@ -47,7 +47,7 @@ export const upsertUser = (preparedObject) => {
         body: JSON.stringify(preparedObject)
       };
 
-      fetch(getState().app.pillarHost + '/api/user', init)
+      fetch(getState().app.trustHost + '/api/user', init)
         .then(res => res.json())
         .then(json => {
           dispatch(receiveUpsertedUser(json));

@@ -4,8 +4,12 @@ if [[ -z "$XENIA_URL" ]]; then
     export XENIA_URL="http://${XENIA_PORT_4000_TCP_ADDR}:${XENIA_PORT_4000_TCP_PORT}"
 fi
 
-if [[ -z "$PILLAR_URL" ]]; then
-    export PILLAR_URL="http://${PILLAR_PORT_8080_TCP_ADDR}:${PILLAR_PORT_8080_TCP_PORT}"
+if [[ -z "$ASK_URL" ]]; then
+    export ASK_URL="http://${ASK_PORT_8080_TCP_ADDR}:${ASK_PORT_8080_TCP_PORT}"
+fi
+
+if [[ -z "$TRUST_URL" ]]; then
+    export TRUST_URL="http://${TRUST_PORT_8080_TCP_ADDR}:${TRUST_PORT_8080_TCP_PORT}"
 fi
 
 if [[ -z "$ELKHORN_URL" ]]; then

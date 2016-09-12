@@ -1,8 +1,7 @@
-
 var amqp = require('amqplib');
 var config = require('./public/config');
 
-var exchangeName = 'PillarMQ';
+var exchangeName = 'TBD';
 var queueName = '';
 
 module.exports = function(io) {

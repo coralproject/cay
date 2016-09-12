@@ -169,7 +169,7 @@ const answerRemovedFromGallery = gallery => ({
 export const fetchForms = () => (dispatch, getState) => {
   dispatch(formsRequestStarted());
 
-  return fetch(`${getState().app.askHost}/api/forms`)
+  return fetch(`${getState().app.askHost}/v1/form`)
     .then(res => res.json())
     .then(forms => dispatch(formsRequestSuccess(forms)))
     .catch(error => dispatch(formsRequestFailure(error)));
@@ -178,7 +178,7 @@ export const fetchForms = () => (dispatch, getState) => {
 export const fetchForm = id => (dispatch, getState) => {
   dispatch(formRequestStarted(id));
 
-  return fetch(`${getState().app.askHost}/api/form/${id}`)
+  return fetch(`${getState().app.askHost}/v1/form/${id}`)
     .then(res => res.json())
     .then(form => dispatch(formRequestSuccess(form)))
     .catch(error => dispatch(formRequestFailure(error)));
@@ -195,7 +195,7 @@ export const copyForm = (id) => (dispatch, getState) => {
 
 export const deleteForm = (name, description, id) => (dispatch, getState) => {
   dispatch(formRequestStarted(id));
-  return fetch(`${getState().app.askHost}/api/form/${id}`, getInit({ name, description }, 'DELETE'))
+  return fetch(`${getState().app.askHost}/v1/form/${id}`, getInit({ name, description }, 'DELETE'))
     .then(res => res.json())
     .then(deletedForm => {
       dispatch(deleteSuccessful(id));
@@ -212,7 +212,7 @@ export const leavingEdit = formId => dispatch =>
 dispatch(formLeaveEdit(formId));
 
 export const createEmpty = () => (dispatch, getState) =>
-dispatch(createEmptyAction(`${getState().app.askHost}/api/form_submission/`));
+dispatch(createEmptyAction());
 
 export const appendWidget = (type, targetPosition) => ({
   type: APPEND_FORM_WIDGET,
@@ -259,7 +259,7 @@ export const saveForm = (form, widgets) => {
   return (dispatch, getState) => {
 
     const {app} = getState();
-    data.settings.saveDestination =  `${app.askHost}/api/form_submission/`;
+    data.settings.saveDestination =  `${app.askHost}/v1/form/${form.id}/submission`;
 
     dispatch({ type: CREATE_INIT_FORM, data });
     return fetch(`${app.elkhornHost}/create`, {
@@ -284,6 +284,9 @@ export const saveForm = (form, widgets) => {
 export const editForm = form => (dispatch, getState) => {
   const data = {...form};
   const {app} = getState();
+
+  // update save destination on edit to capture config changes
+  data.settings.saveDestination = `${app.askHost}/v1/form/${form.id}/submission`;
 
   dispatch({type: EDIT_FORM_REQUEST, data});
   return fetch(`${app.elkhornHost}/create`, getInit(data, 'POST'))
@@ -318,7 +321,7 @@ export const fetchSubmissions = (formId, page = 0) => (dispatch, getState) => {
   const { submissionOrder, submissionFilterBy, submissionSearch } = forms;
   const filterBy = submissionFilterBy === 'default' ? '' : submissionFilterBy;
   const skip = page * 10;
-  return fetch(`${app.askHost}/api/form_submissions/${formId}?skip=${skip}&limit=10&orderby=${submissionOrder}&filterby=${filterBy}&search=${submissionSearch}`)
+  return fetch(`${app.askHost}/v1/form/${formId}/submission?skip=${skip}&limit=10&orderby=${submissionOrder}&filterby=${filterBy}&search=${submissionSearch}`)
     .then(res => res.json())
     .then(data => dispatch(submissionsFetched(data.counts, data.submissions || [])))
     .catch(error => dispatch(submissionsFetchError(error)));
@@ -330,7 +333,7 @@ export const fetchSubmissions = (formId, page = 0) => (dispatch, getState) => {
 
 export const updateSubmissionFlags = props => (dispatch, getState) => {
   const state = getState();
-  const { activeSubmission } = state.forms;
+  const { activeSubmission, activeForm } = state.forms;
   const keys = Object.keys(props);
 
   // Create an array with the old and new flags
@@ -345,8 +348,8 @@ export const updateSubmissionFlags = props => (dispatch, getState) => {
   // and return the responses as an array (we are not using it but is good
   // to return the promise so the caller know when everything is done)
   return Promise.all(keys.map(prop =>
-    fetch(`${state.app.askHost}/api/form_submission/${activeSubmission}/flag/${prop}`,
-          { method: props[prop] ? 'PUT': 'DELETE', mode: 'cors' })
+    fetch(`${state.app.askHost}/v1/form/${activeForm}/submission/${activeSubmission}/flag/${prop}`,
+          { method: props[prop] ? 'POST': 'DELETE', mode: 'cors' })
     .then(res=> res.json())
   ));
 };
@@ -356,9 +359,9 @@ export const fetchGallery = formId => (dispatch, getState) => {
 
   const {app} = getState();
 
-  fetch(`${app.askHost}/api/form_galleries/${formId}`)
+  fetch(`${app.askHost}/v1/form/${formId}/gallery`)
     .then(res => res.json())
-    .then(galleries => dispatch(receivedGallery(galleries[0])))
+    .then(galleries => dispatch(receivedGallery(galleries[0]))) // we only support 1 gallery
     .catch(error => dispatch(galleryRequestError(error)));
 };
 
@@ -366,8 +369,8 @@ export const sendToGallery = (galleryId, subId, answerId) => {
   return (dispatch, getState) => {
     const {app} = getState();
 
-    fetch(`${app.askHost}/api/form_gallery/${galleryId}/add/${subId}/${answerId}`, {
-      method: 'PUT',
+    fetch(`${app.askHost}/v1/form_gallery/${galleryId}/submission/${subId}/${answerId}`, {
+      method: 'POST',
       mode: 'cors'
     })
       .then(res => res.json())
@@ -383,7 +386,7 @@ export const removeFromGallery = (galleryId, subId, answerId) => {
     const { app } = getState();
     const options = {method: 'DELETE', mode: 'cors'};
 
-    fetch(`${app.askHost}/api/form_gallery/${galleryId}/remove/${subId}/${answerId}`, options)
+    fetch(`${app.askHost}/v1/form_gallery/${galleryId}/submission/${subId}/${answerId}`, options)
       .then(res => res.json())
       .then(gallery => dispatch(answerRemovedFromGallery(gallery)))
       .catch(error => {
@@ -396,7 +399,7 @@ export const updateFormStatus = (formId, status) => (dispatch, getState) => {
   const {app} = getState();
   const options = {method: 'PUT', mode: 'cors'};
 
-  fetch(`${app.askHost}/api/form/${formId}/status/${status}`, options)
+  fetch(`${app.askHost}/v1/form/${formId}/status/${status}`, options)
     .then(res => res.json())
     .then(form => dispatch({type: FORM_STATUS_UPDATED, form, status}))
     .catch(error => dispatch({type: FORM_STATUS_UPDATE_ERROR, error}));
@@ -462,7 +465,7 @@ export const editAnswer = (edited, submission_id, answer_id, formId) => {
 
     const {app} = getState();
 
-    fetch(`${app.askHost}/api/form_submission/${submission_id}/${answer_id}`, {
+    fetch(`${app.askHost}/v1/form/${formId}/submission/${submission_id}/answer/${answer_id}`, {
       method: 'PUT',
       mode: 'cors',
       body: JSON.stringify({edited})

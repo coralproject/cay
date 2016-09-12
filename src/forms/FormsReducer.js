@@ -73,7 +73,7 @@ const emptyForm = {
     selectedItemText: '#FAFAFA'
   },
   settings: {
-    saveDestination: getState().app.askHost + '/api/form_submission/',
+    saveDestination: '',
     showFieldNumbers: true,
     isActive: false,
     inactiveMessage: 'We are not currently accepting submissions. Thank you.',

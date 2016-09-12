@@ -20,7 +20,7 @@ self.addEventListener('activate', function(event) {
 });
 
 self.addEventListener('fetch', function(event) {
-  if (event.request.mode === 'cors' && /\/api\//.test(event.request.url)) {
+  if (event.request.mode === 'cors' && /\/v1\//.test(event.request.url)) {
   // If it's cors and match  /api/ (probably data),
   // go to the network and if it fails retrieve from cache
   console.log('cors', event.request.url, event.request);

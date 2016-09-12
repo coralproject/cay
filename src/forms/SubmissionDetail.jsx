@@ -205,7 +205,8 @@ const styles = {
     display: 'flex'
   },
   answers: {
-    flex: 1
+    flex: 1,
+    overflow: 'auto'
   },
   authorHeaderContainer: {
     display: 'flex',

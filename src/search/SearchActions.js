@@ -314,7 +314,7 @@ export const saveQueryFromState = (queryName, desc, tag) => (dispatch, getState)
 
   dispatch({type: SEARCH_SAVE_INIT, query: state.searches.activeQuery});
 
-  saveSearchTothe Trust service(dispatch, state, queryName, desc, tag);
+  saveSearchToTrust(dispatch, state, queryName, desc, tag);
 };
 
 // prepare the active query to be saved to xenia
@@ -369,7 +369,7 @@ const createQueryForSave = (query, name, desc) => {
 };
 
 // create the body of request to save a Search to the Trust service
-const prepSearchForthe Trust service = (filters, query, name, desc, tag, breakdown, specificBreakdown, excluded_tags) => {
+const prepSearchForTrust = (filters, query, name, desc, tag, breakdown, specificBreakdown, excluded_tags) => {
 
   let values = compact(map(filters, f => {
     // this will return the ENTIRE filter if only the min OR max was changed.
@@ -426,14 +426,14 @@ the filters object only stores non-default values and the dimension breakdowns
 */
 
 
-const saveSearchTothe Trust service = (dispatch, state, name, desc, tag) => {
+const saveSearchToTrust = (dispatch, state, name, desc, tag) => {
 
   const {breakdown, specificBreakdown} = state.filters;
   const query = createQueryForSave(state.searches.activeQuery, name, desc);
   const filters = state.filters.filterList.map(key => state.filters[key]);
   const excludedTags = state.searches.excluded_tags;
 
-  const body = prepSearchForthe Trust service(filters, query, name, desc, tag, breakdown, specificBreakdown, excludedTags);
+  const body = prepSearchForTrust(filters, query, name, desc, tag, breakdown, specificBreakdown, excludedTags);
 
   fetch(`${state.app.trustHost}/api/search`, {method: 'POST', body: JSON.stringify(body)})
     .then(resp => resp.json())
@@ -478,7 +478,7 @@ export const updateSearch = staleSearch => {
     dispatch({type: SAVED_SEARCH_UPDATE, query});
 
     // update search in the Trust service
-    const body = prepSearchForthe Trust service(editFilters, query, name, description, tag, breakdownEdit, specificBreakdownEdit, excluded_tags);
+    const body = prepSearchFortheTrust(editFilters, query, name, description, tag, breakdownEdit, specificBreakdownEdit, excluded_tags);
 
     // append the id for update mode
     body.id = id;

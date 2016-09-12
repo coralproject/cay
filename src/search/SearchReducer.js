@@ -14,7 +14,7 @@ const initialState = {
   editMeta_name: '',
   editMeta_description: '',
   editMeta_tag: '',
-  pendingSavedSearch: null, // when the search is being prepared to be saved in pillar
+  pendingSavedSearch: null, // when the search is being prepared to be saved in the Trust service
   searchUpdatedSuccessfully: false, // when the search has been updated on the Edit screen
   users: [],
   searches: [],
@@ -53,7 +53,7 @@ const searches = (state = initialState, action) => {
       savedSearchError: action.error
     };
 
-  case types.CREATE_QUERY: // store the query so it can be easily saved to pillar
+  case types.CREATE_QUERY: // store the query so it can be easily saved to the Trust service
     return {...state, activeQuery: action.query};
 
   case types.QUERYSET_SELECTED:
@@ -70,7 +70,7 @@ const searches = (state = initialState, action) => {
   case types.SEARCHLIST_REQUEST:
     return {...state, loadingSearches: true};
 
-  // list of all saved searches fetched from Pillar
+  // list of all saved searches fetched from the Trust service
   case types.SEARCHLIST_SUCCESS:
     return {...state, searches: action.searches, loadingSearches: false};
 
@@ -109,7 +109,7 @@ const searches = (state = initialState, action) => {
   case types.SAVED_SEARCH_EDIT_REQUEST:
     return {...state, editableSearchLoading: true};
 
-  // saved search loaded from pillar to be edited
+  // saved search loaded from the Trust service to be edited
   case types.EDIT_SEARCH_SUCCESS:
 
     return {

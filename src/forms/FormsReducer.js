@@ -73,7 +73,7 @@ const emptyForm = {
     selectedItemText: '#FAFAFA'
   },
   settings: {
-    saveDestination: 'https://pillar_stg.coralproject.net/api/form_submission/',
+    saveDestination: getState().app.askHost + '/api/form_submission/',
     showFieldNumbers: true,
     isActive: false,
     inactiveMessage: 'We are not currently accepting submissions. Thank you.',
@@ -118,7 +118,7 @@ export default (state = initial, action) => {
     return {...state, activeForm: null, formLoading: false};
 
   case types.FORM_DELETED:
-    // FIXME: Pillar is returning 'null' for deleted forms. See: FormActions/deleteForm.
+    // FIXME: the Ask service is returning 'null' for deleted forms. See: FormActions/deleteForm.
     var newState = Object.assign({}, state);
     delete newState[action.id];
     var formListIndex = newState.formList.indexOf(action.id);

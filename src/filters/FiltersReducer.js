@@ -110,7 +110,7 @@ export default (state = initialState, action) => {
   case types.RESET_FILTER:
     return {...state, ...action.filter};
 
-  // a Saved Search was loaded from Pillar to be edited
+  // a Saved Search was loaded from the Trust service to be edited
   case types.EDIT_SEARCH_SUCCESS:
     return {
       ...state,

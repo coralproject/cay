@@ -63,7 +63,7 @@ export const SEARCH_UPDATE_FAILED = 'SEARCH_UPDATE_FAILED';
 
 export const UPDATE_EDITABLE_SEARCH_META = 'UPDATE_EDITABLE_SEARCH_META';
 
-// when we're initializing a Saved Search update to Pillar
+// when we're initializing a Saved Search update to the Trust service
 export const SAVED_SEARCH_UPDATE = 'SAVED_SEARCH_UPDATE';
 export const SEARCH_UPDATE_STALE = 'SEARCH_UPDATE_STALE';
 
@@ -119,9 +119,9 @@ export const receiveQueryset = (data, replace) => ({
 export const fetchSearch = id => (dispatch, getState) => {
   dispatch(requestSearch());
 
-  const { pillarHost } = getState().app;
+  const { trustHost } = getState().app;
 
-  return fetch(`${pillarHost}/api/search/${id}`)
+  return fetch(`${trustHost}/api/search/${id}`)
     .then(resp => resp.json())
     .then(search => dispatch(receivedSearch(search)))
     .catch(error => dispatch(searchFailed(error)));
@@ -132,7 +132,7 @@ export const fetchSavedSearchForEdit = id => (dispatch, getState) => {
 
   dispatch(requestSavedSearchForEdit(id));
 
-  return fetch(`${app.pillarHost}/api/search/${id}`)
+  return fetch(`${app.trustHost}/api/search/${id}`)
     .then(resp => resp.json())
     .then(search => {
       const {breakdown, specificBreakdown, values} = search.filters;
@@ -152,13 +152,13 @@ export const fetchSavedSearchForEdit = id => (dispatch, getState) => {
     .catch(error => dispatch(searchEditFetchFailed(error)));
 };
 
-// get a list of Saved Searches from Pillar
+// get a list of Saved Searches from the Trust service
 export const fetchSearches = () => (dispatch, getState) => {
   dispatch(requestSearches());
 
   const app = getState().app;
 
-  fetch(app.pillarHost + '/api/searches')
+  fetch(app.trustHost + '/api/searches')
     .then(resp => resp.json())
     .then(searches => dispatch(receivedSearches(searches)))
     .catch(error => dispatch(searchesFailed(error)));
@@ -314,7 +314,7 @@ export const saveQueryFromState = (queryName, desc, tag) => (dispatch, getState)
 
   dispatch({type: SEARCH_SAVE_INIT, query: state.searches.activeQuery});
 
-  saveSearchToPillar(dispatch, state, queryName, desc, tag);
+  saveSearchTothe Trust service(dispatch, state, queryName, desc, tag);
 };
 
 // prepare the active query to be saved to xenia
@@ -368,8 +368,8 @@ const createQueryForSave = (query, name, desc) => {
   return q;
 };
 
-// create the body of request to save a Search to Pillar
-const prepSearchForPillar = (filters, query, name, desc, tag, breakdown, specificBreakdown, excluded_tags) => {
+// create the body of request to save a Search to the Trust service
+const prepSearchForthe Trust service = (filters, query, name, desc, tag, breakdown, specificBreakdown, excluded_tags) => {
 
   let values = compact(map(filters, f => {
     // this will return the ENTIRE filter if only the min OR max was changed.
@@ -398,9 +398,9 @@ const prepSearchForPillar = (filters, query, name, desc, tag, breakdown, specifi
 const saveQuerySetToXenia = (state, search, query) => {
 
   return dispatch => {
-    // we are using a pillar generated queryset name, so
+    // we are using a the Trust service generated queryset name, so
     //   set the query name from the search, which has
-    //   been returned from pillar/api/search POST
+    //   been returned from the Trust service/api/search POST
     query.name = search.query;
 
     console.log('save search to xenia', query);
@@ -418,7 +418,7 @@ const saveQuerySetToXenia = (state, search, query) => {
 
 /*
 
-this method saves the active query to pillar with some other metadata,
+this method saves the active query to the Trust service with some other metadata,
 then saves the resulting id to xenia to form a "Search"
 
 the filters object only stores non-default values and the dimension breakdowns
@@ -426,16 +426,16 @@ the filters object only stores non-default values and the dimension breakdowns
 */
 
 
-const saveSearchToPillar = (dispatch, state, name, desc, tag) => {
+const saveSearchTothe Trust service = (dispatch, state, name, desc, tag) => {
 
   const {breakdown, specificBreakdown} = state.filters;
   const query = createQueryForSave(state.searches.activeQuery, name, desc);
   const filters = state.filters.filterList.map(key => state.filters[key]);
   const excludedTags = state.searches.excluded_tags;
 
-  const body = prepSearchForPillar(filters, query, name, desc, tag, breakdown, specificBreakdown, excludedTags);
+  const body = prepSearchForthe Trust service(filters, query, name, desc, tag, breakdown, specificBreakdown, excludedTags);
 
-  fetch(`${state.app.pillarHost}/api/search`, {method: 'POST', body: JSON.stringify(body)})
+  fetch(`${state.app.trustHost}/api/search`, {method: 'POST', body: JSON.stringify(body)})
     .then(resp => resp.json())
     .then(search => {
       // do something with savedSearch?
@@ -477,14 +477,14 @@ export const updateSearch = staleSearch => {
 
     dispatch({type: SAVED_SEARCH_UPDATE, query});
 
-    // update search in pillar
-    const body = prepSearchForPillar(editFilters, query, name, description, tag, breakdownEdit, specificBreakdownEdit, excluded_tags);
+    // update search in the Trust service
+    const body = prepSearchForthe Trust service(editFilters, query, name, description, tag, breakdownEdit, specificBreakdownEdit, excluded_tags);
 
     // append the id for update mode
     body.id = id;
     body.query = xeniaQueryName; // make sure to keep old name so xenia save is an update insted of insert
 
-    fetch(`${app.pillarHost}/api/search`, {method: 'PUT', body: JSON.stringify(body)})
+    fetch(`${app.trustHost}/api/search`, {method: 'PUT', body: JSON.stringify(body)})
       .then(resp => resp.json())
       .then(search => {
         // do something with savedSearch?
@@ -512,9 +512,9 @@ export const deleteSearch = search => {
 
     dispatch({type: SEARCH_DELETE_INIT, search});
 
-    fetch(`${app.pillarHost}/api/search/${search.id}`, {method: 'DELETE'})
+    fetch(`${app.trustHost}/api/search/${search.id}`, {method: 'DELETE'})
     .then(resp => {
-      console.info('search deleted from pillar', resp);
+      console.info('search deleted from the Trust service', resp);
       const newSearches = searches.searches.concat();
       // splice out deleted search
       newSearches.splice(indexOf(map(newSearches, 'id'), search.id), 1);

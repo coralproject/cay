@@ -1,6 +1,7 @@
 {
   "xeniaHost": "",
-  "pillarHost": "",
+  "askHost": "",
+  "trustHost": "",
   "elkhornHost": "",
   "elkhornStaticHost": "",
   "environment": "development",

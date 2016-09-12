@@ -27,7 +27,7 @@ describe('TagActions', () => {
     // Set the initial state of the store
     store = mockStore({
       app:{
-        pillarHost:'pillarhost'
+        trustHost:'trustHost'
       }
     });
   });
@@ -41,7 +41,7 @@ describe('TagActions', () => {
 
     beforeEach(() => {
       // Mock a server response
-      fetchMock.mock('pillarhost/api/tags', '{"tags":["tag1","tag2"]}');
+      fetchMock.mock('trustHost/api/tags', '{"tags":["tag1","tag2"]}');
 
     });
 
@@ -68,7 +68,7 @@ describe('TagActions', () => {
 
     it ('should dispatch a TAG_REQUEST_FAILURE action on failure', (done) => {
       fetchMock.restore();
-      fetchMock.mock('pillarhost/api/tags', {status:404});
+      fetchMock.mock('trustHost/api/tags', {status:404});
       TagActions.getTags()(store.dispatch, store.getState)
         .then(() => {
           let action = store.getActions()[1];
@@ -86,7 +86,7 @@ describe('TagActions', () => {
     beforeEach(() => {
       // Mock a server response
       fetchMock.mock((url, opts) => {
-        if (url === 'pillarhost/api/tag' && opts.method === 'DELETE') {
+        if (url === 'trustHost/api/tag' && opts.method === 'DELETE') {
           return true;
         } else {
           return false;
@@ -98,7 +98,7 @@ describe('TagActions', () => {
     it('should make a properly formatted DELETE request', (done) => {
       fetchMock.restore();
       fetchMock.mock((url, opts) => {
-        expect(url).to.equal('pillarhost/api/tag');
+        expect(url).to.equal('trustHost/api/tag');
         expect(opts.method).to.equal('DELETE');
         done();
         return true;
@@ -130,7 +130,7 @@ describe('TagActions', () => {
     it ('should dispatch a TAG_REQUEST_FAILURE action on failure', (done) => {
       fetchMock.restore();
       fetchMock.mock((url, opts) => {
-        if (url === 'pillarhost/api/tag' && opts.method === 'DELETE') {
+        if (url === 'trustHost/api/tag' && opts.method === 'DELETE') {
           return true;
         } else {
           return false;
@@ -153,7 +153,7 @@ describe('TagActions', () => {
     beforeEach(() => {
       // Mock a server response
       fetchMock.mock((url, opts) => {
-        if (url === 'pillarhost/api/tag' && opts.method === 'POST') {
+        if (url === 'trustHost/api/tag' && opts.method === 'POST') {
           return true;
         } else {
           return false;
@@ -164,7 +164,7 @@ describe('TagActions', () => {
     it('should make a properly formatted POST request', (done) => {
       fetchMock.restore();
       fetchMock.mock((url, opts) => {
-        expect(url).to.equal('pillarhost/api/tag');
+        expect(url).to.equal('trustHost/api/tag');
         expect(opts.method).to.equal('POST');
 
         let body = JSON.parse(opts.body);
@@ -205,19 +205,19 @@ describe('TagActions', () => {
     it('should return an TAG_REQUEST_FAILURE when json from server is improperly formatted', (done) => {
       fetchMock.restore();
       fetchMock.mock((url, opts) => {
-        if (url === 'pillarhost/api/tag' && opts.method === 'POST') {
+        if (url === 'trustHost/api/tag' && opts.method === 'POST') {
           return true;
         } else {
           return false;
         }
-      }, 'Pillar is pissed yo');
+      }, 'The Trust service is pissed yo'); // Todo: update jive, don't know what's going down
       TagActions.storeTag(mocktag.name,mocktag.description, mocktag.index)(store.dispatch, store.getState)
         .then(() => {
           let action = store.getActions()[1];
           expect(action).to.have.property('type')
             .and.to.equal(TagActions.TAG_REQUEST_FAILURE);
           expect(action).to.have.property('err')
-            .and.to.deep.equal('Error from pillar: Pillar is pissed yo');
+            .and.to.deep.equal('Error from trust: Trust is pissed yo');
           done();
         });
     });
@@ -225,7 +225,7 @@ describe('TagActions', () => {
     it ('should dispatch a TAG_REQUEST_FAILURE action on failure', (done) => {
       fetchMock.restore();
       fetchMock.mock((url, opts) => {
-        if (url === 'pillarhost/api/tag' && opts.method === 'POST') {
+        if (url === 'trustHost/api/tag' && opts.method === 'POST') {
           return true;
         } else {
           return false;
@@ -246,7 +246,7 @@ describe('TagActions', () => {
 
   describe('fetchAllTags', () => {
     beforeEach(()=> {
-      fetchMock.mock('pillarhost/api/tags',JSON.stringify([mocktag,mocktag2]));
+      fetchMock.mock('trustHost/api/tags',JSON.stringify([mocktag,mocktag2]));
     });
 
     it('should disptach a REQUEST_ALL_TAGS action', (done) => {
@@ -262,7 +262,7 @@ describe('TagActions', () => {
       // Set the initial state of the store
       store = mockStore({
         app:{
-          pillarHost:'pillarhost'
+          trustHost:'trustHost'
         },
         loadingTags:true
       });
@@ -283,7 +283,7 @@ describe('TagActions', () => {
 
     it('should dispatch an ALL_TAGS_REQUEST_ERROR action on failure', () => {
       fetchMock.restore();
-      fetchMock.mock('pillarhost/api/tags',{status:404});
+      fetchMock.mock('trustHost/api/tags',{status:404});
       TagActions.fetchAllTags()(store.dispatch, store.getState)
         .then(() => {
           let action = store.getActions()[1];

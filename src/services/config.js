@@ -4,7 +4,7 @@
  * Module constants
  */
 const CONFIG_ROUTES = ['/config.json', '/data_config.json'];
-const REQUIRED_KEYS = [ 'xeniaHost', 'pillarHost', 'basicAuthorization',
+const REQUIRED_KEYS = [ 'xeniaHost', 'trustHost', 'askHost', 'basicAuthorization',
                         'environment', 'googleAnalyticsId', 'requireLogin' ];
 
 /**

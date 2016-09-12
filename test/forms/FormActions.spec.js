@@ -13,7 +13,7 @@ describe('FormActions', () => {
 
   beforeEach(() => {
     store = mockStore({
-      app: {pillarHost: 'pillarHost'}
+      app: {askHost: 'askHost'}
     });
   });
 

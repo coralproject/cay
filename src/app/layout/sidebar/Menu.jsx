@@ -19,7 +19,8 @@ import MdBuild from 'react-icons/lib/md/build';
 import L from 'i18n';
 import { bgColorLogo } from 'settings';
 
-import { AskIcon } from 'components/icons/AskIcon/AskIcon';
+import { AskIcon } from 'components/icons/AskIcon';
+import { TrustIcon } from 'components/icons/TrustIcon';
 
 /**
  * Sidebar menu component
@@ -44,10 +45,10 @@ export default Radium(({ open, features, onToggleSidebar }) => (
 
 const TopMenu = ({ features }) => (
   <ul>
-    { features.trust === false ? null : <MenuItem name={ L.t('Create Search') } target="/search-creator" icon={<FaGroup />} />}
-    { features.trust === false ? null : <MenuItem name={ L.t('Saved Searches') } target="/saved-searches" icon={<FaDashboard />} />}
+    { features.trust === false ? null : <MenuItem name={ L.t('Trust') } target="/search-creator" icon={<TrustIcon wh="24px" fill="rgb(155, 155, 155)" stroke="rgb(155, 155, 155)" />} />}
+    {/**features.trust === false ? null : <MenuItem name={ L.t('Saved Searches') } target="/saved-searches" icon={<FaDashboard />} />**/}
     {/** features.ask ? <MenuItem open={open} name="Create Form" target="/forms/create" icon={<MdBuild />} /> : null **/}
-    { features.ask ? <MenuItem open={open} name="Ask" target="/forms" icon={<AskIcon wh="24px" fill="rgb(155, 155, 155)" stroke="rgb(155, 155, 155)"/>}/> : null }
+    { features.ask ? <MenuItem open={open} name="Ask" target="/forms" icon={<AskIcon wh="24px" fill="rgb(155, 155, 155)" stroke="rgb(155, 155, 155)" />}/> : null }
   </ul>
 );
 

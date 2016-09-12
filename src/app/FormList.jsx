@@ -125,7 +125,7 @@ const formatForm = ({ header, stats, id, date_created }, index) => {
 
 const FormTable = ({ loadingTags, forms, onRowClick, confirmDeletion, onCopyFormClick }) => (
   <DataTable style={styles.table} sortable rows={forms.map(formatForm)}>
-    <TableHeader cellFormatter={(n, r, i) => <span style={styles.name} onClick={() => onRowClick(r.id)}>{n}</span>} name="name">{ L.t('Name') }</TableHeader>
+    <TableHeader cellFormatter={(n, r, i) => <span style={styles.name} onClick={() => onRowClick(r.id)}>{n || L.t('Untitled Form')}</span>} name="name">{ L.t('Name') }</TableHeader>
     <TableHeader name="description">{ L.t('Description') }</TableHeader>
     <TableHeader sortFn={(a, b, asc) => asc ? b - a : a - b} cellFormatter={n => <span style={styles.submission}>{n}</span>} numeric name="submissions">{ L.t('Submissions') }</TableHeader>
     <TableHeader cellFormatter={date => moment(date).format('L')} name="date_created">{ L.t('Creation date') }</TableHeader>

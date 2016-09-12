@@ -19,6 +19,8 @@ import MdBuild from 'react-icons/lib/md/build';
 import L from 'i18n';
 import { bgColorLogo } from 'settings';
 
+import { AskIcon } from 'components/icons/AskIcon/AskIcon';
+
 /**
  * Sidebar menu component
  */
@@ -44,8 +46,8 @@ const TopMenu = ({ features }) => (
   <ul>
     { features.trust === false ? null : <MenuItem name={ L.t('Create Search') } target="/search-creator" icon={<FaGroup />} />}
     { features.trust === false ? null : <MenuItem name={ L.t('Saved Searches') } target="/saved-searches" icon={<FaDashboard />} />}
-    { features.ask ? <MenuItem open={open} name="Create Form" target="/forms/create" icon={<MdBuild />} /> : null }
-    { features.ask ? <MenuItem open={open} name="View Forms" target="/forms" icon={<FaListAlt />}/> : null }
+    {/** features.ask ? <MenuItem open={open} name="Create Form" target="/forms/create" icon={<MdBuild />} /> : null **/}
+    { features.ask ? <MenuItem open={open} name="Ask" target="/forms" icon={<AskIcon wh="24px" fill="rgb(155, 155, 155)" stroke="rgb(155, 155, 155)"/>}/> : null }
   </ul>
 );
 

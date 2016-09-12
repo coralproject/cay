@@ -184,7 +184,8 @@ const styles = {
     background: 'white',
     boxShadow: '-5px -5px 20px #999',
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    zIndex: 100
   },
   previewActions: {
     padding: '10px',
@@ -212,7 +213,8 @@ const styles = {
     borderTop: '10px solid transparent',
     borderBottom: '10px solid transparent',
     height: '0px',
-    width: '50px'
+    width: '50px',
+    zIndex: 100
   },
   previewCloseIcon: {
     position: 'absolute',
@@ -224,7 +226,8 @@ const styles = {
     flexGrow: '2'
   },
   previewContainer: {
-    position: 'relative'
+    position: 'relative',
+    zIndex: 100
   },
   previewSpinner: {
     position: 'absolute',
@@ -242,6 +245,7 @@ const styles = {
     width: '100%',
     height: '100%',
     top: 0,
-    left: 0
+    left: 0,
+    zIndex: 10
   }
 };

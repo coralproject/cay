@@ -176,8 +176,13 @@ export default class FormField extends Component {
 
   renderExpanded() {
     const { field } = this.state;
+<<<<<<< HEAD
     const { onTitleChange, onDescriptionChange, onCancelClick, onSaveClick, onKeyUp } = this;
 
+=======
+
+    const { onTitleChange, onDescriptionChange, onCancelClick, onSaveClick, onKeyUp } = this;
+>>>>>>> master
     return  (
       <div className="widget-expanded" style={ styles.editSettingsPanel } onKeyUp={onKeyUp}>
 
@@ -267,7 +272,10 @@ export const styles = {
   arrowContainer: {
     position: 'absolute',
     top: '8px',
-    right: '20px'
+    paddingLeft: 15,
+    background: 'linear-gradient(to right, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 10%,rgba(255,255,255,1) 100%)',
+    right: 0,
+    paddingRight: 20
   },
   arrow: {
     width: '30px',

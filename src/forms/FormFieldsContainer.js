@@ -10,6 +10,7 @@ import {
   updateFormFinishedScreen
 } from 'forms/FormActions';
 import uuid from 'node-uuid';
+import { Checkbox } from 'react-mdl';
 
 import { DropTarget } from 'react-dnd';
 import Tooltip from 'react-tooltip';
@@ -119,6 +120,12 @@ export default class FormFieldsContainer extends Component {
     this.props.dispatch(moveWidget(origin, target));
   }
 
+  onRecaptchaChange(e) {
+    this.props.dispatch(updateForm({
+      settings: { recaptcha: e.target.checked }
+    }));
+  }
+
   appendWidget(field, targetPosition) {
     this.setState({ autoExpand: targetPosition });
     this.props.markAsUnsaved();
@@ -182,6 +189,8 @@ export default class FormFieldsContainer extends Component {
         </div>
 
         <div style={ styles.extraFields }>
+        { this.props.app.recaptcha ? <Checkbox checked={form.settings.recaptcha} label="Include reCAPTCHA"
+            ripple onChange={this.onRecaptchaChange.bind(this)} /> : null }
           <h3 style={ styles.extraFieldTitle }>Thank you message (optional)</h3>
           <textarea
             defaultValue={ form.finishedScreen.description }

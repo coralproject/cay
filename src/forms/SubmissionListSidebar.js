@@ -217,7 +217,7 @@ const styles = {
   count: {
     fontWeight: 'bold',
     fontSize: '1.2em',
-    color: darkGrey
+    color: 'black'
   },
   countContainer: {
     margin: 10

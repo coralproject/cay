@@ -64,7 +64,7 @@ export default class SubmissionDetail extends Component {
               <Card style={styles.answerCard} key={key}>
                 <CardTitle>{reply.question}</CardTitle>
                 <CardText>{this.renderAnswer(reply)}</CardText>
-                <CardActions border>
+                <CardActions style={{ textAlign: 'right' }} border>
                   <Button colored onClick={modAnswer.bind(this, gallery.id, submission.id, reply.widget_id)}>
                     { inGallery ?
                         <span>Remove from Gallery <Icon name='delete' /></span> :

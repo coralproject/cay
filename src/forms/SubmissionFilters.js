@@ -24,7 +24,7 @@ export class OrderDropdown extends Component {
     const { order='dsc', onChange, open=false, onToggle } = this.props;
     return (
       <div style={styles.order.container(open)}>
-        <p style={styles.filterBy.current}>{OrderOptions[order]}</p>
+        <p style={styles.filterBy.current}>Sort</p>
         {Object.keys(OrderOptions).map((value, i) => {
           return (
             <RadioButton
@@ -75,10 +75,10 @@ export class FilterDropdown extends Component {
   }
 
   render() {
-    const { filterBy='default', onChange, open=false } = this.props;
+    const { filterBy='default', onChange, open=false, onToggle } = this.props;
     return (
       <div style={styles.filterBy.container(open)}>
-        <p style={styles.filterBy.current}>{FilterByOptions[filterBy]}</p>
+        <p style={styles.filterBy.current}>Filter</p>
         {Object.keys(FilterByOptions).map((value, i) => {
           return (
             <RadioButton
@@ -86,7 +86,11 @@ export class FilterDropdown extends Component {
               style={styles.filterBy.radio}
               checked={filterBy === value ? 'checked' : null}
               label={`${FilterByOptions[value]} (${this.getCount(value)})`} value={value}
-              onClick={() => onChange(value)} />
+              onClick={() => {
+                onToggle(false);
+                onChange(value);
+                }}
+            />
           );
         })}
       </div>
@@ -103,7 +107,8 @@ const styles = {
         zIndex: 2,
         backgroundColor: '#fff',
         padding: 10,
-        left: 15,
+        left: -13,
+        top: 89,
         border: '1px solid #ccc',
         borderRadius: 4
       };

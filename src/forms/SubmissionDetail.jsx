@@ -21,7 +21,6 @@ export default class SubmissionDetail extends Component {
     return (
       <div style={styles.container}>
         {this.renderAuthorDetail()}
-        <div style={styles.hr}></div>
         {this.renderAnswers()}
       </div>
     );
@@ -174,6 +173,7 @@ export default class SubmissionDetail extends Component {
             </Button>
           </div>
         </div>
+        <div style={styles.hr}></div>
         <div style={styles.submissionContainer}>
           <div style={styles.authorContainer}>
             <div style={styles.authorDetailsContainer}>

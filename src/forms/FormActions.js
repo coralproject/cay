@@ -534,10 +534,10 @@ export const publishGallery = () => (dispatch, getState) => {
   })
   .then(res => res.json())
   .then(gallery => {
-    console.log(gallery);
     dispatch({type: PUBLISH_GALLERY_SUCCESS, gallery});
     return gallery;
   })
+  .then(gallery => dispatch(fetchGallery(forms.activeForm)))
   .catch(error => dispatch({type: PUBLISH_GALLERY_FAILURE, error}));
 };
 

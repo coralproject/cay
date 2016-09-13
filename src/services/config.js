@@ -16,7 +16,7 @@ export const loadConfig = () =>
   Promise.all(CONFIG_ROUTES.map(fetchConfigFile))
   .then(([app, filters]) => {
     if (!allKeysDefined(app, REQUIRED_KEYS)) {
-      throw new Error(`missing required keys on config.json. Must define ${requiredKeys.join('|')}`);
+      throw new Error(`missing required keys on config.json. Must define ${REQUIRED_KEYS.join('|')}`);
     }
     // redefine elkhornStaticHost if not set
     app.elkhornStaticHost = app.elkhornStaticHost || `${app.elkhornHost}/widgets`;

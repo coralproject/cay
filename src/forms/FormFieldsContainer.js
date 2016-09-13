@@ -55,9 +55,9 @@ export default class FormFieldsContainer extends Component {
   //   this.setState({ savedFields: nextProps.forms.widgets, currentFields: nextProps.forms.widgets, isHovering: false });
   // }
   //
-  // resetForm() {
-  //   this.setState({ currentFields: this.state.savedFields.slice() });
-  // }
+  resetForm() {
+    this.setState({ currentFields: this.props.forms.widgets.slice() });
+  }
 
   getForm() {
     return this.props.activeForm ? this.props.forms[this.props.activeForm] : this.props.forms.form;
@@ -126,12 +126,13 @@ export default class FormFieldsContainer extends Component {
   }
 
   onRecaptchaChange(e) {
-    this.props.dispatch(updateForm({
+    this.props.dispatch(updateFormSet({
       settings: { recaptcha: e.target.checked }
     }));
   }
 
   appendWidget(field, targetPosition) {
+    debugger;
     this.setState({ autoExpand: targetPosition });
     this.props.markAsUnsaved();
     this.props.dispatch(appendWidget({
@@ -150,7 +151,6 @@ export default class FormFieldsContainer extends Component {
   render() {
     const { onFieldSelect, forms } = this.props;
     const form = this.props.activeForm ? forms[this.props.activeForm] : forms.form;
-    console.log('FormFieldsContainer.form', form);
     return (
       <div style={ styles.fieldsListContainer }>
         <input className="form-headline" onChange={ this.onFormHeadingChange } style={ styles.headLine } type="text" placeholder={ "Write a headline" } defaultValue={ form.header.heading } />
@@ -164,9 +164,9 @@ export default class FormFieldsContainer extends Component {
         <div style={ styles.fieldsList } className="widgets-container">
 
           {
-            forms.widgets && forms.widgets.map((id, i) => {
+            forms.widgets.map((id, i) => {
               return (
-                <FormFieldPlaceHolder key={id} container={this}>
+                <FormFieldPlaceHolder key={id} container={this} position={i}>
                   <FormField
                     id={id}
                     field={forms[id]}

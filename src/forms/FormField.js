@@ -44,20 +44,20 @@ export default class FormField extends Component {
   constructor(props, context) {
     super(props, context);
     // fieldBackup is used to restore params when clicking Cancel
+
     this.state = { expanded: props.autoExpand };
 
     this.onTitleChange = this.onTitleChange.bind(this);
     this.onDescriptionChange = this.onDescriptionChange.bind(this);
-    this.onCancelClick = this.onCancelClick.bind(this);
-    this.onSaveClick = this.onSaveClick.bind(this);
+    this.onCollapseClick = this.onCollapseClick.bind(this);
     this.onKeyUp = this.onKeyUp.bind(this);
     this.toggleExpanded = this.toggleExpanded.bind(this);
     this.onEditorChange = this.onEditorChange.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({ field: nextProps.field, fieldBackup: nextProps.field });
-  }
+  // componentWillReceiveProps(nextProps) {
+  //   this.setState({ field: nextProps.field, fieldBackup: nextProps.field });
+  // }
 
   toggleExpanded() {
     this.props.container.setState({ autoExpand: -1 });
@@ -89,13 +89,7 @@ export default class FormField extends Component {
     dispatch(updateWidget(id, {...field, title: e.target.value}));
   }
 
-  onSaveClick(e) {
-    if (e) e.stopPropagation();
-    this.toggleExpanded();
-    this.props.dispatch(updateWidget(this.props.id, this.state.field));
-  }
-
-  onCancelClick(e) {
+  onCollapseClick(e) {
     if (e) e.stopPropagation();
     this.toggleExpanded();
   }
@@ -114,12 +108,12 @@ export default class FormField extends Component {
 
   onKeyUp(e) {
     if (e.keyCode === 27) { // the Esc key
-      this.onCancelClick();
+      this.onCollapseClick();
     }
   }
 
   getFieldEditor() {
-    const { field } = this.state;
+    const { field } = this.props;
     // Passing listeners down from this class to the editors
     var localProps = { onEditorChange: this.onEditorChange };
     return EditorFactory[field.component] ? EditorFactory[field.component](field, localProps) : EditorFactory['TextField'](field, localProps);
@@ -179,16 +173,15 @@ export default class FormField extends Component {
   }
 
   renderExpanded() {
-    const { field } = this.state;
-    const { onTitleChange, onDescriptionChange, onCancelClick, onKeyUp } = this;
+    const { field } = this.props;
 
     return  (
-      <div className="widget-expanded" style={ styles.editSettingsPanel } onKeyUp={onKeyUp}>
+      <div className="widget-expanded" style={ styles.editSettingsPanel } onKeyUp={this.onKeyUp}>
 
         <div style={ styles.titleAndDescription }>
           <input
             className="field-title"
-            onChange={onTitleChange}
+            onChange={this.onTitleChange}
             style={ styles.fieldTitle }
             defaultValue={ field.title }
             type="text"
@@ -196,7 +189,7 @@ export default class FormField extends Component {
             autoFocus={ true } />
           <input
             className="field-description"
-            onChange={onDescriptionChange}
+            onChange={this.onDescriptionChange}
             defaultValue={ field.description }
             style={ styles.fieldDescription }
             type="text"
@@ -206,7 +199,7 @@ export default class FormField extends Component {
         { this.getFieldEditor() }
 
         <div style={ styles.bottomButtons }>
-          <button className="field-close-button" style={ styles.cancelButton } onClick={onCancelClick}><FaCompress /> Collapse</button>
+          <button className="field-close-button" style={ styles.cancelButton } onClick={this.onCollapseClick}><FaCompress /> Collapse</button>
         </div>
 
       </div>

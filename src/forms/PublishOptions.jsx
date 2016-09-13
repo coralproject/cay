@@ -79,7 +79,7 @@ export default class PublishOptions extends Component {
 
   render() {
 
-    const { onOpenPreview, forms, activeForm, onSaveClick, iframeCode, scriptCode, standaloneCode } = this.props;
+    const { onOpenPreview, forms, activeForm, onSaveClick, iframeCode, scriptCode, standaloneCode, hideOptions } = this.props;
 
     return (
       <div style={styles.leftPan}>
@@ -99,7 +99,7 @@ export default class PublishOptions extends Component {
             </Button>
 
             {
-              activeForm
+              activeForm && !hideOptions
               ? <Button
                   style={{ width: 310, marginTop: 10, backgroundColor: '#353B43' }}
                   raised ripple accent

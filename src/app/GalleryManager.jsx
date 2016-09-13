@@ -239,6 +239,7 @@ export default class GalleryManager extends Component {
   createEmbed(type) {
     const {forms} = this.props;
     const gallery = forms[forms.activeGallery];
+
     if (!gallery) return;
 
     switch (type) {
@@ -390,6 +391,7 @@ export default class GalleryManager extends Component {
               <PublishOptions
                  form={form}
                  forms={forms}
+                 hideOptions={!forms.activeGallery || !forms[forms.activeGallery].config.baseUrl}
                  activeForm={forms.activeForm}
                  onOpenPreview={this.togglePreview.bind(this)}
                  onSaveClick={this.onSaveClick.bind(this)}

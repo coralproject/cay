@@ -42,6 +42,11 @@ export default class SubmissionDetail extends Component {
       <div style={styles.answersContainer}>
         <div style={styles.answers}>
           {submission.replies.map((reply, key) => {
+            
+            // To filter null dates from the replies.
+            if (reply.answer.value === '--') {
+              return null;
+            }
 
             // identity fields are shown above, not as part of
             //   the reply list
@@ -60,6 +65,7 @@ export default class SubmissionDetail extends Component {
             });
 
             const modAnswer = inGallery ? this.props.removeFromGallery : this.props.sendToGallery;
+
             return (
               <Card style={styles.answerCard} key={key}>
                 <CardTitle>{reply.question}</CardTitle>

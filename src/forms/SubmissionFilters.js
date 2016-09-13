@@ -124,7 +124,8 @@ const styles = {
         padding: 10,
         left: 100,
         border: '1px solid #ccc',
-        borderRadius: 4
+        borderRadius: 4,
+        width: 240
       };
     }
   }

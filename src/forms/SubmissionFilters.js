@@ -122,10 +122,11 @@ const styles = {
         zIndex: 2,
         backgroundColor: '#fff',
         padding: 10,
-        left: 100,
         border: '1px solid #ccc',
         borderRadius: 4,
-        width: 240
+        width: 240,
+        top: 89,
+        left: 69
       };
     }
   }

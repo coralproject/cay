@@ -21,7 +21,7 @@ export class OrderDropdown extends Component {
   }
 
   render() {
-    const { order='dsc', onChange, open=false } = this.props;
+    const { order='dsc', onChange, open=false, onToggle } = this.props;
     return (
       <div style={styles.order.container(open)}>
         <p style={styles.filterBy.current}>{OrderOptions[order]}</p>
@@ -31,7 +31,11 @@ export class OrderDropdown extends Component {
               key={`order-${i}`}
               style={styles.filterBy.radio}
               checked={value === order ? 'checked' : null}
-              label={OrderOptions[value]} value={value} onClick={() => onChange(value)} />
+              label={OrderOptions[value]} value={value} onClick={() => {
+                onToggle(false);
+                onChange(value);
+              }}
+            />
           );
         })}
       </div>

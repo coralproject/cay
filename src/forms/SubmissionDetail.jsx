@@ -63,7 +63,7 @@ export default class SubmissionDetail extends Component {
               <Card style={styles.answerCard} key={key}>
                 <CardTitle>{reply.question}</CardTitle>
                 <CardText>{this.renderAnswer(reply)}</CardText>
-                <CardActions style={{ textAlign: 'right' }} border>
+                <CardActions style={styles.answerActions} border>
                   <Button colored onClick={modAnswer.bind(this, gallery.id, submission.id, reply.widget_id)}>
                     { inGallery ?
                         <span>Remove from Gallery <Icon name='delete' /></span> :
@@ -277,5 +277,8 @@ const styles = {
       marginLeft: 20,
       color: flagged ? '#fff' : '#000'
     };
+  },
+  answerActions: {
+    textAlign: 'right'
   }
 };

@@ -575,7 +575,7 @@ export const downloadCSV = formId => (dispatch, getState) => {
 
   fetch(`${app.askHost}/v1/form/${formId}/submission?filterby=${filterBy}&search=${submissionSearch}&csv=true`)
   .then(res => res.json())
-  .then(({ csv_url }) => window.open(csv_url, '_self')); // download by opening a new tab
+  .then(({ csv_url }) => window.open(`${csv_url}?filterby=${filterBy}&search=${submissionSearch}&csv=true`, '_self')); // download by opening a new tab
 }
 
 export const hasFlag = (submission, flag) => -1 !== submission.flags.indexOf(flag);

@@ -7,6 +7,7 @@ import {
   duplicateWidget,
   updateFormHeader,
   updateFormFooter,
+  updateFormSettings,
   updateFormFinishedScreen
 } from 'forms/FormActions';
 import uuid from 'node-uuid';
@@ -121,9 +122,7 @@ export default class FormFieldsContainer extends Component {
   }
 
   onRecaptchaChange(e) {
-    this.props.dispatch(updateForm({
-      settings: { recaptcha: e.target.checked }
-    }));
+    this.props.dispatch(updateFormSettings({ recaptcha: e.target.checked  }));
   }
 
   appendWidget(field, targetPosition) {

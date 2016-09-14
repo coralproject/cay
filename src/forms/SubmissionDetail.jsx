@@ -21,7 +21,6 @@ export default class SubmissionDetail extends Component {
     return (
       <div style={styles.container}>
         {this.renderAuthorDetail()}
-        <div style={styles.hr}></div>
         {this.renderAnswers()}
       </div>
     );
@@ -64,7 +63,7 @@ export default class SubmissionDetail extends Component {
               <Card style={styles.answerCard} key={key}>
                 <CardTitle>{reply.question}</CardTitle>
                 <CardText>{this.renderAnswer(reply)}</CardText>
-                <CardActions border>
+                <CardActions style={styles.answerActions} border>
                   <Button colored onClick={modAnswer.bind(this, gallery.id, submission.id, reply.widget_id)}>
                     { inGallery ?
                         <span>Remove from Gallery <Icon name='delete' /></span> :
@@ -174,6 +173,7 @@ export default class SubmissionDetail extends Component {
             </Button>
           </div>
         </div>
+        <div style={styles.hr}></div>
         <div style={styles.submissionContainer}>
           <div style={styles.authorContainer}>
             <div style={styles.authorDetailsContainer}>
@@ -201,7 +201,7 @@ const styles = {
     }
   },
   answersContainer: {
-    padding: '20px 15px 15px 15px',
+    padding: '20px 0',
     display: 'flex'
   },
   answers: {
@@ -277,5 +277,8 @@ const styles = {
       marginLeft: 20,
       color: flagged ? '#fff' : '#000'
     };
+  },
+  answerActions: {
+    textAlign: 'right'
   }
 };

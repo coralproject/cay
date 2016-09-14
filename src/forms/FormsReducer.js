@@ -106,12 +106,19 @@ export default (state = initial, action) => {
     return {...state, activeForm: null, formLoading: true};
 
   case types.FETCH_FORM_SUCCESS:
+
+    // make the widgets top-level so there's not all this copying mayhem any more
+    const widgets = action.form.steps[0].widgets.reduce((accum, widget) => {
+      accum[widget.id] = widget;
+      return accum;
+    }, {});
+
     return {  ...state,
               activeForm: action.form.id,
               [action.form.id]: action.form,
               formLoading: false,
-              widgets: action.form.steps[0].widgets,
-              currentFields: action.form.steps[0].widgets
+              widgets: action.form.steps[0].widgets.map(widget => widget.id),
+              ...widgets
           };
 
   case types.FETCH_FORM_FAILURE:
@@ -165,18 +172,23 @@ export default (state = initial, action) => {
 
     widgetsCopy.splice(position, 0, widgetCopy);
 
-    return Object.assign({}, state, { widgets: widgetsCopy, currentFields: widgetsCopy });
+    return Object.assign({}, state, { widgets: widgetsCopy });
 
   case types.APPEND_FORM_WIDGET:
 
     var widget = action.widget;
 
     var targetPosition = action.targetPosition || state.widgets.length;
-    var widgetsCopy = [...state.widgets];
+    var widgetsBeforeAppend = [...state.widgets];
 
-    widgetsCopy.splice(targetPosition, 0, widget);
+    widgetsBeforeAppend.splice(targetPosition, 0, widget.id);
 
-    return {...state, widgets: widgetsCopy, currentFields: widgetsCopy, isDragging: false };
+    return {
+      ...state,
+      widgets: widgetsBeforeAppend,
+      isDragging: false,
+      [widget.id]: widget
+    };
 
   case types.FETCH_FORMS_SUCCESS:
 
@@ -189,10 +201,8 @@ export default (state = initial, action) => {
     return {...state, formList, ...forms };
 
   case types.UPDATE_WIDGET:
-    var updatedWidgets = state.widgets.map((widget, id) => {
-      return widget.id === action.id ? Object.assign({}, widget, action.data) : widget;
-    });
-    return Object.assign({}, state, { widgets: updatedWidgets });
+    console.log(types.UPDATE_WIDGET, action);
+    return {...state, [action.id]: action.data};
 
   case types.UPDATE_FORM:
     const formProp = state.activeForm ? state.activeForm : 'form';
@@ -229,16 +239,16 @@ export default (state = initial, action) => {
   case types.MOVE_WIDGET:
 
     // First we make a copy removing the dragged element
-    var newWidgets = [...state.widgets];
-    var removed = newWidgets.splice(action.from, 1)[0];
-    newWidgets.splice(action.to, 0, removed);
+    var reorderedWidgets = [...state.widgets];
+    var removed = reorderedWidgets.splice(action.from, 1)[0];
+    reorderedWidgets.splice(action.to, 0, removed);
 
-    return {...state, currentFields: newWidgets, widgets: newWidgets, isDragging: false };
+    return {...state, widgets: reorderedWidgets, isDragging: false };
 
   case types.DELETE_FORM_WIDGET:
-    var widgetsCopy = [...state.widgets];
-    widgetsCopy.splice(action.widgetPosition, 1);
-    return {...state, widgets: widgetsCopy, currentFields: widgetsCopy };
+    var widgetsSansTarget = [...state.widgets];
+    widgetsSansTarget.splice(action.widgetPosition, 1);
+    return {...state, widgets: widgetsSansTarget };
 
   case types.CREATE_INIT_FORM:
     return {...state, savingForm: true, formCreationError: null, savedForm: null};

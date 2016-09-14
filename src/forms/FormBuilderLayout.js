@@ -1,7 +1,7 @@
 
 import React from 'react';
 
-export const Header = ({ onTitleChange, form, forms, onSaveClick, onOpenPreview }) => (
+export const Header = ({ onTitleChange, form }) => (
   <div style={ styles.formHeader }>
     <div style={ styles.titleAndMeta }>
       <input onChange={onTitleChange} style={styles.headLine} type="text"

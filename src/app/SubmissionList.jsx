@@ -22,7 +22,8 @@ import {
   updateOrder,
   updateSearch,
   updateFilterBy,
-  cleanSubmissionFilters
+  cleanSubmissionFilters,
+  downloadCSV
 } from 'forms/FormActions';
 
 import SubmissionDetail from 'forms/SubmissionDetail';
@@ -79,6 +80,10 @@ export default class SubmissionList extends Component {
     this.props.dispatch(fetchSubmissions(this.props.params.id));
   }
 
+  onDownloadCSV() {
+    this.props.dispatch(downloadCSV(this.props.params.id));
+  }
+
   onFilterByChange(filterBy) {
     this.props.dispatch(updateFilterBy(filterBy));
     this.props.dispatch(fetchSubmissions(this.props.params.id));
@@ -116,7 +121,8 @@ export default class SubmissionList extends Component {
             onSearchChange={this.onSearchChange.bind(this)}
             onFlag={this.onFlag.bind(this)}
             onBookmark={this.onBookmark.bind(this)}
-            onSelect={this.onSubmissionSelect.bind(this)} />
+            onSelect={this.onSubmissionSelect.bind(this)}
+            onDownloadCSV={this.onDownloadCSV.bind(this)} />
           <SubmissionDetail
             dispatch={this.props.dispatch}
             submission={submission}

@@ -130,7 +130,7 @@ export default class FormField extends Component {
   }
 
   render() {
-    return this.props.connectDragSource(
+    return (
       <div onMouseDown={ this.onMouseDown.bind(this) }>
         { this.renderContainer() }
       </div>
@@ -142,7 +142,7 @@ export default class FormField extends Component {
   }
 
   renderContainer() {
-    const { id, onMove, isLast, position, onDelete, onDuplicate } = this.props;
+    const { id, onMove, isLast, position, onDelete, onDuplicate, connectDragSource } = this.props;
     const { field } = this.state;
     const FieldIcon = this.getIcon(field);
     const fieldTitle = field.title ? field.title : 'Ask readers a question';
@@ -151,7 +151,7 @@ export default class FormField extends Component {
 
     return (
       <div className={field.component + ' ' + id} style={ styles.fieldContainer(!this.props.isDragging && this.state.expanded) } key={ id }>
-        <div style={ styles.fieldPosition }>{ position + 1 }</div>
+        {connectDragSource(<div style={ styles.fieldPosition }>{ position + 1 }</div>)}
         <div style={ styles.fieldIcon }><FieldIcon /></div>
         <div style={ styles.fieldContents }>
 
@@ -385,6 +385,8 @@ export const styles = {
     background: 'none'
   },
   fieldPosition: {
+    background: 'repeating-linear-gradient( -45deg, #dbdbdb, #dbdbdb 10px, #eee 10px, #eee 20px )',
+    cursor: 'move',
     alignSelf: 'flex-start',
     fontWeight: 'normal',
     padding: '15px 15px',

@@ -123,9 +123,15 @@ export default class FormField extends Component {
     return EditorFactory[field.component] ? EditorFactory[field.component](field, localProps) : EditorFactory['TextField'](field, localProps);
   }
 
+  onMouseDown(e) {
+    if (this.state.expanded) {
+      e.stopPropagation();
+    }
+  }
+
   render() {
     return this.props.connectDragSource(
-      <div>
+      <div onMouseDown={ this.onMouseDown.bind(this) }>
         { this.renderContainer() }
       </div>
     );

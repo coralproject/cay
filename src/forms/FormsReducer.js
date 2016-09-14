@@ -201,6 +201,7 @@ export default (state = initial, action) => {
     return {...state, formList, ...forms };
 
   case types.UPDATE_WIDGET:
+    console.log(types.UPDATE_WIDGET, action);
     return {...state, [action.id]: action.data};
 
   case types.UPDATE_FORM:

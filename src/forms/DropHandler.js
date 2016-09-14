@@ -19,7 +19,7 @@ const DropHelper = {
       container.moveWidget(draggedItem.position, targetPosition);
 
     } else {
-      // container.appendWidget(draggedItem.field, targetPosition);
+      container.appendWidget(draggedItem.field, targetPosition);
       // If hovering over the default empty placeholder (the bottom one)
       // if (component.props.empty) {
       //   currentFields[targetPosition] = draggedItem.field;
@@ -73,7 +73,7 @@ const DropHandler = {
       container.moveWidget(draggedItem.position, targetPosition);
     } else {
       console.log('DropHandler.drop', draggedItem);
-      container.appendWidget(draggedItem.field, targetPosition);
+      // container.appendWidget(draggedItem.field, targetPosition);
     }
 
   }

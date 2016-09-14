@@ -48,6 +48,8 @@ export default class FieldTypeButton extends Component {
       component: fieldModel.type,
       identity: fieldModel.identity ? fieldModel.identity : false,
       wrapper: {},
+      // defines what type this widget is, Short Answer, Numbers, etc.
+      // fieldModel.props could be undefined depending on the type.
       props: { ...fieldModel.props },
       id: uuid.v4()
     }));

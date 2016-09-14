@@ -132,7 +132,6 @@ export default class FormFieldsContainer extends Component {
   }
 
   appendWidget(field, targetPosition) {
-    debugger;
     this.setState({ autoExpand: targetPosition });
     this.props.markAsUnsaved();
     this.props.dispatch(appendWidget({

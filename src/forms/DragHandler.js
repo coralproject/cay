@@ -3,6 +3,9 @@ import { formDragStarted, formDragEnded } from 'forms/FormActions';
 const DragHandler = {
   beginDrag(props, monitor, component) {
     if (component && component.dispatchProps) component.dispatchProps.dispatch(formDragStarted());
+
+    console.log('beginDrag', props);
+
     return {
       field: props.field,
       id: props.id,

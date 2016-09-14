@@ -68,7 +68,7 @@ export default class FormField extends Component {
 
   onIdentityClick(e) {
     if (e) e.stopPropagation();
-    var field = Object.assign({}, this.state.field);
+    var field = Object.assign({}, this.props.field);
     field.identity = e.target.checked;
     this.setState({ field: field });
   }
@@ -95,7 +95,7 @@ export default class FormField extends Component {
   }
 
   onEditorChange(field) {
-    var fieldCopy = Object.assign({}, this.state.field, field);
+    var fieldCopy = Object.assign({}, this.props.field, field);
     this.setState({ field: fieldCopy });
   }
 

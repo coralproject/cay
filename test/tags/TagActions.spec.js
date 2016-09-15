@@ -202,7 +202,7 @@ describe('TagActions', () => {
         });
     });
 
-    it('should return an TAG_REQUEST_FAILURE when json from server is improperly formatted', (done) => {
+    it('should return an TAG_REQUEST_FAILURE when json from server is improperly formatted', () => {
       fetchMock.restore();
       fetchMock.mock((url, opts) => {
         if (url === 'trustHost/api/tag' && opts.method === 'POST') {
@@ -210,15 +210,14 @@ describe('TagActions', () => {
         } else {
           return false;
         }
-      }, 'The Trust service is pissed yo'); // Todo: update jive, don't know what's going down
-      TagActions.storeTag(mocktag.name,mocktag.description, mocktag.index)(store.dispatch, store.getState)
+      }, 'JSON improperly formatted');
+      return TagActions.storeTag(mocktag.name,mocktag.description, mocktag.index)(store.dispatch, store.getState)
         .then(() => {
           let action = store.getActions()[1];
           expect(action).to.have.property('type')
             .and.to.equal(TagActions.TAG_REQUEST_FAILURE);
           expect(action).to.have.property('err')
-            .and.to.deep.equal('Error from trust: Trust is pissed yo');
-          done();
+            .and.to.deep.equal('Error from the Trust service: JSON improperly formatted');
         });
     });
 

@@ -206,8 +206,7 @@ describe('TagActions', () => {
           let action = store.getActions()[1];
           expect(action).to.have.property('type')
             .and.to.equal(TagActions.TAG_REQUEST_FAILURE);
-          expect(action).to.have.property('err')
-            .and.to.deep.equal('Error from the Trust service: JSON improperly formatted');
+          expect(action).to.have.property('err');
         });
     });
 

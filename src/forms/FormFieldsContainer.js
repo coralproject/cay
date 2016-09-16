@@ -55,6 +55,10 @@ export default class FormFieldsContainer extends Component {
     this.setState({ currentFields: this.state.savedFields.slice() });
   }
 
+  collapseAll() {
+    this.setState({ autoExpand: false, expanded: false });
+  }
+
   getForm() {
     return this.props.activeForm ? this.props.forms[this.props.activeForm] : this.props.forms.form;
   }

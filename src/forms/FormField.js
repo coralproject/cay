@@ -24,8 +24,12 @@ import EditorFactory from 'forms/EditorFactory';
 // Field types
 import askTypes from 'forms/WidgetTypes';
 
+// Tools
+import cloneDeep from 'lodash/lang/cloneDeep';
+
 @DragSource('DraggableFormField', DragHandler, (connect) => ({
-  connectDragSource: connect.dragSource()
+  connectDragSource: connect.dragSource(),
+  connectDragPreview: connect.dragPreview()
 }))
 @connect(({ forms }) => ({
   isDragging: forms.isDragging,
@@ -36,6 +40,7 @@ export default class FormField extends Component {
   static propTypes = {
     field: PropTypes.object.isRequired,
     connectDragSource: PropTypes.func.isRequired,
+    connectDragPreview: PropTypes.func.isRequired,
     id: PropTypes.string
   };
 
@@ -45,7 +50,7 @@ export default class FormField extends Component {
     this.state = {
       'expanded': props.autoExpand,
       field: props.field,
-      fieldBackup: props.field
+      fieldBackup: cloneDeep(props.field)
     };
 
     this.onTitleChange = this.onTitleChange.bind(this);
@@ -56,7 +61,13 @@ export default class FormField extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({ field: nextProps.field, fieldBackup: nextProps.field });
+    this.setState({ field: nextProps.field });
+  }
+
+  expandField() {
+    // Create a backup copy of the field state before expanding
+    this.setState({ fieldBackup: cloneDeep(this.state.field) });
+    this.toggleExpanded();
   }
 
   toggleExpanded() {
@@ -71,36 +82,43 @@ export default class FormField extends Component {
     var field = Object.assign({}, this.state.field);
     field.identity = e.target.checked;
     this.setState({ field: field });
+    this.persistField(field);
   }
 
   onDescriptionChange(e) {
     var field = Object.assign({}, this.state.field);
     field.description = e.target.value;
     this.setState({ field: field });
+    this.persistField(field);
   }
 
   onTitleChange(e) {
     var field = Object.assign({}, this.state.field);
     field.title = e.target.value;
-    this.setState({ field: field });
+    this.persistField(field);
+  }
+
+  persistField(field) {
+    this.props.dispatch(updateWidget(this.props.id, field));
   }
 
   onSaveClick(e) {
     if (e) e.stopPropagation();
     this.toggleExpanded();
-    this.setState({ fieldBackup: this.state.field });
+    this.setState({ fieldBackup: cloneDeep(this.state.field) });
     this.props.dispatch(updateWidget(this.props.id, this.state.field));
   }
 
   onCancelClick(e) {
     if (e) e.stopPropagation();
-    this.setState({ field: this.state.fieldBackup });
+    // Restore the saved field backup on cancel
+    this.props.dispatch(updateWidget(this.props.id, cloneDeep(this.state.fieldBackup)));
     this.toggleExpanded();
   }
 
   onEditorChange(field) {
     var fieldCopy = Object.assign({}, this.state.field, field);
-    this.setState({ field: fieldCopy });
+    this.persistField(fieldCopy);
   }
 
   onClick() {
@@ -123,15 +141,10 @@ export default class FormField extends Component {
     return EditorFactory[field.component] ? EditorFactory[field.component](field, localProps) : EditorFactory['TextField'](field, localProps);
   }
 
-  onMouseDown(e) {
-    if (this.state.expanded) {
-      e.stopPropagation();
-    }
-  }
-
   render() {
-    return (
-      <div onMouseDown={ this.onMouseDown.bind(this) }>
+    const { connectDragPreview } = this.props;
+    return connectDragPreview(
+      <div>
         { this.renderContainer() }
       </div>
     );
@@ -156,8 +169,8 @@ export default class FormField extends Component {
         <div style={ styles.fieldContents }>
 
           {
-            !this.state.expanded
-            ? <h4 style={ styles.fieldTitleHeader }  onClick={ this.toggleExpanded.bind(this) }>
+            !this.state.expanded || this.props.isDragging
+            ? <h4 style={ styles.fieldTitleHeader }  onClick={ this.expandField.bind(this) }>
               { fieldTitle }
               { requiredMark }
               { identityMark }

@@ -38,23 +38,17 @@ export default class FormCreate extends Component {
     }
   }
 
-  updateFormStatus(status) {
-    this.props.dispatch(updateForm({status}));
-    this.props.dispatch(updateFormSettings({ isActive: status === 'open' }));
-  }
-
   updateInactive(value) {
     this.props.dispatch(updateFormSettings({ inactiveMessage: value }));
   }
 
   render() {
     const { preview } = this.state;
-    const { forms } = this.props;
     return (
       <Page style={styles.page}>
-        <FormChrome form={forms.form}
+        <FormChrome form={null}
           create={true}
-          updateStatus={this.updateFormStatus.bind(this)}
+          updateStatus={() => null}
           updateInactive={this.updateInactive.bind(this)}
           activeTab="builder" />
         <div style={styles.formBuilderContainer}>

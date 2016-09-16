@@ -39,13 +39,6 @@ export default class FormBuilderSidebar extends Component {
     })
   }
 
-  onFormStatusChange(e) {
-    let status = e.target.value;
-    this.setState({ formStatus: status });
-    this.props.dispatch(updateForm({status}));
-    this.props.dispatch(updateFormSettings({ isActive: status === 'open' }));
-  }
-
   onInactiveMessageChange(e) {
     this.props.dispatch(updateFormSettings({ inactiveMessage: e.target.value }));
   }

@@ -1,11 +1,8 @@
-import { formDragStarted, formDragEnded, updateWidget } from 'forms/FormActions';
+import { formDragStarted, formDragEnded } from 'forms/FormActions';
 
 const DragHandler = {
   beginDrag(props, monitor, component) {
     if (component && component.dispatchProps) component.dispatchProps.dispatch(formDragStarted());
-    /*if (component && component.dispatchProps) {
-      component.dispatchProps.dispatch(updateWidget(component.props.id, component.state.field));
-    }*/
     return {
       field: props.field,
       id: props.id,

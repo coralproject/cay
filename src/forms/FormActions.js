@@ -578,7 +578,7 @@ export const downloadCSV = formId => (dispatch, getState) => {
   const { submissionFilterBy, submissionSearch } = forms;
   const filterBy = submissionFilterBy === 'default' ? '' : submissionFilterBy;
 
-  fetch(`${app.askHost}/v1/form/${formId}/submission?filterby=${filterBy}&search=${submissionSearch}`)
+  fetch(`${app.askHost}/v1/form/${formId}/submission/export?filterby=${filterBy}&search=${submissionSearch}`)
   .then(res => res.json())
   .then(({ csv_url }) => window.open(`${csv_url}&filterby=${filterBy}&search=${submissionSearch}`, '_self')); // download by opening a new tab
 }

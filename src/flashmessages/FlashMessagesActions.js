@@ -10,7 +10,7 @@ export const HIDE_FLASH_MESSAGE = 'HIDE_FLASH_MESSAGE';
  * Action creators API
  */
 
-export const showFlashMessage = (message, messageType, duration=5000) => dispatch => {
+export const showFlashMessage = (message, messageType, duration=2500) => dispatch => {
   dispatch({ type: SHOW_FLASH_MESSAGE, message, messageType });
 
   if (duration) {

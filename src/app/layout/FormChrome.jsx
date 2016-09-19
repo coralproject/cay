@@ -129,12 +129,12 @@ export default class FormChrome extends React.Component {
         if (response.data && response.data.id) {
           this.props.dispatch(showFlashMessage('Your form saved.', 'success'));
         } else {
-          this.props.dispatch(showFlashMessage('Uh-oh, we can\'t save your form. Try again or report the error to your technical team', 'warning', false));
+          this.props.dispatch(showFlashMessage('Uh-oh, we can\'t save your form. Try again or report the error to your technical team', 'warning', 4000));
         }
       })
       .catch(err => {
         this.setState({statusDropdownOpen: false});
-        this.props.dispatch(showFlashMessage('Uh-oh, we can\'t save your form. Try again or report the error to your technical team', 'warning', false));
+        this.props.dispatch(showFlashMessage('Uh-oh, we can\'t save your form. Try again or report the error to your technical team', 'warning', 4000));
       });
   }
 

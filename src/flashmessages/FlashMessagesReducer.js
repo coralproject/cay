@@ -28,7 +28,7 @@ export default (state = initialState, action) => {
     return Object.assign({}, state, { show: true, message: action.message, type: action.messageType});
 
   case types.HIDE_FLASH_MESSAGE:
-    return Object.assign({}, state, { show: false, message: '', type: 'warning' });
+    return Object.assign({}, state, { ...initialState  });
 
   default:
     return state;

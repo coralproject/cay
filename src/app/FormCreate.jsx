@@ -83,7 +83,7 @@ export default class FormCreate extends Component {
     })
     .then(() => formCreate.setState({ preview: true }))
     .catch(() => formCreate.props
-      .dispatch(showFlashMessage('Uh-oh, we can\'t preview your form. Try again or report the error to your technical team', 'warning', false)));
+      .dispatch(showFlashMessage('Uh-oh, we can\'t preview your form. Try again or report the error to your technical team', 'warning', 4000)));
   }
 }
 

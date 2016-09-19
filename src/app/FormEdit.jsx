@@ -70,11 +70,7 @@ export default class FormEdit extends Component {
   }
 
   updateFormStatus(value) {
-    const {dispatch, forms} = this.props;
-    // hack. this needs to be fixed.
-    dispatch(updateFormStatus(forms.activeForm, value)).then(updatedForm => {
-      dispatch(saveForm(updatedForm, forms.widgets));
-    });
+    this.props.dispatch(updateFormStatus(this.props.forms.activeForm, value));
   }
 
   updateInactive(value) {

@@ -86,7 +86,7 @@ export default class PublishOptions extends Component {
 
   render() {
 
-    const { onOpenPreview, forms, activeForm, onSaveClick, iframeCode, scriptCode, standaloneCode, hideOptions } = this.props;
+    const { onOpenPreview, forms, activeForm, onSaveClick, iframeCode, scriptCode, standaloneCode, hideOptions, isGallery } = this.props;
 
     return (
       <div style={styles.leftPan}>
@@ -181,7 +181,7 @@ export default class PublishOptions extends Component {
                 </div>
 
                 <div>
-                  <h4 style={ styles.dialogSubTitle }>Standalone Form URL</h4>
+                  <h4 style={ styles.dialogSubTitle }>Standalone {isGallery ? 'Gallery' : 'Form'} URL</h4>
                   <textarea className="standalone-form-url" readOnly style={styles.embedCode} value={standaloneCode}/>
                     <div style={ styles.rightAlignButtons }>
                       <CopyToClipboard

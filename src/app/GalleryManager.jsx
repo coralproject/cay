@@ -396,7 +396,8 @@ export default class GalleryManager extends Component {
                  form={form}
                  forms={forms}
                  hideOptions={!forms.activeGallery || !forms[forms.activeGallery].config.baseUrl}
-                 activeForm={forms.activeForm}
+		 activeForm={forms.activeForm}
+		 isGallery={true}
                  onOpenPreview={this.togglePreview.bind(this)}
                  onSaveClick={this.onSaveClick.bind(this)}
                  scriptCode={this.createEmbed('script-tag')}

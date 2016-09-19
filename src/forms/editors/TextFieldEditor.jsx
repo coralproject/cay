@@ -100,7 +100,7 @@ export default class TextFieldEditor extends Component {
         }
         <div style={styles.bottomOptions}>
           <div style={styles.bottomOptionsLeft}>
-            <CheckInput
+            { /* <CheckInput
               label={'Min. Chars'}
               enabled={minLengthEnabled}
               handleCheckbox={ (e) => this.handleCheckboxChange(e, 'minLength') }
@@ -113,7 +113,7 @@ export default class TextFieldEditor extends Component {
               handleCheckbox={ (e) => this.handleCheckboxChange(e, 'maxLength') }
               handleInput={handleMaxInput}
               defaultValue={field.props.maxLength}
-            />
+            /> */ }
           </div>
           <CommonFieldOptions
             {...this.props}

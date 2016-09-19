@@ -116,7 +116,7 @@ export default class FormBuilder extends Component {
           this.props.dispatch(showFlashMessage('Your form saved.', 'success'));
           return !activeForm && router.push(`/forms/${response.data.id}`);
         } else {
-          this.props.dispatch(showFlashMessage('Uh-oh, we can\'t save your form. Try again or report the error to your technical team', 'warning', false));
+          this.props.dispatch(showFlashMessage('Uh-oh, we can\'t save your form. Try again or report the error to your technical team', 'warning', 4000));
         }
       });
   }

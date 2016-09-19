@@ -30,7 +30,7 @@ export default class FormFieldPlaceHolder extends Component {
                     this.props.children ?
                       this.props.children
                     :
-                      <p style={ styles.emptyPlaceholderText }>Drag and drop fields here to add a question</p>
+                      <p style={ styles.emptyPlaceholderText }>Click or drag and drop fields here to add a question</p>
                   }
                 </div>
           }

@@ -75,7 +75,7 @@ export default class FormBuilderSidebar extends Component {
     return (
       <div style={styles.leftPan}>
         <div style={styles.leftContainer}>
-          <h4 style={styles.leftContainerTitle}>Question Fields</h4>
+          <h4 style={styles.leftContainerTitle}>Select a question</h4>
           <div className="field-types" style={styles.typeList}>
             {askTypes.map((type, i) => (
               <FieldTypeButton key={ i } field={ type } />

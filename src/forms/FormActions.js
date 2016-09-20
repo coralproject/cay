@@ -395,14 +395,20 @@ export const removeFromGallery = (galleryId, subId, answerId) => {
   };
 };
 
-export const updateFormStatus = (formId, status) => (dispatch, getState) => {
+export const updateFormStatus = (formId, status) => (dispatch, getState) => dispatch({
+  type: FORM_STATUS_UPDATED,
+  form: getState().forms[formId],
+  status
+});
+
+export const publishFormStatus = (formId, status) => (dispatch, getState) => {
   const {app} = getState();
   const options = {method: 'PUT', mode: 'cors'};
 
   return fetch(`${app.askHost}/v1/form/${formId}/status/${status}`, options)
     .then(res => res.json())
     .then(form => {
-      dispatch({type: FORM_STATUS_UPDATED, form, status});
+      dispatch(updateFormStatus(formId, status));
       const updatedState = getState();
       // we want the Promise to evaluate to the saved form.
       return updatedState.forms[updatedState.forms.activeForm];

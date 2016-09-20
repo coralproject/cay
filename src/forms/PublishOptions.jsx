@@ -35,9 +35,7 @@ export default class PublishOptions extends Component {
     let status = e.target.value;
     const {dispatch, forms} = this.props;
     this.setState({ formStatus: status });
-    this.props.dispatch(updateFormStatus(forms.activeForm, status)).then(updatedForm => {
-      dispatch(saveForm(updatedForm, forms.widgets));
-    });
+    this.props.dispatch(updateFormStatus(forms.activeForm, status));
   }
 
   onInactiveMessageChange(e) {

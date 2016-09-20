@@ -1,17 +1,13 @@
-
-var config = require('../../nightwatch.conf.js')
-
-module.exports = {
+export default {
   'Create form and try it on a newsroom article': function(browser) {
     // Go to form creator and add headline and title
     browser
       .resizeWindow(1200, 800)
-      .url(`${config.baseUrl}forms/create`)
+      .url(`${browser.globals.baseUrl}forms/create`)
       .waitForElementVisible('body', 1000)
       .setValue('.form-title', 'E2E created form (test)')
       .setValue('.form-headline', 'My e2e form')
       .setValue('.form-description', 'This is a sample description :)')
-
 
       // make it live 
       .click('.form-status-toggle')
@@ -74,7 +70,6 @@ module.exports = {
                 .end()
             })
           })
-        
       })
   }
 };

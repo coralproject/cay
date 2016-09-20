@@ -40,3 +40,4 @@ reports/*
 !reports/.gitkeep
 bin
 selenium-debug.log
+test/e2e/reports

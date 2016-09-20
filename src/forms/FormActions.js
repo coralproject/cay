@@ -454,7 +454,6 @@ export const updateEditablePii = (reply, idAnswer, value) => {
   return (dispatch, getState) => {
 
     const {forms: {editablePii: editablePii}} = getState();
-
     // set the new value to the edited field in the editablePII array
     const newEditablePii = editablePii.map(entry => {
       if (entry.widget_id === idAnswer.widget_id) {

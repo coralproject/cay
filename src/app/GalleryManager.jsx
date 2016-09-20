@@ -207,7 +207,6 @@ export default class GalleryManager extends Component {
 
     return identityAnswers.map(idAnswer => {
       const text = idAnswer.edited ? idAnswer.edited : idAnswer.answer.text;
-
       return <div>
         <TextField
           onBlur={this.updatePiiInfo.bind(this, reply, idAnswer)}
@@ -288,6 +287,9 @@ export default class GalleryManager extends Component {
   }
 
   resetText(ans) {
+    ans.identity_answers.forEach(answer => {
+      this.props.dispatch(updateEditablePii(ans, answer, answer.answer.text || ''));
+    });
     this.props.dispatch(resetEditableTextToOriginal(ans));
   }
 

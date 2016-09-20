@@ -1,4 +1,8 @@
 const createFormCommands = {
+  ready() {
+    return this
+      .waitForElementVisible('body', 1000)
+  },
   addTitle(title) {
     return this
       .setValue('@formTitle', title)
@@ -22,6 +26,11 @@ const createFormCommands = {
   saveForm() {
     return this
       .click('@formSaveButton')
+  },
+  goLive() {
+    return this
+      .click('@statusToggle')
+      .click('@liveStatusOption')
   }
 };
 
@@ -53,7 +62,22 @@ export default {
       selector: '.widget-expanded .save-button'
     },
     formSaveButton: {
-      selector: '.form-actions .form-save-button'
+      selector: '.form-save-button'
+    },
+    formPreviewButton: {
+      selector: '.form-preview-button'
+    },
+    formPublishButton: {
+      selector: '.form-publish-button'
+    },
+    formSaveButton: {
+      selector: '.form-save-button'
+    },
+    statusToggle: {
+      selector: '.form-status-toggle'
+    },
+    liveStatusOption: {
+      selector: '.form-status-dropdown div:nth-of-type(3) span span'
     }
   }
 };

@@ -94,11 +94,13 @@ export default class PublishOptions extends Component {
           <div>
             <Button
               raised ripple primary
+              className="form-preview-button"
               onClick={onOpenPreview}
               style={{ width: 150, marginRight: 10, backgroundColor: '#4565A1' }}>
               Preview
             </Button>
             <Button
+              className="form-save-button"
               style={{ width: 150, backgroundColor: '#358D66' }}
               raised ripple colored
               onClick={onSaveClick}>
@@ -108,6 +110,7 @@ export default class PublishOptions extends Component {
             {
               activeForm && !hideOptions
               ? <Button
+                  className="form-publish-button"
                   style={{ width: 310, marginTop: 10, backgroundColor: '#353B43' }}
                   raised ripple accent
                   onClick={this.togglePublishModal}>

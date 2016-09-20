@@ -24,6 +24,7 @@ import GalleryManager from 'app/GalleryManager';
 
 import SignUp from 'app/SignUp';
 import SignIn from 'app/SignIn';
+import Permissions from 'app/Permissions';
 
 /**
  * Expose App base component. Handle all routes
@@ -36,6 +37,8 @@ export default ({ store, onLogPageView, defaultRoute, features }) => (
         <Redirect from="/" to={defaultRoute} />
         <Route path="login" component={Login} />
         <Route path="sign-up" component={SignUp} />
+        <Route path="sign-in" component={SignIn} />
+        <Route path="permissions" component={Permissions} />
         <Route path="about" component={About} />
         {features.trust !== false ?
           <div>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites errors="5"
+            failures="1"
+            tests="1">
+
+  <testsuite name="CreateFormTest"
+    errors="5" failures="1" hostname="" id="" package="tests" skipped="0"
+    tests="1" time="18.36" timestamp="Tue, 20 Sep 2016 03:11:47 GMT">
+  
+    <testcase name="Create form and try it on a newsroom article" time="18.36" assertions="3">
+
+    
+
+      <failure message="Timed out while waiting for element &lt;.embed-codes&gt; to be present for 8000 milliseconds.">    at Object.CreateFormAndTryItOnANewsroomArticle [as Create form and try it on a newsroom article] (/Users/belencurcio/Develop/cay/test/e2e/tests/CreateFormTest.js:38:8)
+    at _combinedTickCallback (internal/process/next_tick.js:67:7)</failure>
+
+    
+    </testcase>
+      <system-err>
+        ERROR: Unable to locate element: &quot;.form-status-toggle&quot; using: css selector
+    at Object.CreateFormAndTryItOnANewsroomArticle [as Create form and try it on a newsroom article] (/Users/belencurcio/Develop/cay/test/e2e/tests/CreateFormTest.js:13:8)
+    at Module.call (/Users/belencurcio/Develop/cay/node_modules/nightwatch/lib/runner/module.js:62:34)
+    at /Users/belencurcio/Develop/cay/node_modules/nightwatch/lib/runner/testcase.js:70:29
+    at _fulfilled (/Users/belencurcio/Develop/cay/node_modules/q/q.js:834:54)
+    at self.promiseDispatch.done (/Users/belencurcio/Develop/cay/node_modules/q/q.js:863:30)
+    at Promise.promise.promiseDispatch (/Users/belencurcio/Develop/cay/node_modules/q/q.js:796:13)
+    at /Users/belencurcio/Develop/cay/node_modules/q/q.js:556:49
+    at runSingle (/Users/belencurcio/Develop/cay/node_modules/q/q.js:137:13)
+    at flush (/Users/belencurcio/Develop/cay/node_modules/q/q.js:125:13)
+    at _combinedTickCallback (internal/process/next_tick.js:67:7)
+ERROR: Unable to locate element: &quot;.form-status-dropdown div:nth-of-type(3) span span&quot; using: css selector
+    at Object.CreateFormAndTryItOnANewsroomArticle [as Create form and try it on a newsroom article] (/Users/belencurcio/Develop/cay/test/e2e/tests/CreateFormTest.js:14:8)
+    at Module.call (/Users/belencurcio/Develop/cay/node_modules/nightwatch/lib/runner/module.js:62:34)
+    at /Users/belencurcio/Develop/cay/node_modules/nightwatch/lib/runner/testcase.js:70:29
+    at _fulfilled (/Users/belencurcio/Develop/cay/node_modules/q/q.js:834:54)
+    at self.promiseDispatch.done (/Users/belencurcio/Develop/cay/node_modules/q/q.js:863:30)
+    at Promise.promise.promiseDispatch (/Users/belencurcio/Develop/cay/node_modules/q/q.js:796:13)
+    at /Users/belencurcio/Develop/cay/node_modules/q/q.js:556:49
+    at runSingle (/Users/belencurcio/Develop/cay/node_modules/q/q.js:137:13)
+    at flush (/Users/belencurcio/Develop/cay/node_modules/q/q.js:125:13)
+    at _combinedTickCallback (internal/process/next_tick.js:67:7)
+ERROR: Unable to locate element: &quot;input[value=&quot;Option 1&quot;]&quot; using: css selector
+    at Object.CreateFormAndTryItOnANewsroomArticle [as Create form and try it on a newsroom article] (/Users/belencurcio/Develop/cay/test/e2e/tests/CreateFormTest.js:29:8)
+    at Module.call (/Users/belencurcio/Develop/cay/node_modules/nightwatch/lib/runner/module.js:62:34)
+    at /Users/belencurcio/Develop/cay/node_modules/nightwatch/lib/runner/testcase.js:70:29
+    at _fulfilled (/Users/belencurcio/Develop/cay/node_modules/q/q.js:834:54)
+    at self.promiseDispatch.done (/Users/belencurcio/Develop/cay/node_modules/q/q.js:863:30)
+    at Promise.promise.promiseDispatch (/Users/belencurcio/Develop/cay/node_modules/q/q.js:796:13)
+    at /Users/belencurcio/Develop/cay/node_modules/q/q.js:556:49
+    at runSingle (/Users/belencurcio/Develop/cay/node_modules/q/q.js:137:13)
+    at flush (/Users/belencurcio/Develop/cay/node_modules/q/q.js:125:13)
+    at _combinedTickCallback (internal/process/next_tick.js:67:7)
+ERROR: Unable to locate element: &quot;input[value=&quot;Option 2&quot;]&quot; using: css selector
+    at Object.CreateFormAndTryItOnANewsroomArticle [as Create form and try it on a newsroom article] (/Users/belencurcio/Develop/cay/test/e2e/tests/CreateFormTest.js:31:8)
+    at Module.call (/Users/belencurcio/Develop/cay/node_modules/nightwatch/lib/runner/module.js:62:34)
+    at /Users/belencurcio/Develop/cay/node_modules/nightwatch/lib/runner/testcase.js:70:29
+    at _fulfilled (/Users/belencurcio/Develop/cay/node_modules/q/q.js:834:54)
+    at self.promiseDispatch.done (/Users/belencurcio/Develop/cay/node_modules/q/q.js:863:30)
+    at Promise.promise.promiseDispatch (/Users/belencurcio/Develop/cay/node_modules/q/q.js:796:13)
+    at /Users/belencurcio/Develop/cay/node_modules/q/q.js:556:49
+    at runSingle (/Users/belencurcio/Develop/cay/node_modules/q/q.js:137:13)
+    at flush (/Users/belencurcio/Develop/cay/node_modules/q/q.js:125:13)
+    at _combinedTickCallback (internal/process/next_tick.js:67:7)
+ERROR: Unable to locate element: &quot;.form-actions .form-save-button&quot; using: css selector
+    at Object.CreateFormAndTryItOnANewsroomArticle [as Create form and try it on a newsroom article] (/Users/belencurcio/Develop/cay/test/e2e/tests/CreateFormTest.js:35:8)
+    at Module.call (/Users/belencurcio/Develop/cay/node_modules/nightwatch/lib/runner/module.js:62:34)
+    at /Users/belencurcio/Develop/cay/node_modules/nightwatch/lib/runner/testcase.js:70:29
+    at _fulfilled (/Users/belencurcio/Develop/cay/node_modules/q/q.js:834:54)
+    at self.promiseDispatch.done (/Users/belencurcio/Develop/cay/node_modules/q/q.js:863:30)
+    at Promise.promise.promiseDispatch (/Users/belencurcio/Develop/cay/node_modules/q/q.js:796:13)
+    at /Users/belencurcio/Develop/cay/node_modules/q/q.js:556:49
+    at runSingle (/Users/belencurcio/Develop/cay/node_modules/q/q.js:137:13)
+    at flush (/Users/belencurcio/Develop/cay/node_modules/q/q.js:125:13)
+    at _combinedTickCallback (internal/process/next_tick.js:67:7)
+      </system-err>
+  
+  
+  </testsuite>
+</testsuites>

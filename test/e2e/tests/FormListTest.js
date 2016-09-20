@@ -1,9 +1,7 @@
-var config = require('../../../nightwatch.conf.js')
-
-module.exports = {
+export default {
   'Form list': function (browser) {
     browser
-      .url(`${config.baseUrl}forms`)
+      .url(`${browser.globals.baseUrl}forms`)
       // Wait for the table to render
       .waitForElementVisible('.mdl-data-table', 1000)
       // Wait for a table item
@@ -15,13 +13,9 @@ module.exports = {
       browser.click('.mdl-data-table__cell--non-numeric')
       browser.expect.element('.mdl-data-table__cell--non-numeric').to.have.attribute('class').which.contains('mdl-data-table__header--sorted-descending')
 
-
       // The copy action is not sortable
       browser.click('.mdl-data-table__cell--non-numeric:nth-of-type(5)')
       browser.expect.element('.mdl-data-table__cell--non-numeric:nth-of-type(5)').to.have.attribute('class').equal('mdl-data-table__cell--non-numeric')
-
-
-
 
       browser.end()
   }

@@ -31,6 +31,12 @@ module.exports = {
         "applicationCacheEnabled" : false,
         "nativeEvents" : true
       },
+      "screenshots" : {
+        "enabled" : true,
+        "on_failure" : true,
+        "on_error" : true,
+        "path" : "./test/e2e/reports"
+      },
       "exclude": [
         './test/e2e/tests/CreateFormTest.js',
         './test/e2e/tests/FormListTest.js',

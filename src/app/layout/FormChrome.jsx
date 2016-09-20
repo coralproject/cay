@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import has from 'lodash/object/has';
 import {connect} from 'react-redux';
-import {saveForm} from 'forms/FormActions';
+import {saveForm, publishFormStatus} from 'forms/FormActions';
 import { showFlashMessage } from 'flashmessages/FlashMessagesActions';
 import Badge from 'components/Badge';
 import color from 'color';
@@ -123,7 +123,12 @@ export default class FormChrome extends React.Component {
     const { forms, dispatch } = this.props;
     const { form, widgets, activeForm } = forms;
 
-    dispatch(saveForm(activeForm ? forms[activeForm] : form, widgets))
+    const currentForm = activeForm ? forms[activeForm] : form;
+    dispatch(publishFormStatus(currentForm.id, currentForm.status))
+    .then(updatedForm => {
+      dispatch(saveForm(updatedForm, forms.widgets));
+    });
+    dispatch(saveForm(currentForm, widgets))
       .then(response => {
         this.setState({statusDropdownOpen: false});
         if (response.data && response.data.id) {

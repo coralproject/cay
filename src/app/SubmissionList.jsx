@@ -76,9 +76,7 @@ export default class SubmissionList extends Component {
 
   updateFormStatus(value) {
     const {dispatch, forms} = this.props;
-    dispatch(updateFormStatus(forms.activeForm, value)).then(updatedForm => {
-      dispatch(saveForm(updatedForm, forms.widgets));
-    });
+    dispatch(updateFormStatus(forms.activeForm, value));
   }
 
   updateInactive(value) {

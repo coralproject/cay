@@ -150,9 +150,7 @@ export default class GalleryManager extends Component {
 
   updateFormStatus(value) {
     const {dispatch, forms} = this.props;
-    dispatch(updateFormStatus(forms.activeForm, value)).then(updatedForm => {
-      dispatch(saveForm(updatedForm, forms.widgets));
-    });
+    dispatch(updateFormStatus(forms.activeForm, value));
   }
 
   getAttributionFields(form) {

@@ -58,6 +58,8 @@ export default class FormField extends Component {
     this.onCancelClick = this.onCancelClick.bind(this);
     this.onSaveClick = this.onSaveClick.bind(this);
     this.onKeyUp = this.onKeyUp.bind(this);
+    this.expandField = this.expandField.bind(this);
+    this.onEditorChange = this.onEditorChange.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -137,7 +139,7 @@ export default class FormField extends Component {
   getFieldEditor() {
     const { field } = this.state;
     // Passing listeners down from this class to the editors
-    var localProps = { onEditorChange: this.onEditorChange.bind(this) };
+    var localProps = { onEditorChange: this.onEditorChange };
     return EditorFactory[field.component] ? EditorFactory[field.component](field, localProps) : EditorFactory['TextField'](field, localProps);
   }
 
@@ -172,7 +174,7 @@ export default class FormField extends Component {
 
           {
             !showExpanded
-            ? <h4 style={ styles.fieldTitleHeader }  onClick={ this.expandField.bind(this) }>
+            ? <h4 style={ styles.fieldTitleHeader }  onClick={ this.expandField }>
               { fieldTitle }
               { requiredMark }
               { identityMark }

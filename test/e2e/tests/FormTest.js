@@ -1,23 +1,43 @@
 export default {
   tags: ['form'],
-  beforeEach: browser => {
-  },
-  'Creating a Form': client => {
+  before: client => {
     const { baseUrl } = client.globals;
     const createFormPage = client.page.createFormPage();
 
     createFormPage
       .navigate(baseUrl + '/forms/create')
-      .addTitle('Test Title')
-      .addHeadline('Test Headline')
-      .addDescription('Test Description')
+      .ready()
+      .saveForm()
+      .goLive()
+  },
+  'User adds Title': client => {
+    const createFormPage = client.page.createFormPage();
 
+    createFormPage
+      .addHeadline('Test Headline')
+  },
+  'User adds Headline': client => {
+    const createFormPage = client.page.createFormPage();
+
+    createFormPage
+      .addHeadline('Test Headline')
+  },
+  'User adds Headline': client => {
+    const createFormPage = client.page.createFormPage();
+
+    createFormPage
+      .addDescription('Test Description')
+  },
+  'User adds a Short Answer': client => {
+    const createFormPage = client.page.createFormPage();
+
+    createFormPage
       .addShortAnswer({
         title: 'Test Title',
         description: 'Test Description'
       })
-      .saveForm()
-
-    client.end()
   },
+  after: client => {
+    client.end()
+  }
 };

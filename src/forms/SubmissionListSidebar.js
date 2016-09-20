@@ -9,6 +9,7 @@ import FaSearch from 'react-icons/lib/fa/search';
 import FaFilter from 'react-icons/lib/fa/filter';
 import FaLongArrowUp from 'react-icons/lib/fa/long-arrow-up';
 import FaLongArrowDown from 'react-icons/lib/fa/long-arrow-down';
+import FaDownload from 'react-icons/lib/fa/download';
 import { FilterDropdown, OrderDropdown } from 'forms/SubmissionFilters';
 import Pagination from 'components/lists/Pagination';
 import { fetchSubmissions, hasFlag } from 'forms/FormActions';
@@ -137,6 +138,8 @@ export default class Sidebar extends Component {
         <div style={styles.container}>
           <div style={styles.countContainer}>
             <p style={styles.count}>{count} of {formCounts.totalSubmissions} Submission{formCounts.totalSubmissions === 1 ? '' : 's'}</p>
+            <button onClick={() => this.props.onDownloadCSV()}
+              style={[styles.filterButton, styles.filterDownloadButton]}><FaDownload /></button>
           </div>
           <div style={styles.searchContainer}>
             <input
@@ -217,10 +220,12 @@ const styles = {
   count: {
     fontWeight: 'bold',
     fontSize: '1.2em',
-    color: darkGrey
+    color: 'black'
   },
   countContainer: {
-    margin: 10
+    margin: 10,
+    display: 'flex',
+    justifyContent: 'space-between'
   },
   search: {
     height: 35,
@@ -261,6 +266,9 @@ const styles = {
     display: 'inline-block',
     color: 'rgb(94,94,94)',
     cursor: 'pointer'
+  },
+  filterDownloadButton: {
+    borderRadius: 6
   },
   filterLeftButton: {
     borderLeft: 0,

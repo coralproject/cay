@@ -1,6 +1,7 @@
 {
  "xeniaHost": "${XENIA_URL}",
- "pillarHost": "${PILLAR_URL}",
+ "askHost": "${ASK_URL}",
+ "trustHost": "${TRUST_URL}",
  "elkhornHost": "${ELKHORN_URL}",
  "environment": "${ENV}",
  "brand": "${PROJECT}",
@@ -8,7 +9,7 @@
  "requireLogin": false,
  "basicAuthorization": "Basic ${AUTH_TOKEN}",
   "features": {
-    "trust": ${TRUST}
+    "trust": ${TRUST},
     "ask": true
   }
 }

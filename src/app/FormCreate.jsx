@@ -38,23 +38,17 @@ export default class FormCreate extends Component {
     }
   }
 
-  updateFormStatus(status) {
-    this.props.dispatch(updateForm({status}));
-    this.props.dispatch(updateFormSettings({ isActive: status === 'open' }));
-  }
-
   updateInactive(value) {
     this.props.dispatch(updateFormSettings({ inactiveMessage: value }));
   }
 
   render() {
     const { preview } = this.state;
-    const { forms } = this.props;
     return (
       <Page style={styles.page}>
-        <FormChrome form={forms.form}
+        <FormChrome form={null}
           create={true}
-          updateStatus={this.updateFormStatus.bind(this)}
+          updateStatus={() => null}
           updateInactive={this.updateInactive.bind(this)}
           activeTab="builder" />
         <div style={styles.formBuilderContainer}>
@@ -89,7 +83,7 @@ export default class FormCreate extends Component {
     })
     .then(() => formCreate.setState({ preview: true }))
     .catch(() => formCreate.props
-      .dispatch(showFlashMessage('Uh-oh, we can\'t preview your form. Try again or report the error to your technical team', 'warning', false)));
+      .dispatch(showFlashMessage('Uh-oh, we can\'t preview your form. Try again or report the error to your technical team', 'warning', 4000)));
   }
 }
 

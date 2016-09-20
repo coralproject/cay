@@ -21,7 +21,6 @@ export default class SubmissionDetail extends Component {
     return (
       <div style={styles.container}>
         {this.renderAuthorDetail()}
-        <div style={styles.hr}></div>
         {this.renderAnswers()}
       </div>
     );
@@ -42,6 +41,11 @@ export default class SubmissionDetail extends Component {
       <div style={styles.answersContainer}>
         <div style={styles.answers}>
           {submission.replies.map((reply, key) => {
+            
+            // To filter null dates from the replies.
+            if (reply.answer.value === '--') {
+              return null;
+            }
 
             // identity fields are shown above, not as part of
             //   the reply list
@@ -60,11 +64,12 @@ export default class SubmissionDetail extends Component {
             });
 
             const modAnswer = inGallery ? this.props.removeFromGallery : this.props.sendToGallery;
+
             return (
               <Card style={styles.answerCard} key={key}>
                 <CardTitle>{reply.question}</CardTitle>
                 <CardText>{this.renderAnswer(reply)}</CardText>
-                <CardActions border>
+                <CardActions style={styles.answerActions} border>
                   <Button colored onClick={modAnswer.bind(this, gallery.id, submission.id, reply.widget_id)}>
                     { inGallery ?
                         <span>Remove from Gallery <Icon name='delete' /></span> :
@@ -174,6 +179,7 @@ export default class SubmissionDetail extends Component {
             </Button>
           </div>
         </div>
+        <div style={styles.hr}></div>
         <div style={styles.submissionContainer}>
           <div style={styles.authorContainer}>
             <div style={styles.authorDetailsContainer}>
@@ -201,11 +207,12 @@ const styles = {
     }
   },
   answersContainer: {
-    padding: '20px 15px 15px 15px',
+    padding: '20px 0',
     display: 'flex'
   },
   answers: {
-    flex: 1
+    flex: 1,
+    overflow: 'auto'
   },
   authorHeaderContainer: {
     display: 'flex',
@@ -276,5 +283,8 @@ const styles = {
       marginLeft: 20,
       color: flagged ? '#fff' : '#000'
     };
+  },
+  answerActions: {
+    textAlign: 'right'
   }
 };

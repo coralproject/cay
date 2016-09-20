@@ -19,8 +19,11 @@ export default class MultipleChoiceEditor extends Component {
     this.state = { options: props.field.props.options && props.field.props.options.length ?
         props.field.props.options
       :
-        [ { title: 'Option 1' } ]
+        [ { title: 'Option 1', placeholder: true } ]
     };
+
+    this.addOption = this.addOption.bind(this);
+
     this.focusNew = false;
   }
 
@@ -33,7 +36,10 @@ export default class MultipleChoiceEditor extends Component {
 
   addOption() {
     var optionsCopy = this.state.options.slice();
-    optionsCopy.push({ title: 'Option ' + (this.state.options.length + 1) });
+    optionsCopy.push({
+      title: 'Option ' + (this.state.options.length + 1),
+      placeholder: true
+    });
     // We are not using state on this, it's going to be manipulated on render
     this.focusNew = true;
     this.setState({ options: optionsCopy });
@@ -58,7 +64,7 @@ export default class MultipleChoiceEditor extends Component {
 
   updateOption(i, e) {
     var optionsCopy = this.state.options.slice();
-    optionsCopy[i] = { title: e.target.value };
+    optionsCopy[i] = { title: e.target.value, placeholder: false };
     this.setState({ options: optionsCopy });
     this.updateFieldOptions(optionsCopy);
   }
@@ -115,7 +121,12 @@ export default class MultipleChoiceEditor extends Component {
                   }
                 }
               }
-              style={ styles.optionInput } type="text" value={ option.title } onChange={ this.updateOption.bind(this, i) } />
+              style={ styles.optionInput }
+              type="text"
+              placeholder={ option.title }
+              value={ !option.placeholder ? option.title : '' }
+              onChange={ this.updateOption.bind(this, i) }
+            />
           </div>
 
           {/* Action buttons for an option */}
@@ -150,7 +161,7 @@ export default class MultipleChoiceEditor extends Component {
             field.props.otherAllowed ?
               <div style={ styles.optionRow }>
                 <div style={ styles.optionRowText }>
-                  <input style={ styles.optionInput } type="text" defaultValue="Other:" value={ field.props.otherText } onChange={ this.onOtherTextChange.bind(this) } />
+                  <input style={ styles.optionInput } type="text" placeholder="Other:" value={ field.props.otherText } onChange={ this.onOtherTextChange.bind(this) } />
                 </div>
                 <div style={ styles.optionRowButtons }>
                   &nbsp;
@@ -161,7 +172,7 @@ export default class MultipleChoiceEditor extends Component {
 
           <div style={ styles.optionRow }>
             <div style={ styles.optionRowText }>
-              <button style={ styles.addOption } onClick={ this.addOption.bind(this) } className="add-option"><FaPlusCircle /> Add another option</button>
+              <button style={ styles.addOption } onClick={ this.addOption } className="add-option"><FaPlusCircle /> Add another option</button>
             </div>
             <div style={ styles.optionRowButtons }>
               &nbsp;

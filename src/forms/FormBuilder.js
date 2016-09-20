@@ -69,7 +69,6 @@ export default class FormBuilder extends Component {
             onOpenPreview={onOpenPreview}
             onPublishOptions={this.onPublishOptions.bind(this)}
             onSaveClick={this.onSaveClick.bind(this)}
-            onFormStatusChange={this.onFormStatusChange.bind(this)}
             addToBottom={this.addToBottom.bind(this)}
             activeForm={activeForm}
             openDialog={this.state.openDialog}
@@ -117,18 +116,13 @@ export default class FormBuilder extends Component {
           this.props.dispatch(showFlashMessage('Your form saved.', 'success'));
           return !activeForm && router.push(`/forms/${response.data.id}`);
         } else {
-          this.props.dispatch(showFlashMessage('Uh-oh, we can\'t save your form. Try again or report the error to your technical team', 'warning', false));
+          this.props.dispatch(showFlashMessage('Uh-oh, we can\'t save your form. Try again or report the error to your technical team', 'warning', 4000));
         }
       });
   }
 
   onPublishOptions() {
     this.setState({ openDialog: !this.state.openDialog });
-  }
-
-  onFormStatusChange(e) {
-    this.markAsUnsaved();
-    this.props.dispatch(updateFormSettings({isActive: e.target.checked}));
   }
 
   onFormTitleChange(e) {
@@ -184,7 +178,8 @@ const styles = {
     background: 'white',
     boxShadow: '-5px -5px 20px #999',
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    zIndex: 100
   },
   previewActions: {
     padding: '10px',
@@ -212,7 +207,8 @@ const styles = {
     borderTop: '10px solid transparent',
     borderBottom: '10px solid transparent',
     height: '0px',
-    width: '50px'
+    width: '50px',
+    zIndex: 100
   },
   previewCloseIcon: {
     position: 'absolute',
@@ -224,7 +220,8 @@ const styles = {
     flexGrow: '2'
   },
   previewContainer: {
-    position: 'relative'
+    position: 'relative',
+    zIndex: 100
   },
   previewSpinner: {
     position: 'absolute',
@@ -242,6 +239,7 @@ const styles = {
     width: '100%',
     height: '100%',
     top: 0,
-    left: 0
+    left: 0,
+    zIndex: 10
   }
 };

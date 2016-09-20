@@ -16,24 +16,27 @@ import FieldTypeButton from 'forms/FieldTypeButton';
 import askTypes from 'forms/WidgetTypes';
 
 import Modal from 'components/modal/Modal';
+import PublishOptions from 'forms/PublishOptions';
 
 @connect(({ app, forms }) => ({ app, forms }))
 export default class FormBuilderSidebar extends Component {
 
   constructor(props) {
-    super(props);
-    this.state = { openDialog: false, formStatus: 'closed' };
+    super(props)
+
+    this.state = {
+      openDialog: false,
+      formStatus: 'closed',
+      activeTab: 0
+    }
+
+    this.setActiveTab = this.setActiveTab.bind(this)
   }
 
   onPublishOptions() {
-    this.setState({ openDialog: !this.state.openDialog });
-  }
-
-  onFormStatusChange(e) {
-    let status = e.target.value;
-    this.setState({ formStatus: status });
-    this.props.dispatch(updateForm({status}));
-    this.props.dispatch(updateFormSettings({ isActive: status === 'open' }));
+    this.setState({
+      openDialog: !this.state.openDialog
+    })
   }
 
   onInactiveMessageChange(e) {
@@ -57,155 +60,39 @@ export default class FormBuilderSidebar extends Component {
     }
   }
 
+  setActiveTab(tab) {
+    this.setState({
+      activeTab: tab
+    })
+  }
+
   render() {
 
     const { preview, onClosePreview, onOpenPreview, forms, activeForm, app, onSaveClick } = this.props;
     const form = activeForm ? forms[activeForm] : forms.form;
+    const { activeTab } = this.state;
 
     return (
       <div style={styles.leftPan}>
         <div style={styles.leftContainer}>
-          <h4 style={styles.leftContainerTitle}>Question Fields</h4>
+          <h4 style={styles.leftContainerTitle}>Select a question</h4>
           <div className="field-types" style={styles.typeList}>
             {askTypes.map((type, i) => (
               <FieldTypeButton key={ i } field={ type } />
             ))}
           </div>
 
-          <div>
-            <Button
-              raised ripple
-              onClick={onOpenPreview}
-              style={{ width: 150, marginRight: 10 }}>
-              Preview
-            </Button>
-            <Button
-              style={{ width: 150 }}
-              raised ripple accent
-              onClick={onSaveClick}>
-              { forms.savingForm ? <Spinner/> : null } Save
-            </Button>
-
-            {
-              activeForm
-              ? <Button
-                  style={{ width: 310, marginTop: 10 }}
-                  raised ripple accent
-                  onClick={this.onPublishOptions.bind(this)}>
-                  Publish options
-                </Button>
-              : null
-            }
-
-          </div>
-
-          {activeForm ? (
-            <Modal
-              noFooter
-              style={styles.publishModal}
-              title="Publish Options"
-              cancelAction={this.onPublishOptions.bind(this)}
-              isOpen={this.state.openDialog}>
-
-              <div style={ styles.dialogContent }>
-
-                <div>
-                  <h4 style={ styles.dialogSubTitle }>Set form status</h4>
-                  <RadioGroup
-                    onChange={ this.onFormStatusChange.bind(this) }
-                    childContainer="div"
-                    value={ form.status }
-                    name="formStatusRadio">
-                    <Radio value="open" ripple>Live, accepting submissions</Radio>
-                    <Radio value="closed">Closed, not accepting submissions</Radio>
-                  </RadioGroup>
-                  {
-                    this.state.formStatus && this.state.formStatus == 'closed'
-                    ? <div>
-                      <Textfield
-                        onChange={this.onInactiveMessageChange.bind(this)}
-                        label="We are not currently accepting submissions..."
-                        value={form.settings.inactiveMessage}
-                        style={{ width: '95%', marginLeft: '5%' }}
-                      />
-                      </div>
-                    : null
-                  }
-                  <Button
-                    raised ripple
-                    style={{ marginTop: 20 }}
-                    onClick={onSaveClick}>
-                    { forms.savingForm ? <Spinner/> : null } Apply
-                  </Button>
-                </div>
-
-                <div>
-                  <h4 style={ styles.dialogSubTitle }>Embed options</h4>
-                  <Tabs activeTab={this.state.activeTab} onChange={(tabId) => this.setState({ activeTab: tabId })}>
-                    <Tab>With iframe</Tab>
-                    <Tab>Without iframe</Tab>
-                  </Tabs>
-                  <section>
-                    {
-                      this.state.activeTab == 0 ?
-                        <div>
-                          <textarea className="embed-code" readOnly style={styles.embedCode} value={this.createEmbed('script-tag')}/>
-                          <CopyToClipboard
-                            text={this.createEmbed('script-tag')}
-                            onCopy={() => {
-                              this.setState({embedCopied: true});
-                              setTimeout(() => this.setState({embedCopied: false}), 5000);
-                            }}>
-                            <Button raised>Copy</Button>
-                          </CopyToClipboard>
-                          {
-                            this.state.embedCopied
-                            ? <span style={ styles.copied }>Copied!</span>
-                            : null
-                          }
-                        </div>
-                      :
-                        <div>
-                          <textarea className="embed-code-iframe" readOnly style={styles.embedCode} value={this.createEmbed('iframe')}/>
-                          <CopyToClipboard
-                            text={this.createEmbed('iframe')}
-                            onCopy={() => {
-                              this.setState({embedCopied: true});
-                              setTimeout(() => this.setState({embedCopied: false}), 5000);
-                            }}>
-                            <Button raised>Copy</Button>
-                          </CopyToClipboard>
-                          {
-                            this.state.embedCopied
-                            ? <span style={ styles.copied }>Copied!</span>
-                            : null
-                          }
-                        </div>
-                    }
-                  </section>
-                </div>
-
-                <div>
-                  <h4 style={ styles.dialogSubTitle }>Standalone Form URL</h4>
-                  <textarea className="standalone-form-url" readOnly style={styles.embedCode} value={this.createEmbed('standalone')}/>
-                    <CopyToClipboard
-                      text={this.createEmbed('standalone')}
-                      onCopy={() => {
-                        this.setState({standaloneCopied: true});
-                        setTimeout(() => this.setState({standaloneCopied: false}), 5000);
-                      }}>
-                      <Button raised>Copy</Button>
-                    </CopyToClipboard>
-                    {
-                      this.state.standaloneCopied
-                      ? <span style={ styles.copied }>Copied!</span>
-                      : null
-                    }
-                </div>
-
-              </div>
-            </Modal>
-          ): null }
+          <PublishOptions
+            isForm
+            form={form}
+            forms={forms}
+            activeForm={activeForm}
+            onOpenPreview={onOpenPreview}
+            onSaveClick={onSaveClick}
+            scriptCode={this.createEmbed('script-tag')}
+            iframeCode={this.createEmbed('iframe')}
+            standaloneCode={this.createEmbed('standalone')}
+          />
 
         </div>
       </div>

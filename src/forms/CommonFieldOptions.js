@@ -9,10 +9,12 @@ import FaQuestionCircle from 'react-icons/lib/fa/question-circle';
 @connect(({ forms, app }) => ({ forms, app }))
 @Radium
 export default class TextFieldEditor extends Component {
-
   constructor(props) {
     super(props);
-    this.state = { showingTooltip: false };
+
+    this.state = {
+      showingTooltip: false
+    };
   }
 
   onRequiredClick(e) {
@@ -74,7 +76,8 @@ const styles = {
     display: 'inline-block',
     padding: '10px 0 10px 10px',
     cursor: 'pointer',
-    lineHeight: '30px'
+    lineHeight: '30px',
+    fontSize: '13px'
   },
   bottomOptionsRight: {
     textAlign: 'right',

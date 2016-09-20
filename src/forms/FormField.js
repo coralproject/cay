@@ -1,5 +1,6 @@
-import React, {Component, PropTypes} from 'react';
-import { connect } from 'react-redux';
+import React, {Component, PropTypes} from 'react'
+import { connect } from 'react-redux'
+import Radium from 'radium'
 
 // Icons
 import FaTrash from 'react-icons/lib/fa/trash';
@@ -30,6 +31,7 @@ import askTypes from 'forms/WidgetTypes';
   isDragging: forms.isDragging,
   widgets: forms.widgets
 }))
+@Radium
 export default class FormField extends Component {
   static propTypes = {
     field: PropTypes.object.isRequired,
@@ -40,7 +42,17 @@ export default class FormField extends Component {
   constructor(props, context) {
     super(props, context);
     // fieldBackup is used to restore params when clicking Cancel
-    this.state = { 'expanded': props.autoExpand, field: props.field, fieldBackup: props.field };
+    this.state = {
+      'expanded': props.autoExpand,
+      field: props.field,
+      fieldBackup: props.field
+    };
+
+    this.onTitleChange = this.onTitleChange.bind(this);
+    this.onDescriptionChange = this.onDescriptionChange.bind(this);
+    this.onCancelClick = this.onCancelClick.bind(this);
+    this.onSaveClick = this.onSaveClick.bind(this);
+    this.onKeyUp = this.onKeyUp.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -99,13 +111,8 @@ export default class FormField extends Component {
   }
 
   onKeyUp(e) {
-    switch (e.keyCode) {
-    case 13: // ENTER
-      this.onSaveClick();
-      break;
-    case 27: // ESCAPE
+    if (e.keyCode === 27) {
       this.onCancelClick();
-      break;
     }
   }
 
@@ -116,29 +123,35 @@ export default class FormField extends Component {
     return EditorFactory[field.component] ? EditorFactory[field.component](field, localProps) : EditorFactory['TextField'](field, localProps);
   }
 
+  onMouseDown(e) {
+    if (this.state.expanded) {
+      e.stopPropagation();
+    }
+  }
+
   render() {
-    return this.props.connectDragSource(
-      <div>
+    return (
+      <div onMouseDown={ this.onMouseDown.bind(this) }>
         { this.renderContainer() }
       </div>
     );
   }
 
-  getIcon(component) {
-    return askTypes.find(type => type.type === component).icon;
+  getIcon(field) {
+    return askTypes.find(type => type.type === field[field.component ? 'component' : 'type']).icon;
   }
 
   renderContainer() {
-    const { id, onMove, isLast, position, onDelete, onDuplicate } = this.props;
+    const { id, onMove, isLast, position, onDelete, onDuplicate, connectDragSource } = this.props;
     const { field } = this.state;
-    const FieldIcon = this.getIcon(field.component);
+    const FieldIcon = this.getIcon(field);
     const fieldTitle = field.title ? field.title : 'Ask readers a question';
     const requiredMark = field.wrapper && field.wrapper.required ? <span style={ styles.requiredAsterisk }>*</span> : null;
     const identityMark = field.identity ? <span style={ styles.identityLabel }><FaUser/></span> : null;
 
     return (
       <div className={field.component + ' ' + id} style={ styles.fieldContainer(!this.props.isDragging && this.state.expanded) } key={ id }>
-        <div style={ styles.fieldPosition }>{ position + 1 }</div>
+        {connectDragSource(<div style={ styles.fieldPosition }>{ position + 1 }</div>)}
         <div style={ styles.fieldIcon }><FieldIcon /></div>
         <div style={ styles.fieldContents }>
 
@@ -172,15 +185,15 @@ export default class FormField extends Component {
 
   renderExpanded() {
     const { field } = this.state;
-    const { id } = this.props;
 
+    const { onTitleChange, onDescriptionChange, onCancelClick, onSaveClick, onKeyUp } = this;
     return  (
-      <div className="widget-expanded" style={ styles.editSettingsPanel } onKeyUp={ this.onKeyUp.bind(this) }>
+      <div className="widget-expanded" style={ styles.editSettingsPanel } onKeyUp={onKeyUp}>
 
         <div style={ styles.titleAndDescription }>
           <input
             className="field-title"
-            onChange={ this.onTitleChange.bind(this) }
+            onChange={onTitleChange}
             style={ styles.fieldTitle }
             defaultValue={ field.title }
             type="text"
@@ -188,7 +201,7 @@ export default class FormField extends Component {
             autoFocus={ true } />
           <input
             className="field-description"
-            onChange={ this.onDescriptionChange.bind(this) }
+            onChange={onDescriptionChange}
             defaultValue={ field.description }
             style={ styles.fieldDescription }
             type="text"
@@ -198,8 +211,16 @@ export default class FormField extends Component {
         { this.getFieldEditor() }
 
         <div style={ styles.bottomButtons }>
-          <button className="field-close-button" style={ styles.cancelButton } onClick={ this.onCancelClick.bind(this) }><FaClose /> Cancel</button>
-          <button className="field-close-button save-button" style={ styles.saveButton } onClick={ this.onSaveClick.bind(this) }><FaFloppyO /> Save</button>
+          <button className="field-close-button" style={ styles.cancelButton } onClick={onCancelClick}><FaClose /> Cancel</button>
+          <button
+            className="field-close-button save-button"
+            style={ [ styles.saveButton, field.error ? styles.saveButton.disabled : null ] }
+            onClick={onSaveClick}
+            disabled={ field.error ? 'disabled' : '' }
+          >
+            <FaFloppyO />
+            Save
+          </button>
         </div>
 
       </div>
@@ -255,7 +276,10 @@ export const styles = {
   arrowContainer: {
     position: 'absolute',
     top: '8px',
-    right: '20px'
+    paddingLeft: 15,
+    background: 'linear-gradient(to right, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 10%,rgba(255,255,255,1) 100%)',
+    right: 0,
+    paddingRight: 20
   },
   arrow: {
     width: '30px',
@@ -319,7 +343,10 @@ export const styles = {
     textAlign: 'center',
     cursor: 'pointer',
     padding: '0 20px',
-    marginLeft: '10px'
+    marginLeft: '10px',
+    disabled: {
+      background: 'grey'
+    }
   },
   cancelButton: {
     fontSize: '11pt',
@@ -358,6 +385,8 @@ export const styles = {
     background: 'none'
   },
   fieldPosition: {
+    background: 'repeating-linear-gradient( -45deg, #dbdbdb, #dbdbdb 10px, #eee 10px, #eee 20px )',
+    cursor: 'move',
     alignSelf: 'flex-start',
     fontWeight: 'normal',
     padding: '15px 15px',

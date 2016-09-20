@@ -73,10 +73,10 @@ const emptyForm = {
     selectedItemText: '#FAFAFA'
   },
   settings: {
-    saveDestination: 'https://pillar_stg.coralproject.net/api/form_submission/',
+    saveDestination: '',
     showFieldNumbers: true,
-    isActive: false,
-    inactiveMessage: 'We are not currently accepting submissions. Thank you.'
+    inactiveMessage: 'We are not currently accepting submissions. Thank you.',
+    recaptcha: false
   },
   header: {
     title: '',
@@ -117,7 +117,7 @@ export default (state = initial, action) => {
     return {...state, activeForm: null, formLoading: false};
 
   case types.FORM_DELETED:
-    // FIXME: Pillar is returning 'null' for deleted forms. See: FormActions/deleteForm.
+    // FIXME: the Ask service is returning 'null' for deleted forms. See: FormActions/deleteForm.
     var newState = Object.assign({}, state);
     delete newState[action.id];
     var formListIndex = newState.formList.indexOf(action.id);
@@ -144,8 +144,8 @@ export default (state = initial, action) => {
 
   case types.COPY_FORM:
     let formToCopy = Object.assign({}, state[action.id]);
-    let headerCopy = Object.assign({},formToCopy.header,{title:formToCopy.header.title + ' (Copy)'});
-    let settingsCopy = Object.assign({},formToCopy.settings,{isActive:false});
+    let headerCopy = Object.assign({}, formToCopy.header, {title: formToCopy.header.title + ' (Copy)'});
+    let settingsCopy = Object.assign({}, formToCopy.settings);
     let copiedForm = Object.assign({}, formToCopy,
       {
         header: headerCopy,
@@ -314,9 +314,17 @@ export default (state = initial, action) => {
     return {...state, loadingGallery: false, activeGallery: null, galleryError: action.error};
 
   case types.FORM_STATUS_UPDATED:
-    return {...state, activeForm: action.form.id, [action.form.id]: Object.assign({},
-      action.form, {status: action.status, settings: Object.assign({},
-      action.form.settings, { isActive: action.status === 'open' })})};
+    return {
+      ...state,
+      activeForm: action.form.id,
+      [action.form.id]: {
+        ...action.form,
+        status: action.status,
+        settings: {
+          ...action.form.settings
+        }
+      }
+    };
 
   case types.FORM_ANSWER_SENT_TO_GALLERY:
     return {...state, [action.gallery.id]: action.gallery};

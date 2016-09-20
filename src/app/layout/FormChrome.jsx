@@ -2,16 +2,17 @@ import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import has from 'lodash/object/has';
 import {connect} from 'react-redux';
-import {updateInactiveMessage} from 'forms/FormActions';
+import {saveForm, publishFormStatus} from 'forms/FormActions';
+import { showFlashMessage } from 'flashmessages/FlashMessagesActions';
 import Badge from 'components/Badge';
 import color from 'color';
 import AngleDownIcon from 'react-icons/lib/fa/angle-down';
 import AngleUpIcon from 'react-icons/lib/fa/angle-up';
-import SaveIcon from 'react-icons/lib/fa/floppy-o';
 import onClickOutside from 'react-onclickoutside';
 
-import Button from 'components/Button';
 import RadioButton from 'components/forms/RadioButton';
+import Spinner from 'components/Spinner';
+import { Button } from 'react-mdl';
 
 import settings from 'settings';
 
@@ -36,6 +37,12 @@ export default class FormChrome extends React.Component {
   constructor(props) {
     super(props);
     this.state = {statusDropdownOpen: false};
+    this.toggleDropdown = this.toggleDropdown.bind(this);
+    this.onApplyClick = this.onApplyClick.bind(this);
+    this.setInactiveMessage = this.setInactiveMessage.bind(this);
+    this.buildForm = this.buildForm.bind(this);
+    this.reviewSubmissions = this.reviewSubmissions.bind(this);
+    this.manageGallery = this.manageGallery.bind(this);
   }
 
   buildForm() { // navigate to the form builder or editor
@@ -112,6 +119,30 @@ export default class FormChrome extends React.Component {
     this.setState({statusDropdownOpen: false});
   }
 
+  onApplyClick() {
+    const { forms, dispatch } = this.props;
+    const { form, widgets, activeForm } = forms;
+
+    const currentForm = activeForm ? forms[activeForm] : form;
+    dispatch(publishFormStatus(currentForm.id, currentForm.status))
+    .then(updatedForm => {
+      dispatch(saveForm(updatedForm, forms.widgets));
+    });
+    dispatch(saveForm(currentForm, widgets))
+      .then(response => {
+        this.setState({statusDropdownOpen: false});
+        if (response.data && response.data.id) {
+          this.props.dispatch(showFlashMessage('Your form saved.', 'success'));
+        } else {
+          this.props.dispatch(showFlashMessage('Uh-oh, we can\'t save your form. Try again or report the error to your technical team', 'warning', 4000));
+        }
+      })
+      .catch(err => {
+        this.setState({statusDropdownOpen: false});
+        this.props.dispatch(showFlashMessage('Uh-oh, we can\'t save your form. Try again or report the error to your technical team', 'warning', 4000));
+      });
+  }
+
   getLoaderStyles(isBackground = false) {
     const base = {
       display: this.state.updatingInactiveMessage ? 'block' : 'none',
@@ -139,8 +170,18 @@ export default class FormChrome extends React.Component {
 
   }
 
+  getColoredStatus() {
+    const { form } = this.props;
+    let statusColor = form.status === 'open' ? 'green' : '#D30D26';
+    return (
+      <span style={ { color: statusColor }}>
+        { form.status === 'open' ? 'Live' : 'Closed' } <span style={ styles.statusBullet(statusColor) }></span>
+      </span>
+    );
+  }
+
   render() {
-    const { form, create, activeTab } = this.props;
+    const { form, create, activeTab, forms } = this.props;
     let name = has(this.props, 'form.header.title') ? form.header.title : '';
 
     if (name.length > 15) {
@@ -157,26 +198,28 @@ export default class FormChrome extends React.Component {
             <div key="huey" style={[
               styles.option,
               this.props.activeTab === 'builder' && styles.active]}
-              onClick={this.buildForm.bind(this)}> Edit Form
+              onClick={this.buildForm}> Edit Form
             </div>
             <div key="dewey" style={[
               styles.option,
               activeTab === 'submissions' && styles.active]}
-              onClick={this.reviewSubmissions.bind(this)}>
+              onClick={this.reviewSubmissions}>
               Submissions {this.submissionBadge()}
             </div>
             <div key="louie" style={[
               styles.option,
               activeTab === 'gallery' && styles.active]}
-              onClick={this.manageGallery.bind(this)}>
+              onClick={this.manageGallery}>
               Gallery {this.galleryBadge()}
             </div>
           </div> : null }
 
         {
           form ?
-            <div style={this.getStatusSelectStyle()} onClick={this.toggleDropdown.bind(this)} className="form-status-toggle" >
-              <span style={{fontWeight: 'bold'}}>Form Status:</span> {form.status==='open' ? 'Live' : 'Closed'} {this.getAngleBtn()}
+            <div style={this.getStatusSelectStyle()} onClick={this.toggleDropdown} className="form-status-toggle" >
+              <span style={ styles.formStatusText }>Form Status:</span>
+              {this.getColoredStatus()}
+              {this.getAngleBtn()}
             </div> :
             null
         }
@@ -200,10 +243,18 @@ export default class FormChrome extends React.Component {
                   checked={form.status === 'closed'}
                   onClick={this.props.updateStatus} />
                 <textarea
-                  onChange={this.setInactiveMessage.bind(this)}
+                  onChange={this.setInactiveMessage}
                   style={styles.statusMessage}
                   defaultValue={form.settings.inactiveMessage}></textarea>
-                <p>The message will appear to readers when you close the form and are no longer collecting submissions.</p>
+                <div style={styles.forceRight}>
+                  <Button raised onClick={ this.onApplyClick }>
+                    { forms.savingForm
+                      ? <span><Spinner /> </span>
+                      : null
+                    }
+                    Apply
+                  </Button>
+                </div>
                 <div style={this.getLoaderStyles(this, true)}></div>
                 <div style={this.getLoaderStyles()}></div>
               </div>
@@ -308,11 +359,29 @@ const styles = {
     marginBottom: 15
   },
   statusMessage: {
-    width: '100%',
     border: '1px solid ' + settings.mediumGrey,
-    height: 50,
-    borderRadius: 4,
     fontSize: '14px',
-    marginBottom: 10
+    marginBottom: 10,
+    resize: 'none',
+    padding: 10,
+    marginLeft: '8%',
+    width: '92%'
+  },
+  forceRight: {
+    display: 'flex',
+    justifyContent: 'flex-end'
+  },
+  statusBullet: (color) => (
+    {
+      backgroundColor: color,
+      borderRadius: 10,
+      height: 10,
+      width: 10,
+      display: 'inline-block',
+      marginRight: 10
+    }
+  ),
+  formStatusText: {
+    paddingRight: 10
   }
 };

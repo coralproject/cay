@@ -3,10 +3,10 @@ import Radium from 'radium';
 import { connect } from 'react-redux';
 import {
   fetchForm,
+  saveForm,
   fetchGallery,
   fetchSubmissions,
   removeFromGallery,
-  updateForm,
   updateFormSettings,
   updateFormStatus,
   updateEditableAnswer,
@@ -47,6 +47,9 @@ import Button from 'components/Button';
 import Modal from 'components/modal/Modal';
 
 import GalleryAnswer from 'forms/GalleryAnswer';
+import PublishOptions from 'forms/PublishOptions';
+
+import { showFlashMessage } from 'flashmessages/FlashMessagesActions';
 
 @connect(({app, forms}) => ({app, forms}))
 @Radium
@@ -55,6 +58,19 @@ export default class GalleryManager extends Component {
   constructor(props) {
     super(props);
     this.state = {publishModalOpen: false, previewOpen: false};
+    this.setHeadline = this.setHeadline.bind(this);
+    this.setDescription = this.setDescription.bind(this);
+    this.removeSubmission = this.removeSubmission.bind(this);
+    this.beginEditAnswer = this.beginEditAnswer.bind(this);
+    this.updateFormStatus = this.updateFormStatus.bind(this);
+    this.updateInactive = this.updateInactive.bind(this);
+    this.togglePreview = this.togglePreview.bind(this);
+    this.openPublishModal = this.openPublishModal.bind(this);
+    this.updatePlacement = this.updatePlacement.bind(this);
+    this.cancelEdit = this.cancelEdit.bind(this);
+    this.updateEditableAnswer = this.updateEditableAnswer.bind(this);
+    this.closePublishModal = this.closePublishModal.bind(this);
+    this.closePreview = this.closePreview.bind(this);
   }
 
   componentWillMount() {
@@ -84,23 +100,24 @@ export default class GalleryManager extends Component {
     return (
       <div>
         <div style={styles.galleryTitle}>
-          <TextField
+          <input
+            style={styles.galleryTitles}
+            type="text"
             value={gallery.headline}
-            onChange={this.setHeadline.bind(this)}
-            style={styles.galleryTitles}
-            label="Write a headline (optional)" />
+            placeholder="Headline"
+            onChange={this.setHeadline} />
           <br />
-          <TextField
-            value={gallery.description}
-            onChange={this.setDescription.bind(this)}
+          <input
             style={styles.galleryTitles}
-            label="Write description for the gallery (optional)" />
+            type="text"
+            placeholder="Description"
+            onChange={this.setDescription} />
         </div>
         {gallery.answers.map((answer, i) => (
           <GalleryAnswer
             key={i}
-            removeSubmission={this.removeSubmission.bind(this)}
-            editAnswer={this.beginEditAnswer.bind(this)}
+            removeSubmission={this.removeSubmission}
+            editAnswer={this.beginEditAnswer}
             answer={answer}
             gallery={gallery}
             identifiableIds={gallery.config.identifiableIds || []}
@@ -132,7 +149,8 @@ export default class GalleryManager extends Component {
   }
 
   updateFormStatus(value) {
-    this.props.dispatch(updateFormStatus(this.props.forms.activeForm, value));
+    const {dispatch, forms} = this.props;
+    dispatch(updateFormStatus(forms.activeForm, value));
   }
 
   getAttributionFields(form) {
@@ -223,6 +241,7 @@ export default class GalleryManager extends Component {
   createEmbed(type) {
     const {forms} = this.props;
     const gallery = forms[forms.activeGallery];
+
     if (!gallery) return;
 
     switch (type) {
@@ -237,12 +256,12 @@ export default class GalleryManager extends Component {
     }
   }
 
-  setHeadline(title) {
-    this.props.dispatch(updateGalleryTitle(title));
+  setHeadline(e) {
+    this.props.dispatch(updateGalleryTitle(e.target.value));
   }
 
-  setDescription(description) {
-    this.props.dispatch(updateGalleryDesc(description));
+  setDescription(e) {
+    this.props.dispatch(updateGalleryDesc(e.target.value));
   }
 
   togglePreview() {
@@ -268,6 +287,16 @@ export default class GalleryManager extends Component {
 
   resetText(ans) {
     this.props.dispatch(resetEditableTextToOriginal(ans));
+  }
+
+  onSaveClick() {
+    this.props.dispatch(publishGallery(this.props.forms.activeForm)).then(() => {
+      if (this.props.forms.publishGalleryError) {
+        this.props.dispatch(showFlashMessage('Error publishing gallery to Elkhorn. Is Elkhorn running?', 'warning'));
+      } else {
+        this.props.dispatch(showFlashMessage('Your gallery saved.', 'success'));
+      }
+    });
   }
 
   render() {
@@ -298,8 +327,8 @@ export default class GalleryManager extends Component {
       <Page>
         <FormChrome
           activeTab="gallery"
-          updateStatus={this.updateFormStatus.bind(this)}
-          updateInactive={this.updateInactive.bind(this)}
+          updateStatus={this.updateFormStatus}
+          updateInactive={this.updateInactive}
           form={form}
           submissions={submissions}
           gallery={gallery} />
@@ -315,14 +344,16 @@ export default class GalleryManager extends Component {
                 value={forms.galleryOrientation}
                 onChange={this.updateOrientation.bind(this)} />
             </div>*/}
+            {/*
             <Button
               style={styles.modButton}
-              onClick={this.togglePreview.bind(this)}
+              onClick={this.togglePreview}
               category="brand"><Eye /> Preview</Button>
             <Button
-              onClick={this.openPublishModal.bind(this)}
+              onClick={this.openPublishModal}
               style={styles.modButton}
               category="success"><Refresh /> Publish</Button>
+              */}
           </div>
           <hr style={styles.rule} />
           <div style={styles.container}>
@@ -336,7 +367,8 @@ export default class GalleryManager extends Component {
                   value={gallery.config.placement}
                   options={placementOpts}
                   clearable={false}
-                  onChange={this.updatePlacement.bind(this)} />
+                  searchable={false}
+                  onChange={this.updatePlacement} />
 
                 <p style={[
                   styles.includeLabel,
@@ -357,9 +389,20 @@ export default class GalleryManager extends Component {
               })}
 
               </Card>
-              <div
-                style={styles.embedCodes}
-                onClick={this.openPublishModal.bind(this)}><Refresh /> Get embed codes</div>
+
+              <PublishOptions
+                 form={form}
+                 forms={forms}
+                 hideOptions={!forms.activeGallery || !forms[forms.activeGallery].config.baseUrl}
+		 activeForm={forms.activeForm}
+		 isGallery={true}
+                 onOpenPreview={this.togglePreview.bind(this)}
+                 onSaveClick={this.onSaveClick.bind(this)}
+                 scriptCode={this.createEmbed('script-tag')}
+                 iframeCode={this.createEmbed('iframe')}
+                 standaloneCode={this.createEmbed('standalone')}
+                />
+
             </div>
             <div style={styles.gallery}>
               {
@@ -378,7 +421,7 @@ export default class GalleryManager extends Component {
             ? <div style={styles.replyModal}>
               <div style={styles.replyModal.container}>
                 <div
-                  onClick={this.cancelEdit.bind(this)}
+                  onClick={this.cancelEdit}
                   key="closebutton"
                   style={styles.replyModal.close}>×</div>
                 <p style={styles.replyModal.heading}>Edit Submission</p>
@@ -391,7 +434,7 @@ export default class GalleryManager extends Component {
                   <div style={styles.replyModal.rightPanel}>
                     <p style={styles.replyModal.subhead}>Edit</p>
                     <textarea
-                      onChange={this.updateEditableAnswer.bind(this)}
+                      onChange={this.updateEditableAnswer}
                       style={styles.replyModal.editText}
                       value={forms.editableAnswer}></textarea>
                     {this.renderIdentityAnswers(ans, forms.editablePii)}
@@ -400,7 +443,7 @@ export default class GalleryManager extends Component {
                         key="resetButton"
                         onClick={this.resetText.bind(this, ans)}
                         style={styles.replyModal.resetButton}>Reset Changes</p>
-                      <Button onClick={this.cancelEdit.bind(this)}><Times /> Cancel</Button>
+                      <Button onClick={this.cancelEdit}><Times /> Cancel</Button>
                       <Button
                         onClick={this.confirmEdit.bind(this, ans)}
                         category="success"
@@ -414,62 +457,9 @@ export default class GalleryManager extends Component {
             : null
         }
 
-        {/* this is the Embed Code modal */}
-
-        <Modal
-          style={styles.publishModal}
-          title="Get embed codes"
-          isOpen={this.state.publishModalOpen}
-          confirmAction={this.closePublishModal.bind(this)}
-          cancelAction={this.closePublishModal.bind(this)}>
-            <div style={[
-              styles.successfulCopy,
-              {opacity: this.state.copied ? 1 : 0}
-            ]}>Copied!</div>
-          {
-            forms.publishGalleryError
-            ? <div style={styles.publishGalleryError}>Error publishing gallery to Elkhorn.<br/>Is Elkhorn running?</div>
-          : <div>
-              <p>Embed code</p>
-              <textarea style={styles.embedTextarea} value={this.createEmbed('script-tag')}></textarea>
-              <CopyToClipboard
-                text={this.createEmbed('script-tag')}
-                onCopy={() => {
-                  this.setState({copied: true});
-                  setTimeout(() => this.setState({copied: false}), 5000);
-                }}>
-                <Button style={styles.copyButton}> Copy <Clipboard /> </Button>
-              </CopyToClipboard>
-              <p style={{clear: 'both'}}>Embed code (with iframe)</p>
-              <textarea style={styles.embedTextarea} value={this.createEmbed('iframe')}></textarea>
-              <CopyToClipboard
-                text={this.createEmbed('iframe')}
-                onCopy={() => {
-                  this.setState({copied: true});
-                  setTimeout(() => this.setState({copied: false}), 5000);
-                }}>
-                <Button style={styles.copyButton}> Copy <Clipboard /> </Button>
-              </CopyToClipboard>
-              <p style={{clear: 'both'}}>Standalone link</p>
-              <input
-                type="text"
-                value={this.createEmbed('standalone')}
-                style={styles.standalone} />
-              <CopyToClipboard
-                text={this.createEmbed('standalone')}
-                onCopy={() => {
-                  this.setState({copied: true});
-                  setTimeout(() => this.setState({copied: false}), 5000);
-                }}>
-                <Button style={styles.copyButton}> Copy <Clipboard /> </Button>
-              </CopyToClipboard>
-            </div>
-          }
-        </Modal>
-
         <GalleryPreview
           {...forms}
-          closePreview={this.closePreview.bind(this)}
+          closePreview={this.closePreview}
           open={this.state.previewOpen} />
 
       </Page>
@@ -518,7 +508,8 @@ const styles = {
   },
   sidebar: {
     flex: 1,
-    marginRight: 20
+    marginRight: 20,
+    width: 310
   },
   gallery: {
     flex: 3
@@ -527,7 +518,7 @@ const styles = {
     marginLeft: 10
   },
   galleryTitle: {
-
+    marginBottom: 15
   },
   rule: {
     borderTop: 'none',
@@ -542,9 +533,13 @@ const styles = {
     right: 20
   },
   galleryTitles: {
+    borderRadius: 4,
+    border: '1px solid ' + settings.mediumGrey,
     width: '75%',
-    marginBottom: 15,
-    marginTop: -25
+    padding: 10,
+    height: '100%',
+    fontSize: '18px',
+    display: 'block'
   },
   orientationOpts: {
     display: 'inline-block',

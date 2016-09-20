@@ -16,7 +16,7 @@ export default [
     friendlyType: 'Multiple choice',
     type: 'MultipleChoice',
     icon: FaListUl,
-    props: { multipleChoice: false, otherAllowed: false, options: [{ title: 'Option 1' }] }
+    props: { multipleChoice: false, otherAllowed: false, options: [] }
   },
   { friendlyType: 'Email', identity: true, type: 'EmailField', icon: FaEnvelopeO, props: { validateAs: 'email', validationMessage: 'Please type a valid e-mail.' } },
   { friendlyType: 'Date', type: 'DateField', icon: FaCalendar, props: { validationMessage: 'Please type a valid date' } },

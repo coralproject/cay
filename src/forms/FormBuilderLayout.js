@@ -5,7 +5,7 @@ export const Header = ({ onTitleChange, form, forms, onSaveClick, onOpenPreview 
   <div style={ styles.formHeader }>
     <div style={ styles.titleAndMeta }>
       <input onChange={onTitleChange} style={styles.headLine} type="text"
-        placeholder={ "Write a title" } defaultValue={ form.header.title }
+        placeholder={ "Write a form name for internal use" } defaultValue={ form.header.title }
         className="form-title" />
     </div>
     <div style={ styles.formActions } className="form-actions">
@@ -78,17 +78,6 @@ const styles = {
     fontSize: '12pt',
     cursor: 'pointer',
     textAlign: 'center'
-  },
-  switchSlider: function(isActive) {
-    return {
-      position: 'absolute',
-      width: '280px',
-      left: isActive ? '-80px' : '0px',
-      background: isActive ? '#292' : '#333',
-      transition: 'all .5s',
-      cursor: 'pointer',
-      height: '45px'
-    };
   },
   switch: {
     position: 'relative',

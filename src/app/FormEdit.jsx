@@ -13,6 +13,7 @@ import {
   updateFormStatus,
   requestEditAccess,
   leavingEdit,
+  saveForm,
   updateFormSettings,
   fetchForm } from 'forms/FormActions';
 
@@ -35,6 +36,11 @@ export default class FormEdit extends Component {
     props.dispatch(fetchForm(id));
     props.dispatch(fetchGallery(id));
     props.dispatch(fetchSubmissions(id));
+
+    this.updateFormStatus = this.updateFormStatus.bind(this);
+    this.onClosePreview = this.onClosePreview.bind(this);
+    this.showPreview = this.showPreview.bind(this);
+    this.updateInactive = this.updateInactive.bind(this);
   }
 
   componentWillMount() {
@@ -64,7 +70,8 @@ export default class FormEdit extends Component {
   }
 
   updateFormStatus(value) {
-    this.props.dispatch(updateFormStatus(this.props.forms.activeForm, value));
+    const {dispatch, forms} = this.props;
+    dispatch(updateFormStatus(forms.activeForm, value));
   }
 
   updateInactive(value) {
@@ -73,9 +80,8 @@ export default class FormEdit extends Component {
 
   render() {
     const { forms, route } = this.props;
-    const { submissionList, activeSubmission, activeForm, activeGallery } = forms;
+    const { submissionList, activeForm, activeGallery } = forms;
     const submissions = submissionList.map(id => forms[id]);
-    const submission = forms[activeSubmission];
     const form = forms[activeForm];
     const gallery = forms[activeGallery];
 
@@ -83,8 +89,8 @@ export default class FormEdit extends Component {
       <Page>
         <FormChrome
           activeTab="builder"
-          updateStatus={this.updateFormStatus.bind(this)}
-          updateInactive={this.updateInactive.bind(this)}
+          updateStatus={this.updateFormStatus}
+          updateInactive={this.updateInactive}
           gallery={gallery}
           submissions={submissions}
           form={form}/>
@@ -93,8 +99,8 @@ export default class FormEdit extends Component {
             form ?
               <FormBuilder
                 activeForm={ forms.activeForm }
-                onClosePreview={this.onClosePreview.bind(this)}
-                onOpenPreview={ this.showPreview.bind(this) }
+                onClosePreview={this.onClosePreview}
+                onOpenPreview={ this.showPreview }
                 route={ route }
                 preview={this.state.preview} />
             : null

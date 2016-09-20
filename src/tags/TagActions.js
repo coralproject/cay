@@ -55,7 +55,7 @@ const allTagsRequestError = err => ({ type: ALL_TAGS_REQUEST_ERROR, err });
 
 export const getTags = () => (dispatch, getState) => {
   dispatch(tagRequestStarted());
-  return fetch(getState().app.pillarHost + API_PREFIX + 'tags', getInit(null, 'GET'))
+  return fetch(getState().app.trustHost + API_PREFIX + 'tags', getInit(null, 'GET'))
     .then(
       response => {
         return response.ok ? response.json() : Promise.reject(response.status + ' ' + response.statusText);
@@ -74,17 +74,17 @@ export const storeTag = (tagName, tagDescription, index, oldValue) => (dispatch,
   if (typeof oldValue != 'undefined') {
     preparedTag['old_name'] = oldValue;
   }
-  return fetch(getState().app.pillarHost + API_PREFIX + 'tag', getInit(preparedTag))
+  return fetch(getState().app.trustHost + API_PREFIX + 'tag', getInit(preparedTag))
     .then(response => {
         return response.ok ? response.text() : Promise.reject(response.status + ' ' + response.statusText);
       })
     .then(responseText => {
-      // Temporary fix, errors from pillar are not in JSON notation.
+      // Temporary fix, errors from the Trust service are not in JSON notation.
       try {
         var responseJson = JSON.parse(responseText);
         dispatch(tagRequestSuccess(responseJson, index, 'create'));
       } catch(e) {
-        dispatch(tagRequestFailure('Error from pillar: ' + responseText));
+        dispatch(tagRequestFailure('Error from the Trust service: ' + responseText));
       }
     })
     .catch(error => dispatch(tagRequestFailure(error)));
@@ -92,7 +92,7 @@ export const storeTag = (tagName, tagDescription, index, oldValue) => (dispatch,
 
 export const deleteTag = (tagName, tagDescription, index) => (dispatch, getState) => {
   dispatch(tagRequestStarted());
-  return fetch(getState().app.pillarHost + API_PREFIX + 'tag', getInit({ 'name': tagName, 'description': tagDescription }, 'DELETE'))
+  return fetch(getState().app.trustHost + API_PREFIX + 'tag', getInit({ 'name': tagName, 'description': tagDescription }, 'DELETE'))
     .then(response => {
         return response.ok ? response : Promise.reject(response.status + ' ' + response.statusText);
       })
@@ -104,7 +104,7 @@ export const fetchAllTags = () => (dispatch, getState) => {
   if (!getState().loadingTags) {
     dispatch(requestAllTags());
 
-    return fetch(getState().app.pillarHost + '/api/tags')
+    return fetch(getState().app.trustHost + '/api/tags')
       .then(res => {
         return res.ok ? res.json() : Promise.reject(res.status + ' ' + res.statusText);
       })

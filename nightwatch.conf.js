@@ -1,13 +1,12 @@
 require('babel-core/register');
 
 module.exports = {
-  "src_folders": ["./test/e2e"],
+  "src_folders": ["./test/e2e/tests"],
   "output_folder": "./test/e2e/reports",
   "page_objects_path": "./test/e2e/pages",
   "globals_path": "./test/e2e/globals",
   "custom_commands_path" : "",
   "custom_assertions_path" : "",
-
   "selenium": {
     "start_process": true,
     "server_path": "./node_modules/selenium-standalone/.selenium/selenium-server/2.53.1-server.jar",
@@ -31,7 +30,11 @@ module.exports = {
         "databaseEnabled" : true,
         "applicationCacheEnabled" : false,
         "nativeEvents" : true
-      }
+      },
+      "exclude": [
+        './test/e2e/tests/CreateFormTest.js',
+        './test/e2e/tests/FormListTest.js',
+      ]
     }
   }
 };

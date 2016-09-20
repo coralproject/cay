@@ -1,5 +1,5 @@
 
-var config = require('../../nightwatch.conf.js')
+var config = require('../../../nightwatch.conf.js')
 
 module.exports = {
   'Create form and try it on a newsroom article': function(browser) {

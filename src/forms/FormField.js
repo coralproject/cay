@@ -155,21 +155,23 @@ export default class FormField extends Component {
   }
 
   renderContainer() {
-    const { id, onMove, isLast, position, onDelete, onDuplicate, connectDragSource } = this.props;
+    const { id, onMove, isLast, position, onDelete, onDuplicate, connectDragSource, isDragging, dragStarted } = this.props;
     const { field } = this.state;
     const FieldIcon = this.getIcon(field);
     const fieldTitle = field.title ? field.title : 'Ask readers a question';
     const requiredMark = field.wrapper && field.wrapper.required ? <span style={ styles.requiredAsterisk }>*</span> : null;
     const identityMark = field.identity ? <span style={ styles.identityLabel }><FaUser/></span> : null;
 
+    const showExpanded = dragStarted ? false : this.state.expanded;
+
     return (
-      <div className={field.component + ' ' + id} style={ styles.fieldContainer(!this.props.isDragging && this.state.expanded) } key={ id }>
+      <div className={field.component + ' ' + id} style={ styles.fieldContainer(showExpanded) } key={ id }>
         {connectDragSource(<div style={ styles.fieldPosition }>{ position + 1 }</div>)}
         <div style={ styles.fieldIcon }><FieldIcon /></div>
         <div style={ styles.fieldContents }>
 
           {
-            !this.state.expanded || this.props.isDragging
+            !showExpanded
             ? <h4 style={ styles.fieldTitleHeader }  onClick={ this.expandField.bind(this) }>
               { fieldTitle }
               { requiredMark }
@@ -179,7 +181,7 @@ export default class FormField extends Component {
           }
 
           {
-            !this.props.isDragging && this.state.expanded
+            showExpanded
             ? this.renderExpanded()
             : null
           }
@@ -211,7 +213,8 @@ export default class FormField extends Component {
             defaultValue={ field.title }
             type="text"
             placeholder={ `Ask readers a question` }
-            autoFocus={ true } />
+            autoFocus={ true }
+             />
           <input
             className="field-description"
             onChange={onDescriptionChange}

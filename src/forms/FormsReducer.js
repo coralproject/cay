@@ -368,7 +368,7 @@ export default (state = initial, action) => {
     return {...state, autoExpand: -1, isDragging: true };
 
   case types.FORM_DRAG_ENDED:
-    return {...state, isHovering: false, isDragging: false };
+    return {...state, dragStarted: false, isDragging: false };
 
   case types.UPDATE_GALLERY_TITLE:
     return {...state, [state.activeGallery]: {...state[state.activeGallery], headline: action.title}};

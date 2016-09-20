@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import Radium from 'radium';
 
 import {Link} from 'react-router';
@@ -9,31 +9,41 @@ import Twitter from 'react-icons/lib/fa/twitter-square';
 
 @Radium
 export default class SignIn extends React.Component {
+
+  static propTypes = {
+    signInFB: PropTypes.func.isRequired,
+    signInGH: PropTypes.func.isRequired,
+    signInTwitter: PropTypes.func.isRequired
+  }
+
   render() {
     return (
       <div style={styles}>
-        <p style={styles.cta}>Sign in</p>
+        <p className="cta" style={styles.cta}>Sign in</p>
         <Button
           raised
           colored
+          onClick={this.signInFB}
           className='facebook signIn'
-          style={styles.social('fb')}><Facebook /> Sign In with Facebook</Button>
+          style={styles.social('fb')}><Facebook /> Sign in with Facebook</Button>
         <Button
           raised
           colored
+          onClick={this.signInGH}
           className='github signIn'
-          style={styles.social('gh')}><GitHub /> Sign In with Github</Button>
+          style={styles.social('gh')}><GitHub /> Sign in with Github</Button>
         <Button
           raised
           colored
+          onClick={this.signInTwitter}
           className='twitter signIn'
-          style={styles.social('twitter')}><Twitter /> Sign In with Twitter</Button>
+          style={styles.social('twitter')}><Twitter /> Sign in with Twitter</Button>
         <p style={styles.cta}>Or</p>
-        <Textfield style={{width: '100%'}} floatingLabel label='Email address' />
-        <Textfield style={{width: '100%'}} floatingLabel label='Password' />
+        <Textfield style={{width: '100%'}} className="emailSignIn" floatingLabel label='Email address' />
+        <Textfield style={{width: '100%'}} className="emailSignInPassword" floatingLabel label='Password' />
         <Button className="signInTrigger" style={styles.signIn} raised ripple>Sign in</Button>
-        <Link style={styles.forgotPassword} to="forgot-password">Forgot your password?</Link>
-        <p style={styles.haveAccount}>Already have an account? <Link className="linkToSignIn" to="sign-in">Sign in.</Link></p>
+        <Link style={styles.forgotPassword} className="forgotPassword" to="forgot-password">Forgot your password?</Link>
+        <p style={styles.haveAccount}>Need an account? <Link className="linkToRegister" to="sign-up">Register.</Link></p>
       </div>
     );
   }

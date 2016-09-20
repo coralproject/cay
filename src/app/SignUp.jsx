@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import Radium from 'radium';
 
 import {Link} from 'react-router';
@@ -9,6 +9,13 @@ import Twitter from 'react-icons/lib/fa/twitter-square';
 
 @Radium
 export default class SignUp extends React.Component {
+
+  static propTypes = {
+    signUpFB: PropTypes.func.isRequired,
+    signUpGH: PropTypes.func.isRequired,
+    signUpTwitter: PropTypes.func.isRequired
+  }
+
   render() {
     return (
       <div style={styles}>
@@ -17,15 +24,18 @@ export default class SignUp extends React.Component {
           raised
           colored
           className='facebook signUp'
+          onClick={this.signUpFB}
           style={styles.social('fb')}><Facebook /> Sign up with Facebook</Button>
         <Button
           raised
           colored
+          onClick={this.signUpGH}
           className='github signUp'
           style={styles.social('gh')}><GitHub /> Sign up with Github</Button>
         <Button
           raised
           colored
+          onClick={this.signUpTwitter}
           className='twitter signUp'
           style={styles.social('twitter')}><Twitter /> Sign up with Twitter</Button>
         <p style={styles.cta}>Or</p>

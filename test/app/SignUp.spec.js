@@ -7,7 +7,19 @@ import SignUp from '../../src/app/SignUp';
 describe('<SignUp/>', function () {
 
   beforeEach(function () {
-    this.mountedInstance = mount(<SignUp />);
+    this.mountedInstance = mount(
+      <SignUp
+        signUpFB={() => {}}
+        signUpGH={() => {}}
+        signUpTwitter={() => {}}
+        />
+    );
+  });
+
+  it('should have all the required props defined', function () {
+    expect(this.mountedInstance.props().signUpFB).to.not.be.undefined;
+    expect(this.mountedInstance.props().signUpGH).to.not.be.undefined;
+    expect(this.mountedInstance.props().signUpTwitter).to.not.be.undefined;
   });
 
   it('should display a Facebook sign up button', function () {
@@ -53,4 +65,6 @@ describe('<SignUp/>', function () {
     expect(this.mountedInstance.find('.signUpTrigger')).to.have.length(1);
     expect(this.mountedInstance.find('.signUpTrigger').text()).to.contain('Sign up');
   });
+
+
 });

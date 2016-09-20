@@ -2,8 +2,8 @@ require('babel-core/register');
 
 module.exports = {
   "src_folders": ["./test/e2e"],
-  "output_folder": "reports",
-  "page_objects_path": "pages",
+  "output_folder": "./test/e2e/reports",
+  "page_objects_path": "./test/e2e/pages",
   "globals_path": "./test/e2e/globals",
   "custom_commands_path" : "",
   "custom_assertions_path" : "",
@@ -20,7 +20,7 @@ module.exports = {
   },
   "test_settings": {
     "default": {
-      "selenium_port": 4444,
+      "selenium_port": 6666,
       "selenium_host": "localhost",
       "silent": true,
       "desiredCapabilities": {

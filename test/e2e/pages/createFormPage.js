@@ -26,11 +26,16 @@ const createFormCommands = {
   saveForm() {
     return this
       .click('@formSaveButton')
+      .waitForElementPresent('@statusToggle', 8000)
   },
   goLive() {
     return this
       .click('@statusToggle')
       .click('@liveStatusOption')
+  },
+  publishFormOptions() {
+    return this
+      .click('@formPublishButton')
   }
 };
 

@@ -3,6 +3,7 @@ import Radium from 'radium';
 import { connect } from 'react-redux';
 import {
   fetchForm,
+  saveForm,
   fetchGallery,
   fetchSubmissions,
   removeFromGallery,
@@ -148,7 +149,10 @@ export default class GalleryManager extends Component {
   }
 
   updateFormStatus(value) {
-    this.props.dispatch(updateFormStatus(this.props.forms.activeForm, value));
+    const {dispatch, forms} = this.props;
+    dispatch(updateFormStatus(forms.activeForm, value)).then(updatedForm => {
+      dispatch(saveForm(updatedForm, forms.widgets));
+    });
   }
 
   getAttributionFields(form) {
@@ -392,7 +396,8 @@ export default class GalleryManager extends Component {
                  form={form}
                  forms={forms}
                  hideOptions={!forms.activeGallery || !forms[forms.activeGallery].config.baseUrl}
-                 activeForm={forms.activeForm}
+		 activeForm={forms.activeForm}
+		 isGallery={true}
                  onOpenPreview={this.togglePreview.bind(this)}
                  onSaveClick={this.onSaveClick.bind(this)}
                  scriptCode={this.createEmbed('script-tag')}

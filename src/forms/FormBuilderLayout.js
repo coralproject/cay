@@ -79,17 +79,6 @@ const styles = {
     cursor: 'pointer',
     textAlign: 'center'
   },
-  switchSlider: function(isActive) {
-    return {
-      position: 'absolute',
-      width: '280px',
-      left: isActive ? '-80px' : '0px',
-      background: isActive ? '#292' : '#333',
-      transition: 'all .5s',
-      cursor: 'pointer',
-      height: '45px'
-    };
-  },
   switch: {
     position: 'relative',
     height: '42px',

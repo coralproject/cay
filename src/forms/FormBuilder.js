@@ -69,7 +69,6 @@ export default class FormBuilder extends Component {
             onOpenPreview={onOpenPreview}
             onPublishOptions={this.onPublishOptions.bind(this)}
             onSaveClick={this.onSaveClick.bind(this)}
-            onFormStatusChange={this.onFormStatusChange.bind(this)}
             addToBottom={this.addToBottom.bind(this)}
             activeForm={activeForm}
             openDialog={this.state.openDialog}
@@ -117,18 +116,13 @@ export default class FormBuilder extends Component {
           this.props.dispatch(showFlashMessage('Your form saved.', 'success'));
           return !activeForm && router.push(`/forms/${response.data.id}`);
         } else {
-          this.props.dispatch(showFlashMessage('Uh-oh, we can\'t save your form. Try again or report the error to your technical team', 'warning', false));
+          this.props.dispatch(showFlashMessage('Uh-oh, we can\'t save your form. Try again or report the error to your technical team', 'warning', 4000));
         }
       });
   }
 
   onPublishOptions() {
     this.setState({ openDialog: !this.state.openDialog });
-  }
-
-  onFormStatusChange(e) {
-    this.markAsUnsaved();
-    this.props.dispatch(updateFormSettings({isActive: e.target.checked}));
   }
 
   onFormTitleChange(e) {

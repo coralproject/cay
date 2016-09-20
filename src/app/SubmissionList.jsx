@@ -17,7 +17,7 @@ import {
   removeFromGallery,
   updateFormStatus,
   fetchForm,
-  updateForm,
+  saveForm,
   updateFormSettings,
   updateOrder,
   updateSearch,
@@ -44,6 +44,18 @@ export default class SubmissionList extends Component {
     dispatch(fetchForm(params.id));
     dispatch(fetchGallery(params.id));
     dispatch(fetchSubmissions(params.id));
+
+    this.updateFormStatus = this.updateFormStatus.bind(this);
+    this.updateInactive = this.updateInactive.bind(this);
+    this.onSubmissionSelect = this.onSubmissionSelect.bind(this);
+    this.onFilterByChange = this.onFilterByChange.bind(this);
+    this.onOrderChange = this.onOrderChange.bind(this);
+    this.onSearchChange = this.onSearchChange.bind(this);
+    this.onFlag = this.onFlag.bind(this);
+    this.onBookmark = this.onBookmark.bind(this);
+    this.onDownloadCSV = this.onDownloadCSV.bind(this);
+    this.removeFromGallery = this.removeFromGallery.bind(this);
+    this.sendToGallery = this.sendToGallery.bind(this);
   }
 
   sendToGallery(galleryId, subId, key) {
@@ -63,7 +75,10 @@ export default class SubmissionList extends Component {
   }
 
   updateFormStatus(value) {
-    this.props.dispatch(updateFormStatus(this.props.forms.activeForm, value));
+    const {dispatch, forms} = this.props;
+    dispatch(updateFormStatus(forms.activeForm, value)).then(updatedForm => {
+      dispatch(saveForm(updatedForm, forms.widgets));
+    });
   }
 
   updateInactive(value) {
@@ -103,8 +118,8 @@ export default class SubmissionList extends Component {
         <div style={styles.container}>
           <FormChrome
             activeTab="submissions"
-            updateStatus={this.updateFormStatus.bind(this)}
-            updateInactive={this.updateInactive.bind(this)}
+            updateStatus={this.updateFormStatus}
+            updateInactive={this.updateInactive}
             gallery={gallery}
             submissions={submissions}
             form={form}/>
@@ -115,22 +130,22 @@ export default class SubmissionList extends Component {
             activeSubmission={activeSubmission}
             filterBy={submissionFilterBy}
             order={submissionOrder}
-            onSelect={this.onSubmissionSelect.bind(this)}
-            onFilterByChange={this.onFilterByChange.bind(this)}
-            onOrderChange={this.onOrderChange.bind(this)}
-            onSearchChange={this.onSearchChange.bind(this)}
-            onFlag={this.onFlag.bind(this)}
-            onBookmark={this.onBookmark.bind(this)}
-            onSelect={this.onSubmissionSelect.bind(this)}
-            onDownloadCSV={this.onDownloadCSV.bind(this)} />
+            onSelect={this.onSubmissionSelect}
+            onFilterByChange={this.onFilterByChange}
+            onOrderChange={this.onOrderChange}
+            onSearchChange={this.onSearchChange}
+            onFlag={this.onFlag}
+            onBookmark={this.onBookmark}
+            onSelect={this.onSubmissionSelect}
+            onDownloadCSV={this.onDownloadCSV} />
           <SubmissionDetail
             dispatch={this.props.dispatch}
             submission={submission}
-            removeFromGallery={this.removeFromGallery.bind(this)}
-            sendToGallery={this.sendToGallery.bind(this)}
+            removeFromGallery={this.removeFromGallery}
+            sendToGallery={this.sendToGallery}
             gallery={gallery}
-            onFlag={this.onFlag.bind(this)}
-            onBookmark={this.onBookmark.bind(this)}/>
+            onFlag={this.onFlag}
+            onBookmark={this.onBookmark}/>
         </div>
       </Page>
     );

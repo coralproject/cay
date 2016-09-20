@@ -37,6 +37,12 @@ export default class FormChrome extends React.Component {
   constructor(props) {
     super(props);
     this.state = {statusDropdownOpen: false};
+    this.toggleDropdown = this.toggleDropdown.bind(this);
+    this.onApplyClick = this.onApplyClick.bind(this);
+    this.setInactiveMessage = this.setInactiveMessage.bind(this);
+    this.buildForm = this.buildForm.bind(this);
+    this.reviewSubmissions = this.reviewSubmissions.bind(this);
+    this.manageGallery = this.manageGallery.bind(this);
   }
 
   buildForm() { // navigate to the form builder or editor
@@ -123,12 +129,12 @@ export default class FormChrome extends React.Component {
         if (response.data && response.data.id) {
           this.props.dispatch(showFlashMessage('Your form saved.', 'success'));
         } else {
-          this.props.dispatch(showFlashMessage('Uh-oh, we can\'t save your form. Try again or report the error to your technical team', 'warning', false));
+          this.props.dispatch(showFlashMessage('Uh-oh, we can\'t save your form. Try again or report the error to your technical team', 'warning', 4000));
         }
       })
       .catch(err => {
         this.setState({statusDropdownOpen: false});
-        this.props.dispatch(showFlashMessage('Uh-oh, we can\'t save your form. Try again or report the error to your technical team', 'warning', false));
+        this.props.dispatch(showFlashMessage('Uh-oh, we can\'t save your form. Try again or report the error to your technical team', 'warning', 4000));
       });
   }
 
@@ -187,25 +193,25 @@ export default class FormChrome extends React.Component {
             <div key="huey" style={[
               styles.option,
               this.props.activeTab === 'builder' && styles.active]}
-              onClick={this.buildForm.bind(this)}> Edit Form
+              onClick={this.buildForm}> Edit Form
             </div>
             <div key="dewey" style={[
               styles.option,
               activeTab === 'submissions' && styles.active]}
-              onClick={this.reviewSubmissions.bind(this)}>
+              onClick={this.reviewSubmissions}>
               Submissions {this.submissionBadge()}
             </div>
             <div key="louie" style={[
               styles.option,
               activeTab === 'gallery' && styles.active]}
-              onClick={this.manageGallery.bind(this)}>
+              onClick={this.manageGallery}>
               Gallery {this.galleryBadge()}
             </div>
           </div> : null }
 
         {
           form ?
-            <div style={this.getStatusSelectStyle()} onClick={this.toggleDropdown.bind(this)} className="form-status-toggle" >
+            <div style={this.getStatusSelectStyle()} onClick={this.toggleDropdown} className="form-status-toggle" >
               <span style={ styles.formStatusText }>Form Status:</span>
               {this.getColoredStatus()}
               {this.getAngleBtn()}
@@ -232,11 +238,11 @@ export default class FormChrome extends React.Component {
                   checked={form.status === 'closed'}
                   onClick={this.props.updateStatus} />
                 <textarea
-                  onChange={this.setInactiveMessage.bind(this)}
+                  onChange={this.setInactiveMessage}
                   style={styles.statusMessage}
                   defaultValue={form.settings.inactiveMessage}></textarea>
                 <div style={styles.forceRight}>
-                  <Button raised onClick={ this.onApplyClick.bind(this) }>
+                  <Button raised onClick={ this.onApplyClick }>
                     { forms.savingForm
                       ? <span><Spinner /> </span>
                       : null

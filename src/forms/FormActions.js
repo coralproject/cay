@@ -399,9 +399,14 @@ export const updateFormStatus = (formId, status) => (dispatch, getState) => {
   const {app} = getState();
   const options = {method: 'PUT', mode: 'cors'};
 
-  fetch(`${app.askHost}/v1/form/${formId}/status/${status}`, options)
+  return fetch(`${app.askHost}/v1/form/${formId}/status/${status}`, options)
     .then(res => res.json())
-    .then(form => dispatch({type: FORM_STATUS_UPDATED, form, status}))
+    .then(form => {
+      dispatch({type: FORM_STATUS_UPDATED, form, status});
+      const updatedState = getState();
+      // we want the Promise to evaluate to the saved form.
+      return updatedState.forms[updatedState.forms.activeForm];
+    })
     .catch(error => dispatch({type: FORM_STATUS_UPDATE_ERROR, error}));
 };
 
@@ -573,9 +578,9 @@ export const downloadCSV = formId => (dispatch, getState) => {
   const { submissionFilterBy, submissionSearch } = forms;
   const filterBy = submissionFilterBy === 'default' ? '' : submissionFilterBy;
 
-  fetch(`${app.askHost}/v1/form/${formId}/submission?filterby=${filterBy}&search=${submissionSearch}&csv=true`)
+  fetch(`${app.askHost}/v1/form/${formId}/submission/export?filterby=${filterBy}&search=${submissionSearch}`)
   .then(res => res.json())
-  .then(({ csv_url }) => window.open(`${csv_url}?filterby=${filterBy}&search=${submissionSearch}&csv=true`, '_self')); // download by opening a new tab
+  .then(({ csv_url }) => window.open(`${csv_url}&filterby=${filterBy}&search=${submissionSearch}`, '_self')); // download by opening a new tab
 }
 
 export const hasFlag = (submission, flag) => -1 !== submission.flags.indexOf(flag);

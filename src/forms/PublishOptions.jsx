@@ -8,7 +8,8 @@ import Spinner from 'components/Spinner';
 import CopyToClipboard from 'react-copy-to-clipboard';
 
 import {
-  updateForm,
+  updateFormStatus,
+  saveForm,
   updateFormSettings
  } from 'forms/FormActions';
 
@@ -20,6 +21,10 @@ export default class PublishOptions extends Component {
   constructor(props) {
     super(props);
     this.state = { publishModalOpened: false, formStatus: 'closed', activeTab: 0 };
+
+    this.onFormStatusChange = this.onFormStatusChange.bind(this);
+    this.onInactiveMessageChange = this.onInactiveMessageChange.bind(this);
+    this.togglePublishModal = this.togglePublishModal.bind(this);
   }
 
   togglePublishModal() {
@@ -28,9 +33,11 @@ export default class PublishOptions extends Component {
 
   onFormStatusChange(e) {
     let status = e.target.value;
+    const {dispatch, forms} = this.props;
     this.setState({ formStatus: status });
-    this.props.dispatch(updateForm({status}));
-    this.props.dispatch(updateFormSettings({ isActive: status === 'open' }));
+    this.props.dispatch(updateFormStatus(forms.activeForm, status)).then(updatedForm => {
+      dispatch(saveForm(updatedForm, forms.widgets));
+    });
   }
 
   onInactiveMessageChange(e) {
@@ -45,7 +52,7 @@ export default class PublishOptions extends Component {
       ? <div>
           <h4 style={ styles.dialogSubTitle }>Set form status</h4>
           <RadioGroup
-            onChange={ this.onFormStatusChange.bind(this) }
+            onChange={ this.onFormStatusChange }
             childContainer="div"
             value={ form.status }
             name="formStatusRadio">
@@ -56,7 +63,7 @@ export default class PublishOptions extends Component {
             this.state.formStatus && this.state.formStatus == 'closed'
             ? <div>
               <Textfield
-                onChange={this.onInactiveMessageChange.bind(this)}
+                onChange={this.onInactiveMessageChange}
                 label="We are not currently accepting submissions..."
                 value={form.settings.inactiveMessage}
                 style={{ width: '95%', marginLeft: '5%' }}
@@ -79,7 +86,7 @@ export default class PublishOptions extends Component {
 
   render() {
 
-    const { onOpenPreview, forms, activeForm, onSaveClick, iframeCode, scriptCode, standaloneCode, hideOptions } = this.props;
+    const { onOpenPreview, forms, activeForm, onSaveClick, iframeCode, scriptCode, standaloneCode, hideOptions, isGallery } = this.props;
 
     return (
       <div style={styles.leftPan}>
@@ -103,7 +110,7 @@ export default class PublishOptions extends Component {
               ? <Button
                   style={{ width: 310, marginTop: 10, backgroundColor: '#353B43' }}
                   raised ripple accent
-                  onClick={this.togglePublishModal.bind(this)}>
+                  onClick={this.togglePublishModal}>
                   Publish options
                 </Button>
               : null
@@ -116,7 +123,7 @@ export default class PublishOptions extends Component {
               noFooter
               style={styles.publishModal}
               title="Publish Options"
-              cancelAction={this.togglePublishModal.bind(this)}
+              cancelAction={this.togglePublishModal}
               isOpen={this.state.publishModalOpened}>
 
               <div style={ styles.dialogContent }>
@@ -174,7 +181,7 @@ export default class PublishOptions extends Component {
                 </div>
 
                 <div>
-                  <h4 style={ styles.dialogSubTitle }>Standalone Form URL</h4>
+                  <h4 style={ styles.dialogSubTitle }>Standalone {isGallery ? 'Gallery' : 'Form'} URL</h4>
                   <textarea className="standalone-form-url" readOnly style={styles.embedCode} value={standaloneCode}/>
                     <div style={ styles.rightAlignButtons }>
                       <CopyToClipboard

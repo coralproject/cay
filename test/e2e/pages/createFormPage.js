@@ -27,6 +27,7 @@ const createFormCommands = {
     return this
       .click('@formSaveButton')
       .waitForElementPresent('@statusToggle', 8000)
+      .waitForElementNotPresent('@flashMessage', 8000)
   },
   goLive() {
     return this
@@ -37,6 +38,7 @@ const createFormCommands = {
       .click('@liveStatusOption')
       .waitForElementVisible('@statusApplyButton', 1000)
       .click('@statusApplyButton')
+      .waitForElementNotPresent('@flashMessage', 5000)
   },
   publishFormOptions() {
     return this

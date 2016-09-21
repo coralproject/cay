@@ -72,17 +72,37 @@ export default {
     createFormPage
       .addMinCharsLimit(5)
       .saveForm()
+
+    client
+      .pause(5000)
+
+    createFormPage
       .publishFormOptions()
       .getUrlStandaloneForm(({ value }) =>{
 
         standAloneFormPage
             .navigate(value)
             .ready()
-            // DO TESTS AND GET BACK
-            client
-              .pause(5000)
-              .back()
 
+        client
+          .pause(5000)
+
+        const textValueTest = "tango";
+
+        standAloneFormPage
+          .setTextFieldValue(textValueTest)
+          .getTextFieldValue(({value}) => {
+
+            // Expect
+            standAloneFormPage.expect.element('@textField').to.have.value.that.equals(textValueTest);
+
+            // Try to submit
+
+          })
+
+        client
+          .back()
+          .pause(3000)
       })
 
   },
@@ -98,19 +118,19 @@ export default {
     createFormPage
       .saveForm()
   },
-  //'User tests the standalone form' : client => {
-  //  const createFormPage = client.page.createFormPage();
-  //  const standAloneFormPage = client.page.standAloneFormPage();
-  //
-  //  createFormPage
-  //    .publishFormOptions()
-  //    .getUrlStandaloneForm(({ value }) =>{
-  //
-  //      //standAloneFormPage
-  //      //    .navigate(value)
-  //      //    .ready()
-  //    })
-  //},
+  'User tests the standalone form' : client => {
+    const createFormPage = client.page.createFormPage();
+    const standAloneFormPage = client.page.standAloneFormPage();
+
+    createFormPage
+      .publishFormOptions()
+      .getUrlStandaloneForm(({ value }) =>{
+
+        standAloneFormPage
+            .navigate(value)
+            .ready()
+      })
+  },
   after: client => {
     client.end()
   }

@@ -247,7 +247,11 @@ export default class FormChrome extends React.Component {
                   style={styles.statusMessage}
                   defaultValue={form.settings.inactiveMessage}></textarea>
                 <div style={styles.forceRight}>
-                  <Button raised onClick={ this.onApplyClick }>
+                  <Button
+                    raised
+                    className="form-status-apply-button"
+                    onClick={ this.onApplyClick }
+                  >
                     { forms.savingForm
                       ? <span><Spinner /> </span>
                       : null

@@ -51,12 +51,14 @@ const createFormCommands = {
       .click('@firstWidget')
       .click('@minLengthCheckbox')
       .setValue('@minLengthInput', limit)
+      .click('@widgetSaveButton')
   },
   addMaxCharsLimit(limit) {
     return this
       .click('@firstWidget')
       .click('@maxLengthCheckbox')
       .setValue('@maxLengthInput', limit)
+      .click('@widgetSaveButton')
   }
 };
 

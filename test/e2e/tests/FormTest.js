@@ -67,9 +67,23 @@ export default {
   },
   'User adds Min. Chars Value': client => {
     const createFormPage = client.page.createFormPage();
+    const standAloneFormPage = client.page.standAloneFormPage();
 
     createFormPage
       .addMinCharsLimit(5)
+      .saveForm()
+      .publishFormOptions()
+      .getUrlStandaloneForm(({ value }) =>{
+
+        standAloneFormPage
+            .navigate(value)
+            .ready()
+            // DO TESTS AND GET BACK
+            client
+              .pause(5000)
+              .back()
+
+      })
 
   },
   'User adds Max. Chars Value': client => {
@@ -84,20 +98,20 @@ export default {
     createFormPage
       .saveForm()
   },
-  'User tests the standalone form' : client => {
-    const createFormPage = client.page.createFormPage();
-    const standAloneFormPage = client.page.standAloneFormPage();
-
-    createFormPage
-      .publishFormOptions()
-      .getUrlStandaloneForm(({ value }) =>{
-
-        //standAloneFormPage
-        //    .navigate(value)
-        //    .ready()
-      })
-  },
+  //'User tests the standalone form' : client => {
+  //  const createFormPage = client.page.createFormPage();
+  //  const standAloneFormPage = client.page.standAloneFormPage();
+  //
+  //  createFormPage
+  //    .publishFormOptions()
+  //    .getUrlStandaloneForm(({ value }) =>{
+  //
+  //      //standAloneFormPage
+  //      //    .navigate(value)
+  //      //    .ready()
+  //    })
+  //},
   after: client => {
-    //client.end()
+    client.end()
   }
 };

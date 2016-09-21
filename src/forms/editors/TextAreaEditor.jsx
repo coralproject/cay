@@ -101,6 +101,7 @@ export default class TextAreaEditor extends Component {
         <div style={styles.bottomOptions}>
           <div style={styles.bottomOptionsLeft}>
             <CheckInput
+              className="form-min-limit"
               label={'Min. Chars'}
               enabled={minLengthEnabled}
               handleCheckbox={ (e) => this.handleCheckboxChange(e, 'minLength') }
@@ -108,6 +109,7 @@ export default class TextAreaEditor extends Component {
               defaultValue={field.props.minLength}
             />
             <CheckInput
+              className="form-max-limit"
               label={'Max. Chars'}
               enabled={maxLengthEnabled}
               handleCheckbox={ (e) => this.handleCheckboxChange(e, 'maxLength') }

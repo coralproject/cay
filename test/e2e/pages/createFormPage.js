@@ -45,6 +45,14 @@ const createFormCommands = {
   getUrlStandaloneForm(cb) {
     return this
       .getValue('@standaloneFormUrl', result => cb({ value: result.value }))
+  },
+  addMinCharsLimit(limit) {
+    return this
+      .setValue('@minLengthInput', limit)
+  },
+  addMaxCharsLimit(limit) {
+    return this
+      .setValue('@maxLengthInput', limit)
   }
 };
 
@@ -101,6 +109,12 @@ export default {
     },
     flashMessage: {
       selector: '.flashmessage'
+    },
+    'minLengthInput': {
+      selector: '.form-min-limit > input[type="number"]:nth-child(3)'
+    },
+    'maxLengthInput': {
+      selector: '.form-max-limit > input[type="number"]:nth-child(3)'
     }
   }
 };

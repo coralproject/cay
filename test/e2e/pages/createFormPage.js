@@ -36,6 +36,10 @@ const createFormCommands = {
   publishFormOptions() {
     return this
       .click('@formPublishButton')
+  },
+  getUrlStandaloneForm(cb) {
+    return this
+      .getValue('@standaloneFormUrl', result => cb({ value: result.value }))
   }
 };
 
@@ -83,6 +87,9 @@ export default {
     },
     liveStatusOption: {
       selector: '.form-status-dropdown div:nth-of-type(3) span span'
+    },
+    standaloneFormUrl: {
+      selector: '.standalone-form-url'
     }
   }
 };

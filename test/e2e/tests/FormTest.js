@@ -1,5 +1,5 @@
 export default {
-  tags: ['form'],
+  tags: ['form', 'standalone-form'],
   before: client => {
     const { baseUrl } = client.globals;
     const createFormPage = client.page.createFormPage();
@@ -71,11 +71,18 @@ export default {
     createFormPage
       .saveForm()
   },
-  'User checks published options' : client => {
+  'User tests the standalone form' : client => {
     const createFormPage = client.page.createFormPage();
+    const standAloneFormPage = client.page.standAloneFormPage();
 
     createFormPage
       .publishFormOptions()
+      .getUrlStandaloneForm(({ value }) =>{
+
+        standAloneFormPage
+            .navigate(value)
+            .ready()
+      })
   },
   after: client => {
     client.end()

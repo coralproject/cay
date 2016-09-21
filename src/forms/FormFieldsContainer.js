@@ -33,7 +33,7 @@ export default class FormFieldsContainer extends Component {
     super(props, context);
     this.state = {
       savedFields: [],
-      isHovering: false,
+      dragStarted: false,
       currentFields: [],
       showTitleIsRequired: false,
       autoExpand: -1
@@ -43,12 +43,12 @@ export default class FormFieldsContainer extends Component {
 
   componentWillMount() {
     if (this.props.forms) {
-      this.setState({ savedFields: this.props.forms.widgets, currentFields: this.props.forms.widgets, isHovering: false });
+      this.setState({ savedFields: this.props.forms.widgets, currentFields: this.props.forms.widgets, dragStarted: false });
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({ savedFields: nextProps.forms.widgets, currentFields: nextProps.forms.widgets, isHovering: false });
+    this.setState({ savedFields: nextProps.forms.widgets, currentFields: nextProps.forms.widgets, dragStarted: false });
   }
 
   resetForm() {
@@ -169,6 +169,7 @@ export default class FormFieldsContainer extends Component {
                   position={ i }
                   onFieldSelect={ onFieldSelect }
                   onList={ true }
+                  dragStarted={ this.state.dragStarted }
                   autoExpand={ i === this.state.autoExpand }
                   isLast={ i === this.state.currentFields.length - 1 }
                   onMove={ this.onMove.bind(this) }
@@ -180,7 +181,7 @@ export default class FormFieldsContainer extends Component {
 
           {
             // Render last placeholder
-            !this.state.isHovering || this.state.currentFields.length === 0
+            !this.state.dragStarted || this.state.currentFields.length === 0
             ? <FormFieldPlaceHolder container={ this } position={ this.state.currentFields.length } key={ this.state.currentFields.length } />
             : null
           }

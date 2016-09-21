@@ -22,6 +22,10 @@ import About from 'app/About';
 import SubmissionList from 'app/SubmissionList';
 import GalleryManager from 'app/GalleryManager';
 
+import SignUp from 'app/SignUp';
+import SignIn from 'app/SignIn';
+import Permissions from 'app/Permissions';
+
 /**
  * Expose App base component. Handle all routes
  */
@@ -32,6 +36,9 @@ export default ({ store, onLogPageView, defaultRoute, features }) => (
       <Router history={browserHistory} onUpdate={onLogPageView}>
         <Redirect from="/" to={defaultRoute} />
         <Route path="login" component={Login} />
+        <Route path="sign-up" component={SignUp} />
+        <Route path="sign-in" component={SignIn} />
+        <Route path="permissions" component={Permissions} />
         <Route path="about" component={About} />
         {features.trust !== false ?
           <div>
@@ -41,7 +48,7 @@ export default ({ store, onLogPageView, defaultRoute, features }) => (
             <Route path="edit-search/:id" component={SearchEditor} />
           </div>
         : null}
-        {!!features.ask ?
+        {features.ask ?
           <div>
             <Route path="forms" component={FormList}/>
             <Route path="forms/create" component={FormCreate}/>

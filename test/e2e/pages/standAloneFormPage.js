@@ -10,6 +10,10 @@ const standAloneFormCommands = {
   setTextFieldValue(value) {
     return this
       .setValue('@textField', value)
+  },
+  submitStandAloneForm () {
+    return this
+      .click('@submitButton')
   }
 };
 
@@ -18,6 +22,12 @@ export default {
   elements: {
     textField: {
       selector: 'input.text-field'
+    },
+    submitButton: {
+      selector: '.submit-button'
+    },
+    finishScreen: {
+      selector: 'finish-screen'
     }
   }
 }

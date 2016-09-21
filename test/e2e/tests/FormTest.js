@@ -93,11 +93,10 @@ export default {
           .setTextFieldValue(textValueTest)
           .getTextFieldValue(({value}) => {
 
-            // Expect
             standAloneFormPage.expect.element('@textField').to.have.value.that.equals(textValueTest);
-
-            // Try to submit
-
+            standAloneFormPage.submitStandAloneForm();
+            //standAloneFormPage.waitForElementNotPresent('@finishScreen', 2000);
+            standAloneFormPage.waitForElementNotPresent('@finishScreen', 2000);
           })
 
         client

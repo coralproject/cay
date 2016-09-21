@@ -43,8 +43,10 @@ describe('<SignUp/>', function () {
     expect(this.mountedInstance.find('.emailSignUp').text()).to.equal('Email address');
     expect(this.mountedInstance.find('.emailSignUpPassword')).to.have.length(1);
     expect(this.mountedInstance.find('.emailSignUpPassword').text()).to.equal('Password');
+    expect(this.mountedInstance.find('.emailSignUpPassword input').prop('type')).to.equal('password');
     expect(this.mountedInstance.find('.emailSignUpPasswordConfirm')).to.have.length(1);
     expect(this.mountedInstance.find('.emailSignUpPasswordConfirm').text()).to.equal('Confirm password');
+    expect(this.mountedInstance.find('.emailSignUpPasswordConfirm input').prop('type')).to.equal('password');
   });
 
   it('should have a Forgot Password link', function () {

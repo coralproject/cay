@@ -40,8 +40,8 @@ export default class SignUp extends React.Component {
           style={styles.social('twitter')}><Twitter /> Sign up with Twitter</Button>
         <p style={styles.cta}>Or</p>
         <Textfield style={{width: '100%'}} className="emailSignUp" floatingLabel label='Email address' />
-        <Textfield style={{width: '100%'}} className="emailSignUpPassword" floatingLabel label='Password' />
-        <Textfield style={{width: '100%'}} className="emailSignUpPasswordConfirm" floatingLabel label='Confirm password' />
+        <Textfield style={{width: '100%'}} className="emailSignUpPassword" type="password" floatingLabel label='Password' />
+        <Textfield style={{width: '100%'}} className="emailSignUpPasswordConfirm" type="password" floatingLabel label='Confirm password' />
         <Button className="signUpTrigger" style={styles.signUp} raised ripple>Sign up</Button>
         <Link style={styles.forgotPassword} className="forgotPassword" to="forgot-password">Forgot your password?</Link>
         <p style={styles.haveAccount}>Already have an account? <Link className="linkToSignIn" to="sign-in">Sign in.</Link></p>

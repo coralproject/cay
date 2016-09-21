@@ -30,8 +30,13 @@ const createFormCommands = {
   },
   goLive() {
     return this
+      .waitForElementVisible('@statusToggle', 1000)
       .click('@statusToggle')
+      .waitForElementNotPresent('@flashMessage', 3000)
+      .waitForElementVisible('@liveStatusOption', 1000)
       .click('@liveStatusOption')
+      .waitForElementVisible('@statusApplyButton', 1000)
+      .click('@statusApplyButton')
   },
   publishFormOptions() {
     return this
@@ -85,11 +90,17 @@ export default {
     statusToggle: {
       selector: '.form-status-toggle'
     },
+    statusApplyButton: {
+      selector: '.form-status-apply-button'
+    },
     liveStatusOption: {
-      selector: '.form-status-dropdown div:nth-of-type(3) span span'
+      selector: '.form-status-dropdown > div:nth-child(3) > span'
     },
     standaloneFormUrl: {
       selector: '.standalone-form-url'
+    },
+    flashMessage: {
+      selector: '.flashmessage'
     }
   }
 };

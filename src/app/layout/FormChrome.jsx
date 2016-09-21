@@ -237,6 +237,7 @@ export default class FormChrome extends React.Component {
                 onClick={this.props.updateStatus} />
               <div style={styles.closeStatusHolder}>
                 <RadioButton
+                  className="form-status-closed-option"
                   value="closed"
                   label="Closed"
                   style={styles.closeRadio}

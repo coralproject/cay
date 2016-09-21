@@ -65,6 +65,19 @@ export default {
         description: 'Test Description'
       })
   },
+  'User adds Min. Chars Value': client => {
+    const createFormPage = client.page.createFormPage();
+
+    createFormPage
+      .addMinCharsLimit(5)
+
+  },
+  'User adds Max. Chars Value': client => {
+    const createFormPage = client.page.createFormPage();
+
+    createFormPage
+      .addMaxCharsLimit(10)
+  },
   'User saves form': client => {
     const createFormPage = client.page.createFormPage();
 
@@ -79,12 +92,12 @@ export default {
       .publishFormOptions()
       .getUrlStandaloneForm(({ value }) =>{
 
-        standAloneFormPage
-            .navigate(value)
-            .ready()
+        //standAloneFormPage
+        //    .navigate(value)
+        //    .ready()
       })
   },
   after: client => {
-    client.end()
+    //client.end()
   }
 };

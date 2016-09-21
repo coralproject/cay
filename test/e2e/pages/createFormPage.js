@@ -48,10 +48,14 @@ const createFormCommands = {
   },
   addMinCharsLimit(limit) {
     return this
+      .click('@firstWidget')
+      .click('@minLengthCheckbox')
       .setValue('@minLengthInput', limit)
   },
   addMaxCharsLimit(limit) {
     return this
+      .click('@firstWidget')
+      .click('@maxLengthCheckbox')
       .setValue('@maxLengthInput', limit)
   }
 };
@@ -110,8 +114,14 @@ export default {
     flashMessage: {
       selector: '.flashmessage'
     },
+    'minLengthCheckbox': {
+      selector: '.form-min-limit > input[type="checkbox"]:nth-child(1)'
+    },
     'minLengthInput': {
       selector: '.form-min-limit > input[type="number"]:nth-child(3)'
+    },
+    'maxLengthCheckbox': {
+      selector: '.form-max-limit > input[type="checkbox"]:nth-child(1)'
     },
     'maxLengthInput': {
       selector: '.form-max-limit > input[type="number"]:nth-child(3)'

@@ -23,6 +23,14 @@ const createFormCommands = {
       .setValue('@fieldDescription', opt.description)
       .click('@widgetSaveButton')
   },
+  addLongAnswer(opt) {
+    return this
+      .click('@textField')
+      .click('@firstWidget')
+      .setValue('@fieldTitle', opt.title)
+      .setValue('@fieldDescription', opt.description)
+      .click('@widgetSaveButton')
+  },
   saveForm() {
     return this
       .click('@formSaveButton')
@@ -91,6 +99,9 @@ export default {
     },
     textField: {
       selector: '.field-types .TextField'
+    },
+    textArea: {
+      selector: '.field-types .TextArea'
     },
     firstWidget: {
       selector: '.widget:first-of-type'

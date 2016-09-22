@@ -14,6 +14,14 @@ const standAloneFormCommands = {
   submitStandAloneForm () {
     return this
       .click('@submitButton')
+  },
+  addValueToTextField(textValueTest, cb) {
+    return this
+      .setTextFieldValue(textValueTest)
+      .getTextFieldValue(({value}) => {
+        this.expect.element('@textField').to.have.value.that.equals(textValueTest);
+        cb({ value })
+      })
   }
 };
 

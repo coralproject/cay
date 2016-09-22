@@ -65,7 +65,7 @@ export default {
         description: 'Test Description'
       })
   },
-  'User adds Min. Chars Value': client => {
+  'User adds Min Chars and test for the final form': client => {
     const createFormPage = client.page.createFormPage();
     const standAloneFormPage = client.page.standAloneFormPage();
 
@@ -73,37 +73,46 @@ export default {
       .addMinCharsLimit(5)
       .saveForm()
 
-    client
-      .pause(5000)
+    client.pause(5000)
 
     createFormPage
       .publishFormOptions()
       .getUrlStandaloneForm(({ value }) =>{
-
         standAloneFormPage
             .navigate(value)
             .ready()
 
-        client
-          .pause(5000)
+            // Not Allowed values
+            .addValueToTextField("tango ", ({ value }) => {
+              standAloneFormPage.submitStandAloneForm();
+              standAloneFormPage.waitForElementNotPresent('@finishScreen', 2000);
+            })
+            .addValueToTextField("red", ({ value }) => {
+              standAloneFormPage.submitStandAloneForm();
+              standAloneFormPage.waitForElementNotPresent('@finishScreen', 2000);
+            })
+            .addValueToTextField("blue", ({ value }) => {
+              standAloneFormPage.submitStandAloneForm();
+              standAloneFormPage.waitForElementNotPresent('@finishScreen', 2000);
+            })
 
-        const textValueTest = "tango";
-
-        standAloneFormPage
-          .setTextFieldValue(textValueTest)
-          .getTextFieldValue(({value}) => {
-
-            standAloneFormPage.expect.element('@textField').to.have.value.that.equals(textValueTest);
-            standAloneFormPage.submitStandAloneForm();
-            //standAloneFormPage.waitForElementNotPresent('@finishScreen', 2000);
-            standAloneFormPage.waitForElementNotPresent('@finishScreen', 2000);
-          })
-
-        client
-          .back()
-          .pause(3000)
+            // Allowed values
+            .addValueToTextField("tango", ({ value }) => {
+              standAloneFormPage.submitStandAloneForm();
+              standAloneFormPage.waitForElementPresent('@finishScreen', 2000);
+              client.refresh();
+            })
+            .addValueToTextField("violins", ({ value }) => {
+              standAloneFormPage.submitStandAloneForm();
+              standAloneFormPage.waitForElementPresent('@finishScreen', 2000);
+              client.refresh();
+            })
+            .addValueToTextField("she sells seashells by the seashore", ({ value }) => {
+              standAloneFormPage.submitStandAloneForm();
+              standAloneFormPage.waitForElementPresent('@finishScreen', 2000);
+              client.refresh();
+            })
       })
-
   },
   'User adds Max. Chars Value': client => {
     const createFormPage = client.page.createFormPage();

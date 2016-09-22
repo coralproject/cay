@@ -6,8 +6,13 @@ import {Textfield, Button} from 'react-mdl';
 @Radium
 export default class ResetPassword extends React.Component {
 
-  static propTypes = {
-    resetPassword: PropTypes.func.isRequired
+  constructor(props) {
+    super(props);
+    this.resetPassword = this.resetPassword.bind(this);
+  }
+
+  resetPassword() {
+    // call an action here or something
   }
 
   render() {

@@ -46,7 +46,7 @@ const createFormCommands = {
   },
   getUrlStandaloneForm(cb) {
     return this
-      .getValue('@standaloneFormUrl', result => cb({ value: result.value }))
+      .getValue('@standaloneFormUrl', result => cb({ url: result.value }))
   },
   addMinCharsLimit(limit) {
     return this
@@ -61,6 +61,14 @@ const createFormCommands = {
       .click('@maxLengthCheckbox')
       .setValue('@maxLengthInput', limit)
       .click('@widgetSaveButton')
+  },
+  deleteWidget() {
+    return this
+      .click('@widgetDeleteButton')
+  },
+  closeModal() {
+    return this
+      .click('@closeModal')
   }
 };
 
@@ -87,6 +95,9 @@ export default {
     },
     fieldDescription: {
       selector: '.widget-expanded .field-description'
+    },
+    widgetDeleteButton: {
+      selector: '.form-delete-widget-button'
     },
     widgetSaveButton: {
       selector: '.widget-expanded .save-button'
@@ -129,6 +140,9 @@ export default {
     },
     'maxLengthInput': {
       selector: '.form-max-limit > input[type="number"]:nth-child(3)'
+    },
+    closeModal: {
+      selector: '.card div:nth-child(1) > span:nth-child(2)'
     }
   }
 };

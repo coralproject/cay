@@ -173,7 +173,7 @@ export default class FormField extends Component {
 
           <div style={styles.arrowContainer}>
             <button style={styles.copy} onClick={ onDuplicate.bind(this, position) }><FaCopy /></button>
-            <button style={styles.delete} onClick={ onDelete.bind(this, position) }><FaTrash /></button>
+            <button className="form-delete-widget-button" style={styles.delete} onClick={ onDelete.bind(this, position) }><FaTrash /></button>
             <button onClick={ position !== 0 ? onMove.bind(this, 'up', position) : null } style={styles.arrow} disabled={position === 0}><FaArrowUp /></button>
             <button onClick={ !isLast ? onMove.bind(this, 'down', position) : null } style={styles.arrow} disabled={!!isLast}><FaArrowDown /></button>
           </div>

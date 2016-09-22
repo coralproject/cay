@@ -17,10 +17,13 @@ const standAloneFormCommands = {
   },
   addValueToTextField(textValueTest, cb) {
     return this
-      .setTextFieldValue(textValueTest)
-      .getTextFieldValue(({value}) => {
-        this.expect.element('@textField').to.have.value.that.equals(textValueTest);
-        cb({ value })
+      .clearValue('@textField', () => {
+        this.expect.element('@textField').to.have.value.that.equals("")
+        this.setTextFieldValue(textValueTest)
+            .getTextFieldValue(({value}) => {
+              //this.expect.element('@textField').to.have.value.that.equals(textValueTest);
+              cb({ value })
+             })
       })
   }
 };
@@ -34,8 +37,8 @@ export default {
     submitButton: {
       selector: '.submit-button'
     },
-    finishScreen: {
-      selector: 'finish-screen'
+    finalScreen: {
+      selector: '.final-screen'
     }
   }
 }

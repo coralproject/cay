@@ -80,8 +80,8 @@ export const styles = {
     fontSize: '11pt'
   },
   title: {
-    fontSize: 14,
-    fontWeight: 'bold',
+    fontSize: '.9em',
+    fontWeight: 'normal',
     lineHeight: '1em'
   }
 };

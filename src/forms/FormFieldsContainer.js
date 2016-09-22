@@ -22,6 +22,8 @@ import FaQuestionCircle from 'react-icons/lib/fa/question-circle';
 import FormFieldPlaceHolder from 'forms/FormFieldPlaceHolder';
 import FormField from 'forms/FormField';
 
+import settings from 'settings';
+
 @connect(({ forms, app }) => ({ forms, app }))
 export default class FormFieldsContainer extends Component {
 
@@ -146,14 +148,14 @@ export default class FormFieldsContainer extends Component {
     const form = this.props.activeForm ? forms[this.props.activeForm] : forms.form;
     return (
       <div style={ styles.fieldsListContainer }>
-        <input className="form-headline" onChange={ this.onFormHeadingChange.bind(this) } style={ styles.headLine } type="text" placeholder={ "Write a headline" } defaultValue={ form.header.heading } />
+        <input className="form-headline" onChange={ this.onFormHeadingChange.bind(this) } style={ styles.formTitles } type="text" placeholder={ "Write a headline" } defaultValue={ form.header.heading } />
         {
           this.state.showTitleIsRequired ?
             <p style={ styles.titleIsRequired }>Title is required</p>
           :
             null
         }
-        <textarea className="form-description" onChange={ this.onFormDescriptionChange.bind(this) } style={ styles.description } placeholder={ "Write instructions and a description for the form below" } defaultValue={ form.header.description } />
+        <textarea className="form-description" onChange={ this.onFormDescriptionChange.bind(this) } style={ styles.formTitles } placeholder={ "Write instructions and a description for the form below" } defaultValue={ form.header.description } />
 
         <div style={ styles.fieldsList } className="widgets-container">
 
@@ -253,18 +255,19 @@ const styles = {
     marginBottom: 10,
     paddingLeft: 5
   },
-  headLine: {
-    fontSize: '1.25em',
-    width: '100%',
+  formTitles: {
+    borderRadius: 4,
+    border: '1px solid ' + settings.mediumGrey,
+    width: '75%',
+    height: '40px',
+    padding: 10,
+    fontSize: '18px',
     display: 'block',
-    border: 'none',
-    background: 'none',
-    fontWeight: 'normal',
-    color: 'black'
+    marginBottom: '20px'
   },
   description: {
     fontSize: '1em',
-    marginBottom: '20px',
+    marginBottom: '15px',
     width: '100%',
     display: 'block',
     border: 'none',

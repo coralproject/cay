@@ -52,18 +52,23 @@ const createFormCommands = {
     return this
       .click('@firstWidget')
       .click('@minLengthCheckbox')
-      .setValue('@minLengthInput', limit)
+      .clearValue('@textField', () => {
+        this.setValue('@minLengthInput', limit)
+      })
       .click('@widgetSaveButton')
   },
   addMaxCharsLimit(limit) {
     return this
       .click('@firstWidget')
       .click('@maxLengthCheckbox')
-      .setValue('@maxLengthInput', limit)
+      .clearValue('@textField', () => {
+        this.setValue('@maxLengthInput', limit)
+      })
       .click('@widgetSaveButton')
   },
   deleteWidget() {
     return this
+      .waitForElementVisible('@widgetDeleteButton')
       .click('@widgetDeleteButton')
   },
   closeModal() {

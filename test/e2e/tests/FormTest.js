@@ -22,48 +22,48 @@ export default {
     createFormPage
       .goLive()
   },
-  //'User saves form': client => {
-  //  const createFormPage = client.page.createFormPage();
-  //
-  //  createFormPage
-  //    .saveForm()
-  //},
-  //'User adds Title': client => {
-  //  const createFormPage = client.page.createFormPage();
-  //
-  //  const title = 'Test Title';
-  //
-  //  createFormPage
-  //    .addTitle(title)
-  //
-  //  // Expect
-  //  createFormPage.expect.element('@formTitle').to.be.present;
-  //  createFormPage.expect.element('@formTitle').to.have.value.that.equals(title);
-  //},
-  //'User adds Headline': client => {
-  //  const createFormPage = client.page.createFormPage();
-  //
-  //  const headline = 'Test Headline';
-  //
-  //  createFormPage
-  //    .addHeadline(headline)
-  //
-  //  // Expect
-  //  createFormPage.expect.element('@formHeadline').to.be.present;
-  //  createFormPage.expect.element('@formHeadline').to.have.value.that.equals(headline);
-  //},
-  //'User adds Description': client => {
-  //  const createFormPage = client.page.createFormPage();
-  //
-  //  const description = 'Test Description';
-  //
-  //  createFormPage
-  //    .addDescription(description)
-  //
-  //  // Expect
-  //  createFormPage.expect.element('@formDescription').to.be.present;
-  //  createFormPage.expect.element('@formDescription').to.have.value.that.equals(description);
-  //},
+  'User saves form': client => {
+    const createFormPage = client.page.createFormPage();
+
+    createFormPage
+      .saveForm()
+  },
+  'User adds Title': client => {
+    const createFormPage = client.page.createFormPage();
+
+    const title = 'Test Title';
+
+    createFormPage
+      .addTitle(title)
+
+    // Expect
+    createFormPage.expect.element('@formTitle').to.be.present;
+    createFormPage.expect.element('@formTitle').to.have.value.that.equals(title);
+  },
+  'User adds Headline': client => {
+    const createFormPage = client.page.createFormPage();
+
+    const headline = 'Test Headline';
+
+    createFormPage
+      .addHeadline(headline)
+
+    // Expect
+    createFormPage.expect.element('@formHeadline').to.be.present;
+    createFormPage.expect.element('@formHeadline').to.have.value.that.equals(headline);
+  },
+  'User adds Description': client => {
+    const createFormPage = client.page.createFormPage();
+
+    const description = 'Test Description';
+
+    createFormPage
+      .addDescription(description)
+
+    // Expect
+    createFormPage.expect.element('@formDescription').to.be.present;
+    createFormPage.expect.element('@formDescription').to.have.value.that.equals(description);
+  },
   'User adds a Short Answer': client => {
     const createFormPage = client.page.createFormPage();
 
@@ -155,29 +155,23 @@ export default {
   'User removes Short Answer': client => {
     const createFormPage = client.page.createFormPage();
 
-    client.pause(5000)
+    client.pause(3000)
 
     createFormPage
       .deleteWidget()
 
 
   },
-  'User adds another Short Answer': client => {
+  'User adds Max Chars and test the published form': client => {
     const createFormPage = client.page.createFormPage();
+    const standAloneFormPage = client.page.standAloneFormPage();
 
+    const limit = 5;
     createFormPage
       .addShortAnswer({
         title: 'Another Short Answer',
         description: 'Test Description'
       })
-  },
-  'User adds Max Chars and test for the final form': client => {
-    const createFormPage = client.page.createFormPage();
-    const standAloneFormPage = client.page.standAloneFormPage();
-
-    const limit = 5;
-
-    createFormPage
       .addMaxCharsLimit(limit)
       .saveForm()
 
@@ -250,6 +244,94 @@ export default {
       });
 
       client.back();
+
+    createFormPage
+      .deleteWidget()
+  },
+  'User creates a Short Answer field with Min and Max values': client => {
+
+      const createFormPage = client.page.createFormPage();
+      const standAloneFormPage = client.page.standAloneFormPage();
+
+      const maxLimit = 10;
+      const minLimit = 5;
+
+      createFormPage
+        .addShortAnswer({
+          title: 'This is a Test Short Answer with Min and Max Chars Limit',
+          description: 'Min Chars 5, Max Chars 10'
+        })
+        .addMinCharsLimit(minLimit)
+        .addMaxCharsLimit(maxLimit)
+
+      client.pause(2000)
+
+    createFormPage
+        .saveForm()
+
+      client.pause(2000)
+
+      createFormPage
+        .publishFormOptions()
+        .getUrlStandaloneForm(({ url }) => {
+
+          createFormPage
+            .closeModal()
+
+          standAloneFormPage
+            .navigate(url)
+            .ready()
+
+          // Allowed values
+          client
+            .url(url)
+            .refresh((e) => {
+              standAloneFormPage
+                .addValueToTextField("Hello!", ({ value }) => {
+                  standAloneFormPage.submitStandAloneForm();
+                  standAloneFormPage.waitForElementPresent('@finalScreen', 3000);
+                });
+            })
+
+          client
+            .url(url)
+            .refresh((e) => {
+              standAloneFormPage
+                .addValueToTextField("tango", ({ value }) => {
+                  standAloneFormPage.submitStandAloneForm();
+                  standAloneFormPage.waitForElementPresent('@finalScreen', 3000);
+                });
+            })
+
+          client
+            .url(url)
+            .refresh((e) => {
+              standAloneFormPage
+                .addValueToTextField("I love red", ({ value }) => {
+                  standAloneFormPage.submitStandAloneForm();
+                  standAloneFormPage.waitForElementPresent('@finalScreen', 3000);
+                });
+            })
+
+            // Not Allowed values
+            client
+              .url(url)
+              .refresh((e) => {
+                console.log(e);
+
+                standAloneFormPage
+                  .addValueToTextField("Hello, is it me you're looking for?", ({ value }) => {
+                    standAloneFormPage.assert.equal(value.length, maxLimit);
+                    //standAloneFormPage.waitForElementNotPresent('@finalScreen', 3000);
+                  })
+
+                  .addValueToTextField("I love red!", ({ value }) => {
+                    standAloneFormPage.assert.equal(value.length, maxLimit);
+                    standAloneFormPage.waitForElementNotPresent('@finalScreen', 3000);
+                  })
+              })
+        })
+
   },
   after: client => {
     client.end()

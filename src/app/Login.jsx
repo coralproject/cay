@@ -10,8 +10,6 @@ import Radium from 'radium';
 import { brandColor } from 'settings';
 import color from 'color';
 
-import {login} from 'auth/AuthActions';
-
 import Button from 'components/Button';
 import TextField from 'components/forms/TextField';
 
@@ -19,7 +17,7 @@ import TextField from 'components/forms/TextField';
  * Expose login component
  */
 
-@connect(({ auth, app }) => ({ auth, app }))
+@connect(({ app }) => ({ app }))
 @Radium
 export default class Login extends React.Component {
 
@@ -28,23 +26,23 @@ export default class Login extends React.Component {
   }
 
   componentWillMount() {
-    if (this.isAuth()) {
-      this.context.router.push('/');
-    }
+    // if (this.isAuth()) {
+    //   this.context.router.push('/');
+    // }
   }
 
   componentWillUpdate() {
-    if (this.isAuth()) {
-      this.context.router.push('/');
-    }
+    // if (this.isAuth()) {
+    //   this.context.router.push('/');
+    // }
   }
 
   isAuth() {
-    return !this.props.app.requireLogin || this.props.auth.authorized;
+    // return !this.props.app.requireLogin || this.props.auth.authorized;
   }
 
   loginUser() {
-    this.props.dispatch(login(this.state.email, this.state.password));
+    // this.props.dispatch(login(this.state.email, this.state.password));
   }
 
   updateEmail(email) {

@@ -37,6 +37,13 @@ export default class FormBuilder extends Component {
     // An empty form with no changes is valid as 'saved'
     this.saved = true;
     this.state = { openDialog: false }
+
+    this.onPublishOptions = this.onPublishOptions.bind(this);
+    this.onSaveClick = this.onSaveClick.bind(this);
+    this.addToBottom = this.addToBottom.bind(this);
+    this.onFormTitleChange = this.onFormTitleChange.bind(this);
+    this.markAsUnsaved = this.markAsUnsaved.bind(this);
+    this.renderPreview = this.renderPreview.bind(this);
   }
 
   markAsUnsaved() {
@@ -61,25 +68,26 @@ export default class FormBuilder extends Component {
     return (
       <div>
         <Header form={form} forms={forms} activeForm={activeForm}
-          onTitleChange={this.onFormTitleChange.bind(this)}
-          onSaveClick={this.onSaveClick.bind(this)} />
+          onTitleChange={this.onFormTitleChange}
+          onSaveClick={this.onSaveClick} />
         <div style={styles.builderContainer}>
           <FormBuilderSidebar
             create={!activeForm}
             onOpenPreview={onOpenPreview}
-            onPublishOptions={this.onPublishOptions.bind(this)}
-            onSaveClick={this.onSaveClick.bind(this)}
-            addToBottom={this.addToBottom.bind(this)}
+            onPublishOptions={this.onPublishOptions}
+            onSaveClick={this.onSaveClick}
+            addToBottom={this.addToBottom}
             activeForm={activeForm}
             openDialog={this.state.openDialog}
             app={app}
+            markAsUnsaved={this.markAsUnsaved}
             />
-          <FormFieldsContainer activeForm={ this.props.activeForm } markAsUnsaved={this.markAsUnsaved.bind(this)} />
+          <FormFieldsContainer activeForm={ this.props.activeForm } markAsUnsaved={this.markAsUnsaved} />
           { preview
             ? <div>
                 <div style={ styles.previewOverlay }></div>
                 <Preview
-                  renderPreview={this.renderPreview.bind(this)}
+                  renderPreview={this.renderPreview}
                   onClosePreview={onClosePreview.bind(this)}
                   />
               </div>

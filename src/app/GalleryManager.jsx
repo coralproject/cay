@@ -104,13 +104,13 @@ export default class GalleryManager extends Component {
             style={styles.galleryTitles}
             type="text"
             value={gallery.headline}
-            placeholder="Headline"
+            placeholder="Write a headline"
             onChange={this.setHeadline} />
           <br />
           <input
             style={styles.galleryTitles}
             type="text"
-            placeholder="Description"
+            placeholder="Write a subhead for your gallery"
             onChange={this.setDescription} />
         </div>
         {gallery.answers.map((answer, i) => (
@@ -361,7 +361,7 @@ export default class GalleryManager extends Component {
           <div style={styles.container}>
             <div style={styles.sidebar}>
               <Card>
-                <CardHeader>Reader Information</CardHeader>
+                <CardHeader titleStyle={styles.readerInfoLabel}>Reader Information</CardHeader>
 
                 <p style={styles.includeLabel}>Placement</p>
                 <Select
@@ -384,8 +384,9 @@ export default class GalleryManager extends Component {
                       onChange={this.updateIdentifiable.bind(this, field.id, !isChecked)}
                       type="checkbox"
                       checked={isChecked}
+                      style={ styles.includeCheck }
                       key={i} />
-                    {field.title}
+                    <span style={ styles.includeText }>{field.title}</span>
                   </label>
                 );
               })}
@@ -396,8 +397,8 @@ export default class GalleryManager extends Component {
                  form={form}
                  forms={forms}
                  hideOptions={!forms.activeGallery || !forms[forms.activeGallery].config.baseUrl}
-		 activeForm={forms.activeForm}
-		 isGallery={true}
+                 activeForm={forms.activeForm}
+                 isGallery={true}
                  onOpenPreview={this.togglePreview.bind(this)}
                  onSaveClick={this.onSaveClick.bind(this)}
                  scriptCode={this.createEmbed('script-tag')}
@@ -553,12 +554,14 @@ const styles = {
     marginBottom: 10
   },
   includeLabel: {
-    marginBottom: 5
+    marginBottom: 5,
+    fontSize: '1em'
   },
   idLabel: {
-    display: 'block',
+    display: 'flex',
     cursor: 'pointer',
-    marginBottom: 5
+    marginBottom: 5,
+    flexDirection: 'row'
   },
   embedCodes: {
     backgroundColor: settings.darkGrey,
@@ -659,5 +662,11 @@ const styles = {
     save: {
       marginLeft: 10
     }
+  },
+  readerInfoLabel: {
+    fontSize: '1.2em'
+  },
+  includeCheck: {
+    marginRight: '10px'
   }
 };

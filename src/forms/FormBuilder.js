@@ -35,11 +35,9 @@ export default class FormBuilder extends Component {
   constructor(props) {
     super(props);
 
-    // An empty form with no changes is valid as 'saved'
-    this.saved = true;
-
     this.state = {
-      openDialog: false
+      openDialog: false,
+      saved: false
     };
 
     this.onPublishOptions = this.onPublishOptions.bind(this);
@@ -51,22 +49,20 @@ export default class FormBuilder extends Component {
   }
 
   markAsUnsaved() {
-    this.saved = false;
-  }
-
-  hookRouter() {
-    const { router } = this.context;
-    const { route } =  this.props;
-
-    router.setRouteLeaveHook(route, () => {
-      if (this.saved === false) {
-        return 'This form has unsaved changes. Are you sure you want to leave this page?';
-      }
+    this.setState({
+      saved: false
     });
   }
 
   componentDidMount() {
-    this.hookRouter();
+    const { router } = this.context;
+    const { route } =  this.props;
+    const { saved } = this.state;
+    router.setRouteLeaveHook(route, () => {
+      if (!saved) {
+        return 'This form has unsaved changes. Are you sure you want to leave this page?';
+      }
+    });
   }
 
   render() {
@@ -127,11 +123,15 @@ export default class FormBuilder extends Component {
     dispatch(saveForm(activeForm ? forms[activeForm] : form, widgets))
       .then(response => {
         if (response.data && response.data.id) {
-          this.saved = true;
-          this.props.dispatch(showFlashMessage('Your form saved.', 'success'));
+
+          this.setState({
+            saved: true
+          });
+
+          dispatch(showFlashMessage('Your form saved.', 'success'));
           return !activeForm && router.push(`/forms/${response.data.id}`);
         } else {
-          this.props.dispatch(showFlashMessage('Uh-oh, we can\'t save your form. Try again or report the error to your technical team', 'warning', 4000));
+          dispatch(showFlashMessage('Uh-oh, we can\'t save your form. Try again or report the error to your technical team', 'warning', 4000));
         }
       });
   }

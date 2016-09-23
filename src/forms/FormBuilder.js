@@ -34,9 +34,13 @@ export default class FormBuilder extends Component {
 
   constructor(props) {
     super(props);
+
     // An empty form with no changes is valid as 'saved'
     this.saved = true;
-    this.state = { openDialog: false }
+
+    this.state = {
+      openDialog: false
+    };
 
     this.onPublishOptions = this.onPublishOptions.bind(this);
     this.onSaveClick = this.onSaveClick.bind(this);
@@ -51,7 +55,10 @@ export default class FormBuilder extends Component {
   }
 
   hookRouter() {
-    this.context.router.setRouteLeaveHook(this.props.route, () => {
+    const { router } = this.context;
+    const { route } =  this.props;
+
+    router.setRouteLeaveHook(route, () => {
       if (this.saved === false) {
         return 'This form has unsaved changes. Are you sure you want to leave this page?';
       }
@@ -89,7 +96,7 @@ export default class FormBuilder extends Component {
                 <Preview
                   renderPreview={this.renderPreview}
                   onClosePreview={onClosePreview.bind(this)}
-                  />
+                />
               </div>
             : null
           }

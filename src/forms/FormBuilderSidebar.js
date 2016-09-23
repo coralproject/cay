@@ -68,7 +68,7 @@ export default class FormBuilderSidebar extends Component {
 
   render() {
 
-    const { preview, onClosePreview, onOpenPreview, forms, activeForm, app, onSaveClick } = this.props;
+    const { preview, onClosePreview, onOpenPreview, forms, activeForm, app, onSaveClick, markAsUnsaved } = this.props;
     const form = activeForm ? forms[activeForm] : forms.form;
     const { activeTab } = this.state;
 
@@ -78,7 +78,7 @@ export default class FormBuilderSidebar extends Component {
           <h4 style={styles.leftContainerTitle}>Select a question</h4>
           <div className="field-types" style={styles.typeList}>
             {askTypes.map((type, i) => (
-              <FieldTypeButton key={ i } field={ type } />
+              <FieldTypeButton key={ i } field={ type } markAsUnsaved={markAsUnsaved} />
             ))}
           </div>
 

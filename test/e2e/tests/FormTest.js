@@ -101,7 +101,7 @@ export default {
             standAloneFormPage
               .addValueToTextField("tango", ({ value }) => {
                 standAloneFormPage.submitStandAloneForm();
-                standAloneFormPage.waitForElementPresent('@finalScreen', 3000);
+                standAloneFormPage.waitForElementPresent('@finalScreen', 8000);
               });
           })
 
@@ -111,7 +111,7 @@ export default {
             standAloneFormPage
               .addValueToTextField("violins", ({ value }) => {
                 standAloneFormPage.submitStandAloneForm();
-                standAloneFormPage.waitForElementPresent('@finalScreen', 3000);
+                standAloneFormPage.waitForElementPresent('@finalScreen', 8000);
               });
           })
 
@@ -121,7 +121,7 @@ export default {
             standAloneFormPage
               .addValueToTextField("she sells seashells by the seashore", ({ value }) => {
                 standAloneFormPage.submitStandAloneForm();
-                standAloneFormPage.waitForElementPresent('@finalScreen', 3000);
+                standAloneFormPage.waitForElementPresent('@finalScreen', 8000);
               });
           })
 
@@ -135,17 +135,17 @@ export default {
             standAloneFormPage
               .addValueToTextField("doge ", ({ value }) => {
                 standAloneFormPage.submitStandAloneForm();
-                standAloneFormPage.waitForElementNotPresent('@finalScreen', 3000);
+                standAloneFormPage.waitForElementNotPresent('@finalScreen', 8000);
               })
 
               .addValueToTextField("red", ({ value }) => {
                 standAloneFormPage.submitStandAloneForm();
-                standAloneFormPage.waitForElementNotPresent('@finalScreen', 3000);
+                standAloneFormPage.waitForElementNotPresent('@finalScreen', 8000);
               })
 
               .addValueToTextField("blue", ({ value }) => {
                 standAloneFormPage.submitStandAloneForm();
-                standAloneFormPage.waitForElementNotPresent('@finalScreen', 3000);
+                standAloneFormPage.waitForElementNotPresent('@finalScreen', 8000);
               });
           })
 
@@ -195,7 +195,7 @@ export default {
             standAloneFormPage
               .addValueToTextField("tango", ({ value }) => {
                 standAloneFormPage.submitStandAloneForm();
-                standAloneFormPage.waitForElementPresent('@finalScreen', 3000);
+                standAloneFormPage.waitForElementPresent('@finalScreen', 8000);
               });
           })
 
@@ -205,7 +205,7 @@ export default {
             standAloneFormPage
               .addValueToTextField("red", ({ value }) => {
                 standAloneFormPage.submitStandAloneForm();
-                standAloneFormPage.waitForElementPresent('@finalScreen', 3000);
+                standAloneFormPage.waitForElementPresent('@finalScreen', 8000);
               });
           })
 
@@ -215,7 +215,7 @@ export default {
             standAloneFormPage
               .addValueToTextField("blue", ({ value }) => {
                 standAloneFormPage.submitStandAloneForm();
-                standAloneFormPage.waitForElementPresent('@finalScreen', 3000);
+                standAloneFormPage.waitForElementPresent('@finalScreen', 8000);
               });
           })
 
@@ -228,17 +228,17 @@ export default {
             standAloneFormPage
               .addValueToTextField("tango ", ({ value }) => {
                 standAloneFormPage.assert.equal(value.length, limit);
-                standAloneFormPage.waitForElementNotPresent('@finalScreen', 3000);
+                standAloneFormPage.waitForElementNotPresent('@finalScreen', 8000);
               })
 
               .addValueToTextField("violins", ({ value }) => {
                 standAloneFormPage.assert.equal(value.length, limit);
-                standAloneFormPage.waitForElementNotPresent('@finalScreen', 3000);
+                standAloneFormPage.waitForElementNotPresent('@finalScreen', 8000);
               })
 
               .addValueToTextField("she sells seashells by the seashore", ({ value }) => {
                 standAloneFormPage.assert.equal(value.length, limit);
-                standAloneFormPage.waitForElementNotPresent('@finalScreen', 3000);
+                standAloneFormPage.waitForElementNotPresent('@finalScreen', 8000);
               });
           })
       });
@@ -289,7 +289,7 @@ export default {
               standAloneFormPage
                 .addValueToTextField("Hello!", ({ value }) => {
                   standAloneFormPage.submitStandAloneForm();
-                  standAloneFormPage.waitForElementPresent('@finalScreen', 3000);
+                  standAloneFormPage.waitForElementPresent('@finalScreen', 8000);
                 });
             })
 
@@ -299,7 +299,7 @@ export default {
               standAloneFormPage
                 .addValueToTextField("tango", ({ value }) => {
                   standAloneFormPage.submitStandAloneForm();
-                  standAloneFormPage.waitForElementPresent('@finalScreen', 3000);
+                  standAloneFormPage.waitForElementPresent('@finalScreen', 8000);
                 });
             })
 
@@ -309,7 +309,7 @@ export default {
               standAloneFormPage
                 .addValueToTextField("I love red", ({ value }) => {
                   standAloneFormPage.submitStandAloneForm();
-                  standAloneFormPage.waitForElementPresent('@finalScreen', 3000);
+                  standAloneFormPage.waitForElementPresent('@finalScreen', 8000);
                 });
             })
 
@@ -322,12 +322,12 @@ export default {
                 standAloneFormPage
                   .addValueToTextField("Hello, is it me you're looking for?", ({ value }) => {
                     standAloneFormPage.assert.equal(value.length, maxLimit);
-                    //standAloneFormPage.waitForElementNotPresent('@finalScreen', 3000);
+                    //standAloneFormPage.waitForElementNotPresent('@finalScreen', 8000);
                   })
 
                   .addValueToTextField("I love red!", ({ value }) => {
                     standAloneFormPage.assert.equal(value.length, maxLimit);
-                    standAloneFormPage.waitForElementNotPresent('@finalScreen', 3000);
+                    standAloneFormPage.waitForElementNotPresent('@finalScreen', 8000);
                   })
               })
         });
@@ -372,7 +372,7 @@ export default {
             standAloneFormPage
               .addValueToTextField("tango", ({ value }) => {
                 standAloneFormPage.submitStandAloneForm();
-                standAloneFormPage.waitForElementPresent('@finalScreen', 3000);
+                standAloneFormPage.waitForElementPresent('@finalScreen', 8000);
               });
           })
 
@@ -382,7 +382,7 @@ export default {
             standAloneFormPage
               .addValueToTextField("violins", ({ value }) => {
                 standAloneFormPage.submitStandAloneForm();
-                standAloneFormPage.waitForElementPresent('@finalScreen', 3000);
+                standAloneFormPage.waitForElementPresent('@finalScreen', 8000);
               });
           })
 
@@ -392,7 +392,7 @@ export default {
             standAloneFormPage
               .addValueToTextField("she sells seashells by the seashore", ({ value }) => {
                 standAloneFormPage.submitStandAloneForm();
-                standAloneFormPage.waitForElementPresent('@finalScreen', 3000);
+                standAloneFormPage.waitForElementPresent('@finalScreen', 8000);
               });
           })
 
@@ -405,17 +405,17 @@ export default {
             standAloneFormPage
               .addValueToTextField("doge ", ({ value }) => {
                 standAloneFormPage.submitStandAloneForm();
-                standAloneFormPage.waitForElementNotPresent('@finalScreen', 3000);
+                standAloneFormPage.waitForElementNotPresent('@finalScreen', 8000);
               })
 
               .addValueToTextField("red", ({ value }) => {
                 standAloneFormPage.submitStandAloneForm();
-                standAloneFormPage.waitForElementNotPresent('@finalScreen', 3000);
+                standAloneFormPage.waitForElementNotPresent('@finalScreen', 8000);
               })
 
               .addValueToTextField("blue", ({ value }) => {
                 standAloneFormPage.submitStandAloneForm();
-                standAloneFormPage.waitForElementNotPresent('@finalScreen', 3000);
+                standAloneFormPage.waitForElementNotPresent('@finalScreen', 8000);
               });
           })
       });
@@ -458,7 +458,7 @@ export default {
             standAloneFormPage
               .addValueToTextField("tango", ({ value }) => {
                 standAloneFormPage.submitStandAloneForm();
-                standAloneFormPage.waitForElementPresent('@finalScreen', 3000);
+                standAloneFormPage.waitForElementPresent('@finalScreen', 8000);
               });
           })
 
@@ -468,7 +468,7 @@ export default {
             standAloneFormPage
               .addValueToTextField("red", ({ value }) => {
                 standAloneFormPage.submitStandAloneForm();
-                standAloneFormPage.waitForElementPresent('@finalScreen', 3000);
+                standAloneFormPage.waitForElementPresent('@finalScreen', 8000);
               });
           })
 
@@ -478,7 +478,7 @@ export default {
             standAloneFormPage
               .addValueToTextField("blue", ({ value }) => {
                 standAloneFormPage.submitStandAloneForm();
-                standAloneFormPage.waitForElementPresent('@finalScreen', 3000);
+                standAloneFormPage.waitForElementPresent('@finalScreen', 8000);
               });
           })
 
@@ -491,17 +491,17 @@ export default {
             standAloneFormPage
               .addValueToTextField("tango ", ({ value }) => {
                 standAloneFormPage.assert.equal(value.length, limit);
-                standAloneFormPage.waitForElementNotPresent('@finalScreen', 3000);
+                standAloneFormPage.waitForElementNotPresent('@finalScreen', 8000);
               })
 
               .addValueToTextField("violins", ({ value }) => {
                 standAloneFormPage.assert.equal(value.length, limit);
-                standAloneFormPage.waitForElementNotPresent('@finalScreen', 3000);
+                standAloneFormPage.waitForElementNotPresent('@finalScreen', 8000);
               })
 
               .addValueToTextField("she sells seashells by the seashore", ({ value }) => {
                 standAloneFormPage.assert.equal(value.length, limit);
-                standAloneFormPage.waitForElementNotPresent('@finalScreen', 3000);
+                standAloneFormPage.waitForElementNotPresent('@finalScreen', 8000);
               });
           })
       });
@@ -551,7 +551,7 @@ export default {
             standAloneFormPage
               .addValueToTextField("Hello!", ({ value }) => {
                 standAloneFormPage.submitStandAloneForm();
-                standAloneFormPage.waitForElementPresent('@finalScreen', 3000);
+                standAloneFormPage.waitForElementPresent('@finalScreen', 8000);
               });
           })
 
@@ -561,7 +561,7 @@ export default {
             standAloneFormPage
               .addValueToTextField("tango", ({ value }) => {
                 standAloneFormPage.submitStandAloneForm();
-                standAloneFormPage.waitForElementPresent('@finalScreen', 3000);
+                standAloneFormPage.waitForElementPresent('@finalScreen', 8000);
               });
           })
 
@@ -571,7 +571,7 @@ export default {
             standAloneFormPage
               .addValueToTextField("I love red", ({ value }) => {
                 standAloneFormPage.submitStandAloneForm();
-                standAloneFormPage.waitForElementPresent('@finalScreen', 3000);
+                standAloneFormPage.waitForElementPresent('@finalScreen', 8000);
               });
           })
 
@@ -588,7 +588,7 @@ export default {
 
                 .addValueToTextField("I love red!", ({ value }) => {
                   standAloneFormPage.assert.equal(value.length, maxLimit);
-                  standAloneFormPage.waitForElementNotPresent('@finalScreen', 3000);
+                  standAloneFormPage.waitForElementNotPresent('@finalScreen', 8000);
                 })
             })
       })

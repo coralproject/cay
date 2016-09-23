@@ -237,6 +237,7 @@ export default class FormChrome extends React.Component {
                 onClick={this.props.updateStatus} />
               <div style={styles.closeStatusHolder}>
                 <RadioButton
+                  className="form-status-closed-option"
                   value="closed"
                   label="Closed"
                   style={styles.closeRadio}
@@ -247,7 +248,11 @@ export default class FormChrome extends React.Component {
                   style={styles.statusMessage}
                   defaultValue={form.settings.inactiveMessage}></textarea>
                 <div style={styles.forceRight}>
-                  <Button raised onClick={ this.onApplyClick }>
+                  <Button
+                    raised
+                    className="form-status-apply-button"
+                    onClick={ this.onApplyClick }
+                  >
                     { forms.savingForm
                       ? <span><Spinner /> </span>
                       : null

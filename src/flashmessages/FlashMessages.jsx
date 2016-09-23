@@ -25,7 +25,10 @@ class FlashMessages extends React.Component {
     let { show, message, type } = this.props.flashMessages;
     return (
       show
-      ? <div style={ this.getStyles() }>
+      ? <div
+        className="flashmessage"
+        style={ this.getStyles() }
+        >
         <span style={ styles.message }>
           {
             type == 'success'

@@ -2,9 +2,9 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { Button, Tabs, Tab, RadioGroup, Radio, Textfield } from 'react-mdl';
+import { CoralButton } from '../components/ui/CoralButton';
 
 import Spinner from 'components/Spinner';
-
 import CopyToClipboard from 'react-copy-to-clipboard';
 
 import {
@@ -90,13 +90,15 @@ export default class PublishOptions extends Component {
       <div style={styles.leftPan}>
 
           <div>
-            <Button
-              raised ripple primary
+            <CoralButton
               className="form-preview-button"
+              icon="clear"
               onClick={onOpenPreview}
-              style={{ width: 150, marginRight: 10, backgroundColor: '#4565A1' }}>
+              style={{  width: 150, marginRight: 10 }}
+            >
               Preview
-            </Button>
+            </CoralButton>
+
             <Button
               className="form-save-button"
               style={{ width: 150, backgroundColor: '#358D66' }}

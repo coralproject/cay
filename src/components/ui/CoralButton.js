@@ -31,6 +31,10 @@ const styles = {
   },
   blue: {
     backgroundColor: '#0e62eb'
+  },
+  icon: {
+    marginRight: 5,
+    fontSize: '16px'
   }
 };
 
@@ -48,9 +52,7 @@ export const CoralButton = ({ type, onClick, disabled, children, icon, style, ..
     disabled={disabled ? 'disabled' : ''}
     { ...rest }
   >
-    { icon === 'done' ? <MdDone style={{ marginRight: 5 }}/> : null }
-    { icon === 'clear' ? <MdClear style={{ marginRight: 5 }}/> : null }
-    { icon === 'visibility' ? <MdVisibility style={{ marginRight: 5 }}/> : null }
+    { icon ? <i className="material-icons" style={styles.icon} > {icon} </i> : null }
     { children }
   </Button>
 );

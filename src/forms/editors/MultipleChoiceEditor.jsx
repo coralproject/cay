@@ -169,7 +169,6 @@ export default class MultipleChoiceEditor extends Component {
               </div>
             : null
           }
-
           <div style={ styles.optionRow }>
             <div style={ styles.optionRowText }>
               <button style={ styles.addOption } onClick={ this.addOption } className="add-option"><FaPlusCircle /> Add another option</button>
@@ -178,11 +177,8 @@ export default class MultipleChoiceEditor extends Component {
               &nbsp;
             </div>
           </div>
-
         </div>
-
         <div style={ styles.bottomOptions }>
-
           <div style={ styles.bottomOptionsLeft }>
             <label style={ styles.bottomCheck }>
               <input type="checkbox"
@@ -197,15 +193,11 @@ export default class MultipleChoiceEditor extends Component {
                 Allow "Other"
             </label>
           </div>
-
           <CommonFieldOptions {...this.props} />
-
         </div>
-
       </div>
     );
   }
-
 }
 
 const styles = {
@@ -234,8 +226,8 @@ const styles = {
     lineHeight: '40px',
     padding: '0px 10px',
     fontSize: '12pt',
-    borderRadius: '0px',
-    border: '1px dashed #ccc',
+    borderRadius: '4px',
+    border: '1px dashed #d8d8d8',
     background: '#fff',
     cursor: 'pointer',
     width: '100%',
@@ -257,7 +249,9 @@ const styles = {
     display: 'block',
     padding: '10px',
     fontSize: '12pt',
-    width: '100%'
+    width: '100%',
+    borderRadius: '4px',
+    border: '1px solid #d8d8d8'
   },
   bottomOptions: {
     display: 'flex',
@@ -273,8 +267,8 @@ const styles = {
     lineHeight: '40px',
     padding: '0px 10px',
     fontSize: '12pt',
-    borderRadius: '0px',
-    border: '1px solid #ddd',
+    borderRadius: '4px',
+    border: '1px dashed #d8d8d8',
     background: '#fff',
     width: '100%',
     textAlign: 'left',

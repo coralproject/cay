@@ -9,24 +9,36 @@ import MdClear from 'react-icons/lib/md/clear';
 
 
 const styles = {
-  base: {
-    backgroundColor: '#00796B',
-    fontSize: '0.9em',
-    borderRadius: 2,
-    textTransform: 'none'
-  },
   success: {
-    backgroundColor: 'red',
-    ':hover': {
-      backgroundColor: '#00796B'
-    }
+    fontSize: '0.9em',
+    textTransform: 'none',
+    backgroundColor: '#00796B'
   },
   cancel: {
+    fontSize: '0.9em',
+    textTransform: 'none',
     backgroundColor: 'white',
-    marginRight: 10,
-    ':hover': {
-      background: color('#0074d9').lighten(0.2).hexString()
-    }
+    marginRight: 10
+  },
+  white: {
+    fontSize: '0.9em',
+    textTransform: 'none',
+    backgroundColor: 'white',
+  },
+  green: {
+    fontSize: '0.9em',
+    textTransform: 'none',
+    backgroundColor: '#00796B'
+  },
+  grey: {
+    fontSize: '0.9em',
+    textTransform: 'none',
+    backgroundColor: '#d8d8d8'
+  },
+  black: {
+    fontSize: '0.9em',
+    textTransform: 'none',
+    backgroundColor: '#262626'
   }
 };
 
@@ -36,10 +48,7 @@ const AskButton = ({ type, onClick, disabled, children }) => (
     ripple
     colored={type === 'success'}
     onClick={onClick}
-    style={[
-           styles.base,
-           styles[type]
-        ]}
+    style={ styles[type] }
     disabled={disabled ? 'disabled' : ''}
   >
     { type === 'success' ? <MdDone style={{ marginRight: 5 }}/> : null }

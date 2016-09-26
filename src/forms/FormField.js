@@ -2,11 +2,6 @@ import React, {Component, PropTypes} from 'react'
 import { connect } from 'react-redux'
 import Radium from 'radium'
 
-import { Button } from 'react-mdl';
-
-import MdDone from 'react-icons/lib/md/done';
-import MdClear from 'react-icons/lib/md/clear';
-
 import FaTrash from 'react-icons/lib/fa/trash';
 import FaClose from 'react-icons/lib/fa/close';
 import FaFloppyO from 'react-icons/lib/fa/floppy-o';
@@ -14,6 +9,8 @@ import FaArrowUp from 'react-icons/lib/fa/arrow-up';
 import FaArrowDown from 'react-icons/lib/fa/arrow-down';
 import FaUser from 'react-icons/lib/fa/user';
 import FaCopy from 'react-icons/lib/fa/copy';
+
+import { AskButton } from '../components/ui/AskButton'
 
 // DnD dependencies
 import { DragSource } from 'react-dnd';
@@ -233,28 +230,20 @@ export default class FormField extends Component {
         { this.getFieldEditor() }
 
         <div style={ styles.bottomButtons }>
-          <Button
-            style={{ backgroundColor: 'white', marginRight: 10 }}
-            raised ripple
+          <AskButton
+            type="cancel"
             onClick={onCancelClick}
           >
-            <MdClear
-              style={{ marginRight: 5 }}
-            />
             Cancel
-          </Button>
+          </AskButton>
 
-          <Button
-            style={{ backgroundColor: '#358D66' }}
-            raised ripple colored
+          <AskButton
+            type="success"
             onClick={onSaveClick}
-            disabled={ field.error ? 'disabled' : '' }
+            disabled={field.error}
           >
-            <MdDone
-              style={{ marginRight: 5 }}
-            />
             Save
-          </Button>
+          </AskButton>
         </div>
 
       </div>

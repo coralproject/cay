@@ -2,7 +2,11 @@ import React, {Component, PropTypes} from 'react'
 import { connect } from 'react-redux'
 import Radium from 'radium'
 
-// Icons
+import { Button } from 'react-mdl';
+
+import MdDone from 'react-icons/lib/md/done';
+import MdClear from 'react-icons/lib/md/clear';
+
 import FaTrash from 'react-icons/lib/fa/trash';
 import FaClose from 'react-icons/lib/fa/close';
 import FaFloppyO from 'react-icons/lib/fa/floppy-o';
@@ -229,16 +233,28 @@ export default class FormField extends Component {
         { this.getFieldEditor() }
 
         <div style={ styles.bottomButtons }>
-          <button className="field-close-button" style={ styles.cancelButton } onClick={onCancelClick}><FaClose /> Cancel</button>
-          <button
-            className="field-close-button save-button"
-            style={ [ styles.saveButton, field.error ? styles.saveButton.disabled : null ] }
+          <Button
+            style={{ backgroundColor: 'white', marginRight: 10 }}
+            raised ripple
+            onClick={onCancelClick}
+          >
+            <MdClear
+              style={{ marginRight: 5 }}
+            />
+            Cancel
+          </Button>
+
+          <Button
+            style={{ backgroundColor: '#358D66' }}
+            raised ripple colored
             onClick={onSaveClick}
             disabled={ field.error ? 'disabled' : '' }
           >
-            <FaFloppyO />
+            <MdDone
+              style={{ marginRight: 5 }}
+            />
             Save
-          </button>
+          </Button>
         </div>
 
       </div>

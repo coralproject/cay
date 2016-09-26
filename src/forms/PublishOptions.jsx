@@ -7,6 +7,8 @@ import Spinner from 'components/Spinner';
 
 import CopyToClipboard from 'react-copy-to-clipboard';
 
+import settings from 'settings';
+
 import {
   updateFormStatus,
   saveForm,
@@ -60,19 +62,19 @@ export default class PublishOptions extends Component {
           {
             this.state.formStatus && this.state.formStatus == 'closed'
             ? <div>
-              <Textfield
+              <input type="text"
                 onChange={this.onInactiveMessageChange}
-                label="We are not currently accepting submissions..."
+                placeholder="We are not currently accepting submissions..."
                 value={form.settings.inactiveMessage}
-                style={{ width: '95%', marginLeft: '5%' }}
-              />
+                style={styles.textInput}
+                />
               </div>
             : null
           }
           <div style={ styles.rightAlignButtons }>
             <Button
-              raised ripple
-              style={{ marginTop: 20 }}
+              raised ripple accent
+              style={{ marginTop: 20, backgroundColor: '#358D66' }}
               onClick={onSaveClick}>
               { forms.savingForm ? <Spinner/> : null } Apply
             </Button>
@@ -143,6 +145,11 @@ export default class PublishOptions extends Component {
                         <div>
                           <textarea className="embed-code" readOnly style={styles.embedCode} value={iframeCode}/>
                           <div style={ styles.rightAlignButtons }>
+                            {
+                              this.state.embedCopied
+                              ? <span style={ styles.copied }>Copied!</span>
+                              : null
+                            }
                             <CopyToClipboard
                               text={iframeCode}
                               onCopy={() => {
@@ -152,16 +159,16 @@ export default class PublishOptions extends Component {
                               <Button raised>Copy</Button>
                             </CopyToClipboard>
                           </div>
-                          {
-                            this.state.embedCopied
-                            ? <span style={ styles.copied }>Copied!</span>
-                            : null
-                          }
                         </div>
                       :
                         <div>
                           <textarea className="embed-code-iframe" readOnly style={styles.embedCode} value={scriptCode}/>
                           <div style={ styles.rightAlignButtons }>
+                            {
+                              this.state.embedCopied
+                              ? <span style={ styles.copied }>Copied!</span>
+                              : null
+                            }
                             <CopyToClipboard
                               text={scriptCode}
                               onCopy={() => {
@@ -171,20 +178,20 @@ export default class PublishOptions extends Component {
                               <Button raised>Copy</Button>
                             </CopyToClipboard>
                           </div>
-                          {
-                            this.state.embedCopied
-                            ? <span style={ styles.copied }>Copied!</span>
-                            : null
-                          }
                         </div>
                     }
                   </section>
                 </div>
 
                 <div>
-                  <h4 style={ styles.dialogSubTitle }>Standalone {isGallery ? 'Gallery' : 'Form'} URL</h4>
+                  <h4 style={ [ styles.dialogSubTitle, styles.withMargin ] }>Standalone {isGallery ? 'Gallery' : 'Form'} URL</h4>
                   <textarea className="standalone-form-url" readOnly style={styles.embedCode} value={standaloneCode}/>
                     <div style={ styles.rightAlignButtons }>
+                      {
+                        this.state.standaloneCopied
+                        ? <span style={ styles.copied }>Copied!</span>
+                        : null
+                      }
                       <CopyToClipboard
                         text={standaloneCode}
                         onCopy={() => {
@@ -194,11 +201,6 @@ export default class PublishOptions extends Component {
                         <Button raised>Copy</Button>
                       </CopyToClipboard>
                     </div>
-                    {
-                      this.state.standaloneCopied
-                      ? <span style={ styles.copied }>Copied!</span>
-                      : null
-                    }
                 </div>
 
               </div>
@@ -250,11 +252,15 @@ const styles = {
     color: '#5d5d5d',
     marginBottom: 10,
     marginTop: 10,
-    resize: 'none'
+    resize: 'none',
+    fontSize: '.9em',
+    borderRadius: '4px',
+    border: '1px solid ' + settings.mediumGrey
   },
   dialogSubTitle: {
-    margin: '10px 0',
-    fontWeight: 'bold'
+    margin: '0 0 10px 0',
+    fontWeight: 'bold',
+    color: settings.darkColorBase
   },
   closeButton: {
     position: 'absolute',
@@ -263,12 +269,24 @@ const styles = {
   },
   copied: {
     paddingLeft: '15px',
-    color: '#0a0'
+    color: '#0a0',
+    marginRight: '15px'
   },
   dialogContent: {
     padding: 10
   },
   rightAlignButtons: {
     textAlign: 'right'
+  },
+  withMargin: {
+    margin: '10px 0 0 0'
+  },
+  textInput: {
+    width: '95%',
+    margin: '10px 0 0 5%',
+    padding: '5px',
+    fontSize: '1em',
+    borderRadius: '4px',
+    border: '1px solid ' + settings.mediumGrey
   }
 };

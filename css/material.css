@@ -15,6 +15,10 @@
   vertical-align: -25%;
 }
 
+.mdl-button, .mdl-tabs__tab {
+  text-transform: none;
+}
+
 .mdl-button--accent.mdl-button--accent.mdl-button--raised {
   background-color: rgb(246, 125, 111);
 }
@@ -25,4 +29,12 @@
 
 .mdl-dialog__title {
   font-size: 1.2em;
+}
+
+.mdl-radio.is-checked .mdl-radio__outer-circle {
+  border: 2px solid #262626;
+}
+
+.mdl-radio.is-checked .mdl-radio__inner-circle {
+  background: #262626;
 }

@@ -42,8 +42,11 @@ import Card from 'components/cards/Card';
 import CardHeader from 'components/cards/CardHeader';
 import GalleryPreview from 'forms/GalleryPreview';
 
-import TextField from 'components/forms/TextField';
-import Button from 'components/Button';
+//import TextField from 'components/forms/TextField';
+//import Button from 'components/Button';
+
+import { Button, Textfield } from 'react-mdl';
+
 import Modal from 'components/modal/Modal';
 
 import GalleryAnswer from 'forms/GalleryAnswer';
@@ -285,9 +288,9 @@ export default class GalleryManager extends Component {
   }
 
   resetText(ans) {
-    ans.identity_answers.forEach(answer => {
+    ans.identity_answers ? ans.identity_answers.forEach(answer => {
       this.props.dispatch(updateEditablePii(ans, answer, answer.answer.text || ''));
-    });
+    }) : null;
     this.props.dispatch(resetEditableTextToOriginal(ans));
   }
 
@@ -396,8 +399,8 @@ export default class GalleryManager extends Component {
                  form={form}
                  forms={forms}
                  hideOptions={!forms.activeGallery || !forms[forms.activeGallery].config.baseUrl}
-		 activeForm={forms.activeForm}
-		 isGallery={true}
+            		 activeForm={forms.activeForm}
+            		 isGallery={true}
                  onOpenPreview={this.togglePreview.bind(this)}
                  onSaveClick={this.onSaveClick.bind(this)}
                  scriptCode={this.createEmbed('script-tag')}
@@ -420,42 +423,56 @@ export default class GalleryManager extends Component {
         {/* this is the Edit Answer modal */}
         {
           ans
-            ? <div style={styles.replyModal}>
-              <div style={styles.replyModal.container}>
-                <div
-                  onClick={this.cancelEdit}
-                  key="closebutton"
-                  style={styles.replyModal.close}>×</div>
-                <p style={styles.replyModal.heading}>Edit Submission</p>
-                <div style={styles.replyModal.panels}>
-                  <div style={styles.replyModal.leftPanel}>
-                    <p style={styles.replyModal.subhead}>Original Submission</p>
+            ? <Modal
+                noFooter
+                style={styles.replyModal.base}
+                title="Publish Options"
+                cancelAction={this.cancelEdit}
+                isOpen={ans}>
+
+                <div style={styles.replyModal.content}>
+                  <div style={ styles.replyModal.question }>
+                    <p style={styles.replyModal.subhead}>Question</p>
                     <p style={styles.replyModal.originalQuestion}>{ans.answer.question}</p>
-                    <p style={styles.replyModal.originalText}>{ans.answer.answer.text}</p>
                   </div>
-                  <div style={styles.replyModal.rightPanel}>
-                    <p style={styles.replyModal.subhead}>Edit</p>
-                    <textarea
-                      onChange={this.updateEditableAnswer}
-                      style={styles.replyModal.editText}
-                      value={forms.editableAnswer}></textarea>
-                    {this.renderIdentityAnswers(ans, forms.editablePii)}
-                    <div style={styles.replyModal.footer}>
-                      <p
-                        key="resetButton"
-                        onClick={this.resetText.bind(this, ans)}
-                        style={styles.replyModal.resetButton}>Reset Changes</p>
-                      <Button onClick={this.cancelEdit}><Times /> Cancel</Button>
-                      <Button
-                        onClick={this.confirmEdit.bind(this, ans)}
-                        category="success"
-                        style={styles.replyModal.save}>
-                        <FloppyO /> Save Edits</Button>
+                  <div style={styles.replyModal.panels}>
+                    <div style={styles.replyModal.leftPanel}>
+                      <p style={styles.replyModal.subhead}>Original Submission</p>
+                      <p style={styles.replyModal.originalText}>{ans.answer.answer.text}</p>
+                    </div>
+                    <div style={styles.replyModal.rightPanel}>
+                      <p style={styles.replyModal.subhead}>
+                        Edit
+                        <a
+                          key="resetButton"
+                          onClick={this.resetText.bind(this, ans)}
+                          style={styles.replyModal.resetButton}>Reset Changes</a>
+                      </p>
+                      <textarea
+                        onChange={this.updateEditableAnswer}
+                        style={styles.replyModal.editText}
+                        value={forms.editableAnswer}></textarea>
+                      {this.renderIdentityAnswers(ans, forms.editablePii)}
+                      <div style={styles.replyModal.footer}>
+                        <Button
+                          raised ripple
+                          onClick={this.cancelEdit}
+                          style={{ marginRight: 10 }}>
+                          Cancel
+                        </Button>
+                        <Button
+                          style={{ backgroundColor: '#358D66' }}
+                          raised ripple colored
+                          onClick={this.confirmEdit.bind(this, ans)}>
+                          { forms.savingForm || forms.loadingGallery ? <Spinner/> : null } Save Changes
+                        </Button>
+
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
+
+              </Modal>
             : null
         }
 
@@ -585,22 +602,11 @@ const styles = {
   },
 
   replyModal: {
-    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'fixed',
-    zIndex: 100,
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
-
-    container: {
-      padding: 20,
-      minWidth: 800,
-      backgroundColor: 'white',
-      position: 'relative'
+    content: {
+      padding: '0 10px',
+    },
+    question: {
+      display: 'block'
     },
     close: {
       position: 'absolute',
@@ -619,9 +625,10 @@ const styles = {
       fontSize: 30
     },
     subhead: {
-      color: settings.brandColor,
-      fontSize: 16,
-      fontWeight: 'bold'
+      color: settings.darkColorBase,
+      fontSize: '1.1em',
+      fontWeight: 'bold',
+      marginBottom: '10px'
     },
     panels: {
       display: 'flex'
@@ -634,27 +641,28 @@ const styles = {
       flex: 1
     },
     originalQuestion: {
-      fontSize: 20
+      fontSize: '1em',
+      marginBottom: '10px'
+    },
+    originalText: {
+      fontSize: '1em'
     },
     editText: {
       width: '100%',
       height: 100,
-      fontSize: '16px',
+      fontSize: '1em',
       padding: 8
     },
     footer: {
       marginTop: 10,
-      display: 'flex'
+      display: 'block',
+      textAlign: 'right'
     },
     resetButton: {
-      flex: 1,
-      fontWeight: 'bold',
-      cursor: 'pointer',
-      fontStyle: 'italic',
-      color: settings.grey,
-      ':hover': {
-        color: 'black'
-      }
+      'float': 'right',
+      fontWeight: 'normal',
+      color: '#7DABF4',
+      cursor: 'pointer'
     },
     save: {
       marginLeft: 10

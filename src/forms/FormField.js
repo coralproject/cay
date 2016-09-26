@@ -301,11 +301,11 @@ export const styles = {
   },
   arrowContainer: {
     position: 'absolute',
-    top: '8px',
+    top: '11px',
     paddingLeft: 15,
     background: 'linear-gradient(to right, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 10%,rgba(255,255,255,1) 100%)',
     right: 0,
-    paddingRight: 20
+    paddingRight: 5
   },
   arrow: {
     width: '30px',
@@ -395,20 +395,27 @@ export const styles = {
   },
   fieldTitle: {
     fontSize: '12pt',
-    padding: '5px 0',
-    width: '75%',
+    width: '78%',
     display: 'block',
-    border: 'none',
-    background: 'none'
+    background: 'none',
+    borderRadius: '4px',
+    border: '1px solid #d8d8d8',
+    padding: '0px 10px',
+    height: '40px',
+    lineHeight: '40px',
+    margin: '5px 0 10px'
 },
   fieldDescription: {
-    fontSize: '11pt',
-    padding: '5px 0',
-    marginBottom: '20px',
-    width: '50%',
+    fontSize: '12pt',
+    width: '78%',
     display: 'block',
-    border: 'none',
-    background: 'none'
+    background: 'none',
+    borderRadius: '4px',
+    border: '1px solid #d8d8d8',
+    padding: '0px 10px',
+    height: '40px',
+    lineHeight: '40px',
+    margin: '5px 0 30px'
   },
   fieldPosition: {
     background: 'white',

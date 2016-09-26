@@ -8,17 +8,14 @@ import MdVisibility from 'react-icons/lib/md/visibility';
 const styles = {
   base: {
     fontSize: '0.9em',
-    textTransform: 'none'
+    textTransform: 'none',
+    backgroundColor: 'white',
   },
   success: {
     backgroundColor: '#00796B'
   },
-  preview: {
+  primary: {
     backgroundColor: '#0e62eb'
-  },
-  cancel: {
-    backgroundColor: 'white',
-    marginRight: 10
   },
   white: {
     backgroundColor: 'white',
@@ -37,7 +34,7 @@ const styles = {
   }
 };
 
-export const AskButton = ({ type, onClick, disabled, children, icon, style }) => (
+export const CoralButton = ({ type, onClick, disabled, children, icon, style, ...rest }) => (
   <Button
     raised
     ripple
@@ -49,10 +46,11 @@ export const AskButton = ({ type, onClick, disabled, children, icon, style }) =>
       ...style
       }}
     disabled={disabled ? 'disabled' : ''}
+    { ...rest }
   >
-    { type === 'success' || icon === 'done' ? <MdDone style={{ marginRight: 5 }}/> : null }
-    { type === 'cancel' || icon === 'clear' ? <MdClear style={{ marginRight: 5 }}/> : null }
-    { type === 'preview' || icon === 'visibility' ? <MdVisibility style={{ marginRight: 5 }}/> : null }
+    { icon === 'done' ? <MdDone style={{ marginRight: 5 }}/> : null }
+    { icon === 'clear' ? <MdClear style={{ marginRight: 5 }}/> : null }
+    { icon === 'visibility' ? <MdVisibility style={{ marginRight: 5 }}/> : null }
     { children }
   </Button>
 );

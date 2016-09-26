@@ -10,7 +10,8 @@ import FaArrowDown from 'react-icons/lib/fa/arrow-down';
 import FaUser from 'react-icons/lib/fa/user';
 import FaCopy from 'react-icons/lib/fa/copy';
 
-import { AskButton } from '../components/ui/AskButton';
+import { CoralButton } from '../components/ui/CoralButton';
+import { CoralIcon } from '../components/ui/CoralIcon';
 
 // DnD dependencies
 import { DragSource } from 'react-dnd';
@@ -190,8 +191,8 @@ export default class FormField extends Component {
           }
 
           <div style={styles.arrowContainer}>
-            <button style={styles.copy} onClick={ onDuplicate.bind(this, position) }><FaCopy /></button>
-            <button className="form-delete-widget-button" style={styles.delete} onClick={ onDelete.bind(this, position) }><FaTrash /></button>
+            <CoralIcon icon="content_copy" style={styles.copy} onClick={onDuplicate.bind(this, position)} />
+            <CoralIcon icon="delete" className="form-delete-widget-button" style={styles.delete} onClick={ onDelete.bind(this, position)} />
             <button onClick={ position !== 0 ? onMove.bind(this, 'up', position) : null } style={styles.arrow} disabled={position === 0}><FaArrowUp /></button>
             <button onClick={ !isLast ? onMove.bind(this, 'down', position) : null } style={styles.arrow} disabled={!!isLast}><FaArrowDown /></button>
           </div>
@@ -230,20 +231,22 @@ export default class FormField extends Component {
         { this.getFieldEditor() }
 
         <div style={ styles.bottomButtons }>
-          <AskButton
-            type="cancel"
+          <CoralButton
+            icon="clear"
             onClick={onCancelClick}
+            style={{ marginRight: 10 }}
           >
             Cancel
-          </AskButton>
+          </CoralButton>
 
-          <AskButton
+          <CoralButton
             type="success"
+            icon="done"
             onClick={onSaveClick}
             disabled={field.error}
           >
             Save
-          </AskButton>
+          </CoralButton>
         </div>
 
       </div>

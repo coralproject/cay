@@ -15,6 +15,7 @@ const styles = {
     backgroundColor: '#00796B'
   },
   primary: {
+    color: 'white',
     backgroundColor: '#0e62eb'
   },
   white: {
@@ -27,9 +28,11 @@ const styles = {
     backgroundColor: '#d8d8d8'
   },
   black: {
+    color: 'white',
     backgroundColor: '#262626'
   },
   blue: {
+    color: 'white',
     backgroundColor: '#0e62eb'
   },
   icon: {

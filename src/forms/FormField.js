@@ -206,12 +206,11 @@ export default class FormField extends Component {
     const { onTitleChange, onDescriptionChange, onCancelClick, onSaveClick, onKeyUp } = this;
     return  (
       <div className="widget-expanded" style={ styles.editSettingsPanel } onKeyUp={onKeyUp}>
-
         <div style={ styles.titleAndDescription }>
           <input
             className="field-title"
             onChange={onTitleChange}
-            style={ styles.fieldTitle }
+            style={{ ...styles.base, ...styles.fieldTitle}}
             defaultValue={ field.title }
             type="text"
             placeholder={ `Ask readers a question` }
@@ -221,7 +220,7 @@ export default class FormField extends Component {
             className="field-description"
             onChange={onDescriptionChange}
             defaultValue={ field.description }
-            style={ styles.fieldDescription }
+            style={{ ...styles.base, ...styles.fieldDescription }}
             type="text"
             placeholder="Description text (optional)" />
         </div>
@@ -246,17 +245,18 @@ export default class FormField extends Component {
             Save
           </CoralButton>
         </div>
-
       </div>
     );
   }
-
 }
 
 export const styles = {
+  base: {
+    fontFamily: 'Roboto'
+  },
   fieldContainer: function(isExpanded) {
     return {
-      font: 'Roboto',
+      fontFamily: 'Roboto',
       display: 'flex',
       justifyContent: 'flex-start',
       alignItems: 'top',
@@ -400,7 +400,7 @@ export const styles = {
     display: 'block',
     border: 'none',
     background: 'none'
-  },
+},
   fieldDescription: {
     fontSize: '11pt',
     padding: '5px 0',

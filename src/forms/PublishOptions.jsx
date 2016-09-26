@@ -92,30 +92,35 @@ export default class PublishOptions extends Component {
           <div>
             <CoralButton
               className="form-preview-button"
-              icon="clear"
+              type="primary"
+              icon="visibility"
               onClick={onOpenPreview}
-              style={{  width: 150, marginRight: 10 }}
+              style={{ width: 150, marginRight: 10 }}
             >
               Preview
             </CoralButton>
 
-            <Button
+            <CoralButton
               className="form-save-button"
-              style={{ width: 150, backgroundColor: '#358D66' }}
-              raised ripple colored
-              onClick={onSaveClick}>
-              { forms.savingForm || forms.loadingGallery ? <Spinner/> : null } Save
-            </Button>
+              type="success"
+              icon="done"
+              style={{ width: 150 }}
+              onClick={onSaveClick}
+            >
+              {`Save `}
+              { forms.savingForm || forms.loadingGallery ? <Spinner/> : null }
+            </CoralButton>
 
             {
               activeForm && !hideOptions
-              ? <Button
+              ? <CoralButton
                   className="form-publish-button"
-                  style={{ width: 310, marginTop: 10, backgroundColor: '#353B43' }}
-                  raised ripple accent
-                  onClick={this.togglePublishModal}>
+                  type="black"
+                  style={{ width: 310, marginTop: 10 }}
+                  onClick={this.togglePublishModal}
+                >
                   Publish options
-                </Button>
+                </CoralButton>
               : null
             }
 

@@ -10,7 +10,7 @@ import FaArrowDown from 'react-icons/lib/fa/arrow-down';
 import FaUser from 'react-icons/lib/fa/user';
 import FaCopy from 'react-icons/lib/fa/copy';
 
-import AskButton from '../components/ui/AskButton'
+import { AskButton } from '../components/ui/AskButton';
 
 // DnD dependencies
 import { DragSource } from 'react-dnd';

@@ -189,14 +189,12 @@ export default class FormField extends Component {
             ? this.renderExpanded()
             : null
           }
-
           <div style={styles.arrowContainer}>
-            <CoralIcon icon="content_copy" style={styles.copy} onClick={onDuplicate.bind(this, position)} />
-            <CoralIcon icon="delete" className="form-delete-widget-button" style={styles.delete} onClick={ onDelete.bind(this, position)} />
-            <button onClick={ position !== 0 ? onMove.bind(this, 'up', position) : null } style={styles.arrow} disabled={position === 0}><FaArrowUp /></button>
-            <button onClick={ !isLast ? onMove.bind(this, 'down', position) : null } style={styles.arrow} disabled={!!isLast}><FaArrowDown /></button>
+            <CoralIcon icon="content_copy" onClick={ onDuplicate.bind(this, position) } />
+            <CoralIcon icon="delete" className="form-delete-widget-button" onClick={ onDelete.bind(this, position) } />
+            <CoralIcon icon="arrow_upward" onClick={ position !== 0 ? onMove.bind(this, 'up', position) : null } disabled={position === 0} />
+            <CoralIcon icon="arrow_downward" onClick={ !isLast ? onMove.bind(this, 'down', position) : null } disabled={!!isLast} />
           </div>
-
         </div>
       </div>
     );
@@ -258,6 +256,7 @@ export default class FormField extends Component {
 export const styles = {
   fieldContainer: function(isExpanded) {
     return {
+      font: 'Roboto',
       display: 'flex',
       justifyContent: 'flex-start',
       alignItems: 'top',
@@ -282,6 +281,7 @@ export const styles = {
     flexGrow: 2
   },
   fieldIcon: {
+    color: '#262626',
     width: '40px',
     padding: '14px 10px',
     display: 'inline-block',
@@ -411,7 +411,7 @@ export const styles = {
     background: 'none'
   },
   fieldPosition: {
-    background: 'repeating-linear-gradient( -45deg, #dbdbdb, #dbdbdb 10px, #eee 10px, #eee 20px )',
+    background: 'white',
     cursor: 'move',
     alignSelf: 'flex-start',
     fontWeight: 'normal',

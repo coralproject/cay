@@ -18,6 +18,12 @@ export default class TextField extends React.Component {
     error: PropTypes.string
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (typeof nextProps.value !== "undefined") {
+      this.setState({ value: nextProps.value });
+    }
+  }
+
   handleChange(event) {
     this.setState({value: event.target.value});
     if (typeof this.props.onChange === 'function') {

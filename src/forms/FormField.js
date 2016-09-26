@@ -24,8 +24,12 @@ import EditorFactory from 'forms/EditorFactory';
 // Field types
 import askTypes from 'forms/WidgetTypes';
 
+// Tools
+import cloneDeep from 'lodash/lang/cloneDeep';
+
 @DragSource('DraggableFormField', DragHandler, (connect) => ({
-  connectDragSource: connect.dragSource()
+  connectDragSource: connect.dragSource(),
+  connectDragPreview: connect.dragPreview()
 }))
 @connect(({ forms }) => ({
   isDragging: forms.isDragging,
@@ -36,6 +40,7 @@ export default class FormField extends Component {
   static propTypes = {
     field: PropTypes.object.isRequired,
     connectDragSource: PropTypes.func.isRequired,
+    connectDragPreview: PropTypes.func.isRequired,
     id: PropTypes.string
   };
 
@@ -45,7 +50,7 @@ export default class FormField extends Component {
     this.state = {
       'expanded': props.autoExpand,
       field: props.field,
-      fieldBackup: props.field
+      fieldBackup: cloneDeep(props.field)
     };
 
     this.onTitleChange = this.onTitleChange.bind(this);
@@ -53,10 +58,18 @@ export default class FormField extends Component {
     this.onCancelClick = this.onCancelClick.bind(this);
     this.onSaveClick = this.onSaveClick.bind(this);
     this.onKeyUp = this.onKeyUp.bind(this);
+    this.expandField = this.expandField.bind(this);
+    this.onEditorChange = this.onEditorChange.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({ field: nextProps.field, fieldBackup: nextProps.field });
+    this.setState({ field: nextProps.field });
+  }
+
+  expandField() {
+    // Create a backup copy of the field state before expanding
+    this.setState({ fieldBackup: cloneDeep(this.state.field) });
+    this.toggleExpanded();
   }
 
   toggleExpanded() {
@@ -71,36 +84,43 @@ export default class FormField extends Component {
     var field = Object.assign({}, this.state.field);
     field.identity = e.target.checked;
     this.setState({ field: field });
+    this.persistField(field);
   }
 
   onDescriptionChange(e) {
     var field = Object.assign({}, this.state.field);
     field.description = e.target.value;
     this.setState({ field: field });
+    this.persistField(field);
   }
 
   onTitleChange(e) {
     var field = Object.assign({}, this.state.field);
     field.title = e.target.value;
-    this.setState({ field: field });
+    this.persistField(field);
+  }
+
+  persistField(field) {
+    this.props.dispatch(updateWidget(this.props.id, field));
   }
 
   onSaveClick(e) {
     if (e) e.stopPropagation();
     this.toggleExpanded();
-    this.setState({ fieldBackup: this.state.field });
+    this.setState({ fieldBackup: cloneDeep(this.state.field) });
     this.props.dispatch(updateWidget(this.props.id, this.state.field));
   }
 
   onCancelClick(e) {
     if (e) e.stopPropagation();
-    this.setState({ field: this.state.fieldBackup });
+    // Restore the saved field backup on cancel
+    this.props.dispatch(updateWidget(this.props.id, cloneDeep(this.state.fieldBackup)));
     this.toggleExpanded();
   }
 
   onEditorChange(field) {
     var fieldCopy = Object.assign({}, this.state.field, field);
-    this.setState({ field: fieldCopy });
+    this.persistField(fieldCopy);
   }
 
   onClick() {
@@ -119,19 +139,14 @@ export default class FormField extends Component {
   getFieldEditor() {
     const { field } = this.state;
     // Passing listeners down from this class to the editors
-    var localProps = { onEditorChange: this.onEditorChange.bind(this) };
+    var localProps = { onEditorChange: this.onEditorChange };
     return EditorFactory[field.component] ? EditorFactory[field.component](field, localProps) : EditorFactory['TextField'](field, localProps);
   }
 
-  onMouseDown(e) {
-    if (this.state.expanded) {
-      e.stopPropagation();
-    }
-  }
-
   render() {
-    return (
-      <div onMouseDown={ this.onMouseDown.bind(this) }>
+    const { connectDragPreview } = this.props;
+    return connectDragPreview(
+      <div>
         { this.renderContainer() }
       </div>
     );
@@ -142,22 +157,24 @@ export default class FormField extends Component {
   }
 
   renderContainer() {
-    const { id, onMove, isLast, position, onDelete, onDuplicate, connectDragSource } = this.props;
+    const { id, onMove, isLast, position, onDelete, onDuplicate, connectDragSource, isDragging, dragStarted } = this.props;
     const { field } = this.state;
     const FieldIcon = this.getIcon(field);
     const fieldTitle = field.title ? field.title : 'Ask readers a question';
     const requiredMark = field.wrapper && field.wrapper.required ? <span style={ styles.requiredAsterisk }>*</span> : null;
     const identityMark = field.identity ? <span style={ styles.identityLabel }><FaUser/></span> : null;
 
+    const showExpanded = dragStarted ? false : this.state.expanded;
+
     return (
-      <div className={field.component + ' ' + id} style={ styles.fieldContainer(!this.props.isDragging && this.state.expanded) } key={ id }>
+      <div className={field.component + ' ' + id} style={ styles.fieldContainer(showExpanded) } key={ id }>
         {connectDragSource(<div style={ styles.fieldPosition }>{ position + 1 }</div>)}
         <div style={ styles.fieldIcon }><FieldIcon /></div>
         <div style={ styles.fieldContents }>
 
           {
-            !this.state.expanded
-            ? <h4 style={ styles.fieldTitleHeader }  onClick={ this.toggleExpanded.bind(this) }>
+            !showExpanded
+            ? <h4 style={ styles.fieldTitleHeader }  onClick={ this.expandField }>
               { fieldTitle }
               { requiredMark }
               { identityMark }
@@ -166,14 +183,14 @@ export default class FormField extends Component {
           }
 
           {
-            !this.props.isDragging && this.state.expanded
+            showExpanded
             ? this.renderExpanded()
             : null
           }
 
           <div style={styles.arrowContainer}>
             <button style={styles.copy} onClick={ onDuplicate.bind(this, position) }><FaCopy /></button>
-            <button style={styles.delete} onClick={ onDelete.bind(this, position) }><FaTrash /></button>
+            <button className="form-delete-widget-button" style={styles.delete} onClick={ onDelete.bind(this, position) }><FaTrash /></button>
             <button onClick={ position !== 0 ? onMove.bind(this, 'up', position) : null } style={styles.arrow} disabled={position === 0}><FaArrowUp /></button>
             <button onClick={ !isLast ? onMove.bind(this, 'down', position) : null } style={styles.arrow} disabled={!!isLast}><FaArrowDown /></button>
           </div>
@@ -198,7 +215,8 @@ export default class FormField extends Component {
             defaultValue={ field.title }
             type="text"
             placeholder={ `Ask readers a question` }
-            autoFocus={ true } />
+            autoFocus={ true }
+             />
           <input
             className="field-description"
             onChange={onDescriptionChange}

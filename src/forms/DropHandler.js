@@ -47,7 +47,7 @@ const DropHandler = {
       return; // hovering the same as before? early return, do nothing.
     }
 
-    container.setState({ isHovering: true });
+    container.setState({ dragStarted: true });
 
     let draggedItem = monitor.getItem();
 

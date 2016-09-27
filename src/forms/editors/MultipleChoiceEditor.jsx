@@ -209,7 +209,7 @@ const styles = {
   },
   bottomCheck: {
     display: 'inline-block',
-    paddingRight: '25px',
+    paddingRight: '15px',
     fontSize: '10pt',
     cursor: 'pointer'
   },

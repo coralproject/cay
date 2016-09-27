@@ -256,14 +256,17 @@ const styles = {
     paddingLeft: 5
   },
   formTitles: {
+    fontFamily: 'Roboto',
     borderRadius: 4,
-    border: '1px solid ' + settings.mediumGrey,
-    width: '75%',
+    border: '1px solid #d8d8d8',
+    width: '72%',
     height: '40px',
-    padding: 10,
-    fontSize: '18px',
+    padding: '10px 15px',
+    fontSize: '14.4px',
     display: 'block',
-    marginBottom: '20px'
+    marginBottom: '10px',
+    resize: 'none',
+    overflow: 'hidden'
   },
   description: {
     fontSize: '1em',

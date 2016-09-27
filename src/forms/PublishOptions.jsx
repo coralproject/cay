@@ -115,6 +115,7 @@ export default class PublishOptions extends Component {
               activeForm && !hideOptions
               ? <CoralButton
                   className="form-publish-button"
+                  icon="settings"
                   type="black"
                   style={{ width: 310, marginTop: 10 }}
                   onClick={this.togglePublishModal}

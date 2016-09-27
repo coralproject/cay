@@ -16,6 +16,8 @@ import ButtonGroup from 'components/ButtonGroup';
 import L from 'i18n';
 import moment from 'moment';
 
+import { CoralButton } from '../components/ui/CoralButton';
+
 // Forms, Widgets, Submissions
 @connect(({ forms }) => ({ forms }))
 @Radium
@@ -77,7 +79,9 @@ export default class FormList extends Component {
       <Page>
         <ContentHeader title="View Forms" style={styles.header} subhead="Create, edit and view forms">
           <Link to="forms/create" style={styles.createButton}>
-            <Button raised colored>Create</Button>
+            <CoralButton icon="add" type="success">
+              Create a form
+            </CoralButton>
           </Link>
         </ContentHeader>
 

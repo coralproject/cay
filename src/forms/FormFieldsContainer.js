@@ -269,6 +269,7 @@ const styles = {
     overflow: 'hidden'
   },
   description: {
+    fontFamily: 'Roboto',
     fontSize: '1em',
     marginBottom: '15px',
     width: '100%',
@@ -278,6 +279,7 @@ const styles = {
     resize: 'none'
   },
   extraFieldTextArea: {
+    fontFamily: 'Roboto',
     display: 'block',
     width: '100%',
     padding: '10px',

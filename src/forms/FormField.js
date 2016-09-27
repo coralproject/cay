@@ -297,7 +297,7 @@ export const styles = {
   fieldTitleHeader: {
     flex: 1,
     alignSelf: 'flex-start',
-    padding: '15px 10px 15px 0'
+    padding: '15px 10px 15px 10px'
   },
   editBody: {
     flex: 1,

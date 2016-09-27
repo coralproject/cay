@@ -148,7 +148,7 @@ export default class FormField extends Component {
   render() {
     const { connectDragPreview } = this.props;
     return connectDragPreview(
-      <div>
+      <div style={ styles.fieldWrapper }>
         { this.renderContainer() }
       </div>
     );
@@ -260,16 +260,21 @@ export const styles = {
       display: 'flex',
       justifyContent: 'flex-start',
       alignItems: 'top',
-      backgroundColor: '#fff',
+      backgroundColor: 'none',
       width: '100%',
-      boxShadow: '0 1px 3px #9B9B9B',
-      borderRadius: 4,
       height: !isExpanded ? '50px' : 'auto',
       lineHeight: '1',
       cursor: 'pointer',
       flexDirection: 'row',
       position: 'relative'
     };
+  },
+  fieldWrapper: {
+    backgroundColor: '#fff',
+    boxShadow: '0 1px 3px #9B9B9B',
+    borderTopLeftRadius: 4,
+    borderTopRightRadius: 4,
+    borderBottom: 'solid 2px #d8d8d8'
   },
   fieldHeader: {
     display: 'flex',
@@ -354,7 +359,6 @@ export const styles = {
     width: '100%',
     height: 'auto',
     padding: '10px 20px 20px 10px',
-    backgroundColor: 'white'
   },
   saveButton: {
     display: 'inline-block',
@@ -411,7 +415,7 @@ export const styles = {
     marginBottom: '20px'
   },
   fieldPosition: {
-    background: 'white',
+    background: 'none',
     cursor: 'move',
     alignSelf: 'flex-start',
     fontWeight: 'normal',

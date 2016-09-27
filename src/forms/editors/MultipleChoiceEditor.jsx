@@ -222,6 +222,7 @@ const styles = {
     cursor: 'pointer'
   },
   addOption: {
+    fontFamily: 'Roboto',
     display: 'block',
     height: '40px',
     borderRadius: '4px',

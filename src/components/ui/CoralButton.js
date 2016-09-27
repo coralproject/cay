@@ -1,9 +1,6 @@
 import React, { PropTypes } from 'react';
 
 import { Button } from 'react-mdl';
-import MdDone from 'react-icons/lib/md/done';
-import MdClear from 'react-icons/lib/md/clear';
-import MdVisibility from 'react-icons/lib/md/visibility';
 
 const styles = {
   base: {
@@ -11,37 +8,53 @@ const styles = {
     textTransform: 'none',
     backgroundColor: 'white',
   },
-  success: {
-    backgroundColor: '#00796B'
+  type: {
+    success: {
+      backgroundColor: '#00796B'
+    },
+    primary: {
+      color: 'white',
+      backgroundColor: '#0e62eb'
+    },
+    white: {
+      backgroundColor: 'white',
+    },
+    green: {
+      backgroundColor: '#00796B'
+    },
+    grey: {
+      backgroundColor: '#d8d8d8'
+    },
+    black: {
+      color: 'white',
+      backgroundColor: '#262626'
+    },
+    blue: {
+      color: 'white',
+      backgroundColor: '#0e62eb'
+    },
+    coral: {
+      color: 'white',
+      backgroundColor: 'rgb(246, 125, 111)',
+      default: {
+        color: 'rgb(246, 125, 111)',
+        backgroundColor: 'rgba(158,158,158,.2)',
+        boxShadow: 'none'
+      }
+    }
   },
-  primary: {
-    color: 'white',
-    backgroundColor: '#0e62eb'
-  },
-  white: {
-    backgroundColor: 'white',
-  },
-  green: {
-    backgroundColor: '#00796B'
-  },
-  grey: {
-    backgroundColor: '#d8d8d8'
-  },
-  black: {
-    color: 'white',
-    backgroundColor: '#262626'
-  },
-  blue: {
-    color: 'white',
-    backgroundColor: '#0e62eb'
+  default: {
+    color: '#262626',
+    backgroundColor: 'none',
+    boxShadow: 'none'
   },
   icon: {
     marginRight: 5,
     fontSize: '16px'
-  }
+  },
 };
 
-export const CoralButton = ({ type, onClick, disabled, children, icon, style, ...rest }) => (
+export const CoralButton = ({ type, onClick, disabled, children, icon, style, active = false, ...rest}) => (
   <Button
     raised
     ripple
@@ -49,7 +62,8 @@ export const CoralButton = ({ type, onClick, disabled, children, icon, style, ..
     onClick={onClick}
     style={{
       ...styles.base,
-      ...styles[type],
+      ...styles.type[type],
+      ...(!active ? styles.type[type].default : {}),
       ...style
       }}
     disabled={disabled ? 'disabled' : ''}

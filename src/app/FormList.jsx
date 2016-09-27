@@ -80,15 +80,26 @@ export default class FormList extends Component {
         <ContentHeader title="View Forms" style={styles.header} subhead="Create, edit and view forms">
           <Link to="forms/create" style={styles.createButton}>
             <CoralButton icon="add" type="success">
-              Create a form
-            </CoralButton>
+            Create a form
+          </CoralButton>
           </Link>
         </ContentHeader>
 
-        <Button accent colored raised={displayMode === 'open'}
-          onClick={this.setDisplayMode.bind(this, 'open')}>Live</Button>
-        <Button accent colored raised={displayMode === 'closed'}
-          onClick={this.setDisplayMode.bind(this, 'closed')}>Closed</Button>
+        <CoralButton
+          type="coral"
+          active={displayMode === 'open'}
+          onClick={this.setDisplayMode.bind(this, 'open')}
+          style={{ marginRight: 10 }}
+        >
+          Live
+        </CoralButton>
+        <CoralButton
+          type="coral"
+          active={displayMode === 'closed'}
+          onClick={this.setDisplayMode.bind(this, 'closed')}
+        >
+          Closed
+        </CoralButton>
 
         <FormTable forms={visibleForms} onRowClick={this.onRowClick.bind(this)}
           confirmDeletion={this.confirmDeletion.bind(this)} onCopyFormClick={this.onCopyFormClick.bind(this)}

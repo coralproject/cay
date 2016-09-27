@@ -209,7 +209,8 @@ const styles = {
   },
   bottomCheck: {
     display: 'inline-block',
-    padding: '10px 10px 10px 0',
+    paddingRight: '25px',
+    fontSize: '10pt',
     cursor: 'pointer'
   },
   optionButton: {
@@ -223,16 +224,15 @@ const styles = {
   addOption: {
     display: 'block',
     height: '40px',
-    lineHeight: '40px',
-    padding: '0px 10px',
-    fontSize: '12pt',
     borderRadius: '4px',
     border: '1px dashed #d8d8d8',
     background: '#fff',
     cursor: 'pointer',
     width: '100%',
     textAlign: 'left',
-    color: '#999'
+    color: '#999',
+    padding: '10px 15px',
+    fontSize: '10pt'
   },
   optionRow: {
     marginBottom: '10px',
@@ -247,8 +247,8 @@ const styles = {
   },
   optionInput: {
     display: 'block',
-    padding: '10px',
-    fontSize: '12pt',
+    padding: '10px 15px',
+    fontSize: '10pt',
     width: '100%',
     borderRadius: '4px',
     border: '1px solid #d8d8d8'
@@ -265,8 +265,8 @@ const styles = {
     display: 'block',
     height: '40px',
     lineHeight: '40px',
-    padding: '0px 10px',
-    fontSize: '12pt',
+    padding: '10px 15px',
+    fontSize: '10pt',
     borderRadius: '4px',
     border: '1px dashed #d8d8d8',
     background: '#fff',

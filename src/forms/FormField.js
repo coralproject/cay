@@ -210,7 +210,7 @@ export default class FormField extends Component {
           <input
             className="field-title"
             onChange={onTitleChange}
-            style={{ ...styles.base, ...styles.fieldTitle}}
+            style={[styles.inputField, styles.fieldTitle]}
             defaultValue={ field.title }
             type="text"
             placeholder={ `Ask readers a question` }
@@ -219,8 +219,8 @@ export default class FormField extends Component {
           <input
             className="field-description"
             onChange={onDescriptionChange}
-            defaultValue={ field.description }
-            style={{ ...styles.base, ...styles.fieldDescription }}
+            defaultValue={field.description}
+            style={[styles.inputField, styles.fieldDescription]}
             type="text"
             placeholder="Description text (optional)" />
         </div>
@@ -301,7 +301,7 @@ export const styles = {
   },
   arrowContainer: {
     position: 'absolute',
-    top: '11px',
+    top: '8px',
     paddingLeft: 15,
     background: 'linear-gradient(to right, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 10%,rgba(255,255,255,1) 100%)',
     right: 0,
@@ -353,7 +353,7 @@ export const styles = {
     left: '0px',
     width: '100%',
     height: 'auto',
-    padding: '10px 20px 20px 0px',
+    padding: '10px 20px 20px 10px',
     backgroundColor: 'white'
   },
   saveButton: {
@@ -393,36 +393,29 @@ export const styles = {
     width: '100%',
     marginBottom: '10px'
   },
-  fieldTitle: {
+  inputField: {
+    fontFamily: 'Roboto',
     fontSize: '12pt',
-    width: '78%',
+    width: '50%',
     display: 'block',
+    border: 'none',
     background: 'none',
-    borderRadius: '4px',
-    border: '1px solid #d8d8d8',
-    padding: '0px 10px',
-    height: '40px',
-    lineHeight: '40px',
-    margin: '5px 0 10px'
+    padding: '0',
+    margin: '2px 0'
+  },
+  fieldTitle: {
+    fontSize: '12pt'
 },
   fieldDescription: {
-    fontSize: '12pt',
-    width: '78%',
-    display: 'block',
-    background: 'none',
-    borderRadius: '4px',
-    border: '1px solid #d8d8d8',
-    padding: '0px 10px',
-    height: '40px',
-    lineHeight: '40px',
-    margin: '5px 0 30px'
+    fontSize: '10pt',
+    marginBottom: '20px'
   },
   fieldPosition: {
     background: 'white',
     cursor: 'move',
     alignSelf: 'flex-start',
     fontWeight: 'normal',
-    padding: '15px 15px',
+    padding: '18px 12px',
     textAlign: 'center',
     borderRight: '1px solid #ddd',
     height: '100%',

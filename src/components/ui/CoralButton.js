@@ -1,52 +1,85 @@
-import React, { PropTypes } from 'react';
+import React, { Component,  PropTypes } from 'react';
+import Radium from 'radium';
+import color from 'color';
 
-import { Button } from 'react-mdl';
+@Radium
+class Button extends Component {
+  render() {
+    const { type = "default", className, onClick, disabled, children, icon, style, active = false, ...rest} = this.props;
+    return (
+    <button
+      className={`mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised ${className}`}
+      onClick={onClick}
+      style={[
+        styles.base,
+        styles[type],
+        style,
+        { ':hover': { backgroundColor: color(styles[type].backgroundColor).lighten(0.2).hexString() }},
+        active ? styles[type].active : {}
+        ]}
+      disabled={disabled ? 'disabled' : ''}
+      { ...rest }
+    >
+      { icon ? <i className="material-icons" style={styles.icon} > {icon} </i> : null }
+      { children }
+    </button>
+    )
+  }
+}
 
 const styles = {
   base: {
+    color: 'white',
     fontSize: '0.9em',
     textTransform: 'none',
     backgroundColor: 'white',
-  },
-  type: {
-    success: {
-      backgroundColor: '#00796B'
-    },
-    primary: {
-      color: 'white',
-      backgroundColor: '#0e62eb'
-    },
-    white: {
-      backgroundColor: 'white',
-    },
-    green: {
-      backgroundColor: '#00796B'
-    },
-    grey: {
+    ':hover': {
       backgroundColor: '#d8d8d8'
-    },
-    black: {
-      color: 'white',
-      backgroundColor: '#262626'
-    },
-    blue: {
-      color: 'white',
-      backgroundColor: '#0e62eb'
-    },
-    coral: {
-      color: 'white',
-      backgroundColor: 'rgb(246, 125, 111)',
-      default: {
-        color: 'rgb(246, 125, 111)',
-        backgroundColor: 'rgba(158,158,158,.2)',
-        boxShadow: 'none'
-      }
     }
+  },
+  success: {
+    backgroundColor: '#00796B'
+  },
+  primary: {
+    backgroundColor: '#0e62eb'
+  },
+  white: {
+    color: '#262626',
+    backgroundColor: 'white'
+  },
+  green: {
+    backgroundColor: '#00796B'
+  },
+  grey: {
+    backgroundColor: '#d8d8d8'
+  },
+  black: {
+    color: 'white',
+    backgroundColor: '#262626'
+  },
+  blue: {
+    color: 'white',
+    backgroundColor: '#0e62eb'
+  },
+  coral: {
+    color: 'white',
+    backgroundColor: 'rgb(246, 125, 111)',
   },
   default: {
     color: '#262626',
     backgroundColor: 'rgba(158,158,158,.2)',
-    boxShadow: 'none'
+    boxShadow: 'none',
+    ':hover': {
+      backgroundColor: '#d8d8d8'
+    },
+    active: {
+      color: 'white',
+      backgroundColor: 'rgb(246, 125, 111)',
+      boxShadow: '0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12)',
+      ':hover': {
+        backgroundColor: 'rgba(246, 125, 111, 0.8)'
+      }
+    },
   },
   icon: {
     marginRight: 5,
@@ -54,22 +87,4 @@ const styles = {
   },
 };
 
-export const CoralButton = ({ type = "primary", onClick, disabled, children, icon, style, active = false, ...rest}) => (
-  <Button
-    raised
-    ripple
-    colored={type === 'success'}
-    onClick={onClick}
-    style={{
-      ...styles.base,
-      ...styles.type[type],
-      ...(!active ? styles.type[type].default : {}),
-      ...style
-      }}
-    disabled={disabled ? 'disabled' : ''}
-    { ...rest }
-  >
-    { icon ? <i className="material-icons" style={styles.icon} > {icon} </i> : null }
-    { children }
-  </Button>
-);
+export const CoralButton = Radium(Button);

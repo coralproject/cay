@@ -86,7 +86,6 @@ export default class FormList extends Component {
         </ContentHeader>
 
         <CoralButton
-          type="coral"
           active={displayMode === 'open'}
           onClick={this.setDisplayMode.bind(this, 'open')}
           style={{ marginRight: 10 }}
@@ -94,7 +93,6 @@ export default class FormList extends Component {
           Live
         </CoralButton>
         <CoralButton
-          type="coral"
           active={displayMode === 'closed'}
           onClick={this.setDisplayMode.bind(this, 'closed')}
         >

@@ -6,6 +6,8 @@ import Radium from 'radium';
  * Find them here: https://design.google.com/icons
  */
 
+  // TODO(bc): Add support for sizes and icon sizes
+
 @Radium
 class IconButton extends Component {
   render() {

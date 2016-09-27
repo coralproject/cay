@@ -1,14 +1,54 @@
-import React, { PropTypes } from 'react';
+import React, { Component,  PropTypes } from 'react';
+import Radium from 'radium';
+
+/**
+ * Pass as icon the name of the Icon
+ * Find them here: https://design.google.com/icons
+ */
+
+@Radium
+class IconButton extends Component {
+  render() {
+    const { onClick, icon, style, disabled, size, ...rest } = this.props;
+    return (
+      <button
+        onClick={onClick}
+        disabled={disabled ? 'disabled' : ''}
+        style={[styles.base]}
+        { ...rest }
+      >
+        <i
+          className="material-icons"
+          style={[styles.icon.base]}
+        >
+          {icon}
+        </i>
+      </button>
+    )
+  }
+}
 
 const styles = {
+  background: 'white',
   base: {
     color: '#262626',
-    background: 'white',
+    backgroundColor: 'white',
     border: 'none',
-    borderRadius: '4px'
-  },
-  disabled: {
-    color: '#696969'
+    borderRadius: '4px',
+    border: 0,
+    padding: '6px',
+    borderRadius: '4em',
+    cursor: 'pointer',
+    outline: 'none',
+    ':hover': {
+      backgroundColor: '#d8d8d8'
+    },
+    ':focus': {
+      backgroundColor: '#d8d8d8'
+    },
+    ':active': {
+      backgroundColor: 'white',
+    }
   },
   icon: {
     base: {
@@ -17,27 +57,4 @@ const styles = {
   }
 };
 
-/**
- * Pass as icon the name of the Icon
- * Find them here: https://design.google.com/icons
- */
-
-export const CoralIconButton = ({ onClick, icon, style, disabled, size, ...rest}) => (
-  <button
-    onClick={onClick}
-    disabled={disabled ? 'disabled' : ''}
-    style={{
-      ...styles.base,
-      ...styles[`${ disabled ? 'disabled' : 'base' }`],
-      ...style
-      }}
-    { ...rest }
-  >
-    <i
-      className="material-icons"
-      style={styles.icon[`${ size ? size : 'base' }`]}
-    >
-      {icon}
-    </i>
-  </button>
-);
+export const CoralIconButton = Radium(IconButton);

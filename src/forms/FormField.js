@@ -229,6 +229,7 @@ export default class FormField extends Component {
 
         <div style={ styles.bottomButtons }>
           <CoralButton
+            className="field-close-button"
             icon="clear"
             type="white"
             onClick={onCancelClick}
@@ -238,6 +239,7 @@ export default class FormField extends Component {
           </CoralButton>
 
           <CoralButton
+            className="save-button"
             type="success"
             icon="done"
             onClick={onSaveClick}

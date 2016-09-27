@@ -23,8 +23,8 @@ class Heading extends React.Component {
 
 const styles = {
   subhead: {
-    fontSize: '.5em',
-    paddingLeft: '4px',
+    fontSize: '.6em',
+    paddingTop: '4px',
     fontWeight: 300,
     color: '#777',
     lineHeight: 1

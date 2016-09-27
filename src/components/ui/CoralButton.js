@@ -45,7 +45,7 @@ const styles = {
   },
   default: {
     color: '#262626',
-    backgroundColor: 'none',
+    backgroundColor: 'rgba(158,158,158,.2)',
     boxShadow: 'none'
   },
   icon: {
@@ -54,7 +54,7 @@ const styles = {
   },
 };
 
-export const CoralButton = ({ type, onClick, disabled, children, icon, style, active = false, ...rest}) => (
+export const CoralButton = ({ type = "primary", onClick, disabled, children, icon, style, active = false, ...rest}) => (
   <Button
     raised
     ripple

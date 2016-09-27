@@ -230,6 +230,7 @@ export default class FormField extends Component {
         <div style={ styles.bottomButtons }>
           <CoralButton
             icon="clear"
+            type="white"
             onClick={onCancelClick}
             style={{ marginRight: 10 }}
           >

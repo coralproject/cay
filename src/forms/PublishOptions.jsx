@@ -92,8 +92,8 @@ export default class PublishOptions extends Component {
           <div>
             <CoralButton
               className="form-preview-button"
-              type="success"
-              icon="pageview"
+              type="primary"
+              icon="visibility"
               onClick={onOpenPreview}
               style={{ width: 150, marginRight: 10 }}
             >

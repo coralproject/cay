@@ -4,11 +4,10 @@ import { connect } from 'react-redux';
 
 import CommonFieldOptions from 'forms/CommonFieldOptions';
 
-import FaArrowUp from 'react-icons/lib/fa/arrow-up';
-import FaArrowDown from 'react-icons/lib/fa/arrow-down';
-import FaTrashO from 'react-icons/lib/fa/trash-o';
 import FaCopy from 'react-icons/lib/fa/copy';
 import FaPlusCircle from 'react-icons/lib/fa/plus-circle';
+
+import { CoralIconButton } from '../../components/ui/CoralIconButton';
 
 @connect(({ forms, app }) => ({ forms, app }))
 @Radium
@@ -131,15 +130,15 @@ export default class MultipleChoiceEditor extends Component {
 
           {/* Action buttons for an option */}
           <div style={ styles.optionRowButtons }>
-            <button style={ styles.optionButton } onClick={ this.duplicateOption.bind(this, i) }><FaCopy /></button>
+            <CoralIconButton icon="content_copy" style={styles.optionButton} onClick={this.duplicateOption.bind(this, i)}  />
             {
               (i > 0) || (i == 0 && this.state.options.length > 1) ?
-                <button style={ styles.optionButton } onClick={ this.removeOption.bind(this, i) }><FaTrashO /></button>
+                <CoralIconButton icon="delete" style={styles.optionButton} onClick={this.removeOption.bind(this, i)} />
               :
-                <button style={ styles.optionButton } disabled><FaTrashO /></button>
+                <CoralIconButton icon="delete" style={ styles.optionButton } disabled />
             }
-            <button disabled={ i == 0 } style={ styles.optionButton } onClick={ this.moveOption.bind(this, i, 'up') }><FaArrowUp /></button>
-            <button disabled={ i == this.state.options.length - 1 } style={ styles.optionButton } onClick={ this.moveOption.bind(this, i, 'down') }><FaArrowDown /></button>
+            <CoralIconButton icon="arrow_upward" disabled={ i == 0 } style={ styles.optionButton } onClick={ this.moveOption.bind(this, i, 'up') } />
+            <CoralIconButton icon="arrow_downward" disabled={ i == this.state.options.length - 1 } style={ styles.optionButton } onClick={ this.moveOption.bind(this, i, 'down') } />
           </div>
 
         </div>
@@ -214,11 +213,6 @@ const styles = {
     cursor: 'pointer'
   },
   optionButton: {
-    border: 'none',
-    background: 'none',
-    fontSize: '14pt',
-    marginLeft: '10px',
-    padding: '0px',
     cursor: 'pointer'
   },
   addOption: {
@@ -243,7 +237,7 @@ const styles = {
     flexGrow: '2'
   },
   optionRowButtons: {
-    paddingTop: '10px',
+    paddingTop: '8px',
     width: '120px'
   },
   optionInput: {

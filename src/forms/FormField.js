@@ -11,7 +11,7 @@ import FaUser from 'react-icons/lib/fa/user';
 import FaCopy from 'react-icons/lib/fa/copy';
 
 import { CoralButton } from '../components/ui/CoralButton';
-import { CoralIcon } from '../components/ui/CoralIcon';
+import { CoralIconButton } from '../components/ui/CoralIconButton';
 
 // DnD dependencies
 import { DragSource } from 'react-dnd';
@@ -190,10 +190,10 @@ export default class FormField extends Component {
             : null
           }
           <div style={styles.arrowContainer}>
-            <CoralIcon icon="content_copy" onClick={ onDuplicate.bind(this, position) } />
-            <CoralIcon icon="delete" className="form-delete-widget-button" onClick={ onDelete.bind(this, position) } />
-            <CoralIcon icon="arrow_upward" onClick={ position !== 0 ? onMove.bind(this, 'up', position) : null } disabled={position === 0} />
-            <CoralIcon icon="arrow_downward" onClick={ !isLast ? onMove.bind(this, 'down', position) : null } disabled={!!isLast} />
+            <CoralIconButton icon="content_copy" onClick={ onDuplicate.bind(this, position) } />
+            <CoralIconButton icon="delete" className="form-delete-widget-button" onClick={ onDelete.bind(this, position) } />
+            <CoralIconButton icon="arrow_upward" onClick={ position !== 0 ? onMove.bind(this, 'up', position) : null } disabled={position === 0} />
+            <CoralIconButton icon="arrow_downward" onClick={ !isLast ? onMove.bind(this, 'down', position) : null } disabled={!!isLast} />
           </div>
         </div>
       </div>
@@ -306,10 +306,10 @@ export const styles = {
   },
   arrowContainer: {
     position: 'absolute',
-    top: '8px',
+    top: 12,
     paddingLeft: 15,
     background: 'linear-gradient(to right, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 10%,rgba(255,255,255,1) 100%)',
-    right: 0,
+    right: 5,
     paddingRight: 5
   },
   arrow: {
@@ -358,39 +358,7 @@ export const styles = {
     left: '0px',
     width: '100%',
     height: 'auto',
-    padding: '10px 20px 20px 10px',
-  },
-  saveButton: {
-    display: 'inline-block',
-    fontSize: '11pt',
-    height: '40px',
-    color: 'white',
-    background: '#36B278',
-    border: 'none',
-    borderRadius: '4px',
-    marginTop: '10px',
-    lineHeight: '40px',
-    textAlign: 'center',
-    cursor: 'pointer',
-    padding: '0 20px',
-    marginLeft: '10px',
-    disabled: {
-      background: 'grey'
-    }
-  },
-  cancelButton: {
-    fontSize: '11pt',
-    height: '40px',
-    color: '#777',
-    background: 'white',
-    border: '1px solid #ccc',
-    borderRadius: '4px',
-    marginTop: '10px',
-    lineHeight: '40px',
-    textAlign: 'center',
-    cursor: 'pointer',
-    padding: '0 20px',
-    marginLeft: '10px'
+    padding: '10px 10px 20px',
   },
   label: {
     display: 'block',
@@ -436,7 +404,7 @@ export const styles = {
     padding: '20px 0'
   },
   identityLabel: {
-    color: '#333',
+    color: '#262626',
     padding: '0 5px',
     marginLeft: '5px',
     display: 'inline-block'

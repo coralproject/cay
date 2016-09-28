@@ -18,16 +18,10 @@ const styles = {
  */
 
 export const CoralIcon = ({ onClick, icon, style, disabled, ...rest}) => (
-  <IconButton
-    onClick={onClick}
-    name={icon}
-    colored
-    disabled={disabled ? 'disabled' : ''}
-    style={{
-      ...styles.base,
-      ...styles[`${ disabled ? 'disabled' : 'base' }`],
-      ...style
-      }}
-    { ...rest }
-  />
+  <i
+    className="material-icons"
+    style={[styles.base, style]}
+  >
+    {icon}
+  </i>
 );

@@ -299,7 +299,7 @@ export const styles = {
   fieldTitleHeader: {
     flex: 1,
     alignSelf: 'flex-start',
-    padding: '15px 10px 15px 10px'
+    padding: '15px 10px 15px 5px'
   },
   editBody: {
     flex: 1,
@@ -308,7 +308,7 @@ export const styles = {
   },
   arrowContainer: {
     position: 'absolute',
-    top: 12,
+    top: 10,
     paddingLeft: 15,
     background: 'linear-gradient(to right, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 10%,rgba(255,255,255,1) 100%)',
     right: 5,
@@ -360,7 +360,7 @@ export const styles = {
     left: '0px',
     width: '100%',
     height: 'auto',
-    padding: '10px 10px 20px',
+    padding: '10px 22px 30px 0px',
   },
   label: {
     display: 'block',
@@ -374,15 +374,19 @@ export const styles = {
     display: 'block',
     border: 'none',
     background: 'none',
-    padding: '0',
-    margin: '2px 0'
+    boxSizing: 'border-box',
   },
   fieldTitle: {
-    fontSize: '12pt'
+    width: '75%',
+    fontSize: '12pt',
+    minHeight: '32px',
+    marginTop: '-3px'
 },
   fieldDescription: {
     fontSize: '10pt',
-    marginBottom: '20px'
+    width: '100%',
+    minHeight: '40px',
+    marginBottom: '30px'
   },
   fieldPosition: {
     background: 'none',

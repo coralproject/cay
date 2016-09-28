@@ -4,15 +4,15 @@ import color from 'color';
 
 const buildCustomStyle = (customColor) => ({
   backgroundColor: customColor,
-  color: 'white',
+  color: '#FFFFFF',
   ':hover': {
     backgroundColor: color(customColor).lighten(0.2).hexString()
   },
   active: {
-    backgroundColor: 'white',
+    backgroundColor: '#FFFFFF',
     color: customColor,
     ':hover': {
-      backgroundColor: color(customColor).lighten(0.2).hexString()
+      backgroundColor: '#FFFFFF'
     }
   }
 })

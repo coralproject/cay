@@ -9,7 +9,7 @@ import settings from 'settings';
 import { Button, Icon, Card, CardTitle, CardActions, CardText } from 'react-mdl';
 import { hasFlag, updateSubmissionFlags } from 'forms/FormActions';
 
-import { CoralButton } from '../components/ui';
+import { CoralButton, CoralIcon } from '../components/ui';
 
 @Radium
 export default class SubmissionDetail extends Component {
@@ -71,7 +71,7 @@ export default class SubmissionDetail extends Component {
               <Card style={styles.answerCard} key={key}>
                 <CardTitle>{reply.question}</CardTitle>
                 <CardText>{this.renderAnswer(reply)}</CardText>
-                <CardActions style={styles.answerActions} border>
+                <CardActions style={styles.answerActions}>
                   <CoralButton
                     type="violet"
                     icon={inGallery ? 'delete' : 'send'}
@@ -176,12 +176,13 @@ export default class SubmissionDetail extends Component {
           </div>
           <div style={styles.headerButtons}>
             <CoralButton
+              style={{ marginRight: 10 }}
               onClick={() => onFlag(!flagged)}
               active={flagged}
               type="custom"
               customColor={settings.flaggedColor}
             >
-              <Icon name='flag' style={styles.headIcon(flagged, settings.flaggedColor)} /> Flag{flagged ? 'ged' : ''}
+              <CoralIcon icon='flag' style={styles.headIcon(flagged, settings.flaggedColor)} /> Flag{flagged ? 'ged' : ''}
             </CoralButton>
             <CoralButton
               onClick={() => onBookmark(!bookmarked)}
@@ -190,7 +191,7 @@ export default class SubmissionDetail extends Component {
               type="custom"
               customColor={settings.bookmarkedColor}
               >
-              <Icon name='bookmark' style={styles.headIcon(bookmarked, settings.bookmarkedColor)} /> Bookmark{bookmarked ? 'ed' : ''}
+              <CoralIcon icon='bookmark' style={styles.headIcon(bookmarked, settings.bookmarkedColor)} /> Bookmark{bookmarked ? 'ed' : ''}
             </CoralButton>
           </div>
         </div>

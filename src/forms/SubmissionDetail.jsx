@@ -188,7 +188,7 @@ export default class SubmissionDetail extends Component {
               type="custom"
               active={bookmarked}
               type="custom"
-              custom={settings.bookmarkedColor}
+              customColor={settings.bookmarkedColor}
               >
               <Icon name='bookmark' style={styles.headIcon(bookmarked, settings.bookmarkedColor)} /> Bookmark{bookmarked ? 'ed' : ''}
             </CoralButton>
@@ -294,7 +294,7 @@ const styles = {
     borderBottom: '2px solid rgb(216, 216, 216)'
   },
   headIcon(flagged, color) {
-    return { color: flagged ? '#fff': color };
+    return { color: !flagged ? '#fff': color };
   },
   answerActions: {
     textAlign: 'right'

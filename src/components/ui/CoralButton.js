@@ -2,22 +2,46 @@ import React, { Component,  PropTypes } from 'react';
 import Radium from 'radium';
 import color from 'color';
 
+const buildCustomStyle = (customColor) => ({
+  backgroundColor: customColor,
+  color: 'white',
+  ':hover': {
+    backgroundColor: color(customColor).lighten(0.2).hexString()
+  },
+  active: {
+    backgroundColor: 'white',
+    color: customColor,
+    ':hover': {
+      backgroundColor: color(customColor).lighten(0.2).hexString()
+    }
+  }
+})
+
 @Radium
 class Button extends Component {
   render() {
-    const { type = "default", className, onClick, disabled, children, icon, style, active = false, ...rest} = this.props;
+    const { type = 'default', className, onClick, disabled, children, icon, style, active = false, customColor, ...rest } = this.props;
+
+    if (type === 'custom' && customColor) {
+      styles.custom = buildCustomStyle(customColor)
+    }
+
+    const finalStyles = {
+      ...styles.base,
+      ...styles[type],
+      ...style
+    };
+
     return (
     <button
       data-upgraded=",MaterialButton"
       className={`mdl-button mdl-js-button mdl-button--raised ${className}`}
       onClick={onClick}
       style={[
-        styles.base,
-        styles[type],
-        style,
-        { ':hover': { backgroundColor: color(styles[type].backgroundColor).lighten(0.2).hexString() }},
+        finalStyles,
+        { ':hover': { backgroundColor: color(finalStyles.backgroundColor).lighten(0.2).hexString() }},
         active ? styles[type].active : {}
-        ]}
+      ]}
       disabled={disabled ? 'disabled' : ''}
       { ...rest }
     >
@@ -30,7 +54,7 @@ class Button extends Component {
 
 const boxShadowDefault = '0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12)';
 
-const styles = {
+let styles = {
   base: {
     color: 'white',
     fontSize: '0.9em',
@@ -81,7 +105,23 @@ const styles = {
   },
   coral: {
     color: 'white',
-    backgroundColor: 'rgb(246, 125, 111)',
+    backgroundColor: '#F36451',
+  },
+  custom: {
+    color: '#262626',
+    backgroundColor: 'rgba(158,158,158,.2)',
+    boxShadow: 'none',
+    ':hover': {
+      backgroundColor: '#d8d8d8'
+    },
+    active: {
+      color: 'white',
+      backgroundColor: '#F36451',
+      boxShadow: boxShadowDefault,
+      ':hover': {
+        backgroundColor: color('#F36451').lighten(0.2).hexString()
+      }
+    },
   },
   default: {
     color: '#262626',
@@ -92,10 +132,10 @@ const styles = {
     },
     active: {
       color: 'white',
-      backgroundColor: 'rgb(246, 125, 111)',
+      backgroundColor: '#F36451',
       boxShadow: boxShadowDefault,
       ':hover': {
-        backgroundColor: 'rgba(246, 125, 111, 0.8)'
+        backgroundColor: color('#F36451').lighten(0.2).hexString()
       }
     },
   },

@@ -8,7 +8,7 @@ class Button extends Component {
     const { type = "default", className, onClick, disabled, children, icon, style, active = false, ...rest} = this.props;
     return (
     <button
-      className={`mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised ${className}`}
+      className={`mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent ${className}`}
       onClick={onClick}
       style={[
         styles.base,
@@ -37,6 +37,9 @@ const styles = {
       backgroundColor: '#d8d8d8'
     }
   },
+  raised: {
+    boxShadow: '0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12)',
+  },
   success: {
     backgroundColor: '#00796B'
   },
@@ -56,6 +59,14 @@ const styles = {
   black: {
     color: 'white',
     backgroundColor: '#262626'
+  },
+  violet: {
+    color: '#864F9E',
+    background: 'white',
+    active: {
+      color: 'white',
+      backgroundColor: '#864F9E',
+    }
   },
   blue: {
     color: 'white',

@@ -8,7 +8,8 @@ class Button extends Component {
     const { type = "default", className, onClick, disabled, children, icon, style, active = false, ...rest} = this.props;
     return (
     <button
-      className={`mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent ${className}`}
+      data-upgraded=",MaterialButton"
+      className={`mdl-button mdl-js-button mdl-button--raised ${className}`}
       onClick={onClick}
       style={[
         styles.base,
@@ -27,6 +28,8 @@ class Button extends Component {
   }
 }
 
+const boxShadowDefault = '0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12)';
+
 const styles = {
   base: {
     color: 'white',
@@ -35,10 +38,11 @@ const styles = {
     backgroundColor: 'white',
     ':hover': {
       backgroundColor: '#d8d8d8'
+    },
+    ':focus': {
+      boxShadow: 'none',
+      boxShadow: boxShadowDefault
     }
-  },
-  raised: {
-    boxShadow: '0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12)',
   },
   success: {
     backgroundColor: '#00796B'
@@ -62,10 +66,13 @@ const styles = {
   },
   violet: {
     color: '#864F9E',
-    background: 'white',
+    backgroundColor: 'white',
     active: {
       color: 'white',
       backgroundColor: '#864F9E',
+      ':hover': {
+        backgroundColor: color('#864F9E').lighten(0.2).hexString()
+      }
     }
   },
   blue: {
@@ -86,7 +93,7 @@ const styles = {
     active: {
       color: 'white',
       backgroundColor: 'rgb(246, 125, 111)',
-      boxShadow: '0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12)',
+      boxShadow: boxShadowDefault,
       ':hover': {
         backgroundColor: 'rgba(246, 125, 111, 0.8)'
       }

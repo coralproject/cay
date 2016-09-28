@@ -9,6 +9,8 @@ import settings from 'settings';
 import { Button, Icon, Card, CardTitle, CardActions, CardText } from 'react-mdl';
 import { hasFlag, updateSubmissionFlags } from 'forms/FormActions';
 
+import { CoralButton } from '../components/ui';
+
 @Radium
 export default class SubmissionDetail extends Component {
   render() {
@@ -70,12 +72,14 @@ export default class SubmissionDetail extends Component {
                 <CardTitle>{reply.question}</CardTitle>
                 <CardText>{this.renderAnswer(reply)}</CardText>
                 <CardActions style={styles.answerActions} border>
-                  <Button colored onClick={modAnswer.bind(this, gallery.id, submission.id, reply.widget_id)}>
-                    { inGallery ?
-                        <span>Remove from Gallery <Icon name='delete' /></span> :
-                        <span>Send to gallery <Icon name='send' /></span>
-                    }
-                  </Button>
+                  <CoralButton
+                    type="violet"
+                    icon={inGallery ? 'delete' : 'send'}
+                    active={inGallery}
+                    onClick={modAnswer.bind(this, gallery.id, submission.id, reply.widget_id)}
+                  >
+                    { inGallery ? 'Remove from Gallery' : 'Send to gallery' }
+                  </CoralButton>
                 </CardActions>
               </Card>
             );

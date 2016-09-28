@@ -10,8 +10,7 @@ import FaArrowDown from 'react-icons/lib/fa/arrow-down';
 import FaUser from 'react-icons/lib/fa/user';
 import FaCopy from 'react-icons/lib/fa/copy';
 
-import { CoralButton } from '../components/ui/CoralButton';
-import { CoralIconButton } from '../components/ui/CoralIconButton';
+import { CoralButton, CoralIconButton } from '../components/ui';
 
 // DnD dependencies
 import { DragSource } from 'react-dnd';

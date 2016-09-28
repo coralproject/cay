@@ -34,7 +34,6 @@ class Button extends Component {
 
     return (
     <button
-      data-upgraded=",MaterialButton"
       className={`mdl-button mdl-js-button mdl-button--raised ${className}`}
       onClick={onClick}
       style={[

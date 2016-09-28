@@ -16,7 +16,7 @@ import ButtonGroup from 'components/ButtonGroup';
 import L from 'i18n';
 import moment from 'moment';
 
-import { CoralButton } from '../components/ui/CoralButton';
+import { CoralButton } from '../components/ui';
 
 // Forms, Widgets, Submissions
 @connect(({ forms }) => ({ forms }))

@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { Button, Tabs, Tab, RadioGroup, Radio, Textfield } from 'react-mdl';
-import { CoralButton } from '../components/ui/CoralButton';
+import { CoralButton } from '../components/ui';
 
 import Spinner from 'components/Spinner';
 import CopyToClipboard from 'react-copy-to-clipboard';

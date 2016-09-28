@@ -175,12 +175,23 @@ export default class SubmissionDetail extends Component {
             <span style={styles.subNum}>{submission.number || ''}</span> {moment(submission.date_created).format('L LT')}
           </div>
           <div style={styles.headerButtons}>
-            <Button raised onClick={() => onFlag(!flagged)} style={styles.headButton(flagged, settings.flaggedColor)}>
-              Flag{flagged ? 'ged' : ''} <Icon name='flag' style={styles.headIcon(flagged, settings.flaggedColor)} />
-            </Button>
-            <Button raised onClick={() => onBookmark(!bookmarked)} style={styles.headButton(bookmarked, settings.bookmarkedColor)}>
-              Bookmark{bookmarked ? 'ed' : ''} <Icon name='bookmark' style={styles.headIcon(bookmarked, settings.bookmarkedColor)} />
-            </Button>
+            <CoralButton
+              onClick={() => onFlag(!flagged)}
+              active={flagged}
+              type="custom"
+              customColor={settings.flaggedColor}
+            >
+              <Icon name='flag' style={styles.headIcon(flagged, settings.flaggedColor)} /> Flag{flagged ? 'ged' : ''}
+            </CoralButton>
+            <CoralButton
+              onClick={() => onBookmark(!bookmarked)}
+              type="custom"
+              active={bookmarked}
+              type="custom"
+              custom={settings.bookmarkedColor}
+              >
+              <Icon name='bookmark' style={styles.headIcon(bookmarked, settings.bookmarkedColor)} /> Bookmark{bookmarked ? 'ed' : ''}
+            </CoralButton>
           </div>
         </div>
         <div style={styles.hr}></div>
@@ -275,18 +286,15 @@ const styles = {
   answerCard: {
     width: '100%',
     marginBottom: 20,
-    borderRadius: 4,
-    border: '1px solid ' + settings.mediumGrey
+    border: '1px solid ' + settings.mediumGrey,
+    backgroundColor: 'rgb(255, 255, 255)',
+    boxShadow: 'rgb(155, 155, 155) 0px 1px 3px',
+    borderTopLeftRadius: 4,
+    borderTopRightRadius: 4,
+    borderBottom: '2px solid rgb(216, 216, 216)'
   },
   headIcon(flagged, color) {
     return { color: flagged ? '#fff': color };
-  },
-  headButton(flagged, color) {
-    return {
-      background: flagged ? color : '#fff',
-      marginLeft: 20,
-      color: flagged ? '#fff' : '#000'
-    };
   },
   answerActions: {
     textAlign: 'right'

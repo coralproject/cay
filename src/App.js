@@ -24,6 +24,7 @@ import SubmissionList from 'app/SubmissionList';
 import GalleryManager from 'app/GalleryManager';
 
 import Permissions from 'app/Permissions';
+import CallbackPage from 'app/CallbackPage';
 
 /**
  * Expose App base component. Handle all routes
@@ -38,6 +39,7 @@ export default ({ store, onLogPageView, defaultRoute, features, userManager }) =
           <Route path="login" component={Login} />
           <Route path="permissions" component={Permissions} />
           <Route path="about" component={About} />
+          <Route path="/callback" component={CallbackPage} />
           {features.trust !== false ?
             <div>
               <Route path="search-creator" component={SearchCreator} />

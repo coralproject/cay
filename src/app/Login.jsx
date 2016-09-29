@@ -3,15 +3,15 @@
  * Module dependencies
  */
 
-import React, { PropTypes, Component } from 'react';
+import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
+import Button from 'components/Button';
 
 import { brandColor } from 'settings';
 import color from 'color';
 
-import Button from 'components/Button';
-import TextField from 'components/forms/TextField';
+import userManager from 'services/userManager';
 
 /**
  * Expose login component
@@ -25,36 +25,12 @@ export default class Login extends React.Component {
     router: PropTypes.object.isRequired
   }
 
-  componentWillMount() {
-    // if (this.isAuth()) {
-    //   this.context.router.push('/');
-    // }
-  }
-
-  componentWillUpdate() {
-    // if (this.isAuth()) {
-    //   this.context.router.push('/');
-    // }
-  }
-
-  isAuth() {
-    // return !this.props.app.requireLogin || this.props.auth.authorized;
-  }
-
   loginUser() {
     // this.props.dispatch(login(this.state.email, this.state.password));
-  }
-
-  updateEmail(email) {
-    this.setState({ email });
-  }
-
-  updatePass(password) {
-    this.setState({ password });
+    userManager.signinRedirect();
   }
 
   render() {
-    const { auth } = this.props;
     return (
       <div style={styles.base}>
         <div style={styles.loginModal}>
@@ -62,30 +38,12 @@ export default class Login extends React.Component {
           <p style={styles.welcome}>Welcome to</p>
           <p style={styles.projectName}>The Coral Project</p>
           <div style={styles.container}>
-            <p style={styles.cta}>Help us test the beta site</p>
-            <TextField
-              ref="email"
-              style={styles.textInput}
-              onChange={this.updateEmail.bind(this)}
-              label="email" />
-            <TextField
-              type="password"
-              ref="password"
-              style={styles.textInput}
-              onChange={this.updatePass.bind(this)}
-              label="password" />
-            {auth.authorized === false
-              ? <p style={ styles.unauthorizedMessage }>Invalid username or password.</p>
-              : null}
-
             <Button
               size="large"
               style={styles.loginButton}
               category="primary"
-              onClick={this.loginUser.bind(this)}
-            >
-              Log In
-            </Button>
+              onClick={this.loginUser}
+            > Log In </Button>
             <a style={styles.loginRequest} href="https://coralproject.net/beta-testers/">How can I request a login?</a>
           </div>
         </div>

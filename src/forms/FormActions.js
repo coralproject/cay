@@ -103,12 +103,20 @@ export const COPY_FORM = 'COPY_FORM';
  * Utils
  */
 
-const getInit = (body, method) => ({
-  method: method || 'POST',
-  headers: new Headers({ 'Accept': 'application/json', 'Content-Type': 'application/json' }),
-  mode: 'cors',
-  body: body ? JSON.stringify(body) : undefined
-});
+const getInit = (method, body, token = '') => {
+  const init = {
+    method: method || 'POST',
+    headers: new Headers({
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': token
+    })
+  };
+
+  if (method !== 'GET' && body) init.body = JSON.stringify(body);
+
+  return init;
+};
 
 /**
  * Action creators
@@ -167,9 +175,11 @@ const answerRemovedFromGallery = gallery => ({
  */
 
 export const fetchForms = () => (dispatch, getState) => {
+  const {oidc, app} = getState();
+
   dispatch(formsRequestStarted());
 
-  return fetch(`${getState().app.askHost}/v1/form`)
+  return fetch(`${app.askHost}/v1/form`, getInit('GET', null, oidc.user.id_token))
     .then(res => res.json())
     .then(forms => dispatch(formsRequestSuccess(forms)))
     .catch(error => dispatch(formsRequestFailure(error)));
@@ -177,8 +187,9 @@ export const fetchForms = () => (dispatch, getState) => {
 
 export const fetchForm = id => (dispatch, getState) => {
   dispatch(formRequestStarted(id));
+  const {app, oidc} = getState();
 
-  return fetch(`${getState().app.askHost}/v1/form/${id}`)
+  return fetch(`${app.askHost}/v1/form/${id}`, getInit('GET', null, oidc.user.id_token))
     .then(res => res.json())
     .then(form => dispatch(formRequestSuccess(form)))
     .catch(error => dispatch(formRequestFailure(error)));
@@ -194,8 +205,9 @@ export const copyForm = (id) => (dispatch, getState) => {
 };
 
 export const deleteForm = (name, description, id) => (dispatch, getState) => {
+  const {app, oidc} = getState();
   dispatch(formRequestStarted(id));
-  return fetch(`${getState().app.askHost}/v1/form/${id}`, getInit({ name, description }, 'DELETE'))
+  return fetch(`${app.askHost}/v1/form/${id}`, getInit('DELETE', { name, description }, oidc.user.id_token))
     .then(res => res.json())
     .then(deletedForm => {
       dispatch(deleteSuccessful(id));
@@ -211,7 +223,7 @@ dispatch(formRequestEditAccess(formId));
 export const leavingEdit = formId => dispatch =>
 dispatch(formLeaveEdit(formId));
 
-export const createEmpty = () => (dispatch, getState) =>
+export const createEmpty = () => (dispatch) =>
 dispatch(createEmptyAction());
 
 export const appendWidget = (type, targetPosition) => ({
@@ -258,18 +270,11 @@ export const saveForm = (form, widgets) => {
 
   return (dispatch, getState) => {
 
-    const {app} = getState();
+    const {app, oidc} = getState();
     data.settings.saveDestination =  `${app.askHost}/v1/form/${form.id}/submission`;
 
     dispatch({ type: CREATE_INIT_FORM, data });
-    return fetch(`${app.elkhornHost}/create`, {
-      method: 'POST',
-      mode: 'cors',
-      headers: new Headers({
-        'Content-Type': 'application/json'
-      }),
-      body: JSON.stringify(data)
-    })
+    return fetch(`${app.elkhornHost}/create`, getInit('POST', data, oidc.user.id_token))
     .then(res => {
       return res.ok ? res.json() : Promise.reject(res.status);
     })
@@ -283,13 +288,13 @@ export const saveForm = (form, widgets) => {
 
 export const editForm = form => (dispatch, getState) => {
   const data = {...form};
-  const {app} = getState();
+  const {app, oidc} = getState();
 
   // update save destination on edit to capture config changes
   data.settings.saveDestination = `${app.askHost}/v1/form/${form.id}/submission`;
 
   dispatch({type: EDIT_FORM_REQUEST, data});
-  return fetch(`${app.elkhornHost}/create`, getInit(data, 'POST'))
+  return fetch(`${app.elkhornHost}/create`, getInit('POST', data, oidc.user.id_token))
   .then(res => res.json())
   .then(json => {
     dispatch({type: EDIT_FORM_SUCCESS, data: json});
@@ -302,10 +307,10 @@ export const updateInactiveMessage = (message, form) => (dispatch, getState) => 
   const formData = {...form};
   formData.settings.inactiveMessage = message;
 
-  const { app } = getState();
+  const { app, oidc } = getState();
 
   dispatch({ type: UPDATE_FORM_INACTIVE_MESSAGE_REQUEST });
-  return fetch(`${app.elkhornHost}/create`, getInit(formData, 'POST'))
+  return fetch(`${app.elkhornHost}/create`, getInit('POST', formData, oidc.user.id_token))
   .then(res => res.json())
   .then(json => {
     dispatch({type: UPDATE_FORM_INACTIVE_MESSAGE_SUCCESS, data: json});
@@ -317,11 +322,14 @@ export const updateInactiveMessage = (message, form) => (dispatch, getState) => 
 };
 
 export const fetchSubmissions = (formId, page = 0) => (dispatch, getState) => {
-  const { app, forms } = getState();
+  const { app, forms, oidc } = getState();
   const { submissionOrder, submissionFilterBy, submissionSearch } = forms;
   const filterBy = submissionFilterBy === 'default' ? '' : submissionFilterBy;
   const skip = page * 10;
-  return fetch(`${app.askHost}/v1/form/${formId}/submission?skip=${skip}&limit=10&orderby=${submissionOrder}&filterby=${filterBy}&search=${submissionSearch}`)
+  return fetch(
+    `${app.askHost}/v1/form/${formId}/submission?skip=${skip}&limit=10&orderby=${submissionOrder}&filterby=${filterBy}&search=${submissionSearch}`,
+    getInit('GET', null, oidc.user.id_token)
+  )
     .then(res => res.json())
     .then(data => dispatch(submissionsFetched(data.counts, data.submissions || [])))
     .catch(error => dispatch(submissionsFetchError(error)));
@@ -332,12 +340,12 @@ export const fetchSubmissions = (formId, page = 0) => (dispatch, getState) => {
 // an array of strings. For example `flags: ["flagged", "bookmarked"]`
 
 export const updateSubmissionFlags = props => (dispatch, getState) => {
-  const state = getState();
-  const { activeSubmission, activeForm } = state.forms;
+  const {forms, oidc, app} = getState();
+  const { activeSubmission, activeForm } = forms;
   const keys = Object.keys(props);
 
   // Create an array with the old and new flags
-  const allKeys = keys.concat(state.forms[activeSubmission].flags);
+  const allKeys = keys.concat(forms[activeSubmission].flags);
 
   dispatch(updateActiveSubmission({
     // remove the flags that are for removing and prevent duplicates using a Set
@@ -348,8 +356,10 @@ export const updateSubmissionFlags = props => (dispatch, getState) => {
   // and return the responses as an array (we are not using it but is good
   // to return the promise so the caller know when everything is done)
   return Promise.all(keys.map(prop =>
-    fetch(`${state.app.askHost}/v1/form/${activeForm}/submission/${activeSubmission}/flag/${prop}`,
-          { method: props[prop] ? 'POST': 'DELETE', mode: 'cors' })
+    fetch(
+      `${app.askHost}/v1/form/${activeForm}/submission/${activeSubmission}/flag/${prop}`,
+      getInit( props[prop] ? 'POST': 'DELETE', null, oidc.user.id_token)
+    )
     .then(res=> res.json())
   ));
 };
@@ -357,9 +367,9 @@ export const updateSubmissionFlags = props => (dispatch, getState) => {
 export const fetchGallery = formId => (dispatch, getState) => {
   dispatch(requestGallery(formId));
 
-  const {app} = getState();
+  const {app, oidc} = getState();
 
-  fetch(`${app.askHost}/v1/form/${formId}/gallery`)
+  fetch(`${app.askHost}/v1/form/${formId}/gallery`, getInit('GET', null, oidc.user.id_token))
     .then(res => res.json())
     .then(galleries => dispatch(receivedGallery(galleries[0]))) // we only support 1 gallery
     .catch(error => dispatch(galleryRequestError(error)));
@@ -367,12 +377,9 @@ export const fetchGallery = formId => (dispatch, getState) => {
 
 export const sendToGallery = (galleryId, subId, answerId) => {
   return (dispatch, getState) => {
-    const {app} = getState();
+    const {app, oidc} = getState();
 
-    fetch(`${app.askHost}/v1/form_gallery/${galleryId}/submission/${subId}/${answerId}`, {
-      method: 'POST',
-      mode: 'cors'
-    })
+    fetch(`${app.askHost}/v1/form_gallery/${galleryId}/submission/${subId}/${answerId}`, getInit('POST', null, oidc.user.id_token))
       .then(res => res.json())
       .then(gallery => {
         dispatch({type: FORM_ANSWER_SENT_TO_GALLERY, gallery});
@@ -383,10 +390,9 @@ export const sendToGallery = (galleryId, subId, answerId) => {
 
 export const removeFromGallery = (galleryId, subId, answerId) => {
   return (dispatch, getState) => {
-    const { app } = getState();
-    const options = {method: 'DELETE', mode: 'cors'};
+    const { app, oidc } = getState();
 
-    fetch(`${app.askHost}/v1/form_gallery/${galleryId}/submission/${subId}/${answerId}`, options)
+    fetch(`${app.askHost}/v1/form_gallery/${galleryId}/submission/${subId}/${answerId}`, getInit('DELETE', null, oidc.user.id_token))
       .then(res => res.json())
       .then(gallery => dispatch(answerRemovedFromGallery(gallery)))
       .catch(error => {
@@ -402,10 +408,9 @@ export const updateFormStatus = (formId, status) => (dispatch, getState) => disp
 });
 
 export const publishFormStatus = (formId, status) => (dispatch, getState) => {
-  const {app} = getState();
-  const options = {method: 'PUT', mode: 'cors'};
+  const {app, oidc} = getState();
 
-  return fetch(`${app.askHost}/v1/form/${formId}/status/${status}`, options)
+  return fetch(`${app.askHost}/v1/form/${formId}/status/${status}`, getInit('PUT', null, oidc.user.id_token))
     .then(res => res.json())
     .then(form => {
       dispatch(updateFormStatus(formId, status));
@@ -473,13 +478,12 @@ export const editAnswer = (edited, submission_id, answer_id, formId) => {
   return (dispatch, getState) => {
     dispatch({type: EDIT_ANSWER_REQUEST});
 
-    const {app} = getState();
+    const {app, oidc} = getState();
 
-    fetch(`${app.askHost}/v1/form/${formId}/submission/${submission_id}/answer/${answer_id}`, {
-      method: 'PUT',
-      mode: 'cors',
-      body: JSON.stringify({edited})
-    })
+    fetch(
+      `${app.askHost}/v1/form/${formId}/submission/${submission_id}/answer/${answer_id}`,
+      getInit('PUT', {edited}, oidc.user.id_token)
+    )
       .then(res => res.json())
       .then(submission => {
         dispatch({type: EDIT_ANSWER_SUCCESS, submission});
@@ -528,7 +532,7 @@ export const toggleIdentifiable = (id, add) => (dispatch, getState) => {
 };
 
 export const publishGallery = () => (dispatch, getState) => {
-  const {app, forms} = getState();
+  const {app, forms, oidc} = getState();
   const { activeGallery } = forms;
   const gallery = forms[activeGallery];
   /*const {
@@ -537,11 +541,7 @@ export const publishGallery = () => (dispatch, getState) => {
   dispatch({type: PUBLISH_GALLERY_REQUEST});
 
 
-  return fetch(`${app.elkhornHost}/gallery/${gallery.id}/publish`, {
-    method: 'POST',
-    headers: new Headers({'Content-Type': 'application/json'}),
-    body: JSON.stringify(gallery)
-  })
+  return fetch(`${app.elkhornHost}/gallery/${gallery.id}/publish`, getInit('POST', gallery, oidc.user.id_token))
   .then(res => res.json())
   .then(gallery => {
     dispatch({type: PUBLISH_GALLERY_SUCCESS, gallery});
@@ -579,13 +579,13 @@ export const reinsertGalleryAnswer = (galleryId, key, position) => ({
 });
 
 export const downloadCSV = formId => (dispatch, getState) => {
-  const { app, forms } = getState();
+  const { app, forms, oidc } = getState();
   const { submissionFilterBy, submissionSearch } = forms;
   const filterBy = submissionFilterBy === 'default' ? '' : submissionFilterBy;
 
-  fetch(`${app.askHost}/v1/form/${formId}/submission/export?filterby=${filterBy}&search=${submissionSearch}`)
+  fetch(`${app.askHost}/v1/form/${formId}/submission/export?filterby=${filterBy}&search=${submissionSearch}`, getInit('GET', null, oidc.user.id_token))
   .then(res => res.json())
   .then(({ csv_url }) => window.open(`${csv_url}&filterby=${filterBy}&search=${submissionSearch}`, '_self')); // download by opening a new tab
-}
+};
 
 export const hasFlag = (submission, flag) => -1 !== submission.flags.indexOf(flag);

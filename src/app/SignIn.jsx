@@ -40,7 +40,7 @@ export default class SignIn extends React.Component {
           style={styles.social('twitter')}><Twitter /> Sign in with Twitter</Button>
         <p style={styles.cta}>Or</p>
         <Textfield style={{width: '100%'}} className="emailSignIn" floatingLabel label='Email address' />
-        <Textfield style={{width: '100%'}} className="emailSignInPassword" floatingLabel label='Password' />
+        <Textfield style={{width: '100%'}} className="emailSignInPassword" type="password" floatingLabel label='Password' />
         <Button className="signInTrigger" style={styles.signIn} raised ripple>Sign in</Button>
         <Link style={styles.forgotPassword} className="forgotPassword" to="forgot-password">Forgot your password?</Link>
         <p style={styles.haveAccount}>Need an account? <Link className="linkToRegister" to="sign-up">Register.</Link></p>

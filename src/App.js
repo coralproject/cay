@@ -23,8 +23,6 @@ import About from 'app/About';
 import SubmissionList from 'app/SubmissionList';
 import GalleryManager from 'app/GalleryManager';
 
-import SignUp from 'app/SignUp';
-import SignIn from 'app/SignIn';
 import Permissions from 'app/Permissions';
 
 /**
@@ -38,8 +36,6 @@ export default ({ store, onLogPageView, defaultRoute, features, userManager }) =
         <Router history={browserHistory} onUpdate={onLogPageView}>
           <Redirect from="/" to={defaultRoute} />
           <Route path="login" component={Login} />
-          <Route path="sign-up" component={SignUp} />
-          <Route path="sign-in" component={SignIn} />
           <Route path="permissions" component={Permissions} />
           <Route path="about" component={About} />
           {features.trust !== false ?

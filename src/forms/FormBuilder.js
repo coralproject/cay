@@ -37,7 +37,7 @@ export default class FormBuilder extends Component {
 
     this.state = {
       openDialog: false,
-      saved: false
+      saved: true
     };
 
     this.onPublishOptions = this.onPublishOptions.bind(this);
@@ -46,6 +46,7 @@ export default class FormBuilder extends Component {
     this.onFormTitleChange = this.onFormTitleChange.bind(this);
     this.markAsUnsaved = this.markAsUnsaved.bind(this);
     this.renderPreview = this.renderPreview.bind(this);
+    this.hookRoute = this.hookRoute.bind(this);
   }
 
   markAsUnsaved() {
@@ -55,14 +56,21 @@ export default class FormBuilder extends Component {
   }
 
   componentDidMount() {
+    console.log('component did mount')
     const { router } = this.context;
     const { route } =  this.props;
+
+    router.setRouteLeaveHook(route, this.hookRoute);
+  }
+
+  hookRoute() {
     const { saved } = this.state;
-    router.setRouteLeaveHook(route, () => {
-      if (!saved) {
-        return 'This form has unsaved changes. Are you sure you want to leave this page?';
-      }
-    });
+    const { leavingEdit } = this.props;
+
+    leavingEdit();
+    if (!saved) {
+      return 'This form has unsaved changes. Are you sure you want to leave this page?';
+    }
   }
 
   render() {

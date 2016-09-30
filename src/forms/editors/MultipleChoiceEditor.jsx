@@ -7,7 +7,7 @@ import CommonFieldOptions from 'forms/CommonFieldOptions';
 import FaCopy from 'react-icons/lib/fa/copy';
 import FaPlusCircle from 'react-icons/lib/fa/plus-circle';
 
-import { CoralIconButton } from '../../components/ui/CoralIconButton';
+import { CoralIconButton } from '../../components/ui';
 
 @connect(({ forms, app }) => ({ forms, app }))
 @Radium

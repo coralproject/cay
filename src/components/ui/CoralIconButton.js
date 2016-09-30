@@ -20,6 +20,7 @@ export default class IconButton extends Component {
     const { onClick, icon, style, disabled, size, ...rest } = this.props;
     return (
       <button
+        className="CoralIconButton"
         onClick={onClick}
         disabled={disabled ? 'disabled' : ''}
         style={[styles.base]}

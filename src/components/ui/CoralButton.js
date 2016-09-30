@@ -45,7 +45,7 @@ export default class CoralButton extends Component {
 
     return (
     <button
-      className={`mdl-button mdl-js-button mdl-button--raised ${className}`}
+      className={`CoralButton mdl-button mdl-js-button mdl-button--raised ${className}`}
       onClick={onClick}
       style={[
         finalStyles,

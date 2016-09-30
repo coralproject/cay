@@ -19,7 +19,7 @@ const styles = {
 
 export const CoralIcon = ({ onClick, icon, style, disabled, ...rest}) => (
   <i
-    className="material-icons"
+    className="CoralIcon material-icons"
     style={[styles.base, style]}
   >
     {icon}

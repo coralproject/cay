@@ -7,17 +7,16 @@ import React, { PropTypes, Component } from 'react';
 import Radium from 'radium';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import { copyForm, deleteForm, fetchForms } from 'forms/FormActions';
-import { mediumGrey, lightGrey, brandColor } from 'settings';
+import { deleteForm, fetchForms } from 'forms/FormActions';
+import { mediumGrey, brandColor } from 'settings';
 import Page from 'app/layout/Page';
-import { Spinner, Button, IconButton, DataTable, TableHeader } from 'react-mdl';
+import { Button, IconButton, DataTable, TableHeader } from 'react-mdl';
 import ContentHeader from 'components/ContentHeader';
-import ButtonGroup from 'components/ButtonGroup';
 import L from 'i18n';
 import moment from 'moment';
 
 // Forms, Widgets, Submissions
-@connect(({ forms }) => ({ forms }))
+@connect(({ oidc, forms }) => ({ oidc, forms }))
 @Radium
 export default class FormList extends Component {
   constructor(props) {
@@ -33,7 +32,20 @@ export default class FormList extends Component {
   };
 
   componentWillMount() {
-    this.props.dispatch(fetchForms());
+    const {oidc, dispatch} = this.props;
+    dispatch(fetchForms());
+
+    if (!oidc.user || oidc.user.expired) {
+      this.context.router.push('/login');
+    }
+  }
+
+  componentWillUpdate() {
+    const {oidc} = this.props;
+    console.log(oidc);
+    if (!oidc.user || oidc.user.expired) {
+      this.context.router.push('/login');
+    }
   }
 
   confirmDeletion(name, description, index, event) {

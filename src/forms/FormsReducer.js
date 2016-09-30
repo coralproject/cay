@@ -11,6 +11,16 @@ import uuid from 'node-uuid';
 
 import * as types from 'forms/FormActions';
 
+import {
+  USER_EXPIRED,
+  REDIRECT_SUCCESS,
+  USER_FOUND,
+  SILENT_RENEW_ERROR,
+  USER_EXPIRING,
+  SESSION_TERMINATED,
+  LOADING_USER
+} from 'redux-oidc';
+
 /**
  * Initial state
  */
@@ -45,7 +55,8 @@ const initial = {
   submissionList: [],
   submissionOrder: 'dsc',
   submissionSearch: '',
-  widgets: []
+  widgets: [],
+  authInvalid: false
 };
 
 /**
@@ -100,6 +111,10 @@ const emptyForm = {
 export default (state = initial, action) => {
 
   switch (action.type) {
+
+  case USER_EXPIRED:
+  case SESSION_TERMINATED:
+    return {...state, authInvalid: 'your session is expired. please log in again'};
 
   case types.FETCH_FORM_REQUEST:
     return {...state, activeForm: null, formLoading: true};

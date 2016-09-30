@@ -1,21 +1,25 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import {CallbackComponent} from 'redux-oidc';
 import {connect} from 'react-redux';
 
 @connect()
 export default class CallbackPage extends React.Component {
 
+  static contextTypes = {
+    router: PropTypes.object.isRequired
+  }
+
   constructor(props) {
     super(props);
     this.successCallback = this.successCallback.bind(this);
   }
 
-  componentWillMount() {
-    console.log('CallbackComponent.componentWillMount');
+  successCallback() {
+    this.context.router.push('/forms');
   }
 
-  successCallback() {
-    console.log('successCallback!');
+  errorCallback(error) {
+    console.error('there was an error handling the token callback', error.message);
   }
 
   render() {

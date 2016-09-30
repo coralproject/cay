@@ -15,7 +15,7 @@ import userManager from 'services/userManager';
  * Store middlewares
  */
 
-const oidcMiddleware = createOidcMiddleware(userManager, null, false, '/callback');
+const oidcMiddleware = createOidcMiddleware(userManager, () => true, true, '/callback');
 const debouncer = createDebounce({ userMangerFilters: 500 });
 const middleware = [thunk, debouncer, oidcMiddleware];
 const devTools = typeof devToolsExtension !== 'undefined' ? devToolsExtension() : f => f;

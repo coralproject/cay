@@ -4,6 +4,7 @@
  */
 
 import cloneDeep from 'lodash/lang/cloneDeep';
+import userManager from 'services/userManager';
 
 /**
  * Action names
@@ -128,6 +129,10 @@ const handleResp = res => {
   }
 };
 
+const authenticated = oidc => {
+  return oidc.user && !oidc.user.expired;
+};
+
 /**
  * Action creators
  */
@@ -187,6 +192,10 @@ const answerRemovedFromGallery = gallery => ({
 export const fetchForms = () => (dispatch, getState) => {
   const {oidc, app} = getState();
 
+  if (!authenticated(oidc)) {
+    return userManager.signoutRedirect();
+  }
+
   dispatch(formsRequestStarted());
 
   return fetch(`${app.askHost}/v1/form`, getInit('GET', null, oidc.user.id_token))
@@ -196,8 +205,13 @@ export const fetchForms = () => (dispatch, getState) => {
 };
 
 export const fetchForm = id => (dispatch, getState) => {
-  dispatch(formRequestStarted(id));
   const {app, oidc} = getState();
+
+  if (!authenticated(oidc)) {
+    return userManager.signoutRedirect();
+  }
+
+  dispatch(formRequestStarted(id));
 
   return fetch(`${app.askHost}/v1/form/${id}`, getInit('GET', null, oidc.user.id_token))
     .then(handleResp)
@@ -216,6 +230,11 @@ export const copyForm = (id) => (dispatch, getState) => {
 
 export const deleteForm = (name, description, id) => (dispatch, getState) => {
   const {app, oidc} = getState();
+
+  if (!authenticated(oidc)) {
+    return userManager.signoutRedirect();
+  }
+
   dispatch(formRequestStarted(id));
   return fetch(`${app.askHost}/v1/form/${id}`, getInit('DELETE', { name, description }, oidc.user.id_token))
     .then(handleResp)
@@ -281,6 +300,11 @@ export const saveForm = (form, widgets) => {
   return (dispatch, getState) => {
 
     const {app, oidc} = getState();
+
+    if (!authenticated(oidc)) {
+      return userManager.signoutRedirect();
+    }
+
     data.settings.saveDestination =  `${app.askHost}/v1/form/${form.id}/submission`;
 
     dispatch({ type: CREATE_INIT_FORM, data });
@@ -297,6 +321,10 @@ export const saveForm = (form, widgets) => {
 export const editForm = form => (dispatch, getState) => {
   const data = {...form};
   const {app, oidc} = getState();
+
+  if (!authenticated(oidc)) {
+    return userManager.signoutRedirect();
+  }
 
   // update save destination on edit to capture config changes
   data.settings.saveDestination = `${app.askHost}/v1/form/${form.id}/submission`;
@@ -317,6 +345,10 @@ export const updateInactiveMessage = (message, form) => (dispatch, getState) => 
 
   const { app, oidc } = getState();
 
+  if (!authenticated(oidc)) {
+    return userManager.signoutRedirect();
+  }
+
   dispatch({ type: UPDATE_FORM_INACTIVE_MESSAGE_REQUEST });
   return fetch(`${app.elkhornHost}/create`, getInit('POST', formData, oidc.user.id_token))
   .then(handleResp)
@@ -334,6 +366,11 @@ export const fetchSubmissions = (formId, page = 0) => (dispatch, getState) => {
   const { submissionOrder, submissionFilterBy, submissionSearch } = forms;
   const filterBy = submissionFilterBy === 'default' ? '' : submissionFilterBy;
   const skip = page * 10;
+
+  if (!authenticated(oidc)) {
+    return userManager.signoutRedirect();
+  }
+
   return fetch(
     `${app.askHost}/v1/form/${formId}/submission?skip=${skip}&limit=10&orderby=${submissionOrder}&filterby=${filterBy}&search=${submissionSearch}`,
     getInit('GET', null, oidc.user.id_token)
@@ -354,6 +391,10 @@ export const updateSubmissionFlags = props => (dispatch, getState) => {
 
   // Create an array with the old and new flags
   const allKeys = keys.concat(forms[activeSubmission].flags);
+
+  if (!authenticated(oidc)) {
+    return userManager.signoutRedirect();
+  }
 
   dispatch(updateActiveSubmission({
     // remove the flags that are for removing and prevent duplicates using a Set
@@ -377,6 +418,10 @@ export const fetchGallery = formId => (dispatch, getState) => {
 
   const {app, oidc} = getState();
 
+  if (!authenticated(oidc)) {
+    return userManager.signoutRedirect();
+  }
+
   fetch(`${app.askHost}/v1/form/${formId}/gallery`, getInit('GET', null, oidc.user.id_token))
     .then(handleResp)
     .then(galleries => dispatch(receivedGallery(galleries[0]))) // we only support 1 gallery
@@ -386,6 +431,10 @@ export const fetchGallery = formId => (dispatch, getState) => {
 export const sendToGallery = (galleryId, subId, answerId) => {
   return (dispatch, getState) => {
     const {app, oidc} = getState();
+
+    if (!authenticated(oidc)) {
+      return userManager.signoutRedirect();
+    }
 
     fetch(`${app.askHost}/v1/form_gallery/${galleryId}/submission/${subId}/${answerId}`, getInit('POST', null, oidc.user.id_token))
       .then(handleResp)
@@ -399,6 +448,10 @@ export const sendToGallery = (galleryId, subId, answerId) => {
 export const removeFromGallery = (galleryId, subId, answerId) => {
   return (dispatch, getState) => {
     const { app, oidc } = getState();
+
+    if (!authenticated(oidc)) {
+      return userManager.signoutRedirect();
+    }
 
     fetch(`${app.askHost}/v1/form_gallery/${galleryId}/submission/${subId}/${answerId}`, getInit('DELETE', null, oidc.user.id_token))
       .then(handleResp)
@@ -417,6 +470,10 @@ export const updateFormStatus = (formId, status) => (dispatch, getState) => disp
 
 export const publishFormStatus = (formId, status) => (dispatch, getState) => {
   const {app, oidc} = getState();
+
+  if (!authenticated(oidc)) {
+    return userManager.signoutRedirect();
+  }
 
   return fetch(`${app.askHost}/v1/form/${formId}/status/${status}`, getInit('PUT', null, oidc.user.id_token))
     .then(handleResp)
@@ -488,6 +545,10 @@ export const editAnswer = (edited, submission_id, answer_id, formId) => {
 
     const {app, oidc} = getState();
 
+    if (!authenticated(oidc)) {
+      return userManager.signoutRedirect();
+    }
+
     fetch(
       `${app.askHost}/v1/form/${formId}/submission/${submission_id}/answer/${answer_id}`,
       getInit('PUT', {edited}, oidc.user.id_token)
@@ -543,11 +604,12 @@ export const publishGallery = () => (dispatch, getState) => {
   const {app, forms, oidc} = getState();
   const { activeGallery } = forms;
   const gallery = forms[activeGallery];
-  /*const {
-    identifiableIds
-  } = forms;*/
-  dispatch({type: PUBLISH_GALLERY_REQUEST});
 
+  if (!authenticated(oidc)) {
+    return userManager.signoutRedirect();
+  }
+
+  dispatch({type: PUBLISH_GALLERY_REQUEST});
 
   return fetch(`${app.elkhornHost}/gallery/${gallery.id}/publish`, getInit('POST', gallery, oidc.user.id_token))
   .then(handleResp)
@@ -590,6 +652,10 @@ export const downloadCSV = formId => (dispatch, getState) => {
   const { app, forms, oidc } = getState();
   const { submissionFilterBy, submissionSearch } = forms;
   const filterBy = submissionFilterBy === 'default' ? '' : submissionFilterBy;
+
+  if (!authenticated(oidc)) {
+    return userManager.signoutRedirect();
+  }
 
   fetch(`${app.askHost}/v1/form/${formId}/submission/export?filterby=${filterBy}&search=${submissionSearch}`, getInit('GET', null, oidc.user.id_token))
   .then(handleResp)

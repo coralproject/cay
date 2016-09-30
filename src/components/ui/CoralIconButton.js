@@ -9,7 +9,7 @@ import Radium from 'radium';
   // TODO(bc): Add support for sizes and icon sizes
 
 @Radium
-class IconButton extends Component {
+export default class IconButton extends Component {
   render() {
     const { onClick, icon, style, disabled, size, ...rest } = this.props;
     return (

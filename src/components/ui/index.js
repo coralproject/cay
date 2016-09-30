@@ -1,3 +1,3 @@
-export { CoralIconButton } from './CoralIconButton';
+export { default as CoralIconButton } from './CoralIconButton';
 export { CoralIcon } from './CoralIcon';
-export { CoralButton } from './CoralButton';
+export { default as CoralButton } from './CoralButton';

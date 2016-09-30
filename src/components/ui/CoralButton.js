@@ -20,7 +20,7 @@ const buildCustomStyle = (customColor) => ({
 })
 
 @Radium
-class Button extends Component {
+export default class CoralButton extends Component {
   render() {
     const { type = 'default', className, onClick, disabled, children, icon, style, active = false, customColor, ...rest } = this.props;
 

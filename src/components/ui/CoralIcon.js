@@ -25,3 +25,7 @@ export const CoralIcon = ({ onClick, icon, style, disabled, ...rest}) => (
     {icon}
   </i>
 );
+
+CoralIcon.propTypes = {
+  icon: PropTypes.string.isRequired
+};

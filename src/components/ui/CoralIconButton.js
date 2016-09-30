@@ -10,6 +10,12 @@ import Radium from 'radium';
 
 @Radium
 export default class IconButton extends Component {
+  static propTypes = {
+    icon: PropTypes.string.isRequired,
+    style: PropTypes.object,
+    disabled: PropTypes.bool
+  };
+
   render() {
     const { onClick, icon, style, disabled, size, ...rest } = this.props;
     return (

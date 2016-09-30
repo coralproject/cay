@@ -186,7 +186,6 @@ export default class SubmissionDetail extends Component {
             </CoralButton>
             <CoralButton
               onClick={() => onBookmark(!bookmarked)}
-              type="custom"
               active={bookmarked}
               type="custom"
               customColor={settings.bookmarkedColor}

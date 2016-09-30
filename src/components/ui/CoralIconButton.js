@@ -58,5 +58,3 @@ const styles = {
     }
   }
 };
-
-export const CoralIconButton = Radium(IconButton);

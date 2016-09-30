@@ -156,5 +156,3 @@ let styles = {
     fontSize: '16px'
   },
 };
-
-export const CoralButton = Radium(Button);

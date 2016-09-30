@@ -2,6 +2,8 @@ import React, { Component,  PropTypes } from 'react';
 import Radium from 'radium';
 import color from 'color';
 
+import { button as buttonSettings } from '../../settings'
+
 const buildCustomStyle = (customColor) => ({
   backgroundColor: customColor,
   color: '#FFFFFF',
@@ -55,7 +57,7 @@ const boxShadowDefault = '0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,
 
 let styles = {
   base: {
-    color: 'white',
+    color: '#ffffff',
     fontSize: '0.9em',
     textTransform: 'none',
     backgroundColor: 'white',
@@ -65,27 +67,34 @@ let styles = {
     ':focus': {
       boxShadow: 'none',
       boxShadow: boxShadowDefault
-    }
+    },
+    ...buttonSettings.base
   },
   success: {
-    backgroundColor: '#00796B'
+    backgroundColor: '#00796B',
+    ...buttonSettings.success
   },
   primary: {
-    backgroundColor: '#0e62eb'
+    backgroundColor: '#0e62eb',
+    ...buttonSettings.primary
   },
   white: {
     color: '#262626',
-    backgroundColor: 'white'
+    backgroundColor: 'white',
+    ...buttonSettings.white
   },
   green: {
-    backgroundColor: '#00796B'
+    backgroundColor: '#00796B',
+    ...buttonSettings.green
   },
   grey: {
-    backgroundColor: '#d8d8d8'
+    backgroundColor: '#d8d8d8',
+    ...buttonSettings.grey
   },
   black: {
     color: 'white',
-    backgroundColor: '#262626'
+    backgroundColor: '#262626',
+    ...buttonSettings.black
   },
   violet: {
     color: '#864F9E',
@@ -96,15 +105,18 @@ let styles = {
       ':hover': {
         backgroundColor: color('#864F9E').lighten(0.2).hexString()
       }
-    }
+    },
+    ...buttonSettings.violet
   },
   blue: {
     color: 'white',
-    backgroundColor: '#0e62eb'
+    backgroundColor: '#0e62eb',
+    ...buttonSettings.blue
   },
   coral: {
     color: 'white',
     backgroundColor: '#F36451',
+    ...buttonSettings.coral
   },
   custom: {
     color: '#262626',
@@ -137,6 +149,7 @@ let styles = {
         backgroundColor: color('#F36451').lighten(0.2).hexString()
       }
     },
+    ...buttonSettings.default
   },
   icon: {
     marginRight: 5,

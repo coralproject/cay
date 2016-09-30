@@ -21,6 +21,15 @@ const buildCustomStyle = (customColor) => ({
 
 @Radium
 export default class CoralButton extends Component {
+  static propTypes = {
+    type: PropTypes.string,
+    icon: PropTypes.string,
+    active: PropTypes.bool,
+    style: PropTypes.object,
+    customColor: PropTypes.string,
+    disabled: PropTypes.bool
+  };
+
   render() {
     const { type = 'default', className, onClick, disabled, children, icon, style, active = false, customColor, ...rest } = this.props;
 

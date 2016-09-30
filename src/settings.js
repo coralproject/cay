@@ -42,8 +42,8 @@ export default {
   infoColor: '#5bc0de',
   warningColor: 'rgb(240, 173, 78)',
   dangerColor: '#d9534f',
-  flaggedColor: 'rgb(217, 83, 79)',
-  bookmarkedColor: 'rgb(46, 151, 102)',
+  flaggedColor: '#F36451',
+  bookmarkedColor: '#00796B',
   button: {
     base: {
       color: '#ffffff'

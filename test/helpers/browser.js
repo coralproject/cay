@@ -1,6 +1,30 @@
 var jsdom = require('jsdom').jsdom;
 var fs = require('fs');
 
+// Storage Mock
+function storageMock() {
+  var storage = {};
+
+  return {
+    setItem: function(key, value) {
+      storage[key] = value || '';
+    },
+    getItem: function(key) {
+      return storage[key] || null;
+    },
+    removeItem: function(key) {
+      delete storage[key];
+    },
+    get length() {
+      return Object.keys(storage).length;
+    },
+    key: function(i) {
+      var keys = Object.keys(storage);
+      return keys[i] || null;
+    }
+  };
+}
+
 global.document = jsdom(fs.readFileSync(__dirname + '/index.test.html'));
 global.window = document.defaultView;
 
@@ -16,6 +40,8 @@ global.navigator = {
 
 global.documentRef = document;
 global.localStorage = {};
+global.sessionStorage = storageMock();
+global.XMLHttpRequest = storageMock();
 
 global.Headers = function(headers) {
   return headers;

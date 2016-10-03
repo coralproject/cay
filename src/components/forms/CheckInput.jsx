@@ -43,10 +43,11 @@ const styles = {
   },
   bottomCheck: {
     display: 'inline-block',
-    padding: '10px 0',
+    fontSize: '10pt',
+    marginBottom: '20px',
     cursor: 'pointer',
     lineHeight: '30px',
-    fontSize: '13px'
+    marginRight: '5px'
   },
   bottomOptions: {
     display: 'flex',

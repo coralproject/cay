@@ -26,3 +26,22 @@
 .mdl-dialog__title {
   font-size: 1.2em;
 }
+
+.mdl-card {
+  padding: 10px 15px 20px;
+  min-height: auto;
+}
+
+.mdl-card__title {
+  padding-bottom: 3px;
+}
+
+.mdl-card__title-text {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.mdl-card__supporting-text {
+  font-size: 16px;
+  padding-top: 3px;
+}

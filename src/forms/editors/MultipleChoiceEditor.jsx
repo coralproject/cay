@@ -4,11 +4,10 @@ import { connect } from 'react-redux';
 
 import CommonFieldOptions from 'forms/CommonFieldOptions';
 
-import FaArrowUp from 'react-icons/lib/fa/arrow-up';
-import FaArrowDown from 'react-icons/lib/fa/arrow-down';
-import FaTrashO from 'react-icons/lib/fa/trash-o';
 import FaCopy from 'react-icons/lib/fa/copy';
 import FaPlusCircle from 'react-icons/lib/fa/plus-circle';
+
+import { CoralIconButton } from '../../components/ui';
 
 @connect(({ forms, app }) => ({ forms, app }))
 @Radium
@@ -131,15 +130,15 @@ export default class MultipleChoiceEditor extends Component {
 
           {/* Action buttons for an option */}
           <div style={ styles.optionRowButtons }>
-            <button style={ styles.optionButton } onClick={ this.duplicateOption.bind(this, i) }><FaCopy /></button>
+            <CoralIconButton icon="content_copy" style={styles.optionButton} onClick={this.duplicateOption.bind(this, i)}  />
             {
               (i > 0) || (i == 0 && this.state.options.length > 1) ?
-                <button style={ styles.optionButton } onClick={ this.removeOption.bind(this, i) }><FaTrashO /></button>
+                <CoralIconButton icon="delete" style={styles.optionButton} onClick={this.removeOption.bind(this, i)} />
               :
-                <button style={ styles.optionButton } disabled><FaTrashO /></button>
+                <CoralIconButton icon="delete" style={ styles.optionButton } disabled />
             }
-            <button disabled={ i == 0 } style={ styles.optionButton } onClick={ this.moveOption.bind(this, i, 'up') }><FaArrowUp /></button>
-            <button disabled={ i == this.state.options.length - 1 } style={ styles.optionButton } onClick={ this.moveOption.bind(this, i, 'down') }><FaArrowDown /></button>
+            <CoralIconButton icon="arrow_upward" disabled={ i == 0 } style={ styles.optionButton } onClick={ this.moveOption.bind(this, i, 'up') } />
+            <CoralIconButton icon="arrow_downward" disabled={ i == this.state.options.length - 1 } style={ styles.optionButton } onClick={ this.moveOption.bind(this, i, 'down') } />
           </div>
 
         </div>
@@ -169,7 +168,6 @@ export default class MultipleChoiceEditor extends Component {
               </div>
             : null
           }
-
           <div style={ styles.optionRow }>
             <div style={ styles.optionRowText }>
               <button style={ styles.addOption } onClick={ this.addOption } className="add-option"><FaPlusCircle /> Add another option</button>
@@ -178,11 +176,8 @@ export default class MultipleChoiceEditor extends Component {
               &nbsp;
             </div>
           </div>
-
         </div>
-
         <div style={ styles.bottomOptions }>
-
           <div style={ styles.bottomOptionsLeft }>
             <label style={ styles.bottomCheck }>
               <input type="checkbox"
@@ -197,15 +192,11 @@ export default class MultipleChoiceEditor extends Component {
                 Allow "Other"
             </label>
           </div>
-
           <CommonFieldOptions {...this.props} />
-
         </div>
-
       </div>
     );
   }
-
 }
 
 const styles = {
@@ -217,30 +208,26 @@ const styles = {
   },
   bottomCheck: {
     display: 'inline-block',
-    padding: '10px 10px 10px 0',
+    paddingRight: '15px',
+    fontSize: '10pt',
     cursor: 'pointer'
   },
   optionButton: {
-    border: 'none',
-    background: 'none',
-    fontSize: '14pt',
-    marginLeft: '10px',
-    padding: '0px',
     cursor: 'pointer'
   },
   addOption: {
+    fontFamily: 'Roboto',
     display: 'block',
     height: '40px',
-    lineHeight: '40px',
-    padding: '0px 10px',
-    fontSize: '12pt',
-    borderRadius: '0px',
-    border: '1px dashed #ccc',
+    borderRadius: '4px',
+    border: '1px dashed #d8d8d8',
     background: '#fff',
     cursor: 'pointer',
     width: '100%',
     textAlign: 'left',
-    color: '#999'
+    color: '#999',
+    padding: '10px 15px',
+    fontSize: '10pt'
   },
   optionRow: {
     marginBottom: '10px',
@@ -250,14 +237,16 @@ const styles = {
     flexGrow: '2'
   },
   optionRowButtons: {
-    paddingTop: '10px',
+    paddingTop: '8px',
     width: '120px'
   },
   optionInput: {
     display: 'block',
-    padding: '10px',
-    fontSize: '12pt',
-    width: '100%'
+    padding: '10px 15px',
+    fontSize: '10pt',
+    width: '100%',
+    borderRadius: '4px',
+    border: '1px solid #d8d8d8'
   },
   bottomOptions: {
     display: 'flex',
@@ -271,10 +260,10 @@ const styles = {
     display: 'block',
     height: '40px',
     lineHeight: '40px',
-    padding: '0px 10px',
-    fontSize: '12pt',
-    borderRadius: '0px',
-    border: '1px solid #ddd',
+    padding: '10px 15px',
+    fontSize: '10pt',
+    borderRadius: '4px',
+    border: '1px dashed #d8d8d8',
     background: '#fff',
     width: '100%',
     textAlign: 'left',

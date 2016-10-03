@@ -106,7 +106,6 @@ export default class GalleryManager extends Component {
             value={gallery.headline}
             placeholder="Write a headline"
             onChange={this.setHeadline} />
-          <br />
           <input
             style={styles.galleryTitles}
             type="text"
@@ -536,13 +535,17 @@ const styles = {
     right: 20
   },
   galleryTitles: {
+    fontFamily: 'Roboto',
     borderRadius: 4,
-    border: '1px solid ' + settings.mediumGrey,
-    width: '75%',
-    padding: 10,
-    height: '100%',
-    fontSize: '18px',
-    display: 'block'
+    border: `1px solid ${settings.mediumGrey}`,
+    width: '72%',
+    height: 40,
+    padding: '10px 15px',
+    fontSize: '14.4px',
+    display: 'block',
+    marginBottom: 10,
+    resize: 'none',
+    overflow: 'hidden'
   },
   orientationOpts: {
     display: 'inline-block',

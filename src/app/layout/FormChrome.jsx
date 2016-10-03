@@ -14,6 +14,8 @@ import RadioButton from 'components/forms/RadioButton';
 import Spinner from 'components/Spinner';
 import { Button } from 'react-mdl';
 
+import { CoralButton } from '../../components/ui';
+
 import settings from 'settings';
 
 @connect(({ forms }) => ({ forms }))
@@ -237,6 +239,7 @@ export default class FormChrome extends React.Component {
                 onClick={this.props.updateStatus} />
               <div style={styles.closeStatusHolder}>
                 <RadioButton
+                  className="form-status-closed-option"
                   value="closed"
                   label="Closed"
                   style={styles.closeRadio}
@@ -247,13 +250,17 @@ export default class FormChrome extends React.Component {
                   style={styles.statusMessage}
                   defaultValue={form.settings.inactiveMessage}></textarea>
                 <div style={styles.forceRight}>
-                  <Button raised onClick={ this.onApplyClick }>
+                  <CoralButton
+                    type="coral"
+                    className="form-status-apply-button"
+                    onClick={ this.onApplyClick }
+                  >
                     { forms.savingForm
                       ? <span><Spinner /> </span>
                       : null
                     }
                     Apply
-                  </Button>
+                  </CoralButton>
                 </div>
                 <div style={this.getLoaderStyles(this, true)}></div>
                 <div style={this.getLoaderStyles()}></div>
@@ -348,6 +355,7 @@ const styles = {
     right: 29
   },
   openRadio: {
+    fontFamily: 'Roboto',
     width: '100%',
     padding: 20,
     borderBottom: '1px solid ' + settings.mediumGrey
@@ -356,9 +364,11 @@ const styles = {
     padding: 20
   },
   closeRadio: {
+    fontFamily: 'Roboto',
     marginBottom: 15
   },
   statusMessage: {
+    fontFamily: 'Roboto',
     border: '1px solid ' + settings.mediumGrey,
     fontSize: '14px',
     marginBottom: 10,

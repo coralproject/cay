@@ -24,6 +24,8 @@ import GalleryManager from 'app/GalleryManager';
 
 import SignUp from 'app/SignUp';
 import SignIn from 'app/SignIn';
+import ForgotPassword from 'app/ForgotPassword';
+import ResetPassword from 'app/ResetPassword';
 import Permissions from 'app/Permissions';
 
 /**
@@ -38,6 +40,8 @@ export default ({ store, onLogPageView, defaultRoute, features }) => (
         <Route path="login" component={Login} />
         <Route path="sign-up" component={SignUp} />
         <Route path="sign-in" component={SignIn} />
+        <Route path="forgot-password" component={ForgotPassword} />
+        <Route path="reset-password" component={ResetPassword} />
         <Route path="permissions" component={Permissions} />
         <Route path="about" component={About} />
         {features.trust !== false ?

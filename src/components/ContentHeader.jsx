@@ -11,7 +11,7 @@ class ContentHeader extends React.Component {
     return (
       <section style={[styles.base, this.props.style]}>
         <Heading fontWeight="600"
-          size="large"
+          size="medium"
           subhead={this.props.subhead ? this.props.subhead : ''}>
           { L.t(this.props.title) }
         </Heading>

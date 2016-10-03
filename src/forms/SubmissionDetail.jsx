@@ -9,6 +9,8 @@ import settings from 'settings';
 import { Button, Icon, Card, CardTitle, CardActions, CardText } from 'react-mdl';
 import { hasFlag, updateSubmissionFlags } from 'forms/FormActions';
 
+import { CoralButton, CoralIcon } from '../components/ui';
+
 @Radium
 export default class SubmissionDetail extends Component {
   render() {
@@ -69,13 +71,15 @@ export default class SubmissionDetail extends Component {
               <Card style={styles.answerCard} key={key}>
                 <CardTitle>{reply.question}</CardTitle>
                 <CardText>{this.renderAnswer(reply)}</CardText>
-                <CardActions style={styles.answerActions} border>
-                  <Button colored onClick={modAnswer.bind(this, gallery.id, submission.id, reply.widget_id)}>
-                    { inGallery ?
-                        <span>Remove from Gallery <Icon name='delete' /></span> :
-                        <span>Send to gallery <Icon name='send' /></span>
-                    }
-                  </Button>
+                <CardActions style={styles.answerActions}>
+                  <CoralButton
+                    type="violet"
+                    icon={inGallery ? 'delete' : 'send'}
+                    active={inGallery}
+                    onClick={modAnswer.bind(this, gallery.id, submission.id, reply.widget_id)}
+                  >
+                    { inGallery ? 'Remove from Gallery' : 'Send to gallery' }
+                  </CoralButton>
                 </CardActions>
               </Card>
             );
@@ -171,12 +175,23 @@ export default class SubmissionDetail extends Component {
             <span style={styles.subNum}>{submission.number || ''}</span> {moment(submission.date_created).format('L LT')}
           </div>
           <div style={styles.headerButtons}>
-            <Button raised onClick={() => onFlag(!flagged)} style={styles.headButton(flagged, settings.flaggedColor)}>
-              Flag{flagged ? 'ged' : ''} <Icon name='flag' style={styles.headIcon(flagged, settings.flaggedColor)} />
-            </Button>
-            <Button raised onClick={() => onBookmark(!bookmarked)} style={styles.headButton(bookmarked, settings.bookmarkedColor)}>
-              Bookmark{bookmarked ? 'ed' : ''} <Icon name='bookmark' style={styles.headIcon(bookmarked, settings.bookmarkedColor)} />
-            </Button>
+            <CoralButton
+              style={{ marginRight: 10 }}
+              onClick={() => onFlag(!flagged)}
+              active={flagged}
+              type="custom"
+              customColor={settings.flaggedColor}
+            >
+              <CoralIcon icon='flag' style={styles.headIcon(flagged, settings.flaggedColor)} /> Flag{flagged ? 'ged' : ''}
+            </CoralButton>
+            <CoralButton
+              onClick={() => onBookmark(!bookmarked)}
+              active={bookmarked}
+              type="custom"
+              customColor={settings.bookmarkedColor}
+              >
+              <CoralIcon icon='bookmark' style={styles.headIcon(bookmarked, settings.bookmarkedColor)} /> Bookmark{bookmarked ? 'ed' : ''}
+            </CoralButton>
           </div>
         </div>
         <div style={styles.hr}></div>
@@ -271,18 +286,15 @@ const styles = {
   answerCard: {
     width: '100%',
     marginBottom: 20,
-    borderRadius: 4,
-    border: '1px solid ' + settings.mediumGrey
+    border: '1px solid ' + settings.mediumGrey,
+    backgroundColor: 'rgb(255, 255, 255)',
+    boxShadow: 'rgb(155, 155, 155) 0px 1px 3px',
+    borderTopLeftRadius: 4,
+    borderTopRightRadius: 4,
+    borderBottom: '2px solid rgb(216, 216, 216)'
   },
   headIcon(flagged, color) {
-    return { color: flagged ? '#fff': color };
-  },
-  headButton(flagged, color) {
-    return {
-      background: flagged ? color : '#fff',
-      marginLeft: 20,
-      color: flagged ? '#fff' : '#000'
-    };
+    return { color: !flagged ? '#fff': color };
   },
   answerActions: {
     textAlign: 'right'

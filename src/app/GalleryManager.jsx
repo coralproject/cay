@@ -42,11 +42,8 @@ import Card from 'components/cards/Card';
 import CardHeader from 'components/cards/CardHeader';
 import GalleryPreview from 'forms/GalleryPreview';
 
-//import TextField from 'components/forms/TextField';
-//import Button from 'components/Button';
-
-import { Button, Textfield } from 'react-mdl';
-
+import TextField from 'components/forms/TextField';
+import Button from 'components/Button';
 import Modal from 'components/modal/Modal';
 
 import GalleryAnswer from 'forms/GalleryAnswer';
@@ -107,13 +104,12 @@ export default class GalleryManager extends Component {
             style={styles.galleryTitles}
             type="text"
             value={gallery.headline}
-            placeholder="Headline"
+            placeholder="Write a headline"
             onChange={this.setHeadline} />
-          <br />
           <input
             style={styles.galleryTitles}
             type="text"
-            placeholder="Description"
+            placeholder="Write a subhead for your gallery"
             onChange={this.setDescription} />
         </div>
         {gallery.answers.map((answer, i) => (
@@ -288,9 +284,9 @@ export default class GalleryManager extends Component {
   }
 
   resetText(ans) {
-    ans.identity_answers ? ans.identity_answers.forEach(answer => {
+    ans.identity_answers.forEach(answer => {
       this.props.dispatch(updateEditablePii(ans, answer, answer.answer.text || ''));
-    }) : null;
+    });
     this.props.dispatch(resetEditableTextToOriginal(ans));
   }
 
@@ -364,7 +360,7 @@ export default class GalleryManager extends Component {
           <div style={styles.container}>
             <div style={styles.sidebar}>
               <Card>
-                <CardHeader>Reader Information</CardHeader>
+                <CardHeader titleStyle={styles.readerInfoLabel}>Reader Information</CardHeader>
 
                 <p style={styles.includeLabel}>Placement</p>
                 <Select
@@ -387,8 +383,9 @@ export default class GalleryManager extends Component {
                       onChange={this.updateIdentifiable.bind(this, field.id, !isChecked)}
                       type="checkbox"
                       checked={isChecked}
+                      style={ styles.includeCheck }
                       key={i} />
-                    {field.title}
+                    <span style={ styles.includeText }>{field.title}</span>
                   </label>
                 );
               })}
@@ -399,8 +396,8 @@ export default class GalleryManager extends Component {
                  form={form}
                  forms={forms}
                  hideOptions={!forms.activeGallery || !forms[forms.activeGallery].config.baseUrl}
-            		 activeForm={forms.activeForm}
-            		 isGallery={true}
+                 activeForm={forms.activeForm}
+                 isGallery={true}
                  onOpenPreview={this.togglePreview.bind(this)}
                  onSaveClick={this.onSaveClick.bind(this)}
                  scriptCode={this.createEmbed('script-tag')}
@@ -423,56 +420,42 @@ export default class GalleryManager extends Component {
         {/* this is the Edit Answer modal */}
         {
           ans
-            ? <Modal
-                noFooter
-                style={styles.replyModal.base}
-                title="Publish Options"
-                cancelAction={this.cancelEdit}
-                isOpen={ans}>
-
-                <div style={styles.replyModal.content}>
-                  <div style={ styles.replyModal.question }>
-                    <p style={styles.replyModal.subhead}>Question</p>
+            ? <div style={styles.replyModal}>
+              <div style={styles.replyModal.container}>
+                <div
+                  onClick={this.cancelEdit}
+                  key="closebutton"
+                  style={styles.replyModal.close}>×</div>
+                <p style={styles.replyModal.heading}>Edit Submission</p>
+                <div style={styles.replyModal.panels}>
+                  <div style={styles.replyModal.leftPanel}>
+                    <p style={styles.replyModal.subhead}>Original Submission</p>
                     <p style={styles.replyModal.originalQuestion}>{ans.answer.question}</p>
+                    <p style={styles.replyModal.originalText}>{ans.answer.answer.text}</p>
                   </div>
-                  <div style={styles.replyModal.panels}>
-                    <div style={styles.replyModal.leftPanel}>
-                      <p style={styles.replyModal.subhead}>Original Submission</p>
-                      <p style={styles.replyModal.originalText}>{ans.answer.answer.text}</p>
-                    </div>
-                    <div style={styles.replyModal.rightPanel}>
-                      <p style={styles.replyModal.subhead}>
-                        Edit
-                        <a
-                          key="resetButton"
-                          onClick={this.resetText.bind(this, ans)}
-                          style={styles.replyModal.resetButton}>Reset Changes</a>
-                      </p>
-                      <textarea
-                        onChange={this.updateEditableAnswer}
-                        style={styles.replyModal.editText}
-                        value={forms.editableAnswer}></textarea>
-                      {this.renderIdentityAnswers(ans, forms.editablePii)}
-                      <div style={styles.replyModal.footer}>
-                        <Button
-                          raised ripple
-                          onClick={this.cancelEdit}
-                          style={{ marginRight: 10 }}>
-                          Cancel
-                        </Button>
-                        <Button
-                          style={{ backgroundColor: '#358D66' }}
-                          raised ripple colored
-                          onClick={this.confirmEdit.bind(this, ans)}>
-                          { forms.savingForm || forms.loadingGallery ? <Spinner/> : null } Save Changes
-                        </Button>
-
-                      </div>
+                  <div style={styles.replyModal.rightPanel}>
+                    <p style={styles.replyModal.subhead}>Edit</p>
+                    <textarea
+                      onChange={this.updateEditableAnswer}
+                      style={styles.replyModal.editText}
+                      value={forms.editableAnswer}></textarea>
+                    {this.renderIdentityAnswers(ans, forms.editablePii)}
+                    <div style={styles.replyModal.footer}>
+                      <p
+                        key="resetButton"
+                        onClick={this.resetText.bind(this, ans)}
+                        style={styles.replyModal.resetButton}>Reset Changes</p>
+                      <Button onClick={this.cancelEdit}><Times /> Cancel</Button>
+                      <Button
+                        onClick={this.confirmEdit.bind(this, ans)}
+                        category="success"
+                        style={styles.replyModal.save}>
+                        <FloppyO /> Save Edits</Button>
                     </div>
                   </div>
                 </div>
-
-              </Modal>
+              </div>
+            </div>
             : null
         }
 
@@ -552,13 +535,17 @@ const styles = {
     right: 20
   },
   galleryTitles: {
+    fontFamily: 'Roboto',
     borderRadius: 4,
-    border: '1px solid ' + settings.mediumGrey,
-    width: '75%',
-    padding: 10,
-    height: '100%',
-    fontSize: '18px',
-    display: 'block'
+    border: `1px solid ${settings.mediumGrey}`,
+    width: '72%',
+    height: 40,
+    padding: '10px 15px',
+    fontSize: '14.4px',
+    display: 'block',
+    marginBottom: 10,
+    resize: 'none',
+    overflow: 'hidden'
   },
   orientationOpts: {
     display: 'inline-block',
@@ -570,12 +557,14 @@ const styles = {
     marginBottom: 10
   },
   includeLabel: {
-    marginBottom: 5
+    marginBottom: 5,
+    fontSize: '1em'
   },
   idLabel: {
-    display: 'block',
+    display: 'flex',
     cursor: 'pointer',
-    marginBottom: 5
+    marginBottom: 5,
+    flexDirection: 'row'
   },
   embedCodes: {
     backgroundColor: settings.darkGrey,
@@ -602,11 +591,22 @@ const styles = {
   },
 
   replyModal: {
-    content: {
-      padding: '0 10px',
-    },
-    question: {
-      display: 'block'
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'fixed',
+    zIndex: 100,
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+
+    container: {
+      padding: 20,
+      minWidth: 800,
+      backgroundColor: 'white',
+      position: 'relative'
     },
     close: {
       position: 'absolute',
@@ -625,10 +625,9 @@ const styles = {
       fontSize: 30
     },
     subhead: {
-      color: settings.darkColorBase,
-      fontSize: '1.1em',
-      fontWeight: 'bold',
-      marginBottom: '10px'
+      color: settings.brandColor,
+      fontSize: 16,
+      fontWeight: 'bold'
     },
     panels: {
       display: 'flex'
@@ -641,31 +640,36 @@ const styles = {
       flex: 1
     },
     originalQuestion: {
-      fontSize: '1em',
-      marginBottom: '10px'
-    },
-    originalText: {
-      fontSize: '1em'
+      fontSize: 20
     },
     editText: {
       width: '100%',
       height: 100,
-      fontSize: '1em',
+      fontSize: '16px',
       padding: 8
     },
     footer: {
       marginTop: 10,
-      display: 'block',
-      textAlign: 'right'
+      display: 'flex'
     },
     resetButton: {
-      'float': 'right',
-      fontWeight: 'normal',
-      color: '#7DABF4',
-      cursor: 'pointer'
+      flex: 1,
+      fontWeight: 'bold',
+      cursor: 'pointer',
+      fontStyle: 'italic',
+      color: settings.grey,
+      ':hover': {
+        color: 'black'
+      }
     },
     save: {
       marginLeft: 10
     }
+  },
+  readerInfoLabel: {
+    fontSize: '1.2em'
+  },
+  includeCheck: {
+    marginRight: '10px'
   }
 };

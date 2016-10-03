@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 import CommonFieldOptions from 'forms/CommonFieldOptions'
 
-import editWidgetStyles from 'forms/editors/editWidgetStyles'
+import editWidgetStyles from 'forms/editors/EditWidgetStyles'
 import CheckInput from '../../components/forms/CheckInput'
 
 @connect(({ forms, app }) => ({ forms, app }))
@@ -100,7 +100,8 @@ export default class TextAreaEditor extends Component {
         }
         <div style={styles.bottomOptions}>
           <div style={styles.bottomOptionsLeft}>
-            { /* <CheckInput
+            <CheckInput
+              className="form-min-limit"
               label={'Min. Chars'}
               enabled={minLengthEnabled}
               handleCheckbox={ (e) => this.handleCheckboxChange(e, 'minLength') }
@@ -108,12 +109,13 @@ export default class TextAreaEditor extends Component {
               defaultValue={field.props.minLength}
             />
             <CheckInput
+              className="form-max-limit"
               label={'Max. Chars'}
               enabled={maxLengthEnabled}
               handleCheckbox={ (e) => this.handleCheckboxChange(e, 'maxLength') }
               handleInput={handleMaxInput}
               defaultValue={field.props.maxLength}
-            /> */ }
+            />
           </div>
           <CommonFieldOptions
             {...this.props}

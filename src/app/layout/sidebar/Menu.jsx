@@ -7,7 +7,7 @@ import React from 'react';
 import Radium from 'radium';
 import { Link } from 'react-router';
 
-import MenuItem from 'app/layout/Sidebar/MenuItem';
+import MenuItem from 'app/layout/sidebar/MenuItem';
 import FaCog from 'react-icons/lib/fa/cog';
 import FaBug from 'react-icons/lib/fa/bug';
 import FaAngleDoubleLeft from 'react-icons/lib/fa/angle-double-left';

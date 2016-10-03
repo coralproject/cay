@@ -2,7 +2,6 @@ import React, {Component, PropTypes} from 'react'
 import { connect } from 'react-redux'
 import Radium from 'radium'
 
-// Icons
 import FaTrash from 'react-icons/lib/fa/trash';
 import FaClose from 'react-icons/lib/fa/close';
 import FaFloppyO from 'react-icons/lib/fa/floppy-o';
@@ -10,6 +9,8 @@ import FaArrowUp from 'react-icons/lib/fa/arrow-up';
 import FaArrowDown from 'react-icons/lib/fa/arrow-down';
 import FaUser from 'react-icons/lib/fa/user';
 import FaCopy from 'react-icons/lib/fa/copy';
+
+import { CoralButton, CoralIconButton } from '../components/ui';
 
 // DnD dependencies
 import { DragSource } from 'react-dnd';
@@ -146,7 +147,7 @@ export default class FormField extends Component {
   render() {
     const { connectDragPreview } = this.props;
     return connectDragPreview(
-      <div>
+      <div style={ styles.fieldWrapper }>
         { this.renderContainer() }
       </div>
     );
@@ -187,14 +188,12 @@ export default class FormField extends Component {
             ? this.renderExpanded()
             : null
           }
-
           <div style={styles.arrowContainer}>
-            <button style={styles.copy} onClick={ onDuplicate.bind(this, position) }><FaCopy /></button>
-            <button className="form-delete-widget-button" style={styles.delete} onClick={ onDelete.bind(this, position) }><FaTrash /></button>
-            <button onClick={ position !== 0 ? onMove.bind(this, 'up', position) : null } style={styles.arrow} disabled={position === 0}><FaArrowUp /></button>
-            <button onClick={ !isLast ? onMove.bind(this, 'down', position) : null } style={styles.arrow} disabled={!!isLast}><FaArrowDown /></button>
+            <CoralIconButton icon="content_copy" onClick={ onDuplicate.bind(this, position) } />
+            <CoralIconButton icon="delete" className="form-delete-widget-button" onClick={ onDelete.bind(this, position) } />
+            <CoralIconButton icon="arrow_upward" onClick={ position !== 0 ? onMove.bind(this, 'up', position) : null } disabled={position === 0} />
+            <CoralIconButton icon="arrow_downward" onClick={ !isLast ? onMove.bind(this, 'down', position) : null } disabled={!!isLast} />
           </div>
-
         </div>
       </div>
     );
@@ -206,12 +205,11 @@ export default class FormField extends Component {
     const { onTitleChange, onDescriptionChange, onCancelClick, onSaveClick, onKeyUp } = this;
     return  (
       <div className="widget-expanded" style={ styles.editSettingsPanel } onKeyUp={onKeyUp}>
-
         <div style={ styles.titleAndDescription }>
           <input
             className="field-title"
             onChange={onTitleChange}
-            style={ styles.fieldTitle }
+            style={[styles.inputField, styles.fieldTitle]}
             defaultValue={ field.title }
             type="text"
             placeholder={ `Ask readers a question` }
@@ -220,8 +218,8 @@ export default class FormField extends Component {
           <input
             className="field-description"
             onChange={onDescriptionChange}
-            defaultValue={ field.description }
-            style={ styles.fieldDescription }
+            defaultValue={field.description}
+            style={[styles.inputField, styles.fieldDescription]}
             type="text"
             placeholder="Description text (optional)" />
         </div>
@@ -229,40 +227,56 @@ export default class FormField extends Component {
         { this.getFieldEditor() }
 
         <div style={ styles.bottomButtons }>
-          <button className="field-close-button" style={ styles.cancelButton } onClick={onCancelClick}><FaClose /> Cancel</button>
-          <button
-            className="field-close-button save-button"
-            style={ [ styles.saveButton, field.error ? styles.saveButton.disabled : null ] }
-            onClick={onSaveClick}
-            disabled={ field.error ? 'disabled' : '' }
+          <CoralButton
+            className="field-close-button"
+            icon="clear"
+            type="white"
+            onClick={onCancelClick}
+            style={{ marginRight: 10 }}
           >
-            <FaFloppyO />
-            Save
-          </button>
-        </div>
+            Cancel
+          </CoralButton>
 
+          <CoralButton
+            className="save-button"
+            type="success"
+            icon="done"
+            onClick={onSaveClick}
+            disabled={field.error}
+          >
+            Save
+          </CoralButton>
+        </div>
       </div>
     );
   }
-
 }
 
 export const styles = {
+  base: {
+    fontFamily: 'Roboto'
+  },
   fieldContainer: function(isExpanded) {
     return {
+      fontFamily: 'Roboto',
       display: 'flex',
       justifyContent: 'flex-start',
       alignItems: 'top',
-      backgroundColor: '#fff',
+      backgroundColor: 'none',
       width: '100%',
-      boxShadow: '0 1px 3px #9B9B9B',
-      borderRadius: 4,
       height: !isExpanded ? '50px' : 'auto',
       lineHeight: '1',
       cursor: 'pointer',
       flexDirection: 'row',
       position: 'relative'
     };
+  },
+  fieldWrapper: {
+    backgroundColor: '#fff',
+    boxShadow: '0 1px 3px #9B9B9B',
+    borderTopLeftRadius: 4,
+    borderTopRightRadius: 4,
+    borderBottom: 'solid 2px #d8d8d8'
   },
   fieldHeader: {
     display: 'flex',
@@ -274,6 +288,7 @@ export const styles = {
     flexGrow: 2
   },
   fieldIcon: {
+    color: '#262626',
     width: '40px',
     padding: '14px 10px',
     display: 'inline-block',
@@ -284,7 +299,7 @@ export const styles = {
   fieldTitleHeader: {
     flex: 1,
     alignSelf: 'flex-start',
-    padding: '15px 10px 15px 0'
+    padding: '15px 10px 15px 5px'
   },
   editBody: {
     flex: 1,
@@ -293,11 +308,11 @@ export const styles = {
   },
   arrowContainer: {
     position: 'absolute',
-    top: '8px',
+    top: 10,
     paddingLeft: 15,
     background: 'linear-gradient(to right, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 10%,rgba(255,255,255,1) 100%)',
-    right: 0,
-    paddingRight: 20
+    right: 5,
+    paddingRight: 5
   },
   arrow: {
     width: '30px',
@@ -345,69 +360,40 @@ export const styles = {
     left: '0px',
     width: '100%',
     height: 'auto',
-    padding: '10px 20px 20px 0px',
-    backgroundColor: 'white'
-  },
-  saveButton: {
-    display: 'inline-block',
-    fontSize: '11pt',
-    height: '40px',
-    color: 'white',
-    background: '#36B278',
-    border: 'none',
-    borderRadius: '4px',
-    marginTop: '10px',
-    lineHeight: '40px',
-    textAlign: 'center',
-    cursor: 'pointer',
-    padding: '0 20px',
-    marginLeft: '10px',
-    disabled: {
-      background: 'grey'
-    }
-  },
-  cancelButton: {
-    fontSize: '11pt',
-    height: '40px',
-    color: '#777',
-    background: 'white',
-    border: '1px solid #ccc',
-    borderRadius: '4px',
-    marginTop: '10px',
-    lineHeight: '40px',
-    textAlign: 'center',
-    cursor: 'pointer',
-    padding: '0 20px',
-    marginLeft: '10px'
+    padding: '10px 22px 30px 0px',
   },
   label: {
     display: 'block',
     width: '100%',
     marginBottom: '10px'
   },
-  fieldTitle: {
+  inputField: {
+    fontFamily: 'Roboto',
     fontSize: '12pt',
-    padding: '5px 0',
-    width: '75%',
-    display: 'block',
-    border: 'none',
-    background: 'none'
-  },
-  fieldDescription: {
-    fontSize: '11pt',
-    padding: '5px 0',
-    marginBottom: '20px',
     width: '50%',
     display: 'block',
     border: 'none',
-    background: 'none'
+    background: 'none',
+    boxSizing: 'border-box',
+  },
+  fieldTitle: {
+    width: '75%',
+    fontSize: '12pt',
+    minHeight: '32px',
+    marginTop: '-3px'
+},
+  fieldDescription: {
+    fontSize: '10pt',
+    width: '100%',
+    minHeight: '40px',
+    marginBottom: '30px'
   },
   fieldPosition: {
-    background: 'repeating-linear-gradient( -45deg, #dbdbdb, #dbdbdb 10px, #eee 10px, #eee 20px )',
+    background: 'none',
     cursor: 'move',
     alignSelf: 'flex-start',
     fontWeight: 'normal',
-    padding: '15px 15px',
+    padding: '18px 12px',
     textAlign: 'center',
     borderRight: '1px solid #ddd',
     height: '100%',
@@ -424,7 +410,7 @@ export const styles = {
     padding: '20px 0'
   },
   identityLabel: {
-    color: '#333',
+    color: '#262626',
     padding: '0 5px',
     marginLeft: '5px',
     display: 'inline-block'

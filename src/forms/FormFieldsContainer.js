@@ -221,7 +221,7 @@ export default class FormFieldsContainer extends Component {
 const styles = {
   blankContainer: {
     background: '#fff',
-    border: '1px dashed #ccc',
+    border: `1px dashed ${settings.mediumGrey}`,
     width: '100%'
   },
   blankTitle: {
@@ -256,18 +256,22 @@ const styles = {
     paddingLeft: 5
   },
   formTitles: {
+    fontFamily: 'Roboto',
     borderRadius: 4,
-    border: '1px solid ' + settings.mediumGrey,
-    width: '75%',
-    height: '40px',
-    padding: 10,
-    fontSize: '18px',
+    border: `1px solid ${settings.mediumGrey}`,
+    width: '72%',
+    height: 40,
+    padding: '10px 15px',
+    fontSize: '14.4px',
     display: 'block',
-    marginBottom: '20px'
+    marginBottom: 10,
+    resize: 'none',
+    overflow: 'hidden'
   },
   description: {
+    fontFamily: 'Roboto',
     fontSize: '1em',
-    marginBottom: '15px',
+    marginBottom: 15,
     width: '100%',
     display: 'block',
     border: 'none',
@@ -275,11 +279,12 @@ const styles = {
     resize: 'none'
   },
   extraFieldTextArea: {
+    fontFamily: 'Roboto',
     display: 'block',
     width: '100%',
-    padding: '10px',
+    padding: 10,
     fontSize: '12pt',
-    border: '1px solid #ddd'
+    border: `1px solid ${settings.mediumGrey}`,
   },
   extraFieldTitle: {
     fontSize: '1em',

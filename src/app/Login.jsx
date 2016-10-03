@@ -34,7 +34,7 @@ export default class Login extends React.Component {
     return (
       <div style={styles.base}>
         <div style={styles.loginModal}>
-          <img style={styles.logo} src="./img/logomark_512x512.svg" />
+          <img style={styles.logo} src="/img/logomark_512x512.svg" />
           <p style={styles.welcome}>Welcome to</p>
           <p style={styles.projectName}>The Coral Project</p>
           <div style={styles.container}>

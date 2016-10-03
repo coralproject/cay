@@ -2,9 +2,9 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { Button, Tabs, Tab, RadioGroup, Radio, Textfield } from 'react-mdl';
+import { CoralButton } from '../components/ui';
 
 import Spinner from 'components/Spinner';
-
 import CopyToClipboard from 'react-copy-to-clipboard';
 
 import {
@@ -90,30 +90,38 @@ export default class PublishOptions extends Component {
       <div style={styles.leftPan}>
 
           <div>
-            <Button
-              raised ripple primary
+            <CoralButton
               className="form-preview-button"
+              type="primary"
+              icon="visibility"
               onClick={onOpenPreview}
-              style={{ width: 150, marginRight: 10, backgroundColor: '#4565A1' }}>
+              style={{ width: 150, marginRight: 10 }}
+            >
               Preview
-            </Button>
-            <Button
+            </CoralButton>
+
+            <CoralButton
               className="form-save-button"
-              style={{ width: 150, backgroundColor: '#358D66' }}
-              raised ripple colored
-              onClick={onSaveClick}>
-              { forms.savingForm || forms.loadingGallery ? <Spinner/> : null } Save
-            </Button>
+              type="success"
+              icon="done"
+              style={{ width: 150 }}
+              onClick={onSaveClick}
+            >
+              {`Save `}
+              { forms.savingForm || forms.loadingGallery ? <Spinner/> : null }
+            </CoralButton>
 
             {
               activeForm && !hideOptions
-              ? <Button
+              ? <CoralButton
                   className="form-publish-button"
-                  style={{ width: 310, marginTop: 10, backgroundColor: '#353B43' }}
-                  raised ripple accent
-                  onClick={this.togglePublishModal}>
+                  icon="settings"
+                  type="black"
+                  style={{ width: 310, marginTop: 10 }}
+                  onClick={this.togglePublishModal}
+                >
                   Publish options
-                </Button>
+                </CoralButton>
               : null
             }
 

@@ -8,7 +8,7 @@ import Radium from 'radium';
 import { connect } from 'react-redux';
 
 import { bgColorBase } from 'settings';
-import Menu from 'app/layout/Sidebar/Menu';
+import Menu from 'app/layout/sidebar/Menu';
 
 /**
  * Module scope variables

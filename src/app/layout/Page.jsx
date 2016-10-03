@@ -6,8 +6,8 @@ and all the other smart components (containers)
 */
 import React from 'react';
 import Radium from 'radium';
-import Sidebar from 'app/layout/Sidebar';
 import {Snackbar} from 'react-mdl';
+import Sidebar from 'app/layout/sidebar';
 
 import Header from 'app/layout/header/Header';
 import FlashMessages from 'flashmessages/FlashMessages';
@@ -17,8 +17,15 @@ import settings from 'settings';
 @Radium
 export default class Page extends React.Component {
 
-  handleSnackbarTimeout() {
+  constructor(props) {
+    super(props);
+    this.state = {isSnackbarActive: true};
 
+    this.handleSnackbarTimeout = this.handleSnackbarTimeout.bind(this);
+  }
+
+  handleSnackbarTimeout() {
+    this.setState({ isSnackbarActive: false });
   }
 
   render() {
@@ -30,8 +37,9 @@ export default class Page extends React.Component {
           {this.props.children}
         </div>
         <Snackbar
+          timeout={4500}
           onTimeout={this.handleSnackbarTimeout}
-          active={true}>
+          active={this.state.isSnackbarActive}>
           {'Welcome! You have 60 minutes before your session expires and you\'re automatically logged out'}
         </Snackbar>
       </Sidebar>

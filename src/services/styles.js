@@ -5,6 +5,10 @@
 
 import 'reset.css';
 import 'global.css';
+
+import 'fonts.css';
+import 'material-icons.css';
+
 import 'ask-gallery-preview.css';
 
 import 'react-select.css';

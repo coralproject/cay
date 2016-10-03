@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import CommonFieldOptions from 'forms/CommonFieldOptions';
 
-import editWidgetStyles from 'forms/editors/editWidgetStyles';
+import editWidgetStyles from 'forms/editors/EditWidgetStyles';
 
 @connect(({ forms, app }) => ({ forms, app }))
 @Radium

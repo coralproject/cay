@@ -88,10 +88,10 @@ export default class GalleryAnswer extends React.Component {
         </div>
         <div style={styles.rightColumn}>
           <div style={styles.modButtons}>
-            <CoralIconButton icon="delete" onClick={this.removeSubmission.bind(this)} />
-            <CoralIconButton icon="arrow_upward" onClick={() => onMoveAnswerUp(position)} />
-            <CoralIconButton icon="arrow_downward" onClick={() => onMoveAnswerDown(position)} />
             <CoralIconButton icon="mode_edit" onClick={this.editAnswer.bind(this)} />
+            <CoralIconButton icon="delete" onClick={this.removeSubmission.bind(this)} />
+            <CoralIconButton icon="arrow_downward" onClick={() => onMoveAnswerDown(position)} />
+            <CoralIconButton icon="arrow_upward" onClick={() => onMoveAnswerUp(position)} />
           </div>
         </div>
       </div>

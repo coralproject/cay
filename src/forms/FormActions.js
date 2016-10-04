@@ -193,7 +193,7 @@ export const fetchForms = () => (dispatch, getState) => {
   const {oidc, app} = getState();
 
   if (!authenticated(oidc)) {
-    return userManager.signoutRedirect();
+    return;
   }
 
   dispatch(formsRequestStarted());
@@ -208,7 +208,7 @@ export const fetchForm = id => (dispatch, getState) => {
   const {app, oidc} = getState();
 
   if (!authenticated(oidc)) {
-    return userManager.signoutRedirect();
+    return;
   }
 
   dispatch(formRequestStarted(id));

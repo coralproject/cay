@@ -38,16 +38,19 @@ export default class FormList extends Component {
     const {oidc, dispatch} = this.props;
     dispatch(fetchForms());
 
-    if (!oidc.user || oidc.user.expired) {
+    if ((!oidc.user || oidc.user.expired) && !oidc.isLoadingUser) {
       this.context.router.push('/login');
     }
   }
 
   componentWillUpdate() {
-    const {oidc} = this.props;
-    console.log(oidc);
-    if (!oidc.user || oidc.user.expired) {
+    const {oidc, forms, dispatch} = this.props;
+    if ((!oidc.user || oidc.user.expired) && !oidc.isLoadingUser) {
       this.context.router.push('/login');
+    }
+
+    if (!forms.formList) {
+      dispatch(fetchForms());
     }
   }
 
@@ -87,7 +90,13 @@ export default class FormList extends Component {
 
     const {oidc, forms} = this.props;
 
-    if (!oidc.user) return <Login />;
+    if (oidc.isLoadingUser) {
+      return <p>Authorizing user...</p>;
+    }
+
+    if (!oidc.user) {
+      return <Login />;
+    }
 
     const allForms = forms.formList.map(id => forms[id]);
     const visibleForms = allForms.filter(form => form.status === this.state.displayMode);

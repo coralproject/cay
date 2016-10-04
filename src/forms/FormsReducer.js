@@ -112,9 +112,13 @@ export default (state = initial, action) => {
 
   switch (action.type) {
 
-  case USER_EXPIRED:
+  case USER_EXPIRING:
   case SESSION_TERMINATED:
-    return {...state, authInvalid: 'your session is expired. please log in again'};
+    return {...state, authInvalid: 'your session has been terminated. please log in again'};
+
+  case USER_FOUND:
+    console.log('USER_FOUND');
+    return state;
 
   case types.FETCH_FORM_REQUEST:
     return {...state, activeForm: null, formLoading: true};

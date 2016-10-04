@@ -1,3 +1,4 @@
+import {WebStorageStateStore} from 'oidc-client';
 import {createUserManager} from 'redux-oidc';
 
 const userManagerConfig = {
@@ -7,9 +8,11 @@ const userManagerConfig = {
   scope: 'openid',
   authority: 'https://92ca94b7.ngrok.io/connect',
   post_logout_redirect_uri: `${window.location.protocol}//${window.location.host}/login`,
-  // silent_redirect_uri: `${window.location.protocol}//${window.location.host}/silent_renew.html`,
-  automaticSilentRenew: true,
-  loadUserInfo: false
+  store: new WebStorageStateStore({store: window.localStorage}),
+  loadUserInfo: false,
+  monitorSession: false
 };
+
+export const openidProviderConfig = userManagerConfig;
 
 export default createUserManager(userManagerConfig);

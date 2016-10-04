@@ -4,16 +4,14 @@ import has from 'lodash/object/has';
 import isString from 'lodash/lang/isString';
 import isDate from 'lodash/lang/isDate';
 import moment from 'moment';
-import Trash from 'react-icons/lib/fa/trash';
-import Edit from 'react-icons/lib/fa/pencil-square';
-import FaArrowCircleUp from 'react-icons/lib/fa/arrow-circle-up';
-import FaArrowCircleDown from 'react-icons/lib/fa/arrow-circle-down';
 
 import settings from 'settings';
 import GalleryAnswerMulti from 'forms/GalleryAnswerMulti';
 import GalleryAnswerDate from 'forms/GalleryAnswerDate';
 import GalleryAnswerNumber from 'forms/GalleryAnswerNumber';
 import GalleryAnswerText from 'forms/GalleryAnswerText';
+
+import { CoralIconButton } from '../components/ui'
 
 @Radium
 export default class GalleryAnswer extends React.Component {
@@ -90,32 +88,12 @@ export default class GalleryAnswer extends React.Component {
         </div>
         <div style={styles.rightColumn}>
           <div style={styles.modButtons}>
-            <div
-              className='trashButton'
-              onClick={this.removeSubmission.bind(this)}
-              style={styles.iconHolder}
-              key="foo">
-              <Trash style={styles.icon} />
-            </div>
-            <div onClick={() => onMoveAnswerUp(position)}
-              style={styles.iconHolder} key="bar">
-              <FaArrowCircleUp style={styles.icon} />
-            </div>
-            <div
-              onClick={() => onMoveAnswerDown(position)}
-              style={styles.iconHolder} key="baz">
-              <FaArrowCircleDown style={styles.icon} />
-            </div>
-          </div>
-          <div
-            className='editButton'
-            style={styles.editButton}
-            size="small"
-            onClick={this.editAnswer.bind(this)}>
-            <Edit style={styles.icon} /> Edit
+            <CoralIconButton icon="delete" onClick={this.removeSubmission.bind(this)} />
+            <CoralIconButton icon="arrow_upward" onClick={() => onMoveAnswerUp(position)} />
+            <CoralIconButton icon="arrow_downward" onClick={() => onMoveAnswerDown(position)} />
+            <CoralIconButton icon="mode_edit" onClick={this.editAnswer.bind(this)} />
           </div>
         </div>
-
       </div>
     );
   }
@@ -124,13 +102,22 @@ export default class GalleryAnswer extends React.Component {
 const styles = {
   base: {
     padding: 20,
-    backgroundColor: 'white',
-    boxShadow: '0px 0px 5px 0px rgba(0,0,0,0.2)',
     marginBottom: 15,
-    display: 'flex'
+    display: 'flex',
+    width: '100%',
+    marginBottom: 20,
+    borderWidth: '1px 1px 2px',
+    borderStyle: 'solid',
+    borderColor: 'rgb(216, 216, 216)',
+    borderImage: 'initial',
+    backgroundColor: 'rgb(255, 255, 255)',
+    boxShadow: 'rgb(155, 155, 155) 0px 1px 3px',
+    borderTopLeftRadius: 4,
+    borderTopRightRadius: 4
   },
   leftColumn: {
-    flex: 1
+    flex: 1,
+    fontSize: '16px'
   },
   rightColumn: {
     minWidth: 200,
@@ -161,7 +148,8 @@ const styles = {
     }
   },
   heading: {
-    fontSize: '18px',
+    fontSize: '16px',
+    fontWeight: 'bold',
     color: settings.darkGrey,
     letterSpacing: '0.03em',
     marginBottom: 10

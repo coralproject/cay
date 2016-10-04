@@ -25,7 +25,9 @@ export default class Modal extends React.Component {
           this.props.style && this.props.style.modalContainer
         ]}>
           <ModalHeader title={this.props.title} cancelAction={this.props.cancelAction} />
-          {this.props.children}
+          <div style={styles.modalContentPadder}>
+            {this.props.children}
+          </div>
           {
             this.props.noFooter
             ? null
@@ -58,7 +60,11 @@ const styles = {
     minWidth: 800,
     marginTop: 30,
     position: 'relative',
-    marginBottom: 50
+    marginBottom: 50,
+    padding: '0'
+  },
+  modalContentPadder: {
+    padding: '20px'
   },
   isClosed: {
     display: 'none',

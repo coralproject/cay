@@ -124,7 +124,7 @@ const styles = {
   leftContainerTitle: {
     fontWeight: 'bold',
     marginBottom: '5px',
-    fontSize: '.9em'
+    fontSize: '1.1em'
   },
   leftContainerSubTitle: {
     margin: '20px 0',

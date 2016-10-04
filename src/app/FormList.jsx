@@ -16,6 +16,8 @@ import ButtonGroup from 'components/ButtonGroup';
 import L from 'i18n';
 import moment from 'moment';
 
+import { CoralButton } from '../components/ui';
+
 // Forms, Widgets, Submissions
 @connect(({ forms }) => ({ forms }))
 @Radium
@@ -77,14 +79,25 @@ export default class FormList extends Component {
       <Page>
         <ContentHeader title="View Forms" style={styles.header} subhead="Create, edit and view forms">
           <Link to="forms/create" style={styles.createButton}>
-            <Button raised colored>Create</Button>
+            <CoralButton icon="add" type="success">
+            Create a form
+          </CoralButton>
           </Link>
         </ContentHeader>
 
-        <Button accent colored raised={displayMode === 'open'}
-          onClick={this.setDisplayMode.bind(this, 'open')}>Live</Button>
-        <Button accent colored raised={displayMode === 'closed'}
-          onClick={this.setDisplayMode.bind(this, 'closed')}>Closed</Button>
+        <CoralButton
+          active={displayMode === 'open'}
+          onClick={this.setDisplayMode.bind(this, 'open')}
+          style={{ marginRight: 10 }}
+        >
+          Live
+        </CoralButton>
+        <CoralButton
+          active={displayMode === 'closed'}
+          onClick={this.setDisplayMode.bind(this, 'closed')}
+        >
+          Closed
+        </CoralButton>
 
         <FormTable forms={visibleForms} onRowClick={this.onRowClick.bind(this)}
           confirmDeletion={this.confirmDeletion.bind(this)} onCopyFormClick={this.onCopyFormClick.bind(this)}

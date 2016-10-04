@@ -23,7 +23,7 @@ export default class CardHeader extends React.Component {
   render() {
     return (
       <div className="card-header" style={[styles.base, this.props.style]}>
-        <p style={styles.title}>{this.props.children}</p>
+        <p style={[styles.title, this.props.titleStyle]}>{this.props.children}</p>
         <p style={[styles.subtitle, this.getVisible()]}>{this.props.subtitle}</p>
       </div>
     );

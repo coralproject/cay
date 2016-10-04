@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { Button, Tabs, Tab, RadioGroup, Radio, Textfield } from 'react-mdl';
+import { Tabs, Tab, RadioGroup, Radio, Textfield } from 'react-mdl';
 import { CoralButton } from '../components/ui';
 
 import Spinner from 'components/Spinner';
@@ -72,12 +72,12 @@ export default class PublishOptions extends Component {
             : null
           }
           <div style={ styles.rightAlignButtons }>
-            <Button
-              raised ripple accent
-              style={{ marginTop: 20, backgroundColor: '#358D66' }}
+            <CoralButton
+              type="success"
+              style={{ marginTop: 20 }}
               onClick={onSaveClick}>
               { forms.savingForm ? <Spinner/> : null } Apply
-            </Button>
+            </CoralButton>
           </div>
         </div>
       : null
@@ -164,7 +164,7 @@ export default class PublishOptions extends Component {
                                 this.setState({embedCopied: true});
                                 setTimeout(() => this.setState({embedCopied: false}), 5000);
                               }}>
-                              <Button raised>Copy</Button>
+                              <CoralButton>Copy</CoralButton>
                             </CopyToClipboard>
                           </div>
                         </div>
@@ -183,7 +183,7 @@ export default class PublishOptions extends Component {
                                 this.setState({embedCopied: true});
                                 setTimeout(() => this.setState({embedCopied: false}), 5000);
                               }}>
-                              <Button raised>Copy</Button>
+                              <CoralButton>Copy</CoralButton>
                             </CopyToClipboard>
                           </div>
                         </div>
@@ -206,7 +206,7 @@ export default class PublishOptions extends Component {
                           this.setState({standaloneCopied: true});
                           setTimeout(() => this.setState({standaloneCopied: false}), 5000);
                         }}>
-                        <Button raised>Copy</Button>
+                        <CoralButton>Copy</CoralButton>
                       </CopyToClipboard>
                     </div>
                 </div>

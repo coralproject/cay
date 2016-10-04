@@ -56,7 +56,6 @@ export default class FormBuilder extends Component {
   }
 
   componentDidMount() {
-    console.log('component did mount')
     const { router } = this.context;
     const { route } =  this.props;
 
@@ -64,11 +63,10 @@ export default class FormBuilder extends Component {
   }
 
   hookRoute() {
-    const { saved } = this.state;
     const { leavingEdit } = this.props;
 
     leavingEdit();
-    if (!saved) {
+    if (!this.state.saved) {
       return 'This form has unsaved changes. Are you sure you want to leave this page?';
     }
   }

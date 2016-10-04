@@ -232,7 +232,7 @@ export const deleteForm = (name, description, id) => (dispatch, getState) => {
   const {app, oidc} = getState();
 
   if (!authenticated(oidc)) {
-    return userManager.signoutRedirect();
+    return;
   }
 
   dispatch(formRequestStarted(id));
@@ -302,7 +302,7 @@ export const saveForm = (form, widgets) => {
     const {app, oidc} = getState();
 
     if (!authenticated(oidc)) {
-      return userManager.signoutRedirect();
+      return;
     }
 
     data.settings.saveDestination =  `${app.askHost}/v1/form/${form.id}/submission`;
@@ -323,7 +323,7 @@ export const editForm = form => (dispatch, getState) => {
   const {app, oidc} = getState();
 
   if (!authenticated(oidc)) {
-    return userManager.signoutRedirect();
+    return;
   }
 
   // update save destination on edit to capture config changes
@@ -346,7 +346,7 @@ export const updateInactiveMessage = (message, form) => (dispatch, getState) => 
   const { app, oidc } = getState();
 
   if (!authenticated(oidc)) {
-    return userManager.signoutRedirect();
+    return;
   }
 
   dispatch({ type: UPDATE_FORM_INACTIVE_MESSAGE_REQUEST });
@@ -368,7 +368,7 @@ export const fetchSubmissions = (formId, page = 0) => (dispatch, getState) => {
   const skip = page * 10;
 
   if (!authenticated(oidc)) {
-    return userManager.signoutRedirect();
+    return;
   }
 
   return fetch(
@@ -393,7 +393,7 @@ export const updateSubmissionFlags = props => (dispatch, getState) => {
   const allKeys = keys.concat(forms[activeSubmission].flags);
 
   if (!authenticated(oidc)) {
-    return userManager.signoutRedirect();
+    return;
   }
 
   dispatch(updateActiveSubmission({
@@ -419,7 +419,7 @@ export const fetchGallery = formId => (dispatch, getState) => {
   const {app, oidc} = getState();
 
   if (!authenticated(oidc)) {
-    return userManager.signoutRedirect();
+    return;
   }
 
   fetch(`${app.askHost}/v1/form/${formId}/gallery`, getInit('GET', null, oidc.user.id_token))
@@ -433,7 +433,7 @@ export const sendToGallery = (galleryId, subId, answerId) => {
     const {app, oidc} = getState();
 
     if (!authenticated(oidc)) {
-      return userManager.signoutRedirect();
+      return;
     }
 
     fetch(`${app.askHost}/v1/form_gallery/${galleryId}/submission/${subId}/${answerId}`, getInit('POST', null, oidc.user.id_token))
@@ -450,7 +450,7 @@ export const removeFromGallery = (galleryId, subId, answerId) => {
     const { app, oidc } = getState();
 
     if (!authenticated(oidc)) {
-      return userManager.signoutRedirect();
+      return;
     }
 
     fetch(`${app.askHost}/v1/form_gallery/${galleryId}/submission/${subId}/${answerId}`, getInit('DELETE', null, oidc.user.id_token))
@@ -472,7 +472,7 @@ export const publishFormStatus = (formId, status) => (dispatch, getState) => {
   const {app, oidc} = getState();
 
   if (!authenticated(oidc)) {
-    return userManager.signoutRedirect();
+    return;
   }
 
   return fetch(`${app.askHost}/v1/form/${formId}/status/${status}`, getInit('PUT', null, oidc.user.id_token))
@@ -546,7 +546,7 @@ export const editAnswer = (edited, submission_id, answer_id, formId) => {
     const {app, oidc} = getState();
 
     if (!authenticated(oidc)) {
-      return userManager.signoutRedirect();
+      return;
     }
 
     fetch(
@@ -606,7 +606,7 @@ export const publishGallery = () => (dispatch, getState) => {
   const gallery = forms[activeGallery];
 
   if (!authenticated(oidc)) {
-    return userManager.signoutRedirect();
+    return;
   }
 
   dispatch({type: PUBLISH_GALLERY_REQUEST});
@@ -654,7 +654,7 @@ export const downloadCSV = formId => (dispatch, getState) => {
   const filterBy = submissionFilterBy === 'default' ? '' : submissionFilterBy;
 
   if (!authenticated(oidc)) {
-    return userManager.signoutRedirect();
+    return;
   }
 
   fetch(`${app.askHost}/v1/form/${formId}/submission/export?filterby=${filterBy}&search=${submissionSearch}`, getInit('GET', null, oidc.user.id_token))

@@ -23,7 +23,6 @@ import About from 'app/About';
 import SubmissionList from 'app/SubmissionList';
 import GalleryManager from 'app/GalleryManager';
 
-import Permissions from 'app/Permissions';
 import CallbackPage from 'app/CallbackPage';
 
 /**
@@ -37,7 +36,6 @@ export default ({ store, onLogPageView, defaultRoute, features, userManager }) =
         <Router history={browserHistory} onUpdate={onLogPageView}>
           <Redirect from="/" to={defaultRoute} />
           <Route path="login" component={Login} />
-          <Route path="permissions" component={Permissions} />
           <Route path="about" component={About} />
           <Route path="/callback" component={CallbackPage} />
           {features.trust !== false ?
@@ -50,7 +48,7 @@ export default ({ store, onLogPageView, defaultRoute, features, userManager }) =
           : null}
           {features.ask ?
             <div>
-              <Route path="forms" component={FormList}/>
+              <Route path="forms" component={FormList} />
               <Route path="forms/create" component={FormCreate}/>
               <Route path="forms/:id" component={FormEdit}/>
               <Route path="forms/:id/submissions" component={SubmissionList}/>

@@ -1,6 +1,7 @@
 import React, { Component,  PropTypes } from 'react';
 import Radium from 'radium';
 import color from 'color';
+import Spinner from 'components/Spinner';
 
 import { button as buttonSettings } from '../../settings'
 
@@ -27,11 +28,23 @@ export default class CoralButton extends Component {
     active: PropTypes.bool,
     style: PropTypes.object,
     customColor: PropTypes.string,
-    disabled: PropTypes.bool
+    disabled: PropTypes.bool,
+    loading: PropTypes.bool
   };
 
   render() {
-    const { type = 'default', className, onClick, children, icon, style, active = false, customColor, ...rest } = this.props;
+    const {
+      type = 'default',
+      icon,
+      style,
+      onClick,
+      children,
+      className,
+      customColor,
+      active = false,
+      loading = false,
+      ...rest
+      } = this.props;
 
     if (type === 'custom' && customColor) {
       styles.custom = buildCustomStyle(customColor)
@@ -56,6 +69,7 @@ export default class CoralButton extends Component {
     >
       { icon ? <i className="material-icons" style={styles.icon} > {icon} </i> : null }
       { children }
+      { loading ? <Spinner/> : null }
     </button>
     )
   }

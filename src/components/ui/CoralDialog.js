@@ -64,8 +64,8 @@ export default class CoralDialog extends Component {
 const styles = {
   base: {
     width: 700,
-    padding: 0,
-    borderRadius: 4
+    borderRadius: 4,
+    padding: '0 0 10px'
   },
   content: {
     padding: '0 10px'

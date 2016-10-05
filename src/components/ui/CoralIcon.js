@@ -15,12 +15,24 @@ const styles = {
 /**
  * Pass as icon the name of the Icon
  * Find them here: https://design.google.com/icons
+ * More about MD Guidelines: https://google.github.io/material-design-icons/
+ *
+ * For Sizing:
+ .material-icons.md-18 { font-size: 18px; }
+ .material-icons.md-24 { font-size: 24px; }
+ .material-icons.md-36 { font-size: 36px; }
+ .material-icons.md-48 { font-size: 48px; }
  */
 
-export const CoralIcon = ({ onClick, icon, style, disabled, ...rest}) => (
+export const CoralIcon = ({ icon, style, className, onClick, disabled, ...rest}) => (
   <i
-    className="CoralIcon material-icons"
+    className={`
+      material-icons md-dark
+      ${disabled ? '.md-inactive' : ''}
+      ${className ? className : ''}
+    `}
     style={[styles.base, style]}
+    size=""
   >
     {icon}
   </i>

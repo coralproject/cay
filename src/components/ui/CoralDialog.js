@@ -30,8 +30,12 @@ export default class CoralDialog extends Component {
 
   componentDidUpdate(prevProps) {
     const dialog = ReactDOM.findDOMNode(this.refs.dialog);
-    if (this.props.open) {
-      dialog.showModal();
+    if (this.props.open !== prevProps.open) {
+      if (this.props.open) {
+        dialog.showModal();
+      } else {
+        dialog.close();
+      }
     }
   }
 

@@ -37,7 +37,7 @@ export default class CoralTab extends Component {
 }
 
 
-let styles = {
+const styles = {
   base: {
     textTransform: 'none',
     fontSize: '0.9em',
@@ -50,6 +50,7 @@ let styles = {
   },
   active: {
     fontWeight: '600',
+    lineHeight: '32px',
     borderBottom: 'solid 2px #F67D6F'
   }
 };

@@ -94,12 +94,20 @@ export default class PublishOptions extends Component {
   }
 
   render() {
-
-    const { onOpenPreview, forms, activeForm, onSaveClick, iframeCode, scriptCode, standaloneCode, hideOptions, isGallery } = this.props;
+    const {
+      onOpenPreview,
+      forms,
+      activeForm,
+      onSaveClick,
+      iframeCode,
+      scriptCode,
+      standaloneCode,
+      hideOptions,
+      isGallery
+      } = this.props;
 
     return (
       <div style={styles.leftPan}>
-
           <div>
             <CoralButton
               className="form-preview-button"
@@ -145,9 +153,7 @@ export default class PublishOptions extends Component {
               open={this.state.publishModalOpened}
             >
               <div style={ styles.dialogContent }>
-
                 {this.getFormStatusSection()}
-
                 <div>
                   <h4 style={ styles.dialogSubTitle }>Embed options</h4>
                   <CoralTabBar style={ { style: { justifyContent: 'flex-start' } } } activeTab={this.state.activeTab} onChange={(tabId) => this.setState({ activeTab: tabId })}>
@@ -168,9 +174,9 @@ export default class PublishOptions extends Component {
                             <CopyToClipboard
                               text={iframeCode}
                               onCopy={() => {
- this.setState({embedCopied: true});
- setTimeout(() => this.setState({embedCopied: false}), 5000);
- }}>
+                               this.setState({embedCopied: true});
+                               setTimeout(() => this.setState({embedCopied: false}), 5000);
+                               }}>
                               <CoralButton>Copy</CoralButton>
                             </CopyToClipboard>
                           </div>
@@ -187,9 +193,9 @@ export default class PublishOptions extends Component {
                             <CopyToClipboard
                               text={scriptCode}
                               onCopy={() => {
- this.setState({embedCopied: true});
- setTimeout(() => this.setState({embedCopied: false}), 5000);
- }}>
+                               this.setState({embedCopied: true});
+                               setTimeout(() => this.setState({embedCopied: false}), 5000);
+                               }}>
                               <CoralButton>Copy</CoralButton>
                             </CopyToClipboard>
                           </div>
@@ -197,7 +203,6 @@ export default class PublishOptions extends Component {
                     }
                   </section>
                 </div>
-
                 <div>
                   <h4 style={ [ styles.dialogSubTitle, styles.withMargin ] }>Standalone {isGallery ? 'Gallery' : 'Form'} URL</h4>
                   <textarea className="standalone-form-url" readOnly style={styles.embedCode} value={standaloneCode}/>
@@ -210,22 +215,19 @@ export default class PublishOptions extends Component {
                     <CopyToClipboard
                       text={standaloneCode}
                       onCopy={() => {
-           this.setState({standaloneCopied: true});
-           setTimeout(() => this.setState({standaloneCopied: false}), 5000);
-           }}>
+                       this.setState({standaloneCopied: true});
+                       setTimeout(() => this.setState({standaloneCopied: false}), 5000);
+                       }}>
                       <CoralButton>Copy</CoralButton>
                     </CopyToClipboard>
                   </div>
                 </div>
-
               </div>
             </CoralDialog>
           ): null }
-
       </div>
     );
   }
-
 }
 
 const styles = {
@@ -307,3 +309,4 @@ const styles = {
     border: '1px solid ' + settings.mediumGrey
   }
 };
+

@@ -34,25 +34,41 @@ export default class FormBuilder extends Component {
 
   constructor(props) {
     super(props);
-    // An empty form with no changes is valid as 'saved'
-    this.saved = true;
-    this.state = { openDialog: false }
+
+    this.state = {
+      openDialog: false,
+      saved: true
+    };
+
+    this.onPublishOptions = this.onPublishOptions.bind(this);
+    this.onSaveClick = this.onSaveClick.bind(this);
+    this.addToBottom = this.addToBottom.bind(this);
+    this.onFormTitleChange = this.onFormTitleChange.bind(this);
+    this.markAsUnsaved = this.markAsUnsaved.bind(this);
+    this.renderPreview = this.renderPreview.bind(this);
+    this.hookRoute = this.hookRoute.bind(this);
   }
 
   markAsUnsaved() {
-    this.saved = false;
-  }
-
-  hookRouter() {
-    this.context.router.setRouteLeaveHook(this.props.route, () => {
-      if (this.saved === false) {
-        return 'This form has unsaved changes. Are you sure you want to leave this page?';
-      }
+    this.setState({
+      saved: false
     });
   }
 
   componentDidMount() {
-    this.hookRouter();
+    const { router } = this.context;
+    const { route } =  this.props;
+
+    router.setRouteLeaveHook(route, this.hookRoute);
+  }
+
+  hookRoute() {
+    const { leavingEdit } = this.props;
+
+    leavingEdit();
+    if (!this.state.saved) {
+      return 'This form has unsaved changes. Are you sure you want to leave this page?';
+    }
   }
 
   render() {
@@ -61,27 +77,28 @@ export default class FormBuilder extends Component {
     return (
       <div>
         <Header form={form} forms={forms} activeForm={activeForm}
-          onTitleChange={this.onFormTitleChange.bind(this)}
-          onSaveClick={this.onSaveClick.bind(this)} />
+          onTitleChange={this.onFormTitleChange}
+          onSaveClick={this.onSaveClick} />
         <div style={styles.builderContainer}>
           <FormBuilderSidebar
             create={!activeForm}
             onOpenPreview={onOpenPreview}
-            onPublishOptions={this.onPublishOptions.bind(this)}
-            onSaveClick={this.onSaveClick.bind(this)}
-            addToBottom={this.addToBottom.bind(this)}
+            onPublishOptions={this.onPublishOptions}
+            onSaveClick={this.onSaveClick}
+            addToBottom={this.addToBottom}
             activeForm={activeForm}
             openDialog={this.state.openDialog}
             app={app}
+            markAsUnsaved={this.markAsUnsaved}
             />
-          <FormFieldsContainer activeForm={ this.props.activeForm } markAsUnsaved={this.markAsUnsaved.bind(this)} />
+          <FormFieldsContainer activeForm={ this.props.activeForm } markAsUnsaved={this.markAsUnsaved} />
           { preview
             ? <div>
                 <div style={ styles.previewOverlay }></div>
                 <Preview
-                  renderPreview={this.renderPreview.bind(this)}
+                  renderPreview={this.renderPreview}
                   onClosePreview={onClosePreview.bind(this)}
-                  />
+                />
               </div>
             : null
           }
@@ -112,11 +129,15 @@ export default class FormBuilder extends Component {
     dispatch(saveForm(activeForm ? forms[activeForm] : form, widgets))
       .then(response => {
         if (response.data && response.data.id) {
-          this.saved = true;
-          this.props.dispatch(showFlashMessage('Your form saved.', 'success'));
+
+          this.setState({
+            saved: true
+          });
+
+          dispatch(showFlashMessage('Your form saved.', 'success'));
           return !activeForm && router.push(`/forms/${response.data.id}`);
         } else {
-          this.props.dispatch(showFlashMessage('Uh-oh, we can\'t save your form. Try again or report the error to your technical team', 'warning', 4000));
+          dispatch(showFlashMessage('Uh-oh, we can\'t save your form. Try again or report the error to your technical team', 'warning', 4000));
         }
       });
   }

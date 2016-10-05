@@ -40,7 +40,9 @@ export default class FieldTypeButton extends Component {
   }
 
   onClick(fieldModel) {
-    this.props.dispatch(appendWidget({
+    const { markAsUnsaved, dispatch } = this.props;
+    markAsUnsaved();
+    dispatch(appendWidget({
       title: fieldModel.title,
       description: fieldModel.description,
       friendlyType: fieldModel.friendlyType,

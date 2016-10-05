@@ -53,7 +53,7 @@ const styles = {
       backgroundColor: '#d8d8d8'
     },
     ':focus': {
-      backgroundColor: '#d8d8d8'
+      backgroundColor: 'white'
     },
     ':active': {
       backgroundColor: 'white',

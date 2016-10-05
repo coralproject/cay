@@ -262,8 +262,9 @@ const styles = {
     marginBottom: 10
   },
   embedCode: {
+    fontFamily: 'Roboto',
     width: '100%',
-    padding: '15px',
+    padding: '10px',
     color: '#5d5d5d',
     marginBottom: 10,
     marginTop: 10,
@@ -297,9 +298,10 @@ const styles = {
     margin: '10px 0 0 0'
   },
   textInput: {
+    fontFamily: 'Roboto',
     width: '95%',
     margin: '10px 0 0 5%',
-    padding: '5px',
+    padding: '10px',
     fontSize: '1em',
     borderRadius: '4px',
     border: '1px solid ' + settings.mediumGrey

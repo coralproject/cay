@@ -20,5 +20,5 @@ import 'react-datepicker.min.css';
 import '../../fonts/glyphicons-halflings-regular.woff';
 
 import 'material.css';
-
+import 'dialog-polyfill/dialog-polyfill.css';
 

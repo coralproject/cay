@@ -11,7 +11,8 @@ import {
   copyForm,
   createEmpty,
   updateForm,
-  updateFormSettings
+  updateFormSettings,
+  leavingEdit
  } from 'forms/FormActions';
 import { showFlashMessage } from 'flashmessages/FlashMessagesActions';
 import Page from 'app/layout/Page';
@@ -27,7 +28,12 @@ export default class FormCreate extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { preview: false };
+
+    this.state = {
+      preview: false
+    };
+
+    this.leavingEdit = this.leavingEdit.bind(this);
   }
 
   componentWillMount() {
@@ -40,6 +46,11 @@ export default class FormCreate extends Component {
 
   updateInactive(value) {
     this.props.dispatch(updateFormSettings({ inactiveMessage: value }));
+  }
+
+  leavingEdit() {
+    const {dispatch, params} = this.props;
+    dispatch(leavingEdit(params.id));
   }
 
   render() {
@@ -57,7 +68,9 @@ export default class FormCreate extends Component {
             onOpenPreview={ this.showPreview.bind(this) }
             route={ this.props.route }
             create={true}
-            preview={preview} />
+            preview={preview}
+            leavingEdit={this.leavingEdit}
+          />
         </div>
       </Page>
     );

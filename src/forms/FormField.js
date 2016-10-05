@@ -290,7 +290,7 @@ export const styles = {
   fieldIcon: {
     color: '#262626',
     width: '40px',
-    padding: '14px 10px',
+    padding: '17px 10px',
     display: 'inline-block',
     textAlign: 'center',
     'float': 'left',
@@ -299,7 +299,9 @@ export const styles = {
   fieldTitleHeader: {
     flex: 1,
     alignSelf: 'flex-start',
-    padding: '15px 10px 15px 5px'
+    padding: '10px 10px 10px 5px',
+    fontSize: 16,
+    margin: 0
   },
   editBody: {
     flex: 1,

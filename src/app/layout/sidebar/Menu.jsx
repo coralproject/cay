@@ -90,7 +90,8 @@ const styles = {
   },
   logoText: {
     marginLeft: 15,
-    width: 128
+    width: 128,
+    fontWeight: 400
   },
   sidebarWrapper: {
     height: '100%',

@@ -101,7 +101,7 @@ export default class FormChrome extends React.Component {
 
   getStatusSelectStyle() {
     return {
-      padding: '12px 12px 0',
+      padding: '10px 12px 0',
       borderRadius: 5,
       cursor: 'pointer',
       userSelect: 'none',
@@ -286,7 +286,7 @@ const styles = {
   },
   formName: {
     color: 'white',
-    padding: 5,
+    padding: '10px 12px 0 12px',
     fontWeight: 'bold',
     fontSize: '20px',
     flex: 1,
@@ -309,7 +309,7 @@ const styles = {
     cursor: 'pointer',
     borderRadius: 4,
     marginRight: 5,
-    padding: '12px 12px 0 12px',
+    padding: '10px 12px 0 12px',
     color: 'white',
     backgroundColor: 'transparent',
     ':hover': {

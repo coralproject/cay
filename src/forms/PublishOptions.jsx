@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { Tabs, Tab, RadioGroup, Radio, Textfield } from 'react-mdl';
-import { CoralButton } from '../components/ui';
+import { CoralButton, CoralDialog } from '../components/ui';
 
 import Spinner from 'components/Spinner';
 import CopyToClipboard from 'react-copy-to-clipboard';
@@ -22,7 +22,11 @@ export default class PublishOptions extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { publishModalOpened: false, formStatus: 'closed', activeTab: 0 };
+    this.state = {
+      publishModalOpened: false,
+      formStatus: 'closed',
+      activeTab: 0
+    };
 
     this.onFormStatusChange = this.onFormStatusChange.bind(this);
     this.onInactiveMessageChange = this.onInactiveMessageChange.bind(this);
@@ -30,7 +34,9 @@ export default class PublishOptions extends Component {
   }
 
   togglePublishModal() {
-    this.setState({ publishModalOpened: !this.state.publishModalOpened });
+    this.setState((state) => ({
+      publishModalOpened: !state.publishModalOpened
+    }));
   }
 
   onFormStatusChange(e) {
@@ -55,7 +61,8 @@ export default class PublishOptions extends Component {
             onChange={ this.onFormStatusChange }
             childContainer="div"
             value={ form.status }
-            name="formStatusRadio">
+            name="formStatusRadio"
+          >
             <Radio value="open" ripple>Live, accepting submissions</Radio>
             <Radio value="closed">Closed, not accepting submissions</Radio>
           </RadioGroup>
@@ -75,8 +82,10 @@ export default class PublishOptions extends Component {
             <CoralButton
               type="success"
               style={{ marginTop: 20 }}
-              onClick={onSaveClick}>
-              { forms.savingForm ? <Spinner/> : null } Apply
+              onClick={onSaveClick}
+              loading={forms.savingForm}
+            >
+              Apply
             </CoralButton>
           </div>
         </div>
@@ -130,13 +139,11 @@ export default class PublishOptions extends Component {
           </div>
 
           {activeForm ? (
-            <Modal
-              noFooter
-              style={styles.publishModal}
+            <CoralDialog
               title="Publish Options"
-              cancelAction={this.togglePublishModal}
-              isOpen={this.state.publishModalOpened}>
-
+              onCancel={this.togglePublishModal}
+              open={this.state.publishModalOpened}
+            >
               <div style={ styles.dialogContent }>
 
                 {this.getFormStatusSection()}
@@ -155,34 +162,34 @@ export default class PublishOptions extends Component {
                           <div style={ styles.rightAlignButtons }>
                             {
                               this.state.embedCopied
-                              ? <span style={ styles.copied }>Copied!</span>
-                              : null
+                                ? <span style={ styles.copied }>Copied!</span>
+                                : null
                             }
                             <CopyToClipboard
                               text={iframeCode}
                               onCopy={() => {
-                                this.setState({embedCopied: true});
-                                setTimeout(() => this.setState({embedCopied: false}), 5000);
-                              }}>
+ this.setState({embedCopied: true});
+ setTimeout(() => this.setState({embedCopied: false}), 5000);
+ }}>
                               <CoralButton>Copy</CoralButton>
                             </CopyToClipboard>
                           </div>
                         </div>
-                      :
+                        :
                         <div>
                           <textarea className="embed-code-iframe" readOnly style={styles.embedCode} value={scriptCode}/>
                           <div style={ styles.rightAlignButtons }>
                             {
                               this.state.embedCopied
-                              ? <span style={ styles.copied }>Copied!</span>
-                              : null
+                                ? <span style={ styles.copied }>Copied!</span>
+                                : null
                             }
                             <CopyToClipboard
                               text={scriptCode}
                               onCopy={() => {
-                                this.setState({embedCopied: true});
-                                setTimeout(() => this.setState({embedCopied: false}), 5000);
-                              }}>
+ this.setState({embedCopied: true});
+ setTimeout(() => this.setState({embedCopied: false}), 5000);
+ }}>
                               <CoralButton>Copy</CoralButton>
                             </CopyToClipboard>
                           </div>
@@ -194,25 +201,25 @@ export default class PublishOptions extends Component {
                 <div>
                   <h4 style={ [ styles.dialogSubTitle, styles.withMargin ] }>Standalone {isGallery ? 'Gallery' : 'Form'} URL</h4>
                   <textarea className="standalone-form-url" readOnly style={styles.embedCode} value={standaloneCode}/>
-                    <div style={ styles.rightAlignButtons }>
-                      {
-                        this.state.standaloneCopied
+                  <div style={ styles.rightAlignButtons }>
+                    {
+                      this.state.standaloneCopied
                         ? <span style={ styles.copied }>Copied!</span>
                         : null
-                      }
-                      <CopyToClipboard
-                        text={standaloneCode}
-                        onCopy={() => {
-                          this.setState({standaloneCopied: true});
-                          setTimeout(() => this.setState({standaloneCopied: false}), 5000);
-                        }}>
-                        <CoralButton>Copy</CoralButton>
-                      </CopyToClipboard>
-                    </div>
+                    }
+                    <CopyToClipboard
+                      text={standaloneCode}
+                      onCopy={() => {
+           this.setState({standaloneCopied: true});
+           setTimeout(() => this.setState({standaloneCopied: false}), 5000);
+           }}>
+                      <CoralButton>Copy</CoralButton>
+                    </CopyToClipboard>
+                  </div>
                 </div>
 
               </div>
-            </Modal>
+            </CoralDialog>
           ): null }
 
       </div>

@@ -6,17 +6,17 @@ import Spinner from 'components/Spinner';
 import { button as buttonSettings } from '../../settings'
 
 const buildCustomStyle = (customColor) => ({
-  backgroundColor: customColor,
-  color: '#FFFFFF',
+  backgroundColor: '#FFFFFF',
+  color: customColor,
   ':hover': {
-    backgroundColor: color(customColor).lighten(0.2).hexString()
+    backgroundColor: color(customColor).lighten(0.4).hexString()
   },
   active: {
-    backgroundColor: '#FFFFFF',
-    color: customColor,
+    backgroundColor: customColor,
+    color: '#FFFFFF',
     ':hover': {
-      backgroundColor: '#FFFFFF'
-    }
+      backgroundColor: color(customColor).lighten(0.2).hexString()
+    },
   }
 })
 

@@ -294,7 +294,7 @@ const styles = {
     borderBottom: '2px solid rgb(216, 216, 216)'
   },
   headIcon(flagged, color) {
-    return { color: !flagged ? '#fff': color };
+    return { color: flagged ? '#fff': color };
   },
   answerActions: {
     textAlign: 'right'

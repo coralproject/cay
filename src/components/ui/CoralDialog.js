@@ -7,16 +7,42 @@ import 'dialog-polyfill/dialog-polyfill.css';
 @Radium
 export default class CoralDialog extends Component {
   static propTypes = {
+    className: PropTypes.string,
+    onCancel: PropTypes.func,
+    open: PropTypes.bool
+  };
+
+  static defaultProps = {
+    onCancel: e => e.preventDefault(),
+    onClose: e => e.preventDefault()
   };
 
   componentDidMount(){
     const dialog = ReactDOM.findDOMNode(this.refs.dialog);
     dialogPolyfill.registerDialog(dialog);
-    dialog.showModal();
+
+    if (this.props.open) {
+      dialog.showModal();
+    }
+
+    dialog.addEventListener('close', this.props.onClose);
+    dialog.addEventListener('cancel', this.props.onCancel);
+  }
+
+  componentDidUpdate(prevProps) {
+    const dialog = ReactDOM.findDOMNode(this.refs.dialog);
+    if (this.props.open) {
+      dialog.showModal();
+    }
+  }
+
+  componentWillUnmount() {
+    const dialog = ReactDOM.findDOMNode(this.refs.dialog);
+    dialog.removeEventListener('cancel', this.props.onCancel);
   }
 
   render() {
-    const { children, ...rest } = this.props;
+    const { children, title, onCancel, open, ...rest } = this.props;
 
     return (
       <dialog
@@ -24,32 +50,18 @@ export default class CoralDialog extends Component {
         className="mdl-dialog"
         style={[styles.base]}
         {...rest}
-      >
-        {children}
+        >
+        <h4 className="mdl-dialog__title">{title}</h4>
+        <div className="mdl-dialog__content">
+          {children}
+        </div>
       </dialog>
     )
   }
 }
 
 const styles = {
-  back: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'fixed',
-    zIndex: 100,
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.2)'
-  },
   base: {
-    backgroundColor: '#ffffff',
-    boxShadow: 'rgb(155, 155, 155) 0px 1px 3px',
-    borderTopLeftRadius: 4,
-    borderTopRightRadius: 4,
-    borderBottom: '2px solid rgb(216, 216, 216)',
-    position: 'fixed'
+    width: 700,
   }
 };

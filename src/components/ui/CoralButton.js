@@ -20,6 +20,12 @@ const buildCustomStyle = (customColor) => ({
   }
 })
 
+/**
+ * Button
+ *
+ * Material Design Reference: https://github.com/google/material-design-lite/tree/mdl-1.x/src/button
+ */
+
 @Radium
 export default class CoralButton extends Component {
   static propTypes = {
@@ -43,6 +49,8 @@ export default class CoralButton extends Component {
       customColor,
       active = false,
       loading = false,
+      raised = true,
+      ripple,
       ...rest
       } = this.props;
 
@@ -58,7 +66,13 @@ export default class CoralButton extends Component {
 
     return (
     <button
-      className={`CoralButton mdl-button mdl-js-button mdl-button--raised ${className}`}
+      className={`
+          mdl-button
+          mdl-js-button
+          ${raised ? 'mdl-button--raised' : ''}
+          ${ripple ? 'mdl-js-ripple-effect' : ''}
+          ${className ? className : ''}
+          `}
       onClick={onClick}
       style={[
         finalStyles,

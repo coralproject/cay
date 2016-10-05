@@ -14,7 +14,7 @@ import userManager from 'services/userManager';
 /**
  * Store middlewares
  */
-
+// https://github.com/maxmantz/redux-oidc/wiki/3.-API
 const oidcMiddleware = createOidcMiddleware(userManager, () => true, true, '/callback');
 const debouncer = createDebounce({ userMangerFilters: 500 });
 const middleware = [thunk, debouncer, oidcMiddleware];

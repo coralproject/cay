@@ -35,22 +35,14 @@ export default class FormList extends Component {
   };
 
   componentWillMount() {
-    const {oidc, dispatch} = this.props;
-    dispatch(fetchForms());
+    this.props.dispatch(fetchForms());
 
-    if ((!oidc.user || oidc.user.expired) && !oidc.isLoadingUser) {
-      this.context.router.push('/login');
-    }
+    console.log()
   }
 
   componentWillUpdate() {
-    const {oidc, forms, dispatch} = this.props;
-    if ((!oidc.user || oidc.user.expired) && !oidc.isLoadingUser) {
-      this.context.router.push('/login');
-    }
-
-    if (!forms.formList) {
-      dispatch(fetchForms());
+    if (!this.props.forms.formList) {
+      this.props.dispatch(fetchForms());
     }
   }
 

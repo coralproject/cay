@@ -8,6 +8,7 @@ import { browserHistory, Router, Route, Redirect } from 'react-router';
 import { Provider } from 'react-redux';
 import { OidcProvider } from 'redux-oidc';
 import {StyleRoot} from 'radium';
+import {UserAuthWrapper} from 'redux-auth-wrapper';
 
 // Routes
 import SearchCreator from 'app/SearchCreator';
@@ -24,6 +25,14 @@ import SubmissionList from 'app/SubmissionList';
 import GalleryManager from 'app/GalleryManager';
 
 import CallbackPage from 'app/CallbackPage';
+
+const UserIsAuthenticated = UserAuthWrapper({
+  authSelector: state => state.oidc.user,
+  authenticatingSelector: state => state.oidc.isLoadingUser,
+  wrapperDisplayName: 'UserIsAuthenticated',
+  // /login is the default, but putting it here for notes to future self
+  failureRedirectPath: '/login'
+});
 
 /**
  * Expose App base component. Handle all routes
@@ -48,7 +57,7 @@ export default ({ store, onLogPageView, defaultRoute, features, userManager }) =
           : null}
           {features.ask ?
             <div>
-              <Route path="forms" component={FormList} />
+              <Route path="forms" component={UserIsAuthenticated(FormList)} />
               <Route path="forms/create" component={FormCreate}/>
               <Route path="forms/:id" component={FormEdit}/>
               <Route path="forms/:id/submissions" component={SubmissionList}/>

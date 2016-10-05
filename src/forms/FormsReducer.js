@@ -112,8 +112,16 @@ export default (state = initial, action) => {
 
   switch (action.type) {
 
+  case USER_EXPIRED:
+    console.error('user is expired');
+    return state;
+
   case USER_EXPIRING:
+    console.error('user expiring');
+    return state;
+
   case SESSION_TERMINATED:
+    console.error('session terminated');
     return {...state, authInvalid: 'your session has been terminated. please log in again'};
 
   case USER_FOUND:

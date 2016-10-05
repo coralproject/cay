@@ -55,6 +55,7 @@
     "color": "^0.10.1",
     "css-loader": "^0.21.0",
     "d3": "^3.5.12",
+    "dialog-polyfill": "^0.4.4",
     "exports-loader": "^0.6.3",
     "file-loader": "^0.8.4",
     "font-awesome": "^4.4.0",

@@ -69,7 +69,7 @@ export default class CoralButton extends Component {
     >
       { icon ? <i className="material-icons" style={styles.icon} > {icon} </i> : null }
       { children }
-      { loading ? <Spinner/> : null }
+      { loading ? <Spinner style={styles.loading} /> : null }
     </button>
     )
   }
@@ -177,4 +177,7 @@ let styles = {
     marginRight: 5,
     fontSize: '16px'
   },
+  loading: {
+    marginLeft: 5
+  }
 };

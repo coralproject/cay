@@ -108,9 +108,9 @@ export default class PublishOptions extends Component {
               icon="done"
               style={{ width: 150 }}
               onClick={onSaveClick}
+              loading={forms.savingForm || forms.loadingGallery}
             >
-              {`Save `}
-              { forms.savingForm || forms.loadingGallery ? <Spinner/> : null }
+              Save
             </CoralButton>
 
             {

@@ -244,7 +244,7 @@ export default class GalleryManager extends Component {
 
     switch (type) {
     case 'script-tag':
-      return `<script src="${gallery.config.baseUrl}${forms.activeGallery}.js"></script><div id="ask-gallery" />`;
+      return `<div id="ask-gallery"></div><script src="${gallery.config.baseUrl}${forms.activeGallery}.js"></script>`;
     case 'iframe':
       return `<iframe width="100%" height="580" src="${gallery.config.baseUrl}${forms.activeGallery}.html"></iframe>`;
     case 'standalone':

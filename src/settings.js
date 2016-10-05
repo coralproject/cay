@@ -7,7 +7,7 @@ export default {
   brandColor: 'rgb(246,125,111)',
   textColor: '#3e3e3e',
   linkColor: '#777777',
-  darkColorBase: '#202020',
+  darkColorBase: '#262626',
   lightColorBase: '#F1F1F1',
   clickCursor: 'pointer',
   linkHoverColor: '#3e3e3e',

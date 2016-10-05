@@ -7,10 +7,10 @@ import FaSpinner from 'react-icons/lib/fa/spinner';
 
 @Radium
 class Spinner extends React.Component {
-
   render() {
+    const { style, ...rest } = this.props;
     return (
-      <span style={ styles.spinner }>
+      <span style={[styles.spinner, style]} { ...rest }>
         <FaSpinner />
       </span>
     );

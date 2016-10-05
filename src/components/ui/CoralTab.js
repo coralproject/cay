@@ -1,6 +1,11 @@
 import React, { Component,  PropTypes } from 'react';
 import Radium from 'radium';
 
+/**
+ * Tab
+ *
+ * Material Design Reference: https://github.com/google/material-design-lite/tree/mdl-1.x/src/tabs
+ */
 @Radium
 export default class CoralTab extends Component {
   static propTypes = {

@@ -2,6 +2,7 @@ import React, { Component,  PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import Radium from 'radium';
 import dialogPolyfill from 'dialog-polyfill';
+import settings from 'settings';
 
 @Radium
 export default class CoralDialog extends Component {
@@ -56,6 +57,7 @@ export default class CoralDialog extends Component {
         >
         <div style={[styles.header]}>
           <h4 className="mdl-dialog__title" style={[styles.title]} >{title}</h4>
+          <span style={styles.close} onClick={onCancel}>×</span>
         </div>
         <div className="mdl-dialog__content" style={[styles.content]}>
           {children}
@@ -82,5 +84,19 @@ const styles = {
     padding: 0,
     margin: 0,
     fontWeight: 'bold'
+  },
+  close: {
+    fontSize: 30,
+    lineHeight: '14px',
+    top: '22px',
+    right: '20px',
+    position: 'absolute',
+    display: 'block',
+    fontWeight: 'bold',
+    color: settings.darkColorBase,
+    cursor: 'pointer',
+    ':hover': {
+      color: settings.darkColorBase
+    }
   }
 };

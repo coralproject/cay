@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { Tabs, Tab, RadioGroup, Radio, Textfield } from 'react-mdl';
-import { CoralButton, CoralDialog } from '../components/ui';
+import { CoralButton, CoralDialog, CoralTabBar, CoralTab } from '../components/ui';
 
 import Spinner from 'components/Spinner';
 import CopyToClipboard from 'react-copy-to-clipboard';
@@ -150,10 +150,10 @@ export default class PublishOptions extends Component {
 
                 <div>
                   <h4 style={ styles.dialogSubTitle }>Embed options</h4>
-                  <Tabs tabBarProps={ { style: { justifyContent: 'flex-start' } } } activeTab={this.state.activeTab} onChange={(tabId) => this.setState({ activeTab: tabId })}>
-                    <Tab style={ { 'float': 'left' } }>With iframe</Tab>
-                    <Tab>Without iframe</Tab>
-                  </Tabs>
+                  <CoralTabBar style={ { style: { justifyContent: 'flex-start' } } } activeTab={this.state.activeTab} onChange={(tabId) => this.setState({ activeTab: tabId })}>
+                    <CoralTab style={ { 'float': 'left' } }>With iframe</CoralTab>
+                    <CoralTab>Without iframe</CoralTab>
+                  </CoralTabBar>
                   <section>
                     {
                       this.state.activeTab == 0 ?

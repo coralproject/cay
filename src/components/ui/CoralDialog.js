@@ -6,6 +6,7 @@ import settings from 'settings';
 
 @Radium
 export default class CoralDialog extends Component {
+  
   static propTypes = {
     className: PropTypes.string,
     title: PropTypes.string,

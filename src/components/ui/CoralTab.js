@@ -8,7 +8,13 @@ import Radium from 'radium';
  */
 @Radium
 export default class CoralTab extends Component {
+
   static propTypes = {
+    active: PropTypes.bool,
+    className: PropTypes.string,
+    onClick: PropTypes.func,
+    tabId: PropTypes.number,
+    style: PropTypes.object
   };
 
   render() {

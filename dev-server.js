@@ -27,10 +27,10 @@ app.use(require('webpack-hot-middleware')(compiler, {log: () => {}}));
 
 // Setup proxy routes to use on Hosts that only expose one external port (i.e.
 // Heroku)
-var config = JSON.parse(fs.readFileSync('public/config.json'));
-app.use('/xenia', proxy(config.xeniaHost));
-app.use('/ask', proxy(config.askHost));
-app.use('/elkhorn', proxy(config.elkhornHost));
+var feConfig = JSON.parse(fs.readFileSync('public/config.json'));
+app.use('/xenia', proxy(feConfig.xeniaHost));
+app.use('/ask', proxy(feConfig.askHost));
+app.use('/elkhorn', proxy(feConfig.elkhornHost));
 
 app.get('*', function(req, res) {
   res.sendFile(path.join(__dirname, 'index.html'));

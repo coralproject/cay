@@ -12,10 +12,12 @@ export default class CoralDialog extends Component {
     title: PropTypes.string,
     onCancel: PropTypes.func,
     onClose: PropTypes.func,
-    open: PropTypes.bool
+    open: PropTypes.bool,
+    style: PropTypes.object
   };
 
   static defaultProps = {
+    style: {},
     onCancel: e => e.preventDefault(),
     onClose: e => e.preventDefault()
   };
@@ -49,13 +51,13 @@ export default class CoralDialog extends Component {
   }
 
   render() {
-    const { children, title, onCancel, onClose, open, ...rest } = this.props;
+    const { children, title, onCancel, onClose, open, style, ...rest } = this.props;
 
     return (
       <dialog
         ref="dialog"
         className="mdl-dialog"
-        style={[styles.base]}
+        style={[styles.base, ...style]}
         {...rest}
         >
         <div style={[styles.header]}>

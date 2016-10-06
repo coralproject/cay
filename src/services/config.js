@@ -20,10 +20,9 @@ export const loadConfig = () =>
     }
 
     // handle proy config
-    app.proxy = app.proxy || false
-    app.askHost = app.proxy ? "/ask" : app.askHost
-    app.xeniaHost = app.proxy ? "/xenia" : app.xeniaHost
-    app.elkhornHost = app.proxy ? "/elkhorn" : app.elkhornHost
+    app.askHost = app.proxy ? '/ask' : app.askHost;
+    app.xeniaHost = app.proxy ? '/xenia' : app.xeniaHost;
+    app.elkhornHost = app.proxy ? '/elkhorn' : app.elkhornHost;
 
     // redefine elkhornStaticHost if not set
     app.elkhornStaticHost = app.elkhornStaticHost || `${app.elkhornHost}/widgets`;

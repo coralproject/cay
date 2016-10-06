@@ -167,50 +167,6 @@ describe('TagReducer', () => {
     });
   });
 
-  describe('LOGIN_SUCCESS', () => {
-    let action;
-
-    beforeEach(() => {
-      action = {
-        type:types.LOGIN_SUCCESS
-      };
-    });
-
-    it('should not morph state', () => {
-      let state = {existing:'state'};
-      TagReducer(state,action);
-      expect(state).to.deep.equal({existing:'state'});
-    });
-
-    it('should set authorized to true', ()=> {
-      let newState = TagReducer(undefined, action);
-      expect(newState).to.have.property('authorized')
-        .and.to.be.true;
-    });
-  });
-
-  describe('LOGGED_OUT', () => {
-    let action;
-
-    beforeEach(() => {
-      action = {
-        type:types.LOGGED_OUT
-      };
-    });
-
-    it('should not morph state', () => {
-      let state = {existing:'state'};
-      TagReducer(state,action);
-      expect(state).to.deep.equal({existing:'state'});
-    });
-
-    it('should set authorized to false', ()=> {
-      let newState = TagReducer(undefined, action);
-      expect(newState).to.have.property('authorized')
-        .and.to.be.false;
-    });
-  });
-
   describe('REQUEST_ALL_TAGS', () => {
     let action;
 

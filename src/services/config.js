@@ -18,6 +18,13 @@ export const loadConfig = () =>
     if (!allKeysDefined(app, REQUIRED_KEYS)) {
       throw new Error(`missing required keys on config.json. Must define ${REQUIRED_KEYS.join('|')}`);
     }
+
+    // handle proy config
+    app.proxy = app.proxy || false
+    app.askHost = app.proxy ? "/ask" : app.askHost
+    app.xeniaHost = app.proxy ? "/xenia" : app.xeniaHost
+    app.elkhornHost = app.proxy ? "/elkhorn" : app.elkhornHost
+
     // redefine elkhornStaticHost if not set
     app.elkhornStaticHost = app.elkhornStaticHost || `${app.elkhornHost}/widgets`;
 

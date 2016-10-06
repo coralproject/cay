@@ -3,6 +3,7 @@ var express = require('express');
 var http = require('http');
 var webpack = require('webpack');
 var config = require('./webpack.config.dev');
+var proxy = require('express-http-proxy');
 var Dashboard = require('webpack-dashboard');
 var DashboardPlugin = require('webpack-dashboard/plugin');
 
@@ -23,6 +24,9 @@ app.use(require('webpack-dev-middleware')(compiler, {
 
 app.use(require('webpack-hot-middleware')(compiler, {log: () => {}}));
 
+app.use('/xenia', proxy('http://localhost:16181'));
+app.use('/ask', proxy('http://localhost:16181'));
+app.use('/elkhorn', proxy('http://localhost:4444'));
 app.get('*', function(req, res) {
   res.sendFile(path.join(__dirname, 'index.html'));
 });

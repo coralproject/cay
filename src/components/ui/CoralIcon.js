@@ -18,13 +18,13 @@ import { IconButton } from 'react-mdl';
 
 export const CoralIcon = ({ icon, style, className, onClick, disabled, ...rest}) => (
   <i
-    className={`material-icons md-dark md-18 ${disabled ? '.md-inactive' : ''} ${className ? className : ''} `}
+    className={`material-icons md-dark md-18 ${disabled ? 'md-inactive' : ''} ${className ? className : ''} `}
     style={style}
   >
     {icon}
   </i>
 );
-  
+
 CoralIcon.propTypes = {
   icon: PropTypes.string.isRequired,
   style: PropTypes.object,

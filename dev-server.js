@@ -2,6 +2,7 @@ var path = require('path');
 var express = require('express');
 var http = require('http');
 var webpack = require('webpack');
+var fs = require('fs');
 var config = require('./webpack.config.dev');
 var proxy = require('express-http-proxy');
 var Dashboard = require('webpack-dashboard');
@@ -24,18 +25,23 @@ app.use(require('webpack-dev-middleware')(compiler, {
 
 app.use(require('webpack-hot-middleware')(compiler, {log: () => {}}));
 
-app.use('/xenia', proxy('http://localhost:16181'));
-app.use('/ask', proxy('http://localhost:16181'));
-app.use('/elkhorn', proxy('http://localhost:4444'));
+// Setup proxy routes to use on Hosts that only expose one external port (i.e.
+// Heroku)
+var config = JSON.parse(fs.readFileSync('public/config.json'));
+app.use('/xenia', proxy(config.xeniaHost));
+app.use('/ask', proxy(config.askHost));
+app.use('/elkhorn', proxy(config.elkhornHost));
+
 app.get('*', function(req, res) {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-server.listen(3000, 'localhost', function(err) {
+var port = process.env.PORT || 3000;
+server.listen(port, 'localhost', function(err) {
   if (err) {
     console.log(err);
     return;
   }
 
-  console.log('Listening at http://localhost:3000');
+  console.log('Listening at http://localhost:'+port);
 });

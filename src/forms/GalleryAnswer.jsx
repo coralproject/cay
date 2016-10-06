@@ -44,7 +44,7 @@ export default class GalleryAnswer extends React.Component {
 
   render() {
 
-    const { answer, gallery, identifiableIds, onMoveAnswerUp, onMoveAnswerDown, position } = this.props;
+    const { answer, gallery, identifiableIds, onMoveAnswerUp, onMoveAnswerDown, position, isLast } = this.props;
     let answerComponent;
 
     const statusFlag = answer.answer.edited ? 'edited' : 'new';
@@ -64,11 +64,10 @@ export default class GalleryAnswer extends React.Component {
       answerComponent = <GalleryAnswerText answer={answer.answer} />;
     }
 
-
-
     if (!gallery) {
       return <p>Loading gallery...</p>;
     }
+
     return (
       <div style={styles.base}>
         <div style={styles.leftColumn}>
@@ -90,8 +89,8 @@ export default class GalleryAnswer extends React.Component {
           <div style={styles.modButtons}>
             <CoralIconButton icon="mode_edit" onClick={this.editAnswer.bind(this)} />
             <CoralIconButton icon="delete" onClick={this.removeSubmission.bind(this)} />
-            <CoralIconButton icon="arrow_downward" onClick={() => onMoveAnswerDown(position)} />
-            <CoralIconButton icon="arrow_upward" onClick={() => onMoveAnswerUp(position)} />
+            <CoralIconButton icon="arrow_downward" onClick={() => onMoveAnswerDown(position)} disabled={!!isLast} />
+            <CoralIconButton icon="arrow_upward" onClick={() => onMoveAnswerUp(position)} disabled={position === 0} />
           </div>
         </div>
       </div>

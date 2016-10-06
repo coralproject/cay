@@ -36,8 +36,6 @@ export default class FormList extends Component {
 
   componentWillMount() {
     this.props.dispatch(fetchForms());
-
-    console.log()
   }
 
   componentWillUpdate() {

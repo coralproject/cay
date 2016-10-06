@@ -3,7 +3,7 @@ import {createUserManager} from 'redux-oidc';
 const userManagerConfig = {
   client_id: 'openidconnectcert',
   redirect_uri: `${window.location.protocol}//${window.location.host}/callback`,
-  response_type: 'id_token',
+  response_type: 'id_token token',
   scope: 'openid',
   authority: 'https://92ca94b7.ngrok.io/connect',
   post_logout_redirect_uri: `${window.location.protocol}//${window.location.host}/login`,

@@ -1,9 +1,6 @@
 import {expect} from 'chai';
 import TagReducer from '../../src/tags/TagReducer';
-import * as tagsActions from 'tags/TagActions';
-import * as authActions from 'auth/AuthActions';
-
-const types = Object.assign({}, tagsActions, authActions);
+import * as types from 'tags/TagActions';
 
 describe('TagReducer', () => {
 

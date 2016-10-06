@@ -122,7 +122,9 @@ export default class GalleryManager extends Component {
             identifiableIds={gallery.config.identifiableIds || []}
             onMoveAnswerDown={this.onMoveAnswerDown.bind(this, gallery.id, i)}
             onMoveAnswerUp={this.onMoveAnswerUp.bind(this, gallery.id, i)}
-            position={i} />
+            position={i}
+            isLast={gallery.answers.length - 1 === i}
+          />
         ))}
       </div>
     );

@@ -8,7 +8,9 @@ import settings from 'settings';
 export default class CoralDialog extends Component {
   static propTypes = {
     className: PropTypes.string,
+    title: PropTypes.string,
     onCancel: PropTypes.func,
+    onClose: PropTypes.func,
     open: PropTypes.bool
   };
 

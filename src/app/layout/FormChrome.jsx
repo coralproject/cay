@@ -101,7 +101,7 @@ export default class FormChrome extends React.Component {
 
   getStatusSelectStyle() {
     return {
-      padding: '10px 12px 0',
+      padding: '12px 12px 0',
       borderRadius: 5,
       cursor: 'pointer',
       userSelect: 'none',
@@ -254,11 +254,8 @@ export default class FormChrome extends React.Component {
                     type="coral"
                     className="form-status-apply-button"
                     onClick={ this.onApplyClick }
+                    loading={forms.savingForm}
                   >
-                    { forms.savingForm
-                      ? <span><Spinner /> </span>
-                      : null
-                    }
                     Apply
                   </CoralButton>
                 </div>
@@ -286,7 +283,7 @@ const styles = {
   },
   formName: {
     color: 'white',
-    padding: '10px 12px 0 12px',
+    padding: 5,
     fontWeight: 'bold',
     fontSize: '20px',
     flex: 1,
@@ -309,7 +306,7 @@ const styles = {
     cursor: 'pointer',
     borderRadius: 4,
     marginRight: 5,
-    padding: '10px 12px 0 12px',
+    padding: '12px 12px 0 12px',
     color: 'white',
     backgroundColor: 'transparent',
     ':hover': {

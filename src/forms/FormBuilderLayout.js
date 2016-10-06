@@ -161,6 +161,7 @@ const styles = {
     marginRight: '15px'
   },
   headLine: {
+    fontFamily: 'Roboto, sans-serif',
     fontSize: '20pt',
     width: '100%',
     display: 'block',

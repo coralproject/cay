@@ -3,7 +3,7 @@ import Radium from 'radium';
 
 @Radium
 export default class CoralTabBar extends Component {
-  
+
   static propTypes = {
     activeTab: PropTypes.number,
     className: PropTypes.string,

@@ -34,10 +34,7 @@ export default class CoralTab extends Component {
           active ? styles.active : {},
           style
           ]}
-        className={`
-          mdl-tabs__tab
-          ${className ? className : ''}
-          `}
+        className={`mdl-tabs__tab ${active ? 'active': ''} ${className ? className : ''}`}
         onClick={() => onClick(tabId)}
         { ...rest }
       >

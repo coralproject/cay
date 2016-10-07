@@ -18,15 +18,7 @@ export default class CoralTab extends Component {
   };
 
   render() {
-    const {
-      active,
-      className,
-      children,
-      onClick,
-      style,
-      tabId,
-      ...rest
-      } = this.props;
+    const { active, className, children, onClick, style, tabId, ...rest } = this.props;
     return (
       <a
         style={[

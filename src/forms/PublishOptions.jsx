@@ -114,7 +114,7 @@ export default class PublishOptions extends Component {
               type="primary"
               icon="visibility"
               onClick={onOpenPreview}
-              style={{ width: 150, marginRight: 10 }}
+              style={styles.previewButton}
             >
               Preview
             </CoralButton>
@@ -123,7 +123,7 @@ export default class PublishOptions extends Component {
               className="form-save-button"
               type="success"
               icon="done"
-              style={{ width: 150 }}
+              style={styles.saveButton}
               onClick={onSaveClick}
               loading={forms.savingForm || forms.loadingGallery}
             >
@@ -136,7 +136,7 @@ export default class PublishOptions extends Component {
                   className="form-publish-button"
                   icon="settings"
                   type="black"
-                  style={{ width: 310, marginTop: 10 }}
+                  style={styles.publishButton}
                   onClick={this.togglePublishModal}
                 >
                   Publish options
@@ -156,8 +156,8 @@ export default class PublishOptions extends Component {
                 {this.getFormStatusSection()}
                 <div>
                   <h4 style={ styles.dialogSubTitle }>Embed options</h4>
-                  <CoralTabBar style={ { style: { justifyContent: 'flex-start' } } } activeTab={this.state.activeTab} onChange={(tabId) => this.setState({ activeTab: tabId })}>
-                    <CoralTab style={ { 'float': 'left' } }>With iframe</CoralTab>
+                  <CoralTabBar style={ styles.tabBar } activeTab={this.state.activeTab} onChange={(tabId) => this.setState({ activeTab: tabId })}>
+                    <CoralTab style={ styles.tab }>With iframe</CoralTab>
                     <CoralTab>Without iframe</CoralTab>
                   </CoralTabBar>
                   <section>
@@ -204,7 +204,7 @@ export default class PublishOptions extends Component {
                   </section>
                 </div>
                 <div>
-                  <h4 style={ [ styles.dialogSubTitle, styles.withMargin ] }>Standalone {isGallery ? 'Gallery' : 'Form'} URL</h4>
+                  <h4 style={ [styles.dialogSubTitle, styles.withMargin] }>Standalone {isGallery ? 'Gallery' : 'Form'} URL</h4>
                   <textarea className="standalone-form-url" readOnly style={styles.embedCode} value={standaloneCode}/>
                   <div style={ styles.rightAlignButtons }>
                     {
@@ -231,6 +231,23 @@ export default class PublishOptions extends Component {
 }
 
 const styles = {
+  previewButton: {
+    width: 150,
+    marginRight: 10
+  },
+  saveButton: {
+    width: 150
+  },
+  publishButton: {
+    width: 310,
+    marginTop: 10
+  },
+  tabBar: {
+    justifyContent: 'flex-start'
+  },
+  tab: {
+    float: 'left'
+  },
   leftPan: {
     width: 400
   },

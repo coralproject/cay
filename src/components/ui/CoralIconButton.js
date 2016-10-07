@@ -22,7 +22,7 @@ export default class IconButton extends Component {
     const { onClick, icon, style, className, disabled, ...rest } = this.props;
     return (
       <button
-        className={`${className ? className : ''}`}
+        className={classname || ''}
         onClick={onClick}
         disabled={disabled ? 'disabled' : ''}
         style={[styles.base]}

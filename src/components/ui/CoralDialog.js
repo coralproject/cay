@@ -60,11 +60,11 @@ export default class CoralDialog extends Component {
         style={[styles.base, ...style]}
         {...rest}
         >
-        <div style={[styles.header]}>
+        <div style={styles.header}>
           <h4 className="mdl-dialog__title" style={[styles.title]} >{title}</h4>
           <span style={styles.close} onClick={onCancel}>×</span>
         </div>
-        <div className="mdl-dialog__content" style={[styles.content]}>
+        <div className="mdl-dialog__content" style={styles.content}>
           {children}
         </div>
       </dialog>

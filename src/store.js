@@ -32,10 +32,6 @@ export default initialState => {
   userManagerConfig.client_id = initialState.app.authClientId;
   userManagerConfig.authority = initialState.app.authAuthority;
 
-  console.log('setting shit up', initialState);
-
-  console.log('userManagerConfig', userManagerConfig);
-
   /**
    * Store middlewares
    */

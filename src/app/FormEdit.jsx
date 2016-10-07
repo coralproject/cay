@@ -41,6 +41,7 @@ export default class FormEdit extends Component {
     this.onClosePreview = this.onClosePreview.bind(this);
     this.showPreview = this.showPreview.bind(this);
     this.updateInactive = this.updateInactive.bind(this);
+    this.leavingEdit = this.leavingEdit.bind(this);
   }
 
   componentWillMount() {
@@ -49,12 +50,9 @@ export default class FormEdit extends Component {
     dispatch(fetchForm(params.id));
   }
 
-  componentDidMount() {
+  leavingEdit() {
     const {dispatch, params} = this.props;
-    this.props.history.listenBefore(() => {
-      dispatch(leavingEdit(params.id));
-      return true;
-    });
+    dispatch(leavingEdit(params.id));
   }
 
   onClosePreview() {
@@ -100,11 +98,13 @@ export default class FormEdit extends Component {
           {
             form ?
               <FormBuilder
-                activeForm={ forms.activeForm }
+                activeForm={forms.activeForm}
                 onClosePreview={this.onClosePreview}
-                onOpenPreview={ this.showPreview }
-                route={ route }
-                preview={this.state.preview} />
+                onOpenPreview={this.showPreview}
+                route={route}
+                preview={this.state.preview}
+                leavingEdit={this.leavingEdit}
+              />
             : null
           }
         </div>

@@ -31,7 +31,7 @@ export default class CoralButton extends Component {
   };
 
   render() {
-    const { type = 'default', className, onClick, disabled, children, icon, style, active = false, customColor, ...rest } = this.props;
+    const { type = 'default', className, onClick, children, icon, style, active = false, customColor, ...rest } = this.props;
 
     if (type === 'custom' && customColor) {
       styles.custom = buildCustomStyle(customColor)
@@ -52,7 +52,6 @@ export default class CoralButton extends Component {
         { ':hover': { backgroundColor: color(finalStyles.backgroundColor).lighten(0.2).hexString() }},
         active ? styles[type].active : {}
       ]}
-      disabled={disabled ? 'disabled' : ''}
       { ...rest }
     >
       { icon ? <i className="material-icons" style={styles.icon} > {icon} </i> : null }

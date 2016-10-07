@@ -57,6 +57,7 @@
     "d3": "^3.5.12",
     "dialog-polyfill": "^0.4.4",
     "exports-loader": "^0.6.3",
+    "express-http-proxy": "^0.10.0",
     "file-loader": "^0.8.4",
     "font-awesome": "^4.4.0",
     "font-awesome-webpack": "0.0.4",

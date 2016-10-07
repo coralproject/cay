@@ -4,7 +4,6 @@
  */
 
 import cloneDeep from 'lodash/lang/cloneDeep';
-import userManager from 'services/userManager';
 
 /**
  * Action names

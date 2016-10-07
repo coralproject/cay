@@ -6,7 +6,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import configureStore from 'store.js';
-import userManager from 'services/userManager';
+import {userManager} from 'store';
 import { configXenia } from 'app/AppActions';
 
 import App from 'App';
@@ -28,7 +28,9 @@ loadConfig()
   const store = configureStore({ app });
 
   store.dispatch(configXenia());
-  store.dispatch({type: FILTERS_CONFIG_LOADED, config: filters});
+  if (app.features.trust === true) {
+    store.dispatch({type: FILTERS_CONFIG_LOADED, config: filters});
+  }
 
   analyticsInit(app.googleAnalyticsId);
 

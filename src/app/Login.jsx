@@ -11,7 +11,7 @@ import Button from 'components/Button';
 import { brandColor } from 'settings';
 import color from 'color';
 
-import userManager from 'services/userManager';
+import {userManager} from 'store';
 
 /**
  * Expose login component

@@ -54,10 +54,9 @@ const TopMenu = ({ features }) => (
 
 const BottomMenu = ({ open, onToggleSidebar }) => (
   <ul>
-    <MenuItem name="Report bug / Give Feedback" externalLink={true} target="https://coralproject.net/contribute.html#other-ideas-and-bug-reports"
-      icon={<FaBug />} />
-    <MenuItem name="Collapse menu" target='#' onClick={stopAndBubble(onToggleSidebar)}
-      icon={open ? <FaAngleDoubleLeft /> : <FaAngleDoubleRight />} />
+    <MenuItem label="Report bug / Give Feedback" externalLink={true} target="https://coralproject.net/contribute.html#other-ideas-and-bug-reports" icon={<FaBug />} />
+    <MenuItem label="Collapse menu" target='#' onClick={stopAndBubble(onToggleSidebar)} icon={open ? <FaAngleDoubleLeft /> : <FaAngleDoubleRight />} />
+    <MenuItem label={`Version: ${process.env.VERSION}`} style={styles.version} />
   </ul>
 );
 
@@ -76,6 +75,9 @@ const stopAndBubble = fn => evt => {
  */
 
 const styles = {
+  version: {
+    padding: '0 10px 0 50px'
+  },
   logo: {
     display: 'flex',
     alignItems: 'center',

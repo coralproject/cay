@@ -41,10 +41,10 @@ export default Radium(({ open, features, onToggleSidebar }) => (
 
 const TopMenu = ({ features }) => (
   <ul>
-    { features.trust === false ? null : <MenuItem name={ L.t('Trust') } target="/search-creator" icon={<TrustIcon wh="24px" fill="rgb(155, 155, 155)" stroke="rgb(155, 155, 155)" />} />}
-    {/**features.trust === false ? null : <MenuItem name={ L.t('Saved Searches') } target="/saved-searches" icon={<FaDashboard />} />**/}
-    {/** features.ask ? <MenuItem open={open} name="Create Form" target="/forms/create" icon={<MdBuild />} /> : null **/}
-    { features.ask ? <MenuItem open={open} name="Ask" target="/forms" icon={<AskIcon wh="24px" fill="rgb(155, 155, 155)" stroke="rgb(155, 155, 155)" />}/> : null }
+    { features.trust === false ? null : <MenuItem label={ L.t('Trust') } target="/search-creator" icon={<TrustIcon wh="24px" fill="rgb(155, 155, 155)" stroke="rgb(155, 155, 155)" />} />}
+    {/**features.trust === false ? null : <MenuItem label={ L.t('Saved Searches') } target="/saved-searches" icon={<FaDashboard />} />**/}
+    {/** features.ask ? <MenuItem open={open} label="Create Form" target="/forms/create" icon={<MdBuild />} /> : null **/}
+    { features.ask ? <MenuItem open={open} label="Ask" target="/forms" icon={<AskIcon wh="24px" fill="rgb(155, 155, 155)" stroke="rgb(155, 155, 155)" />}/> : null }
   </ul>
 );
 

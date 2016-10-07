@@ -14,11 +14,11 @@ import { Link } from 'react-router';
 export default Radium(({ target, icon, label, onClick, style = {}, externalLink }) => (
   <li style={styles.base}>
     { externalLink
-      ? <a style={[styles.link, style]} href={target} target="_blank">
+      ? <a style={{...styles.link, ...style}} href={target} target="_blank">
           { icon ? <span style={styles.icon}>{icon}</span> : null }
           <span style={styles.text}>{label}</span>
         </a>
-      : <RadiumLink style={[styles.link, style]} onClick={onClick}
+      : <RadiumLink style={{...styles.link, ...style}} onClick={onClick}
         to={target} activeStyle={styles.activeLink}>
         { icon ? <span style={styles.icon}>{icon}</span> : null }
         <span style={styles.text}>{label}</span>

@@ -20,7 +20,7 @@ export default class IconButton extends Component {
 
   render() {
     const { onClick, icon, style, className, disabled, ...rest } = this.props;
-    const className = `material-icons md-dark md-18 ${disabled ? 'md-inactive' : ''} `;
+    const compClassName = `material-icons md-dark md-18 ${disabled ? 'md-inactive' : ''}`;
 
     return (
       <button
@@ -31,7 +31,7 @@ export default class IconButton extends Component {
         { ...rest }
       >
         <i
-          className={className}
+          className={compClassName}
           style={[styles.icon.base]}
         >
           {icon}

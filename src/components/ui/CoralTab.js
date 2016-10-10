@@ -19,14 +19,16 @@ export default class CoralTab extends Component {
 
   render() {
     const { active, className, children, onClick, style, tabId, ...rest } = this.props;
+    const className = `mdl-tabs__tab ${active ? 'active': ''} ${className ? className : ''}`;
+
     return (
       <a
         style={[
           styles.base,
-          active ? styles.active : {},
+          active && styles.active,
           style
           ]}
-        className={`mdl-tabs__tab ${active ? 'active': ''} ${className ? className : ''}`}
+        className={className}
         onClick={() => onClick(tabId)}
         { ...rest }
       >

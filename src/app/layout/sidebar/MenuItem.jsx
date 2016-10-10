@@ -11,17 +11,17 @@ import { Link } from 'react-router';
  * Expose Menu Item module
  */
 
-export default Radium(({ target, icon, name, onClick, externalLink }) => (
+export default Radium(({ target, icon, label, onClick, style = {}, externalLink }) => (
   <li style={styles.base}>
     { externalLink
-      ? <a style={ styles.link } href={target} target="_blank">
-          <span style={ styles.icon }>{icon}</span>
-          <span style={styles.text}>{name}</span>
+      ? <a style={{...styles.link, ...style}} href={target} target="_blank">
+          { icon ? <span style={styles.icon}>{icon}</span> : null }
+          <span style={styles.text}>{label}</span>
         </a>
-      : <RadiumLink style={styles.link} onClick={onClick}
+      : <RadiumLink style={{...styles.link, ...style}} onClick={onClick}
         to={target} activeStyle={styles.activeLink}>
-        <span style={ styles.icon }>{icon}</span>
-        <span style={styles.text}>{name}</span>
+        { icon ? <span style={styles.icon}>{icon}</span> : null }
+        <span style={styles.text}>{label}</span>
       </RadiumLink>
     }
   </li>

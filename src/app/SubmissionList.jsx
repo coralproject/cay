@@ -17,7 +17,6 @@ import {
   removeFromGallery,
   updateFormStatus,
   fetchForm,
-  saveForm,
   updateFormSettings,
   updateOrder,
   updateSearch,
@@ -28,13 +27,14 @@ import {
 
 import SubmissionDetail from 'forms/SubmissionDetail';
 import FormChrome from 'app/layout/FormChrome';
+import Login from 'app/Login';
 import Page from 'app/layout/Page';
 
 /**
  * Export submission list component
  */
 
-@connect(({ forms }) => ({ forms }))
+@connect(({ oidc, forms }) => ({ oidc, forms }))
 @Radium
 export default class SubmissionList extends Component {
   constructor(props) {
@@ -104,12 +104,15 @@ export default class SubmissionList extends Component {
 
   render() {
 
+    const {oidc} = this.props;
     const { submissionList, activeSubmission, activeForm, activeGallery,
       submissionFilterBy, submissionOrder, formCounts } = this.props.forms;
     const submissions = submissionList.map(id => this.props.forms[id]);
     const submission = this.props.forms[activeSubmission];
     const form = this.props.forms[activeForm];
     const gallery = this.props.forms[activeGallery];
+
+    if (!oidc.user) return <Login />;
 
     return (
       <Page style={styles.page}>

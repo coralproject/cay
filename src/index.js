@@ -6,6 +6,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import configureStore from 'store.js';
+import {userManager} from 'store';
 import { configXenia } from 'app/AppActions';
 
 import App from 'App';
@@ -13,7 +14,10 @@ import 'i18n';
 import { init as analyticsInit, logPageView } from 'services/analytics';
 import 'services/styles';
 import { loadConfig } from 'services/config';
+// import {Oidc} from 'oidc-client';
 import { FILTERS_CONFIG_LOADED } from 'filters/FiltersActions';
+
+// Oidc.Log.logger = window.console;
 
 /**
  *  Load config and launch app
@@ -24,13 +28,15 @@ loadConfig()
   const store = configureStore({ app });
 
   store.dispatch(configXenia());
-  store.dispatch({type: FILTERS_CONFIG_LOADED, config: filters});
+  if (app.features.trust === true) {
+    store.dispatch({type: FILTERS_CONFIG_LOADED, config: filters});
+  }
 
   analyticsInit(app.googleAnalyticsId);
 
   const { features } = app;
   ReactDOM.render(
-    <App store={store} onLogPageView={logPageView} features={features}
+    <App store={store} onLogPageView={logPageView} features={features} userManager={userManager}
       defaultRoute={getDefaultRoute(features)} />
   , document.getElementById('root'));
 });

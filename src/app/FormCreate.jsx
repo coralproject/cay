@@ -10,17 +10,18 @@ import { connect } from 'react-redux';
 import {
   copyForm,
   createEmpty,
-  updateForm,
   updateFormSettings,
   leavingEdit
  } from 'forms/FormActions';
 import { showFlashMessage } from 'flashmessages/FlashMessagesActions';
+import Login from 'app/Login';
 import Page from 'app/layout/Page';
 import FormBuilder from 'forms/FormBuilder.js';
 import FormChrome from 'app/layout/FormChrome';
 
-@connect(({ app, forms }) => ({
+@connect(({ oidc, app, forms }) => ({
   elkhornHost: app.elkhornHost,
+  oidc,
   forms
 }))
 @Radium
@@ -54,6 +55,8 @@ export default class FormCreate extends Component {
   }
 
   render() {
+    if (!this.props.oidc.user) return <Login />;
+
     const { preview } = this.state;
     return (
       <Page style={styles.page}>

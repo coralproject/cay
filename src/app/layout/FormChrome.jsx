@@ -12,7 +12,6 @@ import onClickOutside from 'react-onclickoutside';
 
 import RadioButton from 'components/forms/RadioButton';
 import Spinner from 'components/Spinner';
-import { Button } from 'react-mdl';
 
 import { CoralButton } from '../../components/ui';
 

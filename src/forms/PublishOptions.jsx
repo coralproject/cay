@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { Tabs, Tab, RadioGroup, Radio, Textfield } from 'react-mdl';
-import { CoralButton } from '../components/ui';
+import { CoralButton, CoralDialog, CoralTabBar, CoralTab } from '../components/ui';
 
 import Spinner from 'components/Spinner';
 import CopyToClipboard from 'react-copy-to-clipboard';
@@ -22,7 +22,11 @@ export default class PublishOptions extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { publishModalOpened: false, formStatus: 'closed', activeTab: 0 };
+    this.state = {
+      publishModalOpened: false,
+      formStatus: 'closed',
+      activeTab: 0
+    };
 
     this.onFormStatusChange = this.onFormStatusChange.bind(this);
     this.onInactiveMessageChange = this.onInactiveMessageChange.bind(this);
@@ -30,7 +34,9 @@ export default class PublishOptions extends Component {
   }
 
   togglePublishModal() {
-    this.setState({ publishModalOpened: !this.state.publishModalOpened });
+    this.setState((state) => ({
+      publishModalOpened: !state.publishModalOpened
+    }));
   }
 
   onFormStatusChange(e) {
@@ -55,7 +61,8 @@ export default class PublishOptions extends Component {
             onChange={ this.onFormStatusChange }
             childContainer="div"
             value={ form.status }
-            name="formStatusRadio">
+            name="formStatusRadio"
+          >
             <Radio value="open" ripple>Live, accepting submissions</Radio>
             <Radio value="closed">Closed, not accepting submissions</Radio>
           </RadioGroup>
@@ -75,8 +82,10 @@ export default class PublishOptions extends Component {
             <CoralButton
               type="success"
               style={{ marginTop: 20 }}
-              onClick={onSaveClick}>
-              { forms.savingForm ? <Spinner/> : null } Apply
+              onClick={onSaveClick}
+              loading={forms.savingForm}
+            >
+              Apply
             </CoralButton>
           </div>
         </div>
@@ -85,19 +94,27 @@ export default class PublishOptions extends Component {
   }
 
   render() {
-
-    const { onOpenPreview, forms, activeForm, onSaveClick, iframeCode, scriptCode, standaloneCode, hideOptions, isGallery } = this.props;
+    const {
+      onOpenPreview,
+      forms,
+      activeForm,
+      onSaveClick,
+      iframeCode,
+      scriptCode,
+      standaloneCode,
+      hideOptions,
+      isGallery
+      } = this.props;
 
     return (
       <div style={styles.leftPan}>
-
           <div>
             <CoralButton
               className="form-preview-button"
               type="primary"
               icon="visibility"
               onClick={onOpenPreview}
-              style={{ width: 150, marginRight: 10 }}
+              style={styles.previewButton}
             >
               Preview
             </CoralButton>
@@ -106,11 +123,11 @@ export default class PublishOptions extends Component {
               className="form-save-button"
               type="success"
               icon="done"
-              style={{ width: 150 }}
+              style={styles.saveButton}
               onClick={onSaveClick}
+              loading={forms.savingForm || forms.loadingGallery}
             >
-              {`Save `}
-              { forms.savingForm || forms.loadingGallery ? <Spinner/> : null }
+              Save
             </CoralButton>
 
             {
@@ -119,7 +136,7 @@ export default class PublishOptions extends Component {
                   className="form-publish-button"
                   icon="settings"
                   type="black"
-                  style={{ width: 310, marginTop: 10 }}
+                  style={styles.publishButton}
                   onClick={this.togglePublishModal}
                 >
                   Publish options
@@ -130,23 +147,19 @@ export default class PublishOptions extends Component {
           </div>
 
           {activeForm ? (
-            <Modal
-              noFooter
-              style={styles.publishModal}
+            <CoralDialog
               title="Publish Options"
-              cancelAction={this.togglePublishModal}
-              isOpen={this.state.publishModalOpened}>
-
+              onCancel={this.togglePublishModal}
+              open={this.state.publishModalOpened}
+            >
               <div style={ styles.dialogContent }>
-
                 {this.getFormStatusSection()}
-
                 <div>
                   <h4 style={ styles.dialogSubTitle }>Embed options</h4>
-                  <Tabs tabBarProps={ { style: { justifyContent: 'flex-start' } } } activeTab={this.state.activeTab} onChange={(tabId) => this.setState({ activeTab: tabId })}>
-                    <Tab style={ { 'float': 'left' } }>With iframe</Tab>
-                    <Tab>Without iframe</Tab>
-                  </Tabs>
+                  <CoralTabBar style={ styles.tabBar } activeTab={this.state.activeTab} onChange={(tabId) => this.setState({ activeTab: tabId })}>
+                    <CoralTab style={ styles.tab }>With iframe</CoralTab>
+                    <CoralTab>Without iframe</CoralTab>
+                  </CoralTabBar>
                   <section>
                     {
                       this.state.activeTab == 0 ?
@@ -155,34 +168,34 @@ export default class PublishOptions extends Component {
                           <div style={ styles.rightAlignButtons }>
                             {
                               this.state.embedCopied
-                              ? <span style={ styles.copied }>Copied!</span>
-                              : null
+                                ? <span style={ styles.copied }>Copied!</span>
+                                : null
                             }
                             <CopyToClipboard
                               text={iframeCode}
                               onCopy={() => {
-                                this.setState({embedCopied: true});
-                                setTimeout(() => this.setState({embedCopied: false}), 5000);
-                              }}>
+                               this.setState({embedCopied: true});
+                               setTimeout(() => this.setState({embedCopied: false}), 5000);
+                               }}>
                               <CoralButton>Copy</CoralButton>
                             </CopyToClipboard>
                           </div>
                         </div>
-                      :
+                        :
                         <div>
                           <textarea className="embed-code-iframe" readOnly style={styles.embedCode} value={scriptCode}/>
                           <div style={ styles.rightAlignButtons }>
                             {
                               this.state.embedCopied
-                              ? <span style={ styles.copied }>Copied!</span>
-                              : null
+                                ? <span style={ styles.copied }>Copied!</span>
+                                : null
                             }
                             <CopyToClipboard
                               text={scriptCode}
                               onCopy={() => {
-                                this.setState({embedCopied: true});
-                                setTimeout(() => this.setState({embedCopied: false}), 5000);
-                              }}>
+                               this.setState({embedCopied: true});
+                               setTimeout(() => this.setState({embedCopied: false}), 5000);
+                               }}>
                               <CoralButton>Copy</CoralButton>
                             </CopyToClipboard>
                           </div>
@@ -190,38 +203,51 @@ export default class PublishOptions extends Component {
                     }
                   </section>
                 </div>
-
                 <div>
-                  <h4 style={ [ styles.dialogSubTitle, styles.withMargin ] }>Standalone {isGallery ? 'Gallery' : 'Form'} URL</h4>
+                  <h4 style={ [styles.dialogSubTitle, styles.withMargin] }>Standalone {isGallery ? 'Gallery' : 'Form'} URL</h4>
                   <textarea className="standalone-form-url" readOnly style={styles.embedCode} value={standaloneCode}/>
-                    <div style={ styles.rightAlignButtons }>
-                      {
-                        this.state.standaloneCopied
+                  <div style={ styles.rightAlignButtons }>
+                    {
+                      this.state.standaloneCopied
                         ? <span style={ styles.copied }>Copied!</span>
                         : null
-                      }
-                      <CopyToClipboard
-                        text={standaloneCode}
-                        onCopy={() => {
-                          this.setState({standaloneCopied: true});
-                          setTimeout(() => this.setState({standaloneCopied: false}), 5000);
-                        }}>
-                        <CoralButton>Copy</CoralButton>
-                      </CopyToClipboard>
-                    </div>
+                    }
+                    <CopyToClipboard
+                      text={standaloneCode}
+                      onCopy={() => {
+                       this.setState({standaloneCopied: true});
+                       setTimeout(() => this.setState({standaloneCopied: false}), 5000);
+                       }}>
+                      <CoralButton>Copy</CoralButton>
+                    </CopyToClipboard>
+                  </div>
                 </div>
-
               </div>
-            </Modal>
+            </CoralDialog>
           ): null }
-
       </div>
     );
   }
-
 }
 
 const styles = {
+  previewButton: {
+    width: 150,
+    marginRight: 10
+  },
+  saveButton: {
+    width: 150
+  },
+  publishButton: {
+    width: 310,
+    marginTop: 10
+  },
+  tabBar: {
+    justifyContent: 'flex-start'
+  },
+  tab: {
+    float: 'left'
+  },
   leftPan: {
     width: 400
   },
@@ -255,8 +281,9 @@ const styles = {
     marginBottom: 10
   },
   embedCode: {
+    fontFamily: 'Roboto',
     width: '100%',
-    padding: '15px',
+    padding: '10px',
     color: '#5d5d5d',
     marginBottom: 10,
     marginTop: 10,
@@ -290,11 +317,13 @@ const styles = {
     margin: '10px 0 0 0'
   },
   textInput: {
+    fontFamily: 'Roboto',
     width: '95%',
     margin: '10px 0 0 5%',
-    padding: '5px',
+    padding: '10px',
     fontSize: '1em',
     borderRadius: '4px',
     border: '1px solid ' + settings.mediumGrey
   }
 };
+

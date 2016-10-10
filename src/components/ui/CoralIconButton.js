@@ -12,22 +12,26 @@ import Radium from 'radium';
 export default class IconButton extends Component {
   static propTypes = {
     icon: PropTypes.string.isRequired,
+    className: PropTypes.string,
     style: PropTypes.object,
-    disabled: PropTypes.bool
+    disabled: PropTypes.bool,
+    onClick: PropTypes.func
   };
 
   render() {
-    const { onClick, icon, style, disabled, size, ...rest } = this.props;
+    const { onClick, icon, style, className, disabled, ...rest } = this.props;
+    const compClassName = `material-icons md-dark md-18 ${disabled ? 'md-inactive' : ''}`;
+
     return (
       <button
-        className="CoralIconButton"
+        className={className || ''}
         onClick={onClick}
         disabled={disabled ? 'disabled' : ''}
         style={[styles.base]}
         { ...rest }
       >
         <i
-          className="material-icons"
+          className={compClassName}
           style={[styles.icon.base]}
         >
           {icon}
@@ -53,7 +57,7 @@ const styles = {
       backgroundColor: '#d8d8d8'
     },
     ':focus': {
-      backgroundColor: '#d8d8d8'
+      backgroundColor: 'white'
     },
     ':active': {
       backgroundColor: 'white',

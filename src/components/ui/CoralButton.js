@@ -1,23 +1,30 @@
 import React, { Component,  PropTypes } from 'react';
 import Radium from 'radium';
 import color from 'color';
+import Spinner from 'components/Spinner';
 
 import { button as buttonSettings } from '../../settings'
 
 const buildCustomStyle = (customColor) => ({
-  backgroundColor: customColor,
-  color: '#FFFFFF',
+  backgroundColor: '#FFFFFF',
+  color: customColor,
   ':hover': {
-    backgroundColor: color(customColor).lighten(0.2).hexString()
+    backgroundColor: color(customColor).lighten(0.4).hexString()
   },
   active: {
-    backgroundColor: '#FFFFFF',
-    color: customColor,
+    backgroundColor: customColor,
+    color: '#FFFFFF',
     ':hover': {
-      backgroundColor: '#FFFFFF'
-    }
+      backgroundColor: color(customColor).lighten(0.2).hexString()
+    },
   }
 })
+
+/**
+ * Button
+ *
+ * Material Design Reference: https://github.com/google/material-design-lite/tree/mdl-1.x/src/button
+ */
 
 @Radium
 export default class CoralButton extends Component {
@@ -27,11 +34,25 @@ export default class CoralButton extends Component {
     active: PropTypes.bool,
     style: PropTypes.object,
     customColor: PropTypes.string,
-    disabled: PropTypes.bool
+    disabled: PropTypes.bool,
+    loading: PropTypes.bool
   };
 
   render() {
-    const { type = 'default', className, onClick, children, icon, style, active = false, customColor, ...rest } = this.props;
+    const {
+      type = 'default',
+      icon,
+      style,
+      onClick,
+      children,
+      className,
+      customColor,
+      active = false,
+      loading = false,
+      raised = true,
+      ripple,
+      ...rest
+      } = this.props;
 
     if (type === 'custom' && customColor) {
       styles.custom = buildCustomStyle(customColor)
@@ -45,7 +66,13 @@ export default class CoralButton extends Component {
 
     return (
     <button
-      className={`CoralButton mdl-button mdl-js-button mdl-button--raised ${className}`}
+      className={`
+          mdl-button
+          mdl-js-button
+          ${raised ? 'mdl-button--raised' : ''}
+          ${ripple ? 'mdl-js-ripple-effect' : ''}
+          ${className ? className : ''}
+          `}
       onClick={onClick}
       style={[
         finalStyles,
@@ -56,6 +83,7 @@ export default class CoralButton extends Component {
     >
       { icon ? <i className="material-icons" style={styles.icon} > {icon} </i> : null }
       { children }
+      { loading ? <Spinner style={styles.loading} /> : null }
     </button>
     )
   }
@@ -163,4 +191,7 @@ let styles = {
     marginRight: 5,
     fontSize: '16px'
   },
+  loading: {
+    marginLeft: 5
+  }
 };

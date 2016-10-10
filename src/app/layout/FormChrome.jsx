@@ -253,11 +253,8 @@ export default class FormChrome extends React.Component {
                     type="coral"
                     className="form-status-apply-button"
                     onClick={ this.onApplyClick }
+                    loading={forms.savingForm}
                   >
-                    { forms.savingForm
-                      ? <span><Spinner /> </span>
-                      : null
-                    }
                     Apply
                   </CoralButton>
                 </div>

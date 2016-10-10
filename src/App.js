@@ -6,7 +6,9 @@
 import React from 'react';
 import { browserHistory, Router, Route, Redirect } from 'react-router';
 import { Provider } from 'react-redux';
+import { OidcProvider } from 'redux-oidc';
 import {StyleRoot} from 'radium';
+import {UserAuthWrapper} from 'redux-auth-wrapper';
 
 // Routes
 import SearchCreator from 'app/SearchCreator';
@@ -22,47 +24,49 @@ import About from 'app/About';
 import SubmissionList from 'app/SubmissionList';
 import GalleryManager from 'app/GalleryManager';
 
-import SignUp from 'app/SignUp';
-import SignIn from 'app/SignIn';
-import ForgotPassword from 'app/ForgotPassword';
-import ResetPassword from 'app/ResetPassword';
-import Permissions from 'app/Permissions';
+import CallbackPage from 'app/CallbackPage';
+
+const UserIsAuthenticated = UserAuthWrapper({
+  authSelector: state => state.oidc.user,
+  authenticatingSelector: state => state.oidc.isLoadingUser,
+  wrapperDisplayName: 'UserIsAuthenticated',
+  // /login is the default, but putting it here for notes to future self
+  failureRedirectPath: '/login'
+});
 
 /**
  * Expose App base component. Handle all routes
  */
 
-export default ({ store, onLogPageView, defaultRoute, features }) => (
+export default ({ store, onLogPageView, defaultRoute, features, userManager }) => (
   <StyleRoot>
     <Provider store={store}>
-      <Router history={browserHistory} onUpdate={onLogPageView}>
-        <Redirect from="/" to={defaultRoute} />
-        <Route path="login" component={Login} />
-        <Route path="sign-up" component={SignUp} />
-        <Route path="sign-in" component={SignIn} />
-        <Route path="forgot-password" component={ForgotPassword} />
-        <Route path="reset-password" component={ResetPassword} />
-        <Route path="permissions" component={Permissions} />
-        <Route path="about" component={About} />
-        {features.trust !== false ?
-          <div>
-            <Route path="search-creator" component={SearchCreator} />
-            <Route path="saved-searches" component={SeeAllSearches}/>
-            <Route path="saved-search/:id" component={SearchDetail} />
-            <Route path="edit-search/:id" component={SearchEditor} />
-          </div>
-        : null}
-        {features.ask ?
-          <div>
-            <Route path="forms" component={FormList}/>
-            <Route path="forms/create" component={FormCreate}/>
-            <Route path="forms/:id" component={FormEdit}/>
-            <Route path="forms/:id/submissions" component={SubmissionList}/>
-            <Route path="forms/:id/gallery" component={GalleryManager}/>
-          </div>
-        : null}
-        <Route path="*" component={NoMatch} />
-      </Router>
+      <OidcProvider store={store} userManager={userManager}>
+        <Router history={browserHistory} onUpdate={onLogPageView}>
+          <Redirect from="/" to={defaultRoute} />
+          <Route path="login" component={Login} />
+          <Route path="about" component={About} />
+          <Route path="/callback" component={CallbackPage} />
+          {features.trust !== false ?
+            <div>
+              <Route path="search-creator" component={SearchCreator} />
+              <Route path="saved-searches" component={SeeAllSearches}/>
+              <Route path="saved-search/:id" component={SearchDetail} />
+              <Route path="edit-search/:id" component={SearchEditor} />
+            </div>
+          : null}
+          {features.ask ?
+            <div>
+              <Route path="forms" component={UserIsAuthenticated(FormList)} />
+              <Route path="forms/create" component={FormCreate}/>
+              <Route path="forms/:id" component={FormEdit}/>
+              <Route path="forms/:id/submissions" component={SubmissionList}/>
+              <Route path="forms/:id/gallery" component={GalleryManager}/>
+            </div>
+          : null}
+          <Route path="*" component={NoMatch} />
+        </Router>
+      </OidcProvider>
     </Provider>
   </StyleRoot>
 );

@@ -6,6 +6,7 @@ and all the other smart components (containers)
 */
 import React from 'react';
 import Radium from 'radium';
+import {Snackbar} from 'react-mdl';
 import Sidebar from 'app/layout/sidebar';
 
 import Header from 'app/layout/header/Header';
@@ -14,7 +15,18 @@ import FlashMessages from 'flashmessages/FlashMessages';
 import settings from 'settings';
 
 @Radium
-class Page extends React.Component {
+export default class Page extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {isSnackbarActive: true};
+
+    this.handleSnackbarTimeout = this.handleSnackbarTimeout.bind(this);
+  }
+
+  handleSnackbarTimeout() {
+    this.setState({ isSnackbarActive: false });
+  }
 
   render() {
     return (
@@ -24,13 +36,16 @@ class Page extends React.Component {
         <div style={[styles.wrapper, this.props.style]}>
           {this.props.children}
         </div>
+        <Snackbar
+          timeout={4500}
+          onTimeout={this.handleSnackbarTimeout}
+          active={this.state.isSnackbarActive}>
+          {'Welcome! You have 60 minutes before your session expires and you\'re automatically logged out'}
+        </Snackbar>
       </Sidebar>
     );
   }
 }
-
-// same as the @connect decorator above
-export default Page;
 
 const styles = {
   wrapper:  {

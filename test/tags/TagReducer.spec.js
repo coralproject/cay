@@ -1,9 +1,6 @@
 import {expect} from 'chai';
 import TagReducer from '../../src/tags/TagReducer';
-import * as tagsActions from 'tags/TagActions';
-import * as authActions from 'auth/AuthActions';
-
-const types = Object.assign({}, tagsActions, authActions);
+import * as types from 'tags/TagActions';
 
 describe('TagReducer', () => {
 
@@ -167,50 +164,6 @@ describe('TagReducer', () => {
         .and.to.be.true;
       expect(newState).to.have.property('errorMsg')
         .and.to.equal('Tag action failed: 404 Not Found');
-    });
-  });
-
-  describe('LOGIN_SUCCESS', () => {
-    let action;
-
-    beforeEach(() => {
-      action = {
-        type:types.LOGIN_SUCCESS
-      };
-    });
-
-    it('should not morph state', () => {
-      let state = {existing:'state'};
-      TagReducer(state,action);
-      expect(state).to.deep.equal({existing:'state'});
-    });
-
-    it('should set authorized to true', ()=> {
-      let newState = TagReducer(undefined, action);
-      expect(newState).to.have.property('authorized')
-        .and.to.be.true;
-    });
-  });
-
-  describe('LOGGED_OUT', () => {
-    let action;
-
-    beforeEach(() => {
-      action = {
-        type:types.LOGGED_OUT
-      };
-    });
-
-    it('should not morph state', () => {
-      let state = {existing:'state'};
-      TagReducer(state,action);
-      expect(state).to.deep.equal({existing:'state'});
-    });
-
-    it('should set authorized to false', ()=> {
-      let newState = TagReducer(undefined, action);
-      expect(newState).to.have.property('authorized')
-        .and.to.be.false;
     });
   });
 

@@ -5,7 +5,7 @@
 
 import { combineReducers } from 'redux';
 import app from 'app/AppReducer';
-import auth from 'auth/AuthReducer';
+import { reducer as oidc } from 'redux-oidc';
 import comments from 'comments/CommentReducer';
 import searches from 'search/SearchReducer';
 import tags from 'tags/TagReducer';
@@ -19,9 +19,9 @@ import flashMessages from 'flashmessages/FlashMessagesReducer';
  */
 
 export default combineReducers({
+  oidc,
   app,
   searches,
-  auth,
   comments,
   tags,
   filters,

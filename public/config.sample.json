@@ -9,6 +9,8 @@
   "googleAnalyticsId": "UA-12345678-9",
   "requireLogin": false,
   "basicAuthorization": "",
+  "authClientId": "example_client_id",
+  "authAuthority": "${authServerHost}/connect",
   "features": {
     "trust": true,
     "ask": true

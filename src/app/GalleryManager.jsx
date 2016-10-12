@@ -106,6 +106,7 @@ export default class GalleryManager extends Component {
           <input
             style={styles.galleryTitles}
             type="text"
+            value={gallery.description}
             placeholder="Write a subhead for your gallery"
             onChange={this.setDescription} />
         </div>

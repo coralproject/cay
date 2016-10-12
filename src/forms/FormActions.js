@@ -656,7 +656,9 @@ export const downloadCSV = formId => (dispatch, getState) => {
     return;
   }
 
-  window.open(`${app.askHost}/v1/form/${formId}/submission/export?filterby=${filterBy}&search=${submissionSearch}&download=true`, '_self'); // download by opening a new tab
+  fetch(`${app.askHost}/v1/form/${formId}/submission/export?filterby=${filterBy}&search=${submissionSearch}`, getInit('GET', null, oidc.user.id_token))
+  .then(handleResp)
+  .then(({ csv_url }) => window.open(`${csv_url}&filterby=${filterBy}&search=${submissionSearch}`, '_self')); // download by opening a new tab
 };
 
 export const hasFlag = (submission, flag) => -1 !== submission.flags.indexOf(flag);

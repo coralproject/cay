@@ -3,7 +3,7 @@ import Radium from 'radium'
 import { connect } from 'react-redux'
 
 import CommonFieldOptions from 'forms/CommonFieldOptions'
-import editWidgetStyles from 'forms/editors/editWidgetStyles'
+import editWidgetStyles from 'forms/editors/EditWidgetStyles'
 
 import CheckInput from '../../components/forms/CheckInput'
 
@@ -52,7 +52,7 @@ export default class TextFieldEditor extends Component {
     const { minLength } = this.props.field.props
     const { minLengthEnabled, maxLengthEnabled } = this.state
     const error = minLengthEnabled && maxLengthEnabled && maxValue < minLength
-    
+
     if (!error) {
       this.handleInputChange(maxValue, 'maxLength')
     }

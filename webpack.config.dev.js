@@ -22,7 +22,8 @@ module.exports = {
   plugins: [
     new webpack.DefinePlugin({
       'process.env': {
-        'NODE_ENV': JSON.stringify('development')
+        'NODE_ENV': JSON.stringify('development'),
+        'VERSION': JSON.stringify(require("./package.json").version)
       }
     }),
     new webpack.HotModuleReplacementPlugin(),
@@ -51,7 +52,7 @@ module.exports = {
       test: /\.json$/,
       loader: 'json-loader'
     }, {
-      test: /\.woff$/,
+      test: /\.(woff(2)?|eot|ttf)$/,
       loader: 'url?limit=100000'
     }]
   }

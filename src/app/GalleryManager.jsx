@@ -3,7 +3,6 @@ import Radium from 'radium';
 import { connect } from 'react-redux';
 import {
   fetchForm,
-  saveForm,
   fetchGallery,
   fetchSubmissions,
   removeFromGallery,
@@ -26,13 +25,9 @@ import {
 import {Link} from 'react-router';
 import moment from 'moment';
 
-import Eye from 'react-icons/lib/fa/eye';
-import Refresh from 'react-icons/lib/fa/refresh';
 import FloppyO from 'react-icons/lib/fa/floppy-o';
 import Times from 'react-icons/lib/fa/times-circle';
-import Clipboard from 'react-icons/lib/fa/clipboard';
 import Select from 'react-select';
-import CopyToClipboard from 'react-copy-to-clipboard';
 
 import settings from 'settings';
 import Page from 'app/layout/Page';
@@ -49,9 +44,11 @@ import Modal from 'components/modal/Modal';
 import GalleryAnswer from 'forms/GalleryAnswer';
 import PublishOptions from 'forms/PublishOptions';
 
+import Login from 'app/Login';
+
 import { showFlashMessage } from 'flashmessages/FlashMessagesActions';
 
-@connect(({app, forms}) => ({app, forms}))
+@connect(({oidc, app, forms}) => ({oidc, app, forms}))
 @Radium
 export default class GalleryManager extends Component {
 
@@ -106,10 +103,10 @@ export default class GalleryManager extends Component {
             value={gallery.headline}
             placeholder="Write a headline"
             onChange={this.setHeadline} />
-          <br />
           <input
             style={styles.galleryTitles}
             type="text"
+            value={gallery.description}
             placeholder="Write a subhead for your gallery"
             onChange={this.setDescription} />
         </div>
@@ -123,7 +120,9 @@ export default class GalleryManager extends Component {
             identifiableIds={gallery.config.identifiableIds || []}
             onMoveAnswerDown={this.onMoveAnswerDown.bind(this, gallery.id, i)}
             onMoveAnswerUp={this.onMoveAnswerUp.bind(this, gallery.id, i)}
-            position={i} />
+            position={i}
+            isLast={gallery.answers.length - 1 === i}
+          />
         ))}
       </div>
     );
@@ -245,7 +244,7 @@ export default class GalleryManager extends Component {
 
     switch (type) {
     case 'script-tag':
-      return `<script src="${gallery.config.baseUrl}${forms.activeGallery}.js"></script><div id="ask-gallery" />`;
+      return `<div id="ask-gallery"></div><script src="${gallery.config.baseUrl}${forms.activeGallery}.js"></script>`;
     case 'iframe':
       return `<iframe width="100%" height="580" src="${gallery.config.baseUrl}${forms.activeGallery}.html"></iframe>`;
     case 'standalone':
@@ -303,7 +302,9 @@ export default class GalleryManager extends Component {
 
   render() {
 
-    const {forms} = this.props;
+    const {forms, oidc} = this.props;
+
+    if (!oidc.user) return <Login />;
 
     const form = forms[forms.activeForm];
     const gallery = forms[forms.activeGallery] || {
@@ -536,13 +537,17 @@ const styles = {
     right: 20
   },
   galleryTitles: {
+    fontFamily: 'Roboto',
     borderRadius: 4,
-    border: '1px solid ' + settings.mediumGrey,
-    width: '75%',
-    padding: 10,
-    height: '100%',
-    fontSize: '18px',
-    display: 'block'
+    border: `1px solid ${settings.mediumGrey}`,
+    width: '72%',
+    height: 40,
+    padding: '10px 15px',
+    fontSize: '14.4px',
+    display: 'block',
+    marginBottom: 10,
+    resize: 'none',
+    overflow: 'hidden'
   },
   orientationOpts: {
     display: 'inline-block',

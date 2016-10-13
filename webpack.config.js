@@ -22,7 +22,8 @@ module.exports = {
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.DefinePlugin({
       'process.env': {
-        'NODE_ENV': JSON.stringify('production')
+        'NODE_ENV': JSON.stringify('production'),
+        'VERSION': JSON.stringify(require("./package.json").version)
       }
     }),
     new webpack.ExtendedAPIPlugin(),
@@ -54,7 +55,7 @@ module.exports = {
       test: /\.json$/,
       loader: 'json-loader'
     }, {
-      test: /\.woff$/,
+      test: /\.(woff(2)?|eot|ttf)$/,
       loader: 'url?limit=100000'
     }]
   }

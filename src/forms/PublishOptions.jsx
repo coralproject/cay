@@ -1,11 +1,13 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { Button, Tabs, Tab, RadioGroup, Radio, Textfield } from 'react-mdl';
+import { Tabs, Tab, RadioGroup, Radio, Textfield } from 'react-mdl';
+import { CoralButton, CoralDialog, CoralTabBar, CoralTab } from '../components/ui';
 
 import Spinner from 'components/Spinner';
-
 import CopyToClipboard from 'react-copy-to-clipboard';
+
+import settings from 'settings';
 
 import {
   updateFormStatus,
@@ -20,7 +22,11 @@ export default class PublishOptions extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { publishModalOpened: false, formStatus: 'closed', activeTab: 0 };
+    this.state = {
+      publishModalOpened: false,
+      formStatus: 'closed',
+      activeTab: 0
+    };
 
     this.onFormStatusChange = this.onFormStatusChange.bind(this);
     this.onInactiveMessageChange = this.onInactiveMessageChange.bind(this);
@@ -28,7 +34,9 @@ export default class PublishOptions extends Component {
   }
 
   togglePublishModal() {
-    this.setState({ publishModalOpened: !this.state.publishModalOpened });
+    this.setState((state) => ({
+      publishModalOpened: !state.publishModalOpened
+    }));
   }
 
   onFormStatusChange(e) {
@@ -53,29 +61,32 @@ export default class PublishOptions extends Component {
             onChange={ this.onFormStatusChange }
             childContainer="div"
             value={ form.status }
-            name="formStatusRadio">
+            name="formStatusRadio"
+          >
             <Radio value="open" ripple>Live, accepting submissions</Radio>
             <Radio value="closed">Closed, not accepting submissions</Radio>
           </RadioGroup>
           {
             this.state.formStatus && this.state.formStatus == 'closed'
             ? <div>
-              <Textfield
+              <input type="text"
                 onChange={this.onInactiveMessageChange}
-                label="We are not currently accepting submissions..."
+                placeholder="We are not currently accepting submissions..."
                 value={form.settings.inactiveMessage}
-                style={{ width: '95%', marginLeft: '5%' }}
-              />
+                style={styles.textInput}
+                />
               </div>
             : null
           }
           <div style={ styles.rightAlignButtons }>
-            <Button
-              raised ripple
+            <CoralButton
+              type="success"
               style={{ marginTop: 20 }}
-              onClick={onSaveClick}>
-              { forms.savingForm ? <Spinner/> : null } Apply
-            </Button>
+              onClick={onSaveClick}
+              loading={forms.savingForm}
+            >
+              Apply
+            </CoralButton>
           </div>
         </div>
       : null
@@ -83,135 +94,160 @@ export default class PublishOptions extends Component {
   }
 
   render() {
-
-    const { onOpenPreview, forms, activeForm, onSaveClick, iframeCode, scriptCode, standaloneCode, hideOptions, isGallery } = this.props;
+    const {
+      onOpenPreview,
+      forms,
+      activeForm,
+      onSaveClick,
+      iframeCode,
+      scriptCode,
+      standaloneCode,
+      hideOptions,
+      isGallery
+      } = this.props;
 
     return (
       <div style={styles.leftPan}>
-
           <div>
-            <Button
-              raised ripple primary
+            <CoralButton
               className="form-preview-button"
+              type="primary"
+              icon="visibility"
               onClick={onOpenPreview}
-              style={{ width: 150, marginRight: 10, backgroundColor: '#4565A1' }}>
+              style={styles.previewButton}
+            >
               Preview
-            </Button>
-            <Button
+            </CoralButton>
+
+            <CoralButton
               className="form-save-button"
-              style={{ width: 150, backgroundColor: '#358D66' }}
-              raised ripple colored
-              onClick={onSaveClick}>
-              { forms.savingForm || forms.loadingGallery ? <Spinner/> : null } Save
-            </Button>
+              type="success"
+              icon="done"
+              style={styles.saveButton}
+              onClick={onSaveClick}
+              loading={forms.savingForm || forms.loadingGallery}
+            >
+              Save
+            </CoralButton>
 
             {
               activeForm && !hideOptions
-              ? <Button
+              ? <CoralButton
                   className="form-publish-button"
-                  style={{ width: 310, marginTop: 10, backgroundColor: '#353B43' }}
-                  raised ripple accent
-                  onClick={this.togglePublishModal}>
+                  icon="settings"
+                  type="black"
+                  style={styles.publishButton}
+                  onClick={this.togglePublishModal}
+                >
                   Publish options
-                </Button>
+                </CoralButton>
               : null
             }
 
           </div>
 
           {activeForm ? (
-            <Modal
-              noFooter
-              style={styles.publishModal}
+            <CoralDialog
               title="Publish Options"
-              cancelAction={this.togglePublishModal}
-              isOpen={this.state.publishModalOpened}>
-
+              onCancel={this.togglePublishModal}
+              open={this.state.publishModalOpened}
+            >
               <div style={ styles.dialogContent }>
-
                 {this.getFormStatusSection()}
-
                 <div>
                   <h4 style={ styles.dialogSubTitle }>Embed options</h4>
-                  <Tabs tabBarProps={ { style: { justifyContent: 'flex-start' } } } activeTab={this.state.activeTab} onChange={(tabId) => this.setState({ activeTab: tabId })}>
-                    <Tab style={ { 'float': 'left' } }>With iframe</Tab>
-                    <Tab>Without iframe</Tab>
-                  </Tabs>
+                  <CoralTabBar style={ styles.tabBar } activeTab={this.state.activeTab} onChange={(tabId) => this.setState({ activeTab: tabId })}>
+                    <CoralTab style={ styles.tab }>With iframe</CoralTab>
+                    <CoralTab>Without iframe</CoralTab>
+                  </CoralTabBar>
                   <section>
                     {
                       this.state.activeTab == 0 ?
                         <div>
                           <textarea className="embed-code" readOnly style={styles.embedCode} value={iframeCode}/>
                           <div style={ styles.rightAlignButtons }>
+                            {
+                              this.state.embedCopied
+                                ? <span style={ styles.copied }>Copied!</span>
+                                : null
+                            }
                             <CopyToClipboard
                               text={iframeCode}
                               onCopy={() => {
-                                this.setState({embedCopied: true});
-                                setTimeout(() => this.setState({embedCopied: false}), 5000);
-                              }}>
-                              <Button raised>Copy</Button>
+                               this.setState({embedCopied: true});
+                               setTimeout(() => this.setState({embedCopied: false}), 5000);
+                               }}>
+                              <CoralButton>Copy</CoralButton>
                             </CopyToClipboard>
                           </div>
-                          {
-                            this.state.embedCopied
-                            ? <span style={ styles.copied }>Copied!</span>
-                            : null
-                          }
                         </div>
-                      :
+                        :
                         <div>
                           <textarea className="embed-code-iframe" readOnly style={styles.embedCode} value={scriptCode}/>
                           <div style={ styles.rightAlignButtons }>
+                            {
+                              this.state.embedCopied
+                                ? <span style={ styles.copied }>Copied!</span>
+                                : null
+                            }
                             <CopyToClipboard
                               text={scriptCode}
                               onCopy={() => {
-                                this.setState({embedCopied: true});
-                                setTimeout(() => this.setState({embedCopied: false}), 5000);
-                              }}>
-                              <Button raised>Copy</Button>
+                               this.setState({embedCopied: true});
+                               setTimeout(() => this.setState({embedCopied: false}), 5000);
+                               }}>
+                              <CoralButton>Copy</CoralButton>
                             </CopyToClipboard>
                           </div>
-                          {
-                            this.state.embedCopied
-                            ? <span style={ styles.copied }>Copied!</span>
-                            : null
-                          }
                         </div>
                     }
                   </section>
                 </div>
-
                 <div>
-                  <h4 style={ styles.dialogSubTitle }>Standalone {isGallery ? 'Gallery' : 'Form'} URL</h4>
+                  <h4 style={ [styles.dialogSubTitle, styles.withMargin] }>Standalone {isGallery ? 'Gallery' : 'Form'} URL</h4>
                   <textarea className="standalone-form-url" readOnly style={styles.embedCode} value={standaloneCode}/>
-                    <div style={ styles.rightAlignButtons }>
-                      <CopyToClipboard
-                        text={standaloneCode}
-                        onCopy={() => {
-                          this.setState({standaloneCopied: true});
-                          setTimeout(() => this.setState({standaloneCopied: false}), 5000);
-                        }}>
-                        <Button raised>Copy</Button>
-                      </CopyToClipboard>
-                    </div>
+                  <div style={ styles.rightAlignButtons }>
                     {
                       this.state.standaloneCopied
-                      ? <span style={ styles.copied }>Copied!</span>
-                      : null
+                        ? <span style={ styles.copied }>Copied!</span>
+                        : null
                     }
+                    <CopyToClipboard
+                      text={standaloneCode}
+                      onCopy={() => {
+                       this.setState({standaloneCopied: true});
+                       setTimeout(() => this.setState({standaloneCopied: false}), 5000);
+                       }}>
+                      <CoralButton>Copy</CoralButton>
+                    </CopyToClipboard>
+                  </div>
                 </div>
-
               </div>
-            </Modal>
+            </CoralDialog>
           ): null }
-
       </div>
     );
   }
-
 }
 
 const styles = {
+  previewButton: {
+    width: 150,
+    marginRight: 10
+  },
+  saveButton: {
+    width: 150
+  },
+  publishButton: {
+    width: 310,
+    marginTop: 10
+  },
+  tabBar: {
+    justifyContent: 'flex-start'
+  },
+  tab: {
+    float: 'left'
+  },
   leftPan: {
     width: 400
   },
@@ -245,16 +281,21 @@ const styles = {
     marginBottom: 10
   },
   embedCode: {
+    fontFamily: 'Roboto',
     width: '100%',
-    padding: '15px',
+    padding: '10px',
     color: '#5d5d5d',
     marginBottom: 10,
     marginTop: 10,
-    resize: 'none'
+    resize: 'none',
+    fontSize: '.9em',
+    borderRadius: '4px',
+    border: '1px solid ' + settings.mediumGrey
   },
   dialogSubTitle: {
-    margin: '10px 0',
-    fontWeight: 'bold'
+    margin: '0 0 10px 0',
+    fontWeight: 'bold',
+    color: settings.darkColorBase
   },
   closeButton: {
     position: 'absolute',
@@ -263,12 +304,26 @@ const styles = {
   },
   copied: {
     paddingLeft: '15px',
-    color: '#0a0'
+    color: '#0a0',
+    marginRight: '15px'
   },
   dialogContent: {
     padding: 10
   },
   rightAlignButtons: {
     textAlign: 'right'
+  },
+  withMargin: {
+    margin: '10px 0 0 0'
+  },
+  textInput: {
+    fontFamily: 'Roboto',
+    width: '95%',
+    margin: '10px 0 0 5%',
+    padding: '10px',
+    fontSize: '1em',
+    borderRadius: '4px',
+    border: '1px solid ' + settings.mediumGrey
   }
 };
+

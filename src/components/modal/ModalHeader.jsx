@@ -13,33 +13,63 @@ export default class ModalHeader extends React.Component {
 
   render() {
     return (
-      <div style={styles.base}>
-        <span>{this.props.title}</span>
-        <span style={styles.ex} onClick={this.props.cancelAction}>×</span>
+      <div style={styles.titleDivider}>
+        <div style={styles.title}>{this.props.title}</div>
+        <span style={styles.close} onClick={this.props.cancelAction}>×</span>
       </div>
     );
   }
 }
 
 const styles = {
-  base: {
-    borderBottom: '1px solid ' + settings.mediumGrey,
-    paddingBottom: 16,
-    paddingTop: 8,
-    paddingLeft: 8,
-    paddingRight: 8,
-    marginBottom: 8
-  },
-  ex: {
-    fontSize: 40,
+  close: {
+    fontSize: 30,
     lineHeight: '14px',
-    float: 'right',
+    top: '4px',
+    right: '30px',
+    position: 'absolute',
     display: 'block',
     fontWeight: 'bold',
-    color: settings.darkGrey,
+    color: settings.darkColorBase,
     cursor: 'pointer',
     ':hover': {
-      color: settings.darkestGrey
+      color: settings.darkColorBase
     }
+  },
+  title: {
+    fontWeight: 'bold',
+    margin: '20px 30px',
+    fontSize: '1.25em'
+  },
+  heading: {
+    fontWeight: 'bold',
+    fontSize: '1.1em'
+  },
+  subHeading: {
+    fontWeight: 'bold',
+    fontSize: '1em'
+  },
+  paragraphText: {
+    fontSize: '1em',
+    fontWeight: 'regular'
+  },
+  links: {
+    fontSize: '1em',
+    color: '#4285F4'
+  },
+  textArea: {
+    fontSize: '1em',
+    fontWeight: 'regular',
+    borderRadius: '4px',
+    padding: '10px'
+  },
+  textField: {
+    fontWeight: 'regular',
+    borderRadius: '4px',
+    padding: '5px 10px'
+  },
+  titleDivider: {
+    borderBottom: '1px solid #d4d4d4',
+    position: 'relative'
   }
 };

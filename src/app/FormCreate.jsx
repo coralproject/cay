@@ -10,16 +10,18 @@ import { connect } from 'react-redux';
 import {
   copyForm,
   createEmpty,
-  updateForm,
-  updateFormSettings
+  updateFormSettings,
+  leavingEdit
  } from 'forms/FormActions';
 import { showFlashMessage } from 'flashmessages/FlashMessagesActions';
+import Login from 'app/Login';
 import Page from 'app/layout/Page';
 import FormBuilder from 'forms/FormBuilder.js';
 import FormChrome from 'app/layout/FormChrome';
 
-@connect(({ app, forms }) => ({
+@connect(({ oidc, app, forms }) => ({
   elkhornHost: app.elkhornHost,
+  oidc,
   forms
 }))
 @Radium
@@ -27,7 +29,12 @@ export default class FormCreate extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { preview: false };
+
+    this.state = {
+      preview: false
+    };
+
+    this.leavingEdit = this.leavingEdit.bind(this);
   }
 
   componentWillMount() {
@@ -42,7 +49,14 @@ export default class FormCreate extends Component {
     this.props.dispatch(updateFormSettings({ inactiveMessage: value }));
   }
 
+  leavingEdit() {
+    const {dispatch, params} = this.props;
+    dispatch(leavingEdit(params.id));
+  }
+
   render() {
+    if (!this.props.oidc.user) return <Login />;
+
     const { preview } = this.state;
     return (
       <Page style={styles.page}>
@@ -57,7 +71,9 @@ export default class FormCreate extends Component {
             onOpenPreview={ this.showPreview.bind(this) }
             route={ this.props.route }
             create={true}
-            preview={preview} />
+            preview={preview}
+            leavingEdit={this.leavingEdit}
+          />
         </div>
       </Page>
     );

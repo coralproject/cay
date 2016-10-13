@@ -7,7 +7,7 @@ import React from 'react';
 import Radium from 'radium';
 import { Link } from 'react-router';
 
-import MenuItem from 'app/layout/Sidebar/MenuItem';
+import MenuItem from 'app/layout/sidebar/MenuItem';
 import FaCog from 'react-icons/lib/fa/cog';
 import FaBug from 'react-icons/lib/fa/bug';
 import FaAngleDoubleLeft from 'react-icons/lib/fa/angle-double-left';
@@ -41,10 +41,10 @@ export default Radium(({ open, features, onToggleSidebar }) => (
 
 const TopMenu = ({ features }) => (
   <ul>
-    { features.trust === false ? null : <MenuItem name={ L.t('Trust') } target="/search-creator" icon={<TrustIcon wh="24px" fill="rgb(155, 155, 155)" stroke="rgb(155, 155, 155)" />} />}
-    {/**features.trust === false ? null : <MenuItem name={ L.t('Saved Searches') } target="/saved-searches" icon={<FaDashboard />} />**/}
-    {/** features.ask ? <MenuItem open={open} name="Create Form" target="/forms/create" icon={<MdBuild />} /> : null **/}
-    { features.ask ? <MenuItem open={open} name="Ask" target="/forms" icon={<AskIcon wh="24px" fill="rgb(155, 155, 155)" stroke="rgb(155, 155, 155)" />}/> : null }
+    { features.trust === false ? null : <MenuItem label={ L.t('Trust') } target="/search-creator" icon={<TrustIcon wh="24px" fill="rgb(155, 155, 155)" stroke="rgb(155, 155, 155)" />} />}
+    {/**features.trust === false ? null : <MenuItem label={ L.t('Saved Searches') } target="/saved-searches" icon={<FaDashboard />} />**/}
+    {/** features.ask ? <MenuItem open={open} label="Create Form" target="/forms/create" icon={<MdBuild />} /> : null **/}
+    { features.ask ? <MenuItem open={open} label="Ask" target="/forms" icon={<AskIcon wh="24px" fill="rgb(155, 155, 155)" stroke="rgb(155, 155, 155)" />}/> : null }
   </ul>
 );
 
@@ -54,10 +54,9 @@ const TopMenu = ({ features }) => (
 
 const BottomMenu = ({ open, onToggleSidebar }) => (
   <ul>
-    <MenuItem name="Report bug / Give Feedback" externalLink={true} target="https://coralproject.net/contribute.html#other-ideas-and-bug-reports"
-      icon={<FaBug />} />
-    <MenuItem name="Collapse menu" target='#' onClick={stopAndBubble(onToggleSidebar)}
-      icon={open ? <FaAngleDoubleLeft /> : <FaAngleDoubleRight />} />
+    <MenuItem label="Report bug / Give Feedback" externalLink={true} target="https://coralproject.net/contribute.html#other-ideas-and-bug-reports" icon={<FaBug />} />
+    <MenuItem label="Collapse menu" target='#' onClick={stopAndBubble(onToggleSidebar)} icon={open ? <FaAngleDoubleLeft /> : <FaAngleDoubleRight />} />
+    <a style={styles.version}>{`Version: ${process.env.VERSION}`}</a>
   </ul>
 );
 
@@ -76,6 +75,18 @@ const stopAndBubble = fn => evt => {
  */
 
 const styles = {
+  version: {
+    padding: '0 10px 0 50px',
+    display: 'block',
+    textDecoration: 'none',
+    color: '#9b9b9b',
+    fontWeight: '400',
+    fontSize: 14,
+    margin: 10,
+    borderRadius: 5,
+    minHeight: 47,
+    lineHeight: 1.5
+  },
   logo: {
     display: 'flex',
     alignItems: 'center',
@@ -90,7 +101,8 @@ const styles = {
   },
   logoText: {
     marginLeft: 15,
-    width: 128
+    width: 128,
+    fontWeight: 400
   },
   sidebarWrapper: {
     height: '100%',

@@ -7,17 +7,19 @@ import React, { PropTypes, Component } from 'react';
 import Radium from 'radium';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import { copyForm, deleteForm, fetchForms } from 'forms/FormActions';
-import { mediumGrey, lightGrey, brandColor } from 'settings';
+import { deleteForm, fetchForms } from 'forms/FormActions';
+import { mediumGrey, brandColor } from 'settings';
 import Page from 'app/layout/Page';
-import { Spinner, Button, IconButton, DataTable, TableHeader } from 'react-mdl';
+import { IconButton, DataTable, TableHeader } from 'react-mdl';
 import ContentHeader from 'components/ContentHeader';
-import ButtonGroup from 'components/ButtonGroup';
 import L from 'i18n';
 import moment from 'moment';
+import Login from 'app/Login';
+
+import { CoralButton } from '../components/ui';
 
 // Forms, Widgets, Submissions
-@connect(({ forms }) => ({ forms }))
+@connect(({ oidc, forms }) => ({ oidc, forms }))
 @Radium
 export default class FormList extends Component {
   constructor(props) {
@@ -34,6 +36,12 @@ export default class FormList extends Component {
 
   componentWillMount() {
     this.props.dispatch(fetchForms());
+  }
+
+  componentWillUpdate() {
+    if (!this.props.forms.formList) {
+      this.props.dispatch(fetchForms());
+    }
   }
 
   confirmDeletion(name, description, index, event) {
@@ -64,27 +72,49 @@ export default class FormList extends Component {
   }
 
   onCopyFormClick(form, event) {
-      event.stopPropagation();
-      this.context.router.push(`/forms/create?copying=${form.id}`);
+    event.stopPropagation();
+    this.context.router.push(`/forms/create?copying=${form.id}`);
   }
 
   render() {
-    const forms = this.props.forms.formList.map(id => this.props.forms[id]);
-    const visibleForms = forms.filter(form => form.status === this.state.displayMode);
+
+    const {oidc, forms} = this.props;
+
+    if (oidc.isLoadingUser) {
+      return <p>Authorizing user...</p>;
+    }
+
+    if (!oidc.user) {
+      return <Login />;
+    }
+
+    const allForms = forms.formList.map(id => forms[id]);
+    const visibleForms = allForms.filter(form => form.status === this.state.displayMode);
     const { displayMode } = this.state;
 
     return (
       <Page>
         <ContentHeader title="View Forms" style={styles.header} subhead="Create, edit and view forms">
           <Link to="forms/create" style={styles.createButton}>
-            <Button raised colored>Create</Button>
+            <CoralButton icon="add" type="success">
+            Create a form
+          </CoralButton>
           </Link>
         </ContentHeader>
 
-        <Button accent colored raised={displayMode === 'open'}
-          onClick={this.setDisplayMode.bind(this, 'open')}>Live</Button>
-        <Button accent colored raised={displayMode === 'closed'}
-          onClick={this.setDisplayMode.bind(this, 'closed')}>Closed</Button>
+        <CoralButton
+          active={displayMode === 'open'}
+          onClick={this.setDisplayMode.bind(this, 'open')}
+          style={{ marginRight: 10 }}
+        >
+          Live
+        </CoralButton>
+        <CoralButton
+          active={displayMode === 'closed'}
+          onClick={this.setDisplayMode.bind(this, 'closed')}
+        >
+          Closed
+        </CoralButton>
 
         <FormTable forms={visibleForms} onRowClick={this.onRowClick.bind(this)}
           confirmDeletion={this.confirmDeletion.bind(this)} onCopyFormClick={this.onCopyFormClick.bind(this)}

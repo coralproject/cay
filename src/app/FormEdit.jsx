@@ -13,10 +13,10 @@ import {
   updateFormStatus,
   requestEditAccess,
   leavingEdit,
-  saveForm,
   updateFormSettings,
   fetchForm } from 'forms/FormActions';
 
+import Login from 'app/Login';
 import Page from 'app/layout/Page';
 import FormChrome from 'app/layout/FormChrome';
 import FormBuilder from 'forms/FormBuilder.js';
@@ -25,7 +25,7 @@ import FormBuilder from 'forms/FormBuilder.js';
  * Expose Form Edit page component
  */
 
-@connect(({ forms }) => ({ forms }))
+@connect(({ oidc, forms }) => ({ oidc, forms }))
 @Radium
 export default class FormEdit extends Component {
 
@@ -41,6 +41,7 @@ export default class FormEdit extends Component {
     this.onClosePreview = this.onClosePreview.bind(this);
     this.showPreview = this.showPreview.bind(this);
     this.updateInactive = this.updateInactive.bind(this);
+    this.leavingEdit = this.leavingEdit.bind(this);
   }
 
   componentWillMount() {
@@ -49,12 +50,9 @@ export default class FormEdit extends Component {
     dispatch(fetchForm(params.id));
   }
 
-  componentDidMount() {
+  leavingEdit() {
     const {dispatch, params} = this.props;
-    this.props.history.listenBefore(() => {
-      dispatch(leavingEdit(params.id));
-      return true;
-    });
+    dispatch(leavingEdit(params.id));
   }
 
   onClosePreview() {
@@ -79,11 +77,13 @@ export default class FormEdit extends Component {
   }
 
   render() {
-    const { forms, route } = this.props;
+    const { oidc, forms, route } = this.props;
     const { submissionList, activeForm, activeGallery } = forms;
     const submissions = submissionList.map(id => forms[id]);
     const form = forms[activeForm];
     const gallery = forms[activeGallery];
+
+    if (!oidc.user) return <Login />;
 
     return (
       <Page>
@@ -98,11 +98,13 @@ export default class FormEdit extends Component {
           {
             form ?
               <FormBuilder
-                activeForm={ forms.activeForm }
+                activeForm={forms.activeForm}
                 onClosePreview={this.onClosePreview}
-                onOpenPreview={ this.showPreview }
-                route={ route }
-                preview={this.state.preview} />
+                onOpenPreview={this.showPreview}
+                route={route}
+                preview={this.state.preview}
+                leavingEdit={this.leavingEdit}
+              />
             : null
           }
         </div>

@@ -3,11 +3,8 @@
  * Import action names
  */
 
-import * as tagsActions from 'tags/TagActions';
-import * as authActions from 'auth/AuthActions';
+import * as types from 'tags/TagActions';
 import L from 'i18n';
-
-const types = Object.assign({}, tagsActions, authActions);
 
 /**
  * Initial state
@@ -63,19 +60,12 @@ export default (state = initialState, action) => {
       errorMsg: `${L.t('Tag action failed')}: ${action.err}`
     };
 
-  // there's probably a better way to do this
-  case types.LOGIN_SUCCESS:
-    return {...state, authorized: true};
-
-  case types.LOGGED_OUT:
-    return {...state, authorized: false};
-
   case types.REQUEST_ALL_TAGS:
     return {...state, loadingTags: true};
 
   case types.RECEIVE_ALL_TAGS:
     return {...state, loadingTags: false, items: action.tags};
-    
+
   default:
     // console.log('no reducer matches:', action.type);
     return state;

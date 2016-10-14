@@ -25,9 +25,37 @@ app.use(require('webpack-dev-middleware')(compiler, {
 
 app.use(require('webpack-hot-middleware')(compiler, {log: () => {}}));
 
+var feConfig = JSON.parse(fs.readFileSync('public/config.json'));
+
+// Inspect the first request in order to setup runtime configuration
+var hasInitialRequest = false;
+function setupRuntime(req, res, next){
+  if(!hasInitialRequest){
+    hasInitialRequest = true;
+    var script = feConfig.runtimeSetupScript;
+    if(typeof script != 'undefined' && script.length > 0){
+      fs.stat(script, function(err, stat){
+        if(err != null){
+          console.log('An error ('+err.code+') occurred when trying to execute the setupRuntimeScript named '+script);
+        }
+        else {
+          var sys = require('sys')
+          var exec = require('child_process').exec
+          function echo(error, stdout, stderr){
+            sys.puts(stdout)
+          }
+          var host = req.get('host');
+          exec('sh '+script+' '+host, echo);
+        }
+      });
+    }
+  }
+  next();
+}
+app.use(setupRuntime);
+
 // Setup proxy routes to use on Hosts that only expose one external port (i.e.
 // Heroku)
-var feConfig = JSON.parse(fs.readFileSync('public/config.json'));
 app.use('/xenia', proxy(feConfig.xeniaHost));
 app.use('/ask', proxy(feConfig.askHost));
 app.use('/elkhorn', proxy(feConfig.elkhornHost));

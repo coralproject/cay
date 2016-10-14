@@ -15,5 +15,7 @@
     "trust": true,
     "ask": true
   },
-  "recaptcha": false
+  "recaptcha": false,
+  "proxy": false,
+  "setupRuntimeScript": ""
 }

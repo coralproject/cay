@@ -24,6 +24,7 @@ fi
 
 if [[ -z "$TRUST" ]]; then
     export TRUST=false
+fi
 
 if [[ -z "$AUTH_CLIENT_ID" ]]; then
     export AUTH_CLIENT_ID=""

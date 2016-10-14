@@ -23,7 +23,14 @@ else
 fi
 
 if [[ -z "$TRUST" ]]; then
-    export TRUST=true,
+    export TRUST=false
+
+if [[ -z "$AUTH_CLIENT_ID" ]]; then
+    export AUTH_CLIENT_ID=""
+fi
+
+if [[ -z "$AUTH_AUTHORITY" ]]; then
+    export AUTH_AUTHORITY=""
 fi
 
 envsubst < /assets/config.json > /usr/share/nginx/html/config.json

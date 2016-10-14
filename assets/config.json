@@ -7,10 +7,11 @@
  "brand": "${PROJECT}",
  "googleAnalyticsId": "${GAID}",
  "requireLogin": false,
+ "authClientId": "",
+ "authAuthority": "",
  "basicAuthorization": "Basic ${AUTH_TOKEN}",
   "features": {
   	"trust": false,
     "ask": true
   }
 }
-

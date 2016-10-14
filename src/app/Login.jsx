@@ -44,7 +44,7 @@ export default class Login extends React.Component {
               category="primary"
               onClick={this.loginUser}
             > Log In </Button>
-            <a style={styles.loginRequest} href="https://coralproject.net/beta-testers/">How can I request a login?</a>
+            <a style={styles.loginRequest} href="https://blog.coralproject.net/beta-testers/">How can I request a login?</a>
           </div>
         </div>
       </div>

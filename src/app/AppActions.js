@@ -10,6 +10,7 @@ import XeniaDriver from 'xenia-driver';
  */
 
 export const CONFIG_ERROR = 'CONFIG_ERROR';
+export const AUTH_SNACKBAR_DISPLAYED_ONCE = 'AUTH_SNACKBAR_DISPLAYED_ONCE';
 
 
 /**
@@ -32,3 +33,5 @@ export const configXenia = () => (dispatch, getState) => {
  */
 
 export const configError = message => ({ type: CONFIG_ERROR, message });
+
+export const authSnackbarDisplayedOnce = () => ({type: AUTH_SNACKBAR_DISPLAYED_ONCE});

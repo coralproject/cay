@@ -7,6 +7,7 @@ import React, { PropTypes, Component } from 'react';
 import Radium from 'radium';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
+import { authSnackbarDisplayedOnce } from 'app/AppActions';
 import { deleteForm, fetchForms } from 'forms/FormActions';
 import { mediumGrey, brandColor } from 'settings';
 import Page from 'app/layout/Page';
@@ -19,7 +20,7 @@ import Login from 'app/Login';
 import { CoralButton } from '../components/ui';
 
 // Forms, Widgets, Submissions
-@connect(({ oidc, forms }) => ({ oidc, forms }))
+@connect(({ app, oidc, forms }) => ({ app, oidc, forms }))
 @Radium
 export default class FormList extends Component {
   constructor(props) {
@@ -42,6 +43,10 @@ export default class FormList extends Component {
     if (!this.props.forms.formList) {
       this.props.dispatch(fetchForms());
     }
+  }
+
+  componentWillUnmount() {
+    this.props.dispatch(authSnackbarDisplayedOnce());
   }
 
   confirmDeletion(name, description, index, event) {
@@ -78,7 +83,7 @@ export default class FormList extends Component {
 
   render() {
 
-    const {oidc, forms} = this.props;
+    const {app, oidc, forms} = this.props;
 
     if (oidc.isLoadingUser) {
       return <p>Authorizing user...</p>;
@@ -91,9 +96,10 @@ export default class FormList extends Component {
     const allForms = forms.formList.map(id => forms[id]);
     const visibleForms = allForms.filter(form => form.status === this.state.displayMode);
     const { displayMode } = this.state;
+    const authTimeout = new Date(oidc.user.expires_at * 1000);
 
     return (
-      <Page>
+      <Page authTimeout={authTimeout} displayAuthSnackbar={!app.authSnackbarDisplayedOnce}>
         <ContentHeader title="View Forms" style={styles.header} subhead="Create, edit and view forms">
           <Link to="forms/create" style={styles.createButton}>
             <CoralButton icon="add" type="success">

@@ -22,6 +22,7 @@ import {
   beginEdit,
   reinsertGalleryAnswer
 } from 'forms/FormActions';
+import {authSnackbarDisplayedOnce} from 'app/AppActions';
 import {Link} from 'react-router';
 import moment from 'moment';
 
@@ -39,7 +40,6 @@ import GalleryPreview from 'forms/GalleryPreview';
 
 import TextField from 'components/forms/TextField';
 import Button from 'components/Button';
-import Modal from 'components/modal/Modal';
 
 import GalleryAnswer from 'forms/GalleryAnswer';
 import PublishOptions from 'forms/PublishOptions';
@@ -75,6 +75,10 @@ export default class GalleryManager extends Component {
     // for the nav to have the correct count of submissions for this form/gallery
     this.props.dispatch(fetchSubmissions(this.props.params.id));
     this.props.dispatch(fetchGallery(this.props.params.id));
+  }
+
+  componentWillUnmount() {
+    this.props.dispatch(authSnackbarDisplayedOnce());
   }
 
   removeSubmission(galleryId, submissionId, answerId) {
@@ -302,9 +306,11 @@ export default class GalleryManager extends Component {
 
   render() {
 
-    const {forms, oidc} = this.props;
+    const {forms, oidc, app} = this.props;
 
     if (!oidc.user) return <Login />;
+
+    const authTimeout = new Date(oidc.user.expires_at * 1000);
 
     const form = forms[forms.activeForm];
     const gallery = forms[forms.activeGallery] || {
@@ -327,7 +333,7 @@ export default class GalleryManager extends Component {
     ];
 
     return (
-      <Page>
+      <Page authTimeout={authTimeout} displayAuthSnackbar={!app.authSnackbarDisplayedOnce}>
         <FormChrome
           activeTab="gallery"
           updateStatus={this.updateFormStatus}

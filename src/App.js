@@ -58,10 +58,10 @@ export default ({ store, onLogPageView, defaultRoute, features, userManager }) =
           {features.ask ?
             <div>
               <Route path="forms" component={UserIsAuthenticated(FormList)} />
-              <Route path="forms/create" component={FormCreate}/>
-              <Route path="forms/:id" component={FormEdit}/>
-              <Route path="forms/:id/submissions" component={SubmissionList}/>
-              <Route path="forms/:id/gallery" component={GalleryManager}/>
+              <Route path="forms/create" component={UserIsAuthenticated(FormCreate)}/>
+              <Route path="forms/:id" component={UserIsAuthenticated(FormEdit)}/>
+              <Route path="forms/:id/submissions" component={UserIsAuthenticated(SubmissionList)}/>
+              <Route path="forms/:id/gallery" component={UserIsAuthenticated(GalleryManager)}/>
             </div>
           : null}
           <Route path="*" component={NoMatch} />

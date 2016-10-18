@@ -115,10 +115,7 @@ export default class SubmissionList extends Component {
     const submission = this.props.forms[activeSubmission];
     const form = this.props.forms[activeForm];
     const gallery = this.props.forms[activeGallery];
-
-    if (!oidc.user) return <Login />;
-
-    const authTimeout = new Date(oidc.user.expires_at * 1000);
+    const authTimeout = app.features.authEnabled ? new Date(oidc.user.expires_at * 1000) : undefined;
 
     return (
       <Page

@@ -42,10 +42,16 @@ export default class TextAreaEditor extends Component {
       props
     })
   }
+  onIncludeInGroups() {
+
+  }
   handleInputChange(value, prop) {
     this.extendFieldProps({
       [prop]: Number(value)
     })
+
+    console.log(this.props)
+
   }
   handleMaxInput(e) {
     const maxValue = e.target.value;
@@ -87,7 +93,7 @@ export default class TextAreaEditor extends Component {
     }
   }
   render() {
-    const { handleMinInput, handleMaxInput, props, state } = this;
+    const { handleMinInput, handleMaxInput, includeInGroups, props, state } = this;
     const { field } = props
     const { minLengthEnabled, maxLengthEnabled, error } = state
 
@@ -116,6 +122,14 @@ export default class TextAreaEditor extends Component {
               handleInput={handleMaxInput}
               defaultValue={field.props.maxLength}
             />
+            <label>
+              <input type="checkbox"
+                className="form-include-in-groups"
+                onChange={ (e) => this.onIncludeInGroups(e) }
+                value={ field.props.includeInGroups } 
+                checked={ field.props.includeInGroups } />
+                Include in Groups
+            </label>
           </div>
           <CommonFieldOptions
             {...this.props}

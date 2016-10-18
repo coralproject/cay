@@ -42,9 +42,6 @@ export default class TextAreaEditor extends Component {
       props
     })
   }
-  onIncludeInGroups() {
-
-  }
   handleInputChange(value, prop) {
     this.extendFieldProps({
       [prop]: Number(value)
@@ -91,6 +88,15 @@ export default class TextAreaEditor extends Component {
     } else {
       this.handleInputChange(0, prop)
     }
+  }
+  onIncludeInGroups(e) {
+
+    this.extendFieldProps({
+      includeInGroups: e.target.checked
+    })
+
+    console.log(this.props)
+
   }
   render() {
     const { handleMinInput, handleMaxInput, includeInGroups, props, state } = this;

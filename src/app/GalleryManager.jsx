@@ -307,10 +307,7 @@ export default class GalleryManager extends Component {
   render() {
 
     const {forms, oidc, app} = this.props;
-
-    if (!oidc.user) return <Login />;
-
-    const authTimeout = new Date(oidc.user.expires_at * 1000);
+    const authTimeout = app.features.authEnabled ? new Date(oidc.user.expires_at * 1000) : undefined;
 
     const form = forms[forms.activeForm];
     const gallery = forms[forms.activeGallery] || {

@@ -5,8 +5,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import configureStore from 'store.js';
-import {userManager} from 'store';
+import configureStore, {userManager} from 'store';
 import { configXenia } from 'app/AppActions';
 
 import App from 'App';

@@ -82,6 +82,7 @@ const styles = {
     fontWeight: 'bold',
     fontSize: '4em',
     marginTop: -10,
+    lineHeight: '1em',
     textShadow: `1px 1px 2px ${color(brandColor).darken(0.3).hexString()}`
   },
   container: {

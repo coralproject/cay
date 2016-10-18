@@ -86,10 +86,7 @@ export default class FormEdit extends Component {
     const submissions = submissionList.map(id => forms[id]);
     const form = forms[activeForm];
     const gallery = forms[activeGallery];
-
-    if (!oidc.user) return <Login />;
-
-    const authTimeout = new Date(oidc.user.expires_at * 1000);
+    const authTimeout = app.features.authEnabled ? new Date(oidc.user.expires_at * 1000) : undefined;
 
     return (
       <Page authTimeout={authTimeout} displayAuthSnackbar={!app.authSnackbarDisplayedOnce}>

@@ -84,19 +84,10 @@ export default class FormList extends Component {
   render() {
 
     const {app, oidc, forms} = this.props;
-
-    if (oidc.isLoadingUser) {
-      return <p>Authorizing user...</p>;
-    }
-
-    if (!oidc.user) {
-      return <Login />;
-    }
-
     const allForms = forms.formList.map(id => forms[id]);
     const visibleForms = allForms.filter(form => form.status === this.state.displayMode);
     const { displayMode } = this.state;
-    const authTimeout = new Date(oidc.user.expires_at * 1000);
+    const authTimeout = app.features.authEnabled ? new Date(oidc.user.expires_at * 1000) : undefined;
 
     return (
       <Page authTimeout={authTimeout} displayAuthSnackbar={!app.authSnackbarDisplayedOnce}>

@@ -63,10 +63,7 @@ export default class FormCreate extends Component {
   render() {
     const {oidc, app} = this.props;
     const { preview } = this.state;
-
-    if (!oidc.user) return <Login />;
-
-    const authTimeout = new Date(this.props.oidc.user.expires_at * 1000);
+    const authTimeout = app.features.authEnabled ? new Date(oidc.user.expires_at * 1000) : undefined;
 
     return (
       <Page

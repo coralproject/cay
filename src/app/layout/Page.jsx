@@ -18,7 +18,7 @@ import settings from 'settings';
 export default class Page extends React.Component {
 
   static propTypes = {
-    authTimeout: PropTypes.instanceOf(Date),
+    authTimeout: PropTypes.instanceOf(Date), // could be Date or null
     displayAuthSnackbar: PropTypes.bool
   }
 

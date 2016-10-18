@@ -123,7 +123,7 @@ const getInit = (method, body, oidc = {}) => {
 const handleResp = res => {
   if (res.status === 401) {
     throw new Error('Not Authorized to make this request');
-  } else if (status > 399) {
+  } else if (res.status > 399) {
     throw new Error('Error! Status ' + res.status);
   } else {
     return res.json();

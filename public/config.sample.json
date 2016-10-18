@@ -12,6 +12,7 @@
   "authClientId": "example_client_id",
   "authAuthority": "<authServerHost>/connect",
   "features": {
+    "authEnabled": false,
     "trust": true,
     "ask": true
   },

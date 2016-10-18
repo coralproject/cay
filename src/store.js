@@ -8,7 +8,7 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import createOidcMiddleware, {createUserManager} from 'redux-oidc';
 import createDebounce from 'redux-debounce';
-import rootReducer from 'app/MainReducer';
+import getRootReducer from 'app/MainReducer';
 
 export let userManagerConfig = {
   client_id: null, // populated after config is loaded
@@ -36,10 +36,15 @@ export default initialState => {
    * Store middlewares
    */
   // https://github.com/maxmantz/redux-oidc/wiki/3.-API
-  userManager = createUserManager(userManagerConfig);
-  const oidcMiddleware = createOidcMiddleware(userManager, () => true, true, '/callback');
   const debouncer = createDebounce({ userMangerFilters: 500 });
-  const middleware = [thunk, debouncer, oidcMiddleware];
+  const middleware = [thunk, debouncer];
+
+  if (initialState.app.features.authEnabled) {
+    userManager = createUserManager(userManagerConfig);
+    const oidcMiddleware = createOidcMiddleware(userManager, () => true, true, '/callback');
+    middleware.push(oidcMiddleware);
+  }
+
   const devTools = typeof devToolsExtension !== 'undefined' ? devToolsExtension() : f => f;
 
   /**
@@ -51,5 +56,5 @@ export default initialState => {
     : compose(applyMiddleware(...middleware), devTools)(createStore);
 
 
-  return envCreateStore(rootReducer, initialState);
+  return envCreateStore(getRootReducer(initialState), initialState);
 };

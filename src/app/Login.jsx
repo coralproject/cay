@@ -44,7 +44,7 @@ export default class Login extends React.Component {
               category="primary"
               onClick={this.loginUser}
             > Log In </Button>
-            <a style={styles.loginRequest} href="https://coralproject.net/beta-testers/">How can I request a login?</a>
+            <a style={styles.loginRequest} href="https://blog.coralproject.net/beta-testers/">How can I request a login?</a>
           </div>
         </div>
       </div>
@@ -82,6 +82,7 @@ const styles = {
     fontWeight: 'bold',
     fontSize: '4em',
     marginTop: -10,
+    lineHeight: '1em',
     textShadow: `1px 1px 2px ${color(brandColor).darken(0.3).hexString()}`
   },
   container: {

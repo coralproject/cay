@@ -26,19 +26,20 @@ import GalleryManager from 'app/GalleryManager';
 
 import CallbackPage from 'app/CallbackPage';
 
-const UserIsAuthenticated = UserAuthWrapper({
-  authSelector: state => state.oidc.user,
-  authenticatingSelector: state => state.oidc.isLoadingUser,
-  wrapperDisplayName: 'UserIsAuthenticated',
-  // /login is the default, but putting it here for notes to future self
-  failureRedirectPath: '/login'
-});
 
 /**
  * Expose App base component. Handle all routes
  */
 
 const buildRoutes = (store, onLogPageView, defaultRoute, features, userManager) => {
+
+  const UserIsAuthenticated = UserAuthWrapper({
+    authSelector: state => state.oidc.user,
+    authenticatingSelector: state => state.oidc.isLoadingUser,
+    wrapperDisplayName: 'UserIsAuthenticated',
+    // /login is the default, but putting it here for notes to future self
+    redirectAction: userManager.signinRedirect
+  });
 
   const getComponent = component => features.authEnabled ? UserIsAuthenticated(component) : component;
 

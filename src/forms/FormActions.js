@@ -9,6 +9,26 @@ import cloneDeep from 'lodash/lang/cloneDeep';
  * Action names
  */
 
+export const FETCH_FORM_STATS_REQUEST = 'FETCH_FORM_STATS_REQUEST';
+export const FETCH_FORM_STATS_SUCCESS = 'FETCH_FORM_STATS_SUCCESS';
+export const FETCH_FORM_STATS_FAILURE = 'FETCH_FORM_STATS_FAILED';
+
+const formStatsRequestStarted = id => ({ type: FETCH_FORM_STATS_REQUEST, id });
+const formStatsRequestSuccess = formStats => ({ type: FETCH_FORM_STATS_SUCCESS, formStats });
+const formStatsRequestFailure = err => ({ type: FETCH_FORM_STATS_FAILURE, err });
+
+export const fetchFormStats = id => (dispatch, getState) => {
+  const {app, oidc} = getState();
+
+  dispatch(formStatsRequestStarted(id));
+
+  return fetch(`${app.askHost}/v1/form/${id}/aggregation`, getInit('GET', null, oidc))
+    .then(handleResp)
+    .then(formStats => dispatch(formStatsRequestSuccess(formStats)))
+    .catch(error => dispatch(formStatsRequestFailure(error)));
+};
+
+
 export const FETCH_SUBMISSIONS_REQUEST = 'FETCH_SUBMISSIONS_REQUEST';
 export const FETCH_SUBMISSIONS_SUCCESS = 'FETCH_SUBMISSIONS_SUCCESS';
 export const FETCH_SUBMISSIONS_FAILED = 'FETCH_SUBMISSIONS_FAILED';

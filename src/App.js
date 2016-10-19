@@ -23,6 +23,7 @@ import NoMatch from 'app/NoMatch';
 import About from 'app/About';
 import SubmissionList from 'app/SubmissionList';
 import GalleryManager from 'app/GalleryManager';
+import FormStats from 'app/FormStats';
 
 import CallbackPage from 'app/CallbackPage';
 
@@ -63,6 +64,7 @@ const buildRoutes = (store, onLogPageView, defaultRoute, features, userManager) 
           <Route path="forms/:id" component={getComponent(FormEdit)}/>
           <Route path="forms/:id/submissions" component={getComponent(SubmissionList)}/>
           <Route path="forms/:id/gallery" component={getComponent(GalleryManager)}/>
+          <Route path="forms/:id/stats" component={getComponent(FormStats)}/>
         </div>
       : null}
       <Route path="*" component={NoMatch} />

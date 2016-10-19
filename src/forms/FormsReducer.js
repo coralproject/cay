@@ -140,6 +140,11 @@ export default (state = initial, action) => {
               currentFields: action.form.steps[0].widgets
           };
 
+  case types.FETCH_FORM_STATS_SUCCESS:
+    return {  ...state,
+              formStats: action.formStats
+          };
+
   case types.FETCH_FORM_FAILURE:
     return {...state, activeForm: null, formLoading: false};
 

@@ -38,35 +38,49 @@ const UserIsAuthenticated = UserAuthWrapper({
  * Expose App base component. Handle all routes
  */
 
+const buildRoutes = (store, onLogPageView, defaultRoute, features, userManager) => {
+
+  const getComponent = component => features.authEnabled ? UserIsAuthenticated(component) : component;
+
+  const router = (
+    <Router history={browserHistory} onUpdate={onLogPageView}>
+      <Redirect from="/" to={defaultRoute} />
+      <Route path="login" component={Login} />
+      <Route path="about" component={About} />
+      <Route path="/callback" component={CallbackPage} />
+      {features.trust !== false ?
+        <div>
+          <Route path="search-creator" component={SearchCreator} />
+          <Route path="saved-searches" component={SeeAllSearches}/>
+          <Route path="saved-search/:id" component={SearchDetail} />
+          <Route path="edit-search/:id" component={SearchEditor} />
+        </div>
+      : null}
+      {features.ask ?
+        <div>
+          <Route path="forms" component={getComponent(FormList)} />
+          <Route path="forms/create" component={getComponent(FormCreate)}/>
+          <Route path="forms/:id" component={getComponent(FormEdit)}/>
+          <Route path="forms/:id/submissions" component={getComponent(SubmissionList)}/>
+          <Route path="forms/:id/gallery" component={getComponent(GalleryManager)}/>
+        </div>
+      : null}
+      <Route path="*" component={NoMatch} />
+    </Router>
+  );
+
+  if (features.authEnabled) {
+    return <OidcProvider store={store} userManager={userManager}>{router}</OidcProvider>;
+  } else {
+    return router;
+  }
+
+};
+
 export default ({ store, onLogPageView, defaultRoute, features, userManager }) => (
   <StyleRoot>
     <Provider store={store}>
-      <OidcProvider store={store} userManager={userManager}>
-        <Router history={browserHistory} onUpdate={onLogPageView}>
-          <Redirect from="/" to={defaultRoute} />
-          <Route path="login" component={Login} />
-          <Route path="about" component={About} />
-          <Route path="/callback" component={CallbackPage} />
-          {features.trust !== false ?
-            <div>
-              <Route path="search-creator" component={SearchCreator} />
-              <Route path="saved-searches" component={SeeAllSearches}/>
-              <Route path="saved-search/:id" component={SearchDetail} />
-              <Route path="edit-search/:id" component={SearchEditor} />
-            </div>
-          : null}
-          {features.ask ?
-            <div>
-              <Route path="forms" component={UserIsAuthenticated(FormList)} />
-              <Route path="forms/create" component={FormCreate}/>
-              <Route path="forms/:id" component={FormEdit}/>
-              <Route path="forms/:id/submissions" component={SubmissionList}/>
-              <Route path="forms/:id/gallery" component={GalleryManager}/>
-            </div>
-          : null}
-          <Route path="*" component={NoMatch} />
-        </Router>
-      </OidcProvider>
+      {buildRoutes(store, onLogPageView, defaultRoute, features, userManager)}
     </Provider>
   </StyleRoot>
 );

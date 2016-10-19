@@ -12,7 +12,8 @@ import {
   createEmpty,
   updateFormSettings,
   leavingEdit
- } from 'forms/FormActions';
+} from 'forms/FormActions';
+import { authSnackbarDisplayedOnce } from 'app/AppActions';
 import { showFlashMessage } from 'flashmessages/FlashMessagesActions';
 import Login from 'app/Login';
 import Page from 'app/layout/Page';
@@ -20,6 +21,7 @@ import FormBuilder from 'forms/FormBuilder.js';
 import FormChrome from 'app/layout/FormChrome';
 
 @connect(({ oidc, app, forms }) => ({
+  app,
   elkhornHost: app.elkhornHost,
   oidc,
   forms
@@ -45,6 +47,10 @@ export default class FormCreate extends Component {
     }
   }
 
+  componentWillUnmount() {
+    this.props.dispatch(authSnackbarDisplayedOnce());
+  }
+
   updateInactive(value) {
     this.props.dispatch(updateFormSettings({ inactiveMessage: value }));
   }
@@ -55,11 +61,16 @@ export default class FormCreate extends Component {
   }
 
   render() {
-    if (!this.props.oidc.user) return <Login />;
-
+    const {oidc, app} = this.props;
     const { preview } = this.state;
+    const authTimeout = app.features.authEnabled ? new Date(oidc.user.expires_at * 1000) : undefined;
+
     return (
-      <Page style={styles.page}>
+      <Page
+        style={styles.page}
+        authTimeout={authTimeout}
+        displayAuthSnackbar={!app.authSnackbarDisplayedOnce}
+        >
         <FormChrome form={null}
           create={true}
           updateStatus={() => null}

@@ -18,14 +18,17 @@ import flashMessages from 'flashmessages/FlashMessagesReducer';
  * Export combined reducer
  */
 
-export default combineReducers({
-  oidc,
-  app,
-  searches,
-  comments,
-  tags,
-  filters,
-  users,
-  forms,
-  flashMessages
-});
+export default initialState => {
+  return combineReducers({
+    oidc: initialState.app.features.authEnabled ? oidc : (state = {}) => state,
+    app,
+    searches,
+    comments,
+    tags,
+    filters,
+    users,
+    forms,
+    flashMessages
+  });
+
+};

@@ -24,7 +24,7 @@ import {
   cleanSubmissionFilters,
   downloadCSV
 } from 'forms/FormActions';
-
+import {authSnackbarDisplayedOnce} from 'app/AppActions';
 import SubmissionDetail from 'forms/SubmissionDetail';
 import FormChrome from 'app/layout/FormChrome';
 import Login from 'app/Login';
@@ -34,7 +34,7 @@ import Page from 'app/layout/Page';
  * Export submission list component
  */
 
-@connect(({ oidc, forms }) => ({ oidc, forms }))
+@connect(({ app, oidc, forms }) => ({ app, oidc, forms }))
 @Radium
 export default class SubmissionList extends Component {
   constructor(props) {
@@ -56,6 +56,10 @@ export default class SubmissionList extends Component {
     this.onDownloadCSV = this.onDownloadCSV.bind(this);
     this.removeFromGallery = this.removeFromGallery.bind(this);
     this.sendToGallery = this.sendToGallery.bind(this);
+  }
+
+  componentWillUnmount() {
+    this.props.dispatch(authSnackbarDisplayedOnce());
   }
 
   sendToGallery(galleryId, subId, key) {
@@ -104,18 +108,21 @@ export default class SubmissionList extends Component {
 
   render() {
 
-    const {oidc} = this.props;
+    const {oidc, app} = this.props;
     const { submissionList, activeSubmission, activeForm, activeGallery,
       submissionFilterBy, submissionOrder, formCounts } = this.props.forms;
     const submissions = submissionList.map(id => this.props.forms[id]);
     const submission = this.props.forms[activeSubmission];
     const form = this.props.forms[activeForm];
     const gallery = this.props.forms[activeGallery];
-
-    if (!oidc.user) return <Login />;
+    const authTimeout = app.features.authEnabled ? new Date(oidc.user.expires_at * 1000) : undefined;
 
     return (
-      <Page style={styles.page}>
+      <Page
+        style={styles.page}
+        authTimeout={authTimeout}
+        displayAuthSnackbar={!app.authSnackbarDisplayedOnce}
+        >
         <div style={styles.container}>
           <FormChrome
             activeTab="submissions"

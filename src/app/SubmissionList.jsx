@@ -27,7 +27,6 @@ import {
 import {authSnackbarDisplayedOnce} from 'app/AppActions';
 import SubmissionDetail from 'forms/SubmissionDetail';
 import FormChrome from 'app/layout/FormChrome';
-import Login from 'app/Login';
 import Page from 'app/layout/Page';
 
 /**

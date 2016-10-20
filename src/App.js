@@ -23,7 +23,7 @@ import NoMatch from 'app/NoMatch';
 import About from 'app/About';
 import SubmissionList from 'app/SubmissionList';
 import GalleryManager from 'app/GalleryManager';
-
+import LoadingAuth from 'app/LoadingAuth';
 import CallbackPage from 'app/CallbackPage';
 
 
@@ -35,12 +35,11 @@ const buildRoutes = (store, onLogPageView, defaultRoute, features, userManager) 
 
   const UserIsAuthenticated = UserAuthWrapper({
     authSelector: state => state.oidc.user,
-    authenticatingSelector: state => state.oidc.isLoadingUser,
-    wrapperDisplayName: 'UserIsAuthenticated',
+    authenticatingSelector: state => {console.log('authenticatingSelector', state.oidc); return state.oidc.isLoadingUser;},
+    LoadingComponent: LoadingAuth,
+    wrapperDisplayName: 'UserIsAuthenticated'
     // /login is the default, but putting it here for notes to future self
-    redirectAction: userManager.signinRedirect
   });
-
   const getComponent = component => features.authEnabled ? UserIsAuthenticated(component) : component;
 
   const router = (

@@ -103,6 +103,13 @@ export default class MultipleChoiceEditor extends Component {
     this.props.onEditorChange(updatedField);
   }
 
+  onGroupClick(e) {
+    let { field } = this.props;
+    let updatedProps = Object.assign({}, field.props, { groupSubmissions: e.target.checked });
+    let updatedField = Object.assign({}, field, { props: updatedProps });
+    this.props.onEditorChange(updatedField);
+  }
+ 
   getOptions() {
     return this.state.options.map((option, i) => {
       return (
@@ -190,6 +197,12 @@ export default class MultipleChoiceEditor extends Component {
                 onClick={ this.onOtherClick.bind(this) }
                 checked={ field.props.otherAllowed } />
                 Allow "Other"
+            </label>
+            <label style={ styles.bottomCheck }>
+              <input type="checkbox"
+                onClick={ this.onGroupClick.bind(this) }
+                checked={ field.props.groupSubmissions } />
+                Group Submissions
             </label>
           </div>
           <CommonFieldOptions {...this.props} />

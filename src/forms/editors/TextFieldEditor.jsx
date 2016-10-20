@@ -86,6 +86,11 @@ export default class TextFieldEditor extends Component {
       this.handleInputChange(0, prop)
     }
   }
+  onIncludeInGroups(e) {
+    this.extendFieldProps({
+      includeInGroups: e.target.checked
+    })
+  }
   render() {
     const { handleMinInput, handleMaxInput, props, state } = this
     const { field } = props
@@ -116,6 +121,14 @@ export default class TextFieldEditor extends Component {
               handleInput={handleMaxInput}
               defaultValue={field.props.maxLength}
             />
+            <label>
+              <input type="checkbox"
+                className="form-include-in-groups"
+                onChange={ (e) => this.onIncludeInGroups(e) }
+                value={ field.props.includeInGroups } 
+                checked={ field.props.includeInGroups } />
+                Include in Groups
+            </label>
           </div>
           <CommonFieldOptions
             {...this.props}

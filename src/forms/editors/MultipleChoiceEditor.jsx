@@ -110,6 +110,13 @@ export default class MultipleChoiceEditor extends Component {
     this.props.onEditorChange(updatedField);
   }
  
+  onIncludeInGroupClick(e) {
+    let { field } = this.props;
+    let updatedProps = Object.assign({}, field.props, { includeInGroups: e.target.checked });
+    let updatedField = Object.assign({}, field, { props: updatedProps });
+    this.props.onEditorChange(updatedField);
+  }
+ 
   getOptions() {
     return this.state.options.map((option, i) => {
       return (
@@ -206,7 +213,7 @@ export default class MultipleChoiceEditor extends Component {
             </label>
             <label style={ styles.bottomCheck }>
               <input type="checkbox"
-                onClick={ this.onGroupClick.bind(this) }
+                onClick={ this.onIncludeInGroupClick.bind(this) }
                 checked={ field.props.includeInGroups } />
                 Include in Groups
             </label>

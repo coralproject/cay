@@ -204,6 +204,12 @@ export default class MultipleChoiceEditor extends Component {
                 checked={ field.props.groupSubmissions } />
                 Group Submissions
             </label>
+            <label style={ styles.bottomCheck }>
+              <input type="checkbox"
+                onClick={ this.onGroupClick.bind(this) }
+                checked={ field.props.includeInGroups } />
+                Include in Groups
+            </label>
           </div>
           <CommonFieldOptions {...this.props} />
         </div>

@@ -17,7 +17,6 @@ const testData = {
   FORM_SUBMISSION_BODY: 'Mate'
 }
 
-
 export default {
   tags: ['user-path-1'],
   'User logs in': client => {
@@ -44,6 +43,7 @@ export default {
 
     createFormPage
       .saveForm()
+      .waitForElementPresent('@flashMessage', 8000); //NEEDED - AWS takes more than 6s to respond
   },
   'User saves form and publishes the form': client => {
     const createFormPage = client.page.createFormPage();
@@ -95,6 +95,8 @@ export default {
       .publishFormOptions()
       .getUrlStandaloneForm(({ url }) => {
 
+        testData.FORM_ID = url.match(/(\S{24}).html$/)[1]
+
         createFormPage
           .closeModal()
 
@@ -102,7 +104,6 @@ export default {
           .navigate(url)
           .ready()
 
-        // Allowed values
         client
           .url(url)
           .refresh((e) => {
@@ -113,6 +114,52 @@ export default {
               });
           })
       })
+
+    client.back()
+  },
+  'User check the submission': client => {
+    const submissionsPage = client.page.submissionsPage();
+    const { baseUrl } = client.globals;
+    const { FORM_ID, FORM_SHORT_ANSWER_TITLE, FORM_SUBMISSION_BODY } = testData;
+
+    submissionsPage
+      .navigate(`${baseUrl}/forms/${FORM_ID}/submissions`)
+      .ready()
+
+    submissionsPage.expect.element('@submission').to.be.present;
+    submissionsPage.expect.element('@submissionTitle').to.be.present;
+    submissionsPage.expect.element('@submissionTitle').text.to.equal(FORM_SHORT_ANSWER_TITLE);
+    submissionsPage.expect.element('@submissionBody').to.be.present;
+    submissionsPage.expect.element('@submissionBody').text.to.equal(FORM_SUBMISSION_BODY);
+
+  },
+  'User sends submission to the gallery': client => {
+    const galleryPage = client.page.galleryPage();
+    const submissionsPage = client.page.submissionsPage();
+    const standAloneGalleryPage = client.page.standAloneGalleryPage();
+
+    const { baseUrl } = client.globals;
+    const { FORM_ID, FORM_SHORT_ANSWER_TITLE, FORM_SUBMISSION_BODY } = testData;
+
+    submissionsPage.sendSubmissionToGallery()
+
+    galleryPage
+      .navigate(`${baseUrl}/forms/${FORM_ID}/gallery`)
+      .ready()
+      .saveGallery()
+      .publishFormOptions()
+      .getGalleryStandaloneUrl(({ url }) => {
+        galleryPage.closeModal()
+        standAloneGalleryPage
+          .navigate(url)
+          .ready()
+
+        // Checking the submission
+        standAloneGalleryPage.expect.element('@answerText').text.to.equal(FORM_SUBMISSION_BODY);
+      })
+  },
+  'User deletes the form' : client => {
+
   },
   after: client => {
     client.end()

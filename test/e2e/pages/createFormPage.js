@@ -46,7 +46,8 @@ const createFormCommands = {
       .click('@liveStatusOption')
       .waitForElementVisible('@statusApplyButton', 1000)
       .click('@statusApplyButton')
-      .waitForElementNotPresent('@flashMessage', 5000)
+      .click('@statusToggle')
+      .waitForElementNotPresent('@flashMessage', 8000)
   },
   publishFormOptions() {
     return this
@@ -158,7 +159,7 @@ export default {
       selector: '.form-max-limit > input[type="number"]:nth-child(3)'
     },
     closeModal: {
-      selector: '.card div:nth-child(1) > span:nth-child(2)'
+      selector: ' dialog > div:nth-child(1) > span'
     }
   }
 };

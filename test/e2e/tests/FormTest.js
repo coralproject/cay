@@ -590,8 +590,6 @@ export default {
           client
             .url(url)
             .refresh((e) => {
-              console.log(e);
-
               standAloneFormPage
                 .addValueToTextField("Hello, is it me you're looking for?", ({ value }) => {
                   standAloneFormPage.assert.equal(value.length, maxLimit);

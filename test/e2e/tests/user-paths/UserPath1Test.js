@@ -12,12 +12,13 @@ const testData = {
     - Delete the form
   `,
   FORM_SHORT_ANSWER_TITLE: 'What do you drink for breakfast?',
-  FORM_SHORT_ANSWER_DESCRIPTION: 'Mate? Sounds like a good choice'
+  FORM_SHORT_ANSWER_DESCRIPTION: 'Mate? Sounds like a good choice',
+  FORM_SUBMISSION_BODY: 'Mate'
 }
 
 
 export default {
-  tags: ['path-1'],
+  tags: ['user-path-1'],
   'User logs in': client => {
     const loginPage = client.page.loginPage();
     const { baseUrl, testUser } = client.globals;
@@ -62,7 +63,7 @@ export default {
     createFormPage.expect.element('@formTitle').to.be.present;
     createFormPage.expect.element('@formTitle').to.have.value.that.equals(title);
   },
-  'User fills the form': client => {
+  'User adds headline and description': client => {
     const createFormPage = client.page.createFormPage();
 
     const { FORM_HEADLINE, FORM_DESCRIPTION } = testData;
@@ -91,11 +92,35 @@ export default {
         description: FORM_SHORT_ANSWER_DESCRIPTION
       })
   },
-  'User saves form': client => {
+  'User add a submission': client => {
     const createFormPage = client.page.createFormPage();
+    const standAloneFormPage = client.page.standAloneFormPage();
 
     createFormPage
       .saveForm()
+
+    createFormPage
+      .publishFormOptions()
+      .getUrlStandaloneForm(({ url }) => {
+
+        createFormPage
+          .closeModal()
+
+        standAloneFormPage
+          .navigate(url)
+          .ready()
+
+        // Allowed values
+        client
+          .url(url)
+          .refresh((e) => {
+            standAloneFormPage
+              .addValueToTextField(FORM_SUBMISSION_BODY, ({ value }) => {
+                standAloneFormPage.submitStandAloneForm();
+                standAloneFormPage.waitForElementPresent('@finalScreen', 8000);
+              });
+          })
+      })
   },
   after: client => {
     client.end()

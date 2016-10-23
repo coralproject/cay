@@ -1,6 +1,17 @@
 export default {
   tags: ['form', 'standalone-form'],
-  before: client => {
+  'User logs in': client => {
+    const loginPage = client.page.loginPage();
+    const { baseUrl, testUser } = client.globals;
+
+    loginPage
+      .navigate(baseUrl + '/login')
+      .ready()
+
+    loginPage.login(testUser)
+    client.pause(2000);
+  },
+  'User goes to forms': client => {
     const { baseUrl } = client.globals;
     const createFormPage = client.page.createFormPage();
 

@@ -35,7 +35,7 @@ const createFormCommands = {
     return this
       .click('@formSaveButton')
       .waitForElementPresent('@statusToggle', 8000)
-      .waitForElementNotPresent('@flashMessage', 8000)
+      .waitForElementPresent('@flashMessage', 8000)
   },
   goLive() {
     return this
@@ -127,9 +127,6 @@ export default {
     },
     formPublishButton: {
       selector: '.form-publish-button'
-    },
-    formSaveButton: {
-      selector: '.form-save-button'
     },
     statusToggle: {
       selector: '.form-status-toggle'

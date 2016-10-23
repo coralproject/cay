@@ -1,6 +1,7 @@
 const testData = {
   FORM_ID: '',
-  FORM_HEADLINE: '[TEST] - Testing Title Path 1',
+  FORM_TITLE: '[TEST] - Testing Title Path 1',
+  FORM_HEADLINE: 'Testing path for user 1',
   FORM_DESCRIPTION: `
     The following test will:
     - Create form with a single question, Save, Publish
@@ -51,34 +52,21 @@ export default {
       .saveForm()
       .goLive()
   },
-  'User adds Title': client => {
+  'User adds title, headline and description': client => {
     const createFormPage = client.page.createFormPage();
 
-    const title = 'Test Title';
+    const { FORM_TITLE, FORM_HEADLINE, FORM_DESCRIPTION } = testData;
 
     createFormPage
-      .addTitle(title)
-
-    // Expect
-    createFormPage.expect.element('@formTitle').to.be.present;
-    createFormPage.expect.element('@formTitle').to.have.value.that.equals(title);
-  },
-  'User adds headline and description': client => {
-    const createFormPage = client.page.createFormPage();
-
-    const { FORM_HEADLINE, FORM_DESCRIPTION } = testData;
-
-    createFormPage
+      .addTitle(FORM_TITLE)
       .addHeadline(FORM_HEADLINE)
-
-    // Expect
-    createFormPage.expect.element('@formHeadline').to.be.present;
-    createFormPage.expect.element('@formHeadline').to.have.value.that.equals(FORM_HEADLINE);
-
-    createFormPage
       .addDescription(FORM_DESCRIPTION)
 
     // Expect
+    createFormPage.expect.element('@formTitle').to.be.present;
+    createFormPage.expect.element('@formTitle').to.have.value.that.equals(FORM_TITLE);
+    createFormPage.expect.element('@formHeadline').to.be.present;
+    createFormPage.expect.element('@formHeadline').to.have.value.that.equals(FORM_HEADLINE);
     createFormPage.expect.element('@formDescription').to.be.present;
     createFormPage.expect.element('@formDescription').to.have.value.that.equals(FORM_DESCRIPTION);
   },
@@ -96,8 +84,12 @@ export default {
     const createFormPage = client.page.createFormPage();
     const standAloneFormPage = client.page.standAloneFormPage();
 
+    const { FORM_SUBMISSION_BODY } = testData;
+
     createFormPage
       .saveForm()
+
+    client.pause(2000)
 
     createFormPage
       .publishFormOptions()

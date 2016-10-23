@@ -159,7 +159,12 @@ export default {
       })
   },
   'User deletes the form' : client => {
+    const { baseUrl } = client.globals;
+    const createFormPage = client.page.createFormPage();
 
+    formListPage
+      .navigate(baseUrl + '/forms')
+      .ready()
   },
   after: client => {
     client.end()

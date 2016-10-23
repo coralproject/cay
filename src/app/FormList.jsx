@@ -151,14 +151,14 @@ const formatForm = ({ header, stats, id, date_created }, index) => {
 
 
 const FormTable = ({ loadingTags, forms, onRowClick, confirmDeletion, onCopyFormClick }) => (
-  <DataTable style={styles.table} sortable rows={forms.map(formatForm)}>
+  <DataTable style={styles.table} sortable rows={forms.map(formatForm)} className="form__row">
     <TableHeader cellFormatter={(n, r, i) => <span style={styles.name} onClick={() => onRowClick(r.id)}>{n || L.t('Untitled Form')}</span>} name="name">{ L.t('Name') }</TableHeader>
     <TableHeader name="description">{ L.t('Description') }</TableHeader>
     <TableHeader sortFn={(a, b, asc) => asc ? b - a : a - b} cellFormatter={n => <span style={styles.submission}>{n}</span>} numeric name="submissions">{ L.t('Submissions') }</TableHeader>
     <TableHeader cellFormatter={date => moment(date).format('L')} name="date_created">{ L.t('Creation date') }</TableHeader>
     <TableHeader nosort name="copy" style={styles.rowActions} cellFormatter={i => <IconButton name='content_copy' onClick={e => onCopyFormClick(forms[i], e)}/>}></TableHeader>
     <TableHeader nosort style={styles.rowActions} name="remove"
-      cellFormatter={i => <IconButton name='delete'
+      cellFormatter={i => <IconButton name='delete' className="form__button__delete" id={`form__id--${forms[i].id}`}
       onClick={e => confirmDeletion(forms[i].header.title, forms[i].header.description, forms[i].id, e)} />}></TableHeader>
   </DataTable>
 );

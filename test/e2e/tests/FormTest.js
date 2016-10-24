@@ -40,6 +40,7 @@ export default {
 
     createFormPage
       .saveForm()
+      .waitForElementPresent('@flashMessage', 12000); //NEEDED - AWS takes more than 6s to respond
   },
   'User adds Title': client => {
     const createFormPage = client.page.createFormPage();
@@ -99,7 +100,7 @@ export default {
     createFormPage
       .publishFormOptions()
       .getUrlStandaloneForm(({ url }) =>{
-        
+
         // Saving FORM ID
         testData.FORM_ID = url.match(/(\S{24}).html$/)[1]
 

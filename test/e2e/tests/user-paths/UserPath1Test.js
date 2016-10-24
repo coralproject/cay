@@ -45,7 +45,7 @@ export default {
 
     createFormPage
       .saveForm()
-      .waitForElementPresent('@flashMessage', 8000); //NEEDED - AWS takes more than 6s to respond
+      .waitForElementPresent('@flashMessage', 12000); //NEEDED - AWS takes more than 6s to respond
   },
   'User saves form and publishes the form': client => {
     const createFormPage = client.page.createFormPage();

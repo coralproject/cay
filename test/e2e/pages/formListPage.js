@@ -8,9 +8,10 @@ const formListPageCommands = {
     return this
       .waitForElementVisible(`.form__row #form__id--${id}`, 4000)
       .click(`.form__row #form__id--${id}`)
-      .waitForElementVisible('@confirmDialog', 1000)
+      .waitForElementVisible('@confirmDialog', 4000)
       .waitForElementVisible('@confirmButton', 1000)
       .click('@confirmButton')
+      .waitForElementNotPresent(`.form__row #form__id--${id}`, 4000)
   }
 };
 

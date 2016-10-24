@@ -143,15 +143,17 @@ export default class FormList extends Component {
 const ConfirmDialog = ({ show, formName, onConfirmClick, onCloseClick }) => show ? (
   <CoralDialog
     className="confirmDialog"
-    title="Publish Options"
-    onCancel={this.closeDialog}
-    open={this.state.publishModalOpened}
+    title="Delete form"
+    onCancel={onCloseClick}
+    open={show}
   >
-    <div style={ styles.confirmDialog }>
+    <div style={styles.dialogContent}>
       <h2 className="confirmDialog__title">Warning: this action has no undo.</h2>
-      <p className="confirmDialog__description" style={ styles.confirmMessage }>Are you sure you want to remove the form <strong style={ styles.strong }>"{ formName }"</strong>?</p>
-      <button className="confirmDialog__button--confirm" style={[styles.confirmButton, styles.yesButton]} onClick={onConfirmClick}>Yes</button>
-      <button className="confirmDialog__button--cancel" style={[styles.confirmButton, styles.noButton]} onClick={onCloseClick}>No</button>
+      <p className="confirmDialog__description" style={styles.confirmMessage}>Are you sure you want to remove the form <strong style={ styles.strong }>"{ formName }"</strong>?</p>
+      <div className="confirmDialog__actions" style={styles.actions}>
+        <CoralButton className="confirmDialog__button--cancel" style={styles.cancelButton} onClick={onCloseClick}>No</CoralButton>
+        <CoralButton type="success" className="confirmDialog__button--confirm" onClick={onConfirmClick}>Yes, delete form</CoralButton>
+      </div>
     </div>
   </CoralDialog>
 ) : null;
@@ -210,23 +212,15 @@ const styles = {
     fontSize: '16px',
     marginTop: '20px'
   },
-  confirmButton: {
-    position: 'absolute',
-    padding: '0 20px',
-    lineHeight: '40px',
-    border: 'none',
-    background: '#ddd',
-    cursor: 'pointer'
+  actions: {
+    paddingTop: 20,
+    textAlign: 'right'
   },
-  yesButton: {
-    right: '30px',
-    bottom: '30px',
-    background: brandColor,
-    color: 'white'
+  cancelButton: {
+    marginRight: 10
   },
-  noButton: {
-    left: '30px',
-    bottom: '30px'
+  dialogContent: {
+    padding: 10
   },
   table: {
     marginTop: 25

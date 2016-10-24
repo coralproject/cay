@@ -35,19 +35,19 @@ const createFormCommands = {
     return this
       .click('@formSaveButton')
       .waitForElementPresent('@statusToggle', 8000)
-      .waitForElementPresent('@flashMessage', 8000)
+      .waitForElementPresent('@flashMessage', 12000)
   },
   goLive() {
     return this
       .waitForElementVisible('@statusToggle', 1000)
       .click('@statusToggle')
-      .waitForElementNotPresent('@flashMessage', 3000)
+      .waitForElementNotPresent('@flashMessage', 12000)
       .waitForElementVisible('@liveStatusOption', 1000)
       .click('@liveStatusOption')
       .waitForElementVisible('@statusApplyButton', 1000)
       .click('@statusApplyButton')
       .click('@statusToggle')
-      .waitForElementNotPresent('@flashMessage', 8000)
+      .waitForElementNotPresent('@flashMessage', 12000)
   },
   publishFormOptions() {
     return this

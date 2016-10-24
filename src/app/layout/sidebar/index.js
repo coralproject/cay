@@ -24,7 +24,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   dispatch,
   handleLogout: () => {
     //dispatch(logout());
-    console.log('hello!')
+    console.log('Do Logout!')
   }
 });
 
@@ -67,13 +67,14 @@ export default class Sidebar extends Component {
 
   render() {
     const { open } = this.state;
-    const { children, features, dispatch } = this.props;
+    const { children, features, dispatch, handleLogout } = this.props;
 
     return (
       <div style={[styles.wrapper, this.props.styles]}>
         <div style={[styles.sidebar(open), this.props.styles.sidebar]}>
           <Menu
             handleLogout={handleLogout}
+            dispatch={dispatch}
             features={features}
             open={open}
             onToggleSidebar={this.toggleSidebar} />

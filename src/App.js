@@ -35,7 +35,7 @@ const buildRoutes = (store, onLogPageView, defaultRoute, features, userManager) 
 
   const UserIsAuthenticated = UserAuthWrapper({
     authSelector: state => state.oidc.user,
-    authenticatingSelector: state => {console.log('authenticatingSelector', state.oidc); return state.oidc.isLoadingUser;},
+    authenticatingSelector: state => state.oidc.isLoadingUser,
     LoadingComponent: LoadingAuth,
     wrapperDisplayName: 'UserIsAuthenticated'
     // /login is the default, but putting it here for notes to future self

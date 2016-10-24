@@ -135,7 +135,7 @@ export default {
     submissionsPage.expect.element('@submissionBody').text.to.equal(FORM_SUBMISSION_BODY);
 
   },
-  'User sends submission to the gallery': client => {
+  'User sends submission to the gallery and adds headline and subhead to the gallery': client => {
     const galleryPage = client.page.galleryPage();
     const submissionsPage = client.page.submissionsPage();
     const standAloneGalleryPage = client.page.standAloneGalleryPage();

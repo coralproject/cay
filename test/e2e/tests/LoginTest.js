@@ -12,8 +12,9 @@ export default {
   },
 
   'User should be redirected': client => {
+    const { authAuthority } = client.globals;
     client.pause(1000);
-    client.assert.urlContains('https://auth.coralproject.net/connect');
+    client.assert.urlContains(authAuthority);
   },
   'User logs in': client => {
     const { testUser } = client.globals;

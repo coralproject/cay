@@ -1,7 +1,7 @@
 export default {
   tags: ['app'],
   'Base url and Hostname': browser => {
-    const { baseUrl } = client.globals;
+    const { baseUrl } = browser.globals;
     browser
       .url(baseUrl)
       .assert.title('Coral - (Beta)')

@@ -22,6 +22,14 @@ const galleryCommands = {
     return this
       .getValue('@standaloneFormUrl', result => cb({ url: result.value }))
   },
+  addHeadline(headline) {
+    return this
+      .setValue('@galleryHeadline', headline)
+  },
+  addSubhead(subhead) {
+    return this
+      .setValue('@gallerySubhead', subhead)
+  }
 }
 
 export default {
@@ -47,6 +55,12 @@ export default {
     },
     flashMessage: {
       selector: '.flashmessage'
+    },
+    galleryHeadline: {
+      selector: '.gallery__headline'
+    },
+    gallerySubhead: {
+      selector: '.gallery__subhead'
     }
   }
 }

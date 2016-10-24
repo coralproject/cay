@@ -10,9 +10,9 @@ export default {
       .navigate(baseUrl + '/login')
       .ready()
   },
-
   'User should be redirected': client => {
     const { authAuthority } = client.globals;
+
     client.pause(1000);
     client.assert.urlContains(authAuthority);
   },

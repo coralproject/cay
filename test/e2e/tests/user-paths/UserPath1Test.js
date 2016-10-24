@@ -20,7 +20,7 @@ const testData = {
 }
 
 export default {
-  tags: ['user-path-1'],
+  '@tags': ['user-path-1'],
   'User logs in': client => {
     const loginPage = client.page.loginPage();
     const { baseUrl, testUser } = client.globals;

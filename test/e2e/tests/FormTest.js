@@ -1,7 +1,7 @@
 const testData = {}
 
 export default {
-  tags: ['form', 'standalone-form'],
+  '@tags': ['form', 'standalone-form'],
   'User logs in': client => {
     const loginPage = client.page.loginPage();
     const { baseUrl, testUser } = client.globals;

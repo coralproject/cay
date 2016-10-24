@@ -1,7 +1,7 @@
 let loginPage;
 
 export default {
-  tags: ['login'],
+  '@tags': ['login'],
   before: client => {
     const { baseUrl, testUser } = client.globals;
     loginPage = client.page.loginPage();

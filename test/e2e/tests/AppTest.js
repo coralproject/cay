@@ -1,5 +1,5 @@
 export default {
-  tags: ['app'],
+  '@tags': ['app'],
   'Base url and Hostname': browser => {
     const { baseUrl } = browser.globals;
     browser

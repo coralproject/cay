@@ -127,12 +127,12 @@ export default class FormList extends Component {
 }
 
 const ConfirmDialog = ({ show, formName, onConfirmClick, onCloseClick }) => show ? (
-  <div style={ styles.confirmOverlay }>
+  <div className="confirmDialog" style={ styles.confirmOverlay }>
     <div style={ styles.confirmDialog }>
-      <h2>Warning: this action has no undo.</h2>
-      <p style={ styles.confirmMessage }>Are you sure you want to remove the form <strong style={ styles.strong }>"{ formName }"</strong>?</p>
-      <button style={[styles.confirmButton, styles.yesButton]} onClick={onConfirmClick}>Yes</button>
-      <button style={[styles.confirmButton, styles.noButton]} onClick={onCloseClick}>No</button>
+      <h2 className="confirmDialog__title">Warning: this action has no undo.</h2>
+      <p className="confirmDialog__description" style={ styles.confirmMessage }>Are you sure you want to remove the form <strong style={ styles.strong }>"{ formName }"</strong>?</p>
+      <button className="confirmDialog__button--confirm" style={[styles.confirmButton, styles.yesButton]} onClick={onConfirmClick}>Yes</button>
+      <button className="confirmDialog__button--cancel" style={[styles.confirmButton, styles.noButton]} onClick={onCloseClick}>No</button>
     </div>
   </div>
 ) : null;

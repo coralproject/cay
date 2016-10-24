@@ -160,11 +160,14 @@ export default {
   },
   'User deletes the form' : client => {
     const { baseUrl } = client.globals;
-    const createFormPage = client.page.createFormPage();
+    const { FORM_ID } = testData;
+    const formListPage = client.page.formListPage();
 
     formListPage
       .navigate(baseUrl + '/forms')
       .ready()
+      .deleteForm(FORM_ID)
+
   },
   after: client => {
     client.end()

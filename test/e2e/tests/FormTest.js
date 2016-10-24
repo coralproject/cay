@@ -147,7 +147,6 @@ export default {
         client
           .url(url)
           .refresh((e) => {
-            console.log(e);
 
             standAloneFormPage
               .addValueToTextField("doge ", ({ value }) => {
@@ -240,7 +239,6 @@ export default {
         client
           .url(url)
           .refresh((e) => {
-            console.log(e);
 
             standAloneFormPage
               .addValueToTextField("tango ", ({ value }) => {
@@ -334,7 +332,6 @@ export default {
             client
               .url(url)
               .refresh((e) => {
-                console.log(e);
 
                 standAloneFormPage
                   .addValueToTextField("Hello, is it me you're looking for?", ({ value }) => {
@@ -417,7 +414,6 @@ export default {
         client
           .url(url)
           .refresh((e) => {
-            console.log(e);
 
             standAloneFormPage
               .addValueToTextField("doge ", ({ value }) => {
@@ -503,7 +499,6 @@ export default {
         client
           .url(url)
           .refresh((e) => {
-            console.log(e);
 
             standAloneFormPage
               .addValueToTextField("tango ", ({ value }) => {

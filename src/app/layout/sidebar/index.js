@@ -8,7 +8,7 @@ import Radium from 'radium';
 import { connect } from 'react-redux';
 
 import { bgColorBase } from 'settings';
-import Menu from 'app/layout/sidebar/Menu';
+  import Menu from 'app/layout/sidebar/Menu';
 
 /**
  * Module scope variables
@@ -20,7 +20,15 @@ let initState = null;
  * Sidebar component
  */
 
-@connect(({ app }) => ({ features: app.features }))
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  dispatch,
+  handleLogout: () => {
+    //dispatch(logout());
+    console.log('hello!')
+  }
+});
+
+@connect(({ app }) => ({ features: app.features }), mapDispatchToProps)
 @Radium
 export default class Sidebar extends Component {
   constructor(props) {
@@ -65,7 +73,7 @@ export default class Sidebar extends Component {
       <div style={[styles.wrapper, this.props.styles]}>
         <div style={[styles.sidebar(open), this.props.styles.sidebar]}>
           <Menu
-            dispatch={dispatch}
+            handleLogout={handleLogout}
             features={features}
             open={open}
             onToggleSidebar={this.toggleSidebar} />

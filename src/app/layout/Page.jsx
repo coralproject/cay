@@ -46,6 +46,7 @@ export default class Page extends React.Component {
   }
 
   render() {
+    console.log('Page', this.props);
     return (
       <Sidebar styles={styles.sidebar}>
         <Header />

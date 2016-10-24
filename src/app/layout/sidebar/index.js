@@ -25,9 +25,8 @@ let initState = null;
 export default class Sidebar extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      open: initState
-    };
+    this.state = { open: initState };
+    this.toggleSidebar = this.toggleSidebar.bind(this);
   }
 
   onSetSidebarOpen(open) {
@@ -60,12 +59,16 @@ export default class Sidebar extends Component {
 
   render() {
     const { open } = this.state;
-    const { children, features } = this.props;
+    const { children, features, dispatch } = this.props;
 
     return (
       <div style={[styles.wrapper, this.props.styles]}>
         <div style={[styles.sidebar(open), this.props.styles.sidebar]}>
-          <Menu features={features} open={open} onToggleSidebar={this.toggleSidebar.bind(this)} />
+          <Menu
+            dispatch={dispatch}
+            features={features}
+            open={open}
+            onToggleSidebar={this.toggleSidebar} />
         </div>
         <div style={styles.main}>{children}</div>
       </div>

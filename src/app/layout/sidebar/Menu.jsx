@@ -16,6 +16,7 @@ import FaAngleDoubleRight from 'react-icons/lib/fa/angle-double-right';
 import L from 'i18n';
 import { bgColorLogo } from 'settings';
 import {userExpired} from 'redux-oidc';
+import {userManager} from 'store';
 
 import { AskIcon } from 'components/icons/AskIcon';
 import { TrustIcon } from 'components/icons/TrustIcon';
@@ -81,6 +82,7 @@ const BottomMenu = ({ open, onToggleSidebar, dispatch }) => (
 
 const logout = dispatch => () => {
   dispatch(userExpired());
+  userManager.signinRedirect();
 };
 
 /**

@@ -151,7 +151,7 @@ const ConfirmDialog = ({ show, formName, onConfirmClick, onCloseClick }) => show
       <h2 className="confirmDialog__title">Warning: this action has no undo.</h2>
       <p className="confirmDialog__description" style={styles.confirmMessage}>Are you sure you want to remove the form <strong style={ styles.strong }>"{ formName }"</strong>?</p>
       <div className="confirmDialog__actions" style={styles.actions}>
-        <CoralButton className="confirmDialog__button--cancel" style={styles.cancelButton} onClick={onCloseClick}>No</CoralButton>
+        <CoralButton className="confirmDialog__button--cancel" style={styles.cancelButton} onClick={onCloseClick}>Cancel</CoralButton>
         <CoralButton type="success" className="confirmDialog__button--confirm" onClick={onConfirmClick}>Yes, delete form</CoralButton>
       </div>
     </div>

@@ -14,7 +14,9 @@ const testData = {
   `,
   FORM_SHORT_ANSWER_TITLE: 'What do you drink for breakfast?',
   FORM_SHORT_ANSWER_DESCRIPTION: 'Mate? Sounds like a good choice',
-  FORM_SUBMISSION_BODY: 'Mate'
+  FORM_SUBMISSION_BODY: 'Mate',
+  GALLERY_HEADLINE: '[TEST] What do you drink for breakfast?',
+  GALLERY_SUBHEAD: 'Gallery testing subhead'
 }
 
 export default {
@@ -139,13 +141,15 @@ export default {
     const standAloneGalleryPage = client.page.standAloneGalleryPage();
 
     const { baseUrl } = client.globals;
-    const { FORM_ID, FORM_SHORT_ANSWER_TITLE, FORM_SUBMISSION_BODY } = testData;
+    const { FORM_ID, FORM_SHORT_ANSWER_TITLE, FORM_SUBMISSION_BODY, GALLERY_HEADLINE, GALLERY_SUBHEAD } = testData;
 
     submissionsPage.sendSubmissionToGallery()
 
     galleryPage
       .navigate(`${baseUrl}/forms/${FORM_ID}/gallery`)
       .ready()
+      .addHeadline(GALLERY_HEADLINE)
+      .addSubhead(GALLERY_SUBHEAD)
       .saveGallery()
       .publishFormOptions()
       .getGalleryStandaloneUrl(({ url }) => {
@@ -154,6 +158,8 @@ export default {
           .navigate(url)
           .ready()
 
+        standAloneGalleryPage.expect.element('@headline').text.to.equal(GALLERY_HEADLINE);
+        standAloneGalleryPage.expect.element('@subhead').text.to.equal(GALLERY_SUBHEAD);
         // Checking the submission
         standAloneGalleryPage.expect.element('@answerText').text.to.equal(FORM_SUBMISSION_BODY);
       })

@@ -8,6 +8,14 @@ const standAloneGalleryCommands = {
 export default {
   commands: [standAloneGalleryCommands],
   elements: {
-    answerText: '.askGallery__answerText'
+    answerText: {
+      selector: '.askGallery__answerText'
+    },
+    headline: {
+      selector: '.askGallery__title'
+    },
+    subhead: {
+      selector: '.askGallery__description'
+    }
   }
 }

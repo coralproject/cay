@@ -1,3 +1,5 @@
+const testData = {}
+
 export default {
   tags: ['form', 'standalone-form'],
   'User logs in': client => {
@@ -97,6 +99,9 @@ export default {
     createFormPage
       .publishFormOptions()
       .getUrlStandaloneForm(({ url }) =>{
+        
+        // Saving FORM ID
+        testData.FORM_ID = url.match(/(\S{24}).html$/)[1]
 
         createFormPage
           .closeModal()
@@ -601,6 +606,16 @@ export default {
                 })
             })
       })
+  },
+  'User deletes the form' : client => {
+    const { baseUrl } = client.globals;
+    const { FORM_ID } = testData;
+    const formListPage = client.page.formListPage();
+
+    formListPage
+      .navigate(baseUrl + '/forms')
+      .ready()
+      .deleteForm(FORM_ID)
   },
   after: client => {
     client.end()

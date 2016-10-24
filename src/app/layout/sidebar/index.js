@@ -6,9 +6,11 @@
 import React, { Component } from 'react';
 import Radium from 'radium';
 import { connect } from 'react-redux';
+import {userExpired} from 'redux-oidc';
+import {userManager} from 'store';
 
 import { bgColorBase } from 'settings';
-  import Menu from 'app/layout/sidebar/Menu';
+import Menu from 'app/layout/sidebar/Menu';
 
 /**
  * Module scope variables
@@ -22,9 +24,12 @@ let initState = null;
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   dispatch,
+  /**
+   * delete the user_id auth token and signout
+   */
   handleLogout: () => {
-    //dispatch(logout());
-    console.log('Do Logout!')
+    dispatch(userExpired());
+    userManager.signinRedirect();
   }
 });
 
@@ -67,14 +72,13 @@ export default class Sidebar extends Component {
 
   render() {
     const { open } = this.state;
-    const { children, features, dispatch, handleLogout } = this.props;
+    const { children, features, handleLogout } = this.props;
 
     return (
       <div style={[styles.wrapper, this.props.styles]}>
         <div style={[styles.sidebar(open), this.props.styles.sidebar]}>
           <Menu
             handleLogout={handleLogout}
-            dispatch={dispatch}
             features={features}
             open={open}
             onToggleSidebar={this.toggleSidebar} />

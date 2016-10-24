@@ -15,8 +15,6 @@ import FaAngleDoubleLeft from 'react-icons/lib/fa/angle-double-left';
 import FaAngleDoubleRight from 'react-icons/lib/fa/angle-double-right';
 import L from 'i18n';
 import { bgColorLogo } from 'settings';
-import {userExpired} from 'redux-oidc';
-import {userManager} from 'store';
 
 import { AskIcon } from 'components/icons/AskIcon';
 import { TrustIcon } from 'components/icons/TrustIcon';
@@ -25,7 +23,7 @@ import { TrustIcon } from 'components/icons/TrustIcon';
  * Sidebar menu component
  */
 
-export default Radium(({ open, features, onToggleSidebar, dispatch }) => (
+export default Radium(({ open, features, onToggleSidebar, handleLogout }) => (
   <div style={styles.sidebarWrapper}>
     <Link to="/" style={styles.logo}>
       <img width="30" height="30" src="/img/logo_white.png" />
@@ -33,7 +31,7 @@ export default Radium(({ open, features, onToggleSidebar, dispatch }) => (
     </Link>
     <div style={styles.menuWrapper}>
       <TopMenu open={open} features={features} />
-      <BottomMenu onToggleSidebar={onToggleSidebar} dispatch={dispatch} open={open} />
+      <BottomMenu onToggleSidebar={onToggleSidebar} handleLogout={handleLogout} open={open} />
     </div>
   </div>
 ));
@@ -55,11 +53,11 @@ const TopMenu = ({ features }) => (
  * Bottom menu nav
  */
 
-const BottomMenu = ({ open, onToggleSidebar, dispatch }) => (
+const BottomMenu = ({ open, onToggleSidebar, handleLogout }) => (
   <ul>
     <MenuItem
       label="Log out"
-      onClick={logout(dispatch)}
+      onClick={handleLogout}
       target="#"
       icon={<MdPerson />} />
     <MenuItem
@@ -75,15 +73,6 @@ const BottomMenu = ({ open, onToggleSidebar, dispatch }) => (
     <a style={styles.version}>{`Version: ${process.env.VERSION}`}</a>
   </ul>
 );
-
-/**
- * delete the user_id auth token and signout
- */
-
-const logout = dispatch => () => {
-  dispatch(userExpired());
-  userManager.signinRedirect();
-};
 
 /**
  * Stop propagation and execute function

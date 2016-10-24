@@ -1,8 +1,3 @@
-
-/**
- * Module dependencies
- */
-
 import React, { PropTypes, Component } from 'react';
 import Radium from 'radium';
 import { connect } from 'react-redux';
@@ -17,7 +12,7 @@ import L from 'i18n';
 import moment from 'moment';
 import Login from 'app/Login';
 
-import { CoralButton } from '../components/ui';
+import { CoralButton, CoralDialog } from '../components/ui';
 
 // Forms, Widgets, Submissions
 @connect(({ app, oidc, forms }) => ({ app, oidc, forms }))
@@ -29,6 +24,13 @@ export default class FormList extends Component {
       displayMode: 'open',
       copying:{}
     };
+
+    this.closeDialog = this.closeDialog.bind(this);
+    this.onConfirmClick = this.onConfirmClick.bind(this);
+    this.setDisplayMode = this.setDisplayMode.bind(this);
+    this.confirmDeletion = this.confirmDeletion.bind(this);
+    this.onCopyFormClick = this.onCopyFormClick.bind(this);
+    this.onRowClick = this.onRowClick.bind(this);
   }
 
   static contextTypes = {
@@ -59,13 +61,17 @@ export default class FormList extends Component {
   }
 
   onConfirmClick() {
-    var formToDelete = this.state.formToDelete;
-    this.setState({ confirmFormName: '', showConfirmDialog: false, tagToDelete: null });
+    const { formToDelete } = this.state;
+    this.closeDialog();
     this.props.dispatch(deleteForm(...formToDelete));
   }
 
   closeDialog() {
-    this.setState({ confirmFormName: '', showConfirmDialog: false, formToDelete: null });
+    this.setState({
+      confirmFormName: '',
+      showConfirmDialog: false,
+      formToDelete: null
+    });
   }
 
   onRowClick(id) {
@@ -82,7 +88,6 @@ export default class FormList extends Component {
   }
 
   render() {
-
     const {app, oidc, forms} = this.props;
     const allForms = forms.formList.map(id => forms[id]);
     const visibleForms = allForms.filter(form => form.status === this.state.displayMode);
@@ -91,6 +96,7 @@ export default class FormList extends Component {
 
     return (
       <Page authTimeout={authTimeout} displayAuthSnackbar={!app.authSnackbarDisplayedOnce}>
+
         <ContentHeader title="View Forms" style={styles.header} subhead="Create, edit and view forms">
           <Link to="forms/create" style={styles.createButton}>
             <CoralButton icon="add" type="success">
@@ -101,40 +107,53 @@ export default class FormList extends Component {
 
         <CoralButton
           active={displayMode === 'open'}
-          onClick={this.setDisplayMode.bind(this, 'open')}
+          onClick={() => this.setDisplayMode('open')}
           style={{ marginRight: 10 }}
         >
           Live
         </CoralButton>
+
         <CoralButton
           active={displayMode === 'closed'}
-          onClick={this.setDisplayMode.bind(this, 'closed')}
+          onClick={() => this.setDisplayMode('closed')}
         >
           Closed
         </CoralButton>
 
-        <FormTable forms={visibleForms} onRowClick={this.onRowClick.bind(this)}
-          confirmDeletion={this.confirmDeletion.bind(this)} onCopyFormClick={this.onCopyFormClick.bind(this)}
-          copying={this.state.copying}/>
+        <FormTable
+          forms={visibleForms}
+          onRowClick={this.onRowClick}
+          confirmDeletion={this.confirmDeletion}
+          onCopyFormClick={this.onCopyFormClick}
+          copying={this.state.copying}
+        />
 
-        <ConfirmDialog show={this.state.showConfirmDialog}
+        <ConfirmDialog
+          show={this.state.showConfirmDialog}
           formName={this.state.confirmFormName}
-          onConfirmClick={this.onConfirmClick.bind(this)}
-          onCloseClick={this.closeDialog.bind(this)} />
+          onConfirmClick={this.onConfirmClick}
+          onCloseClick={this.closeDialog}
+        />
+
       </Page>
     );
   }
 }
 
 const ConfirmDialog = ({ show, formName, onConfirmClick, onCloseClick }) => show ? (
-  <div className="confirmDialog" style={ styles.confirmOverlay }>
+  <CoralDialog
+    className="confirmDialog"
+    title="Publish Options"
+    onCancel={this.closeDialog}
+    open={this.state.publishModalOpened}
+  >
     <div style={ styles.confirmDialog }>
       <h2 className="confirmDialog__title">Warning: this action has no undo.</h2>
       <p className="confirmDialog__description" style={ styles.confirmMessage }>Are you sure you want to remove the form <strong style={ styles.strong }>"{ formName }"</strong>?</p>
       <button className="confirmDialog__button--confirm" style={[styles.confirmButton, styles.yesButton]} onClick={onConfirmClick}>Yes</button>
       <button className="confirmDialog__button--cancel" style={[styles.confirmButton, styles.noButton]} onClick={onCloseClick}>No</button>
     </div>
-  </div>
+  </CoralDialog>
 ) : null;
 
 const formatForm = ({ header, stats, id, date_created }, index) => {

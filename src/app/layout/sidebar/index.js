@@ -6,6 +6,8 @@
 import React, { Component } from 'react';
 import Radium from 'radium';
 import { connect } from 'react-redux';
+import {userExpired} from 'redux-oidc';
+import {userManager} from 'store';
 
 import { bgColorBase } from 'settings';
 import Menu from 'app/layout/sidebar/Menu';
@@ -20,14 +22,24 @@ let initState = null;
  * Sidebar component
  */
 
-@connect(({ app }) => ({ features: app.features }))
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  dispatch,
+  /**
+   * delete the user_id auth token and signout
+   */
+  handleLogout: () => {
+    dispatch(userExpired());
+    userManager.signinRedirect();
+  }
+});
+
+@connect(({ app }) => ({ features: app.features }), mapDispatchToProps)
 @Radium
 export default class Sidebar extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      open: initState
-    };
+    this.state = { open: initState };
+    this.toggleSidebar = this.toggleSidebar.bind(this);
   }
 
   onSetSidebarOpen(open) {
@@ -60,12 +72,16 @@ export default class Sidebar extends Component {
 
   render() {
     const { open } = this.state;
-    const { children, features } = this.props;
+    const { children, features, handleLogout } = this.props;
 
     return (
       <div style={[styles.wrapper, this.props.styles]}>
         <div style={[styles.sidebar(open), this.props.styles.sidebar]}>
-          <Menu features={features} open={open} onToggleSidebar={this.toggleSidebar.bind(this)} />
+          <Menu
+            handleLogout={handleLogout}
+            features={features}
+            open={open}
+            onToggleSidebar={this.toggleSidebar} />
         </div>
         <div style={styles.main}>{children}</div>
       </div>

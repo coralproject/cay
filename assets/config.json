@@ -11,6 +11,7 @@
  "authAuthority": "${AUTH_AUTHORITY}",
  "basicAuthorization": "Basic ${AUTH_TOKEN}",
   "features": {
+    "authEnabled": true,
   	"trust": false,
     "ask": true
   }

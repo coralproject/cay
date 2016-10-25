@@ -52,6 +52,7 @@
   },
   "dependencies": {
     "amqplib": "^0.4.1",
+    "clipboard": "^1.5.15",
     "color": "^0.10.1",
     "css-loader": "^0.21.0",
     "d3": "^3.5.12",
@@ -74,8 +75,7 @@
     "node-uuid": "^1.4.7",
     "oidc-client": "^1.2.0-beta.2",
     "radium": "^0.18.1",
-    "react": "^15.3.0",
-    "react-copy-to-clipboard": "^4.2.2",
+    "react": "^15.3.2",
     "react-datepicker": "^0.29.0",
     "react-dnd": "^2.1.4",
     "react-dnd-html5-backend": "^2.1.2",

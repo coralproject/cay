@@ -39,6 +39,7 @@ export default class Login extends React.Component {
           <p style={styles.projectName}>The Coral Project</p>
           <div style={styles.container}>
             <Button
+              className="login__button"
               size="large"
               style={styles.loginButton}
               category="primary"

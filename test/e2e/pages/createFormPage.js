@@ -35,18 +35,19 @@ const createFormCommands = {
     return this
       .click('@formSaveButton')
       .waitForElementPresent('@statusToggle', 8000)
-      .waitForElementNotPresent('@flashMessage', 8000)
+      .waitForElementPresent('@flashMessage', 12000)
   },
   goLive() {
     return this
       .waitForElementVisible('@statusToggle', 1000)
       .click('@statusToggle')
-      .waitForElementNotPresent('@flashMessage', 3000)
+      .waitForElementNotPresent('@flashMessage', 12000)
       .waitForElementVisible('@liveStatusOption', 1000)
       .click('@liveStatusOption')
       .waitForElementVisible('@statusApplyButton', 1000)
       .click('@statusApplyButton')
-      .waitForElementNotPresent('@flashMessage', 5000)
+      .click('@statusToggle')
+      .waitForElementNotPresent('@flashMessage', 12000)
   },
   publishFormOptions() {
     return this
@@ -127,9 +128,6 @@ export default {
     formPublishButton: {
       selector: '.form-publish-button'
     },
-    formSaveButton: {
-      selector: '.form-save-button'
-    },
     statusToggle: {
       selector: '.form-status-toggle'
     },
@@ -158,7 +156,7 @@ export default {
       selector: '.form-max-limit > input[type="number"]:nth-child(3)'
     },
     closeModal: {
-      selector: '.card div:nth-child(1) > span:nth-child(2)'
+      selector: ' dialog > div:nth-child(1) > span'
     }
   }
 };

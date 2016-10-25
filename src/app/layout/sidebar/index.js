@@ -28,8 +28,12 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
    * delete the user_id auth token and signout
    */
   handleLogout: () => {
-    dispatch(userExpired());
-    userManager.signinRedirect();
+    // according to the docs, I should be able to dispatch the {userExpired}
+    // action from redux-oidc here which sets the user to null
+    // as of 10.25.2016 that action does not work as documented, so I'm doing this
+    userManager.removeUser().then(() => {
+      userManager.signinRedirect();
+    });
   }
 });
 

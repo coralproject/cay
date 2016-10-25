@@ -1,6 +1,19 @@
+const testData = {}
+
 export default {
-  tags: ['form', 'standalone-form'],
-  before: client => {
+  '@tags': ['form', 'standalone-form'],
+  'User logs in': client => {
+    const loginPage = client.page.loginPage();
+    const { baseUrl, testUser } = client.globals;
+
+    loginPage
+      .navigate(baseUrl + '/login')
+      .ready()
+
+    loginPage.login(testUser)
+    client.pause(2000);
+  },
+  'User goes to forms': client => {
     const { baseUrl } = client.globals;
     const createFormPage = client.page.createFormPage();
 
@@ -27,6 +40,7 @@ export default {
 
     createFormPage
       .saveForm()
+      .waitForElementPresent('@flashMessage', 12000); //NEEDED - AWS takes more than 6s to respond
   },
   'User adds Title': client => {
     const createFormPage = client.page.createFormPage();
@@ -87,6 +101,9 @@ export default {
       .publishFormOptions()
       .getUrlStandaloneForm(({ url }) =>{
 
+        // Saving FORM ID
+        testData.FORM_ID = url.match(/([a-f\d]{24})\.html$/i)[1]
+
         createFormPage
           .closeModal()
 
@@ -130,7 +147,6 @@ export default {
         client
           .url(url)
           .refresh((e) => {
-            console.log(e);
 
             standAloneFormPage
               .addValueToTextField("doge ", ({ value }) => {
@@ -223,7 +239,6 @@ export default {
         client
           .url(url)
           .refresh((e) => {
-            console.log(e);
 
             standAloneFormPage
               .addValueToTextField("tango ", ({ value }) => {
@@ -317,7 +332,6 @@ export default {
             client
               .url(url)
               .refresh((e) => {
-                console.log(e);
 
                 standAloneFormPage
                   .addValueToTextField("Hello, is it me you're looking for?", ({ value }) => {
@@ -336,7 +350,7 @@ export default {
 
     createFormPage
       .deleteWidget();
-    
+
   },
   'User adds a Long Answer with Min Chars and tests the published form': client => {
     const createFormPage = client.page.createFormPage();
@@ -400,7 +414,6 @@ export default {
         client
           .url(url)
           .refresh((e) => {
-            console.log(e);
 
             standAloneFormPage
               .addValueToTextField("doge ", ({ value }) => {
@@ -486,7 +499,6 @@ export default {
         client
           .url(url)
           .refresh((e) => {
-            console.log(e);
 
             standAloneFormPage
               .addValueToTextField("tango ", ({ value }) => {
@@ -579,8 +591,6 @@ export default {
           client
             .url(url)
             .refresh((e) => {
-              console.log(e);
-
               standAloneFormPage
                 .addValueToTextField("Hello, is it me you're looking for?", ({ value }) => {
                   standAloneFormPage.assert.equal(value.length, maxLimit);
@@ -592,6 +602,16 @@ export default {
                 })
             })
       })
+  },
+  'User deletes the form' : client => {
+    const { baseUrl } = client.globals;
+    const { FORM_ID } = testData;
+    const formListPage = client.page.formListPage();
+
+    formListPage
+      .navigate(baseUrl + '/forms')
+      .ready()
+      .deleteForm(FORM_ID)
   },
   after: client => {
     client.end()

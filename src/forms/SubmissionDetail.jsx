@@ -68,11 +68,12 @@ export default class SubmissionDetail extends Component {
             const modAnswer = inGallery ? this.props.removeFromGallery : this.props.sendToGallery;
 
             return (
-              <Card style={styles.answerCard} key={key}>
-                <CardTitle>{reply.question}</CardTitle>
-                <CardText>{this.renderAnswer(reply)}</CardText>
-                <CardActions style={styles.answerActions}>
+              <Card className="submission" style={styles.answerCard} key={key}>
+                <CardTitle className="submission__title">{reply.question}</CardTitle>
+                <CardText className="submission__body">{this.renderAnswer(reply)}</CardText>
+                <CardActions className="submission__actions" style={styles.answerActions}>
                   <CoralButton
+                    className={ inGallery ? 'button__remove' : 'button__send' }
                     type="violet"
                     icon={inGallery ? 'delete' : 'send'}
                     active={inGallery}

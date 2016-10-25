@@ -51,12 +51,12 @@ export default class CoralDialog extends Component {
   }
 
   render() {
-    const { children, title, onCancel, onClose, open, style, ...rest } = this.props;
+    const { children, title, onCancel, onClose, open, style, className = '', ...rest } = this.props;
 
     return (
       <dialog
         ref="dialog"
-        className="mdl-dialog"
+        className={`mdl-dialog ${className}`}
         style={[styles.base, ...style]}
         {...rest}
         >

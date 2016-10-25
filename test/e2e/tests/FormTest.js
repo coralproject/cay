@@ -102,7 +102,7 @@ export default {
       .getUrlStandaloneForm(({ url }) =>{
 
         // Saving FORM ID
-        testData.FORM_ID = url.match(/(\S{24}).html$/)[1]
+        testData.FORM_ID = url.match(/([a-f\d]{24})\.html$/i)[1]
 
         createFormPage
           .closeModal()
@@ -350,7 +350,7 @@ export default {
 
     createFormPage
       .deleteWidget();
-    
+
   },
   'User adds a Long Answer with Min Chars and tests the published form': client => {
     const createFormPage = client.page.createFormPage();

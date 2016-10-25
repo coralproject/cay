@@ -6,6 +6,8 @@ const loginCommands = {
   login(testUser) {
     const { user, pass } = testUser
     return this
+      .waitForElementVisible('@goToLoginButton')
+      .click('@goToLoginButton')
       .waitForElementVisible('@inputEmail')
       .setValue('@inputEmail', user)
       .setValue('@inputPassword', pass)
@@ -22,6 +24,9 @@ const loginCommands = {
 export default {
   commands: [loginCommands],
   elements: {
+    goToLoginButton: {
+      selector: '.login__button'
+    },
     inputEmail: {
       selector: '#inputEmail'
     },

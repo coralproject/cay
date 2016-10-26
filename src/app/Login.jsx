@@ -25,8 +25,8 @@ export default class Login extends React.Component {
     router: PropTypes.object.isRequired
   }
 
-  loginUser() {
-    // this.props.dispatch(login(this.state.email, this.state.password));
+  constructor(props) {
+    super(props);
     userManager.signinRedirect();
   }
 
@@ -37,16 +37,7 @@ export default class Login extends React.Component {
           <img style={styles.logo} src="/img/logomark_512x512.svg" />
           <p style={styles.welcome}>Welcome to</p>
           <p style={styles.projectName}>The Coral Project</p>
-          <div style={styles.container}>
-            <Button
-              className="login__button"
-              size="large"
-              style={styles.loginButton}
-              category="primary"
-              onClick={this.loginUser}
-            > Log In </Button>
-            <a style={styles.loginRequest} href="https://blog.coralproject.net/beta-testers/">How can I request a login?</a>
-          </div>
+          <p style={{color: 'white'}}>Redirecting...</p>
         </div>
       </div>
     );

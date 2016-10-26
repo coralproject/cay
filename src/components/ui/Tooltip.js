@@ -27,7 +27,7 @@ export default class Tooltip extends Component {
 
   render() {
     const { text, htmlFor, children } = this.props;
-    const { active, x, y } = this.state;
+    const { active } = this.state;
     return (
       <span
         onMouseOver={this.handleMouseOver}

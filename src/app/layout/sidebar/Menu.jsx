@@ -10,6 +10,7 @@ import { Link } from 'react-router';
 import MenuItem from 'app/layout/sidebar/MenuItem';
 import FaCog from 'react-icons/lib/fa/cog';
 import FaBug from 'react-icons/lib/fa/bug';
+import MdPerson from 'react-icons/lib/md/person';
 import FaAngleDoubleLeft from 'react-icons/lib/fa/angle-double-left';
 import FaAngleDoubleRight from 'react-icons/lib/fa/angle-double-right';
 import L from 'i18n';
@@ -22,7 +23,7 @@ import { TrustIcon } from 'components/icons/TrustIcon';
  * Sidebar menu component
  */
 
-export default Radium(({ open, features, onToggleSidebar }) => (
+export default Radium(({ open, features, onToggleSidebar, handleLogout }) => (
   <div style={styles.sidebarWrapper}>
     <Link to="/" style={styles.logo}>
       <img width="30" height="30" src="/img/logo_white.png" />
@@ -30,7 +31,7 @@ export default Radium(({ open, features, onToggleSidebar }) => (
     </Link>
     <div style={styles.menuWrapper}>
       <TopMenu open={open} features={features} />
-      <BottomMenu onToggleSidebar={onToggleSidebar} open={open} />
+      <BottomMenu onToggleSidebar={onToggleSidebar} handleLogout={handleLogout} open={open} />
     </div>
   </div>
 ));
@@ -52,10 +53,23 @@ const TopMenu = ({ features }) => (
  * Bottom menu nav
  */
 
-const BottomMenu = ({ open, onToggleSidebar }) => (
+const BottomMenu = ({ open, onToggleSidebar, handleLogout }) => (
   <ul>
-    <MenuItem label="Report bug / Give Feedback" externalLink={true} target="https://coralproject.net/contribute.html#other-ideas-and-bug-reports" icon={<FaBug />} />
-    <MenuItem label="Collapse menu" target='#' onClick={stopAndBubble(onToggleSidebar)} icon={open ? <FaAngleDoubleLeft /> : <FaAngleDoubleRight />} />
+    <MenuItem
+      label="Log out"
+      onClick={handleLogout}
+      target="#"
+      icon={<MdPerson />} />
+    <MenuItem
+      label="Report bug / Give Feedback"
+      externalLink={true}
+      target="https://coralproject.net/contribute.html#other-ideas-and-bug-reports"
+      icon={<FaBug />} />
+    <MenuItem
+      label="Collapse menu"
+      target='#'
+      onClick={stopAndBubble(onToggleSidebar)}
+      icon={open ? <FaAngleDoubleLeft /> : <FaAngleDoubleRight />} />
     <a style={styles.version}>{`Version: ${process.env.VERSION}`}</a>
   </ul>
 );

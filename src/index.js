@@ -5,8 +5,9 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import configureStore, {userManager} from 'store';
+import getStore, {userManager} from 'store';
 import { configXenia } from 'app/AppActions';
+import { userFound } from 'redux-oidc';
 
 import App from 'App';
 import 'i18n';
@@ -24,20 +25,27 @@ import { FILTERS_CONFIG_LOADED } from 'filters/FiltersActions';
 
 loadConfig()
 .then(([app, filters]) => {
-  const store = configureStore({ app });
+  getStore({app}).then(([store, user]) => {
 
-  store.dispatch(configXenia());
-  if (app.features.trust === true) {
-    store.dispatch({type: FILTERS_CONFIG_LOADED, config: filters});
-  }
+    if (user) {
+      // I don't know if this is strictly necessary
+      // I want to force the user into the state if it's there.
+      store.dispatch(userFound(user));
+    }
 
-  analyticsInit(app.googleAnalyticsId);
+    store.dispatch(configXenia());
+    if (app.features.trust === true) {
+      store.dispatch({type: FILTERS_CONFIG_LOADED, config: filters});
+    }
 
-  const { features } = app;
-  ReactDOM.render(
-    <App store={store} onLogPageView={logPageView} features={features} userManager={userManager}
-      defaultRoute={getDefaultRoute(features)} />
-  , document.getElementById('root'));
+    analyticsInit(app.googleAnalyticsId);
+
+    const { features } = app;
+    ReactDOM.render(
+      <App store={store} onLogPageView={logPageView} features={features} userManager={userManager}
+        defaultRoute={getDefaultRoute(features)} />
+    , document.getElementById('root'));
+  });
 });
 
 /**

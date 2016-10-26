@@ -13,6 +13,6 @@
   "features": {
   	"trust": false,
     "ask": true,
-    "authEnabled": "${AUTH_ENABLED}"
+    "authEnabled": ${AUTH_ENABLED}
   }
 }

@@ -226,7 +226,7 @@ export default class MultipleChoiceEditor extends Component {
                 id="includeInGroups"
                 onClick={this.onIncludeInGroupClick}
                 checked={field.props.includeInGroups} />
-                Include in Groups
+                Include in Groups (API)
             </label>
           </Tooltip>
           </div>

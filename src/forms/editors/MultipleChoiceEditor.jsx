@@ -7,7 +7,7 @@ import CommonFieldOptions from 'forms/CommonFieldOptions';
 import FaCopy from 'react-icons/lib/fa/copy';
 import FaPlusCircle from 'react-icons/lib/fa/plus-circle';
 
-import { CoralIconButton } from '../../components/ui';
+import { CoralIconButton, Tooltip } from '../../components/ui';
 
 @connect(({ forms, app }) => ({ forms, app }))
 @Radium
@@ -22,6 +22,11 @@ export default class MultipleChoiceEditor extends Component {
     };
 
     this.addOption = this.addOption.bind(this);
+    this.onMultipleClick = this.onMultipleClick.bind(this);
+    this.onOtherTextChange = this.onOtherTextChange.bind(this);
+    this.onOtherClick = this.onOtherClick.bind(this);
+    this.onGroupClick = this.onGroupClick.bind(this);
+    this.onIncludeInGroupClick = this.onIncludeInGroupClick.bind(this);
 
     this.focusNew = false;
   }
@@ -174,7 +179,7 @@ export default class MultipleChoiceEditor extends Component {
             field.props.otherAllowed ?
               <div style={ styles.optionRow }>
                 <div style={ styles.optionRowText }>
-                  <input style={ styles.optionInput } type="text" placeholder="Other:" value={ field.props.otherText } onChange={ this.onOtherTextChange.bind(this) } />
+                  <input style={ styles.optionInput } type="text" placeholder="Other:" value={ field.props.otherText } onChange={this.onOtherTextChange} />
                 </div>
                 <div style={ styles.optionRowButtons }>
                   &nbsp;
@@ -191,32 +196,39 @@ export default class MultipleChoiceEditor extends Component {
             </div>
           </div>
         </div>
-        <div style={ styles.bottomOptions }>
-          <div style={ styles.bottomOptionsLeft }>
-            <label style={ styles.bottomCheck }>
+        <div style={styles.bottomOptions}>
+          <div style={styles.bottomOptionsLeft}>
+            <label style={styles.bottomCheck}>
               <input type="checkbox"
-                onClick={ this.onMultipleClick.bind(this) }
-                checked={ field.props.multipleChoice } />
+                onClick={this.onMultipleClick}
+                checked={field.props.multipleChoice} />
                 Allow multiple selections
             </label>
-            <label style={ styles.bottomCheck }>
+            <label style={styles.bottomCheck}>
               <input type="checkbox"
-                onClick={ this.onOtherClick.bind(this) }
-                checked={ field.props.otherAllowed } />
+                onClick={this.onOtherClick}
+                checked={field.props.otherAllowed} />
                 Allow "Other"
             </label>
-            <label style={ styles.bottomCheck }>
+            <Tooltip htmlFor="groupSubmissions"  text="Create counts by answer for multiple choice questions">
+              <label style={styles.bottomCheck}>
+                <input
+                  id="groupSubmissions"
+                  type="checkbox"
+                  onClick={this.onGroupClick}
+                  checked={field.props.groupSubmissions } />
+                  Group submissions (API)
+              </label>
+            </Tooltip>
+            <Tooltip htmlFor="includeInGroups"  text="Include these answers in grouped submissions">
+            <label style={styles.bottomCheck}>
               <input type="checkbox"
-                onClick={ this.onGroupClick.bind(this) }
-                checked={ field.props.groupSubmissions } />
-                Group Submissions
+                id="includeInGroups"
+                onClick={this.onIncludeInGroupClick}
+                checked={field.props.includeInGroups} />
+                Include in Groups (API)
             </label>
-            <label style={ styles.bottomCheck }>
-              <input type="checkbox"
-                onClick={ this.onIncludeInGroupClick.bind(this) }
-                checked={ field.props.includeInGroups } />
-                Include in Groups
-            </label>
+          </Tooltip>
           </div>
           <CommonFieldOptions {...this.props} />
         </div>

@@ -5,8 +5,6 @@ import { Button, Tabs, Tab, RadioGroup, Radio, Textfield } from 'react-mdl';
 
 import Spinner from 'components/Spinner';
 
-import CopyToClipboard from 'react-copy-to-clipboard';
-
 import {
   updateForm,
   updateFormSettings

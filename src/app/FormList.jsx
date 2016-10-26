@@ -1,12 +1,8 @@
-
-/**
- * Module dependencies
- */
-
 import React, { PropTypes, Component } from 'react';
 import Radium from 'radium';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
+import { authSnackbarDisplayedOnce } from 'app/AppActions';
 import { deleteForm, fetchForms } from 'forms/FormActions';
 import { mediumGrey, brandColor } from 'settings';
 import Page from 'app/layout/Page';
@@ -16,10 +12,10 @@ import L from 'i18n';
 import moment from 'moment';
 import Login from 'app/Login';
 
-import { CoralButton } from '../components/ui';
+import { CoralButton, CoralDialog } from '../components/ui';
 
 // Forms, Widgets, Submissions
-@connect(({ oidc, forms }) => ({ oidc, forms }))
+@connect(({ app, oidc, forms }) => ({ app, oidc, forms }))
 @Radium
 export default class FormList extends Component {
   constructor(props) {
@@ -28,6 +24,13 @@ export default class FormList extends Component {
       displayMode: 'open',
       copying:{}
     };
+
+    this.closeDialog = this.closeDialog.bind(this);
+    this.onConfirmClick = this.onConfirmClick.bind(this);
+    this.setDisplayMode = this.setDisplayMode.bind(this);
+    this.confirmDeletion = this.confirmDeletion.bind(this);
+    this.onCopyFormClick = this.onCopyFormClick.bind(this);
+    this.onRowClick = this.onRowClick.bind(this);
   }
 
   static contextTypes = {
@@ -44,6 +47,10 @@ export default class FormList extends Component {
     }
   }
 
+  componentWillUnmount() {
+    this.props.dispatch(authSnackbarDisplayedOnce());
+  }
+
   confirmDeletion(name, description, index, event) {
     event.stopPropagation();
     this.setState({
@@ -54,13 +61,17 @@ export default class FormList extends Component {
   }
 
   onConfirmClick() {
-    var formToDelete = this.state.formToDelete;
-    this.setState({ confirmFormName: '', showConfirmDialog: false, tagToDelete: null });
+    const { formToDelete } = this.state;
+    this.closeDialog();
     this.props.dispatch(deleteForm(...formToDelete));
   }
 
   closeDialog() {
-    this.setState({ confirmFormName: '', showConfirmDialog: false, formToDelete: null });
+    this.setState({
+      confirmFormName: '',
+      showConfirmDialog: false,
+      formToDelete: null
+    });
   }
 
   onRowClick(id) {
@@ -77,23 +88,15 @@ export default class FormList extends Component {
   }
 
   render() {
-
-    const {oidc, forms} = this.props;
-
-    if (oidc.isLoadingUser) {
-      return <p>Authorizing user...</p>;
-    }
-
-    if (!oidc.user) {
-      return <Login />;
-    }
-
+    const {app, oidc, forms} = this.props;
     const allForms = forms.formList.map(id => forms[id]);
     const visibleForms = allForms.filter(form => form.status === this.state.displayMode);
     const { displayMode } = this.state;
+    const authTimeout = app.features.authEnabled ? new Date(oidc.user.expires_at * 1000) : undefined;
 
     return (
-      <Page>
+      <Page authTimeout={authTimeout} displayAuthSnackbar={!app.authSnackbarDisplayedOnce}>
+
         <ContentHeader title="View Forms" style={styles.header} subhead="Create, edit and view forms">
           <Link to="forms/create" style={styles.createButton}>
             <CoralButton icon="add" type="success">
@@ -104,40 +107,55 @@ export default class FormList extends Component {
 
         <CoralButton
           active={displayMode === 'open'}
-          onClick={this.setDisplayMode.bind(this, 'open')}
+          onClick={() => this.setDisplayMode('open')}
           style={{ marginRight: 10 }}
         >
           Live
         </CoralButton>
+
         <CoralButton
           active={displayMode === 'closed'}
-          onClick={this.setDisplayMode.bind(this, 'closed')}
+          onClick={() => this.setDisplayMode('closed')}
         >
           Closed
         </CoralButton>
 
-        <FormTable forms={visibleForms} onRowClick={this.onRowClick.bind(this)}
-          confirmDeletion={this.confirmDeletion.bind(this)} onCopyFormClick={this.onCopyFormClick.bind(this)}
-          copying={this.state.copying}/>
+        <FormTable
+          forms={visibleForms}
+          onRowClick={this.onRowClick}
+          confirmDeletion={this.confirmDeletion}
+          onCopyFormClick={this.onCopyFormClick}
+          copying={this.state.copying}
+        />
 
-        <ConfirmDialog show={this.state.showConfirmDialog}
+        <ConfirmDialog
+          show={this.state.showConfirmDialog}
           formName={this.state.confirmFormName}
-          onConfirmClick={this.onConfirmClick.bind(this)}
-          onCloseClick={this.closeDialog.bind(this)} />
+          onConfirmClick={this.onConfirmClick}
+          onCloseClick={this.closeDialog}
+        />
+
       </Page>
     );
   }
 }
 
 const ConfirmDialog = ({ show, formName, onConfirmClick, onCloseClick }) => show ? (
-  <div style={ styles.confirmOverlay }>
-    <div style={ styles.confirmDialog }>
-      <h2>Warning: this action has no undo.</h2>
-      <p style={ styles.confirmMessage }>Are you sure you want to remove the form <strong style={ styles.strong }>"{ formName }"</strong>?</p>
-      <button style={[styles.confirmButton, styles.yesButton]} onClick={onConfirmClick}>Yes</button>
-      <button style={[styles.confirmButton, styles.noButton]} onClick={onCloseClick}>No</button>
+  <CoralDialog
+    className="confirmDialog"
+    title="Delete form"
+    onCancel={onCloseClick}
+    open={show}
+  >
+    <div style={styles.dialogContent}>
+      <h2 className="confirmDialog__title">Warning: this action has no undo.</h2>
+      <p className="confirmDialog__description" style={styles.confirmMessage}>Are you sure you want to remove the form <strong style={ styles.strong }>"{ formName }"</strong>?</p>
+      <div className="confirmDialog__actions" style={styles.actions}>
+        <CoralButton className="confirmDialog__button--cancel" style={styles.cancelButton} onClick={onCloseClick}>Cancel</CoralButton>
+        <CoralButton type="success" className="confirmDialog__button--confirm" onClick={onConfirmClick}>Yes, delete form</CoralButton>
+      </div>
     </div>
-  </div>
+  </CoralDialog>
 ) : null;
 
 const formatForm = ({ header, stats, id, date_created }, index) => {
@@ -154,14 +172,14 @@ const formatForm = ({ header, stats, id, date_created }, index) => {
 
 
 const FormTable = ({ loadingTags, forms, onRowClick, confirmDeletion, onCopyFormClick }) => (
-  <DataTable style={styles.table} sortable rows={forms.map(formatForm)}>
+  <DataTable style={styles.table} sortable rows={forms.map(formatForm)} className="form__row">
     <TableHeader cellFormatter={(n, r, i) => <span style={styles.name} onClick={() => onRowClick(r.id)}>{n || L.t('Untitled Form')}</span>} name="name">{ L.t('Name') }</TableHeader>
     <TableHeader name="description">{ L.t('Description') }</TableHeader>
     <TableHeader sortFn={(a, b, asc) => asc ? b - a : a - b} cellFormatter={n => <span style={styles.submission}>{n}</span>} numeric name="submissions">{ L.t('Submissions') }</TableHeader>
     <TableHeader cellFormatter={date => moment(date).format('L')} name="date_created">{ L.t('Creation date') }</TableHeader>
     <TableHeader nosort name="copy" style={styles.rowActions} cellFormatter={i => <IconButton name='content_copy' onClick={e => onCopyFormClick(forms[i], e)}/>}></TableHeader>
     <TableHeader nosort style={styles.rowActions} name="remove"
-      cellFormatter={i => <IconButton name='delete'
+      cellFormatter={i => <IconButton name='delete' className="form__button__delete" id={`form__id--${forms[i].id}`}
       onClick={e => confirmDeletion(forms[i].header.title, forms[i].header.description, forms[i].id, e)} />}></TableHeader>
   </DataTable>
 );
@@ -194,23 +212,15 @@ const styles = {
     fontSize: '16px',
     marginTop: '20px'
   },
-  confirmButton: {
-    position: 'absolute',
-    padding: '0 20px',
-    lineHeight: '40px',
-    border: 'none',
-    background: '#ddd',
-    cursor: 'pointer'
+  actions: {
+    paddingTop: 20,
+    textAlign: 'right'
   },
-  yesButton: {
-    right: '30px',
-    bottom: '30px',
-    background: brandColor,
-    color: 'white'
+  cancelButton: {
+    marginRight: 10
   },
-  noButton: {
-    left: '30px',
-    bottom: '30px'
+  dialogContent: {
+    padding: 10
   },
   table: {
     marginTop: 25

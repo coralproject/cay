@@ -22,6 +22,7 @@ import {
   beginEdit,
   reinsertGalleryAnswer
 } from 'forms/FormActions';
+import {authSnackbarDisplayedOnce} from 'app/AppActions';
 import {Link} from 'react-router';
 import moment from 'moment';
 
@@ -39,7 +40,6 @@ import GalleryPreview from 'forms/GalleryPreview';
 
 import TextField from 'components/forms/TextField';
 import Button from 'components/Button';
-import Modal from 'components/modal/Modal';
 
 import GalleryAnswer from 'forms/GalleryAnswer';
 import PublishOptions from 'forms/PublishOptions';
@@ -77,6 +77,10 @@ export default class GalleryManager extends Component {
     this.props.dispatch(fetchGallery(this.props.params.id));
   }
 
+  componentWillUnmount() {
+    this.props.dispatch(authSnackbarDisplayedOnce());
+  }
+
   removeSubmission(galleryId, submissionId, answerId) {
     this.props.dispatch(removeFromGallery(galleryId, submissionId, answerId));
   }
@@ -98,12 +102,14 @@ export default class GalleryManager extends Component {
       <div>
         <div style={styles.galleryTitle}>
           <input
+            className='gallery__headline'
             style={styles.galleryTitles}
             type="text"
             value={gallery.headline}
             placeholder="Write a headline"
             onChange={this.setHeadline} />
           <input
+            className='gallery__subhead'
             style={styles.galleryTitles}
             type="text"
             value={gallery.description}
@@ -302,9 +308,8 @@ export default class GalleryManager extends Component {
 
   render() {
 
-    const {forms, oidc} = this.props;
-
-    if (!oidc.user) return <Login />;
+    const {forms, oidc, app} = this.props;
+    const authTimeout = app.features.authEnabled ? new Date(oidc.user.expires_at * 1000) : undefined;
 
     const form = forms[forms.activeForm];
     const gallery = forms[forms.activeGallery] || {
@@ -327,7 +332,7 @@ export default class GalleryManager extends Component {
     ];
 
     return (
-      <Page>
+      <Page authTimeout={authTimeout} displayAuthSnackbar={!app.authSnackbarDisplayedOnce}>
         <FormChrome
           activeTab="gallery"
           updateStatus={this.updateFormStatus}

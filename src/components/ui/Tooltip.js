@@ -53,5 +53,3 @@ const styles = {
   top: 'auto',
   bottom: -50,
 };
-
-

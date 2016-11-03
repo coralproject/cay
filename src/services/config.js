@@ -4,8 +4,7 @@
  * Module constants
  */
 const CONFIG_ROUTES = ['/config.json', '/data_config.json'];
-const REQUIRED_KEYS = [ 'xeniaHost', 'trustHost', 'askHost', 'basicAuthorization',
-                        'environment', 'googleAnalyticsId', 'authClientId', 'authAuthority'];
+const REQUIRED_KEYS = [ 'xeniaHost', 'trustHost', 'askHost', 'googleAnalyticsId', 'authClientId', 'authAuthority'];
 
 /**
  * Load config from json files. Not handling errors because the app can't recover

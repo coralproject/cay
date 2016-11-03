@@ -383,7 +383,7 @@ export const updateSubmissionFlags = props => (dispatch, getState) => {
         .then(res => {
           if (res.status !== 200) {
             // As there is no front end component for form aggregations, we can fail silently
-            // only notifying developers here. If/when we use this data in the interface we 
+            // only notifying developers here. If/when we use this data in the interface we
             // can message failures properly.
             console.log("Error publishing form aggregations.")
           }
@@ -614,9 +614,12 @@ export const downloadCSV = formId => (dispatch, getState) => {
   const { submissionFilterBy, submissionSearch } = forms;
   const filterBy = submissionFilterBy === 'default' ? '' : submissionFilterBy;
 
-  fetch(`${app.askHost}/v1/form/${formId}/submission/export?filterby=${filterBy}&search=${submissionSearch}`, getInit('GET', null, oidc))
-  .then(handleResp)
-  .then(({ csv_url }) => window.open(`${csv_url}&filterby=${filterBy}&search=${submissionSearch}`, '_self')); // download by opening a new tab
+  fetch(`${app.askHost}/v1/form/${formId}/submission/export?filterby=${filterBy}&search=${submissionSearch}&download=true`, getInit('GET', null, oidc))
+  .then(res => res.blob())
+  .then((file) => {
+    const csvFile = new Blob([file], {type: 'text/csv'});
+    window.open(window.URL.createObjectURL(csvFile), "_blank");
+  });
 };
 
 export const hasFlag = (submission, flag) => -1 !== submission.flags.indexOf(flag);

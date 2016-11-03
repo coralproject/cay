@@ -37,6 +37,7 @@ const buildRoutes = (store, onLogPageView, defaultRoute, features, userManager) 
     authSelector: state => state.oidc.user,
     authenticatingSelector: state => state.oidc.isLoadingUser,
     LoadingComponent: LoadingAuth,
+    redirectAction: () => { userManager.signinRedirect(); },
     wrapperDisplayName: 'UserIsAuthenticated'
     // /login is the default, but putting it here for notes to future self
   });

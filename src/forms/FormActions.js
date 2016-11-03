@@ -378,7 +378,19 @@ export const updateSubmissionFlags = props => (dispatch, getState) => {
       `${app.askHost}/v1/form/${activeForm}/submission/${activeSubmission}/flag/${prop}`,
       getInit( props[prop] ? 'POST': 'DELETE', null, oidc)
     )
-    .then(handleResp)
+    .then(res => {
+      fetch(`${app.elkhornHost}/publish/aggregations/form/${activeForm}`, getInit('GET', null, oidc))
+        .then(res => {
+          if (res.status !== 200) {
+            // As there is no front end component for form aggregations, we can fail silently
+            // only notifying developers here. If/when we use this data in the interface we 
+            // can message failures properly.
+            console.log("Error publishing form aggregations.")
+          }
+        })
+
+      handleResp(res)
+    })
   ));
 };
 

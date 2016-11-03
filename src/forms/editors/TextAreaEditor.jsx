@@ -6,6 +6,7 @@ import CommonFieldOptions from 'forms/CommonFieldOptions'
 
 import editWidgetStyles from 'forms/editors/EditWidgetStyles'
 import CheckInput from '../../components/forms/CheckInput'
+import { Tooltip } from '../../components/ui';
 
 @connect(({ forms, app }) => ({ forms, app }))
 @Radium
@@ -86,6 +87,11 @@ export default class TextAreaEditor extends Component {
       this.handleInputChange(0, prop)
     }
   }
+  onIncludeInGroups(e) {
+    this.extendFieldProps({
+      includeInGroups: e.target.checked
+    })
+  }
   render() {
     const { handleMinInput, handleMaxInput, props, state } = this;
     const { field } = props
@@ -116,6 +122,16 @@ export default class TextAreaEditor extends Component {
               handleInput={handleMaxInput}
               defaultValue={field.props.maxLength}
             />
+            <Tooltip htmlFor="includeInGroups"  text="Include these answers in grouped submissions">
+              <label style={styles.bottomCheck}>
+                <input type="checkbox"
+                  className="form-include-in-groups"
+                  onChange={ (e) => this.onIncludeInGroups(e) }
+                  value={ field.props.includeInGroups }
+                  checked={ field.props.includeInGroups } />
+                  Include in Groups (API)
+              </label>
+            </Tooltip>
           </div>
           <CommonFieldOptions
             {...this.props}
@@ -138,8 +154,11 @@ const styles = {
   },
   bottomCheck: {
     display: 'inline-block',
-    padding: '10px 20px 10px 0',
+    fontSize: '10pt',
+    marginBottom: '20px',
     cursor: 'pointer',
+    lineHeight: '30px',
+    marginRight: '5px'
   },
   bottomOptions: {
     display: 'flex',

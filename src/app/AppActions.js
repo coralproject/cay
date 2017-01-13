@@ -25,7 +25,7 @@ export let xenia;
 
 export const configXenia = () => (dispatch, getState) => {
   const { app } = getState();
-  xenia = XeniaDriver(`${app.xeniaHost}/1.0`, app.basicAuthorization);
+  xenia = XeniaDriver(`${app.xeniaHost}/v1`, app.basicAuthorization);
 };
 
 /**

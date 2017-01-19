@@ -2,7 +2,7 @@
 
 [Cay](https://github.com/coralproject/cay) are the frontend tools and UI for Coral's product Ask.
 
-Installation instructions for The Coral Project products can be found [in our docs.](https://docs.coralproject.net/)
+If you're interested in using or contributing to Ask, get started with our User Guides and Technical Documentation: https://docs.coralproject.net. 
 
 # Related Tools & Resources
 

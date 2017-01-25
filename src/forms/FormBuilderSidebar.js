@@ -53,6 +53,8 @@ export default class FormBuilderSidebar extends Component {
       return `<iframe width="100%" height="580" src="${form.settings.baseUrl}${activeForm}.html"></iframe>`;
     case 'standalone':
       return `${form.settings.baseUrl}${activeForm}.html`;
+    case 'wordpress-shortcode':
+      return `[ask-form id="${activeForm}"]`;
     default:
       // nothing
     }
@@ -89,6 +91,7 @@ export default class FormBuilderSidebar extends Component {
             onSaveClick={onSaveClick}
             scriptCode={this.createEmbed('script-tag')}
             iframeCode={this.createEmbed('iframe')}
+            wordpressShortcode={this.createEmbed('wordpress-shortcode')}
             standaloneCode={this.createEmbed('standalone')}
           />
 

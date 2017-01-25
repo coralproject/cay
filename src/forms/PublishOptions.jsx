@@ -1,21 +1,16 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { Tabs, Tab, RadioGroup, Radio, Textfield } from 'react-mdl';
+import { RadioGroup, Radio } from 'react-mdl';
 import { CoralButton, CoralDialog, CoralTabBar, CoralTab } from '../components/ui';
 import Copy from '../components/Copy';
-
-import Spinner from 'components/Spinner';
 
 import settings from 'settings';
 
 import {
   updateFormStatus,
-  saveForm,
   updateFormSettings
  } from 'forms/FormActions';
-
-import Modal from 'components/modal/Modal';
 
 @connect(({ app, forms }) => ({ app, forms }))
 export default class PublishOptions extends Component {
@@ -33,6 +28,14 @@ export default class PublishOptions extends Component {
     this.togglePublishModal = this.togglePublishModal.bind(this);
   }
 
+  static propTypes = {
+    activeForm: PropTypes.string.isRequired,
+    scriptCode: PropTypes.string.isRequired,
+    iframeCode: PropTypes.string.isRequired,
+    standaloneCode: PropTypes.string.isRequired,
+    wordpressShortcode: PropTypes.string.isRequired
+  }
+
   togglePublishModal() {
     this.setState((state) => ({
       publishModalOpened: !state.publishModalOpened
@@ -41,7 +44,7 @@ export default class PublishOptions extends Component {
 
   onFormStatusChange(e) {
     let status = e.target.value;
-    const {dispatch, forms} = this.props;
+    const {forms} = this.props;
     this.setState({ formStatus: status });
     this.props.dispatch(updateFormStatus(forms.activeForm, status));
   }
@@ -113,6 +116,7 @@ export default class PublishOptions extends Component {
       iframeCode,
       scriptCode,
       standaloneCode,
+      wordpressShortcode,
       hideOptions,
       isGallery
       } = this.props;
@@ -170,11 +174,12 @@ export default class PublishOptions extends Component {
                   <CoralTabBar style={ styles.tabBar } activeTab={this.state.activeTab} onChange={(tabId) => this.setState({ activeTab: tabId })}>
                     <CoralTab style={ styles.tab }>With iframe</CoralTab>
                     <CoralTab>Without iframe</CoralTab>
+                    <CoralTab>WordPress shortcode</CoralTab>
                   </CoralTabBar>
                   <section>
                     {
-                      this.state.activeTab == 0 ?
-                        <div>
+                      this.state.activeTab == 0
+                      ? <div>
                           <textarea className="embed-code" id="iframeCode" readOnly style={styles.embedCode} value={iframeCode}/>
                           <div style={ styles.rightAlignButtons }>
                             {
@@ -192,8 +197,11 @@ export default class PublishOptions extends Component {
                             </Copy>
                           </div>
                         </div>
-                        :
-                        <div>
+                        : null
+                    }
+                    {
+                      this.state.activeTab === 1
+                      ? <div>
                           <textarea className="embed-code-iframe" id="embedCode" readOnly style={styles.embedCode} value={scriptCode}/>
                           <div style={ styles.rightAlignButtons }>
                             {
@@ -211,6 +219,20 @@ export default class PublishOptions extends Component {
                             </Copy>
                           </div>
                         </div>
+                      : null
+                    }
+                    {
+                      this.state.activeTab === 2
+                      ? <div>
+                          <textarea className="wordpress-shortcode" id="shortCode" readOnly style={styles.embedCode} value={wordpressShortcode} />
+                          <div style={ styles.rightAlignButtons }>
+                            { this.state.embedCopied ? <span style={ styles.copied }>Copied!</span> : null }
+                            <Copy target="textarea#shortCode" onCopy={()=> this.showCopied('embed')}>
+                              <CoralButton>Copy</CoralButton>
+                            </Copy>
+                          </div>
+                        </div>
+                      : null
                     }
                   </section>
                 </div>

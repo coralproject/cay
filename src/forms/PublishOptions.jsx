@@ -225,6 +225,7 @@ export default class PublishOptions extends Component {
                       this.state.activeTab === 2
                       ? <div>
                           <textarea className="wordpress-shortcode" id="shortCode" readOnly style={styles.embedCode} value={wordpressShortcode} />
+                          <p style={{fontSize: '11px', marginTop: -10}}>note: WordPress shortcode must be used with the Ask WordPress plugin: <a target="_blank" href="https://github.com/coralproject/ask-wp-plugin">https://github.com/coralproject/ask-wp-plugin</a></p>
                           <div style={ styles.rightAlignButtons }>
                             { this.state.embedCopied ? <span style={ styles.copied }>Copied!</span> : null }
                             <Copy target="textarea#shortCode" onCopy={()=> this.showCopied('embed')}>

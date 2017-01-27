@@ -255,6 +255,8 @@ export default class GalleryManager extends Component {
       return `<iframe width="100%" height="580" src="${gallery.config.baseUrl}${forms.activeGallery}.html"></iframe>`;
     case 'standalone':
       return `${gallery.config.baseUrl}${forms.activeGallery}.html`;
+    case 'wordpress-shortcode':
+      return `[ask-gallery id="${forms.activeGallery}"]`;
     default:
       // nothing
     }
@@ -409,6 +411,7 @@ export default class GalleryManager extends Component {
                  onSaveClick={this.onSaveClick.bind(this)}
                  scriptCode={this.createEmbed('script-tag')}
                  iframeCode={this.createEmbed('iframe')}
+                 wordpressShortcode={this.createEmbed('wordpress-shortcode')}
                  standaloneCode={this.createEmbed('standalone')}
                 />
 

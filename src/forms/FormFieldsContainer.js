@@ -63,6 +63,11 @@ export default class FormFieldsContainer extends Component {
 
   // TODO: Refactor: All this methods look very similar, maybe generalize into one?
 
+  onFormCtaChange(e) {
+    this.props.markAsUnsaved();
+    this.props.dispatch(updateFormFooter({ cta: e.target.value }))
+  }
+
   onFormHeadingChange(e) {
     this.props.markAsUnsaved();
     this.props.dispatch(updateFormHeader({ heading: e.target.value }));
@@ -79,6 +84,15 @@ export default class FormFieldsContainer extends Component {
     this.props.dispatch(updateFormFinishedScreen({
       title: form.finishedScreen.title,
       description: e.target.value
+    }));
+  }
+
+  onThankYouTitleChange(e) {
+    let form = this.getForm();
+    this.props.markAsUnsaved();
+    this.props.dispatch(updateFormFinishedScreen({
+      title: e.target.value,
+      description: form.finishedScreen.description
     }));
   }
 
@@ -193,7 +207,22 @@ export default class FormFieldsContainer extends Component {
         <div style={ styles.extraFields }>
         { this.props.app.recaptcha ? <Checkbox checked={form.settings.recaptcha} label="Include reCAPTCHA"
             ripple onChange={this.onRecaptchaChange.bind(this)} /> : null }
-          <h3 style={ styles.extraFieldTitle }>Thank you message (optional)</h3>
+          <h3 style={ styles.extraFieldTitle }>
+          Call To Action
+          <FaQuestionCircle data-tip data-for="cta" />
+          <Tooltip class="cayTooltip" id="cta" place="bottom" effect="solid" type="light">
+            <p>Enter the text for the submit button.</p>
+          </Tooltip>
+          </h3>
+          <input className="form-cta" onChange={ this.onFormCtaChange.bind(this) } style={ styles.formTitles } type="text" placeholder={ "Write a Call to Action" } defaultValue={ form.footer.cta } />
+          <h3 style={ styles.extraFieldTitle }>
+          Finished Screen (optional)
+          <FaQuestionCircle data-tip data-for="finished-screen" />
+          <Tooltip class="cayTooltip" id="finished-screen" place="bottom" effect="solid" type="light">
+            <p>Enter a title and message to display when the form has been submitted.</p>
+          </Tooltip>
+          </h3>
+          <input className="form-finished-screen-title" onChange={ this.onThankYouTitleChange.bind(this) } style={ styles.formTitles } type="text" placeholder={ "Write a Title" } defaultValue={ form.finishedScreen.title } />
           <textarea
             defaultValue={ form.finishedScreen.description }
             style={ styles.extraFieldTextArea }

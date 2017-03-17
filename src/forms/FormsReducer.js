@@ -95,7 +95,8 @@ const emptyForm = {
     heading: ''
   },
   footer: {
-    conditions: ''
+    conditions: '',
+    cta: 'Submit'
   },
   finishedScreen: {
     title: 'Thanks.',

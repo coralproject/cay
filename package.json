@@ -1,8 +1,8 @@
 {
   "name": "trust",
-  "version": "0.4.7",
-  "description": "trust",
-  "repository": "git@github.com:CoralProject/trust.git",
+  "version": "0.4.9",
+  "description": "cay",
+  "repository": "git@github.com:coralproject/cay.git",
   "scripts": {
     "clean": "rimraf dist",
     "build:webpack": "NODE_ENV=production webpack --config webpack.config.js",

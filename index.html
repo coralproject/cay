@@ -49,6 +49,44 @@
         100% { background-position: 0 0; }
       }
     </style>
+    <link rel="stylesheet" type="text/css" href="https://www.smore.com/css/clippyjs.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script src="https://www.smore.com/js/clippyjs.js"></script>
+
+    <script type="text/javascript">
+
+        var messages = [
+          "Communities are made of users.",
+          "Click on a link by moving your mouse to it and pressing the button.",
+          "A reputation score is the only way to really know your users.",
+          "Try our set - it - and - forget - it community!",
+          "Remember: The more comments the better, so make sure to user your comment",
+          "Error x02384: Unstacked bites leaked out of the heap!"
+        ];
+
+        setTimeout(function () {
+
+          clippy.load('Clippy', function(agent) {
+              // Do anything with the loaded agent
+              agent.show();
+
+              agent.speak("Hello. It looks like you want to community.");
+
+              setInterval(function () {
+
+                if (Math.random() < .5) {
+                  agent.speak(messages[Math.floor(Math.random() * messages.length)])
+                } else {
+                  agent.animate();
+                }
+
+              }, 6000);
+
+
+          });
+        }, 1000);
+    </script>
+
   </head>
   <body class="skin-blue sidebar-mini">
     <div id='root'>
@@ -57,5 +95,6 @@
     </div>
     <script src="/material.min.js"></script>
     <script src="/bundle.js"></script>
-  </body>
+    
+   </body>
 </html>
